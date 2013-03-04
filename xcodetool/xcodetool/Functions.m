@@ -356,16 +356,6 @@ void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, void (^block)(NSString *))
   LineReader *reader = [[[LineReader alloc] initWithFileHandle:stdoutReadHandle] autorelease];
   reader.didReadLineBlock = block;
   
-  void (^taskDidTerminateBlock)(NSNotification *) = ^(NSNotification *notification){
-    // Make our CFRunLoopRun pop out early.
-    CFRunLoopStop(CFRunLoopGetCurrent());
-  };
-  
-  id taskObserver = [[NSNotificationCenter defaultCenter] addObserverForName:NSTaskDidTerminateNotification
-                                                                        object:task
-                                                                         queue:nil
-                                                                    usingBlock:taskDidTerminateBlock];
-  
   [task setStandardOutput:stdoutWriteHandle];
   [task launch];
   
@@ -377,8 +367,6 @@ void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, void (^block)(NSString *))
 
   [reader stopReading];
   [reader finishReadingToEndOfFile];
-  
-  [[NSNotificationCenter defaultCenter] removeObserver:taskObserver];
 }
 
 NSDictionary *BuildSettingsFromOutput(NSString *output)
