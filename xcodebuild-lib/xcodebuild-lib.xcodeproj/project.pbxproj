@@ -1,0 +1,361 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		283CCAAD16C2EE7200F2E343 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283CCAAC16C2EE7200F2E343 /* Cocoa.framework */; };
+		283CCAB716C2EE7200F2E343 /* xcodebuild_lib.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCAB616C2EE7200F2E343 /* xcodebuild_lib.m */; };
+		287A380F16C876A800319E81 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283CCAAC16C2EE7200F2E343 /* Cocoa.framework */; };
+		287A381516C876A800319E81 /* xcodebuild_fastsettings_lib.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A381416C876A800319E81 /* xcodebuild_fastsettings_lib.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		283CCAA916C2EE7200F2E343 /* xcodebuild-lib.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "xcodebuild-lib.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		283CCAAC16C2EE7200F2E343 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		283CCAAF16C2EE7200F2E343 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		283CCAB016C2EE7200F2E343 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		283CCAB116C2EE7200F2E343 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		283CCAB416C2EE7200F2E343 /* xcodebuild-lib-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "xcodebuild-lib-Prefix.pch"; sourceTree = "<group>"; };
+		283CCAB616C2EE7200F2E343 /* xcodebuild_lib.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = xcodebuild_lib.m; sourceTree = "<group>"; };
+		287A380E16C876A800319E81 /* xcodebuild-fastsettings-lib.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "xcodebuild-fastsettings-lib.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		287A381216C876A800319E81 /* xcodebuild-fastsettings-lib-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "xcodebuild-fastsettings-lib-Prefix.pch"; sourceTree = "<group>"; };
+		287A381416C876A800319E81 /* xcodebuild_fastsettings_lib.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = xcodebuild_fastsettings_lib.m; sourceTree = "<group>"; };
+		28E9B98116C2F2CE00A52E4D /* xcodebuild-lib.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "xcodebuild-lib.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		283CCAA616C2EE7200F2E343 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				283CCAAD16C2EE7200F2E343 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		287A380B16C876A800319E81 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				287A380F16C876A800319E81 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		283CCAA016C2EE7200F2E343 = {
+			isa = PBXGroup;
+			children = (
+				28E9B98116C2F2CE00A52E4D /* xcodebuild-lib.xcconfig */,
+				283CCAAB16C2EE7200F2E343 /* Frameworks */,
+				283CCAAA16C2EE7200F2E343 /* Products */,
+				287A381016C876A800319E81 /* xcodebuild-fastsettings-lib */,
+				283CCAB216C2EE7200F2E343 /* xcodebuild-lib */,
+			);
+			sourceTree = "<group>";
+		};
+		283CCAAA16C2EE7200F2E343 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				283CCAA916C2EE7200F2E343 /* xcodebuild-lib.dylib */,
+				287A380E16C876A800319E81 /* xcodebuild-fastsettings-lib.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		283CCAAB16C2EE7200F2E343 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				283CCAAC16C2EE7200F2E343 /* Cocoa.framework */,
+				283CCAAE16C2EE7200F2E343 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		283CCAAE16C2EE7200F2E343 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				283CCAAF16C2EE7200F2E343 /* AppKit.framework */,
+				283CCAB016C2EE7200F2E343 /* CoreData.framework */,
+				283CCAB116C2EE7200F2E343 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		283CCAB216C2EE7200F2E343 /* xcodebuild-lib */ = {
+			isa = PBXGroup;
+			children = (
+				283CCAB616C2EE7200F2E343 /* xcodebuild_lib.m */,
+				283CCAB316C2EE7200F2E343 /* Supporting Files */,
+			);
+			path = "xcodebuild-lib";
+			sourceTree = "<group>";
+		};
+		283CCAB316C2EE7200F2E343 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				283CCAB416C2EE7200F2E343 /* xcodebuild-lib-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		287A381016C876A800319E81 /* xcodebuild-fastsettings-lib */ = {
+			isa = PBXGroup;
+			children = (
+				287A381416C876A800319E81 /* xcodebuild_fastsettings_lib.m */,
+				287A381116C876A800319E81 /* Supporting Files */,
+			);
+			path = "xcodebuild-fastsettings-lib";
+			sourceTree = "<group>";
+		};
+		287A381116C876A800319E81 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				287A381216C876A800319E81 /* xcodebuild-fastsettings-lib-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		283CCAA716C2EE7200F2E343 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		287A380C16C876A800319E81 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		283CCAA816C2EE7200F2E343 /* xcodebuild-lib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 283CCABA16C2EE7200F2E343 /* Build configuration list for PBXNativeTarget "xcodebuild-lib" */;
+			buildPhases = (
+				283CCAA516C2EE7200F2E343 /* Sources */,
+				283CCAA616C2EE7200F2E343 /* Frameworks */,
+				283CCAA716C2EE7200F2E343 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "xcodebuild-lib";
+			productName = "xcodebuild-lib";
+			productReference = 283CCAA916C2EE7200F2E343 /* xcodebuild-lib.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		287A380D16C876A800319E81 /* xcodebuild-fastsettings-lib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 287A381816C876A800319E81 /* Build configuration list for PBXNativeTarget "xcodebuild-fastsettings-lib" */;
+			buildPhases = (
+				287A380A16C876A800319E81 /* Sources */,
+				287A380B16C876A800319E81 /* Frameworks */,
+				287A380C16C876A800319E81 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "xcodebuild-fastsettings-lib";
+			productName = "xcodebuild-fastsettings-lib";
+			productReference = 287A380E16C876A800319E81 /* xcodebuild-fastsettings-lib.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		283CCAA116C2EE7200F2E343 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "Fred Potter";
+			};
+			buildConfigurationList = 283CCAA416C2EE7200F2E343 /* Build configuration list for PBXProject "xcodebuild-lib" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 283CCAA016C2EE7200F2E343;
+			productRefGroup = 283CCAAA16C2EE7200F2E343 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				283CCAA816C2EE7200F2E343 /* xcodebuild-lib */,
+				287A380D16C876A800319E81 /* xcodebuild-fastsettings-lib */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		283CCAA516C2EE7200F2E343 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				283CCAB716C2EE7200F2E343 /* xcodebuild_lib.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		287A380A16C876A800319E81 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				287A381516C876A800319E81 /* xcodebuild_fastsettings_lib.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		283CCAB816C2EE7200F2E343 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 28E9B98116C2F2CE00A52E4D /* xcodebuild-lib.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		283CCAB916C2EE7200F2E343 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 28E9B98116C2F2CE00A52E4D /* xcodebuild-lib.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		283CCABB16C2EE7200F2E343 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				"GCC_ENABLE_OBJC_GC[arch=x86_64]" = supported;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "xcodebuild-lib/xcodebuild-lib-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		283CCABC16C2EE7200F2E343 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "xcodebuild-lib/xcodebuild-lib-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		287A381616C876A800319E81 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "xcodebuild-fastsettings-lib/xcodebuild-fastsettings-lib-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		287A381716C876A800319E81 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "xcodebuild-fastsettings-lib/xcodebuild-fastsettings-lib-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		283CCAA416C2EE7200F2E343 /* Build configuration list for PBXProject "xcodebuild-lib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				283CCAB816C2EE7200F2E343 /* Debug */,
+				283CCAB916C2EE7200F2E343 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		283CCABA16C2EE7200F2E343 /* Build configuration list for PBXNativeTarget "xcodebuild-lib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				283CCABB16C2EE7200F2E343 /* Debug */,
+				283CCABC16C2EE7200F2E343 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		287A381816C876A800319E81 /* Build configuration list for PBXNativeTarget "xcodebuild-fastsettings-lib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				287A381616C876A800319E81 /* Debug */,
+				287A381716C876A800319E81 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 283CCAA116C2EE7200F2E343 /* Project object */;
+}

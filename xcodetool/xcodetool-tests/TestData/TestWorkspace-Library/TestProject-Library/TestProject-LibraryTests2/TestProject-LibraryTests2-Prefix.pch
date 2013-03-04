@@ -1,0 +1,8 @@
+//
+// Prefix header for all source files of the 'TestProject-LibraryTests2' target in the 'TestProject-LibraryTests2' project
+//
+
+#ifdef __OBJC__
+  #import <UIKit/UIKit.h>
+  #import <Foundation/Foundation.h>
+#endif

@@ -1,0 +1,250 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		283EA65E16C6F9A0009CE8D3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283EA65D16C6F9A0009CE8D3 /* UIKit.framework */; };
+		283EA66016C6F9A0009CE8D3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283EA65F16C6F9A0009CE8D3 /* Foundation.framework */; };
+		283EA66216C6F9A0009CE8D3 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283EA66116C6F9A0009CE8D3 /* CoreGraphics.framework */; };
+		283EA66A16C6F9A0009CE8D3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 283EA66916C6F9A0009CE8D3 /* main.m */; };
+		287A37E616C728D400319E81 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 287A37E516C728D400319E81 /* Default-568h@2x.png */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		283EA65A16C6F9A0009CE8D3 /* app-uninstaller.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "app-uninstaller.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		283EA65D16C6F9A0009CE8D3 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		283EA65F16C6F9A0009CE8D3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		283EA66116C6F9A0009CE8D3 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		283EA66516C6F9A0009CE8D3 /* app-uninstaller-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "app-uninstaller-Info.plist"; sourceTree = "<group>"; };
+		283EA66916C6F9A0009CE8D3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		283EA67A16C6F9E6009CE8D3 /* app-installer.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "app-installer.xcconfig"; sourceTree = "<group>"; };
+		287A37E516C728D400319E81 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		283EA65716C6F9A0009CE8D3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				283EA65E16C6F9A0009CE8D3 /* UIKit.framework in Frameworks */,
+				283EA66016C6F9A0009CE8D3 /* Foundation.framework in Frameworks */,
+				283EA66216C6F9A0009CE8D3 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		283EA65116C6F9A0009CE8D3 = {
+			isa = PBXGroup;
+			children = (
+				287A37E516C728D400319E81 /* Default-568h@2x.png */,
+				283EA67A16C6F9E6009CE8D3 /* app-installer.xcconfig */,
+				283EA66316C6F9A0009CE8D3 /* app-uninstaller */,
+				283EA65C16C6F9A0009CE8D3 /* Frameworks */,
+				283EA65B16C6F9A0009CE8D3 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		283EA65B16C6F9A0009CE8D3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				283EA65A16C6F9A0009CE8D3 /* app-uninstaller.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		283EA65C16C6F9A0009CE8D3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				283EA65D16C6F9A0009CE8D3 /* UIKit.framework */,
+				283EA65F16C6F9A0009CE8D3 /* Foundation.framework */,
+				283EA66116C6F9A0009CE8D3 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		283EA66316C6F9A0009CE8D3 /* app-uninstaller */ = {
+			isa = PBXGroup;
+			children = (
+				283EA66516C6F9A0009CE8D3 /* app-uninstaller-Info.plist */,
+				283EA66916C6F9A0009CE8D3 /* main.m */,
+			);
+			path = "app-uninstaller";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		283EA65916C6F9A0009CE8D3 /* app-uninstaller */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 283EA67716C6F9A0009CE8D3 /* Build configuration list for PBXNativeTarget "app-uninstaller" */;
+			buildPhases = (
+				283EA65616C6F9A0009CE8D3 /* Sources */,
+				283EA65716C6F9A0009CE8D3 /* Frameworks */,
+				283EA65816C6F9A0009CE8D3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "app-uninstaller";
+			productName = "app-uninstaller";
+			productReference = 283EA65A16C6F9A0009CE8D3 /* app-uninstaller.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		283EA65216C6F9A0009CE8D3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "Fred Potter";
+			};
+			buildConfigurationList = 283EA65516C6F9A0009CE8D3 /* Build configuration list for PBXProject "app-uninstaller" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 283EA65116C6F9A0009CE8D3;
+			productRefGroup = 283EA65B16C6F9A0009CE8D3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				283EA65916C6F9A0009CE8D3 /* app-uninstaller */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		283EA65816C6F9A0009CE8D3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				287A37E616C728D400319E81 /* Default-568h@2x.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		283EA65616C6F9A0009CE8D3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				283EA66A16C6F9A0009CE8D3 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		283EA67516C6F9A0009CE8D3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 283EA67A16C6F9E6009CE8D3 /* app-installer.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+			};
+			name = Debug;
+		};
+		283EA67616C6F9A0009CE8D3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 283EA67A16C6F9E6009CE8D3 /* app-installer.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		283EA67816C6F9A0009CE8D3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 283EA67A16C6F9E6009CE8D3 /* app-installer.xcconfig */;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				INFOPLIST_FILE = "app-uninstaller/app-uninstaller-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		283EA67916C6F9A0009CE8D3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 283EA67A16C6F9E6009CE8D3 /* app-installer.xcconfig */;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				INFOPLIST_FILE = "app-uninstaller/app-uninstaller-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		283EA65516C6F9A0009CE8D3 /* Build configuration list for PBXProject "app-uninstaller" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				283EA67516C6F9A0009CE8D3 /* Debug */,
+				283EA67616C6F9A0009CE8D3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		283EA67716C6F9A0009CE8D3 /* Build configuration list for PBXNativeTarget "app-uninstaller" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				283EA67816C6F9A0009CE8D3 /* Debug */,
+				283EA67916C6F9A0009CE8D3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 283EA65216C6F9A0009CE8D3 /* Project object */;
+}

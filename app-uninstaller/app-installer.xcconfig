@@ -1,0 +1,9 @@
+#include "../Configurations/Project.xcconfig"
+
+OTHER_LDFLAGS = -F$(SDKROOT)/System/Library/PrivateFrameworks -framework MobileInstallation
+
+// Make sure the build products go to 'Debug' rather than 'Debug-iphonesimulator'
+EFFECTIVE_PLATFORM_NAME =
+
+// Force a simulator build.
+SDKROOT = iphonesimulator

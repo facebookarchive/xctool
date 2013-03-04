@@ -1,0 +1,17 @@
+//
+// Prefix header for all source files of the 'fbxcodetool-tests' target in the 'fbxcodetool-tests' project
+//
+
+#ifdef __OBJC__
+  #import <Cocoa/Cocoa.h>
+
+  #define HC_SHORTHAND
+  #import <OCHamcrest/OCHamcrest.h>
+
+  #define MOCKITO_SHORTHAND
+  #import <OCMockito/OCMockito.h>
+
+  #define TEST_DATA @"xcodetool-tests/TestData/"
+
+  #define JSONKIT_PREFIX XT_
+#endif

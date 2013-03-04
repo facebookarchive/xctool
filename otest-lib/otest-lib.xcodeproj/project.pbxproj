@@ -1,0 +1,270 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		283CCA9A16C2EE4C00F2E343 /* otest_lib.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCA9916C2EE4C00F2E343 /* otest_lib.m */; };
+		287A37E916C7776E00319E81 /* dyld-interposing.h in Headers */ = {isa = PBXBuildFile; fileRef = 287A37E816C7776E00319E81 /* dyld-interposing.h */; };
+		28A33C9416CEC5D500C5EE2A /* PJSONKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 28A33C9216CEC5D500C5EE2A /* PJSONKit.h */; };
+		28A33C9516CEC5D500C5EE2A /* PJSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A33C9316CEC5D500C5EE2A /* PJSONKit.m */; };
+		28E9B9DF16C32E9A00A52E4D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283CCA9416C2EE4C00F2E343 /* Foundation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		281B80BE16CB989D0032430F /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGELOG.md; sourceTree = "<group>"; };
+		281B80C116CB989D0032430F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		283CCA8C16C2EE4C00F2E343 /* otest-lib-ios.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "otest-lib-ios.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		283CCA9416C2EE4C00F2E343 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		283CCA9716C2EE4C00F2E343 /* otest-lib-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "otest-lib-Prefix.pch"; sourceTree = "<group>"; };
+		283CCA9916C2EE4C00F2E343 /* otest_lib.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = otest_lib.m; sourceTree = "<group>"; };
+		287A37E816C7776E00319E81 /* dyld-interposing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dyld-interposing.h"; sourceTree = "<group>"; };
+		28A33C9216CEC5D500C5EE2A /* PJSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PJSONKit.h; sourceTree = "<group>"; };
+		28A33C9316CEC5D500C5EE2A /* PJSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PJSONKit.m; sourceTree = "<group>"; };
+		28E9B98216C2F2D400A52E4D /* otest-lib.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "otest-lib.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		283CCA8916C2EE4C00F2E343 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				28E9B9DF16C32E9A00A52E4D /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		281B80BD16CB989D0032430F /* JSONKit */ = {
+			isa = PBXGroup;
+			children = (
+				28A33C9216CEC5D500C5EE2A /* PJSONKit.h */,
+				28A33C9316CEC5D500C5EE2A /* PJSONKit.m */,
+				281B80BE16CB989D0032430F /* CHANGELOG.md */,
+				281B80C116CB989D0032430F /* README.md */,
+			);
+			name = JSONKit;
+			path = ../Vendor/JSONKit;
+			sourceTree = "<group>";
+		};
+		283CCA8316C2EE4C00F2E343 = {
+			isa = PBXGroup;
+			children = (
+				28E9B98216C2F2D400A52E4D /* otest-lib.xcconfig */,
+				283CCA8E16C2EE4C00F2E343 /* Frameworks */,
+				281B80BD16CB989D0032430F /* JSONKit */,
+				283CCA9516C2EE4C00F2E343 /* otest-lib */,
+				283CCA8D16C2EE4C00F2E343 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		283CCA8D16C2EE4C00F2E343 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				283CCA8C16C2EE4C00F2E343 /* otest-lib-ios.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		283CCA8E16C2EE4C00F2E343 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				283CCA9416C2EE4C00F2E343 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		283CCA9516C2EE4C00F2E343 /* otest-lib */ = {
+			isa = PBXGroup;
+			children = (
+				287A37E816C7776E00319E81 /* dyld-interposing.h */,
+				283CCA9916C2EE4C00F2E343 /* otest_lib.m */,
+				283CCA9616C2EE4C00F2E343 /* Supporting Files */,
+			);
+			path = "otest-lib";
+			sourceTree = "<group>";
+		};
+		283CCA9616C2EE4C00F2E343 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				283CCA9716C2EE4C00F2E343 /* otest-lib-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		283CCA8A16C2EE4C00F2E343 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				287A37E916C7776E00319E81 /* dyld-interposing.h in Headers */,
+				28A33C9416CEC5D500C5EE2A /* PJSONKit.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		283CCA8B16C2EE4C00F2E343 /* otest-lib-ios */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 283CCA9D16C2EE4C00F2E343 /* Build configuration list for PBXNativeTarget "otest-lib-ios" */;
+			buildPhases = (
+				283CCA8816C2EE4C00F2E343 /* Sources */,
+				283CCA8916C2EE4C00F2E343 /* Frameworks */,
+				283CCA8A16C2EE4C00F2E343 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "otest-lib-ios";
+			productName = "otest-lib";
+			productReference = 283CCA8C16C2EE4C00F2E343 /* otest-lib-ios.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		283CCA8416C2EE4C00F2E343 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "Fred Potter";
+			};
+			buildConfigurationList = 283CCA8716C2EE4C00F2E343 /* Build configuration list for PBXProject "otest-lib" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 283CCA8316C2EE4C00F2E343;
+			productRefGroup = 283CCA8D16C2EE4C00F2E343 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				283CCA8B16C2EE4C00F2E343 /* otest-lib-ios */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		283CCA8816C2EE4C00F2E343 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				283CCA9A16C2EE4C00F2E343 /* otest_lib.m in Sources */,
+				28A33C9516CEC5D500C5EE2A /* PJSONKit.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		283CCA9B16C2EE4C00F2E343 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 28E9B98216C2F2D400A52E4D /* otest-lib.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+			};
+			name = Debug;
+		};
+		283CCA9C16C2EE4C00F2E343 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 28E9B98216C2F2D400A52E4D /* otest-lib.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+			};
+			name = Release;
+		};
+		283CCA9E16C2EE4C00F2E343 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "otest-lib/otest-lib-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		283CCA9F16C2EE4C00F2E343 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "otest-lib/otest-lib-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		283CCA8716C2EE4C00F2E343 /* Build configuration list for PBXProject "otest-lib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				283CCA9B16C2EE4C00F2E343 /* Debug */,
+				283CCA9C16C2EE4C00F2E343 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		283CCA9D16C2EE4C00F2E343 /* Build configuration list for PBXNativeTarget "otest-lib-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				283CCA9E16C2EE4C00F2E343 /* Debug */,
+				283CCA9F16C2EE4C00F2E343 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 283CCA8416C2EE4C00F2E343 /* Project object */;
+}

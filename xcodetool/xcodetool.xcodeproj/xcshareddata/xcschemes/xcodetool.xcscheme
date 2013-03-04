@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scheme
+   LastUpgradeVersion = "0460"
+   version = "1.3">
+   <BuildAction
+      parallelizeBuildables = "YES"
+      buildImplicitDependencies = "YES">
+      <BuildActionEntries>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "283CCA8B16C2EE4C00F2E343"
+               BuildableName = "otest-lib-ios.dylib"
+               BlueprintName = "otest-lib-ios"
+               ReferencedContainer = "container:../otest-lib/otest-lib.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "283CCAA816C2EE7200F2E343"
+               BuildableName = "xcodebuild-lib.dylib"
+               BlueprintName = "xcodebuild-lib"
+               ReferencedContainer = "container:../xcodebuild-lib/xcodebuild-lib.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "287A380D16C876A800319E81"
+               BuildableName = "xcodebuild-fastsettings-lib.dylib"
+               BlueprintName = "xcodebuild-fastsettings-lib"
+               ReferencedContainer = "container:../xcodebuild-lib/xcodebuild-lib.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "283EA65916C6F9A0009CE8D3"
+               BuildableName = "app-uninstaller.app"
+               BlueprintName = "app-uninstaller"
+               ReferencedContainer = "container:../app-uninstaller/app-uninstaller.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "283CCA4116C2EA3700F2E343"
+               BuildableName = "xcodetool"
+               BlueprintName = "xcodetool"
+               ReferencedContainer = "container:xcodetool.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+      </BuildActionEntries>
+   </BuildAction>
+   <TestAction
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      buildConfiguration = "Debug">
+      <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "283CCAC116C2EE9900F2E343"
+               BuildableName = "xcodetool-tests.octest"
+               BlueprintName = "xcodetool-tests"
+               ReferencedContainer = "container:xcodetool.xcodeproj">
+            </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "OptionsTests/testArgumentsFlowThroughToCommonXcodebuildArguments">
+               </Test>
+               <Test
+                  Identifier = "OptionsTests/testBuildAndRunTestActionRequiresTargetAndList">
+               </Test>
+               <Test
+                  Identifier = "OptionsTests/testBuildSettingsAreCollected">
+               </Test>
+               <Test
+                  Identifier = "OptionsTests/testBuildTest_RunTest_BuildAndRunTest_allRequireValidTestTarget">
+               </Test>
+               <Test
+                  Identifier = "OptionsTests/testBuildTestActionRequiresTarget">
+               </Test>
+               <Test
+                  Identifier = "OptionsTests/testDefaultReporterIsPrettyIfNotSpecified">
+               </Test>
+               <Test
+                  Identifier = "OptionsTests/testOnlyAllowSimulatorSDKsForTesting">
+               </Test>
+               <Test
+                  Identifier = "OptionsTests/testOptionsPassThrough">
+               </Test>
+               <Test
+                  Identifier = "OptionsTests/testProjectMustBeADirectory">
+               </Test>
+               <Test
+                  Identifier = "OptionsTests/testRunTestActionRequiresTargetAndList">
+               </Test>
+               <Test
+                  Identifier = "OptionsTests/testSchemeIsRequired">
+               </Test>
+               <Test
+                  Identifier = "OptionsTests/testSchemeMustBeValid">
+               </Test>
+               <Test
+                  Identifier = "OptionsTests/testSDKDefaultsToSubjectsSDK">
+               </Test>
+               <Test
+                  Identifier = "OptionsTests/testSDKMustBeValid">
+               </Test>
+               <Test
+                  Identifier = "OptionsTests/testWorkspaceMustBeADirectory">
+               </Test>
+               <Test
+                  Identifier = "OptionsTests/testXcodeBuildArgumentsForProjectAndSchemeSubject">
+               </Test>
+               <Test
+                  Identifier = "OptionsTests/testXcodeBuildArgumentsForWorkspaceAndSchemeSubject">
+               </Test>
+            </SkippedTests>
+         </TestableReference>
+      </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "283CCA4116C2EA3700F2E343"
+            BuildableName = "xcodetool"
+            BlueprintName = "xcodetool"
+            ReferencedContainer = "container:xcodetool.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
+   </TestAction>
+   <LaunchAction
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      launchStyle = "0"
+      useCustomWorkingDirectory = "NO"
+      buildConfiguration = "Debug"
+      ignoresPersistentStateOnLaunch = "NO"
+      debugDocumentVersioning = "YES"
+      allowLocationSimulation = "YES">
+      <BuildableProductRunnable>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "283CCA4116C2EA3700F2E343"
+            BuildableName = "xcodetool"
+            BlueprintName = "xcodetool"
+            ReferencedContainer = "container:xcodetool.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
+      <AdditionalOptions>
+         <AdditionalOption
+            key = "OBJC_PRINT_EXCEPTIONS"
+            value = "YES"
+            isEnabled = "YES">
+         </AdditionalOption>
+         <AdditionalOption
+            key = "USERBREAK"
+            value = "1"
+            isEnabled = "YES">
+         </AdditionalOption>
+      </AdditionalOptions>
+   </LaunchAction>
+   <ProfileAction
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      savedToolIdentifier = ""
+      useCustomWorkingDirectory = "NO"
+      buildConfiguration = "Release"
+      debugDocumentVersioning = "YES">
+      <BuildableProductRunnable>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "283CCA4116C2EA3700F2E343"
+            BuildableName = "xcodetool"
+            BlueprintName = "xcodetool"
+            ReferencedContainer = "container:xcodetool.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
+   </ProfileAction>
+   <AnalyzeAction
+      buildConfiguration = "Debug">
+   </AnalyzeAction>
+   <ArchiveAction
+      buildConfiguration = "Release"
+      revealArchiveInOrganizer = "YES">
+   </ArchiveAction>
+</Scheme>
