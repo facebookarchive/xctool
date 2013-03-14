@@ -53,7 +53,7 @@
 		28ADB43B16E410F9006301ED /* BuildActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28ADB43A16E410F9006301ED /* BuildActionTests.m */; };
 		28E9B97F16C2F1C600A52E4D /* Functions.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B97E16C2F1C600A52E4D /* Functions.m */; };
 		28E9B98016C2F1C600A52E4D /* Functions.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B97E16C2F1C600A52E4D /* Functions.m */; };
-		28E9B98416C2F2D900A52E4D /* fbxcodetool.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 28E9B98316C2F2D900A52E4D /* fbxcodetool.xcconfig */; };
+		28E9B98416C2F2D900A52E4D /* xcodetool.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 28E9B98316C2F2D900A52E4D /* xcodetool.xcconfig */; };
 		28E9B98B16C2FDA700A52E4D /* OCMockito.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28E9B98A16C2FDA700A52E4D /* OCMockito.framework */; };
 		28E9B98C16C2FDB200A52E4D /* OCMockito.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 28E9B98A16C2FDA700A52E4D /* OCMockito.framework */; };
 		28E9B98E16C2FE4800A52E4D /* OCHamcrest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28E9B98D16C2FE4800A52E4D /* OCHamcrest.framework */; };
@@ -152,7 +152,7 @@
 		28ADB43A16E410F9006301ED /* BuildActionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuildActionTests.m; sourceTree = "<group>"; };
 		28E9B97D16C2F1C600A52E4D /* Functions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Functions.h; sourceTree = "<group>"; };
 		28E9B97E16C2F1C600A52E4D /* Functions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Functions.m; sourceTree = "<group>"; };
-		28E9B98316C2F2D900A52E4D /* fbxcodetool.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = fbxcodetool.xcconfig; sourceTree = "<group>"; };
+		28E9B98316C2F2D900A52E4D /* xcodetool.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = xcodetool.xcconfig; sourceTree = "<group>"; };
 		28E9B98A16C2FDA700A52E4D /* OCMockito.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OCMockito.framework; path = ../Vendor/OCMockito.framework; sourceTree = "<group>"; };
 		28E9B98D16C2FE4800A52E4D /* OCHamcrest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OCHamcrest.framework; path = ../Vendor/OCHamcrest.framework; sourceTree = "<group>"; };
 		28E9B99016C3037E00A52E4D /* Fakes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fakes.h; sourceTree = "<group>"; };
@@ -233,7 +233,7 @@
 			children = (
 				281B80C416CB98B60032430F /* JSONKit */,
 				28E9B9DD16C3278D00A52E4D /* iPhoneSimulatorRemoteClient */,
-				28E9B98316C2F2D900A52E4D /* fbxcodetool.xcconfig */,
+				28E9B98316C2F2D900A52E4D /* xcodetool.xcconfig */,
 				283CCA4716C2EA3800F2E343 /* xcodetool */,
 				283CCAC516C2EE9900F2E343 /* xcodetool-tests */,
 				283CCA4416C2EA3800F2E343 /* Frameworks */,
@@ -435,7 +435,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				283CCACA16C2EE9900F2E343 /* InfoPlist.strings in Resources */,
-				28E9B98416C2F2D900A52E4D /* fbxcodetool.xcconfig in Resources */,
+				28E9B98416C2F2D900A52E4D /* xcodetool.xcconfig in Resources */,
 				281B80C916CB98B60032430F /* CHANGELOG.md in Resources */,
 				281B80CC16CB98B60032430F /* README.md in Resources */,
 			);
@@ -543,7 +543,7 @@
 /* Begin XCBuildConfiguration section */
 		283CCA4E16C2EA3800F2E343 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 28E9B98316C2F2D900A52E4D /* fbxcodetool.xcconfig */;
+			baseConfigurationReference = 28E9B98316C2F2D900A52E4D /* xcodetool.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
@@ -576,7 +576,7 @@
 		};
 		283CCA4F16C2EA3800F2E343 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 28E9B98316C2F2D900A52E4D /* fbxcodetool.xcconfig */;
+			baseConfigurationReference = 28E9B98316C2F2D900A52E4D /* xcodetool.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
