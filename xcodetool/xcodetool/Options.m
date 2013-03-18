@@ -3,7 +3,7 @@
 #import "Reporter.h"
 #import "PJSONKit.h"
 #import "Functions.h"
-#import "BuildTestInfo.h"
+#import "XcodeSubjectInfo.h"
 #import "ImplicitAction.h"
 #import "BuildAction.h"
 #import "CleanAction.h"
@@ -70,14 +70,14 @@
   return succeeded;
 }
 
-- (BOOL)validateOptions:(NSString **)errorMessage buildTestInfo:(BuildTestInfo *)buildTestInfo
+- (BOOL)validateOptions:(NSString **)errorMessage xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
-  if (![self.implicitAction validateOptions:errorMessage buildTestInfo:buildTestInfo implicitAction:nil]) {
+  if (![self.implicitAction validateOptions:errorMessage xcodeSubjectInfo:xcodeSubjectInfo implicitAction:nil]) {
     return NO;
   }
   
   for (Action *action in self.actions) {
-    BOOL valid = [action validateOptions:errorMessage buildTestInfo:buildTestInfo implicitAction:self.implicitAction];
+    BOOL valid = [action validateOptions:errorMessage xcodeSubjectInfo:xcodeSubjectInfo implicitAction:self.implicitAction];
     if (!valid) {
       return NO;
     }

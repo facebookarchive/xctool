@@ -4,7 +4,7 @@
 #import "Options.h"
 #import "Functions.h"
 #import "TextReporter.h"
-#import "BuildTestInfo.h"
+#import "XcodeSubjectInfo.h"
 #import "Fakes.h"
 #import "ImplicitAction.h"
 #import "BuildAction.h"
@@ -36,7 +36,7 @@
 {
   Options *options = [self optionsFromArgumentList:argumentList];
   NSString *errorMessage = nil;
-  BOOL valid = [options validateOptions:&errorMessage buildTestInfo:[[[BuildTestInfo alloc] init] autorelease]];
+  BOOL valid = [options validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease]];
   assertThatBool(valid, equalToBool(YES));
   
   return options;
@@ -55,7 +55,7 @@
 {
   Options *options = [self optionsFromArgumentList:argumentList];
   NSString *errorMessage = nil;
-  BOOL valid = [options validateOptions:&errorMessage buildTestInfo:[[[BuildTestInfo alloc] init] autorelease]];
+  BOOL valid = [options validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease]];
   assertThatBool(valid, equalToBool(NO));
   assertThat(errorMessage, equalTo(message));
 }
@@ -64,7 +64,7 @@
 {
   Options *options = [self optionsFromArgumentList:argumentList];
   NSString *errorMessage = nil;
-  BOOL valid = [options validateOptions:&errorMessage buildTestInfo:[[[BuildTestInfo alloc] init] autorelease]];
+  BOOL valid = [options validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease]];
   assertThatBool(valid, equalToBool(YES));
 }
 

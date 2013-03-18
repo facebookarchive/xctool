@@ -1,6 +1,6 @@
 
 #import "BuildTestsAction.h"
-#import "BuildTestInfo.h"
+#import "XcodeSubjectInfo.h"
 #import "Options.h"
 #import "ActionUtil.h"
 
@@ -37,13 +37,11 @@
 }
 
 - (BOOL)validateOptions:(NSString **)errorMessage
-          buildTestInfo:(BuildTestInfo *)buildTestInfo
+          xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
          implicitAction:(ImplicitAction *)implicitAction
 {
-  [buildTestInfo collectInfoIfNeededWithOptions:implicitAction];
-  
   for (NSString *target in self.onlyList) {
-    if ([buildTestInfo testableWithTarget:target] == nil) {
+    if ([xcodeSubjectInfo testableWithTarget:target] == nil) {
       *errorMessage = [NSString stringWithFormat:@"build-tests: '%@' is not a testing target in this scheme.", target];
       return NO;
     }
@@ -65,21 +63,21 @@
   return result;
 }
 
-- (BOOL)performActionWithOptions:(Options *)options buildTestInfo:(BuildTestInfo *)buildTestInfo
+- (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
-  [buildTestInfo collectInfoIfNeededWithOptions:options.implicitAction];
+//  [xcodeSubjectInfo collectInfoIfNeededWithOptions:options.implicitAction];
   
   NSMutableSet *targetsAdded = [NSMutableSet set];
   NSMutableArray *buildableList = [NSMutableArray array];
   
-  [buildTestInfo.buildablesForTest enumerateObjectsUsingBlock:^(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+  [xcodeSubjectInfo.buildablesForTest enumerateObjectsUsingBlock:^(NSDictionary *item, NSUInteger idx, BOOL *stop) {
     if (![targetsAdded containsObject:item[@"target"]]) {
       [targetsAdded addObject:@YES];
       [buildableList addObject:item];
     }
   }];
 
-  [buildTestInfo.testables enumerateObjectsUsingBlock:^(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+  [xcodeSubjectInfo.testables enumerateObjectsUsingBlock:^(NSDictionary *item, NSUInteger idx, BOOL *stop) {
     if (![targetsAdded containsObject:item[@"target"]]) {
       [targetsAdded addObject:@YES];
       [buildableList addObject:item];
@@ -93,7 +91,7 @@
   if (![ActionUtil buildTestables:buildableList
                           command:@"build"
                           options:options
-                    buildTestInfo:buildTestInfo]) {
+                    xcodeSubjectInfo:xcodeSubjectInfo]) {
     return NO;
   }
   

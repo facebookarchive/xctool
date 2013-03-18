@@ -195,14 +195,14 @@
 }
 
 - (BOOL)validateOptions:(NSString **)errorMessage
-          buildTestInfo:(BuildTestInfo *)buildTestInfo
+          xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
          implicitAction:(ImplicitAction *)implicitAction
 {
   // Override in subclass
   return YES;
 }
 
-- (BOOL)performActionWithOptions:(Options *)options buildTestInfo:(BuildTestInfo *)buildTestInfo
+- (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   return YES;
 }

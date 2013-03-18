@@ -1,7 +1,7 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 #import "Action.h"
-#import "BuildTestInfo.h"
+#import "xcodeSubjectInfo.h"
 #import "RunTestsAction.h"
 #import "ImplicitAction.h"
 #import "Fakes.h"

@@ -44,8 +44,9 @@
 		287A37E116C711E000319E81 /* SimulatorLauncher.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A37E016C711E000319E81 /* SimulatorLauncher.m */; };
 		287A37E216C711E000319E81 /* SimulatorLauncher.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A37E016C711E000319E81 /* SimulatorLauncher.m */; };
 		287A37E716C749D500319E81 /* LineReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A37DD16C711AE00319E81 /* LineReader.m */; };
-		28A33C9016CD858000C5EE2A /* BuildTestInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A33C8F16CD858000C5EE2A /* BuildTestInfo.m */; };
-		28A33C9116CD858000C5EE2A /* BuildTestInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A33C8F16CD858000C5EE2A /* BuildTestInfo.m */; };
+		287BF04D16F1A6EB00590E06 /* XcodeSubjectInfoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 287BF04C16F1A6EB00590E06 /* XcodeSubjectInfoTests.m */; };
+		287BF08416F1A97900590E06 /* XcodeSubjectInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 287BF08316F1A97900590E06 /* XcodeSubjectInfo.m */; };
+		287BF08516F1A97900590E06 /* XcodeSubjectInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 287BF08316F1A97900590E06 /* XcodeSubjectInfo.m */; };
 		28A33C9816CEC65500C5EE2A /* PJSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A33C9716CEC65500C5EE2A /* PJSONKit.m */; };
 		28A33C9916CEC65500C5EE2A /* PJSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A33C9716CEC65500C5EE2A /* PJSONKit.m */; };
 		28AC9E3016DB3478009E5B9A /* ImplicitActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28AC9E2F16DB3478009E5B9A /* ImplicitActionTests.m */; };
@@ -97,29 +98,29 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		28046D2A16D7603B000AA15C /* Action.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Action.h; sourceTree = "<group>"; };
-		28046D2B16D7603B000AA15C /* Action.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Action.m; sourceTree = "<group>"; };
+		28046D2A16D7603B000AA15C /* Action.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Action.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		28046D2B16D7603B000AA15C /* Action.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = Action.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		28046D2F16D76665000AA15C /* ActionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionTests.m; sourceTree = "<group>"; };
 		281B80C516CB98B60032430F /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGELOG.md; sourceTree = "<group>"; };
 		281B80C816CB98B60032430F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		281B80CD16CC304B0032430F /* Options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Options.h; sourceTree = "<group>"; };
 		281B80CE16CC304B0032430F /* Options.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Options.m; sourceTree = "<group>"; };
-		281B80D216CC3BC30032430F /* OptionsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OptionsTests.m; sourceTree = "<group>"; };
+		281B80D216CC3BC30032430F /* OptionsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = OptionsTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		2834799216E199A2003C3B77 /* BuildAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BuildAction.h; sourceTree = "<group>"; };
-		2834799316E199A2003C3B77 /* BuildAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuildAction.m; sourceTree = "<group>"; };
+		2834799316E199A2003C3B77 /* BuildAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BuildAction.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		2834799616E199D6003C3B77 /* ImplicitAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImplicitAction.h; sourceTree = "<group>"; };
 		2834799716E199D6003C3B77 /* ImplicitAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImplicitAction.m; sourceTree = "<group>"; };
 		2834799B16E1A09D003C3B77 /* CleanAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CleanAction.h; sourceTree = "<group>"; };
-		2834799C16E1A09D003C3B77 /* CleanAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CleanAction.m; sourceTree = "<group>"; };
+		2834799C16E1A09D003C3B77 /* CleanAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CleanAction.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		283479A416E1B242003C3B77 /* RunTestsActionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RunTestsActionTests.m; sourceTree = "<group>"; };
 		283479AB16E2A736003C3B77 /* BuildTestsAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BuildTestsAction.h; sourceTree = "<group>"; };
-		283479AC16E2A736003C3B77 /* BuildTestsAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuildTestsAction.m; sourceTree = "<group>"; };
-		283479AF16E2A898003C3B77 /* ActionUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActionUtil.h; sourceTree = "<group>"; };
-		283479B016E2A898003C3B77 /* ActionUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionUtil.m; sourceTree = "<group>"; };
+		283479AC16E2A736003C3B77 /* BuildTestsAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BuildTestsAction.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		283479AF16E2A898003C3B77 /* ActionUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ActionUtil.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		283479B016E2A898003C3B77 /* ActionUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ActionUtil.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		283479B316E2B39B003C3B77 /* RunTestsAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RunTestsAction.h; sourceTree = "<group>"; };
-		283479B416E2B39B003C3B77 /* RunTestsAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RunTestsAction.m; sourceTree = "<group>"; };
+		283479B416E2B39B003C3B77 /* RunTestsAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RunTestsAction.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		283479B716E3EBE5003C3B77 /* TestUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestUtil.h; sourceTree = "<group>"; };
-		283479B816E3EBE5003C3B77 /* TestUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestUtil.m; sourceTree = "<group>"; };
+		283479B816E3EBE5003C3B77 /* TestUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = TestUtil.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		283479BB16E3FC0E003C3B77 /* BuildTestsActionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuildTestsActionTests.m; sourceTree = "<group>"; };
 		283CCA4216C2EA3800F2E343 /* xcodetool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = xcodetool; sourceTree = BUILT_PRODUCTS_DIR; };
 		283CCA4516C2EA3800F2E343 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -136,15 +137,16 @@
 		283CCACC16C2EE9900F2E343 /* XcodeToolTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XcodeToolTests.m; sourceTree = "<group>"; };
 		283CCACE16C2EE9900F2E343 /* xcodetool-tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "xcodetool-tests-Prefix.pch"; sourceTree = "<group>"; };
 		283CCAD416C2F10A00F2E343 /* FBXcodeTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBXcodeTool.h; sourceTree = "<group>"; };
-		283CCAD516C2F10A00F2E343 /* FBXcodeTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBXcodeTool.m; sourceTree = "<group>"; };
+		283CCAD516C2F10A00F2E343 /* FBXcodeTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FBXcodeTool.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		283CCAD716C2F13A00F2E343 /* NSFileHandle+Print.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileHandle+Print.h"; sourceTree = "<group>"; };
 		283CCAD816C2F13A00F2E343 /* NSFileHandle+Print.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileHandle+Print.m"; sourceTree = "<group>"; };
 		287A37DC16C711AE00319E81 /* LineReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LineReader.h; sourceTree = "<group>"; };
 		287A37DD16C711AE00319E81 /* LineReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LineReader.m; sourceTree = "<group>"; };
 		287A37DF16C711E000319E81 /* SimulatorLauncher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimulatorLauncher.h; sourceTree = "<group>"; };
 		287A37E016C711E000319E81 /* SimulatorLauncher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimulatorLauncher.m; sourceTree = "<group>"; };
-		28A33C8E16CD858000C5EE2A /* BuildTestInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BuildTestInfo.h; sourceTree = "<group>"; };
-		28A33C8F16CD858000C5EE2A /* BuildTestInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuildTestInfo.m; sourceTree = "<group>"; };
+		287BF04C16F1A6EB00590E06 /* XcodeSubjectInfoTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodeSubjectInfoTests.m; sourceTree = "<group>"; };
+		287BF08216F1A97900590E06 /* XcodeSubjectInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XcodeSubjectInfo.h; sourceTree = "<group>"; };
+		287BF08316F1A97900590E06 /* XcodeSubjectInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodeSubjectInfo.m; sourceTree = "<group>"; };
 		28A33C9616CEC65500C5EE2A /* PJSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PJSONKit.h; sourceTree = "<group>"; };
 		28A33C9716CEC65500C5EE2A /* PJSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PJSONKit.m; sourceTree = "<group>"; };
 		28AC9E2F16DB3478009E5B9A /* ImplicitActionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImplicitActionTests.m; sourceTree = "<group>"; };
@@ -269,8 +271,6 @@
 				2834799516E199A9003C3B77 /* Actions */,
 				28E9B9D116C3275200A52E4D /* ApplicationTestRunner.h */,
 				28E9B9D216C3275200A52E4D /* ApplicationTestRunner.m */,
-				28A33C8E16CD858000C5EE2A /* BuildTestInfo.h */,
-				28A33C8F16CD858000C5EE2A /* BuildTestInfo.m */,
 				283CCAD416C2F10A00F2E343 /* FBXcodeTool.h */,
 				283CCAD516C2F10A00F2E343 /* FBXcodeTool.m */,
 				28E9B97D16C2F1C600A52E4D /* Functions.h */,
@@ -290,6 +290,8 @@
 				283CCA4A16C2EA3800F2E343 /* Supporting Files */,
 				28E9B9D516C3275200A52E4D /* TestRunner.h */,
 				28E9B9D616C3275200A52E4D /* TestRunner.m */,
+				287BF08216F1A97900590E06 /* XcodeSubjectInfo.h */,
+				287BF08316F1A97900590E06 /* XcodeSubjectInfo.m */,
 			);
 			path = xcodetool;
 			sourceTree = "<group>";
@@ -328,6 +330,7 @@
 				283CCAC616C2EE9900F2E343 /* Supporting Files */,
 				283479B716E3EBE5003C3B77 /* TestUtil.h */,
 				283479B816E3EBE5003C3B77 /* TestUtil.m */,
+				287BF04C16F1A6EB00590E06 /* XcodeSubjectInfoTests.m */,
 			);
 			path = "xcodetool-tests";
 			sourceTree = "<group>";
@@ -477,7 +480,6 @@
 				287A37DE16C711AF00319E81 /* LineReader.m in Sources */,
 				287A37E116C711E000319E81 /* SimulatorLauncher.m in Sources */,
 				281B80CF16CC304B0032430F /* Options.m in Sources */,
-				28A33C9016CD858000C5EE2A /* BuildTestInfo.m in Sources */,
 				28A33C9816CEC65500C5EE2A /* PJSONKit.m in Sources */,
 				28046D2C16D7603B000AA15C /* Action.m in Sources */,
 				2834799416E199A2003C3B77 /* BuildAction.m in Sources */,
@@ -486,6 +488,7 @@
 				283479AD16E2A736003C3B77 /* BuildTestsAction.m in Sources */,
 				283479B116E2A899003C3B77 /* ActionUtil.m in Sources */,
 				283479B516E2B39C003C3B77 /* RunTestsAction.m in Sources */,
+				287BF08416F1A97900590E06 /* XcodeSubjectInfo.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -511,7 +514,6 @@
 				287A37E216C711E000319E81 /* SimulatorLauncher.m in Sources */,
 				281B80D016CC304B0032430F /* Options.m in Sources */,
 				281B80D316CC3BC30032430F /* OptionsTests.m in Sources */,
-				28A33C9116CD858000C5EE2A /* BuildTestInfo.m in Sources */,
 				28A33C9916CEC65500C5EE2A /* PJSONKit.m in Sources */,
 				28046D2D16D7603B000AA15C /* Action.m in Sources */,
 				28046D3016D76665000AA15C /* ActionTests.m in Sources */,
@@ -524,6 +526,8 @@
 				283479BC16E3FC0F003C3B77 /* BuildTestsActionTests.m in Sources */,
 				28ADB43816E4107F006301ED /* CleanActionTests.m in Sources */,
 				28ADB43B16E410F9006301ED /* BuildActionTests.m in Sources */,
+				287BF04D16F1A6EB00590E06 /* XcodeSubjectInfoTests.m in Sources */,
+				287BF08516F1A97900590E06 /* XcodeSubjectInfo.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,6 +1,6 @@
 
 #import "RunTestsAction.h"
-#import "BuildTestInfo.h"
+#import "XcodeSubjectInfo.h"
 #import "Options.h"
 #import "ActionUtil.h"
 #import "ImplicitAction.h"
@@ -75,7 +75,7 @@
 }
 
 - (BOOL)validateOptions:(NSString **)errorMessage
-          buildTestInfo:(BuildTestInfo *)buildTestInfo
+          xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
          implicitAction:(ImplicitAction *)implicitAction
 {
   if (self.testSDK == nil) {
@@ -96,10 +96,8 @@
     return NO;
   }
   
-  [buildTestInfo collectInfoIfNeededWithOptions:implicitAction];
-  
   for (NSDictionary *only in [self onlyListAsTargetsAndSenTestList]) {
-    if ([buildTestInfo testableWithTarget:only[@"target"]] == nil) {
+    if ([xcodeSubjectInfo testableWithTarget:only[@"target"]] == nil) {
       *errorMessage = [NSString stringWithFormat:@"run-tests: '%@' is not a testing target in this scheme.", only[@"target"]];
       return NO;
     }
@@ -108,20 +106,18 @@
   return YES;
 }
 
-- (BOOL)performActionWithOptions:(Options *)options buildTestInfo:(BuildTestInfo *)buildTestInfo
+- (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
-  [buildTestInfo collectInfoIfNeededWithOptions:options.implicitAction];
-
   NSArray *testables = nil;
   
   if (self.onlyList.count == 0) {
     // Use whatever we found in the scheme.
-    testables = buildTestInfo.testables;
+    testables = xcodeSubjectInfo.testables;
   } else {
     // Munge the list of testables from the scheme to only include those given.
     NSMutableArray *newTestables = [NSMutableArray array];
     for (NSDictionary *only in [self onlyListAsTargetsAndSenTestList]) {
-      NSDictionary *matchingTestable = [buildTestInfo testableWithTarget:only[@"target"]];
+      NSDictionary *matchingTestable = [xcodeSubjectInfo testableWithTarget:only[@"target"]];
       if (matchingTestable) {
         NSMutableDictionary *newTestable = [NSMutableDictionary dictionaryWithDictionary:matchingTestable];
         newTestable[@"senTestInvertScope"] = @NO;
@@ -143,7 +139,7 @@
   if (![ActionUtil runTestables:testables
                         testSDK:self.testSDK
                         options:options
-                  buildTestInfo:buildTestInfo]) {
+                  xcodeSubjectInfo:xcodeSubjectInfo]) {
     return NO;
   }
   

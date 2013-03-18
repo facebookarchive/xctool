@@ -8,7 +8,7 @@
 #import "TextReporter.h"
 #import "Options.h"
 #import "PJSONKit.h"
-#import "BuildTestInfo.h"
+#import "XcodeSubjectInfo.h"
 #import "Action.h"
 #import "ImplicitAction.h"
 
@@ -63,7 +63,7 @@
 - (void)run
 {
   Options *options = [[[Options alloc] init] autorelease];
-  BuildTestInfo *buildTestInfo = [[[BuildTestInfo alloc] init] autorelease];
+  XcodeSubjectInfo *xcodeSubjectInfo = [[[XcodeSubjectInfo alloc] init] autorelease];
   
   NSString *errorMessage = nil;
   
@@ -108,7 +108,7 @@
     return;
   }
   
-  if (![options validateOptions:&errorMessage buildTestInfo:buildTestInfo]) {
+  if (![options validateOptions:&errorMessage xcodeSubjectInfo:xcodeSubjectInfo]) {
     [_standardError printString:@"ERROR: %@\n\n", errorMessage];
     [self printUsage];
     _exitStatus = 1;
@@ -120,7 +120,7 @@
   }
   
   for (Action *action in options.actions) {
-    if (![action performActionWithOptions:options buildTestInfo:buildTestInfo]) {
+    if (![action performActionWithOptions:options xcodeSubjectInfo:xcodeSubjectInfo]) {
       _exitStatus = 1;
       break;
     }

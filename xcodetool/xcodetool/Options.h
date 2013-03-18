@@ -9,7 +9,7 @@
 #define kActionRunTest @"run-test"
 #define kActionBuildAndRunTest @"build-and-run-test"
 
-@class BuildTestInfo;
+@class XcodeSubjectInfo;
 @class ImplicitAction;
 
 @interface Options : NSObject
@@ -22,6 +22,6 @@
 + (NSArray *)actionClasses;
 
 - (BOOL)parseOptionsFromArgumentList:(NSArray *)arguments errorMessage:(NSString **)errorMessage;
-- (BOOL)validateOptions:(NSString **)errorMessage buildTestInfo:(BuildTestInfo *)buildTestInfo;
+- (BOOL)validateOptions:(NSString **)errorMessage xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo;
 
 @end

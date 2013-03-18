@@ -3,7 +3,7 @@
 #import "Action.h"
 #import "ImplicitAction.h"
 #import "TextReporter.h"
-#import "BuildTestInfo.h"
+#import "XcodeSubjectInfo.h"
 #import "Functions.h"
 #import "Fakes.h"
 
@@ -26,7 +26,7 @@
 {
   ImplicitAction *action = [self actionWithArguments:arguments];
   NSString *errorMessage = nil;
-  BOOL valid = [action validateOptions:&errorMessage buildTestInfo:[[[BuildTestInfo alloc] init] autorelease] implicitAction:nil];
+  BOOL valid = [action validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] implicitAction:nil];
   assertThatBool(valid, equalToBool(YES));
   return action;
 }
@@ -36,7 +36,7 @@
 {
   Action *action = [self actionWithArguments:argumentList];
   NSString *errorMessage = nil;
-  BOOL valid = [action validateOptions:&errorMessage buildTestInfo:[[[BuildTestInfo alloc] init] autorelease] implicitAction:nil];
+  BOOL valid = [action validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] implicitAction:nil];
   assertThatBool(valid, equalToBool(NO));
   assertThat(errorMessage, equalTo(message));
 }
@@ -45,7 +45,7 @@
 {
   Action *action = [self actionWithArguments:argumentList];
   NSString *errorMessage = nil;
-  BOOL valid = [action validateOptions:&errorMessage buildTestInfo:[[[BuildTestInfo alloc] init] autorelease] implicitAction:nil];
+  BOOL valid = [action validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] implicitAction:nil];
   assertThatBool(valid, equalToBool(YES));
 }
 
@@ -235,7 +235,7 @@
                       ]];
   
   NSString *errorMessage = nil;
-  BOOL valid = [action validateOptions:&errorMessage buildTestInfo:[[[BuildTestInfo alloc] init] autorelease] implicitAction:nil];
+  BOOL valid = [action validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] implicitAction:nil];
   assertThatBool(valid, equalToBool(YES));
   assertThatBool(([action.reporters[0] isKindOfClass:[TextReporter class]]), equalToBool(YES));
 }

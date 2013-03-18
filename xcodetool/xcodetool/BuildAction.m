@@ -6,7 +6,7 @@
 
 @implementation BuildAction
 
-- (BOOL)performActionWithOptions:(Options *)options buildTestInfo:(BuildTestInfo *)buildTestInfo
+- (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   return [ActionUtil runXcodeBuildCommand:@"build" withOptions:options];
 }

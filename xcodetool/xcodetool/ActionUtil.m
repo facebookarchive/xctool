@@ -5,7 +5,7 @@
 #import "ImplicitAction.h"
 #import "ApplicationTestRunner.h"
 #import "LogicTestRunner.h"
-#import "BuildTestInfo.h"
+#import "XcodeSubjectInfo.h"
 
 @implementation ActionUtil
 
@@ -91,13 +91,13 @@
 + (BOOL)buildTestables:(NSArray *)testables
                command:(NSString *)command
                options:(Options *)options
-         buildTestInfo:(BuildTestInfo *)buildTestInfo
+         xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   for (NSDictionary *testable in testables) {
     BOOL succeeded = [self buildTestable:testable
                                reporters:options.implicitAction.reporters
-                                 objRoot:buildTestInfo.objRoot
-                                 symRoot:buildTestInfo.symRoot
+                                 objRoot:xcodeSubjectInfo.objRoot
+                                 symRoot:xcodeSubjectInfo.symRoot
                           xcodeArguments:[options.implicitAction commonXcodeBuildArguments]
                             xcodeCommand:command];
     if (!succeeded) {
@@ -164,7 +164,7 @@
 + (BOOL)runTestables:(NSArray *)testables
              testSDK:(NSString *)testSDK
              options:(Options *)options
-       buildTestInfo:(BuildTestInfo *)buildTestInfo
+       xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   for (NSDictionary *testable in testables) {
     BOOL senTestInvertScope = [testable[@"senTestInvertScope"] boolValue];
@@ -172,8 +172,8 @@
 
     BOOL succeeded = [self runTestable:testable
                              reproters:options.implicitAction.reporters
-                               objRoot:buildTestInfo.objRoot
-                               symRoot:buildTestInfo.symRoot
+                               objRoot:xcodeSubjectInfo.objRoot
+                               symRoot:xcodeSubjectInfo.symRoot
                         xcodeArguments:[options.implicitAction commonXcodeBuildArgumentsIncludingSDK:NO]
                                testSDK:testSDK
                            senTestList:senTestList

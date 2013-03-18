@@ -9,7 +9,7 @@
 #define kActionOptionMapToSelector @"kActionOptionMapToSelector"
 #define kActionOptionSetFlagSelector @"kActionOptionSetFlagSelector"
 
-@class BuildTestInfo;
+@class XcodeSubjectInfo;
 @class ImplicitAction;
 @class Options;
 
@@ -38,9 +38,9 @@
 - (NSUInteger)consumeArguments:(NSMutableArray *)arguments errorMessage:(NSString **)errorMessage;
 
 - (BOOL)validateOptions:(NSString **)errorMessage
-          buildTestInfo:(BuildTestInfo *)buildTestInfo
+          xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
          implicitAction:(ImplicitAction *)implicitAction;
 
-- (BOOL)performActionWithOptions:(Options *)options buildTestInfo:(BuildTestInfo *)buildTestInfo;
+- (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo;
 
 @end

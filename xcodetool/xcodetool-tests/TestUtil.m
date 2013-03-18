@@ -1,6 +1,6 @@
 
 #import "TestUtil.h"
-#import "BuildTestInfo.h"
+#import "XcodeSubjectInfo.h"
 #import "Fakes.h"
 
 @implementation TestUtil
@@ -19,7 +19,7 @@
 //{
 //  Action *action = [self actionWithArguments:arguments];
 //  NSString *errorMessage = nil;
-//  BOOL valid = [action validateOptions:&errorMessage buildTestInfo:[[[BuildTestInfo alloc] init] autorelease] implicitAction:nil];
+//  BOOL valid = [action validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] implicitAction:nil];
 //  assertThatBool(valid, equalToBool(YES));
 //  return action;
 //}
@@ -29,7 +29,7 @@
 //{
 //  Action *action = [self actionWithArguments:argumentList];
 //  NSString *errorMessage = nil;
-//  BOOL valid = [action validateOptions:&errorMessage buildTestInfo:[[[BuildTestInfo alloc] init] autorelease] implicitAction:nil];
+//  BOOL valid = [action validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] implicitAction:nil];
 //  assertThatBool(valid, equalToBool(NO));
 //  assertThat(errorMessage, equalTo(message));
 //}
@@ -38,7 +38,7 @@
 //{
 //  Action *action = [self actionWithArguments:argumentList];
 //  NSString *errorMessage = nil;
-//  BOOL valid = [action validateOptions:&errorMessage buildTestInfo:[[[BuildTestInfo alloc] init] autorelease] implicitAction:nil];
+//  BOOL valid = [action validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] implicitAction:nil];
 //  assertThatBool(valid, equalToBool(YES));
 //}
 
@@ -59,7 +59,7 @@
 {
   Options *options = [self optionsFromArgumentList:argumentList];
   NSString *errorMessage = nil;
-  BOOL valid = [options validateOptions:&errorMessage buildTestInfo:[[[BuildTestInfo alloc] init] autorelease]];
+  BOOL valid = [options validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease]];
   
   if (!valid) {
     [NSException raise:NSGenericException format:@"Options are invalid: %@", errorMessage];
@@ -81,7 +81,7 @@
 {
   Options *options = [self optionsFromArgumentList:argumentList];
   NSString *errorMessage = nil;
-  BOOL valid = [options validateOptions:&errorMessage buildTestInfo:[[[BuildTestInfo alloc] init] autorelease]];
+  BOOL valid = [options validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease]];
   
   if (valid) {
     [NSException raise:NSGenericException format:@"Expected validation to failed, but passed."];
@@ -94,7 +94,7 @@
 //{
 //  Options *options = [self optionsFromArgumentList:argumentList];
 //  NSString *errorMessage = nil;
-//  BOOL valid = [options validateOptions:&errorMessage buildTestInfo:[[[BuildTestInfo alloc] init] autorelease]];
+//  BOOL valid = [options validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease]];
 //  assertThatBool(valid, equalToBool(YES));
 //}
 

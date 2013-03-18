@@ -2,7 +2,8 @@
 #import "ImplicitAction.h"
 #import "Reporter.h"
 #import "Functions.h"
-#import "BuildTestInfo.h"
+#import "XcodeSubjectInfo.h"
+#import "XcodeSubjectInfo.h"
 
 @implementation ImplicitAction
 
@@ -98,7 +99,7 @@
 }
 
 - (BOOL)validateOptions:(NSString **)errorMessage
-          buildTestInfo:(BuildTestInfo *)buildTestInfo
+          xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
          implicitAction:(ImplicitAction *)implicitAction
 {
   BOOL (^isDirectory)(NSString *) = ^(NSString *path){
@@ -130,23 +131,22 @@
     return NO;
   }
   
-  NSMutableArray *schemes = [NSMutableArray array];
+  NSArray *schemePaths = nil;
   if (self.workspace != nil) {
-    for (NSString *projectPath in ProjectsInWorkspace(self.workspace)) {
-      for (NSString *schemePath in SchemesInProject(projectPath)) {
-        [schemes addObject:[[schemePath lastPathComponent] stringByDeletingPathExtension]];
-      }
-    }
+    schemePaths = [XcodeSubjectInfo schemePathsInWorkspace:self.workspace];
   } else {
-    for (NSString *schemePath in SchemesInProject(self.project)) {
-      [schemes addObject:[[schemePath lastPathComponent] stringByDeletingPathExtension]];
-    }
+    schemePaths = [XcodeSubjectInfo schemePathsInContainer:self.project];
   }
-  if (![schemes containsObject:self.scheme]) {
+  NSMutableArray *schemeNames = [NSMutableArray array];
+  for (NSString *schemePath in schemePaths) {
+    [schemeNames addObject:[[schemePath lastPathComponent] stringByDeletingPathExtension]];
+  }
+  
+  if (![schemeNames containsObject:self.scheme]) {
     *errorMessage = [NSString stringWithFormat:
                      @"Can't find scheme '%@'. Possible schemes include: %@",
                      self.scheme,
-                     [schemes componentsJoinedByString:@", "]];
+                     [schemeNames componentsJoinedByString:@", "]];
     return NO;
   }
   
@@ -161,14 +161,17 @@
     }
   }
   
-  [buildTestInfo collectInfoIfNeededWithOptions:self];
+  xcodeSubjectInfo.subjectWorkspace = self.workspace;
+  xcodeSubjectInfo.subjectProject = self.project;
+  xcodeSubjectInfo.subjectScheme = self.scheme;
+  xcodeSubjectInfo.subjectXcodeBuildArguments = [self xcodeBuildArgumentsForSubject];
   
   if (self.sdk == nil) {
-    self.sdk = buildTestInfo.sdkName;
+    self.sdk = xcodeSubjectInfo.sdkName;
   }
   
   if (self.configuration == nil) {
-    self.configuration = buildTestInfo.configuration;
+    self.configuration = xcodeSubjectInfo.configuration;
   }
   
   if (self.reporters.count == 0) {

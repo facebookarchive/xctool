@@ -26,11 +26,11 @@
 + (BOOL)buildTestables:(NSArray *)testables
                command:(NSString *)command
                options:(Options *)options
-         buildTestInfo:(BuildTestInfo *)buildTestInfo;
+         xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo;
 
 + (BOOL)runTestables:(NSArray *)testables
              testSDK:(NSString *)testSDK
              options:(Options *)options
-       buildTestInfo:(BuildTestInfo *)buildTestInfo;
+       xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo;
 
 @end

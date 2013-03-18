@@ -3,19 +3,17 @@
 #import "Functions.h"
 #import "Options.h"
 #import "ActionUtil.h"
-#import "BuildTestInfo.h"
+#import "XcodeSubjectInfo.h"
 
 @implementation CleanAction
 
-- (BOOL)performActionWithOptions:(Options *)options buildTestInfo:(BuildTestInfo *)buildTestInfo
+- (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   if (![ActionUtil runXcodeBuildCommand:@"clean" withOptions:options]) {
     return NO;
   }
   
-  [buildTestInfo collectInfoIfNeededWithOptions:options.implicitAction];
-  
-  if (![ActionUtil buildTestables:buildTestInfo.testables command:@"clean" options:options buildTestInfo:buildTestInfo]) {
+  if (![ActionUtil buildTestables:xcodeSubjectInfo.testables command:@"clean" options:options xcodeSubjectInfo:xcodeSubjectInfo]) {
     return NO;
   }
   
