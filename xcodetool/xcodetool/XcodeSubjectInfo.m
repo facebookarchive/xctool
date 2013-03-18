@@ -245,10 +245,27 @@
       }
     }
     
-    self.testables = [self testablesInSchemePath:matchingSchemePath
+    NSSet *projectPathsInWorkspace = [NSSet setWithArray:[XcodeSubjectInfo projectPathsInWorkspace:self.subjectWorkspace]];
+    
+    NSArray *(^itemsMatchingProjectPath)(NSArray *) = ^(NSArray *items) {
+      NSMutableArray *newItems = [NSMutableArray array];
+      for (NSDictionary *item in items) {
+        if ([projectPathsInWorkspace containsObject:item[@"projectPath"]]) {
+          [newItems addObject:item];
+        }
+      }
+      return newItems;
+    };
+    
+    NSArray *testables = [self testablesInSchemePath:matchingSchemePath
                                         basePath:basePathFromSchemePath(matchingSchemePath)];
-    self.buildablesForTest = [self buildablesForTestInSchemePath:matchingSchemePath
+    NSArray *buildablesForTest = [self buildablesForTestInSchemePath:matchingSchemePath
                                                         basePath:basePathFromSchemePath(matchingSchemePath)];
+    
+    // It's possible that the scheme references projects that aren't part of the workspace.  When
+    // Xcode encounters these, it just skips them so we'll do the same.
+    self.testables = itemsMatchingProjectPath(testables);
+    self.buildablesForTest = itemsMatchingProjectPath(buildablesForTest);
   } else {
     NSString *matchingSchemePath = nil;
     NSArray *schemePaths = [XcodeSubjectInfo schemePathsInContainer:self.subjectProject];

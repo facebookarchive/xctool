@@ -65,8 +65,6 @@
 
 - (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
-//  [xcodeSubjectInfo collectInfoIfNeededWithOptions:options.implicitAction];
-  
   NSMutableSet *targetsAdded = [NSMutableSet set];
   NSMutableArray *buildableList = [NSMutableArray array];
   

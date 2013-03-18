@@ -101,10 +101,10 @@ void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, void (^block)(NSString *))
   reader.didReadLineBlock = block;
   
   [task setStandardOutput:stdoutWriteHandle];
-  [task launch];
   
   [reader startReading];
-
+  
+  [task launch];
   [task waitUntilExit];
   
   [stdoutWriteHandle closeFile];
