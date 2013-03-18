@@ -8,7 +8,7 @@ NSDictionary *LaunchTaskAndCaptureOutput(NSTask *task);
 void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, void (^block)(NSString *));
 NSDictionary *BuildSettingsFromOutput(NSString *output);
 NSString *AbsoluteExecutablePath(void);
-NSString *PathToFBXcodeTestBinaries(void);
+NSString *PathToFBXcodetoolBinaries(void);
 NSString *XcodeDeveloperDirPath(void);
 NSString *StringForJSON(id object);
 NSString *MakeTempFileWithPrefix(NSString *prefix);

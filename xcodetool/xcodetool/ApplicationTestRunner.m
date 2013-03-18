@@ -17,7 +17,7 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
   assert(bundleID != nil);
   DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot defaultRoot];
   DTiPhoneSimulatorApplicationSpecifier *appSpec = [DTiPhoneSimulatorApplicationSpecifier specifierWithApplicationPath:
-                                                    [PathToFBXcodeTestBinaries() stringByAppendingPathComponent:@"app-uninstaller.app"]];
+                                                    [PathToFBXcodetoolBinaries() stringByAppendingPathComponent:@"app-uninstaller.app"]];
   DTiPhoneSimulatorSessionConfig *sessionConfig = [[[DTiPhoneSimulatorSessionConfig alloc] init] autorelease];
   [sessionConfig setApplicationToSimulateOnStart:appSpec];
   [sessionConfig setSimulatedSystemRoot:systemRoot];

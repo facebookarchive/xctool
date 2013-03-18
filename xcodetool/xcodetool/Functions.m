@@ -179,7 +179,7 @@ NSString *AbsoluteExecutablePath(void)
   return [NSString stringWithUTF8String:execAbsolutePath];
 }
 
-NSString *PathToFBXcodeTestBinaries(void)
+NSString *PathToFBXcodetoolBinaries(void)
 {
   if ([[NSString stringWithUTF8String:getprogname()] isEqualToString:@"otest"]) {
     // We're running in the test harness.  Turns out DYLD_LIBRARY_PATH contains the path our

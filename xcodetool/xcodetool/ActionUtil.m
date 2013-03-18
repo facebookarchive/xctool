@@ -15,7 +15,7 @@
   [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
   [task setArguments:[[options.implicitAction xcodeBuildArgumentsForSubject] arrayByAddingObject:command]];
   [task setEnvironment:@{
-   @"DYLD_INSERT_LIBRARIES" : [PathToFBXcodeTestBinaries() stringByAppendingPathComponent:@"xcodebuild-lib.dylib"],
+   @"DYLD_INSERT_LIBRARIES" : [PathToFBXcodetoolBinaries() stringByAppendingPathComponent:@"xcodebuild-lib.dylib"],
    @"PATH": @"/usr/bin:/bin:/usr/sbin:/sbin",
    }];
   
@@ -63,7 +63,7 @@
   [buildTask setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
   [buildTask setArguments:taskArguments];
   [buildTask setEnvironment:@{
-   @"DYLD_INSERT_LIBRARIES" : [PathToFBXcodeTestBinaries() stringByAppendingPathComponent:@"xcodebuild-lib.dylib"],
+   @"DYLD_INSERT_LIBRARIES" : [PathToFBXcodetoolBinaries() stringByAppendingPathComponent:@"xcodebuild-lib.dylib"],
    @"PATH": @"/usr/bin:/bin:/usr/sbin:/sbin",
    }];
   
@@ -131,7 +131,7 @@
                               @"-showBuildSettings",
                               ]]];
   [settingsTask setEnvironment:@{
-   @"DYLD_INSERT_LIBRARIES" : [PathToFBXcodeTestBinaries() stringByAppendingPathComponent:@"xcodebuild-fastsettings-lib.dylib"],
+   @"DYLD_INSERT_LIBRARIES" : [PathToFBXcodetoolBinaries() stringByAppendingPathComponent:@"xcodebuild-fastsettings-lib.dylib"],
    @"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET" : testableTarget,
    }];
   

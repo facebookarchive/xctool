@@ -206,7 +206,7 @@
   [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
   [task setArguments:[self.subjectXcodeBuildArguments arrayByAddingObject:@"-showBuildSettings"]];
   [task setEnvironment:@{
-   @"DYLD_INSERT_LIBRARIES" : [PathToFBXcodeTestBinaries() stringByAppendingPathComponent:@"xcodebuild-fastsettings-lib.dylib"],
+   @"DYLD_INSERT_LIBRARIES" : [PathToFBXcodetoolBinaries() stringByAppendingPathComponent:@"xcodebuild-fastsettings-lib.dylib"],
    @"SHOW_ONLY_BUILD_SETTINGS_FOR_FIRST_BUILDABLE" : @"YES"
    }];
   
