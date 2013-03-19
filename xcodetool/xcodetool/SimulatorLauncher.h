@@ -14,7 +14,6 @@
 @property (nonatomic, retain) NSError *launchError;
 
 - (id)initWithSessionConfig:(DTiPhoneSimulatorSessionConfig *)sessionConfig;
-- (BOOL)launch;
-- (void)waitUntilAppExits;
+- (BOOL)launchAndWaitForExit;
 
 @end

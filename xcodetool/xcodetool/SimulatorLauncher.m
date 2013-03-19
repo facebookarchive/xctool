@@ -21,7 +21,7 @@
   [super dealloc];
 }
 
-- (BOOL)launch
+- (BOOL)launchAndWaitForExit
 {
   NSError *error = nil;
   if (![_session requestStartWithConfig:[_session sessionConfig] timeout:30 error:&error]) {
@@ -29,18 +29,11 @@
     return NO;
   }
   
-  while (!_didStart && !_didFailToStart) {
+  while (!_didQuit && !_didFailToStart) {
     CFRunLoopRun();
   }
-  
-  return _didStart;
-}
 
-- (void)waitUntilAppExits
-{
-  while (_didStart && !_didQuit) {
-    CFRunLoopRun();
-  }
+  return _didStart;
 }
 
 - (void)session:(DTiPhoneSimulatorSession *)session didEndWithError:(NSError *)error

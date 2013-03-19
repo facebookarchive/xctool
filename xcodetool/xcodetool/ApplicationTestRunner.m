@@ -89,14 +89,8 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
   assert(bundleID != nil);
   DTiPhoneSimulatorSessionConfig *config = [self sessionForAppUninstaller:bundleID];
   SimulatorLauncher *launcher = [[[SimulatorLauncher alloc] initWithSessionConfig:config] autorelease];
-  
-  if (![launcher launch]) {
-    return NO;
-  }
 
-  [launcher waitUntilAppExits];
-
-  return YES;
+  return [launcher launchAndWaitForExit];
 }
 
 - (BOOL)runTestsInSimulator:(NSString *)testHostAppPath
@@ -121,12 +115,10 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
   
   SimulatorLauncher *launcher = [[[SimulatorLauncher alloc] initWithSessionConfig:sessionConfig] autorelease];
   
-  if (![launcher launch]) {
-    return NO;
-  }
-  
   [reader startReading];
-  [launcher waitUntilAppExits];
+  
+  [launcher launchAndWaitForExit];
+  
   [reader stopReading];
   [reader finishReadingToEndOfFile];
   

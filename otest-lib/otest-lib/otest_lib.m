@@ -233,6 +233,11 @@ __attribute__((constructor)) static void EntryPoint()
     // started by adding an operation to the run loop.  So, before that happens, let's add our own
     // operation to do the swizzling as soon as the run loop is going.
     [doSwizzleBlock performSelector:@selector(invoke) withObject:nil afterDelay:0.0];
+
+    // HACK! DTiPhoneSimulatorSessionDelegate's session:didStart:withError: will fail to be called
+    // if the process exits immediately upon startup.  A short pause here is enough to make the
+    // right things happen.
+    [NSThread sleepForTimeInterval:0.1];
   }  
   
   // Unset so we don't cascade into other process that get spawned from xcodebuild.
