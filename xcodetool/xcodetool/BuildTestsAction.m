@@ -69,19 +69,21 @@
   NSMutableArray *buildableList = [NSMutableArray array];
   
   [xcodeSubjectInfo.buildablesForTest enumerateObjectsUsingBlock:^(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-    if (![targetsAdded containsObject:item[@"target"]]) {
-      [targetsAdded addObject:@YES];
+    NSString *target = item[@"target"];
+    if (![targetsAdded containsObject:target]) {
+      [targetsAdded addObject:target];
       [buildableList addObject:item];
     }
   }];
 
   [xcodeSubjectInfo.testables enumerateObjectsUsingBlock:^(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-    if (![targetsAdded containsObject:item[@"target"]]) {
-      [targetsAdded addObject:@YES];
+    NSString *target = item[@"target"];
+    if (![targetsAdded containsObject:target]) {
+      [targetsAdded addObject:target];
       [buildableList addObject:item];
     }
   }];
-  
+
   if (self.onlyList.count > 0) {
     buildableList = [self buildableList:buildableList matchingTargets:self.onlyList];
   }
