@@ -62,7 +62,7 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
                                             @"DYLD_FRAMEWORK_PATH" : _buildSettings[@"TARGET_BUILD_DIR"],
                                             @"DYLD_LIBRARY_PATH" : _buildSettings[@"TARGET_BUILD_DIR"],
                                             @"DYLD_INSERT_LIBRARIES" : [@[
-                                                                        [PathToFBXcodeTestBinaries() stringByAppendingPathComponent:@"otest-lib-ios.dylib"],
+                                                                        [PathToFBXcodetoolBinaries() stringByAppendingPathComponent:@"otest-lib-ios.dylib"],
                                                                         ideBundleInjectionLibPath,
                                                                         ] componentsJoinedByString:@":"],
                                             @"DYLD_ROOT_PATH" : _buildSettings[@"SDKROOT"],
