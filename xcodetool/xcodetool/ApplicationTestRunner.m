@@ -15,7 +15,9 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
 - (DTiPhoneSimulatorSessionConfig *)sessionForAppUninstaller:(NSString *)bundleID
 {
   assert(bundleID != nil);
-  DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot defaultRoot];
+  
+  NSString *sdkVersion = [_buildSettings[@"SDK_NAME"] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
+  DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKVersion:sdkVersion];
   DTiPhoneSimulatorApplicationSpecifier *appSpec = [DTiPhoneSimulatorApplicationSpecifier specifierWithApplicationPath:
                                                     [PathToFBXcodetoolBinaries() stringByAppendingPathComponent:@"app-uninstaller.app"]];
   DTiPhoneSimulatorSessionConfig *sessionConfig = [[[DTiPhoneSimulatorSessionConfig alloc] init] autorelease];
@@ -24,7 +26,7 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
   // Always run as iPhone (family = 1)
   [sessionConfig setSimulatedDeviceFamily:@1];
   [sessionConfig setSimulatedApplicationShouldWaitForDebugger:NO];
-  [sessionConfig setLocalizedClientName:[NSString stringWithFormat:@"1234"]];
+  [sessionConfig setLocalizedClientName:@"xcodetool"];
   [sessionConfig setSimulatedApplicationLaunchArgs:@[bundleID]];
   return sessionConfig;
 }
@@ -41,7 +43,7 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
   NSString *ideBundleInjectionLibPath = @"/../../Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection";
   NSString *testBundlePath = [NSString stringWithFormat:@"%@/%@", _buildSettings[@"BUILT_PRODUCTS_DIR"], _buildSettings[@"FULL_PRODUCT_NAME"]];
   
-  DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot defaultRoot];
+  DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKVersion:sdkVersion];
   DTiPhoneSimulatorApplicationSpecifier *appSpec =
   [DTiPhoneSimulatorApplicationSpecifier specifierWithApplicationPath:testHostAppPath];
   
