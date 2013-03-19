@@ -122,7 +122,6 @@
   for (Action *action in options.actions) {
     if (![action performActionWithOptions:options xcodeSubjectInfo:xcodeSubjectInfo]) {
       _exitStatus = 1;
-      break;
     }
   }
   
