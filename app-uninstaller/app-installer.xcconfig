@@ -7,3 +7,5 @@ EFFECTIVE_PLATFORM_NAME =
 
 // Force a simulator build.
 SDKROOT = iphonesimulator
+IPHONEOS_DEPLOYMENT_TARGET = 5.0
+
