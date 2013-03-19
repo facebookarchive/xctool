@@ -30,7 +30,7 @@
                          [[[FakeTask alloc] init] autorelease],
                          ];
   
-  FBXcodeTool *tool = [[[FBXcodeTool alloc] init] autorelease];
+  XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
   ReturnFakeTasks(fakeTasks);
   
   tool.arguments = @[

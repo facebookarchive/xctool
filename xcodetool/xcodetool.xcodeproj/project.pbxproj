@@ -36,10 +36,10 @@
 		283CCAC416C2EE9900F2E343 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283CCA5B16C2EA8B00F2E343 /* Cocoa.framework */; };
 		283CCACA16C2EE9900F2E343 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 283CCAC816C2EE9900F2E343 /* InfoPlist.strings */; };
 		283CCACD16C2EE9900F2E343 /* XcodeToolTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCACC16C2EE9900F2E343 /* XcodeToolTests.m */; };
-		283CCAD616C2F10A00F2E343 /* FBXcodeTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCAD516C2F10A00F2E343 /* FBXcodeTool.m */; };
+		283CCAD616C2F10A00F2E343 /* XcodeTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCAD516C2F10A00F2E343 /* XcodeTool.m */; };
 		283CCAD916C2F13A00F2E343 /* NSFileHandle+Print.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCAD816C2F13A00F2E343 /* NSFileHandle+Print.m */; };
 		283CCADA16C2F13A00F2E343 /* NSFileHandle+Print.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCAD816C2F13A00F2E343 /* NSFileHandle+Print.m */; };
-		283CCADB16C2F14C00F2E343 /* FBXcodeTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCAD516C2F10A00F2E343 /* FBXcodeTool.m */; };
+		283CCADB16C2F14C00F2E343 /* XcodeTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCAD516C2F10A00F2E343 /* XcodeTool.m */; };
 		287A37DE16C711AF00319E81 /* LineReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A37DD16C711AE00319E81 /* LineReader.m */; };
 		287A37E116C711E000319E81 /* SimulatorLauncher.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A37E016C711E000319E81 /* SimulatorLauncher.m */; };
 		287A37E216C711E000319E81 /* SimulatorLauncher.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A37E016C711E000319E81 /* SimulatorLauncher.m */; };
@@ -136,8 +136,8 @@
 		283CCAC916C2EE9900F2E343 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		283CCACC16C2EE9900F2E343 /* XcodeToolTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XcodeToolTests.m; sourceTree = "<group>"; };
 		283CCACE16C2EE9900F2E343 /* xcodetool-tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "xcodetool-tests-Prefix.pch"; sourceTree = "<group>"; };
-		283CCAD416C2F10A00F2E343 /* FBXcodeTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBXcodeTool.h; sourceTree = "<group>"; };
-		283CCAD516C2F10A00F2E343 /* FBXcodeTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FBXcodeTool.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		283CCAD416C2F10A00F2E343 /* XcodeTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XcodeTool.h; sourceTree = "<group>"; };
+		283CCAD516C2F10A00F2E343 /* XcodeTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = XcodeTool.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		283CCAD716C2F13A00F2E343 /* NSFileHandle+Print.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileHandle+Print.h"; sourceTree = "<group>"; };
 		283CCAD816C2F13A00F2E343 /* NSFileHandle+Print.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileHandle+Print.m"; sourceTree = "<group>"; };
 		287A37DC16C711AE00319E81 /* LineReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LineReader.h; sourceTree = "<group>"; };
@@ -271,8 +271,8 @@
 				2834799516E199A9003C3B77 /* Actions */,
 				28E9B9D116C3275200A52E4D /* ApplicationTestRunner.h */,
 				28E9B9D216C3275200A52E4D /* ApplicationTestRunner.m */,
-				283CCAD416C2F10A00F2E343 /* FBXcodeTool.h */,
-				283CCAD516C2F10A00F2E343 /* FBXcodeTool.m */,
+				283CCAD416C2F10A00F2E343 /* XcodeTool.h */,
+				283CCAD516C2F10A00F2E343 /* XcodeTool.m */,
 				28E9B97D16C2F1C600A52E4D /* Functions.h */,
 				28E9B97E16C2F1C600A52E4D /* Functions.m */,
 				287A37DC16C711AE00319E81 /* LineReader.h */,
@@ -468,7 +468,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				283CCA4916C2EA3800F2E343 /* main.m in Sources */,
-				283CCAD616C2F10A00F2E343 /* FBXcodeTool.m in Sources */,
+				283CCAD616C2F10A00F2E343 /* XcodeTool.m in Sources */,
 				283CCAD916C2F13A00F2E343 /* NSFileHandle+Print.m in Sources */,
 				28E9B97F16C2F1C600A52E4D /* Functions.m in Sources */,
 				28E9B9D716C3275200A52E4D /* ApplicationTestRunner.m in Sources */,
@@ -500,7 +500,7 @@
 				2834799916E199E5003C3B77 /* BuildAction.m in Sources */,
 				2834799A16E199E5003C3B77 /* ImplicitAction.m in Sources */,
 				287A37E716C749D500319E81 /* LineReader.m in Sources */,
-				283CCADB16C2F14C00F2E343 /* FBXcodeTool.m in Sources */,
+				283CCADB16C2F14C00F2E343 /* XcodeTool.m in Sources */,
 				283CCACD16C2EE9900F2E343 /* XcodeToolTests.m in Sources */,
 				283CCADA16C2F13A00F2E343 /* NSFileHandle+Print.m in Sources */,
 				28E9B98016C2F1C600A52E4D /* Functions.m in Sources */,

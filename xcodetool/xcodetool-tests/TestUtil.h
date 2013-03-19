@@ -2,7 +2,7 @@
 #import <Foundation/Foundation.h>
 #import "Action.h"
 #import "Options.h"
-#import "FBXcodeTool.h"
+#import "XcodeTool.h"
 
 @interface TestUtil : NSObject
 
@@ -25,7 +25,7 @@
 //
 //+ (void)assertThatOptionsValidationPassesWithArgumentList:(NSArray *)argumentList;
 
-+ (NSDictionary *)runWithFakeStreams:(FBXcodeTool *)tool;
++ (NSDictionary *)runWithFakeStreams:(XcodeTool *)tool;
 
 + (NSTask *)fakeTaskWithExitStatus:(int)exitStatus
                     standardOutput:(NSString *)standardOutput

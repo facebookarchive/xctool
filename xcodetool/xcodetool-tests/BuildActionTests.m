@@ -28,7 +28,7 @@
                          [[[FakeTask alloc] init] autorelease],
                          ];
   
-  FBXcodeTool *tool = [[[FBXcodeTool alloc] init] autorelease];
+  XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
   ReturnFakeTasks(fakeTasks);
   
   tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
@@ -57,7 +57,7 @@
                          [[[FakeTask alloc] init] autorelease],
                          ];
   
-  FBXcodeTool *tool = [[[FBXcodeTool alloc] init] autorelease];
+  XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
   ReturnFakeTasks(fakeTasks);
   
   tool.arguments = @[
@@ -86,7 +86,7 @@
                          [[[FakeTask alloc] init] autorelease],
                          ];
   
-  FBXcodeTool *tool = [[[FBXcodeTool alloc] init] autorelease];
+  XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
   ReturnFakeTasks(fakeTasks);
   
   tool.arguments = @[@"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
@@ -114,7 +114,7 @@
                          [[[FakeTask alloc] init] autorelease],
                          ];
   
-  FBXcodeTool *tool = [[[FBXcodeTool alloc] init] autorelease];
+  XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
   ReturnFakeTasks(fakeTasks);
   
   tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
@@ -145,7 +145,7 @@
                            [TestUtil fakeTaskWithExitStatus:exitStatus],
                            ];
     
-    FBXcodeTool *tool = [[[FBXcodeTool alloc] init] autorelease];
+    XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
     ReturnFakeTasks(fakeTasks);
     
     tool.arguments = @[

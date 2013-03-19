@@ -1,5 +1,5 @@
 
-#import "FBXcodeTool.h"
+#import "XcodeTool.h"
 #import "Functions.h"
 #import "NSFileHandle+Print.h"
 #import "ApplicationTestRunner.h"
@@ -12,7 +12,7 @@
 #import "Action.h"
 #import "ImplicitAction.h"
 
-@implementation FBXcodeTool
+@implementation XcodeTool
 
 - (id)init
 {

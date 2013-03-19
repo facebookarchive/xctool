@@ -60,7 +60,7 @@
 
 - (void)testBuildTestsAction
 {
-  FBXcodeTool *tool = [[[FBXcodeTool alloc] init] autorelease];
+  XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
   
   tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                      @"-scheme", @"TestProject-Library",
@@ -132,7 +132,7 @@
   // dependency gets built is that it's added to the scheme as build-for-test above
   // TestProject-LibraryTest2.  This a lame way to setup dependencies (they should be explicit),
   // but we're seeing this in the wild and should support it.
-  FBXcodeTool *tool = [[[FBXcodeTool alloc] init] autorelease];
+  XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
   
   tool.arguments = @[@"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
                      @"-scheme", @"TestProject-Library",
@@ -232,7 +232,7 @@
   // dependency gets built is that it's added to the scheme as build-for-test above
   // TestProject-LibraryTest2.  This a lame way to setup dependencies (they should be explicit),
   // but we're seeing this in the wild and should support it.
-  FBXcodeTool *tool = [[[FBXcodeTool alloc] init] autorelease];
+  XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
   
   tool.arguments = @[@"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
                      @"-scheme", @"TestProject-Library",

@@ -98,7 +98,7 @@
 //  assertThatBool(valid, equalToBool(YES));
 //}
 
-+ (NSDictionary *)runWithFakeStreams:(FBXcodeTool *)tool
++ (NSDictionary *)runWithFakeStreams:(XcodeTool *)tool
 {
   __block NSString *standardOutput = nil;
   __block NSString *standardError = nil;

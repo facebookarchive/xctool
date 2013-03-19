@@ -1,6 +1,6 @@
 
 #import <SenTestingKit/SenTestingKit.h>
-#import "FBXcodeTool.h"
+#import "XcodeTool.h"
 #import "Functions.h"
 #import "Fakes.h"
 #import "TestUtil.h"
@@ -24,7 +24,7 @@
 
 - (void)testCallingWithHelpPrintsUsage
 {
-  FBXcodeTool *tool = [[[FBXcodeTool alloc] init] autorelease];
+  XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
   tool.arguments = @[@"-help"];
   
   NSDictionary *result = [TestUtil runWithFakeStreams:tool];
@@ -35,7 +35,7 @@
 
 - (void)testCallingWithNoArgsDefaultsToBuild
 {
-  FBXcodeTool *tool = [[[FBXcodeTool alloc] init] autorelease];
+  XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
   tool.arguments = @[];
   
   NSDictionary *result = [TestUtil runWithFakeStreams:tool];

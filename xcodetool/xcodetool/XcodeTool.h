@@ -1,7 +1,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface FBXcodeTool : NSObject
+@interface XcodeTool : NSObject
 
 @property (nonatomic, retain) NSFileHandle *standardOutput;
 @property (nonatomic, retain) NSFileHandle *standardError;

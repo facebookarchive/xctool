@@ -128,7 +128,7 @@
 
 - (void)testRunTestsAction
 {
-  FBXcodeTool *tool = [[[FBXcodeTool alloc] init] autorelease];
+  XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
   
   tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                      @"-scheme", @"TestProject-Library",
@@ -193,7 +193,7 @@
 
 - (void)testCanRunTestsAgainstDifferentTestSDK
 {
-  FBXcodeTool *tool = [[[FBXcodeTool alloc] init] autorelease];
+  XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
   
   tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                      @"-scheme", @"TestProject-Library",
