@@ -34,7 +34,11 @@
     NSMutableString *buffer = [NSMutableString string];
     
     for (NSDictionary *option in options) {
-      [buffer appendFormat:@" [-%@ %@]", option[kActionOptionName], option[kActionOptionParamName]];
+      if (option[kActionOptionParamName]) {
+        [buffer appendFormat:@" [-%@ %@]", option[kActionOptionName], option[kActionOptionParamName]];
+      } else {
+        [buffer appendFormat:@" [-%@]", option[kActionOptionName]];
+      }
     }
     
     [_standardError printString:@"    xcodetool [BASE OPTIONS] %@%@", verb, buffer];
