@@ -32,7 +32,7 @@
       NSRange colonRange = [location rangeOfString:@":"];
       location = [location substringFromIndex:colonRange.location + 1];
       
-      [projectFiles addObject:[workspaceBasePath stringByAppendingPathComponent:location]];
+      [projectFiles addObject:StringByStandardizingPath([NSString stringWithFormat:@"%@/%@", workspaceBasePath, location])];
     }
   }
   
@@ -125,7 +125,7 @@
     NSString *referencedContainer = [[buildableReference attributeForName:@"ReferencedContainer"] stringValue];
     assert([referencedContainer hasPrefix:@"container:"]);
     
-    NSString *projectPath = [basePath stringByAppendingPathComponent:[referencedContainer substringFromIndex:@"container:".length]];
+    NSString *projectPath = StringByStandardizingPath([basePath stringByAppendingPathComponent:[referencedContainer substringFromIndex:@"container:".length]]);
     assert([[NSFileManager defaultManager] fileExistsAtPath:projectPath]);
     
     NSString *executable = [[buildableReference attributeForName:@"BuildableName"] stringValue];
@@ -177,7 +177,7 @@
     NSString *referencedContainer = [[buildableReference attributeForName:@"ReferencedContainer"] stringValue];
     assert([referencedContainer hasPrefix:@"container:"]);
     
-    NSString *projectPath = [basePath stringByAppendingPathComponent:[referencedContainer substringFromIndex:@"container:".length]];
+    NSString *projectPath = StringByStandardizingPath([basePath stringByAppendingPathComponent:[referencedContainer substringFromIndex:@"container:".length]]);
     assert([[NSFileManager defaultManager] fileExistsAtPath:projectPath]);
     
     NSString *target = [[buildableReference attributeForName:@"BlueprintName"] stringValue];

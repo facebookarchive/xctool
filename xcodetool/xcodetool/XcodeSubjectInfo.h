@@ -20,6 +20,7 @@
 @property (nonatomic, retain) NSString *symRoot;
 @property (nonatomic, retain) NSString *configuration;
 @property (nonatomic, retain) NSArray *testables;
+// Everything in the scheme marked as Build for Test
 @property (nonatomic, retain) NSArray *buildablesForTest;
 
 /**

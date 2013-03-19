@@ -13,3 +13,4 @@ NSString *XcodeDeveloperDirPath(void);
 NSString *StringForJSON(id object);
 NSString *MakeTempFileWithPrefix(NSString *prefix);
 NSArray *GetAvailableSDKs();
+NSString *StringByStandardizingPath(NSString *path);
