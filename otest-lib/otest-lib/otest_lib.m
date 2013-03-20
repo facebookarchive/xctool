@@ -180,22 +180,63 @@ static ssize_t __write(int fildes, const void *buf, size_t nbyte)
 }
 DYLD_INTERPOSE(__write, write);
 
+static NSString *CreateStringFromIOV(const struct iovec *iov, int iovcnt) {
+  NSMutableData *buffer = [[NSMutableData alloc] initWithCapacity:0];
+  
+  for (int i = 0; i < iovcnt; i++) {
+    [buffer appendBytes:iov[i].iov_base length:iov[i].iov_len];
+  }
+  
+  NSMutableData *bufferWithoutNulls = [[NSMutableData alloc] initWithLength:buffer.length];
+  
+  NSUInteger offset = 0;
+  uint8_t *bufferBytes = (uint8_t *)[buffer mutableBytes];
+  uint8_t *bufferWithoutNullsBytes = (uint8_t *)[bufferWithoutNulls mutableBytes];
+  
+  for (NSUInteger i = 0; i < buffer.length; i++) {
+    uint8_t byte = bufferBytes[i];
+    if (byte != 0) {
+      bufferWithoutNullsBytes[offset++] = byte;
+    }
+  }
+  
+  [bufferWithoutNulls setLength:offset];
+  
+  NSString *str = [[NSString alloc] initWithData:bufferWithoutNulls encoding:NSUTF8StringEncoding];
+  
+  [buffer release];
+  [bufferWithoutNulls release];
+  
+  return str;
+}
+
+// From /usr/lib/system/libsystem_kernel.dylib - output from writev$NOCANCEL$UNIX2003 will flow
+// here.  'backtrace_symbols_fd' is one function that sends output this direction.
+ssize_t __writev_nocancel(int fildes, const struct iovec *iov, int iovcnt);
+static ssize_t ___writev_nocancel(int fildes, const struct iovec *iov, int iovcnt)
+{
+  if (fildes == STDOUT_FILENO || fildes == STDERR_FILENO) {
+    if (__testIsRunning && iovcnt > 0) {
+      NSString *buffer = CreateStringFromIOV(iov, iovcnt);
+      PrintJSON(@{@"event": @"test-output", @"output": buffer});
+      [__testOutput appendString:buffer];
+      [buffer release];
+    }
+    return iovcnt;
+  } else {
+    return __writev_nocancel(fildes, iov, iovcnt);
+  }
+}
+DYLD_INTERPOSE(___writev_nocancel, __writev_nocancel);
+
 // Output from NSLog flows through writev
 static ssize_t __writev(int fildes, const struct iovec *iov, int iovcnt)
 {
   if (fildes == STDOUT_FILENO || fildes == STDERR_FILENO) {
     if (__testIsRunning && iovcnt > 0) {
-      NSMutableString *buffer = [[NSMutableString alloc] initWithCapacity:1024];
-
-      for (int i = 0; i < iovcnt; i++) {
-        NSString *str = [[NSString alloc] initWithBytes:iov[i].iov_base length:iov[i].iov_len encoding:NSUTF8StringEncoding];
-        [buffer appendString:str];
-        [str release];
-      }
-      
+      NSString *buffer = CreateStringFromIOV(iov, iovcnt);
       PrintJSON(@{@"event": @"test-output", @"output": buffer});
       [__testOutput appendString:buffer];
-      
       [buffer release];
     }
     return iovcnt;

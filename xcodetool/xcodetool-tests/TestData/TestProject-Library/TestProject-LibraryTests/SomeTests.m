@@ -57,4 +57,11 @@
   }
 }
 
+- (void)testBacktraceOutputIsCaptured
+{
+  void *exceptionSymbols[256];
+  int numSymbols = backtrace(exceptionSymbols, 256);
+  backtrace_symbols_fd(exceptionSymbols, numSymbols, STDERR_FILENO);
+}
+
 @end
