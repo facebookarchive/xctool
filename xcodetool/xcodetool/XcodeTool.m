@@ -91,14 +91,16 @@
       return;
     }
     
-    if (![options consumeArguments:[NSMutableArray arrayWithArray:argumentsList] errorMessage:&errorMessage]) {
+    [options consumeArguments:[NSMutableArray arrayWithArray:argumentsList] errorMessage:&errorMessage];
+    if (errorMessage != nil) {
       [_standardError printString:@"ERROR: %@\n", errorMessage];
       _exitStatus = 1;
       return;
     }
   }
 
-  if (![options consumeArguments:[NSMutableArray arrayWithArray:self.arguments] errorMessage:&errorMessage]) {
+  [options consumeArguments:[NSMutableArray arrayWithArray:self.arguments] errorMessage:&errorMessage];
+  if (errorMessage != nil) {
     [_standardError printString:@"ERROR: %@\n", errorMessage];
     [self printUsage];
     _exitStatus = 1;
