@@ -10,7 +10,7 @@
 #define kActionOptionSetFlagSelector @"kActionOptionSetFlagSelector"
 
 @class XcodeSubjectInfo;
-@class ImplicitAction;
+@class Options;
 
 @interface Action : NSObject
 
@@ -38,8 +38,8 @@
 
 - (BOOL)validateOptions:(NSString **)errorMessage
           xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
-         implicitAction:(ImplicitAction *)implicitAction;
+         options:(Options *)options;
 
-- (BOOL)performActionWithOptions:(ImplicitAction *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo;
+- (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo;
 
 @end

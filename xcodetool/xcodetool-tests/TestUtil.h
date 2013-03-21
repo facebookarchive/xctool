@@ -5,9 +5,9 @@
 
 @interface TestUtil : NSObject
 
-+ (ImplicitAction *)optionsFromArgumentList:(NSArray *)argumentList;
++ (Options *)optionsFromArgumentList:(NSArray *)argumentList;
 
-+ (ImplicitAction *)validatedOptionsFromArgumentList:(NSArray *)argumentList;
++ (Options *)validatedOptionsFromArgumentList:(NSArray *)argumentList;
 
 + (void)assertThatOptionsValidationWithArgumentList:(NSArray *)argumentList failsWithMessage:(NSString *)message;
 

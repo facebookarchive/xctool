@@ -9,7 +9,7 @@
 #import "PJSONKit.h"
 #import "XcodeSubjectInfo.h"
 #import "Action.h"
-#import "ImplicitAction.h"
+#import "Options.h"
 
 @implementation XcodeTool
 
@@ -26,7 +26,7 @@
   [_standardError printString:@"usage: xcodetool [BASE OPTIONS] [ACTION [ACTION ARGUMENTS]] ...\n\n"];
   
   [_standardError printString:@"Examples:\n"];
-  for (NSArray *verbAndClass in [ImplicitAction actionClasses]) {
+  for (NSArray *verbAndClass in [Options actionClasses]) {
     NSString *verb = verbAndClass[0];
     NSArray *options = [verbAndClass[1] performSelector:@selector(options)];
     
@@ -47,9 +47,9 @@
   [_standardError printString:@"\n"];
   
   [_standardError printString:@"Base Options:\n"];
-  [_standardError printString:@"%@", [ImplicitAction actionUsage]];
+  [_standardError printString:@"%@", [Options actionUsage]];
   
-  for (NSArray *verbAndClass in [ImplicitAction actionClasses]) {
+  for (NSArray *verbAndClass in [Options actionClasses]) {
     NSString *verb = verbAndClass[0];
     NSString *actionUsage = [verbAndClass[1] actionUsage];
     
@@ -65,7 +65,7 @@
 
 - (void)run
 {
-  ImplicitAction *options = [[[ImplicitAction alloc] init] autorelease];
+  Options *options = [[[Options alloc] init] autorelease];
   XcodeSubjectInfo *xcodeSubjectInfo = [[[XcodeSubjectInfo alloc] init] autorelease];
   
   NSString *errorMessage = nil;
@@ -111,7 +111,7 @@
     return;
   }
   
-  if (![options validateOptions:&errorMessage xcodeSubjectInfo:xcodeSubjectInfo implicitAction:options]) {
+  if (![options validateOptions:&errorMessage xcodeSubjectInfo:xcodeSubjectInfo options:options]) {
     [_standardError printString:@"ERROR: %@\n\n", errorMessage];
     [self printUsage];
     _exitStatus = 1;

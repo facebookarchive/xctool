@@ -1,14 +1,14 @@
 
 #import "ActionUtil.h"
 #import "Functions.h"
-#import "ImplicitAction.h"
+#import "Options.h"
 #import "ApplicationTestRunner.h"
 #import "LogicTestRunner.h"
 #import "XcodeSubjectInfo.h"
 
 @implementation ActionUtil
 
-+ (BOOL)runXcodeBuildCommand:(NSString *)command withOptions:(ImplicitAction *)options
++ (BOOL)runXcodeBuildCommand:(NSString *)command withOptions:(Options *)options
 {
   NSTask *task = TaskInstance();
   [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
@@ -89,7 +89,7 @@
 
 + (BOOL)buildTestables:(NSArray *)testables
                command:(NSString *)command
-               options:(ImplicitAction *)options
+               options:(Options *)options
          xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   for (NSDictionary *testable in testables) {
@@ -162,7 +162,7 @@
 
 + (BOOL)runTestables:(NSArray *)testables
              testSDK:(NSString *)testSDK
-             options:(ImplicitAction *)options
+             options:(Options *)options
        xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   for (NSDictionary *testable in testables) {

@@ -2,7 +2,7 @@
 #import <Foundation/Foundation.h>
 #import "Action.h"
 
-@interface ImplicitAction : Action
+@interface Options : Action
 
 @property (nonatomic, retain) NSString *workspace;
 @property (nonatomic, retain) NSString *project;

@@ -3,7 +3,7 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 
-@class ImplicitAction;
+@class Options;
 
 @implementation Action
 
@@ -195,13 +195,13 @@
 
 - (BOOL)validateOptions:(NSString **)errorMessage
           xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
-         implicitAction:(ImplicitAction *)implicitAction
+         options:(Options *)options
 {
   // Override in subclass
   return YES;
 }
 
-- (BOOL)performActionWithOptions:(ImplicitAction *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
+- (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   return YES;
 }

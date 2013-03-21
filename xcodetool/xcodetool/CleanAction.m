@@ -6,7 +6,7 @@
 
 @implementation CleanAction
 
-- (BOOL)performActionWithOptions:(ImplicitAction *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
+- (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   if (![ActionUtil runXcodeBuildCommand:@"clean" withOptions:options]) {
     return NO;

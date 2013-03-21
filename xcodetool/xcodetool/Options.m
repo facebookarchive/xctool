@@ -1,5 +1,5 @@
 
-#import "ImplicitAction.h"
+#import "Options.h"
 #import "Reporter.h"
 #import "Functions.h"
 #import "XcodeSubjectInfo.h"
@@ -8,7 +8,7 @@
 #import "BuildTestsAction.h"
 #import "RunTestsAction.h"
 
-@implementation ImplicitAction
+@implementation Options
 
 + (NSArray *)actionClasses
 {
@@ -114,7 +114,7 @@
 - (NSUInteger)consumeArguments:(NSMutableArray *)arguments errorMessage:(NSString **)errorMessage
 {
   NSMutableDictionary *verbToClass = [NSMutableDictionary dictionary];
-  for (NSArray *verbAndClass in [ImplicitAction actionClasses]) {
+  for (NSArray *verbAndClass in [Options actionClasses]) {
     verbToClass[verbAndClass[0]] = verbAndClass[1];
   }
   
@@ -145,12 +145,12 @@
   return consumed;
 }
 
-//  if (![self.implicitAction validateOptions:errorMessage xcodeSubjectInfo:xcodeSubjectInfo implicitAction:nil]) {
+//  if (![self.options validateOptions:errorMessage xcodeSubjectInfo:xcodeSubjectInfo options:nil]) {
 //    return NO;
 //  }
 //
 //  for (Action *action in self.actions) {
-//    BOOL valid = [action validateOptions:errorMessage xcodeSubjectInfo:xcodeSubjectInfo implicitAction:self.implicitAction];
+//    BOOL valid = [action validateOptions:errorMessage xcodeSubjectInfo:xcodeSubjectInfo options:self.options];
 //    if (!valid) {
 //      return NO;
 //    }
@@ -166,7 +166,7 @@
 
 - (BOOL)validateOptions:(NSString **)errorMessage
           xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
-         implicitAction:(ImplicitAction *)implicitAction
+         options:(Options *)options
 {
   BOOL (^isDirectory)(NSString *) = ^(NSString *path){
     BOOL isDirectory = NO;
@@ -245,7 +245,7 @@
   }
   
   for (Action *action in self.actions) {
-    BOOL valid = [action validateOptions:errorMessage xcodeSubjectInfo:xcodeSubjectInfo implicitAction:self];
+    BOOL valid = [action validateOptions:errorMessage xcodeSubjectInfo:xcodeSubjectInfo options:self];
     if (!valid) {
       return NO;
     }

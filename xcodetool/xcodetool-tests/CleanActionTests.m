@@ -3,7 +3,7 @@
 #import "Action.h"
 #import "xcodeSubjectInfo.h"
 #import "RunTestsAction.h"
-#import "ImplicitAction.h"
+#import "Options.h"
 #import "Fakes.h"
 #import "Functions.h"
 #import "TestUtil.h"

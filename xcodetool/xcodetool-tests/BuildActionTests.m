@@ -2,7 +2,7 @@
 #import <SenTestingKit/SenTestingKit.h>
 #import "Action.h"
 #import "xcodeSubjectInfo.h"
-#import "ImplicitAction.h"
+#import "Options.h"
 #import "Fakes.h"
 #import "Functions.h"
 #import "TestUtil.h"

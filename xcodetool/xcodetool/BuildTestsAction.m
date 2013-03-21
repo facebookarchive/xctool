@@ -37,7 +37,7 @@
 
 - (BOOL)validateOptions:(NSString **)errorMessage
           xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
-         implicitAction:(ImplicitAction *)implicitAction
+         options:(Options *)options
 {
   for (NSString *target in self.onlyList) {
     if ([xcodeSubjectInfo testableWithTarget:target] == nil) {
@@ -62,7 +62,7 @@
   return result;
 }
 
-- (BOOL)performActionWithOptions:(ImplicitAction *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
+- (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   NSMutableSet *targetsAdded = [NSMutableSet set];
   NSMutableArray *buildableList = [NSMutableArray array];

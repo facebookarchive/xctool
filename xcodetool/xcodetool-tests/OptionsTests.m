@@ -1,21 +1,21 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 #import "Action.h"
-#import "ImplicitAction.h"
+#import "Options.h"
 #import "TextReporter.h"
 #import "XcodeSubjectInfo.h"
 #import "Functions.h"
 #import "Fakes.h"
 #import <objc/runtime.h>
 
-@interface ImplicitActionTests : SenTestCase
+@interface OptionsTests : SenTestCase
 @end
 
-@implementation ImplicitActionTests
+@implementation OptionsTests
 
-- (ImplicitAction *)actionWithArguments:(NSArray *)arguments
+- (Options *)actionWithArguments:(NSArray *)arguments
 {
-  ImplicitAction *action = [[ImplicitAction alloc] init];
+  Options *action = [[Options alloc] init];
   NSString *errorMessage = nil;
   NSUInteger consumed = [action consumeArguments:[NSMutableArray arrayWithArray:arguments] errorMessage:&errorMessage];
   assertThat(errorMessage, equalTo(nil));
@@ -23,11 +23,11 @@
   return action;
 }
 
-- (ImplicitAction *)validatedActionWithArguments:(NSArray *)arguments
+- (Options *)validatedActionWithArguments:(NSArray *)arguments
 {
-  ImplicitAction *action = [self actionWithArguments:arguments];
+  Options *action = [self actionWithArguments:arguments];
   NSString *errorMessage = nil;
-  BOOL valid = [action validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] implicitAction:nil];
+  BOOL valid = [action validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] options:nil];
   assertThatBool(valid, equalToBool(YES));
   return action;
 }
@@ -37,7 +37,7 @@
 {
   Action *action = [self actionWithArguments:argumentList];
   NSString *errorMessage = nil;
-  BOOL valid = [action validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] implicitAction:nil];
+  BOOL valid = [action validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] options:nil];
   assertThatBool(valid, equalToBool(NO));
   assertThat(errorMessage, equalTo(message));
 }
@@ -46,14 +46,14 @@
 {
   Action *action = [self actionWithArguments:argumentList];
   NSString *errorMessage = nil;
-  BOOL valid = [action validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] implicitAction:nil];
+  BOOL valid = [action validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] options:nil];
   assertThatBool(valid, equalToBool(YES));
 }
 
 - (void)testHelpOptionSetsFlag
 {
-  assertThatBool([(ImplicitAction *)[self actionWithArguments:@[@"-h"]] showHelp], equalToBool(YES));
-  assertThatBool([(ImplicitAction *)[self actionWithArguments:@[@"-help"]] showHelp], equalToBool(YES));
+  assertThatBool([(Options *)[self actionWithArguments:@[@"-h"]] showHelp], equalToBool(YES));
+  assertThatBool([(Options *)[self actionWithArguments:@[@"-help"]] showHelp], equalToBool(YES));
 }
 
 - (void)testOptionsPassThrough
@@ -201,7 +201,7 @@
                          @"SOMEKEY=SOMEVAL",
                          @"SOMEKEY2=SOMEVAL2"
                          ];
-  ImplicitAction *action = [self actionWithArguments:arguments];
+  Options *action = [self actionWithArguments:arguments];
   assertThat([action commonXcodeBuildArguments], equalTo(arguments));
 }
 
@@ -210,7 +210,7 @@
   NSArray *arguments = @[@"-workspace", @"path/to/Something.xcworkspace",
                          @"-scheme", @"Something",
                          ];
-  ImplicitAction *action = [self actionWithArguments:arguments];
+  Options *action = [self actionWithArguments:arguments];
   assertThat([action xcodeBuildArgumentsForSubject], equalTo(arguments));
 }
 
@@ -219,7 +219,7 @@
   NSArray *arguments = @[@"-project", @"path/to/Something.xcodeproj",
                          @"-scheme", @"Something",
                          ];
-  ImplicitAction *action = [self actionWithArguments:arguments];
+  Options *action = [self actionWithArguments:arguments];
   assertThat([action xcodeBuildArgumentsForSubject], equalTo(arguments));
 }
 
@@ -230,13 +230,13 @@
                                 standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
                                  standardErrorPath:nil]
                   ]);
-  ImplicitAction *action = [self actionWithArguments:@[
+  Options *action = [self actionWithArguments:@[
                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                       @"-scheme", @"TestProject-Library",
                       ]];
   
   NSString *errorMessage = nil;
-  BOOL valid = [action validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] implicitAction:nil];
+  BOOL valid = [action validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] options:nil];
   assertThatBool(valid, equalToBool(YES));
   assertThatBool(([action.reporters[0] isKindOfClass:[TextReporter class]]), equalToBool(YES));
 }
@@ -250,7 +250,7 @@
                                  standardErrorPath:nil]
                   ]);
 
-  ImplicitAction *action = [self validatedActionWithArguments:@[
+  Options *action = [self validatedActionWithArguments:@[
                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                       @"-scheme", @"TestProject-Library",
                       ]];
@@ -303,7 +303,7 @@
                                  standardErrorPath:nil]
                   ]);
 
-  ImplicitAction *options = [self validatedActionWithArguments:@[
+  Options *options = [self validatedActionWithArguments:@[
                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                       @"-scheme", @"TestProject-Library",
                       ]];

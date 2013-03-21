@@ -2,7 +2,7 @@
 #import "RunTestsAction.h"
 #import "XcodeSubjectInfo.h"
 #import "ActionUtil.h"
-#import "ImplicitAction.h"
+#import "Options.h"
 #import "Functions.h"
 #import "ApplicationTestRunner.h"
 
@@ -75,11 +75,11 @@
 
 - (BOOL)validateOptions:(NSString **)errorMessage
           xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
-         implicitAction:(ImplicitAction *)implicitAction
+         options:(Options *)options
 {
   if (self.testSDK == nil) {
     // If specified test SDKs aren't provided, just inherit the main SDK.
-    self.testSDK = implicitAction.sdk;
+    self.testSDK = options.sdk;
   }
   
   NSMutableArray *supportedTestSDKs = [NSMutableArray array];
@@ -105,7 +105,7 @@
   return YES;
 }
 
-- (BOOL)performActionWithOptions:(ImplicitAction *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
+- (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   NSArray *testables = nil;
   

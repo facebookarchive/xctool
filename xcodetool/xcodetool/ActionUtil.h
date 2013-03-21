@@ -3,7 +3,7 @@
 
 @interface ActionUtil : NSObject
 
-+ (BOOL)runXcodeBuildCommand:(NSString *)command withOptions:(ImplicitAction *)options;
++ (BOOL)runXcodeBuildCommand:(NSString *)command withOptions:(Options *)options;
 
 + (BOOL)buildTestable:(NSDictionary *)testable
             reporters:(NSArray *)reporters
@@ -23,12 +23,12 @@
 
 + (BOOL)buildTestables:(NSArray *)testables
                command:(NSString *)command
-               options:(ImplicitAction *)options
+               options:(Options *)options
          xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo;
 
 + (BOOL)runTestables:(NSArray *)testables
              testSDK:(NSString *)testSDK
-             options:(ImplicitAction *)options
+             options:(Options *)options
        xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo;
 
 @end
