@@ -259,19 +259,3 @@ NSArray *GetAvailableSDKs()
   
   return SDKs;
 }
-
-NSString *StringByStandardizingPath(NSString *path)
-{
-  NSMutableArray *stack = [NSMutableArray array];
-  for (NSString *component in [path pathComponents]) {
-    if ([component isEqualToString:@"."]) {
-      // skip
-    } else if ([component isEqualToString:@".."] && stack.count > 0 && ![[stack lastObject] isEqualToString:@".."]) {
-      [stack removeLastObject];
-      continue;
-    } else {
-      [stack addObject:component];
-    }
-  }
-  return [stack componentsJoinedByString:@"/"];
-}
