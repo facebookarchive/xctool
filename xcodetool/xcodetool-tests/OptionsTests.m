@@ -152,7 +152,7 @@
    ]
                             failsWithMessage:[NSString stringWithFormat:
                                               @"SDK 'BOGUSSDK' doesn't exist.  Possible SDKs include: %@",
-                                              [GetAvailableSDKs() componentsJoinedByString:@", "]]];
+                                              [[GetAvailableSDKsAndAliases() allKeys] componentsJoinedByString:@", "]]];
 }
 
 - (void)testArgumentsFlowThroughToCommonXcodebuildArguments
@@ -186,6 +186,28 @@
                          ];
   Options *action = [TestUtil optionsFromArgumentList:arguments];
   assertThat([action xcodeBuildArgumentsForSubject], equalTo(arguments));
+}
+
+- (void)testCanSpecifyLatestInsteadOfSpecificSDKVersion
+{
+  ReturnFakeTasks(@[
+                  [FakeTask fakeTaskWithExitStatus:0
+                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                                 standardErrorPath:nil]
+                  ]);
+
+  NSArray *arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                         @"-scheme", @"TestProject-Library",
+                         @"-sdk", @"IPHONESIMULATOR_LATEST",
+                         ];
+  Options *action = [TestUtil validatedOptionsFromArgumentList:arguments];
+  assertThat([action xcodeBuildArgumentsForSubject],
+             equalTo(@[
+                     @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                     @"-scheme", @"TestProject-Library",
+                     @"-configuration", @"Release",
+                     @"-sdk", @"iphonesimulator6.1",
+                     ]));
 }
 
 - (void)testDefaultReporterIsPrettyIfNotSpecified
@@ -275,6 +297,5 @@
   NSString *actionClassName = [NSString stringWithUTF8String:class_getName([action class])];
   assertThat(actionClassName, equalTo(@"BuildAction"));
 }
-
 
 @end

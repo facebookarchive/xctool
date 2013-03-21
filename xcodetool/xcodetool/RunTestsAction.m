@@ -85,7 +85,7 @@
   }
   
   NSMutableArray *supportedTestSDKs = [NSMutableArray array];
-  for (NSString *sdk in GetAvailableSDKs()) {
+  for (NSString *sdk in [GetAvailableSDKsAndAliases() allKeys]) {
     if ([sdk hasPrefix:@"iphonesimulator"]) {
       [supportedTestSDKs addObject:sdk];
     }

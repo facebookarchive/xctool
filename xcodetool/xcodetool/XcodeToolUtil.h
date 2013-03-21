@@ -7,4 +7,4 @@ NSString *PathToFBXcodetoolBinaries(void);
 NSString *XcodeDeveloperDirPath(void);
 NSString *StringForJSON(id object);
 NSString *MakeTempFileWithPrefix(NSString *prefix);
-NSArray *GetAvailableSDKs();
+NSDictionary *GetAvailableSDKsAndAliases();

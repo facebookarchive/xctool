@@ -184,6 +184,7 @@
   } else {
     schemePaths = [XcodeSubjectInfo schemePathsInContainer:self.project];
   }
+
   NSMutableArray *schemeNames = [NSMutableArray array];
   for (NSString *schemePath in schemePaths) {
     [schemeNames addObject:[[schemePath lastPathComponent] stringByDeletingPathExtension]];
@@ -198,13 +199,19 @@
   }
   
   if (self.sdk != nil) {
-    NSArray *SDKs = GetAvailableSDKs();
-    if (![SDKs containsObject:self.sdk]) {
+    NSDictionary *sdksAndAliases = GetAvailableSDKsAndAliases();
+
+    if (sdksAndAliases[self.sdk] == nil) {
       *errorMessage = [NSString stringWithFormat:
                        @"SDK '%@' doesn't exist.  Possible SDKs include: %@",
                        self.sdk,
-                       [SDKs componentsJoinedByString:@", "]];
+                       [[sdksAndAliases allKeys] componentsJoinedByString:@", "]];
       return NO;
+    }
+
+    // If an alias was given, convert to the specific SDK string.
+    if ([self.sdk hasSuffix:@"_LATEST"]) {
+      self.sdk = sdksAndAliases[self.sdk];
     }
   }
   

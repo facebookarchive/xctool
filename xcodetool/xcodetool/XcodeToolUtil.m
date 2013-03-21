@@ -131,23 +131,42 @@ NSString *MakeTempFileWithPrefix(NSString *prefix)
   return [NSString stringWithFormat:@"%s", tempPath];
 }
 
-NSArray *GetAvailableSDKs()
+NSDictionary *GetAvailableSDKsAndAliases()
 {
-  static NSArray *SDKs = nil;
+  static NSMutableDictionary *result = nil;
   
-  if (SDKs == nil) {
+  if (result == nil) {
+    result = [[NSMutableDictionary alloc] initWithCapacity:0];
+    // Get a list of available SDKs in the form of:
+    //   "macosx 10.7"
+    //   "macosx 10.8"
+    //   "iphoneos 6.1"
+    //   "iphonesimulator 5.0"
+    //
+    // xcodebuild is nice enough to return them to us in ascending order.
     NSTask *task = [[[NSTask alloc] init] autorelease];
     [task setLaunchPath:@"/bin/bash"];
     [task setArguments:@[
      @"-c",
-     @"/usr/bin/xcodebuild -showsdks | perl -ne '/-sdk (.*)$/ && print \"$1\n\"'",
+     @"/usr/bin/xcodebuild -showsdks | perl -ne '/-sdk (.*?)([\\d\\.]+)$/ && print \"$1 $2\n\"'",
      ]];
     [task setEnvironment:@{}];
     
-    SDKs = [LaunchTaskAndCaptureOutput(task)[@"stdout"] componentsSeparatedByString:@"\n"];
-    SDKs = [SDKs subarrayWithRange:NSMakeRange(0, SDKs.count - 1)];
-    [SDKs retain];
+    NSArray *lines = [LaunchTaskAndCaptureOutput(task)[@"stdout"] componentsSeparatedByString:@"\n"];
+    lines = [lines subarrayWithRange:NSMakeRange(0, lines.count - 1)];
+
+    for (NSString *line in lines) {
+      NSArray *parts = [line componentsSeparatedByString:@" "];
+      NSString *sdkName = parts[0];
+      NSString *sdkVersion = parts[1];
+
+      NSString *sdk = [NSString stringWithFormat:@"%@%@", sdkName, sdkVersion];
+      result[sdk] = sdk;
+
+      NSString *sdkLatestKey = [NSString stringWithFormat:@"%@_LATEST", [sdkName uppercaseString]];
+      result[sdkLatestKey] = sdk;
+    }
   }
-  
-  return SDKs;
+
+  return result;
 }
