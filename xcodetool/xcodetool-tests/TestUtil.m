@@ -6,51 +6,11 @@
 
 @implementation TestUtil
 
-//+ (Action *)actionWithArguments:(NSArray *)arguments
-//{
-//  Action *action = [[Action alloc] init];
-//  NSString *errorMessage = nil;
-//  NSUInteger consumed = [action consumeArguments:[NSMutableArray arrayWithArray:arguments] errorMessage:&errorMessage];
-//  assertThat(errorMessage, equalTo(nil));
-//  assertThatInteger(consumed, equalToInteger(arguments.count));
-//  return action;
-//}
-//
-//+ (Action *)validatedActionWithArguments:(NSArray *)arguments
-//{
-//  Action *action = [self actionWithArguments:arguments];
-//  NSString *errorMessage = nil;
-//  BOOL valid = [action validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] options:nil];
-//  assertThatBool(valid, equalToBool(YES));
-//  return action;
-//}
-//
-//+ (void)assertThatValidationWithArgumentList:(NSArray *)argumentList
-//                            failsWithMessage:(NSString *)message
-//{
-//  Action *action = [self actionWithArguments:argumentList];
-//  NSString *errorMessage = nil;
-//  BOOL valid = [action validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] options:nil];
-//  assertThatBool(valid, equalToBool(NO));
-//  assertThat(errorMessage, equalTo(message));
-//}
-//
-//+ (void)assertThatValidationPassesWithArgumentList:(NSArray *)argumentList
-//{
-//  Action *action = [self actionWithArguments:argumentList];
-//  NSString *errorMessage = nil;
-//  BOOL valid = [action validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] options:nil];
-//  assertThatBool(valid, equalToBool(YES));
-//}
-
 + (Options *)optionsFromArgumentList:(NSArray *)argumentList
 {
   Options *options = [[[Options alloc] init] autorelease];
   NSString *errorMessage = nil;
-  //  - (NSUInteger)consumeArguments:(NSMutableArray *)arguments errorMessage:(NSString **)errorMessage;
-  
   [options consumeArguments:[NSMutableArray arrayWithArray:argumentList] errorMessage:&errorMessage];
-//  BOOL parsed = [options parseOptionsFromArgumentList:argumentList errorMessage:&errorMessage];
   
   if (errorMessage != nil) {
     [NSException raise:NSGenericException format:@"Failed to parse options: %@", errorMessage];
@@ -63,11 +23,7 @@
 {
   Options *options = [self optionsFromArgumentList:argumentList];
   NSString *errorMessage = nil;
-  
-  //[options consumeArguments:[NSMutableArray arrayWithArray:argumentList] errorMessage:&errorMessage];
-  
   BOOL valid = [options validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] options:options];
-  //  BOOL valid = [options validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease]];
   
   if (!valid) {
     [NSException raise:NSGenericException format:@"Options are invalid: %@", errorMessage];
@@ -76,15 +32,6 @@
   return options;
 }
 
-//+ (void)assertThatOptionsParseArgumentList:(NSArray *)argumentList failsWithMessage:(NSString *)message
-//{
-//  Options *options = [[[Options alloc] init] autorelease];
-//  NSString *errorMessage = nil;
-//  BOOL parsed = [options parseOptionsFromArgumentList:argumentList errorMessage:&errorMessage];
-//  assertThatBool(parsed, equalToBool(NO));
-//  assertThat(errorMessage, equalTo(message));
-//}
-//
 + (void)assertThatOptionsValidationWithArgumentList:(NSArray *)argumentList failsWithMessage:(NSString *)message
 {
   Options *options = [self optionsFromArgumentList:argumentList];
@@ -98,14 +45,6 @@
     [NSException raise:NSGenericException format:@"Expected validation to fail with message '%@' but instead failed with '%@'", message, errorMessage];
   }
 }
-//
-//+ (void)assertThatOptionsValidationPassesWithArgumentList:(NSArray *)argumentList
-//{
-//  Options *options = [self optionsFromArgumentList:argumentList];
-//  NSString *errorMessage = nil;
-//  BOOL valid = [options validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease]];
-//  assertThatBool(valid, equalToBool(YES));
-//}
 
 + (NSDictionary *)runWithFakeStreams:(XcodeTool *)tool
 {

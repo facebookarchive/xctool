@@ -255,9 +255,6 @@
                       @"-scheme", @"TestProject-Library",
                       ]];
   assertThat(action.sdk, equalTo(@"iphoneos6.1"));
-//
-//  // If no testSDKs were specified, it should carry through to that, too.
-//  assertThat(options.testSDKs, equalTo(@[@"iphoneos6.1"]));
 }
 
 - (void)testHelpOptionSetsPrintUsage

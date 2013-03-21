@@ -145,25 +145,6 @@
   return consumed;
 }
 
-//  if (![self.options validateOptions:errorMessage xcodeSubjectInfo:xcodeSubjectInfo options:nil]) {
-//    return NO;
-//  }
-//
-//  for (Action *action in self.actions) {
-//    BOOL valid = [action validateOptions:errorMessage xcodeSubjectInfo:xcodeSubjectInfo options:self.options];
-//    if (!valid) {
-//      return NO;
-//    }
-//  }
-//
-//  // Assume build if no action is given.
-//  if (self.actions.count == 0) {
-//    [self.actions addObject:[[[BuildAction alloc] init] autorelease]];
-//  }
-//
-//  return YES;
-
-
 - (BOOL)validateOptions:(NSString **)errorMessage
           xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
          options:(Options *)options
