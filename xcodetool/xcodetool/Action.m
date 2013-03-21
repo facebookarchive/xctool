@@ -1,6 +1,5 @@
 
 #import "Action.h"
-#import "Options.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
 
@@ -202,7 +201,7 @@
   return YES;
 }
 
-- (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
+- (BOOL)performActionWithOptions:(ImplicitAction *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   return YES;
 }

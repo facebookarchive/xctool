@@ -19,7 +19,11 @@
 
 @property (nonatomic, assign) BOOL showHelp;
 
+@property (nonatomic, retain) NSMutableArray *actions;
++ (NSArray *)actionClasses;
+
 - (NSArray *)commonXcodeBuildArgumentsIncludingSDK:(BOOL)includingSDK;
 - (NSArray *)commonXcodeBuildArguments;
 - (NSArray *)xcodeBuildArgumentsForSubject;
+
 @end

@@ -1,7 +1,6 @@
 
 #import "BuildTestsAction.h"
 #import "XcodeSubjectInfo.h"
-#import "Options.h"
 #import "ActionUtil.h"
 
 
@@ -63,7 +62,7 @@
   return result;
 }
 
-- (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
+- (BOOL)performActionWithOptions:(ImplicitAction *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   NSMutableSet *targetsAdded = [NSMutableSet set];
   NSMutableArray *buildableList = [NSMutableArray array];

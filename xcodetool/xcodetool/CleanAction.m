@@ -1,13 +1,12 @@
 
 #import "CleanAction.h"
 #import "Functions.h"
-#import "Options.h"
 #import "ActionUtil.h"
 #import "XcodeSubjectInfo.h"
 
 @implementation CleanAction
 
-- (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
+- (BOOL)performActionWithOptions:(ImplicitAction *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   if (![ActionUtil runXcodeBuildCommand:@"clean" withOptions:options]) {
     return NO;

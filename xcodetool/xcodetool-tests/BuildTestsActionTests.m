@@ -6,7 +6,6 @@
 #import "ImplicitAction.h"
 #import "Fakes.h"
 #import "Functions.h"
-#import "Options.h"
 #import "TestUtil.h"
 
 @interface BuildTestsActionTests : SenTestCase
@@ -30,7 +29,7 @@
                                  standardErrorPath:nil]
                   ]);
   
-  Options *options = [TestUtil validatedOptionsFromArgumentList:@[
+  ImplicitAction *options = [TestUtil validatedOptionsFromArgumentList:@[
                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                       @"-scheme", @"TestProject-Library",
                       @"-sdk", @"iphonesimulator6.1",

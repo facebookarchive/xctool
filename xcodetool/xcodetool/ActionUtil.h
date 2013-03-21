@@ -1,11 +1,9 @@
 
 #import "Action.h"
 
-@class Options;
-
 @interface ActionUtil : NSObject
 
-+ (BOOL)runXcodeBuildCommand:(NSString *)command withOptions:(Options *)options;
++ (BOOL)runXcodeBuildCommand:(NSString *)command withOptions:(ImplicitAction *)options;
 
 + (BOOL)buildTestable:(NSDictionary *)testable
             reporters:(NSArray *)reporters
@@ -25,12 +23,12 @@
 
 + (BOOL)buildTestables:(NSArray *)testables
                command:(NSString *)command
-               options:(Options *)options
+               options:(ImplicitAction *)options
          xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo;
 
 + (BOOL)runTestables:(NSArray *)testables
              testSDK:(NSString *)testSDK
-             options:(Options *)options
+             options:(ImplicitAction *)options
        xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo;
 
 @end

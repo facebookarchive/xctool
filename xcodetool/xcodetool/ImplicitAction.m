@@ -3,9 +3,21 @@
 #import "Reporter.h"
 #import "Functions.h"
 #import "XcodeSubjectInfo.h"
-#import "XcodeSubjectInfo.h"
+#import "BuildAction.h"
+#import "CleanAction.h"
+#import "BuildTestsAction.h"
+#import "RunTestsAction.h"
 
 @implementation ImplicitAction
+
++ (NSArray *)actionClasses
+{
+  return @[@[@"clean", [CleanAction class]],
+           @[@"build", [BuildAction class]],
+           @[@"build-tests", [BuildTestsAction class]],
+           @[@"run-tests", [RunTestsAction class]],
+           ];
+}
 
 + (NSArray *)options
 {
@@ -80,6 +92,7 @@
   {
     self.reporters = [NSMutableArray array];
     self.buildSettings = [NSMutableArray array];
+    self.actions = [NSMutableArray array];
   }
   return self;
 }
@@ -97,6 +110,59 @@
 {
   [self.buildSettings addObject:argument];
 }
+
+- (NSUInteger)consumeArguments:(NSMutableArray *)arguments errorMessage:(NSString **)errorMessage
+{
+  NSMutableDictionary *verbToClass = [NSMutableDictionary dictionary];
+  for (NSArray *verbAndClass in [ImplicitAction actionClasses]) {
+    verbToClass[verbAndClass[0]] = verbAndClass[1];
+  }
+  
+  NSUInteger consumed = 0;
+  
+  NSMutableArray *argumentList = [NSMutableArray arrayWithArray:arguments];
+  while (argumentList.count > 0) {
+    consumed += [super consumeArguments:argumentList errorMessage:errorMessage];
+    
+    if (argumentList.count == 0) {
+      break;
+    }
+    
+    NSString *argument = argumentList[0];
+    [argumentList removeObjectAtIndex:0];
+    consumed++;
+    
+    if (verbToClass[argument]) {
+      Action *action = [[[verbToClass[argument] alloc] init] autorelease];
+      consumed += [action consumeArguments:argumentList errorMessage:errorMessage];
+      [self.actions addObject:action];
+    } else {
+      *errorMessage = [NSString stringWithFormat:@"Unexpected action: %@", argument];
+      break;
+    }
+  }
+  
+  return consumed;
+}
+
+//  if (![self.implicitAction validateOptions:errorMessage xcodeSubjectInfo:xcodeSubjectInfo implicitAction:nil]) {
+//    return NO;
+//  }
+//
+//  for (Action *action in self.actions) {
+//    BOOL valid = [action validateOptions:errorMessage xcodeSubjectInfo:xcodeSubjectInfo implicitAction:self.implicitAction];
+//    if (!valid) {
+//      return NO;
+//    }
+//  }
+//
+//  // Assume build if no action is given.
+//  if (self.actions.count == 0) {
+//    [self.actions addObject:[[[BuildAction alloc] init] autorelease]];
+//  }
+//
+//  return YES;
+
 
 - (BOOL)validateOptions:(NSString **)errorMessage
           xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
@@ -176,6 +242,18 @@
   
   if (self.reporters.count == 0) {
     [self.reporters addObject:[Reporter reporterWithName:@"pretty" outputPath:@"-"]];
+  }
+  
+  for (Action *action in self.actions) {
+    BOOL valid = [action validateOptions:errorMessage xcodeSubjectInfo:xcodeSubjectInfo implicitAction:self];
+    if (!valid) {
+      return NO;
+    }
+  }
+
+  // Assume build if no action is given.
+  if (self.actions.count == 0) {
+    [self.actions addObject:[[[BuildAction alloc] init] autorelease]];
   }
 
   return YES;

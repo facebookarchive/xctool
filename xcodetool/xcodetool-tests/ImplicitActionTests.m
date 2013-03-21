@@ -6,6 +6,7 @@
 #import "XcodeSubjectInfo.h"
 #import "Functions.h"
 #import "Fakes.h"
+#import <objc/runtime.h>
 
 @interface ImplicitActionTests : SenTestCase
 @end
@@ -258,5 +259,60 @@
 //  // If no testSDKs were specified, it should carry through to that, too.
 //  assertThat(options.testSDKs, equalTo(@[@"iphoneos6.1"]));
 }
+
+- (void)testHelpOptionSetsPrintUsage
+{
+  assertThatBool([self actionWithArguments:@[@"-help"]].showHelp, equalToBool(YES));
+}
+
+- (void)testShortHelpOptionSetsPrintUsage
+{
+  assertThatBool([self actionWithArguments:@[@"-h"]].showHelp, equalToBool(YES));
+}
+
+
+- (void)testActionsAreRecorded
+{
+  NSArray *(^classNamesFromArray)(NSArray *) = ^(NSArray *arr){
+    NSMutableArray *result = [NSMutableArray array];
+    for (id item in arr) {
+      [result addObject:[NSString stringWithUTF8String:class_getName([item class])]];
+    }
+    return result;
+  };
+
+  assertThat(classNamesFromArray([self actionWithArguments:@[
+                                  @"clean",
+                                  @"build",
+                                  @"build-tests",
+                                  @"run-tests",
+                                  ]].actions),
+             equalTo(@[
+                     @"CleanAction",
+                     @"BuildAction",
+                     @"BuildTestsAction",
+                     @"RunTestsAction",
+                     ]));
+}
+
+- (void)testDefaultActionIsBuildIfNotSpecified
+{
+  ReturnFakeTasks(@[
+                  [FakeTask fakeTaskWithExitStatus:0
+                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                                 standardErrorPath:nil]
+                  ]);
+
+  ImplicitAction *options = [self validatedActionWithArguments:@[
+                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                      @"-scheme", @"TestProject-Library",
+                      ]];
+
+  assertThatInteger(options.actions.count, equalToInteger(1));
+  Action *action = options.actions[0];
+  NSString *actionClassName = [NSString stringWithUTF8String:class_getName([action class])];
+  assertThat(actionClassName, equalTo(@"BuildAction"));
+}
+
 
 @end

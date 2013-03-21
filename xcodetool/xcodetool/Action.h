@@ -11,7 +11,6 @@
 
 @class XcodeSubjectInfo;
 @class ImplicitAction;
-@class Options;
 
 @interface Action : NSObject
 
@@ -41,6 +40,6 @@
           xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
          implicitAction:(ImplicitAction *)implicitAction;
 
-- (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo;
+- (BOOL)performActionWithOptions:(ImplicitAction *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo;
 
 @end

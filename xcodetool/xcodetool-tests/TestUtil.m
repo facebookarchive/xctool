@@ -2,6 +2,7 @@
 #import "TestUtil.h"
 #import "XcodeSubjectInfo.h"
 #import "Fakes.h"
+#import "ImplicitAction.h"
 
 @implementation TestUtil
 
@@ -42,24 +43,31 @@
 //  assertThatBool(valid, equalToBool(YES));
 //}
 
-+ (Options *)optionsFromArgumentList:(NSArray *)argumentList
++ (ImplicitAction *)optionsFromArgumentList:(NSArray *)argumentList
 {
-  Options *options = [[[Options alloc] init] autorelease];
+  ImplicitAction *options = [[[ImplicitAction alloc] init] autorelease];
   NSString *errorMessage = nil;
-  BOOL parsed = [options parseOptionsFromArgumentList:argumentList errorMessage:&errorMessage];
+  //  - (NSUInteger)consumeArguments:(NSMutableArray *)arguments errorMessage:(NSString **)errorMessage;
   
-  if (!parsed) {
+  [options consumeArguments:[NSMutableArray arrayWithArray:argumentList] errorMessage:&errorMessage];
+//  BOOL parsed = [options parseOptionsFromArgumentList:argumentList errorMessage:&errorMessage];
+  
+  if (errorMessage != nil) {
     [NSException raise:NSGenericException format:@"Failed to parse options: %@", errorMessage];
   }
 
   return options;
 }
 
-+ (Options *)validatedOptionsFromArgumentList:(NSArray *)argumentList
++ (ImplicitAction *)validatedOptionsFromArgumentList:(NSArray *)argumentList
 {
-  Options *options = [self optionsFromArgumentList:argumentList];
+  ImplicitAction *options = [self optionsFromArgumentList:argumentList];
   NSString *errorMessage = nil;
-  BOOL valid = [options validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease]];
+  
+  //[options consumeArguments:[NSMutableArray arrayWithArray:argumentList] errorMessage:&errorMessage];
+  
+  BOOL valid = [options validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] implicitAction:options];
+  //  BOOL valid = [options validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease]];
   
   if (!valid) {
     [NSException raise:NSGenericException format:@"Options are invalid: %@", errorMessage];
@@ -79,9 +87,10 @@
 //
 + (void)assertThatOptionsValidationWithArgumentList:(NSArray *)argumentList failsWithMessage:(NSString *)message
 {
-  Options *options = [self optionsFromArgumentList:argumentList];
+  ImplicitAction *options = [self optionsFromArgumentList:argumentList];
   NSString *errorMessage = nil;
-  BOOL valid = [options validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease]];
+  //  BOOL valid = [options validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease]];
+  BOOL valid = [options validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] implicitAction:options];
   
   if (valid) {
     [NSException raise:NSGenericException format:@"Expected validation to failed, but passed."];

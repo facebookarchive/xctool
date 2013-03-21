@@ -1,6 +1,5 @@
 
 #import "ActionUtil.h"
-#import "Options.h"
 #import "Functions.h"
 #import "ImplicitAction.h"
 #import "ApplicationTestRunner.h"
@@ -9,32 +8,32 @@
 
 @implementation ActionUtil
 
-+ (BOOL)runXcodeBuildCommand:(NSString *)command withOptions:(Options *)options
++ (BOOL)runXcodeBuildCommand:(NSString *)command withOptions:(ImplicitAction *)options
 {
   NSTask *task = TaskInstance();
   [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
-  [task setArguments:[[options.implicitAction xcodeBuildArgumentsForSubject] arrayByAddingObject:command]];
+  [task setArguments:[[options xcodeBuildArgumentsForSubject] arrayByAddingObject:command]];
   [task setEnvironment:@{
    @"DYLD_INSERT_LIBRARIES" : [PathToFBXcodetoolBinaries() stringByAppendingPathComponent:@"xcodebuild-lib.dylib"],
    @"PATH": @"/usr/bin:/bin:/usr/sbin:/sbin",
    }];
   
-  [options.implicitAction.reporters makeObjectsPerformSelector:@selector(handleEvent:)
+  [options.reporters makeObjectsPerformSelector:@selector(handleEvent:)
                                                     withObject:StringForJSON(@{
                                                                              @"event": @"begin-xcodebuild",
                                                                              @"command": command,
-                                                                             @"title": options.implicitAction.scheme,
+                                                                             @"title": options.scheme,
                                                                              })];
   
   LaunchTaskAndFeedOuputLinesToBlock(task, ^(NSString *line){
-    [options.implicitAction.reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:line];
+    [options.reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:line];
   });
   
-  [options.implicitAction.reporters makeObjectsPerformSelector:@selector(handleEvent:)
+  [options.reporters makeObjectsPerformSelector:@selector(handleEvent:)
                                                     withObject:StringForJSON(@{
                                                                              @"event": @"end-xcodebuild",
                                                                              @"command": command,
-                                                                             @"title": options.implicitAction.scheme,
+                                                                             @"title": options.scheme,
                                                                              })];
   
   return [task terminationStatus] == 0 ? YES : NO;
@@ -90,15 +89,15 @@
 
 + (BOOL)buildTestables:(NSArray *)testables
                command:(NSString *)command
-               options:(Options *)options
+               options:(ImplicitAction *)options
          xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   for (NSDictionary *testable in testables) {
     BOOL succeeded = [self buildTestable:testable
-                               reporters:options.implicitAction.reporters
+                               reporters:options.reporters
                                  objRoot:xcodeSubjectInfo.objRoot
                                  symRoot:xcodeSubjectInfo.symRoot
-                          xcodeArguments:[options.implicitAction commonXcodeBuildArguments]
+                          xcodeArguments:[options commonXcodeBuildArguments]
                             xcodeCommand:command];
     if (!succeeded) {
       return NO;
@@ -163,7 +162,7 @@
 
 + (BOOL)runTestables:(NSArray *)testables
              testSDK:(NSString *)testSDK
-             options:(Options *)options
+             options:(ImplicitAction *)options
        xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   for (NSDictionary *testable in testables) {
@@ -171,10 +170,10 @@
     NSString *senTestList = testable[@"senTestList"];
 
     BOOL succeeded = [self runTestable:testable
-                             reproters:options.implicitAction.reporters
+                             reproters:options.reporters
                                objRoot:xcodeSubjectInfo.objRoot
                                symRoot:xcodeSubjectInfo.symRoot
-                        xcodeArguments:[options.implicitAction commonXcodeBuildArgumentsIncludingSDK:NO]
+                        xcodeArguments:[options commonXcodeBuildArgumentsIncludingSDK:NO]
                                testSDK:testSDK
                            senTestList:senTestList
                     senTestInvertScope:senTestInvertScope];

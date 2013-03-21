@@ -6,7 +6,6 @@
 #import "LogicTestRunner.h"
 #import "RawReporter.h"
 #import "TextReporter.h"
-#import "Options.h"
 #import "PJSONKit.h"
 #import "XcodeSubjectInfo.h"
 #import "Action.h"
@@ -27,7 +26,7 @@
   [_standardError printString:@"usage: xcodetool [BASE OPTIONS] [ACTION [ACTION ARGUMENTS]] ...\n\n"];
   
   [_standardError printString:@"Examples:\n"];
-  for (NSArray *verbAndClass in [Options actionClasses]) {
+  for (NSArray *verbAndClass in [ImplicitAction actionClasses]) {
     NSString *verb = verbAndClass[0];
     NSArray *options = [verbAndClass[1] performSelector:@selector(options)];
     
@@ -50,7 +49,7 @@
   [_standardError printString:@"Base Options:\n"];
   [_standardError printString:@"%@", [ImplicitAction actionUsage]];
   
-  for (NSArray *verbAndClass in [Options actionClasses]) {
+  for (NSArray *verbAndClass in [ImplicitAction actionClasses]) {
     NSString *verb = verbAndClass[0];
     NSString *actionUsage = [verbAndClass[1] actionUsage];
     
@@ -66,7 +65,7 @@
 
 - (void)run
 {
-  Options *options = [[[Options alloc] init] autorelease];
+  ImplicitAction *options = [[[ImplicitAction alloc] init] autorelease];
   XcodeSubjectInfo *xcodeSubjectInfo = [[[XcodeSubjectInfo alloc] init] autorelease];
   
   NSString *errorMessage = nil;
@@ -92,34 +91,34 @@
       return;
     }
     
-    if (![options parseOptionsFromArgumentList:argumentsList errorMessage:&errorMessage]) {
+    if (![options consumeArguments:[NSMutableArray arrayWithArray:argumentsList] errorMessage:&errorMessage]) {
       [_standardError printString:@"ERROR: %@\n", errorMessage];
       _exitStatus = 1;
       return;
     }
   }
 
-  if (![options parseOptionsFromArgumentList:self.arguments errorMessage:&errorMessage]) {
+  if (![options consumeArguments:[NSMutableArray arrayWithArray:self.arguments] errorMessage:&errorMessage]) {
     [_standardError printString:@"ERROR: %@\n", errorMessage];
     [self printUsage];
     _exitStatus = 1;
     return;
   }
   
-  if (options.implicitAction.showHelp) {
+  if (options.showHelp) {
     [self printUsage];
     _exitStatus = 1;
     return;
   }
   
-  if (![options validateOptions:&errorMessage xcodeSubjectInfo:xcodeSubjectInfo]) {
+  if (![options validateOptions:&errorMessage xcodeSubjectInfo:xcodeSubjectInfo implicitAction:options]) {
     [_standardError printString:@"ERROR: %@\n\n", errorMessage];
     [self printUsage];
     _exitStatus = 1;
     return;
   }
   
-  for (Reporter *reporter in options.implicitAction.reporters) {
+  for (Reporter *reporter in options.reporters) {
     [reporter setupOutputHandleWithStandardOutput:_standardOutput];
   }
   
@@ -129,7 +128,7 @@
     }
   }
   
-  for (Reporter *reporter in options.implicitAction.reporters) {
+  for (Reporter *reporter in options.reporters) {
     @try {
       [[reporter outputHandle] synchronizeFile];
     } @catch (NSException *ex) {

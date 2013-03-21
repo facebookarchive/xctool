@@ -12,9 +12,6 @@
 		28046D3016D76665000AA15C /* ActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28046D2F16D76665000AA15C /* ActionTests.m */; };
 		281B80C916CB98B60032430F /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = 281B80C516CB98B60032430F /* CHANGELOG.md */; };
 		281B80CC16CB98B60032430F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 281B80C816CB98B60032430F /* README.md */; };
-		281B80CF16CC304B0032430F /* Options.m in Sources */ = {isa = PBXBuildFile; fileRef = 281B80CE16CC304B0032430F /* Options.m */; };
-		281B80D016CC304B0032430F /* Options.m in Sources */ = {isa = PBXBuildFile; fileRef = 281B80CE16CC304B0032430F /* Options.m */; };
-		281B80D316CC3BC30032430F /* OptionsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 281B80D216CC3BC30032430F /* OptionsTests.m */; };
 		2834799416E199A2003C3B77 /* BuildAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 2834799316E199A2003C3B77 /* BuildAction.m */; };
 		2834799816E199D6003C3B77 /* ImplicitAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 2834799716E199D6003C3B77 /* ImplicitAction.m */; };
 		2834799916E199E5003C3B77 /* BuildAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 2834799316E199A2003C3B77 /* BuildAction.m */; };
@@ -103,9 +100,6 @@
 		28046D2F16D76665000AA15C /* ActionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionTests.m; sourceTree = "<group>"; };
 		281B80C516CB98B60032430F /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGELOG.md; sourceTree = "<group>"; };
 		281B80C816CB98B60032430F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
-		281B80CD16CC304B0032430F /* Options.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Options.h; sourceTree = "<group>"; };
-		281B80CE16CC304B0032430F /* Options.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Options.m; sourceTree = "<group>"; };
-		281B80D216CC3BC30032430F /* OptionsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = OptionsTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		2834799216E199A2003C3B77 /* BuildAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BuildAction.h; sourceTree = "<group>"; };
 		2834799316E199A2003C3B77 /* BuildAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BuildAction.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		2834799616E199D6003C3B77 /* ImplicitAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImplicitAction.h; sourceTree = "<group>"; };
@@ -282,8 +276,6 @@
 				283CCA4816C2EA3800F2E343 /* main.m */,
 				283CCAD716C2F13A00F2E343 /* NSFileHandle+Print.h */,
 				283CCAD816C2F13A00F2E343 /* NSFileHandle+Print.m */,
-				281B80CD16CC304B0032430F /* Options.h */,
-				281B80CE16CC304B0032430F /* Options.m */,
 				28E9B9E816C341DA00A52E4D /* Reporters */,
 				287A37DF16C711E000319E81 /* SimulatorLauncher.h */,
 				287A37E016C711E000319E81 /* SimulatorLauncher.m */,
@@ -325,7 +317,6 @@
 				28E9B99016C3037E00A52E4D /* Fakes.h */,
 				28E9B99116C3037E00A52E4D /* Fakes.m */,
 				28AC9E2F16DB3478009E5B9A /* ImplicitActionTests.m */,
-				281B80D216CC3BC30032430F /* OptionsTests.m */,
 				283479A416E1B242003C3B77 /* RunTestsActionTests.m */,
 				283CCAC616C2EE9900F2E343 /* Supporting Files */,
 				283479B716E3EBE5003C3B77 /* TestUtil.h */,
@@ -479,7 +470,6 @@
 				28E9B9EB16C34F2B00A52E4D /* TextReporter.m in Sources */,
 				287A37DE16C711AF00319E81 /* LineReader.m in Sources */,
 				287A37E116C711E000319E81 /* SimulatorLauncher.m in Sources */,
-				281B80CF16CC304B0032430F /* Options.m in Sources */,
 				28A33C9816CEC65500C5EE2A /* PJSONKit.m in Sources */,
 				28046D2C16D7603B000AA15C /* Action.m in Sources */,
 				2834799416E199A2003C3B77 /* BuildAction.m in Sources */,
@@ -512,8 +502,6 @@
 				28E9B9E716C341C000A52E4D /* RawReporter.m in Sources */,
 				28E9B9EC16C34F2B00A52E4D /* TextReporter.m in Sources */,
 				287A37E216C711E000319E81 /* SimulatorLauncher.m in Sources */,
-				281B80D016CC304B0032430F /* Options.m in Sources */,
-				281B80D316CC3BC30032430F /* OptionsTests.m in Sources */,
 				28A33C9916CEC65500C5EE2A /* PJSONKit.m in Sources */,
 				28046D2D16D7603B000AA15C /* Action.m in Sources */,
 				28046D3016D76665000AA15C /* ActionTests.m in Sources */,

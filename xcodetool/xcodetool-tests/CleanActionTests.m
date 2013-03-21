@@ -6,7 +6,6 @@
 #import "ImplicitAction.h"
 #import "Fakes.h"
 #import "Functions.h"
-#import "Options.h"
 #import "TestUtil.h"
 
 @interface CleanActionTests : SenTestCase

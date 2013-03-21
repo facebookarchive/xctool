@@ -1,29 +1,15 @@
 
 #import <Foundation/Foundation.h>
 #import "Action.h"
-#import "Options.h"
 #import "XcodeTool.h"
 
 @interface TestUtil : NSObject
 
-//+ (Action *)actionWithArguments:(NSArray *)arguments;
-//
-//+ (Action *)validatedActionWithArguments:(NSArray *)arguments;
-//
-//+ (void)assertThatValidationWithArgumentList:(NSArray *)argumentList
-//                            failsWithMessage:(NSString *)message;
-//
-//+ (void)assertThatValidationPassesWithArgumentList:(NSArray *)argumentList;
++ (ImplicitAction *)optionsFromArgumentList:(NSArray *)argumentList;
 
-+ (Options *)optionsFromArgumentList:(NSArray *)argumentList;
++ (ImplicitAction *)validatedOptionsFromArgumentList:(NSArray *)argumentList;
 
-+ (Options *)validatedOptionsFromArgumentList:(NSArray *)argumentList;
-
-//+ (void)assertThatOptionsParseArgumentList:(NSArray *)argumentList failsWithMessage:(NSString *)message;
-//
 + (void)assertThatOptionsValidationWithArgumentList:(NSArray *)argumentList failsWithMessage:(NSString *)message;
-//
-//+ (void)assertThatOptionsValidationPassesWithArgumentList:(NSArray *)argumentList;
 
 + (NSDictionary *)runWithFakeStreams:(XcodeTool *)tool;
 

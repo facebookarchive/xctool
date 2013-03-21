@@ -1,7 +1,6 @@
 
 #import "RunTestsAction.h"
 #import "XcodeSubjectInfo.h"
-#import "Options.h"
 #import "ActionUtil.h"
 #import "ImplicitAction.h"
 #import "Functions.h"
@@ -106,7 +105,7 @@
   return YES;
 }
 
-- (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
+- (BOOL)performActionWithOptions:(ImplicitAction *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   NSArray *testables = nil;
   

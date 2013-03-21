@@ -1,12 +1,11 @@
 
 #import "BuildAction.h"
 #import "Functions.h"
-#import "Options.h"
 #import "ActionUtil.h"
 
 @implementation BuildAction
 
-- (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
+- (BOOL)performActionWithOptions:(ImplicitAction *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   return [ActionUtil runXcodeBuildCommand:@"build" withOptions:options];
 }
