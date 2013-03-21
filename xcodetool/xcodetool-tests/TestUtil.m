@@ -32,11 +32,23 @@
   return options;
 }
 
-+ (void)assertThatOptionsValidationWithArgumentList:(NSArray *)argumentList failsWithMessage:(NSString *)message
++ (void)assertThatOptionsValidateWithArgumentList:(NSArray *)argumentList
 {
   Options *options = [self optionsFromArgumentList:argumentList];
   NSString *errorMessage = nil;
-  //  BOOL valid = [options validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease]];
+
+  BOOL valid = [options validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] options:options];
+
+  if (!valid) {
+    [NSException raise:NSGenericException format:@"Expected validation to pass but failed with '%@'", errorMessage];
+  }
+}
+
++ (void)assertThatOptionsValidateWithArgumentList:(NSArray *)argumentList failsWithMessage:(NSString *)message
+{
+  Options *options = [self optionsFromArgumentList:argumentList];
+  NSString *errorMessage = nil;
+
   BOOL valid = [options validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] options:options];
   
   if (valid) {

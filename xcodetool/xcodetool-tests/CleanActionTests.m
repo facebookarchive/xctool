@@ -5,8 +5,9 @@
 #import "RunTestsAction.h"
 #import "Options.h"
 #import "Fakes.h"
-#import "Functions.h"
+#import "XcodeToolUtil.h"
 #import "TestUtil.h"
+#import "TaskUtil.h"
 
 @interface CleanActionTests : SenTestCase
 @end

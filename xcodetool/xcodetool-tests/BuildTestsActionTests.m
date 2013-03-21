@@ -5,8 +5,9 @@
 #import "RunTestsAction.h"
 #import "Options.h"
 #import "Fakes.h"
-#import "Functions.h"
+#import "XcodeToolUtil.h"
 #import "TestUtil.h"
+#import "TaskUtil.h"
 
 @interface BuildTestsActionTests : SenTestCase
 @end
@@ -48,7 +49,7 @@
                                  standardErrorPath:nil]
                   ]);
   
-  [TestUtil assertThatOptionsValidationWithArgumentList:@[
+  [TestUtil assertThatOptionsValidateWithArgumentList:@[
    @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
    @"-scheme", @"TestProject-Library",
    @"-sdk", @"iphonesimulator6.1",

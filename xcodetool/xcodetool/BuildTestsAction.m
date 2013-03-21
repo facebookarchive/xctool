@@ -1,8 +1,9 @@
 
 #import "BuildTestsAction.h"
 #import "XcodeSubjectInfo.h"
-#import "ActionUtil.h"
-
+#import "TaskUtil.h"
+#import "Options.h"
+#import "XcodeToolUtil.h"
 
 @implementation BuildTestsAction
 
@@ -15,6 +16,73 @@
                      paramName:@"TARGET"
                          mapTo:@selector(addOnly:)],
   ];
+}
+
++ (BOOL)buildTestable:(NSDictionary *)testable
+            reporters:(NSArray *)reporters
+              objRoot:(NSString *)objRoot
+              symRoot:(NSString *)symRoot
+       xcodeArguments:(NSArray *)xcodeArguments
+         xcodeCommand:(NSString *)xcodeCommand
+{
+  NSString *testableProjectPath = testable[@"projectPath"];
+  NSString *testableTarget = testable[@"target"];
+
+  NSArray *taskArguments = [xcodeArguments arrayByAddingObjectsFromArray:@[
+                            @"-project", testableProjectPath,
+                            @"-target", testableTarget,
+                            [NSString stringWithFormat:@"OBJROOT=%@", objRoot],
+                            [NSString stringWithFormat:@"SYMROOT=%@", symRoot],
+                            xcodeCommand,
+                            ]];
+
+  // Build the test target.
+  NSTask *buildTask = TaskInstance();
+  [buildTask setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
+  [buildTask setArguments:taskArguments];
+  [buildTask setEnvironment:@{
+   @"DYLD_INSERT_LIBRARIES" : [PathToFBXcodetoolBinaries() stringByAppendingPathComponent:@"xcodebuild-lib.dylib"],
+   @"PATH": @"/usr/bin:/bin:/usr/sbin:/sbin",
+   }];
+
+  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
+                             withObject:StringForJSON(@{
+                                                      @"event": @"begin-xcodebuild",
+                                                      @"command": [xcodeCommand stringByAppendingString:@"-test"],
+                                                      @"title": testableTarget,
+                                                      })];
+
+  LaunchTaskAndFeedOuputLinesToBlock(buildTask, ^(NSString *line){
+    [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:line];
+  });
+
+  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
+                             withObject:StringForJSON(@{
+                                                      @"event": @"end-xcodebuild",
+                                                      @"command": [xcodeCommand stringByAppendingString:@"-test"],
+                                                      @"title": testableTarget,
+                                                      })];
+
+  return ([buildTask terminationStatus] == 0);
+}
+
++ (BOOL)buildTestables:(NSArray *)testables
+               command:(NSString *)command
+               options:(Options *)options
+      xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
+{
+  for (NSDictionary *testable in testables) {
+    BOOL succeeded = [self buildTestable:testable
+                               reporters:options.reporters
+                                 objRoot:xcodeSubjectInfo.objRoot
+                                 symRoot:xcodeSubjectInfo.symRoot
+                          xcodeArguments:[options commonXcodeBuildArguments]
+                            xcodeCommand:command];
+    if (!succeeded) {
+      return NO;
+    }
+  }
+  return YES;
 }
 
 - (id)init
@@ -87,7 +155,7 @@
     buildableList = [self buildableList:buildableList matchingTargets:self.onlyList];
   }
   
-  if (![ActionUtil buildTestables:buildableList
+  if (![BuildTestsAction buildTestables:buildableList
                           command:@"build"
                           options:options
                     xcodeSubjectInfo:xcodeSubjectInfo]) {

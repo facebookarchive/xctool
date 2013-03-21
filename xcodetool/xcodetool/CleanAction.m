@@ -1,18 +1,19 @@
 
 #import "CleanAction.h"
-#import "Functions.h"
-#import "ActionUtil.h"
+#import "XcodeToolUtil.h"
 #import "XcodeSubjectInfo.h"
+#import "BuildAction.h"
+#import "BuildTestsAction.h"
 
 @implementation CleanAction
 
 - (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
-  if (![ActionUtil runXcodeBuildCommand:@"clean" withOptions:options]) {
+  if (![BuildAction runXcodeBuildCommand:@"clean" withOptions:options]) {
     return NO;
   }
   
-  if (![ActionUtil buildTestables:xcodeSubjectInfo.testables command:@"clean" options:options xcodeSubjectInfo:xcodeSubjectInfo]) {
+  if (![BuildTestsAction buildTestables:xcodeSubjectInfo.testables command:@"clean" options:options xcodeSubjectInfo:xcodeSubjectInfo]) {
     return NO;
   }
   

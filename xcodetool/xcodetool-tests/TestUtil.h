@@ -9,7 +9,8 @@
 
 + (Options *)validatedOptionsFromArgumentList:(NSArray *)argumentList;
 
-+ (void)assertThatOptionsValidationWithArgumentList:(NSArray *)argumentList failsWithMessage:(NSString *)message;
++ (void)assertThatOptionsValidateWithArgumentList:(NSArray *)argumentList;
++ (void)assertThatOptionsValidateWithArgumentList:(NSArray *)argumentList failsWithMessage:(NSString *)message;
 
 + (NSDictionary *)runWithFakeStreams:(XcodeTool *)tool;
 

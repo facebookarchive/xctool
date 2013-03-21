@@ -1,6 +1,7 @@
 
 #import "LogicTestRunner.h"
-#import "Functions.h"
+#import "XcodeToolUtil.h"
+#import "TaskUtil.h"
 
 @implementation LogicTestRunner
 

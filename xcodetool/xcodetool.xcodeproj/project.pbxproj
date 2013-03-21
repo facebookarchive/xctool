@@ -21,8 +21,6 @@
 		283479A616E1B242003C3B77 /* RunTestsActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 283479A416E1B242003C3B77 /* RunTestsActionTests.m */; };
 		283479AD16E2A736003C3B77 /* BuildTestsAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 283479AC16E2A736003C3B77 /* BuildTestsAction.m */; };
 		283479AE16E2A736003C3B77 /* BuildTestsAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 283479AC16E2A736003C3B77 /* BuildTestsAction.m */; };
-		283479B116E2A899003C3B77 /* ActionUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 283479B016E2A898003C3B77 /* ActionUtil.m */; };
-		283479B216E2A899003C3B77 /* ActionUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 283479B016E2A898003C3B77 /* ActionUtil.m */; };
 		283479B516E2B39C003C3B77 /* RunTestsAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 283479B416E2B39B003C3B77 /* RunTestsAction.m */; };
 		283479B616E2B39C003C3B77 /* RunTestsAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 283479B416E2B39B003C3B77 /* RunTestsAction.m */; };
 		283479B916E3EBE5003C3B77 /* TestUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 283479B816E3EBE5003C3B77 /* TestUtil.m */; };
@@ -47,10 +45,12 @@
 		28A33C9816CEC65500C5EE2A /* PJSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A33C9716CEC65500C5EE2A /* PJSONKit.m */; };
 		28A33C9916CEC65500C5EE2A /* PJSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A33C9716CEC65500C5EE2A /* PJSONKit.m */; };
 		28AC9E3016DB3478009E5B9A /* OptionsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28AC9E2F16DB3478009E5B9A /* OptionsTests.m */; };
+		28ACFC8316FBA888004BAF33 /* TaskUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 28ACFC8216FBA888004BAF33 /* TaskUtil.m */; };
+		28ACFC8416FBA888004BAF33 /* TaskUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 28ACFC8216FBA888004BAF33 /* TaskUtil.m */; };
 		28ADB43816E4107F006301ED /* CleanActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28ADB43716E4107F006301ED /* CleanActionTests.m */; };
 		28ADB43B16E410F9006301ED /* BuildActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28ADB43A16E410F9006301ED /* BuildActionTests.m */; };
-		28E9B97F16C2F1C600A52E4D /* Functions.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B97E16C2F1C600A52E4D /* Functions.m */; };
-		28E9B98016C2F1C600A52E4D /* Functions.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B97E16C2F1C600A52E4D /* Functions.m */; };
+		28E9B97F16C2F1C600A52E4D /* XcodeToolUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B97E16C2F1C600A52E4D /* XcodeToolUtil.m */; };
+		28E9B98016C2F1C600A52E4D /* XcodeToolUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B97E16C2F1C600A52E4D /* XcodeToolUtil.m */; };
 		28E9B98416C2F2D900A52E4D /* xcodetool.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 28E9B98316C2F2D900A52E4D /* xcodetool.xcconfig */; };
 		28E9B98B16C2FDA700A52E4D /* OCMockito.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28E9B98A16C2FDA700A52E4D /* OCMockito.framework */; };
 		28E9B98C16C2FDB200A52E4D /* OCMockito.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 28E9B98A16C2FDA700A52E4D /* OCMockito.framework */; };
@@ -109,13 +109,11 @@
 		283479A416E1B242003C3B77 /* RunTestsActionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RunTestsActionTests.m; sourceTree = "<group>"; };
 		283479AB16E2A736003C3B77 /* BuildTestsAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BuildTestsAction.h; sourceTree = "<group>"; };
 		283479AC16E2A736003C3B77 /* BuildTestsAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BuildTestsAction.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		283479AF16E2A898003C3B77 /* ActionUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ActionUtil.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		283479B016E2A898003C3B77 /* ActionUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ActionUtil.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		283479B316E2B39B003C3B77 /* RunTestsAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RunTestsAction.h; sourceTree = "<group>"; };
 		283479B416E2B39B003C3B77 /* RunTestsAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = RunTestsAction.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		283479B716E3EBE5003C3B77 /* TestUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestUtil.h; sourceTree = "<group>"; };
 		283479B816E3EBE5003C3B77 /* TestUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = TestUtil.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		283479BB16E3FC0E003C3B77 /* BuildTestsActionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuildTestsActionTests.m; sourceTree = "<group>"; };
+		283479BB16E3FC0E003C3B77 /* BuildTestsActionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BuildTestsActionTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		283CCA4216C2EA3800F2E343 /* xcodetool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = xcodetool; sourceTree = BUILT_PRODUCTS_DIR; };
 		283CCA4516C2EA3800F2E343 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		283CCA4816C2EA3800F2E343 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -144,19 +142,21 @@
 		28A33C9616CEC65500C5EE2A /* PJSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PJSONKit.h; sourceTree = "<group>"; };
 		28A33C9716CEC65500C5EE2A /* PJSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PJSONKit.m; sourceTree = "<group>"; };
 		28AC9E2F16DB3478009E5B9A /* OptionsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = OptionsTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		28ADB43716E4107F006301ED /* CleanActionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CleanActionTests.m; sourceTree = "<group>"; };
-		28ADB43A16E410F9006301ED /* BuildActionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuildActionTests.m; sourceTree = "<group>"; };
-		28E9B97D16C2F1C600A52E4D /* Functions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Functions.h; sourceTree = "<group>"; };
-		28E9B97E16C2F1C600A52E4D /* Functions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Functions.m; sourceTree = "<group>"; };
+		28ACFC8116FBA888004BAF33 /* TaskUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskUtil.h; sourceTree = "<group>"; };
+		28ACFC8216FBA888004BAF33 /* TaskUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskUtil.m; sourceTree = "<group>"; };
+		28ADB43716E4107F006301ED /* CleanActionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CleanActionTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		28ADB43A16E410F9006301ED /* BuildActionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BuildActionTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		28E9B97D16C2F1C600A52E4D /* XcodeToolUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XcodeToolUtil.h; sourceTree = "<group>"; };
+		28E9B97E16C2F1C600A52E4D /* XcodeToolUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodeToolUtil.m; sourceTree = "<group>"; };
 		28E9B98316C2F2D900A52E4D /* xcodetool.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = xcodetool.xcconfig; sourceTree = "<group>"; };
 		28E9B98A16C2FDA700A52E4D /* OCMockito.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OCMockito.framework; path = ../Vendor/OCMockito.framework; sourceTree = "<group>"; };
 		28E9B98D16C2FE4800A52E4D /* OCHamcrest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OCHamcrest.framework; path = ../Vendor/OCHamcrest.framework; sourceTree = "<group>"; };
 		28E9B99016C3037E00A52E4D /* Fakes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fakes.h; sourceTree = "<group>"; };
 		28E9B99116C3037E00A52E4D /* Fakes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Fakes.m; sourceTree = "<group>"; };
 		28E9B9D116C3275200A52E4D /* ApplicationTestRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplicationTestRunner.h; sourceTree = "<group>"; };
-		28E9B9D216C3275200A52E4D /* ApplicationTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplicationTestRunner.m; sourceTree = "<group>"; };
+		28E9B9D216C3275200A52E4D /* ApplicationTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ApplicationTestRunner.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		28E9B9D316C3275200A52E4D /* LogicTestRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogicTestRunner.h; sourceTree = "<group>"; };
-		28E9B9D416C3275200A52E4D /* LogicTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogicTestRunner.m; sourceTree = "<group>"; };
+		28E9B9D416C3275200A52E4D /* LogicTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LogicTestRunner.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		28E9B9D516C3275200A52E4D /* TestRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestRunner.h; sourceTree = "<group>"; };
 		28E9B9D616C3275200A52E4D /* TestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestRunner.m; sourceTree = "<group>"; };
 		28E9B9DE16C3278D00A52E4D /* iPhoneSimulatorRemoteClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iPhoneSimulatorRemoteClient.h; sourceTree = "<group>"; };
@@ -216,8 +216,6 @@
 				2834799C16E1A09D003C3B77 /* CleanAction.m */,
 				283479AB16E2A736003C3B77 /* BuildTestsAction.h */,
 				283479AC16E2A736003C3B77 /* BuildTestsAction.m */,
-				283479AF16E2A898003C3B77 /* ActionUtil.h */,
-				283479B016E2A898003C3B77 /* ActionUtil.m */,
 				283479B316E2B39B003C3B77 /* RunTestsAction.h */,
 				283479B416E2B39B003C3B77 /* RunTestsAction.m */,
 			);
@@ -267,8 +265,8 @@
 				28E9B9D216C3275200A52E4D /* ApplicationTestRunner.m */,
 				283CCAD416C2F10A00F2E343 /* XcodeTool.h */,
 				283CCAD516C2F10A00F2E343 /* XcodeTool.m */,
-				28E9B97D16C2F1C600A52E4D /* Functions.h */,
-				28E9B97E16C2F1C600A52E4D /* Functions.m */,
+				28E9B97D16C2F1C600A52E4D /* XcodeToolUtil.h */,
+				28E9B97E16C2F1C600A52E4D /* XcodeToolUtil.m */,
 				287A37DC16C711AE00319E81 /* LineReader.h */,
 				287A37DD16C711AE00319E81 /* LineReader.m */,
 				28E9B9D316C3275200A52E4D /* LogicTestRunner.h */,
@@ -284,6 +282,8 @@
 				28E9B9D616C3275200A52E4D /* TestRunner.m */,
 				287BF08216F1A97900590E06 /* XcodeSubjectInfo.h */,
 				287BF08316F1A97900590E06 /* XcodeSubjectInfo.m */,
+				28ACFC8116FBA888004BAF33 /* TaskUtil.h */,
+				28ACFC8216FBA888004BAF33 /* TaskUtil.m */,
 			);
 			path = xcodetool;
 			sourceTree = "<group>";
@@ -461,7 +461,7 @@
 				283CCA4916C2EA3800F2E343 /* main.m in Sources */,
 				283CCAD616C2F10A00F2E343 /* XcodeTool.m in Sources */,
 				283CCAD916C2F13A00F2E343 /* NSFileHandle+Print.m in Sources */,
-				28E9B97F16C2F1C600A52E4D /* Functions.m in Sources */,
+				28E9B97F16C2F1C600A52E4D /* XcodeToolUtil.m in Sources */,
 				28E9B9D716C3275200A52E4D /* ApplicationTestRunner.m in Sources */,
 				28E9B9D916C3275200A52E4D /* LogicTestRunner.m in Sources */,
 				28E9B9DB16C3275200A52E4D /* TestRunner.m in Sources */,
@@ -476,9 +476,9 @@
 				2834799816E199D6003C3B77 /* Options.m in Sources */,
 				2834799D16E1A09D003C3B77 /* CleanAction.m in Sources */,
 				283479AD16E2A736003C3B77 /* BuildTestsAction.m in Sources */,
-				283479B116E2A899003C3B77 /* ActionUtil.m in Sources */,
 				283479B516E2B39C003C3B77 /* RunTestsAction.m in Sources */,
 				287BF08416F1A97900590E06 /* XcodeSubjectInfo.m in Sources */,
+				28ACFC8316FBA888004BAF33 /* TaskUtil.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -493,7 +493,7 @@
 				283CCADB16C2F14C00F2E343 /* XcodeTool.m in Sources */,
 				283CCACD16C2EE9900F2E343 /* XcodeToolTests.m in Sources */,
 				283CCADA16C2F13A00F2E343 /* NSFileHandle+Print.m in Sources */,
-				28E9B98016C2F1C600A52E4D /* Functions.m in Sources */,
+				28E9B98016C2F1C600A52E4D /* XcodeToolUtil.m in Sources */,
 				28E9B99216C3037E00A52E4D /* Fakes.m in Sources */,
 				28E9B9D816C3275200A52E4D /* ApplicationTestRunner.m in Sources */,
 				28E9B9DA16C3275200A52E4D /* LogicTestRunner.m in Sources */,
@@ -508,7 +508,6 @@
 				28AC9E3016DB3478009E5B9A /* OptionsTests.m in Sources */,
 				283479A616E1B242003C3B77 /* RunTestsActionTests.m in Sources */,
 				283479AE16E2A736003C3B77 /* BuildTestsAction.m in Sources */,
-				283479B216E2A899003C3B77 /* ActionUtil.m in Sources */,
 				283479B616E2B39C003C3B77 /* RunTestsAction.m in Sources */,
 				283479B916E3EBE5003C3B77 /* TestUtil.m in Sources */,
 				283479BC16E3FC0F003C3B77 /* BuildTestsActionTests.m in Sources */,
@@ -516,6 +515,7 @@
 				28ADB43B16E410F9006301ED /* BuildActionTests.m in Sources */,
 				287BF04D16F1A6EB00590E06 /* XcodeSubjectInfoTests.m in Sources */,
 				287BF08516F1A97900590E06 /* XcodeSubjectInfo.m in Sources */,
+				28ACFC8416FBA888004BAF33 /* TaskUtil.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

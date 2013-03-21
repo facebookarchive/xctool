@@ -1,6 +1,6 @@
 
 #import "XcodeTool.h"
-#import "Functions.h"
+#import "XcodeToolUtil.h"
 #import "NSFileHandle+Print.h"
 #import "ApplicationTestRunner.h"
 #import "LogicTestRunner.h"

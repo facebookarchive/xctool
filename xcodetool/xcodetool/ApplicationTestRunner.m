@@ -1,6 +1,6 @@
 
 #import "ApplicationTestRunner.h"
-#import "Functions.h"
+#import "XcodeToolUtil.h"
 #import "SimulatorLauncher.h"
 #import "LineReader.h"
 #import <launch.h>

@@ -1,7 +1,7 @@
 
 #import "Options.h"
 #import "Reporter.h"
-#import "Functions.h"
+#import "XcodeToolUtil.h"
 #import "XcodeSubjectInfo.h"
 #import "BuildAction.h"
 #import "CleanAction.h"

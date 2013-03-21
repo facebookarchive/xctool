@@ -4,8 +4,10 @@
 #import "Options.h"
 #import "TextReporter.h"
 #import "XcodeSubjectInfo.h"
-#import "Functions.h"
+#import "XcodeToolUtil.h"
 #import "Fakes.h"
+#import "TaskUtil.h"
+#import "TestUtil.h"
 #import <objc/runtime.h>
 
 @interface OptionsTests : SenTestCase
@@ -13,64 +15,27 @@
 
 @implementation OptionsTests
 
-- (Options *)actionWithArguments:(NSArray *)arguments
-{
-  Options *action = [[Options alloc] init];
-  NSString *errorMessage = nil;
-  NSUInteger consumed = [action consumeArguments:[NSMutableArray arrayWithArray:arguments] errorMessage:&errorMessage];
-  assertThat(errorMessage, equalTo(nil));
-  assertThatInteger(consumed, equalToInteger(arguments.count));
-  return action;
-}
-
-- (Options *)validatedActionWithArguments:(NSArray *)arguments
-{
-  Options *action = [self actionWithArguments:arguments];
-  NSString *errorMessage = nil;
-  BOOL valid = [action validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] options:nil];
-  assertThatBool(valid, equalToBool(YES));
-  return action;
-}
-
-- (void)assertThatValidationWithArgumentList:(NSArray *)argumentList
-                            failsWithMessage:(NSString *)message
-{
-  Action *action = [self actionWithArguments:argumentList];
-  NSString *errorMessage = nil;
-  BOOL valid = [action validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] options:nil];
-  assertThatBool(valid, equalToBool(NO));
-  assertThat(errorMessage, equalTo(message));
-}
-
-- (void)assertThatValidationPassesWithArgumentList:(NSArray *)argumentList
-{
-  Action *action = [self actionWithArguments:argumentList];
-  NSString *errorMessage = nil;
-  BOOL valid = [action validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] options:nil];
-  assertThatBool(valid, equalToBool(YES));
-}
-
 - (void)testHelpOptionSetsFlag
 {
-  assertThatBool([(Options *)[self actionWithArguments:@[@"-h"]] showHelp], equalToBool(YES));
-  assertThatBool([(Options *)[self actionWithArguments:@[@"-help"]] showHelp], equalToBool(YES));
+  assertThatBool([(Options *)[TestUtil optionsFromArgumentList:@[@"-h"]] showHelp], equalToBool(YES));
+  assertThatBool([(Options *)[TestUtil optionsFromArgumentList:@[@"-help"]] showHelp], equalToBool(YES));
 }
 
 - (void)testOptionsPassThrough
 {
-  assertThat(([[self actionWithArguments:@[@"-configuration", @"SomeConfig"]] configuration]), equalTo(@"SomeConfig"));
-  assertThat(([[self actionWithArguments:@[@"-arch", @"SomeArch"]] arch]), equalTo(@"SomeArch"));
-  assertThat(([[self actionWithArguments:@[@"-sdk", @"SomeSDK"]] sdk]), equalTo(@"SomeSDK"));
-  assertThat(([[self actionWithArguments:@[@"-workspace", @"SomeWorkspace"]] workspace]), equalTo(@"SomeWorkspace"));
-  assertThat(([[self actionWithArguments:@[@"-project", @"SomeProject"]] project]), equalTo(@"SomeProject"));
-  assertThat(([[self actionWithArguments:@[@"-toolchain", @"SomeToolChain"]] toolchain]), equalTo(@"SomeToolChain"));
-  assertThat(([[self actionWithArguments:@[@"-xcconfig", @"something.xcconfig"]] xcconfig]), equalTo(@"something.xcconfig"));
-  assertThat(([[self actionWithArguments:@[@"-jobs", @"10"]] jobs]), equalTo(@"10"));
+  assertThat(([[TestUtil optionsFromArgumentList:@[@"-configuration", @"SomeConfig"]] configuration]), equalTo(@"SomeConfig"));
+  assertThat(([[TestUtil optionsFromArgumentList:@[@"-arch", @"SomeArch"]] arch]), equalTo(@"SomeArch"));
+  assertThat(([[TestUtil optionsFromArgumentList:@[@"-sdk", @"SomeSDK"]] sdk]), equalTo(@"SomeSDK"));
+  assertThat(([[TestUtil optionsFromArgumentList:@[@"-workspace", @"SomeWorkspace"]] workspace]), equalTo(@"SomeWorkspace"));
+  assertThat(([[TestUtil optionsFromArgumentList:@[@"-project", @"SomeProject"]] project]), equalTo(@"SomeProject"));
+  assertThat(([[TestUtil optionsFromArgumentList:@[@"-toolchain", @"SomeToolChain"]] toolchain]), equalTo(@"SomeToolChain"));
+  assertThat(([[TestUtil optionsFromArgumentList:@[@"-xcconfig", @"something.xcconfig"]] xcconfig]), equalTo(@"something.xcconfig"));
+  assertThat(([[TestUtil optionsFromArgumentList:@[@"-jobs", @"10"]] jobs]), equalTo(@"10"));
 }
 
 - (void)testReporterOptionsAreCollected
 {
-  NSArray *reporters = [[self actionWithArguments:@[@"-reporter", @"pretty", @"-reporter", @"plain:out.txt"]] reporters];
+  NSArray *reporters = [[TestUtil optionsFromArgumentList:@[@"-reporter", @"pretty", @"-reporter", @"plain:out.txt"]] reporters];
   assertThatInteger(reporters.count, equalToInteger(2));
   assertThatBool(([reporters[0] isKindOfClass:[PrettyTextReporter class]]), equalToBool(YES));
   assertThatBool(([reporters[1] isKindOfClass:[PlainTextReporter class]]), equalToBool(YES));
@@ -78,16 +43,16 @@
 
 - (void)testBuildSettingsAreCollected
 {
-  NSArray *buildSettings = [[self actionWithArguments:@[@"-configuration", @"Release", @"ABC=123", @"DEF=456"]] buildSettings];
+  NSArray *buildSettings = [[TestUtil optionsFromArgumentList:@[@"-configuration", @"Release", @"ABC=123", @"DEF=456"]] buildSettings];
   assertThatInteger(buildSettings.count, equalToInteger(2));
   assertThat(buildSettings, equalTo(@[@"ABC=123", @"DEF=456"]));
 }
 
 - (void)testWorkspaceOrProjectAreRequired
 {
-  [self assertThatValidationWithArgumentList:@[]
+  [TestUtil assertThatOptionsValidateWithArgumentList:@[]
                             failsWithMessage:@"Either -workspace or -project must be specified."];
-  [self assertThatValidationWithArgumentList:@[
+  [TestUtil assertThatOptionsValidateWithArgumentList:@[
    @"-workspace", @"Something.xcworkspace",
    @"-project", @"Something.xcodeproj"
    ]
@@ -96,13 +61,13 @@
 
 - (void)testSchemeIsRequired
 {
-  [self assertThatValidationWithArgumentList:@[@"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace"]
+  [TestUtil assertThatOptionsValidateWithArgumentList:@[@"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace"]
                             failsWithMessage:@"Missing the required -scheme argument."];
 }
 
 - (void)testWorkspaceMustBeADirectory
 {
-  [self assertThatValidationWithArgumentList:@[
+  [TestUtil assertThatOptionsValidateWithArgumentList:@[
    @"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library-Bogus.xcworkspace",
    @"-scheme", @"SomeScheme",
    ]
@@ -111,7 +76,7 @@
 
 - (void)testProjectMustBeADirectory
 {
-  [self assertThatValidationWithArgumentList:@[
+  [TestUtil assertThatOptionsValidateWithArgumentList:@[
    @"-project", TEST_DATA @"TestProject-Library/TestProject-Library-Bogus.xcodeproj",
    @"-scheme", @"SomeScheme",
    ]
@@ -126,7 +91,7 @@
                                  standardErrorPath:nil]
                   ]);
   // When we're working with projects...
-  [self assertThatValidationPassesWithArgumentList:@[
+  [TestUtil assertThatOptionsValidateWithArgumentList:@[
    @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
    @"-scheme", @"TestProject-Library"]];
 
@@ -135,7 +100,7 @@
                                 standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
                                  standardErrorPath:nil]
                   ]);
-  [self assertThatValidationWithArgumentList:@[
+  [TestUtil assertThatOptionsValidateWithArgumentList:@[
    @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
    @"-scheme", @"TestProject-Library-Bogus",
    ]
@@ -147,7 +112,7 @@
                                  standardErrorPath:nil]
                   ]);
   // When we're working with workspaces...
-  [self assertThatValidationPassesWithArgumentList:@[
+  [TestUtil assertThatOptionsValidateWithArgumentList:@[
    @"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
    @"-scheme", @"TestProject-Library"]];
 
@@ -156,7 +121,7 @@
                                 standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt"
                                  standardErrorPath:nil]
                   ]);
-  [self assertThatValidationWithArgumentList:@[
+  [TestUtil assertThatOptionsValidateWithArgumentList:@[
    @"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
    @"-scheme", @"TestProject-Library-Bogus",
    ]
@@ -170,7 +135,7 @@
                                 standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
                                  standardErrorPath:nil]
                   ]);
-  [self assertThatValidationPassesWithArgumentList:@[
+  [TestUtil assertThatOptionsValidateWithArgumentList:@[
    @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
    @"-scheme", @"TestProject-Library",
    @"-sdk", @"macosx10.7"]];
@@ -180,7 +145,7 @@
                                 standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
                                  standardErrorPath:nil]
                   ]);
-  [self assertThatValidationWithArgumentList:@[
+  [TestUtil assertThatOptionsValidateWithArgumentList:@[
    @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
    @"-scheme", @"TestProject-Library",
    @"-sdk", @"BOGUSSDK",
@@ -201,7 +166,7 @@
                          @"SOMEKEY=SOMEVAL",
                          @"SOMEKEY2=SOMEVAL2"
                          ];
-  Options *action = [self actionWithArguments:arguments];
+  Options *action = [TestUtil optionsFromArgumentList:arguments];
   assertThat([action commonXcodeBuildArguments], equalTo(arguments));
 }
 
@@ -210,7 +175,7 @@
   NSArray *arguments = @[@"-workspace", @"path/to/Something.xcworkspace",
                          @"-scheme", @"Something",
                          ];
-  Options *action = [self actionWithArguments:arguments];
+  Options *action = [TestUtil optionsFromArgumentList:arguments];
   assertThat([action xcodeBuildArgumentsForSubject], equalTo(arguments));
 }
 
@@ -219,7 +184,7 @@
   NSArray *arguments = @[@"-project", @"path/to/Something.xcodeproj",
                          @"-scheme", @"Something",
                          ];
-  Options *action = [self actionWithArguments:arguments];
+  Options *action = [TestUtil optionsFromArgumentList:arguments];
   assertThat([action xcodeBuildArgumentsForSubject], equalTo(arguments));
 }
 
@@ -230,7 +195,7 @@
                                 standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
                                  standardErrorPath:nil]
                   ]);
-  Options *action = [self actionWithArguments:@[
+  Options *action = [TestUtil optionsFromArgumentList:@[
                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                       @"-scheme", @"TestProject-Library",
                       ]];
@@ -250,7 +215,7 @@
                                  standardErrorPath:nil]
                   ]);
 
-  Options *action = [self validatedActionWithArguments:@[
+  Options *action = [TestUtil validatedOptionsFromArgumentList:@[
                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                       @"-scheme", @"TestProject-Library",
                       ]];
@@ -259,12 +224,12 @@
 
 - (void)testHelpOptionSetsPrintUsage
 {
-  assertThatBool([self actionWithArguments:@[@"-help"]].showHelp, equalToBool(YES));
+  assertThatBool([TestUtil optionsFromArgumentList:@[@"-help"]].showHelp, equalToBool(YES));
 }
 
 - (void)testShortHelpOptionSetsPrintUsage
 {
-  assertThatBool([self actionWithArguments:@[@"-h"]].showHelp, equalToBool(YES));
+  assertThatBool([TestUtil optionsFromArgumentList:@[@"-h"]].showHelp, equalToBool(YES));
 }
 
 
@@ -278,7 +243,7 @@
     return result;
   };
 
-  assertThat(classNamesFromArray([self actionWithArguments:@[
+  assertThat(classNamesFromArray([TestUtil optionsFromArgumentList:@[
                                   @"clean",
                                   @"build",
                                   @"build-tests",
@@ -300,7 +265,7 @@
                                  standardErrorPath:nil]
                   ]);
 
-  Options *options = [self validatedActionWithArguments:@[
+  Options *options = [TestUtil validatedOptionsFromArgumentList:@[
                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                       @"-scheme", @"TestProject-Library",
                       ]];

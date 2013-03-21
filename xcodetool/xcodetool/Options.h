@@ -2,7 +2,14 @@
 #import <Foundation/Foundation.h>
 #import "Action.h"
 
+/**
+ * Options is a special case of Action.  It's an action that accepts its own params
+ * (defined via +[Action options]), but also is the parent of other Actions's.  The
+ * params it accepts are all the common params that xcodebuild would accept.
+ */
 @interface Options : Action
+
++ (NSArray *)actionClasses;
 
 @property (nonatomic, retain) NSString *workspace;
 @property (nonatomic, retain) NSString *project;
@@ -20,7 +27,6 @@
 @property (nonatomic, assign) BOOL showHelp;
 
 @property (nonatomic, retain) NSMutableArray *actions;
-+ (NSArray *)actionClasses;
 
 - (NSArray *)commonXcodeBuildArgumentsIncludingSDK:(BOOL)includingSDK;
 - (NSArray *)commonXcodeBuildArguments;
