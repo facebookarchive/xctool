@@ -150,7 +150,10 @@
 
 - (void)setupOutputHandleWithStandardOutput:(NSFileHandle *)standardOutput {
   [super setupOutputHandleWithStandardOutput:standardOutput];
-  self.reportWriter = [[[ReportWriter alloc] initWithOutputHandle:standardOutput] autorelease];
+  
+  // self.outputHandle will either be a file handle for stdout or a file handle for
+  // some file on disk.
+  self.reportWriter = [[[ReportWriter alloc] initWithOutputHandle:self.outputHandle] autorelease];
   self.reportWriter.useANSI = _isPretty;
 }
 
