@@ -7,6 +7,10 @@
 + (NSArray *)projectPathsInWorkspace:(NSString *)workspacePath
 {
   NSString *workspaceBasePath = [workspacePath stringByDeletingLastPathComponent];
+  if (workspaceBasePath.length == 0) {
+    workspaceBasePath = @".";
+  }
+  
   NSURL *URL = [NSURL fileURLWithPath:[workspacePath stringByAppendingPathComponent:@"contents.xcworkspacedata"]];
   NSError *error = nil;
   NSXMLDocument *doc = [[NSXMLDocument alloc] initWithContentsOfURL:URL
@@ -233,6 +237,11 @@
       
       schemePath = [schemePath stringByDeletingLastPathComponent];
     }
+    
+    if (schemePath.length == 0) {
+      schemePath = @".";
+    }
+    
     return schemePath;
   };
   
