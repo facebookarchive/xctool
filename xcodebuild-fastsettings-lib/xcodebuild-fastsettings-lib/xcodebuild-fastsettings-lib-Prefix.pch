@@ -1,7 +1,0 @@
-//
-// Prefix header for all source files of the 'xcodebuild-fastsettings-lib' target in the 'xcodebuild-fastsettings-lib' project
-//
-
-#ifdef __OBJC__
-  #import <Cocoa/Cocoa.h>
-#endif
