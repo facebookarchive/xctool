@@ -240,6 +240,7 @@ static NSString *StringByStandardizingPath(NSString *path)
   // in the same places as we built the original products - this is what Xcode does.
   self.objRoot = firstBuildable[@"OBJROOT"];
   self.symRoot = firstBuildable[@"SYMROOT"];
+  self.sharedPrecompsDir = firstBuildable[@"SHARED_PRECOMPS_DIR"];
   self.sdkName = firstBuildable[@"SDK_NAME"];
   self.configuration = firstBuildable[@"CONFIGURATION"];
   

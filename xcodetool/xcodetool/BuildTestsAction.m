@@ -22,6 +22,7 @@
             reporters:(NSArray *)reporters
               objRoot:(NSString *)objRoot
               symRoot:(NSString *)symRoot
+    sharedPrecompsDir:(NSString *)sharedPrecompsDir
        xcodeArguments:(NSArray *)xcodeArguments
          xcodeCommand:(NSString *)xcodeCommand
 {
@@ -33,6 +34,7 @@
                             @"-target", testableTarget,
                             [NSString stringWithFormat:@"OBJROOT=%@", objRoot],
                             [NSString stringWithFormat:@"SYMROOT=%@", symRoot],
+                            [NSString stringWithFormat:@"SHARED_PRECOMPS_DIR=%@", sharedPrecompsDir],
                             xcodeCommand,
                             ]];
 
@@ -76,6 +78,7 @@
                                reporters:options.reporters
                                  objRoot:xcodeSubjectInfo.objRoot
                                  symRoot:xcodeSubjectInfo.symRoot
+                       sharedPrecompsDir:xcodeSubjectInfo.sharedPrecompsDir
                           xcodeArguments:[options commonXcodeBuildArguments]
                             xcodeCommand:command];
     if (!succeeded) {

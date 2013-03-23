@@ -151,6 +151,7 @@
           reproters:(NSArray *)reporters
             objRoot:(NSString *)objRoot
             symRoot:(NSString *)symRoot
+  sharedPrecompsDir:(NSString *)sharedPrecompsDir
      xcodeArguments:(NSArray *)xcodeArguments
             testSDK:(NSString *)testSDK
         senTestList:(NSString *)senTestList
@@ -168,6 +169,7 @@
                               @"-target", testableTarget,
                               [NSString stringWithFormat:@"OBJROOT=%@", objRoot],
                               [NSString stringWithFormat:@"SYMROOT=%@", symRoot],
+                              [NSString stringWithFormat:@"SHARED_PRECOMPS_DIR=%@", sharedPrecompsDir],
                               @"-showBuildSettings",
                               ]]];
   [settingsTask setEnvironment:@{
@@ -214,6 +216,7 @@
                              reproters:options.reporters
                                objRoot:xcodeSubjectInfo.objRoot
                                symRoot:xcodeSubjectInfo.symRoot
+                     sharedPrecompsDir:xcodeSubjectInfo.sharedPrecompsDir
                         xcodeArguments:[options commonXcodeBuildArgumentsIncludingSDK:NO]
                                testSDK:testSDK
                            senTestList:senTestList

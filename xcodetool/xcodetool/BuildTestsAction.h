@@ -9,6 +9,7 @@
             reporters:(NSArray *)reporters
               objRoot:(NSString *)objRoot
               symRoot:(NSString *)symRoot
+    sharedPrecompsDir:(NSString *)sharedPrecompsDir
        xcodeArguments:(NSArray *)xcodeArguments
          xcodeCommand:(NSString *)xcodeCommand;
 

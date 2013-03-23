@@ -18,6 +18,7 @@
 @property (nonatomic, retain) NSString *sdkName;
 @property (nonatomic, retain) NSString *objRoot;
 @property (nonatomic, retain) NSString *symRoot;
+@property (nonatomic, retain) NSString *sharedPrecompsDir;
 @property (nonatomic, retain) NSString *configuration;
 @property (nonatomic, retain) NSArray *testables;
 // Everything in the scheme marked as Build for Test
