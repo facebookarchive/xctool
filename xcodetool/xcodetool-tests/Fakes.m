@@ -67,11 +67,11 @@
   self.isRunning = NO;
   [[NSNotificationCenter defaultCenter] postNotificationName:NSTaskDidTerminateNotification object:self];
   
-  if ([[self standardOutput] isKindOfClass:[NSPipe pipe]]) {
+  if ([[self standardOutput] isKindOfClass:[NSPipe class]]) {
     [[[self standardOutput] fileHandleForWriting] closeFile];
   }
   
-  if ([[self standardError] isKindOfClass:[NSPipe pipe]]) {
+  if ([[self standardError] isKindOfClass:[NSPipe class]]) {
     [[[self standardError] fileHandleForWriting] closeFile];
   }
   

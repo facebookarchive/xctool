@@ -95,12 +95,11 @@ void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, void (^block)(NSString *))
 {
   NSPipe *stdoutPipe = [NSPipe pipe];
   NSFileHandle *stdoutReadHandle = [stdoutPipe fileHandleForReading];
-  NSFileHandle *stdoutWriteHandle = [stdoutPipe fileHandleForWriting];
 
   LineReader *reader = [[[LineReader alloc] initWithFileHandle:stdoutReadHandle] autorelease];
   reader.didReadLineBlock = block;
 
-  [task setStandardOutput:stdoutWriteHandle];
+  [task setStandardOutput:stdoutPipe];
 
   [reader startReading];
 
@@ -108,6 +107,5 @@ void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, void (^block)(NSString *))
   [task waitUntilExit];
 
   [reader stopReading];
-  [stdoutWriteHandle closeFile];
   [reader finishReadingToEndOfFile];
 }
