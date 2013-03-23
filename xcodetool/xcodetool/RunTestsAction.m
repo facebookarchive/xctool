@@ -213,24 +213,26 @@
              options:(Options *)options
     xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
+  BOOL succeeded = YES;
+
   for (NSDictionary *testable in testables) {
     BOOL senTestInvertScope = [testable[@"senTestInvertScope"] boolValue];
     NSString *senTestList = testable[@"senTestList"];
 
-    BOOL succeeded = [self runTestable:testable
-                             reproters:options.reporters
-                               objRoot:xcodeSubjectInfo.objRoot
-                               symRoot:xcodeSubjectInfo.symRoot
-                     sharedPrecompsDir:xcodeSubjectInfo.sharedPrecompsDir
-                        xcodeArguments:[options commonXcodeBuildArgumentsIncludingSDK:NO]
-                               testSDK:testSDK
-                           senTestList:senTestList
-                    senTestInvertScope:senTestInvertScope];
-    if (!succeeded) {
-      return NO;
+    if (![self runTestable:testable
+                 reproters:options.reporters
+                   objRoot:xcodeSubjectInfo.objRoot
+                   symRoot:xcodeSubjectInfo.symRoot
+         sharedPrecompsDir:xcodeSubjectInfo.sharedPrecompsDir
+            xcodeArguments:[options commonXcodeBuildArgumentsIncludingSDK:NO]
+                   testSDK:testSDK
+               senTestList:senTestList
+        senTestInvertScope:senTestInvertScope]) {
+      succeeded = NO;
     }
   }
-  return YES;
+
+  return succeeded;
 }
 
 @end
