@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <Group
+      location = "group:../OtherNestedDir"
+      name = "OtherNestedDir">
+      <FileRef
+        location = "container:../OtherNestedDir/OtherProject/OtherProject.xcodeproj">
+      </FileRef>
+   </Group>
+   <Group
+      location = "group:NestedNestedDir"
+      name = "NestedNestedDir">
+      <Group
+         location = "group:.."
+         name = "UpOneLevel">
+         <FileRef
+            location = "group:SomeProject/SomeProject.xcodeproj">
+         </FileRef>
+      </Group>
+   </Group>
+</Workspace>

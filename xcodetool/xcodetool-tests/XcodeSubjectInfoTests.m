@@ -14,6 +14,16 @@
   assertThat(paths, equalTo(@[TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj"]));
 }
 
+- (void)testCanGetProjectPathsInWorkspaceWhenPathsAreRelativeToGroups
+{
+  // In contents.xcworkspacedata, FileRefs can have paths relative to the groups they're within.
+  NSArray *paths = [XcodeSubjectInfo projectPathsInWorkspace:TEST_DATA @"WorkspacePathTest/NestedDir/SomeWorkspace.xcworkspace"];
+  assertThat(paths,
+             equalTo(@[
+                     TEST_DATA @"WorkspacePathTest/OtherNestedDir/OtherProject/OtherProject.xcodeproj",
+                     TEST_DATA @"WorkspacePathTest/NestedDir/SomeProject/SomeProject.xcodeproj"]));
+}
+
 - (void)testCanGetAllSchemesInAProject
 {
   NSArray *schemes = [XcodeSubjectInfo schemePathsInContainer:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"];

@@ -38,22 +38,37 @@ static NSString *StringByStandardizingPath(NSString *path)
     abort();
   }
   
+  __block NSString *(^fullLocation)(NSXMLNode*, NSString *) = ^(NSXMLNode *node, NSString *containerPath) {
+
+    if (node == nil || ![@[@"FileRef", @"Group", @"Workspace"] containsObject:node.name]) {
+      return @"";
+    }
+
+    if ([node.name isEqualToString:@"Workspace"]) {
+      return containerPath;
+    }
+
+    NSString *location = [[(NSXMLElement *)node attributeForName:@"location"] stringValue];
+    NSRange colonRange = [location rangeOfString:@":"];
+    NSString *locationAfterColon = [location substringFromIndex:colonRange.location + 1];
+
+    if ([location hasPrefix:@"container:"]) {
+      return [containerPath stringByAppendingPathComponent:locationAfterColon];
+    } else if ([location hasPrefix:@"group"]) {
+      return [fullLocation(node.parent, containerPath) stringByAppendingPathComponent:locationAfterColon];
+    } else {
+      [NSException raise:NSGenericException format:@"Unexpection location in workspace '%@'", location];
+      return (NSString *)nil;
+    }
+  };
+
   NSArray *fileRefNodes = [doc nodesForXPath:@"//FileRef" error:nil];
   NSMutableArray *projectFiles = [NSMutableArray array];
   for (NSXMLElement *node in fileRefNodes) {
     NSString *location = [[node attributeForName:@"location"] stringValue];
     
     if ([location hasSuffix:@".xcodeproj"]) {
-      
-      if (![location hasPrefix:@"group:"] && ![location hasPrefix:@"container:"]) {
-        [NSException raise:NSGenericException
-                    format:@"Unexpected format in FileRef location: %@", location];
-      }
-      
-      NSRange colonRange = [location rangeOfString:@":"];
-      location = [location substringFromIndex:colonRange.location + 1];
-      
-      [projectFiles addObject:StringByStandardizingPath([NSString stringWithFormat:@"%@/%@", workspaceBasePath, location])];
+      [projectFiles addObject:StringByStandardizingPath(fullLocation(node, workspaceBasePath))];
     }
   }
   
