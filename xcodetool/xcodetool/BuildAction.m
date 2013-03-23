@@ -6,6 +6,11 @@
 
 @implementation BuildAction
 
++ (NSString *)name
+{
+  return @"build";
+}
+
 + (BOOL)runXcodeBuildCommand:(NSString *)command withOptions:(Options *)options
 {
   NSTask *task = TaskInstance();

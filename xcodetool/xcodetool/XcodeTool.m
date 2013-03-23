@@ -26,9 +26,9 @@
   [_standardError printString:@"usage: xcodetool [BASE OPTIONS] [ACTION [ACTION ARGUMENTS]] ...\n\n"];
   
   [_standardError printString:@"Examples:\n"];
-  for (NSArray *verbAndClass in [Options actionClasses]) {
-    NSString *verb = verbAndClass[0];
-    NSArray *options = [verbAndClass[1] performSelector:@selector(options)];
+  for (Class actionClass in [Options actionClasses]) {
+    NSString *actionName = [actionClass name];
+    NSArray *options = [actionClass options];
     
     NSMutableString *buffer = [NSMutableString string];
     
@@ -40,7 +40,7 @@
       }
     }
     
-    [_standardError printString:@"    xcodetool [BASE OPTIONS] %@%@", verb, buffer];
+    [_standardError printString:@"    xcodetool [BASE OPTIONS] %@%@", actionName, buffer];
     [_standardError printString:@"\n"];
   }
   
@@ -49,13 +49,13 @@
   [_standardError printString:@"Base Options:\n"];
   [_standardError printString:@"%@", [Options actionUsage]];
   
-  for (NSArray *verbAndClass in [Options actionClasses]) {
-    NSString *verb = verbAndClass[0];
-    NSString *actionUsage = [verbAndClass[1] actionUsage];
+  for (Class actionClass in [Options actionClasses]) {
+    NSString *actionName = [actionClass name];
+    NSString *actionUsage = [actionClass actionUsage];
     
     if (actionUsage.length > 0) {
       [_standardError printString:@"\n"];
-      [_standardError printString:@"Options for '%@' action:\n", verb];
+      [_standardError printString:@"Options for '%@' action:\n", actionName];
       [_standardError printString:@"%@", actionUsage];
     }
   }

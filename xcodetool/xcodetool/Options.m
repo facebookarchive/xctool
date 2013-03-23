@@ -12,10 +12,10 @@
 
 + (NSArray *)actionClasses
 {
-  return @[@[@"clean", [CleanAction class]],
-           @[@"build", [BuildAction class]],
-           @[@"build-tests", [BuildTestsAction class]],
-           @[@"run-tests", [RunTestsAction class]],
+  return @[[CleanAction class],
+           [BuildAction class],
+           [BuildTestsAction class],
+           [RunTestsAction class],
            ];
 }
 
@@ -114,8 +114,9 @@
 - (NSUInteger)consumeArguments:(NSMutableArray *)arguments errorMessage:(NSString **)errorMessage
 {
   NSMutableDictionary *verbToClass = [NSMutableDictionary dictionary];
-  for (NSArray *verbAndClass in [Options actionClasses]) {
-    verbToClass[verbAndClass[0]] = verbAndClass[1];
+  for (Class actionClass in [Options actionClasses]) {
+    NSString *actionName = [actionClass name];
+    verbToClass[actionName] = actionClass;
   }
   
   NSUInteger consumed = 0;

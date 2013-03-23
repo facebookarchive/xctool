@@ -7,6 +7,11 @@
 
 @implementation BuildTestsAction
 
++ (NSString *)name
+{
+  return @"build-tests";
+}
+
 + (NSArray *)options
 {
   return @[

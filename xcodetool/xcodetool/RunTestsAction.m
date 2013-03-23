@@ -10,6 +10,11 @@
 
 @implementation RunTestsAction
 
++ (NSString *)name
+{
+  return @"run-tests";
+}
+
 + (NSArray *)options
 {
   return

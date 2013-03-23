@@ -7,6 +7,11 @@
 
 @implementation CleanAction
 
++ (NSString *)name
+{
+  return @"clean";
+}
+
 - (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   if (![BuildAction runXcodeBuildCommand:@"clean" withOptions:options]) {

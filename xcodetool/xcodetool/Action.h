@@ -15,6 +15,7 @@
 @interface Action : NSObject
 
 + (NSArray *)options;
++ (NSString *)name;
 
 + (NSDictionary *)actionOptionWithName:(NSString *)name
                                aliases:(NSArray *)aliases

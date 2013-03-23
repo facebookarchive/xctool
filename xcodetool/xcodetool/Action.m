@@ -12,6 +12,12 @@
   return @{};
 }
 
++ (NSString *)name
+{
+  [NSException raise:NSGenericException format:@"Subclass should have implemented 'name'."];
+  return nil;
+}
+
 + (NSDictionary *)actionOptionWithName:(NSString *)name
                                aliases:(NSArray *)aliases
                            description:(NSString *)description
