@@ -7,6 +7,10 @@
 @interface TextReporter : Reporter
 {
   BOOL _isPretty;
+  CFTimeInterval _actionStartedTime;
+
+  NSUInteger _testsTotal;
+  NSUInteger _testsPassed;
 }
 
 @property (nonatomic, retain) NSDictionary *currentBuildCommandEvent;

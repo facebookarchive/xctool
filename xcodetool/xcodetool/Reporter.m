@@ -68,6 +68,8 @@
   [self performSelector:sel withObject:eventDict];
 }
 
+- (void)beginAction:(Action *)action {}
+- (void)endAction:(Action *)action succeeded:(BOOL)succeeded {}
 - (void)beginBuildTarget:(NSDictionary *)event {}
 - (void)endBuildTarget:(NSDictionary *)event {}
 - (void)beginBuildCommand:(NSDictionary *)event {}

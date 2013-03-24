@@ -1,9 +1,11 @@
 
 #import "TextReporter.h"
 #import "NSFileHandle+Print.h"
-
+#import "Action.h"
 #import <sys/ioctl.h>
 #import <unistd.h>
+#import <QuartzCore/QuartzCore.h>
+#import "RunTestsAction.h"
 
 @interface ReportWriter : NSObject
 {
@@ -223,9 +225,40 @@
   return [newParts componentsJoinedByString:@" "];
 }
 
+- (void)beginAction:(Action *)action
+{
+  _actionStartedTime = CACurrentMediaTime();
+  _testsTotal = 0;
+  _testsPassed = 0;
+
+  [self.reportWriter printLine:@"<bold>=== %@ ===<reset>", [[[action class] name] uppercaseString]];
+  [self.reportWriter printNewline];
+  [self.reportWriter increaseIndent];
+}
+
+- (void)endAction:(Action *)action succeeded:(BOOL)succeeded
+{
+  [self.reportWriter decreaseIndent];
+
+  CFTimeInterval duration = (CACurrentMediaTime() - _actionStartedTime);
+  NSString *message = nil;
+  NSString *status = succeeded ? @"SUCCEEDED" : @"FAILED";
+
+  if ([action isKindOfClass:[RunTestsAction class]]) {
+    message = [NSString stringWithFormat:@"%lu of %lu tests passed", _testsPassed, _testsTotal];
+  }
+
+  [self.reportWriter printLine:@"<bold>** %@ %@%@ **<reset> <faint>(%03d ms)<reset>",
+   [[[action class] name] uppercaseString],
+   status,
+   message != nil ? [@": " stringByAppendingString:message] : @"",
+   (int)(duration * 1000)];
+  [self.reportWriter printNewline];
+}
+
 - (void)beginXcodebuild:(NSDictionary *)event
 {
-  [self.reportWriter printLine:@"<bold>%@<reset> <underline>%@<reset>", event[@"command"], event[@"title"]];
+  [self.reportWriter printLine:@"xcodebuild <bold>%@<reset> <underline>%@<reset>", event[@"command"], event[@"title"]];
   [self.reportWriter increaseIndent];
 }
 
@@ -393,7 +426,8 @@
 
 - (void)endTest:(NSDictionary *)event
 {
-  BOOL showInfo = ![event[@"succeeded"] boolValue] || ([event[@"output"] length] > 0);
+  BOOL succeeded = [event[@"succeeded"] boolValue];
+  BOOL showInfo = !succeeded || ([event[@"output"] length] > 0);
   NSString *indicator = nil;
   
   if ([event[@"succeeded"] boolValue]) {
@@ -427,6 +461,11 @@
    event[@"test"],
    [self formattedTestDuration:[event[@"totalDuration"] floatValue] withColor:YES]
    ];
+
+  _testsTotal++;
+  if (succeeded) {
+    _testsPassed++;
+  }
 }
 
 @end

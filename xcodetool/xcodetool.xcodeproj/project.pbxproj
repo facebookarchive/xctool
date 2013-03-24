@@ -69,6 +69,8 @@
 		28E9B9E716C341C000A52E4D /* RawReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9E516C341C000A52E4D /* RawReporter.m */; };
 		28E9B9EB16C34F2B00A52E4D /* TextReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9EA16C34F2B00A52E4D /* TextReporter.m */; };
 		28E9B9EC16C34F2B00A52E4D /* TextReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9EA16C34F2B00A52E4D /* TextReporter.m */; };
+		28FFB00516FF5A21000CCE2A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FFB00416FF5A21000CCE2A /* QuartzCore.framework */; };
+		28FFB00616FF5A2B000CCE2A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FFB00416FF5A21000CCE2A /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -166,6 +168,7 @@
 		28E9B9E516C341C000A52E4D /* RawReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RawReporter.m; sourceTree = "<group>"; };
 		28E9B9E916C34F2B00A52E4D /* TextReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextReporter.h; sourceTree = "<group>"; };
 		28E9B9EA16C34F2B00A52E4D /* TextReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextReporter.m; sourceTree = "<group>"; };
+		28FFB00416FF5A21000CCE2A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,6 +176,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				28FFB00616FF5A2B000CCE2A /* QuartzCore.framework in Frameworks */,
 				283CCA4616C2EA3800F2E343 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -181,6 +185,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				28FFB00516FF5A21000CCE2A /* QuartzCore.framework in Frameworks */,
 				28E9B98E16C2FE4800A52E4D /* OCHamcrest.framework in Frameworks */,
 				28E9B98B16C2FDA700A52E4D /* OCMockito.framework in Frameworks */,
 				283CCAC316C2EE9900F2E343 /* SenTestingKit.framework in Frameworks */,
@@ -247,6 +252,7 @@
 		283CCA4416C2EA3800F2E343 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				28FFB00416FF5A21000CCE2A /* QuartzCore.framework */,
 				28E9B98D16C2FE4800A52E4D /* OCHamcrest.framework */,
 				28E9B98A16C2FDA700A52E4D /* OCMockito.framework */,
 				283CCA4516C2EA3800F2E343 /* Foundation.framework */,

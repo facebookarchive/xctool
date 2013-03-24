@@ -55,7 +55,7 @@
   [reporters makeObjectsPerformSelector:@selector(handleEvent:)
                              withObject:StringForJSON(@{
                                                       @"event": @"begin-xcodebuild",
-                                                      @"command": [xcodeCommand stringByAppendingString:@"-test"],
+                                                      @"command": xcodeCommand,
                                                       @"title": testableTarget,
                                                       })];
 
@@ -66,7 +66,7 @@
   [reporters makeObjectsPerformSelector:@selector(handleEvent:)
                              withObject:StringForJSON(@{
                                                       @"event": @"end-xcodebuild",
-                                                      @"command": [xcodeCommand stringByAppendingString:@"-test"],
+                                                      @"command": xcodeCommand,
                                                       @"title": testableTarget,
                                                       })];
 

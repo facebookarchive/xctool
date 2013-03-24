@@ -1,6 +1,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class Action;
+
 @interface Reporter : NSObject
 {
   NSFileHandle *_outputHandle;
@@ -19,6 +21,8 @@
 - (void)setupOutputHandleWithStandardOutput:(NSFileHandle *)standardOutput;
 - (void)handleEvent:(NSString *)event;
 
+- (void)beginAction:(Action *)action;
+- (void)endAction:(Action *)action succeeded:(BOOL)succeeded;
 - (void)beginBuildTarget:(NSDictionary *)event;
 - (void)endBuildTarget:(NSDictionary *)event;
 - (void)beginBuildCommand:(NSDictionary *)event;

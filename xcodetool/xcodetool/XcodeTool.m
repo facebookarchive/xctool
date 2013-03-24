@@ -120,12 +120,19 @@
     return;
   }
   
-  for (Reporter *reporter in options.reporters) {
-    [reporter setupOutputHandleWithStandardOutput:_standardOutput];
-  }
+  [options.reporters makeObjectsPerformSelector:@selector(setupOutputHandleWithStandardOutput:)
+                                     withObject:_standardOutput];
   
   for (Action *action in options.actions) {
-    if (![action performActionWithOptions:options xcodeSubjectInfo:xcodeSubjectInfo]) {
+    [options.reporters makeObjectsPerformSelector:@selector(beginAction:) withObject:action];
+
+    BOOL succeeded = [action performActionWithOptions:options xcodeSubjectInfo:xcodeSubjectInfo];
+
+    for (Reporter *reporter in options.reporters) {
+      [reporter endAction:action succeeded:succeeded];
+    }
+
+    if (!succeeded) {
       _exitStatus = 1;
     }
   }
