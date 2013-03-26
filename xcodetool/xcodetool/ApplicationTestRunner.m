@@ -4,6 +4,7 @@
 #import "SimulatorLauncher.h"
 #import "LineReader.h"
 #import <launch.h>
+#import "PJSONKit.h"
 
 static void GetJobsIterator(const launch_data_t launch_data, const char *key, void *context) {
   void (^block)(const launch_data_t, const char *) = context;
@@ -101,7 +102,7 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
   
   LineReader *reader = [[[LineReader alloc] initWithFileHandle:outputHandle] autorelease];
   reader.didReadLineBlock = ^(NSString *line){
-    [_reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:line];
+    [_reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:[line XT_objectFromJSONString]];
   };
 
   DTiPhoneSimulatorSessionConfig *sessionConfig =
@@ -175,11 +176,11 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
   NSString *failureReason = nil;
   
   [_reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                              withObject:StringForJSON(@{
-                                                       @"event": @"begin-octest",
-                                                       @"title": _buildSettings[@"FULL_PRODUCT_NAME"],
-                                                       @"titleExtra": _buildSettings[@"SDK_NAME"],
-                                                       })];
+                              withObject:@{
+   @"event": @"begin-octest",
+   @"title": _buildSettings[@"FULL_PRODUCT_NAME"],
+   @"titleExtra": _buildSettings[@"SDK_NAME"],
+   }];
   
   // Sometimes the TEST_HOST will be wrapped in double quotes.
   NSString *testHostPath = [_buildSettings[@"TEST_HOST"] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
@@ -202,13 +203,13 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
   
 Error:
   [_reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                              withObject:StringForJSON(@{
-                                                       @"event": @"end-octest",
-                                                       @"title": _buildSettings[@"FULL_PRODUCT_NAME"],
-                                                       @"titleExtra": _buildSettings[@"SDK_NAME"],
-                                                       @"succeeded" : @(succeeded),
-                                                       @"failureReason" : failureReason != nil ? failureReason : [NSNull null],
-                                                       })];
+                              withObject:@{
+   @"event": @"end-octest",
+   @"title": _buildSettings[@"FULL_PRODUCT_NAME"],
+   @"titleExtra": _buildSettings[@"SDK_NAME"],
+   @"succeeded" : @(succeeded),
+   @"failureReason" : failureReason != nil ? failureReason : [NSNull null],
+   }];
   return succeeded;
 }
 

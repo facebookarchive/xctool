@@ -3,6 +3,7 @@
 #import "XcodeToolUtil.h"
 #import "TaskUtil.h"
 #import "Options.h"
+#import "PJSONKit.h"
 
 @implementation BuildAction
 
@@ -22,22 +23,22 @@
    }];
 
   [options.reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                                     withObject:StringForJSON(@{
-                                                              @"event": @"begin-xcodebuild",
-                                                              @"command": command,
-                                                              @"title": options.scheme,
-                                                              })];
+                                     withObject:@{
+   @"event": @"begin-xcodebuild",
+   @"command": command,
+   @"title": options.scheme,
+   }];
 
   LaunchTaskAndFeedOuputLinesToBlock(task, ^(NSString *line){
-    [options.reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:line];
+    [options.reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:[line XT_objectFromJSONString]];
   });
 
   [options.reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                                     withObject:StringForJSON(@{
-                                                              @"event": @"end-xcodebuild",
-                                                              @"command": command,
-                                                              @"title": options.scheme,
-                                                              })];
+                                     withObject:@{
+   @"event": @"end-xcodebuild",
+   @"command": command,
+   @"title": options.scheme,
+   }];
 
   return [task terminationStatus] == 0 ? YES : NO;
 }

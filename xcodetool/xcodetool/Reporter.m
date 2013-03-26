@@ -41,16 +41,8 @@
   }
 }
 
-- (void)handleEvent:(NSString *)eventLine
+- (void)handleEvent:(NSDictionary *)eventDict
 {
-  NSError *error = nil;
-  NSDictionary *eventDict = [eventLine XT_objectFromJSONStringWithParseOptions:XT_JKParseOptionNone error:&error];
-  
-  if (error != nil) {
-    NSLog(@"ERROR: Can't parse event '%@': %@", eventLine, [error localizedFailureReason]);
-    abort();
-  }
-  
   NSString *event = eventDict[@"event"];
   NSMutableString *selectorName = [NSMutableString string];
   

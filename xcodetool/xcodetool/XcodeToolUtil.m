@@ -100,23 +100,6 @@ NSString *XcodeDeveloperDirPath(void)
   return path;
 }
 
-NSString *StringForJSON(id object)
-{
-  NSError *error = nil;
-  NSData *data = [NSJSONSerialization dataWithJSONObject:object
-                                                 options:0
-                                                   error:&error];
-  
-  if (error != nil) {
-    fprintf(stderr, "ERROR: Error encoding JSON for object: %s: %s\n",
-            [[object description] UTF8String],
-            [[error localizedFailureReason] UTF8String]);
-    exit(1);
-  }
-  
-  return [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
-}
-
 NSString *MakeTempFileWithPrefix(NSString *prefix)
 {
   const char *template = [[NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.XXXXXXX", prefix]] UTF8String];

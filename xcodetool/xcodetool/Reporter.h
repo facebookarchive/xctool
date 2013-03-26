@@ -19,7 +19,7 @@
 - (id)initWithOutputPath:(NSString *)outputPath;
 
 - (void)setupOutputHandleWithStandardOutput:(NSFileHandle *)standardOutput;
-- (void)handleEvent:(NSString *)event;
+- (void)handleEvent:(NSDictionary *)event;
 
 - (void)beginAction:(Action *)action;
 - (void)endAction:(Action *)action succeeded:(BOOL)succeeded;

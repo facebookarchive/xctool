@@ -2,6 +2,7 @@
 #import "LogicTestRunner.h"
 #import "XcodeToolUtil.h"
 #import "TaskUtil.h"
+#import "PJSONKit.h"
 
 @implementation LogicTestRunner
 
@@ -12,11 +13,11 @@
   NSString *octestBundlePath = [_buildSettings[@"BUILT_PRODUCTS_DIR"] stringByAppendingPathComponent:_buildSettings[@"EXECUTABLE_FOLDER_PATH"]];
   
   [_reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                              withObject:StringForJSON(@{
-                                                       @"event": @"begin-octest",
-                                                       @"title": [octestBundlePath lastPathComponent],
-                                                       @"titleExtra": _buildSettings[@"SDK_NAME"],
-                                                       })];
+                              withObject:@{
+   @"event": @"begin-octest",
+   @"title": [octestBundlePath lastPathComponent],
+   @"titleExtra": _buildSettings[@"SDK_NAME"],
+   }];
   
   if ([[NSFileManager defaultManager] fileExistsAtPath:octestBundlePath] ||
       // Always take this path when we're under test.
@@ -52,7 +53,7 @@
     [task setEnvironment:taskEnvironment];
     
     LaunchTaskAndFeedOuputLinesToBlock(task, ^(NSString *line){
-      [_reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:line];
+      [_reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:[line XT_objectFromJSONString]];
     });
     
     succeeded = [task terminationStatus] == 0 ? YES : NO;
@@ -62,13 +63,13 @@
   }
   
   [_reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                              withObject:StringForJSON(@{
-                                                       @"event": @"end-octest",
-                                                       @"title": [octestBundlePath lastPathComponent],
-                                                       @"titleExtra": _buildSettings[@"SDK_NAME"],
-                                                       @"succeeded" : @(succeeded),
-                                                       @"failureReason" : (failureReason ? failureReason : [NSNull null]),
-                                                       })];
+                              withObject:@{
+   @"event": @"end-octest",
+   @"title": [octestBundlePath lastPathComponent],
+   @"titleExtra": _buildSettings[@"SDK_NAME"],
+   @"succeeded" : @(succeeded),
+   @"failureReason" : (failureReason ? failureReason : [NSNull null]),
+   }];
   return succeeded;
 }
 
