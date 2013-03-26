@@ -6,19 +6,10 @@
 
 @implementation LogicTestRunner
 
-- (BOOL)runTests {
-  BOOL succeeded = NO;
-  NSString *failureReason = nil;
-  
+- (BOOL)runTestsWithError:(NSString **)error
+{
   NSString *octestBundlePath = [_buildSettings[@"BUILT_PRODUCTS_DIR"] stringByAppendingPathComponent:_buildSettings[@"EXECUTABLE_FOLDER_PATH"]];
-  
-  [_reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                              withObject:@{
-   @"event": @"begin-octest",
-   @"title": [octestBundlePath lastPathComponent],
-   @"titleExtra": _buildSettings[@"SDK_NAME"],
-   }];
-  
+
   if ([[NSFileManager defaultManager] fileExistsAtPath:octestBundlePath] ||
       // Always take this path when we're under test.
       [[[NSProcessInfo processInfo] processName] isEqualToString:@"otest"]) {
@@ -56,21 +47,11 @@
       [_reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:[line XT_objectFromJSONString]];
     });
     
-    succeeded = [task terminationStatus] == 0 ? YES : NO;
+    return [task terminationStatus] == 0 ? YES : NO;
   } else {
-    succeeded = NO;
-    failureReason = [NSString stringWithFormat:@"Test bundle not found at: %@", octestBundlePath];
+    *error = [NSString stringWithFormat:@"Test bundle not found at: %@", octestBundlePath];
+    return NO;
   }
-  
-  [_reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                              withObject:@{
-   @"event": @"end-octest",
-   @"title": [octestBundlePath lastPathComponent],
-   @"titleExtra": _buildSettings[@"SDK_NAME"],
-   @"succeeded" : @(succeeded),
-   @"failureReason" : (failureReason ? failureReason : [NSNull null]),
-   }];
-  return succeeded;
 }
 
 @end

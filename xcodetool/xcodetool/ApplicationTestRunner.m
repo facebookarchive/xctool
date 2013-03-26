@@ -171,17 +171,8 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
   launch_data_free(getJobsMessage);
 }
 
-- (BOOL)runTests {
-  BOOL succeeded = YES;
-  NSString *failureReason = nil;
-  
-  [_reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                              withObject:@{
-   @"event": @"begin-octest",
-   @"title": _buildSettings[@"FULL_PRODUCT_NAME"],
-   @"titleExtra": _buildSettings[@"SDK_NAME"],
-   }];
-  
+- (BOOL)runTestsWithError:(NSString **)error
+{
   // Sometimes the TEST_HOST will be wrapped in double quotes.
   NSString *testHostPath = [_buildSettings[@"TEST_HOST"] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
   NSString *testHostAppPath = [testHostPath stringByDeletingLastPathComponent];
@@ -190,28 +181,16 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
   NSString *testHostBundleID = plist[@"CFBundleIdentifier"];
 
   if (![self uninstallApplication:testHostBundleID]) {
-    succeeded = NO;
-    failureReason = [NSString stringWithFormat:@"Failed to uninstall the test host app '%@' before running tests.", testHostBundleID];
-    goto Error;
+    *error = [NSString stringWithFormat:@"Failed to uninstall the test host app '%@' before running tests.", testHostBundleID];
+    return NO;
   }
   
   if (![self runTestsInSimulator:testHostAppPath]) {
-    succeeded = NO;
-    failureReason = [NSString stringWithFormat:@"Failed to run tests"];
-    goto Error;
+    *error = [NSString stringWithFormat:@"Failed to run tests"];
+    return NO;
   }
-  
-Error:
-  [_reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                              withObject:@{
-   @"event": @"end-octest",
-   @"title": _buildSettings[@"FULL_PRODUCT_NAME"],
-   @"titleExtra": _buildSettings[@"SDK_NAME"],
-   @"succeeded" : @(succeeded),
-   @"failureReason" : failureReason != nil ? failureReason : [NSNull null],
-   }];
-  return succeeded;
-}
 
+  return YES;
+}
 
 @end

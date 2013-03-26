@@ -205,7 +205,26 @@
                              standardError:nil
                              reporters:reporters] autorelease];
 
-  return [testRunner runTests];
+  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
+                              withObject:@{
+   @"event": @"begin-octest",
+   @"title": testableBuildSettings[@"FULL_PRODUCT_NAME"],
+   @"titleExtra": testableBuildSettings[@"SDK_NAME"],
+   }];
+
+  NSString *error = nil;
+  BOOL succeeded = [testRunner runTestsWithError:&error];
+
+  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
+                              withObject:@{
+   @"event": @"end-octest",
+   @"title": testableBuildSettings[@"FULL_PRODUCT_NAME"],
+   @"titleExtra": testableBuildSettings[@"SDK_NAME"],
+   @"succeeded" : @(succeeded),
+   @"failureReason" : (error ? error : [NSNull null]),
+   }];
+
+  return succeeded;
 }
 
 - (BOOL)runTestables:(NSArray *)testables

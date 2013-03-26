@@ -17,6 +17,6 @@
               standardError:(NSFileHandle *)standardError
                   reporters:(NSArray *)reporters;
 
-- (BOOL)runTests;
+- (BOOL)runTestsWithError:(NSString **)error;
 
 @end

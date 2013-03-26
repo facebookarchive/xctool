@@ -31,7 +31,7 @@
   [super dealloc];
 }
 
-- (BOOL)runTests {
+- (BOOL)runTestsWithError:(NSString **)error {
   return NO;
 }
 
