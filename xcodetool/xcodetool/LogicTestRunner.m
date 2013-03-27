@@ -6,7 +6,7 @@
 
 @implementation LogicTestRunner
 
-- (BOOL)runTestsWithError:(NSString **)error
+- (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock error:(NSString **)error
 {
   NSString *octestBundlePath = [_buildSettings[@"BUILT_PRODUCTS_DIR"] stringByAppendingPathComponent:_buildSettings[@"EXECUTABLE_FOLDER_PATH"]];
 
@@ -43,9 +43,7 @@
     [task setArguments:taskArguments];
     [task setEnvironment:taskEnvironment];
     
-    LaunchTaskAndFeedOuputLinesToBlock(task, ^(NSString *line){
-      [_reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:[line XT_objectFromJSONString]];
-    });
+    LaunchTaskAndFeedOuputLinesToBlock(task, outputLineBlock);
     
     return [task terminationStatus] == 0 ? YES : NO;
   } else {

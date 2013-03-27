@@ -1,5 +1,6 @@
 
 #import "TestRunner.h"
+#import "PJSONKit.h"
 
 @implementation TestRunner
 
@@ -31,8 +32,25 @@
   [super dealloc];
 }
 
-- (BOOL)runTestsWithError:(NSString **)error {
+- (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock error:(NSString **)error
+{
+  // Subclasses will override this method.
   return NO;
+}
+
+- (BOOL)runTestsWithError:(NSString **)error {
+  void (^feedOutputToBlock)(NSString *) = ^(NSString *line) {
+    NSError *parseError = nil;
+    NSDictionary *eventDict = [line XT_objectFromJSONStringWithParseOptions:XT_JKParseOptionNone error:&parseError];
+
+    if (parseError) {
+      [NSException raise:NSGenericException format:@"Failed to parse test output: %@", [parseError localizedFailureReason]];
+    }
+
+    [_reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:eventDict];
+  };
+
+  return [self runTestsAndFeedOutputTo:feedOutputToBlock error:error];
 }
 
 @end

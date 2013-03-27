@@ -94,16 +94,14 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
   return [launcher launchAndWaitForExit];
 }
 
-- (BOOL)runTestsInSimulator:(NSString *)testHostAppPath
+- (BOOL)runTestsInSimulator:(NSString *)testHostAppPath feedOutputToBlock:(void (^)(NSString *))feedOutputToBlock
 {
   NSString *exitModePath = MakeTempFileWithPrefix(@"exit-mode");
   NSString *outputPath = MakeTempFileWithPrefix(@"output");
   NSFileHandle *outputHandle = [NSFileHandle fileHandleForReadingAtPath:outputPath];
   
   LineReader *reader = [[[LineReader alloc] initWithFileHandle:outputHandle] autorelease];
-  reader.didReadLineBlock = ^(NSString *line){
-    [_reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:[line XT_objectFromJSONString]];
-  };
+  reader.didReadLineBlock = feedOutputToBlock;
 
   DTiPhoneSimulatorSessionConfig *sessionConfig =
     [self sessionConfigForRunningTestsWithEnvironment:@{
@@ -171,7 +169,7 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
   launch_data_free(getJobsMessage);
 }
 
-- (BOOL)runTestsWithError:(NSString **)error
+- (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock error:(NSString **)error
 {
   // Sometimes the TEST_HOST will be wrapped in double quotes.
   NSString *testHostPath = [_buildSettings[@"TEST_HOST"] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
@@ -185,7 +183,7 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
     return NO;
   }
   
-  if (![self runTestsInSimulator:testHostAppPath]) {
+  if (![self runTestsInSimulator:testHostAppPath feedOutputToBlock:outputLineBlock]) {
     *error = [NSString stringWithFormat:@"Failed to run tests"];
     return NO;
   }
