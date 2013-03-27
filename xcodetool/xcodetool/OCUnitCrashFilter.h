@@ -20,8 +20,10 @@
 @property (nonatomic, retain) NSMutableArray *currentTestSuiteEventTimestampStack;
 @property (nonatomic, retain) NSMutableArray *currentTestSuiteEventTestCountStack;
 @property (nonatomic, retain) NSMutableString *currentTestOutput;
+@property (nonatomic, retain) NSDictionary *lastTestEvent;
 
 - (void)handleEvent:(NSDictionary *)event;
-- (void)fireEventsToSimulateTestRunFinishing:(NSArray *)reporters;
+- (void)fireEventsToSimulateTestRunFinishing:(NSArray *)reporters fullProductName:(NSString *)fullProductName;
+- (BOOL)testRunWasUnfinished;
 
 @end

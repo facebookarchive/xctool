@@ -56,8 +56,8 @@
 
   BOOL succeeded = [self runTestsAndFeedOutputTo:feedOutputToBlock error:error];
 
-  if (crashFilter.currentTestEvent != nil) {
-    [crashFilter fireEventsToSimulateTestRunFinishing:_reporters];
+  if ([crashFilter testRunWasUnfinished]) {
+    [crashFilter fireEventsToSimulateTestRunFinishing:_reporters fullProductName:_buildSettings[@"FULL_PRODUCT_NAME"]];
   }
 
   return succeeded;

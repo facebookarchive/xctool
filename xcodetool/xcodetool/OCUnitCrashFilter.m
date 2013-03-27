@@ -17,6 +17,17 @@
   return self;
 }
 
+- (void)dealloc
+{
+  self.currentTestEvent = nil;
+  self.currentTestSuiteEventStack = nil;
+  self.currentTestSuiteEventTestCountStack = nil;
+  self.currentTestSuiteEventTimestampStack = nil;
+  self.currentTestOutput = nil;
+  self.lastTestEvent = nil;
+  [super dealloc];
+}
+
 - (void)handleEvent:(NSDictionary *)event
 {
   NSString *eventName = event[@"event"];
@@ -32,6 +43,7 @@
     }
   } else if ([eventName isEqualToString:@"end-test"]) {
     NSAssert(self.currentTestEvent != nil, @"Got 'end-test' event before getting the 'begin-test' event.");
+    self.lastTestEvent = self.currentTestEvent;
     self.currentTestEvent = nil;
     self.currentTestEventTimestamp = 0;
     self.currentTestOutput = nil;
@@ -66,21 +78,61 @@
   }
 }
 
-- (void)fireEventsToSimulateTestRunFinishing:(NSArray *)reporters
+- (void)fireEventsToSimulateTestRunFinishing:(NSArray *)reporters fullProductName:(NSString *)fullProductName
 {
-  // Record this test as a failure in the test suite counts.
-  for (NSMutableDictionary *testSuiteEvent in [self.currentTestSuiteEventTestCountStack reverseObjectEnumerator]) {
-    testSuiteEvent[@"totalFailureCount"] = @([testSuiteEvent[@"totalFailureCount"] intValue] + 1);
-  }
+  if (self.currentTestEvent != nil) {
+    // It looks like we've crashed in the middle of running a test.  Record this test as a failure
+    // in the test suite counts.
+    for (NSMutableDictionary *testSuiteEvent in [self.currentTestSuiteEventTestCountStack reverseObjectEnumerator]) {
+      testSuiteEvent[@"totalFailureCount"] = @([testSuiteEvent[@"totalFailureCount"] intValue] + 1);
+    }
 
-  // Fire a fake 'end-test' event.
-  [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
-   @"event" : @"end-test",
-   @"test" : self.currentTestEvent[@"test"],
-   @"succeeded" : @NO,
-   @"totalDuration" : @(CACurrentMediaTime() - self.currentTestEventTimestamp),
-   @"output" : self.currentTestOutput,
-   }];
+    // Fire a fake 'end-test' event.
+    [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
+     @"event" : @"end-test",
+     @"test" : self.currentTestEvent[@"test"],
+     @"succeeded" : @NO,
+     @"totalDuration" : @(CACurrentMediaTime() - self.currentTestEventTimestamp),
+     @"output" : self.currentTestOutput,
+     }];
+  } else if (self.currentTestSuiteEventStack.count > 0) {
+    // We've crashed outside of a running test.  Usually this means the previously run test
+    // over-released something and OCUnit got an EXC_BAD_ACCESS while trying to drain the
+    // NSAutoreleasePool.  It could be anything, though (e.g. some background thread).
+
+    // To surface this to the Reporter, we create a fictional test.
+    NSString *testName = [NSString stringWithFormat:@"%@_CRASHED", fullProductName];
+    NSString *output =
+      [NSString stringWithFormat:
+       @"The tests crashed immediately after running '%@'.  Even though that test finished, it's "
+       @"likely responsible for the crash.\n"
+       @"\n"
+       @"Tip: Consider re-running this test in Xcode with NSZombieEnabled=YES.  A common cause for "
+       @"these kinds of crashes is over-released objects.  OCUnit creates a NSAutoreleasePool "
+       @"before starting your test and drains it at the end of your test.  If an object has been "
+       @"over-released, it'll trigger an EXC_BAD_ACCESS crash when draining the pool.\n",
+       self.lastTestEvent[@"test"]];
+    [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
+     @"event" : @"begin-test",
+     @"test" : testName,
+     }];
+    [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
+     @"event" : @"test-output",
+     @"output" : output,
+     }];
+    [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
+     @"event" : @"end-test",
+     @"test" : testName,
+     @"succeeded" : @NO,
+     @"totalDuration" : @(0),
+     @"output" : output,
+     }];
+    
+    for (NSMutableDictionary *testSuiteEvent in [self.currentTestSuiteEventTestCountStack reverseObjectEnumerator]) {
+      testSuiteEvent[@"testCaseCount"] = @([testSuiteEvent[@"testCaseCount"] intValue] + 1);
+      testSuiteEvent[@"totalFailureCount"] = @([testSuiteEvent[@"totalFailureCount"] intValue] + 1);
+    }
+  }
 
   // For off any 'end-test-suite' events to keep the reporter sane (it expects every
   // suite to finish).
@@ -97,6 +149,11 @@
      @"totalFailureCount" : testSuiteCounts[@"totalFailureCount"],
      }];
   }
+}
+
+- (BOOL)testRunWasUnfinished
+{
+  return (self.currentTestEvent != nil || self.currentTestSuiteEventStack.count > 0);
 }
 
 @end

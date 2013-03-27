@@ -54,7 +54,7 @@
      @{@"event" : @"end-test-suite", @"suite" : @"/path/to/TestProject-LibraryTests.octest(Tests)", @"testCaseCount" : @1, @"totalFailureCount" : @0, @"totalDuration" : @1.0, @"testDuration" : @1.0, @"unexpectedExceptionCount" : @0},
      @{@"event" : @"end-test-suite", @"suite" : @"All tests", @"testCaseCount" : @1, @"totalFailureCount" : @0, @"totalDuration" : @1.0, @"testDuration" : @1.0, @"unexpectedExceptionCount" : @0},
      ]];
-  assertThat(filter.currentTestEvent, equalTo(nil));
+  assertThatBool([filter testRunWasUnfinished], equalToBool(NO));
 }
 
 - (void)testCanGenerateCorrectEventsWhenTestNeverFinishes
@@ -66,10 +66,12 @@
      @{@"event" : @"begin-test-suite", @"suite" : @"OtherTests"},
      @{@"event" : @"begin-test", @"test" : @"-[OtherTests testSomething]"},
      ]];
+  assertThatBool([filter testRunWasUnfinished], equalToBool(YES));
   assertThat(filter.currentTestEvent, notNilValue());
   
   NSMutableArray *generatedEvents = [NSMutableArray array];
-  [filter fireEventsToSimulateTestRunFinishing:@[[FakeReporter fakeReporterThatSavesTo:generatedEvents]]];
+  [filter fireEventsToSimulateTestRunFinishing:@[[FakeReporter fakeReporterThatSavesTo:generatedEvents]]
+                               fullProductName:@"TestProject-LibraryTests.octest"];
   
   assertThatInteger((generatedEvents.count), equalToInteger(4));
   
@@ -82,6 +84,47 @@
   assertThat(generatedEvents[1][@"event"], equalTo(@"end-test-suite"));
   assertThat(generatedEvents[2][@"event"], equalTo(@"end-test-suite"));
   assertThat(generatedEvents[3][@"event"], equalTo(@"end-test-suite"));
+}
+
+- (void)testCanGenerateCorrectEventsWhenTestFinishesButCrashesImmediatelyAfterwards
+{
+  // This is a common case where we've over-released something.  When OCUnit runs
+  // a test, it creates a new NSAutoreleasePool before starting the test, and drains
+  // it immediately afterwards.  If we over-release something that's already been
+  // added to the autorelease pool, then the test runner will crash with EXC_BAD_ACCESS
+  // as soon as the pool is drained.
+  
+  OCUnitCrashFilter *filter =
+    [self filterWithEvents:@[
+     @{@"event" : @"begin-test-suite", @"suite" : @"All tests"},
+     @{@"event" : @"begin-test-suite", @"suite" : @"/path/to/TestProject-LibraryTests.octest(Tests)"},
+     @{@"event" : @"begin-test-suite", @"suite" : @"OtherTests"},
+     @{@"event" : @"begin-test", @"test" : @"-[OtherTests testSomething]"},
+     @{@"event" : @"end-test", @"test" : @"-[OtherTests testSomething]", @"succeeded" : @YES, @"output" : @"", @"totalDuration" : @1.0},
+     ]];
+  assertThatBool([filter testRunWasUnfinished], equalToBool(YES));
+  
+  NSMutableArray *generatedEvents = [NSMutableArray array];
+  [filter fireEventsToSimulateTestRunFinishing:@[[FakeReporter fakeReporterThatSavesTo:generatedEvents]]
+                               fullProductName:@"TestProject-LibraryTests.octest"];
+  
+  assertThatInteger((generatedEvents.count), equalToInteger(6));
+  
+  // The test should get marked as a failure
+  assertThat(generatedEvents[0][@"event"], equalTo(@"begin-test"));
+  assertThat(generatedEvents[0][@"test"], equalTo(@"TestProject-LibraryTests.octest_CRASHED"));
+
+  assertThat(generatedEvents[1][@"event"], equalTo(@"test-output"));
+  assertThat(generatedEvents[1][@"output"], startsWith(@"The tests crashed"));
+  
+  assertThat(generatedEvents[2][@"event"], equalTo(@"end-test"));
+  assertThat(generatedEvents[2][@"test"], equalTo(@"TestProject-LibraryTests.octest_CRASHED"));
+  assertThat(generatedEvents[2][@"succeeded"], equalTo(@NO));
+  
+  // And 'end-test-suite' events should get sent for each of the suites we were in.
+  assertThat(generatedEvents[3][@"event"], equalTo(@"end-test-suite"));
+  assertThat(generatedEvents[4][@"event"], equalTo(@"end-test-suite"));
+  assertThat(generatedEvents[5][@"event"], equalTo(@"end-test-suite"));
 }
 
 @end
