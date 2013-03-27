@@ -71,19 +71,24 @@
   
   NSMutableArray *generatedEvents = [NSMutableArray array];
   [filter fireEventsToSimulateTestRunFinishing:@[[FakeReporter fakeReporterThatSavesTo:generatedEvents]]
-                               fullProductName:@"TestProject-LibraryTests.octest"];
+                               fullProductName:@"TestProject-LibraryTests.octest"
+                      concatenatedCrashReports:@"CONCATENATED_CRASH_REPORTS_GO_HERE"];
   
-  assertThatInteger((generatedEvents.count), equalToInteger(4));
+  assertThatInteger((generatedEvents.count), equalToInteger(5));
+  
+  // We should see another 'test-output' event with the crash report text.
+  assertThat(generatedEvents[0][@"event"], equalTo(@"test-output"));
+  assertThat(generatedEvents[0][@"output"], equalTo(@"CONCATENATED_CRASH_REPORTS_GO_HERE"));
   
   // The test should get marked as a failure
-  assertThat(generatedEvents[0][@"event"], equalTo(@"end-test"));
-  assertThat(generatedEvents[0][@"test"], equalTo(@"-[OtherTests testSomething]"));
-  assertThat(generatedEvents[0][@"succeeded"], equalTo(@NO));
+  assertThat(generatedEvents[1][@"event"], equalTo(@"end-test"));
+  assertThat(generatedEvents[1][@"test"], equalTo(@"-[OtherTests testSomething]"));
+  assertThat(generatedEvents[1][@"succeeded"], equalTo(@NO));
 
   // And 'end-test-suite' events should get sent for each of the suites we were in.
-  assertThat(generatedEvents[1][@"event"], equalTo(@"end-test-suite"));
   assertThat(generatedEvents[2][@"event"], equalTo(@"end-test-suite"));
   assertThat(generatedEvents[3][@"event"], equalTo(@"end-test-suite"));
+  assertThat(generatedEvents[4][@"event"], equalTo(@"end-test-suite"));
 }
 
 - (void)testCanGenerateCorrectEventsWhenTestFinishesButCrashesImmediatelyAfterwards
@@ -106,7 +111,8 @@
   
   NSMutableArray *generatedEvents = [NSMutableArray array];
   [filter fireEventsToSimulateTestRunFinishing:@[[FakeReporter fakeReporterThatSavesTo:generatedEvents]]
-                               fullProductName:@"TestProject-LibraryTests.octest"];
+                               fullProductName:@"TestProject-LibraryTests.octest"
+                      concatenatedCrashReports:@"CONCATENATED_CRASH_REPORTS_GO_HERE"];
   
   assertThatInteger((generatedEvents.count), equalToInteger(6));
   

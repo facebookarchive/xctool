@@ -23,7 +23,9 @@
 @property (nonatomic, retain) NSDictionary *lastTestEvent;
 
 - (void)handleEvent:(NSDictionary *)event;
-- (void)fireEventsToSimulateTestRunFinishing:(NSArray *)reporters fullProductName:(NSString *)fullProductName;
+- (void)fireEventsToSimulateTestRunFinishing:(NSArray *)reporters
+                             fullProductName:(NSString *)fullProductName
+                    concatenatedCrashReports:(NSString *)concatenatedCrashReports;
 - (BOOL)testRunWasUnfinished;
 
 @end

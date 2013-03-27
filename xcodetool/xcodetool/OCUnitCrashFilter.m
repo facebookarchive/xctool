@@ -78,7 +78,9 @@
   }
 }
 
-- (void)fireEventsToSimulateTestRunFinishing:(NSArray *)reporters fullProductName:(NSString *)fullProductName
+- (void)fireEventsToSimulateTestRunFinishing:(NSArray *)reporters
+                             fullProductName:(NSString *)fullProductName
+                    concatenatedCrashReports:(NSString *)concatenatedCrashReports
 {
   if (self.currentTestEvent != nil) {
     // It looks like we've crashed in the middle of running a test.  Record this test as a failure
@@ -87,13 +89,20 @@
       testSuiteEvent[@"totalFailureCount"] = @([testSuiteEvent[@"totalFailureCount"] intValue] + 1);
     }
 
+    // Fire another 'test-output' event - we'll include the crash report as if it
+    // was written to stdout in the test.
+    [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
+     @"event" : @"test-output",
+     @"output" : concatenatedCrashReports,
+     }];
+    
     // Fire a fake 'end-test' event.
     [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
      @"event" : @"end-test",
      @"test" : self.currentTestEvent[@"test"],
      @"succeeded" : @NO,
      @"totalDuration" : @(CACurrentMediaTime() - self.currentTestEventTimestamp),
-     @"output" : self.currentTestOutput,
+     @"output" : [self.currentTestOutput stringByAppendingString:concatenatedCrashReports],
      }];
   } else if (self.currentTestSuiteEventStack.count > 0) {
     // We've crashed outside of a running test.  Usually this means the previously run test
@@ -110,8 +119,11 @@
        @"Tip: Consider re-running this test in Xcode with NSZombieEnabled=YES.  A common cause for "
        @"these kinds of crashes is over-released objects.  OCUnit creates a NSAutoreleasePool "
        @"before starting your test and drains it at the end of your test.  If an object has been "
-       @"over-released, it'll trigger an EXC_BAD_ACCESS crash when draining the pool.\n",
-       self.lastTestEvent[@"test"]];
+       @"over-released, it'll trigger an EXC_BAD_ACCESS crash when draining the pool.\n"
+       @"\n"
+       @"%@",
+       self.lastTestEvent[@"test"],
+       concatenatedCrashReports];
     [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
      @"event" : @"begin-test",
      @"test" : testName,
