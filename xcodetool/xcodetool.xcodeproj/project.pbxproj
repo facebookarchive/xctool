@@ -35,6 +35,9 @@
 		283CCAD916C2F13A00F2E343 /* NSFileHandle+Print.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCAD816C2F13A00F2E343 /* NSFileHandle+Print.m */; };
 		283CCADA16C2F13A00F2E343 /* NSFileHandle+Print.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCAD816C2F13A00F2E343 /* NSFileHandle+Print.m */; };
 		283CCADB16C2F14C00F2E343 /* XcodeTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCAD516C2F10A00F2E343 /* XcodeTool.m */; };
+		283EAF12170288FE00CE0A0C /* OCUnitCrashFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 283EAF11170288FE00CE0A0C /* OCUnitCrashFilter.m */; };
+		283EAF13170288FE00CE0A0C /* OCUnitCrashFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 283EAF11170288FE00CE0A0C /* OCUnitCrashFilter.m */; };
+		283EAF161702BB0600CE0A0C /* OCUnitCrashFilterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 283EAF151702BB0600CE0A0C /* OCUnitCrashFilterTests.m */; };
 		287A37DE16C711AF00319E81 /* LineReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A37DD16C711AE00319E81 /* LineReader.m */; };
 		287A37E116C711E000319E81 /* SimulatorLauncher.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A37E016C711E000319E81 /* SimulatorLauncher.m */; };
 		287A37E216C711E000319E81 /* SimulatorLauncher.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A37E016C711E000319E81 /* SimulatorLauncher.m */; };
@@ -134,6 +137,9 @@
 		283CCAD516C2F10A00F2E343 /* XcodeTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = XcodeTool.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		283CCAD716C2F13A00F2E343 /* NSFileHandle+Print.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileHandle+Print.h"; sourceTree = "<group>"; };
 		283CCAD816C2F13A00F2E343 /* NSFileHandle+Print.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileHandle+Print.m"; sourceTree = "<group>"; };
+		283EAF10170288FE00CE0A0C /* OCUnitCrashFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUnitCrashFilter.h; sourceTree = "<group>"; };
+		283EAF11170288FE00CE0A0C /* OCUnitCrashFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitCrashFilter.m; sourceTree = "<group>"; };
+		283EAF151702BB0600CE0A0C /* OCUnitCrashFilterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitCrashFilterTests.m; sourceTree = "<group>"; };
 		287A37DC16C711AE00319E81 /* LineReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LineReader.h; sourceTree = "<group>"; };
 		287A37DD16C711AE00319E81 /* LineReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LineReader.m; sourceTree = "<group>"; };
 		287A37DF16C711E000319E81 /* SimulatorLauncher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimulatorLauncher.h; sourceTree = "<group>"; };
@@ -290,6 +296,8 @@
 				287BF08316F1A97900590E06 /* XcodeSubjectInfo.m */,
 				28ACFC8116FBA888004BAF33 /* TaskUtil.h */,
 				28ACFC8216FBA888004BAF33 /* TaskUtil.m */,
+				283EAF10170288FE00CE0A0C /* OCUnitCrashFilter.h */,
+				283EAF11170288FE00CE0A0C /* OCUnitCrashFilter.m */,
 			);
 			path = xcodetool;
 			sourceTree = "<group>";
@@ -328,6 +336,7 @@
 				283479B716E3EBE5003C3B77 /* TestUtil.h */,
 				283479B816E3EBE5003C3B77 /* TestUtil.m */,
 				287BF04C16F1A6EB00590E06 /* XcodeSubjectInfoTests.m */,
+				283EAF151702BB0600CE0A0C /* OCUnitCrashFilterTests.m */,
 			);
 			path = "xcodetool-tests";
 			sourceTree = "<group>";
@@ -485,6 +494,7 @@
 				283479B516E2B39C003C3B77 /* RunTestsAction.m in Sources */,
 				287BF08416F1A97900590E06 /* XcodeSubjectInfo.m in Sources */,
 				28ACFC8316FBA888004BAF33 /* TaskUtil.m in Sources */,
+				283EAF12170288FE00CE0A0C /* OCUnitCrashFilter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -522,6 +532,8 @@
 				287BF04D16F1A6EB00590E06 /* XcodeSubjectInfoTests.m in Sources */,
 				287BF08516F1A97900590E06 /* XcodeSubjectInfo.m in Sources */,
 				28ACFC8416FBA888004BAF33 /* TaskUtil.m in Sources */,
+				283EAF13170288FE00CE0A0C /* OCUnitCrashFilter.m in Sources */,
+				283EAF161702BB0600CE0A0C /* OCUnitCrashFilterTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

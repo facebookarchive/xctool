@@ -1,6 +1,7 @@
 
 #import "TestRunner.h"
 #import "PJSONKit.h"
+#import "OCUnitCrashFilter.h"
 
 @implementation TestRunner
 
@@ -39,18 +40,27 @@
 }
 
 - (BOOL)runTestsWithError:(NSString **)error {
+  OCUnitCrashFilter *crashFilter = [[[OCUnitCrashFilter alloc] init] autorelease];
+
   void (^feedOutputToBlock)(NSString *) = ^(NSString *line) {
     NSError *parseError = nil;
-    NSDictionary *eventDict = [line XT_objectFromJSONStringWithParseOptions:XT_JKParseOptionNone error:&parseError];
+    NSDictionary *event = [line XT_objectFromJSONStringWithParseOptions:XT_JKParseOptionNone error:&parseError];
 
     if (parseError) {
       [NSException raise:NSGenericException format:@"Failed to parse test output: %@", [parseError localizedFailureReason]];
     }
 
-    [_reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:eventDict];
+    [_reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:event];
+    [crashFilter handleEvent:event];
   };
 
-  return [self runTestsAndFeedOutputTo:feedOutputToBlock error:error];
+  BOOL succeeded = [self runTestsAndFeedOutputTo:feedOutputToBlock error:error];
+
+  if (crashFilter.currentTestEvent != nil) {
+    [crashFilter fireEventsToSimulateTestRunFinishing:_reporters];
+  }
+
+  return succeeded;
 }
 
 @end
