@@ -103,7 +103,7 @@
   NSString *name = argumentParts[0];
   NSString *outputFile = (argumentParts.count > 1) ? argumentParts[1] : @"-";
   
-  [self.reporters addObject:[Reporter reporterWithName:name outputPath:outputFile]];
+  [self.reporters addObject:[Reporter reporterWithName:name outputPath:outputFile options:self]];
 }
 
 - (void)addBuildSetting:(NSString *)argument
@@ -230,7 +230,7 @@
   }
   
   if (self.reporters.count == 0) {
-    [self.reporters addObject:[Reporter reporterWithName:@"pretty" outputPath:@"-"]];
+    [self.reporters addObject:[Reporter reporterWithName:@"pretty" outputPath:@"-" options:self]];
   }
   
   for (Action *action in self.actions) {

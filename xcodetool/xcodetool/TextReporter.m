@@ -142,9 +142,9 @@
 
 @implementation TextReporter
 
-- (id)initWithOutputPath:(NSString *)outputPath
+- (id)init
 {
-  if (self = [super initWithOutputPath:outputPath]) {
+  if (self = [super init]) {
     _isPretty = [self isKindOfClass:[PrettyTextReporter class]];
   }
   return self;

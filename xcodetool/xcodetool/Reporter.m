@@ -4,10 +4,11 @@
 #import "RawReporter.h"
 #import "TextReporter.h"
 #import "PJSONKit.h"
+#import "Options.h"
 
 @implementation Reporter
 
-+ (Reporter *)reporterWithName:(NSString *)name outputPath:(NSString *)outputPath
++ (Reporter *)reporterWithName:(NSString *)name outputPath:(NSString *)outputPath options:(Options *)options
 {
   NSDictionary *reporters = @{@"raw": [RawReporter class],
                               @"pretty": [PrettyTextReporter class],
@@ -15,13 +16,16 @@
                               };
   
   Class reporterClass = reporters[name];
-  return [[[reporterClass alloc] initWithOutputPath:outputPath] autorelease];
+
+  Reporter *reporter = [[[reporterClass alloc] init] autorelease];
+  reporter.outputPath = outputPath;
+  reporter.options = options;
+  return reporter;
 }
 
-- (id)initWithOutputPath:(NSString *)outputPath
+- (id)init
 {
   if (self = [super init]) {
-    self.outputPath = outputPath;
   }
   return self;
 }
@@ -29,6 +33,8 @@
 - (void)dealloc
 {
   [_outputHandle release];
+  [_outputPath release];
+  [_options release];
   [super dealloc];
 }
 
