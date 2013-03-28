@@ -3,6 +3,7 @@
 #import "Reporter.h"
 #import "RawReporter.h"
 #import "TextReporter.h"
+#import "PhabricatorReporter.h"
 #import "PJSONKit.h"
 #import "Options.h"
 
@@ -13,6 +14,7 @@
   NSDictionary *reporters = @{@"raw": [RawReporter class],
                               @"pretty": [PrettyTextReporter class],
                               @"plain": [PlainTextReporter class],
+                              @"phabricator": [PhabricatorReporter class],
                               };
   
   Class reporterClass = reporters[name];
