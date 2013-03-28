@@ -37,4 +37,9 @@
 - (void)endTest:(NSDictionary *)event;
 - (void)testOutput:(NSDictionary *)event;
 
+/*
+ To be called just before xcodetool exits.
+ */
+- (void)close;
+
 @end

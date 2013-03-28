@@ -137,12 +137,7 @@
     }
   }
   
-  for (Reporter *reporter in options.reporters) {
-    @try {
-      [[reporter outputHandle] synchronizeFile];
-    } @catch (NSException *ex) {
-    }
-  }
+  [options.reporters makeObjectsPerformSelector:@selector(close)];
 }
 
 

@@ -1,4 +1,5 @@
 
+#import <sys/stat.h>
 #import "Reporter.h"
 #import "RawReporter.h"
 #import "TextReporter.h"
@@ -76,6 +77,17 @@
 - (void)endTest:(NSDictionary *)event {}
 - (void)testOutput:(NSDictionary *)event {}
 
+- (void)close
+{
+  // Be sure everything gets flushed.
+  struct stat fdstat = {0};
+  NSAssert(fstat([_outputHandle fileDescriptor], &fdstat) == 0, @"fstat() failed: %s", strerror(errno));
 
+  // Don't call synchronizeFile for pipes - it's not supported.  All of the automated
+  // tests pass around pipes, so it's important to have this check.
+  if (!S_ISFIFO(fdstat.st_mode)) {
+    [_outputHandle synchronizeFile];
+  }
+}
 
 @end
