@@ -30,9 +30,9 @@ static NSString *StringByStandardizingPath(NSString *path)
   
   NSURL *URL = [NSURL fileURLWithPath:[workspacePath stringByAppendingPathComponent:@"contents.xcworkspacedata"]];
   NSError *error = nil;
-  NSXMLDocument *doc = [[NSXMLDocument alloc] initWithContentsOfURL:URL
-                                                            options:0
-                                                              error:&error];
+  NSXMLDocument *doc = [[[NSXMLDocument alloc] initWithContentsOfURL:URL
+                                                             options:0
+                                                               error:&error] autorelease];
   if (error != nil) {
     NSLog(@"Error in parsing: %@: %@", workspacePath, error);
     abort();
@@ -141,9 +141,9 @@ static NSString *StringByStandardizingPath(NSString *path)
 - (NSArray *)testablesInSchemePath:(NSString *)schemePath basePath:(NSString *)basePath
 {
   NSError *error = nil;
-  NSXMLDocument *doc = [[NSXMLDocument alloc] initWithContentsOfURL:[NSURL fileURLWithPath:schemePath]
-                                                            options:0
-                                                              error:&error];
+  NSXMLDocument *doc = [[[NSXMLDocument alloc] initWithContentsOfURL:[NSURL fileURLWithPath:schemePath]
+                                                             options:0
+                                                               error:&error] autorelease];
   if (error != nil) {
     NSLog(@"Error in parsing: %@: %@", schemePath, error);
     abort();
@@ -193,9 +193,9 @@ static NSString *StringByStandardizingPath(NSString *path)
 - (NSArray *)buildablesForTestInSchemePath:(NSString *)schemePath basePath:(NSString *)basePath
 {
   NSError *error = nil;
-  NSXMLDocument *doc = [[NSXMLDocument alloc] initWithContentsOfURL:[NSURL fileURLWithPath:schemePath]
-                                                            options:0
-                                                              error:&error];
+  NSXMLDocument *doc = [[[NSXMLDocument alloc] initWithContentsOfURL:[NSURL fileURLWithPath:schemePath]
+                                                             options:0
+                                                               error:&error] autorelease];
   if (error != nil) {
     NSLog(@"Error in parsing: %@: %@", schemePath, error);
     abort();

@@ -54,12 +54,12 @@ NSDictionary *LaunchTaskAndCaptureOutput(NSTask *task)
 
   void (^completionBlock)(NSNotification *) = ^(NSNotification *notification){
     NSData *data = notification.userInfo[NSFileHandleNotificationDataItem];
-    NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSString *str = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
 
     if (notification.object == stdoutHandle) {
-      standardOutput = str;
+      standardOutput = [str retain];
     } else if (notification.object == stderrHandle) {
-      standardError = str;
+      standardError = [str retain];
     }
 
     CFRunLoopStop(CFRunLoopGetCurrent());
@@ -88,7 +88,12 @@ NSDictionary *LaunchTaskAndCaptureOutput(NSTask *task)
   [[NSNotificationCenter defaultCenter] removeObserver:stdoutObserver];
   [[NSNotificationCenter defaultCenter] removeObserver:stderrObserver];
 
-  return @{@"stdout" : standardOutput, @"stderr" : standardError};
+  NSDictionary *output = @{@"stdout" : standardOutput, @"stderr" : standardError};
+
+  [standardOutput release];
+  [standardError release];
+
+  return output;
 }
 
 void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, void (^block)(NSString *))
