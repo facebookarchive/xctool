@@ -13,7 +13,7 @@
 
 @property (nonatomic, assign) NSInteger indent;
 @property (nonatomic, assign) NSInteger savedIndent;
-@property (nonatomic, assign) BOOL useANSI;
+@property (nonatomic, assign) BOOL useColorOutput;
 @property (nonatomic, retain) NSFileHandle *outputHandle;
 @property (nonatomic, retain) NSString *lastLineUpdate;
 
@@ -79,7 +79,7 @@
                              };
   
   for (NSString *ansiTag in [ansiTags allKeys]) {
-    NSString *replaceWith = self.useANSI ? ansiTags[ansiTag] : @"";
+    NSString *replaceWith = self.useColorOutput ? ansiTags[ansiTag] : @"";
     [str replaceOccurrencesOfString:ansiTag withString:replaceWith options:0 range:NSMakeRange(0, [str length])];
   }
 
@@ -102,7 +102,7 @@
 
 - (void)printNewline
 {
-  if (self.lastLineUpdate != nil && !_useANSI) {
+  if (self.lastLineUpdate != nil && !_useColorOutput) {
     [self.outputHandle writeData:[self.lastLineUpdate dataUsingEncoding:NSUTF8StringEncoding]];
     self.lastLineUpdate = nil;
   }
@@ -113,7 +113,7 @@
 {
   NSString *line = [self formattedStringWithFormat:format arguments:argList];;
 
-  if (_useANSI) {
+  if (_useColorOutput) {
     [self.outputHandle writeData:[@"\r" dataUsingEncoding:NSUTF8StringEncoding]];
     [self.outputHandle writeData:[line dataUsingEncoding:NSUTF8StringEncoding]];
   } else {
@@ -156,7 +156,7 @@
   // self.outputHandle will either be a file handle for stdout or a file handle for
   // some file on disk.
   self.reportWriter = [[[ReportWriter alloc] initWithOutputHandle:self.outputHandle] autorelease];
-  self.reportWriter.useANSI = _isPretty;
+  self.reportWriter.useColorOutput = _isPretty;
 }
 
 - (NSString *)passIndicatorString

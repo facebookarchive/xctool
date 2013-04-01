@@ -1,13 +1,11 @@
+
 //
-// iOS-Simulator-Dylib.xcconfig - a workaround to build iOS dynamic libraries in Xcode.
-//
-// Apple doesn't provide Xcode project templates for iOS dylibs.  There are workarounds for this
-// ( http://sumgroup.wikispaces.com/iPhone_Dynamic_Library ), but they require patching your Xcode
-// install.
+// Trick Xcode into building this as a dynamic lib for iOS.
 //
 
-_IOS_SDK_VERSION = 5.0
-_IOS_SDK_VERSION_EXPANDED = 50000
+// These versions must match an installed iPhoneSimulator SDK or the build will fail in Xcode.
+XT_IOS_SDK_VERSION = 6.1
+XT_IOS_SDK_VERSION_EXPANDED = 61000
 
 // Must be set to 'macosx' or you'll get an error:
 //    target specifies product type 'com.apple.product-type.library.dynamic', but there's no
@@ -30,7 +28,7 @@ VALID_ARCHS = i386
 //    availability macros think we're building for OS X (and, therefore, cannot use iOS-specific
 //    classes).  Setting __IPHONE_OS_VERSION_MIN_REQUIRED convinces the availability macros we're
 //    building for iOS.
-_OTHER_CFLAGS = -fobjc-abi-version=2 -D__IPHONE_OS_VERSION_MIN_REQUIRED=$(_IOS_SDK_VERSION_EXPANDED)
+_OTHER_CFLAGS = -fobjc-abi-version=2 -D__IPHONE_OS_VERSION_MIN_REQUIRED=$(XT_IOS_SDK_VERSION_EXPANDED)
 
-OTHER_CFLAGS = -isysroot $(PLATFORM_DIR)/../iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(_IOS_SDK_VERSION).sdk $(_OTHER_CFLAGS) -F$(PLATFORM_DIR)/../iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(_IOS_SDK_VERSION).sdk/Developer/Library/Frameworks
-OTHER_LDFLAGS = -isysroot $(PLATFORM_DIR)/../iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(_IOS_SDK_VERSION).sdk -F$(PLATFORM_DIR)/../iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(_IOS_SDK_VERSION).sdk/Developer/Library/Frameworks
+OTHER_CFLAGS = -isysroot $(PLATFORM_DIR)/../iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(XT_IOS_SDK_VERSION).sdk $(_OTHER_CFLAGS) -F$(PLATFORM_DIR)/../iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(XT_IOS_SDK_VERSION).sdk/Developer/Library/Frameworks
+OTHER_LDFLAGS = -isysroot $(PLATFORM_DIR)/../iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(XT_IOS_SDK_VERSION).sdk -F$(PLATFORM_DIR)/../iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(XT_IOS_SDK_VERSION).sdk/Developer/Library/Frameworks
