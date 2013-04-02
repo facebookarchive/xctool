@@ -120,8 +120,14 @@
     return;
   }
   
-  [options.reporters makeObjectsPerformSelector:@selector(setupOutputHandleWithStandardOutput:)
-                                     withObject:_standardOutput];
+  for (Reporter *reporter in options.reporters) {
+    NSString *error = nil;
+    if (![reporter openWithStandardOutput:_standardOutput error:&error]) {
+      [_standardError printString:@"ERROR: %@\n\n", error];
+      _exitStatus = 1;
+      return;
+    }
+  }
   
   for (Action *action in options.actions) {
     [options.reporters makeObjectsPerformSelector:@selector(beginAction:) withObject:action];

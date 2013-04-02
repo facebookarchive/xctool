@@ -150,13 +150,17 @@
   return self;
 }
 
-- (void)setupOutputHandleWithStandardOutput:(NSFileHandle *)standardOutput {
-  [super setupOutputHandleWithStandardOutput:standardOutput];
-  
-  // self.outputHandle will either be a file handle for stdout or a file handle for
-  // some file on disk.
-  self.reportWriter = [[[ReportWriter alloc] initWithOutputHandle:self.outputHandle] autorelease];
-  self.reportWriter.useColorOutput = _isPretty;
+- (BOOL)openWithStandardOutput:(NSFileHandle *)standardOutput error:(NSString **)error
+{
+  if ([super openWithStandardOutput:standardOutput error:error]) {
+    // self.outputHandle will either be a file handle for stdout or a file handle for
+    // some file on disk.
+    self.reportWriter = [[[ReportWriter alloc] initWithOutputHandle:self.outputHandle] autorelease];
+    self.reportWriter.useColorOutput = _isPretty;
+    return YES;
+  } else {
+    return NO;
+  }
 }
 
 - (NSString *)passIndicatorString

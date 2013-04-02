@@ -18,7 +18,6 @@
 @property (nonatomic, readonly) NSFileHandle *outputHandle;
 @property (nonatomic, retain) Options *options;
 
-- (void)setupOutputHandleWithStandardOutput:(NSFileHandle *)standardOutput;
 - (void)handleEvent:(NSDictionary *)event;
 
 - (void)beginAction:(Action *)action;
@@ -37,7 +36,12 @@
 - (void)endTest:(NSDictionary *)event;
 - (void)testOutput:(NSDictionary *)event;
 
-/*
+/**
+ To be called before any action is run.
+ */
+- (BOOL)openWithStandardOutput:(NSFileHandle *)standardOutput error:(NSString **)error;
+
+/**
  To be called just before xcodetool exits.
  */
 - (void)close;

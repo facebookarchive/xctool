@@ -40,13 +40,20 @@
   [super dealloc];
 }
 
-- (void)setupOutputHandleWithStandardOutput:(NSFileHandle *)standardOutput
+- (BOOL)openWithStandardOutput:(NSFileHandle *)standardOutput error:(NSString **)error
 {
   if ([self.outputPath isEqualToString:@"-"]) {
     _outputHandle = [standardOutput retain];
+    return YES;
   } else {
-    [[NSFileManager defaultManager] createFileAtPath:self.outputPath contents:nil attributes:nil];
+    if (![[NSFileManager defaultManager] createFileAtPath:self.outputPath contents:nil attributes:nil]) {
+      *error = [NSString stringWithFormat:@"Failed to create file at '%@'.", self.outputPath];
+      return NO;
+    }
+
     _outputHandle = [[NSFileHandle fileHandleForWritingAtPath:self.outputPath] retain];
+
+    return YES;
   }
 }
 

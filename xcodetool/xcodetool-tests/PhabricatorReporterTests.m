@@ -17,7 +17,7 @@
   PhabricatorReporter *reporter = (PhabricatorReporter *)[Reporter reporterWithName:@"phabricator"
                                                                          outputPath:@"-"
                                                                             options:options];
-  [reporter setupOutputHandleWithStandardOutput:[NSFileHandle fileHandleWithNullDevice]];
+  [reporter openWithStandardOutput:[NSFileHandle fileHandleWithNullDevice] error:nil];
 
   NSString *pathContents = [NSString stringWithContentsOfFile:path
                                                      encoding:NSUTF8StringEncoding
