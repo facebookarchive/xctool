@@ -91,19 +91,25 @@
   if (self = [super init])
   {
     self.reporters = [NSMutableArray array];
+    _reporterOptions = [[NSMutableArray alloc] init];
     self.buildSettings = [NSMutableArray array];
     self.actions = [NSMutableArray array];
   }
   return self;
 }
 
+- (void)dealloc
+{
+  [_reporterOptions release];
+  self.reporters = nil;
+  self.buildSettings = nil;
+  self.actions = nil;
+  [super dealloc];
+}
+
 - (void)addReporter:(NSString *)argument
 {
-  NSArray *argumentParts = [argument componentsSeparatedByString:@":"];
-  NSString *name = argumentParts[0];
-  NSString *outputFile = (argumentParts.count > 1) ? argumentParts[1] : @"-";
-  
-  [self.reporters addObject:[Reporter reporterWithName:name outputPath:outputFile options:self]];
+  [_reporterOptions addObject:argument];
 }
 
 - (void)addBuildSetting:(NSString *)argument
@@ -214,6 +220,21 @@
     if ([self.sdk hasSuffix:@"_LATEST"]) {
       self.sdk = sdksAndAliases[self.sdk];
     }
+  }
+
+  for (NSString *reporterOption in _reporterOptions) {
+    NSArray *optionParts = [reporterOption componentsSeparatedByString:@":"];
+    NSString *name = optionParts[0];
+    NSString *outputFile = (optionParts.count > 1) ? optionParts[1] : @"-";
+
+    Reporter *reporter = [Reporter reporterWithName:name outputPath:outputFile options:self];
+
+    if (reporter == nil) {
+      *errorMessage = [NSString stringWithFormat:@"No reporter with name '%@' found.", name];
+      return NO;
+    }
+
+    [self.reporters addObject:reporter];
   }
   
   xcodeSubjectInfo.subjectWorkspace = self.workspace;

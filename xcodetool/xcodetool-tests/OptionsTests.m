@@ -33,9 +33,20 @@
   assertThat(([[TestUtil optionsFromArgumentList:@[@"-jobs", @"10"]] jobs]), equalTo(@"10"));
 }
 
-- (void)testReporterOptionsAreCollected
+- (void)testReporterOptionsSetupReporters
 {
-  NSArray *reporters = [[TestUtil optionsFromArgumentList:@[@"-reporter", @"pretty", @"-reporter", @"plain:out.txt"]] reporters];
+  ReturnFakeTasks(@[
+                  [FakeTask fakeTaskWithExitStatus:0
+                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                                 standardErrorPath:nil]
+                  ]);
+
+  NSArray *reporters = [[TestUtil validatedOptionsFromArgumentList:@[
+                         @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                         @"-scheme", @"TestProject-Library",
+                         @"-reporter", @"pretty",
+                         @"-reporter", @"plain:out.txt"]] reporters];
+
   assertThatInteger(reporters.count, equalToInteger(2));
   assertThatBool(([reporters[0] isKindOfClass:[PrettyTextReporter class]]), equalToBool(YES));
   assertThatBool(([reporters[1] isKindOfClass:[PlainTextReporter class]]), equalToBool(YES));
@@ -153,6 +164,34 @@
                             failsWithMessage:[NSString stringWithFormat:
                                               @"SDK 'BOGUSSDK' doesn't exist.  Possible SDKs include: %@",
                                               [[GetAvailableSDKsAndAliases() allKeys] componentsJoinedByString:@", "]]];
+}
+
+- (void)testReporterMustBeValid
+{
+  ReturnFakeTasks(@[
+                  [FakeTask fakeTaskWithExitStatus:0
+                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                                 standardErrorPath:nil]
+                  ]);
+  [TestUtil assertThatOptionsValidateWithArgumentList:@[
+   @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+   @"-scheme", @"TestProject-Library",
+   @"-sdk", @"IPHONESIMULATOR_LATEST",
+   @"-reporter", @"pretty"]];
+
+  ReturnFakeTasks(@[
+                  [FakeTask fakeTaskWithExitStatus:0
+                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                                 standardErrorPath:nil]
+                  ]);
+  [TestUtil assertThatOptionsValidateWithArgumentList:@[
+   @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+   @"-scheme", @"TestProject-Library",
+   @"-sdk", @"IPHONESIMULATOR_LATEST",
+   @"-reporter", @"blah",
+   ]
+                                     failsWithMessage:[NSString stringWithFormat:
+                                                       @"No reporter with name 'blah' found."]];
 }
 
 - (void)testArgumentsFlowThroughToCommonXcodebuildArguments
