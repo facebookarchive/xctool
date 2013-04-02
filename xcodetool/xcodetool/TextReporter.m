@@ -372,14 +372,14 @@
      [self formattedTestDuration:[event[@"totalDuration"] floatValue] withColor:NO]
      ];
     [self.reportWriter decreaseIndent];
-    [self.reportWriter printString:@"\n"];
+    [self.reportWriter printNewline];
   } else if ([suite isEqualToString:@"All tests"] && totalFailureCount > 0) {
     [self.reportWriter printLine:@"<bold>%d of %d tests passed %@<reset>",
      (testCaseCount - totalFailureCount),
      testCaseCount,
      [self formattedTestDuration:[event[@"totalDuration"] floatValue] withColor:NO]
      ];
-    [self.reportWriter printString:@"\n"];
+    [self.reportWriter printNewline];
   }
 }
 
@@ -452,15 +452,14 @@
     
     [self.reportWriter enableIndent];
     [self printDividerWithDownLine:YES];
-  } else {
-    [self.reportWriter printString:@"\r"];
   }
   
-  [self.reportWriter printLine:@"%@ %@ %@",
+  [self.reportWriter updateLine:@"%@ %@ %@",
    indicator,
    event[@"test"],
    [self formattedTestDuration:[event[@"totalDuration"] floatValue] withColor:YES]
    ];
+  [self.reportWriter printNewline];
 
   _testsTotal++;
   if (succeeded) {
