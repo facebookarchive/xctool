@@ -145,7 +145,7 @@
 - (id)init
 {
   if (self = [super init]) {
-    _isPretty = [self isKindOfClass:[PrettyTextReporter class]];
+    _isPretty = [self isKindOfClass:[PrettyTextReporter class]] && (isatty(STDOUT_FILENO));
   }
   return self;
 }
