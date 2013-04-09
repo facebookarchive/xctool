@@ -10,6 +10,7 @@
 #import "XcodeSubjectInfo.h"
 #import "Action.h"
 #import "Options.h"
+#import "TaskUtil.h"
 
 @implementation XcodeTool
 
@@ -113,6 +114,18 @@
     return;
   }
   
+  if (options.showBuildSettings) {
+    NSTask *task = TaskInstance();
+    [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
+    [task setArguments:[[options xcodeBuildArgumentsForSubject] arrayByAddingObject:@"-showBuildSettings"]];
+    [task setStandardOutput:_standardOutput];
+    [task setStandardError:_standardError];
+    [task launch];
+    [task waitUntilExit];
+    _exitStatus = [task terminationStatus];
+    return;
+  }
+
   if (![options validateOptions:&errorMessage xcodeSubjectInfo:xcodeSubjectInfo options:options]) {
     [_standardError printString:@"ERROR: %@\n\n", errorMessage];
     [self printUsage];

@@ -76,6 +76,10 @@
                      description:@"add reporter"
                        paramName:@"TYPE[:FILE]"
                            mapTo:@selector(addReporter:)],
+    [Action actionOptionWithName:@"showBuildSettings"
+                         aliases:nil
+                     description:@"display a list of build settings and values"
+                         setFlag:@selector(setShowBuildSettings:)],
     [Action actionOptionWithMatcher:^(NSString *argument){
       // Anything that looks like KEY=VALUE - xcodebuild will accept options like this.
       return (BOOL)([argument rangeOfString:@"="].length > 0 ? YES : NO);

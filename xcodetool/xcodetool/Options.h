@@ -23,6 +23,7 @@
 @property (nonatomic, retain) NSString *toolchain;
 @property (nonatomic, retain) NSString *xcconfig;
 @property (nonatomic, retain) NSString *jobs;
+@property (nonatomic, assign) BOOL showBuildSettings;
 
 @property (nonatomic, retain) NSMutableArray *buildSettings;
 @property (nonatomic, retain) NSMutableArray *reporters;

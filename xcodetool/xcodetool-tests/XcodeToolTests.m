@@ -45,4 +45,30 @@
   assertThat((result[@"stderr"]), startsWith(@"ERROR:"));
 }
 
+- (void)testCallingWithShowBuildSettingsPassesThroughToXcodebuild
+{
+  NSArray *fakeTasks = @[[TestUtil fakeTaskWithExitStatus:0
+                                           standardOutput:[NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-showBuildSettings.txt" encoding:NSUTF8StringEncoding error:nil]
+                                            standardError:@""],
+                         ];
+
+  XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
+  ReturnFakeTasks(fakeTasks);
+
+  tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                     @"-scheme", @"TestProject-Library",
+                     @"-showBuildSettings",
+                     ];
+
+  NSDictionary *output = [TestUtil runWithFakeStreams:tool];
+
+  assertThat(([fakeTasks[0] arguments]),
+             equalTo(@[
+                     @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                     @"-scheme", @"TestProject-Library",
+                     @"-showBuildSettings",
+                     ]));
+  assertThat(output[@"stdout"], startsWith(@"Build settings"));
+}
+
 @end
