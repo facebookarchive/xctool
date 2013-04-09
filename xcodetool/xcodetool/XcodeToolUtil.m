@@ -146,8 +146,10 @@ NSDictionary *GetAvailableSDKsAndAliases()
       NSString *sdk = [NSString stringWithFormat:@"%@%@", sdkName, sdkVersion];
       result[sdk] = sdk;
 
-      NSString *sdkLatestKey = [NSString stringWithFormat:@"%@_LATEST", [sdkName uppercaseString]];
-      result[sdkLatestKey] = sdk;
+      // Map [name] -> [name][version]. i.e. 'iphoneos' -> 'iphoneos6.1'.  Since SDKs are listed
+      // in ascending order by version number, this will always leave us with 'iphoneos' mapped
+      // to the newest 'iphoneos' SDK.
+      result[sdkName] = sdk;
     }
   }
 

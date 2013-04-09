@@ -208,6 +208,7 @@
   if (self.sdk != nil) {
     NSDictionary *sdksAndAliases = GetAvailableSDKsAndAliases();
 
+    // Is this an available SDK?
     if (sdksAndAliases[self.sdk] == nil) {
       *errorMessage = [NSString stringWithFormat:
                        @"SDK '%@' doesn't exist.  Possible SDKs include: %@",
@@ -216,10 +217,9 @@
       return NO;
     }
 
-    // If an alias was given, convert to the specific SDK string.
-    if ([self.sdk hasSuffix:@"_LATEST"]) {
-      self.sdk = sdksAndAliases[self.sdk];
-    }
+    // Map SDK param to actual SDK name.  This allows for aliases like 'iphoneos' to map
+    // to 'iphoneos6.1'.
+    self.sdk = sdksAndAliases[self.sdk];
   }
 
   for (NSString *reporterOption in _reporterOptions) {

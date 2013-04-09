@@ -176,7 +176,7 @@
   [TestUtil assertThatOptionsValidateWithArgumentList:@[
    @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
    @"-scheme", @"TestProject-Library",
-   @"-sdk", @"IPHONESIMULATOR_LATEST",
+   @"-sdk", @"iphonesimulator",
    @"-reporter", @"pretty"]];
 
   ReturnFakeTasks(@[
@@ -187,7 +187,7 @@
   [TestUtil assertThatOptionsValidateWithArgumentList:@[
    @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
    @"-scheme", @"TestProject-Library",
-   @"-sdk", @"IPHONESIMULATOR_LATEST",
+   @"-sdk", @"iphonesimulator",
    @"-reporter", @"blah",
    ]
                                      failsWithMessage:[NSString stringWithFormat:
@@ -237,7 +237,7 @@
 
   NSArray *arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                          @"-scheme", @"TestProject-Library",
-                         @"-sdk", @"IPHONESIMULATOR_LATEST",
+                         @"-sdk", @"iphonesimulator",
                          ];
   Options *action = [TestUtil validatedOptionsFromArgumentList:arguments];
   assertThat([action xcodeBuildArgumentsForSubject],
