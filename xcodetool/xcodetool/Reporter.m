@@ -1,11 +1,13 @@
 
-#import <sys/stat.h>
 #import "Reporter.h"
+
+#import <sys/stat.h>
+
+#import "Options.h"
+#import "PJSONKit.h"
+#import "PhabricatorReporter.h"
 #import "RawReporter.h"
 #import "TextReporter.h"
-#import "PhabricatorReporter.h"
-#import "PJSONKit.h"
-#import "Options.h"
 
 @implementation Reporter
 

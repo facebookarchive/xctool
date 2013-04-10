@@ -1,9 +1,10 @@
 
 #import "CleanAction.h"
-#import "XcodeToolUtil.h"
-#import "XcodeSubjectInfo.h"
+
 #import "BuildAction.h"
 #import "BuildTestsAction.h"
+#import "XcodeSubjectInfo.h"
+#import "XcodeToolUtil.h"
 
 @implementation CleanAction
 

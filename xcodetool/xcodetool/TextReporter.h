@@ -1,5 +1,6 @@
 
 #import <Foundation/Foundation.h>
+
 #import "Reporter.h"
 
 @class ReportWriter;

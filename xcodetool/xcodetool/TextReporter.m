@@ -1,10 +1,13 @@
 
 #import "TextReporter.h"
-#import "NSFileHandle+Print.h"
-#import "Action.h"
+
 #import <sys/ioctl.h>
 #import <unistd.h>
+
 #import <QuartzCore/QuartzCore.h>
+
+#import "Action.h"
+#import "NSFileHandle+Print.h"
 #import "RunTestsAction.h"
 
 @interface ReportWriter : NSObject

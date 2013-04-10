@@ -1,12 +1,13 @@
 
 #import <SenTestingKit/SenTestingKit.h>
+
 #import "Action.h"
-#import "xcodeSubjectInfo.h"
-#import "Options.h"
 #import "Fakes.h"
-#import "XcodeToolUtil.h"
-#import "TestUtil.h"
+#import "Options.h"
 #import "TaskUtil.h"
+#import "TestUtil.h"
+#import "XcodeToolUtil.h"
+#import "xcodeSubjectInfo.h"
 
 @interface BuildActionTests : SenTestCase
 @end

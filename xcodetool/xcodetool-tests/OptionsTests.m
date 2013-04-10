@@ -1,14 +1,16 @@
 
+#import <objc/runtime.h>
+
 #import <SenTestingKit/SenTestingKit.h>
+
 #import "Action.h"
+#import "Fakes.h"
 #import "Options.h"
+#import "TaskUtil.h"
+#import "TestUtil.h"
 #import "TextReporter.h"
 #import "XcodeSubjectInfo.h"
 #import "XcodeToolUtil.h"
-#import "Fakes.h"
-#import "TaskUtil.h"
-#import "TestUtil.h"
-#import <objc/runtime.h>
 
 @interface OptionsTests : SenTestCase
 @end

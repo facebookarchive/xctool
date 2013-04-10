@@ -1,12 +1,13 @@
 
 #import "Options.h"
-#import "Reporter.h"
-#import "XcodeToolUtil.h"
-#import "XcodeSubjectInfo.h"
+
 #import "BuildAction.h"
-#import "CleanAction.h"
 #import "BuildTestsAction.h"
+#import "CleanAction.h"
+#import "Reporter.h"
 #import "RunTestsAction.h"
+#import "XcodeSubjectInfo.h"
+#import "XcodeToolUtil.h"
 
 @implementation Options
 

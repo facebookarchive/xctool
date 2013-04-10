@@ -1,5 +1,6 @@
 
 #import <SenTestingKit/SenTestingKit.h>
+
 #import "Action.h"
 
 @interface FakeAction : Action

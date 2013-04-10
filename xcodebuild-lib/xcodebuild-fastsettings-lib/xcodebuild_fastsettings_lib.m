@@ -1,7 +1,8 @@
 
-#import <Foundation/Foundation.h>
-#import <objc/runtime.h>
 #import <objc/message.h>
+#import <objc/runtime.h>
+
+#import <Foundation/Foundation.h>
 
 // class-dump'ed from:
 // /Applications/Xcode.app/Contents/PlugIns/Xcode3Core.ideplugin/Contents/Frameworks/DevToolsCore.framework/DevToolsCore

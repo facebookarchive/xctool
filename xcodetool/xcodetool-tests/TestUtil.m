@@ -1,8 +1,9 @@
 
 #import "TestUtil.h"
-#import "XcodeSubjectInfo.h"
+
 #import "Fakes.h"
 #import "Options.h"
+#import "XcodeSubjectInfo.h"
 
 @implementation TestUtil
 

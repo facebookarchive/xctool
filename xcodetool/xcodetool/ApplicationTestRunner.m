@@ -1,10 +1,12 @@
 
 #import "ApplicationTestRunner.h"
-#import "XcodeToolUtil.h"
-#import "SimulatorLauncher.h"
-#import "LineReader.h"
+
 #import <launch.h>
+
+#import "LineReader.h"
 #import "PJSONKit.h"
+#import "SimulatorLauncher.h"
+#import "XcodeToolUtil.h"
 
 static void GetJobsIterator(const launch_data_t launch_data, const char *key, void *context) {
   void (^block)(const launch_data_t, const char *) = context;

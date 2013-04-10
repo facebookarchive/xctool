@@ -1,7 +1,8 @@
 
 #import "XcodeSubjectInfo.h"
-#import "XcodeToolUtil.h"
+
 #import "TaskUtil.h"
+#import "XcodeToolUtil.h"
 
 static NSString *StringByStandardizingPath(NSString *path)
 {

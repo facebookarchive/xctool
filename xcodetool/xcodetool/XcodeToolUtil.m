@@ -1,8 +1,10 @@
 
 #import "XcodeToolUtil.h"
-#import "TaskUtil.h"
-#import "NSFileHandle+Print.h"
+
 #import <mach-o/dyld.h>
+
+#import "NSFileHandle+Print.h"
+#import "TaskUtil.h"
 
 NSDictionary *BuildSettingsFromOutput(NSString *output)
 {

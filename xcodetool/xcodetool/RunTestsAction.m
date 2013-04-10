@@ -1,12 +1,12 @@
 
 #import "RunTestsAction.h"
-#import "XcodeSubjectInfo.h"
-#import "Options.h"
-#import "XcodeToolUtil.h"
+
 #import "ApplicationTestRunner.h"
 #import "LogicTestRunner.h"
-#import "XcodeSubjectInfo.h"
+#import "Options.h"
 #import "TaskUtil.h"
+#import "XcodeSubjectInfo.h"
+#import "XcodeToolUtil.h"
 
 @implementation RunTestsAction
 

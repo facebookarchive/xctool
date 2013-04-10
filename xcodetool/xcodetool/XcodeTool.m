@@ -1,16 +1,17 @@
 
 #import "XcodeTool.h"
 #import "XcodeToolUtil.h"
-#import "NSFileHandle+Print.h"
+
+#import "Action.h"
 #import "ApplicationTestRunner.h"
 #import "LogicTestRunner.h"
-#import "RawReporter.h"
-#import "TextReporter.h"
-#import "PJSONKit.h"
-#import "XcodeSubjectInfo.h"
-#import "Action.h"
+#import "NSFileHandle+Print.h"
 #import "Options.h"
+#import "PJSONKit.h"
+#import "RawReporter.h"
 #import "TaskUtil.h"
+#import "TextReporter.h"
+#import "XcodeSubjectInfo.h"
 
 @implementation XcodeTool
 

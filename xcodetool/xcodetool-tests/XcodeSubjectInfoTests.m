@@ -1,6 +1,8 @@
 
 #import <Foundation/Foundation.h>
+
 #import <SenTestingKit/SenTestingKit.h>
+
 #import "XcodeSubjectInfo.h"
 
 @interface XcodeSubjectInfoTests : SenTestCase

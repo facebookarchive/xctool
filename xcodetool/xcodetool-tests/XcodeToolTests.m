@@ -1,10 +1,11 @@
 
 #import <SenTestingKit/SenTestingKit.h>
+
+#import "Fakes.h"
+#import "TaskUtil.h"
+#import "TestUtil.h"
 #import "XcodeTool.h"
 #import "XcodeToolUtil.h"
-#import "Fakes.h"
-#import "TestUtil.h"
-#import "TaskUtil.h"
 
 @interface XcodeToolTests : SenTestCase
 @end

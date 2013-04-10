@@ -2,10 +2,11 @@
 
 
 #import <SenTestingKit/SenTestingKit.h>
-#import "PhabricatorReporter.h"
-#import "PJSONKit.h"
-#import "TestUtil.h"
+
 #import "Options.h"
+#import "PJSONKit.h"
+#import "PhabricatorReporter.h"
+#import "TestUtil.h"
 
 @interface PhabricatorReporterTests : SenTestCase
 @end
