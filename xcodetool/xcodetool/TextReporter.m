@@ -148,9 +148,15 @@
 - (id)init
 {
   if (self = [super init]) {
-    _isPretty = [self isKindOfClass:[PrettyTextReporter class]] && (isatty(STDOUT_FILENO));
   }
   return self;
+}
+
+- (void)dealloc
+{
+  self.currentBuildCommandEvent = nil;
+  self.reportWriter = nil;
+  [super dealloc];
 }
 
 - (BOOL)openWithStandardOutput:(NSFileHandle *)standardOutput error:(NSString **)error
@@ -190,7 +196,7 @@
   NSString *dashStr = nil;
   NSString *indicatorStr = nil;
   
-  if ([self isKindOfClass:[PrettyTextReporter class]]) {
+  if (_isPretty) {
     dashStr = @"\u2501";
     indicatorStr = @"\u2533";
   } else {
@@ -477,7 +483,26 @@
 @end
 
 @implementation PrettyTextReporter
+
+- (id)init
+{
+  if (self = [super init]) {
+    // Be pretty so long as stdout looks like a nice TTY.
+    _isPretty = isatty(STDOUT_FILENO);
+  }
+  return self;
+}
+
 @end
 
 @implementation PlainTextReporter
+
+- (id)init
+{
+  if (self = [super init]) {
+    _isPretty = NO;
+  }
+  return self;
+}
+
 @end
