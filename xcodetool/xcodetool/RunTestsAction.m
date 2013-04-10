@@ -91,7 +91,7 @@
   
   NSMutableArray *supportedTestSDKs = [NSMutableArray array];
   for (NSString *sdk in [GetAvailableSDKsAndAliases() allKeys]) {
-    if ([sdk hasPrefix:@"iphonesimulator"]) {
+    if ([sdk hasPrefix:@"iphonesimulator"] || [sdk hasPrefix:@"macosx"]) {
       [supportedTestSDKs addObject:sdk];
     }
   }
@@ -186,8 +186,6 @@
   NSDictionary *allSettings = BuildSettingsFromOutput(result[@"stdout"]);
   assert(allSettings.count == 1);
   NSDictionary *testableBuildSettings = allSettings[testableTarget];
-
-  assert([testableBuildSettings[@"SDK_NAME"] hasPrefix:@"iphonesimulator"]);
 
   Class testRunnerClass = {0};
 

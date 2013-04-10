@@ -1,0 +1,5 @@
+
+MACOSX_DEPLOYMENT_TARGET = 10.7
+
+// Needed so we can #import from SenTestingKit.
+OTHER_CFLAGS = -F$(DEVELOPER_FRAMEWORKS_DIR)

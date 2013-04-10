@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		282BFE1B171602C60022F9FF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 282BFE1A171602C60022F9FF /* Cocoa.framework */; };
+		282BFE2A1716044C0022F9FF /* PJSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A33C9316CEC5D500C5EE2A /* PJSONKit.m */; };
+		282BFE2B1716044C0022F9FF /* otest_lib.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCA9916C2EE4C00F2E343 /* otest_lib.m */; };
 		283CCA9A16C2EE4C00F2E343 /* otest_lib.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCA9916C2EE4C00F2E343 /* otest_lib.m */; };
 		287A37E916C7776E00319E81 /* dyld-interposing.h in Headers */ = {isa = PBXBuildFile; fileRef = 287A37E816C7776E00319E81 /* dyld-interposing.h */; };
 		28A33C9416CEC5D500C5EE2A /* PJSONKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 28A33C9216CEC5D500C5EE2A /* PJSONKit.h */; };
@@ -17,6 +20,13 @@
 /* Begin PBXFileReference section */
 		281B80BE16CB989D0032430F /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGELOG.md; sourceTree = "<group>"; };
 		281B80C116CB989D0032430F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		282BFE19171602C60022F9FF /* otest-lib-osx.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "otest-lib-osx.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		282BFE1A171602C60022F9FF /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		282BFE1D171602C60022F9FF /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		282BFE1E171602C60022F9FF /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		282BFE1F171602C60022F9FF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		282BFE29171602F80022F9FF /* otest-lib-osx.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "otest-lib-osx.xcconfig"; sourceTree = "<group>"; };
+		282BFE2C1716049F0022F9FF /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		283CCA8C16C2EE4C00F2E343 /* otest-lib-ios.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "otest-lib-ios.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		283CCA9416C2EE4C00F2E343 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		283CCA9716C2EE4C00F2E343 /* otest-lib-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "otest-lib-Prefix.pch"; sourceTree = "<group>"; };
@@ -24,10 +34,18 @@
 		287A37E816C7776E00319E81 /* dyld-interposing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dyld-interposing.h"; sourceTree = "<group>"; };
 		28A33C9216CEC5D500C5EE2A /* PJSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PJSONKit.h; sourceTree = "<group>"; };
 		28A33C9316CEC5D500C5EE2A /* PJSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PJSONKit.m; sourceTree = "<group>"; };
-		28E9B98216C2F2D400A52E4D /* otest-lib.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "otest-lib.xcconfig"; sourceTree = "<group>"; };
+		28E9B98216C2F2D400A52E4D /* otest-lib-ios.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "otest-lib-ios.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		282BFE16171602C60022F9FF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				282BFE1B171602C60022F9FF /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		283CCA8916C2EE4C00F2E343 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -51,10 +69,21 @@
 			path = ../Vendor/JSONKit;
 			sourceTree = "<group>";
 		};
+		282BFE1C171602C60022F9FF /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				282BFE1D171602C60022F9FF /* AppKit.framework */,
+				282BFE1E171602C60022F9FF /* CoreData.framework */,
+				282BFE1F171602C60022F9FF /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
 		283CCA8316C2EE4C00F2E343 = {
 			isa = PBXGroup;
 			children = (
-				28E9B98216C2F2D400A52E4D /* otest-lib.xcconfig */,
+				282BFE29171602F80022F9FF /* otest-lib-osx.xcconfig */,
+				28E9B98216C2F2D400A52E4D /* otest-lib-ios.xcconfig */,
 				283CCA8E16C2EE4C00F2E343 /* Frameworks */,
 				281B80BD16CB989D0032430F /* JSONKit */,
 				283CCA9516C2EE4C00F2E343 /* otest-lib */,
@@ -66,6 +95,7 @@
 			isa = PBXGroup;
 			children = (
 				283CCA8C16C2EE4C00F2E343 /* otest-lib-ios.dylib */,
+				282BFE19171602C60022F9FF /* otest-lib-osx.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -73,7 +103,10 @@
 		283CCA8E16C2EE4C00F2E343 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				282BFE2C1716049F0022F9FF /* SenTestingKit.framework */,
 				283CCA9416C2EE4C00F2E343 /* Foundation.framework */,
+				282BFE1A171602C60022F9FF /* Cocoa.framework */,
+				282BFE1C171602C60022F9FF /* Other Frameworks */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -99,6 +132,13 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		282BFE17171602C60022F9FF /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		283CCA8A16C2EE4C00F2E343 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -111,6 +151,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		282BFE18171602C60022F9FF /* otest-lib-osx */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 282BFE28171602C60022F9FF /* Build configuration list for PBXNativeTarget "otest-lib-osx" */;
+			buildPhases = (
+				282BFE15171602C60022F9FF /* Sources */,
+				282BFE16171602C60022F9FF /* Frameworks */,
+				282BFE17171602C60022F9FF /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "otest-lib-osx";
+			productName = "otest-lib-osx";
+			productReference = 282BFE19171602C60022F9FF /* otest-lib-osx.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
 		283CCA8B16C2EE4C00F2E343 /* otest-lib-ios */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 283CCA9D16C2EE4C00F2E343 /* Build configuration list for PBXNativeTarget "otest-lib-ios" */;
@@ -150,11 +207,21 @@
 			projectRoot = "";
 			targets = (
 				283CCA8B16C2EE4C00F2E343 /* otest-lib-ios */,
+				282BFE18171602C60022F9FF /* otest-lib-osx */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		282BFE15171602C60022F9FF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				282BFE2A1716044C0022F9FF /* PJSONKit.m in Sources */,
+				282BFE2B1716044C0022F9FF /* otest_lib.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		283CCA8816C2EE4C00F2E343 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -167,9 +234,42 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		282BFE26171602C60022F9FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 282BFE29171602F80022F9FF /* otest-lib-osx.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "otest-lib/otest-lib-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		282BFE27171602C60022F9FF /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 282BFE29171602F80022F9FF /* otest-lib-osx.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "otest-lib/otest-lib-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		283CCA9B16C2EE4C00F2E343 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 28E9B98216C2F2D400A52E4D /* otest-lib.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -198,7 +298,6 @@
 		};
 		283CCA9C16C2EE4C00F2E343 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 28E9B98216C2F2D400A52E4D /* otest-lib.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -221,6 +320,7 @@
 		};
 		283CCA9E16C2EE4C00F2E343 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 28E9B98216C2F2D400A52E4D /* otest-lib-ios.xcconfig */;
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -232,6 +332,7 @@
 		};
 		283CCA9F16C2EE4C00F2E343 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 28E9B98216C2F2D400A52E4D /* otest-lib-ios.xcconfig */;
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -244,6 +345,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		282BFE28171602C60022F9FF /* Build configuration list for PBXNativeTarget "otest-lib-osx" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				282BFE26171602C60022F9FF /* Debug */,
+				282BFE27171602C60022F9FF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		283CCA8716C2EE4C00F2E343 /* Build configuration list for PBXProject "otest-lib" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

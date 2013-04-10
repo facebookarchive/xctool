@@ -28,6 +28,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "282BFE18171602C60022F9FF"
+               BuildableName = "otest-lib-osx.dylib"
+               BlueprintName = "otest-lib-osx"
+               ReferencedContainer = "container:../otest-lib/otest-lib.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "283CCAA816C2EE7200F2E343"
                BuildableName = "xcodebuild-lib.dylib"
                BlueprintName = "xcodebuild-lib"
