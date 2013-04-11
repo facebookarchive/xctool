@@ -55,8 +55,17 @@ static NSString *StringByStandardizingPath(NSString *path)
 
     if ([location hasPrefix:@"container:"]) {
       return [containerPath stringByAppendingPathComponent:locationAfterColon];
-    } else if ([location hasPrefix:@"group"]) {
+    } else if ([location hasPrefix:@"group:"]) {
       return [fullLocation(node.parent, containerPath) stringByAppendingPathComponent:locationAfterColon];
+    } else if ([location hasPrefix:@"self:"]) {
+      NSCAssert([[workspacePath lastPathComponent] isEqualToString:@"project.xcworkspace"],
+                @"We only expect to see 'self:' in workspaces nested in xcodeproj's.");
+      // Go from path/to/SomeProj.xcodeproj/contents.xcworkspace -> path/to/SomeProj.xcodeproj
+      NSString *path = [workspaceBasePath stringByDeletingLastPathComponent];
+      // Go from path/to/SomeProj.xcodeproj -> path/to
+      path = [workspaceBasePath stringByDeletingLastPathComponent];
+
+      return [path stringByAppendingPathComponent:locationAfterColon];
     } else {
       [NSException raise:NSGenericException format:@"Unexpection location in workspace '%@'", location];
       return (NSString *)nil;
