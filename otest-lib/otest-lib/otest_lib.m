@@ -103,6 +103,7 @@ static void SenTestLog_testCaseDidStop(id self, SEL sel, NSNotification *notific
      @"filePathInProject" : [__testException filePathInProject],
      @"lineNumber" : [__testException lineNumber],
      @"reason" : [__testException reason],
+     @"name" : [__testException name],
      }
              forKey:@"exception"];
   }

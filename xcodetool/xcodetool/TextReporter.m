@@ -460,7 +460,11 @@
     // Show exception, if any.
     NSDictionary *exception = event[@"exception"];
     if (exception) {
-      [self.reportWriter printLine:@"%@:%d: %@", exception[@"filePathInProject"], [exception[@"lineNumber"] intValue], exception[@"reason"]];
+      [self.reportWriter printLine:@"<faint>%@:%d: %@: %@<reset>",
+       exception[@"filePathInProject"],
+       [exception[@"lineNumber"] intValue],
+       exception[@"name"],
+       exception[@"reason"]];
     }
     
     [self.reportWriter enableIndent];

@@ -121,7 +121,11 @@
   // Include exception, if any.
   NSDictionary *exception = event[@"exception"];
   if (exception) {
-    [userdata appendFormat:@"Exception: %@:%d: %@", exception[@"filePathInProject"], [exception[@"lineNumber"] intValue], exception[@"reason"]];
+    [userdata appendFormat:@"%@:%d: %@: %@",
+     exception[@"filePathInProject"],
+     [exception[@"lineNumber"] intValue],
+     exception[@"name"],
+     exception[@"reason"]];
   }
 
   [_results addObject:@{
