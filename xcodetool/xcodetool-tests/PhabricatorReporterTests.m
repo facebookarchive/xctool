@@ -133,7 +133,7 @@
                      @{
                      @"name" : @"TestProject-Library: -[SomeTests testWillFail]",
                      @"result" : @"fail",
-                     @"userdata" : @"",
+                     @"userdata" : @"Exception: /Users/fpotter/fb/git/fbobjc/Tools/xcodetool/xcodetool/xcodetool-tests/TestData/TestProject-Library/TestProject-LibraryTests/SomeTests.m:40: 'a' should be equal to 'b' Strings aren't equal",
                      @"coverage" : [NSNull null],
                      @"extra" :  [NSNull null],
                      @"link" : [NSNull null],

@@ -116,11 +116,19 @@
 
 - (void)endTest:(NSDictionary *)event
 {
+  NSMutableString *userdata = [NSMutableString stringWithString:event[@"output"]];
+
+  // Include exception, if any.
+  NSDictionary *exception = event[@"exception"];
+  if (exception) {
+    [userdata appendFormat:@"Exception: %@:%d: %@", exception[@"filePathInProject"], [exception[@"lineNumber"] intValue], exception[@"reason"]];
+  }
+
   [_results addObject:@{
    @"name" : [NSString stringWithFormat:@"%@: %@", [self projectOrWorkspaceName], event[@"test"]],
    @"link" : [NSNull null],
    @"result" : [event[@"succeeded"] boolValue] ? @"pass" : @"fail",
-   @"userdata" : event[@"output"],
+   @"userdata" : userdata,
    @"coverage" : [NSNull null],
    @"extra" : [NSNull null],
    }];
