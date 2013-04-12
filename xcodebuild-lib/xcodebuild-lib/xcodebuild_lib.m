@@ -153,7 +153,10 @@ static void AnnounceEndSection(IDEActivityLogSection *section)
               @"event" : @"end-build-command",
               @"title" : section.title,
               @"succeeded" : (section.resultCode == 0) ? @YES : @NO,
-              @"failureReason" : (section.emittedOutputText == nil) ? [NSNull null] : section.emittedOutputText,
+              // Sometimes things will fail and 'emittedOutputText' will be nil.  We've seen this
+              // happen when Xcode's Copy command fails.  In this case, just send an empty string
+              // so Reporters don't have to worry about this sometimes being [NSNull null].
+              @"failureReason" : section.emittedOutputText ?: @"",
               @"duration" : @(section.timeStoppedRecording - section.timeStartedRecording),
               });
   } else if ([sectionTypeString hasPrefix:kDomainTypeProductItemPrefix]) {
@@ -212,14 +215,14 @@ __attribute__((constructor)) static void EntryPoint()
   __begunLogSections = [[NSMutableSet alloc] initWithCapacity:0];
   __endedLogSections = [[NSMutableSet alloc] initWithCapacity:0];
   
-  // Overrite -[Xcode3CommandLineBuildLogRecorder _emitSection:(IDEActivityLogSection *)section]
+  // Override -[Xcode3CommandLineBuildLogRecorder _emitSection:(IDEActivityLogSection *)section]
   // This method is called once for every line item in the log, and is meant to announce the action
   // that will be done. e.g., this would get called to print out the clang command that's about to
   // be executed.
   SwizzleSelectorForFunction(NSClassFromString(@"Xcode3CommandLineBuildLogRecorder"),
                              @selector(_emitSection:),
                              (IMP)Xcode3CommandLineBuildLogRecorder__emitSection);
-  // Overrite -[Xcode3CommandLineBuildLogRecorder _finishEmittingClosedSection:(IDEActivityLogSection *)section]
+  // Override -[Xcode3CommandLineBuildLogRecorder _finishEmittingClosedSection:(IDEActivityLogSection *)section]
   // This method is called once for every line item in the log, and is meant to announce the result
   // of something.  e.g., this would print out the error text (if any) from a clang command that just ran.
   SwizzleSelectorForFunction(NSClassFromString(@"Xcode3CommandLineBuildLogRecorder"),
