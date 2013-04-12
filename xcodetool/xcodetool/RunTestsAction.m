@@ -188,11 +188,14 @@
   NSDictionary *testableBuildSettings = allSettings[testableTarget];
 
   Class testRunnerClass = {0};
+  NSString *testType = nil;
 
   if (testableBuildSettings[@"TEST_HOST"] != nil) {
     testRunnerClass = [ApplicationTestRunner class];
+    testType = @"application-test";
   } else {
     testRunnerClass = [LogicTestRunner class];
+    testType = @"logic-test";
   }
 
   TestRunner *testRunner = [[[testRunnerClass alloc]
@@ -203,11 +206,14 @@
                              standardError:nil
                              reporters:reporters] autorelease];
 
+  NSString *title = testableBuildSettings[@"FULL_PRODUCT_NAME"];
+  NSString *titleExtra = [NSString stringWithFormat:@"%@, %@", testType, testableBuildSettings[@"SDK_NAME"]];
+
   [reporters makeObjectsPerformSelector:@selector(handleEvent:)
                               withObject:@{
    @"event": @"begin-octest",
-   @"title": testableBuildSettings[@"FULL_PRODUCT_NAME"],
-   @"titleExtra": testableBuildSettings[@"SDK_NAME"],
+   @"title": title,
+   @"titleExtra": titleExtra,
    }];
 
   NSString *error = nil;
@@ -216,8 +222,8 @@
   [reporters makeObjectsPerformSelector:@selector(handleEvent:)
                               withObject:@{
    @"event": @"end-octest",
-   @"title": testableBuildSettings[@"FULL_PRODUCT_NAME"],
-   @"titleExtra": testableBuildSettings[@"SDK_NAME"],
+   @"title": title,
+   @"titleExtra": titleExtra,
    @"succeeded" : @(succeeded),
    @"failureReason" : (error ? error : [NSNull null]),
    }];
