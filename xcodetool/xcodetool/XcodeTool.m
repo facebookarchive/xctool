@@ -154,6 +154,7 @@
 
     if (!succeeded) {
       _exitStatus = 1;
+      break;
     }
   }
   
