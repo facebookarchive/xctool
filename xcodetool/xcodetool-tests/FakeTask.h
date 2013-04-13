@@ -3,10 +3,11 @@
 
 @interface FakeTask : NSTask
 {
-  BOOL _isWaitingUntilExit;
+  int _fakeExitStatus;
+  NSString *_fakeStandardOutputPath;
+  NSString *_fakeStandardErrorPath;
 }
 
-@property (nonatomic, copy) void (^onLaunchBlock)(void);
 @property (nonatomic, retain) NSString *launchPath;
 @property (nonatomic, retain) NSArray *arguments;
 @property (nonatomic, retain) NSDictionary *environment;
@@ -20,6 +21,5 @@
                  standardErrorPath:(NSString *)standardErrorPath;
 
 + (NSTask *)fakeTaskWithExitStatus:(int)exitStatus;
-
 
 @end
