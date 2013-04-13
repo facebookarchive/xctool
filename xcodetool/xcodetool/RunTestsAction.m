@@ -1,12 +1,19 @@
 
 #import "RunTestsAction.h"
 
+#import <launch.h>
+
 #import "ApplicationTestRunner.h"
 #import "LogicTestRunner.h"
 #import "Options.h"
 #import "TaskUtil.h"
 #import "XcodeSubjectInfo.h"
 #import "XcodeToolUtil.h"
+
+static void GetJobsIterator(const launch_data_t launch_data, const char *key, void *context) {
+  void (^block)(const launch_data_t, const char *) = context;
+  block(launch_data, key);
+}
 
 @implementation RunTestsAction
 
@@ -53,6 +60,46 @@
 - (void)addOnly:(NSString *)argument
 {
   [self.onlyList addObject:argument];
+}
+
+/**
+ Kill any active simulator plus any other iOS services it started via launchd.
+ */
+- (void)killSimulatorJobs
+{
+  launch_data_t getJobsMessage = launch_data_new_string(LAUNCH_KEY_GETJOBS);
+  launch_data_t response = launch_msg(getJobsMessage);
+  
+  assert(launch_data_get_type(response) == LAUNCH_DATA_DICTIONARY);
+  
+  launch_data_dict_iterate(response, GetJobsIterator, ^(const launch_data_t launch_data, const char *keyCString){
+    NSString *key = [NSString stringWithCString:keyCString encoding:NSUTF8StringEncoding];
+    
+    NSArray *strings = @[@"com.apple.iphonesimulator",
+                         @"UIKitApplication",
+                         @"SimulatorBridge",
+                         ];
+    
+    BOOL matches = NO;
+    for (NSString *str in strings) {
+      if ([key rangeOfString:str options:NSCaseInsensitiveSearch].length > 0) {
+        matches = YES;
+        break;
+      }
+    }
+    
+    if (matches) {
+      launch_data_t stopMessage = launch_data_alloc(LAUNCH_DATA_DICTIONARY);
+      launch_data_dict_insert(stopMessage, launch_data_new_string([key UTF8String]), LAUNCH_KEY_REMOVEJOB);
+      launch_data_t stopResponse = launch_msg(stopMessage);
+      
+      launch_data_free(stopMessage);
+      launch_data_free(stopResponse);
+    }
+  });
+  
+  launch_data_free(response);
+  launch_data_free(getJobsMessage);
 }
 
 - (NSArray *)onlyListAsTargetsAndSenTestList
@@ -139,7 +186,7 @@
   }
   
   if (self.killSimulator) {
-    [ApplicationTestRunner removeAllSimulatorJobs];
+    [self killSimulatorJobs];
   }
 
   if (![self runTestables:testables

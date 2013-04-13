@@ -6,6 +6,4 @@
 @interface ApplicationTestRunner : TestRunner {
 }
 
-+ (void)removeAllSimulatorJobs;
-
 @end

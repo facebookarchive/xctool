@@ -1,17 +1,10 @@
 
 #import "ApplicationTestRunner.h"
 
-#import <launch.h>
-
 #import "LineReader.h"
 #import "PJSONKit.h"
 #import "SimulatorLauncher.h"
 #import "XcodeToolUtil.h"
-
-static void GetJobsIterator(const launch_data_t launch_data, const char *key, void *context) {
-  void (^block)(const launch_data_t, const char *) = context;
-  block(launch_data, key);
-}
 
 @implementation ApplicationTestRunner
 
@@ -129,46 +122,6 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
   [[NSFileManager defaultManager] removeItemAtPath:exitModePath error:nil];
   
   return [exitMode[@"via"] isEqualToString:@"exit"] && ([exitMode[@"status"] intValue] == 0);
-}
-
-+ (void)removeAllSimulatorJobs
-{
-  // Fully cleanup the simulator.  Just killing the simulator process itself isn't always itself.
-  // In fact, when the simulator first starts up, it will try and remove any lingering launchd jobs
-  // left over from the previous run.
-  launch_data_t getJobsMessage = launch_data_new_string(LAUNCH_KEY_GETJOBS);
-  launch_data_t response = launch_msg(getJobsMessage);
-  
-  assert(launch_data_get_type(response) == LAUNCH_DATA_DICTIONARY);
-  
-  launch_data_dict_iterate(response, GetJobsIterator, ^(const launch_data_t launch_data, const char *keyCString){
-    NSString *key = [NSString stringWithCString:keyCString encoding:NSUTF8StringEncoding];
-    
-    NSArray *strings = @[@"com.apple.iphonesimulator",
-                         @"UIKitApplication",
-                         @"SimulatorBridge",
-                         ];
-    
-    BOOL matches = NO;
-    for (NSString *str in strings) {
-      if ([key rangeOfString:str options:NSCaseInsensitiveSearch].length > 0) {
-        matches = YES;
-        break;
-      }
-    }
-    
-    if (matches) {
-      launch_data_t stopMessage = launch_data_alloc(LAUNCH_DATA_DICTIONARY);
-      launch_data_dict_insert(stopMessage, launch_data_new_string([key UTF8String]), LAUNCH_KEY_REMOVEJOB);
-      launch_data_t stopResponse = launch_msg(stopMessage);
-      
-      launch_data_free(stopMessage);
-      launch_data_free(stopResponse);
-    }
-  });
-
-  launch_data_free(response);
-  launch_data_free(getJobsMessage);
 }
 
 - (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock error:(NSString **)error
