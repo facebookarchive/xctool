@@ -1,7 +1,7 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
-#import "Fakes.h"
+#import "FakeTask.h"
 #import "TaskUtil.h"
 #import "TestUtil.h"
 #import "XcodeTool.h"

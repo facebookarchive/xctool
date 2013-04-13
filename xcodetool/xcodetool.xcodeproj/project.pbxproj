@@ -62,7 +62,7 @@
 		28E9B98C16C2FDB200A52E4D /* OCMockito.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 28E9B98A16C2FDA700A52E4D /* OCMockito.framework */; };
 		28E9B98E16C2FE4800A52E4D /* OCHamcrest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28E9B98D16C2FE4800A52E4D /* OCHamcrest.framework */; };
 		28E9B98F16C2FE4C00A52E4D /* OCHamcrest.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 28E9B98D16C2FE4800A52E4D /* OCHamcrest.framework */; };
-		28E9B99216C3037E00A52E4D /* Fakes.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B99116C3037E00A52E4D /* Fakes.m */; };
+		28E9B99216C3037E00A52E4D /* FakeTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B99116C3037E00A52E4D /* FakeTask.m */; };
 		28E9B9D716C3275200A52E4D /* ApplicationTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9D216C3275200A52E4D /* ApplicationTestRunner.m */; };
 		28E9B9D816C3275200A52E4D /* ApplicationTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9D216C3275200A52E4D /* ApplicationTestRunner.m */; };
 		28E9B9D916C3275200A52E4D /* LogicTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9D416C3275200A52E4D /* LogicTestRunner.m */; };
@@ -165,8 +165,8 @@
 		28E9B98316C2F2D900A52E4D /* xcodetool.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = xcodetool.xcconfig; sourceTree = "<group>"; };
 		28E9B98A16C2FDA700A52E4D /* OCMockito.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OCMockito.framework; path = ../Vendor/OCMockito.framework; sourceTree = "<group>"; };
 		28E9B98D16C2FE4800A52E4D /* OCHamcrest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OCHamcrest.framework; path = ../Vendor/OCHamcrest.framework; sourceTree = "<group>"; };
-		28E9B99016C3037E00A52E4D /* Fakes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fakes.h; sourceTree = "<group>"; };
-		28E9B99116C3037E00A52E4D /* Fakes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Fakes.m; sourceTree = "<group>"; };
+		28E9B99016C3037E00A52E4D /* FakeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeTask.h; sourceTree = "<group>"; };
+		28E9B99116C3037E00A52E4D /* FakeTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeTask.m; sourceTree = "<group>"; };
 		28E9B9D116C3275200A52E4D /* ApplicationTestRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ApplicationTestRunner.h; sourceTree = "<group>"; };
 		28E9B9D216C3275200A52E4D /* ApplicationTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ApplicationTestRunner.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		28E9B9D316C3275200A52E4D /* LogicTestRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogicTestRunner.h; sourceTree = "<group>"; };
@@ -334,8 +334,8 @@
 				28ADB43A16E410F9006301ED /* BuildActionTests.m */,
 				283479BB16E3FC0E003C3B77 /* BuildTestsActionTests.m */,
 				28ADB43716E4107F006301ED /* CleanActionTests.m */,
-				28E9B99016C3037E00A52E4D /* Fakes.h */,
-				28E9B99116C3037E00A52E4D /* Fakes.m */,
+				28E9B99016C3037E00A52E4D /* FakeTask.h */,
+				28E9B99116C3037E00A52E4D /* FakeTask.m */,
 				28AC9E2F16DB3478009E5B9A /* OptionsTests.m */,
 				283479A416E1B242003C3B77 /* RunTestsActionTests.m */,
 				283CCAC616C2EE9900F2E343 /* Supporting Files */,
@@ -520,7 +520,7 @@
 				283CCACD16C2EE9900F2E343 /* XcodeToolTests.m in Sources */,
 				283CCADA16C2F13A00F2E343 /* NSFileHandle+Print.m in Sources */,
 				28E9B98016C2F1C600A52E4D /* XcodeToolUtil.m in Sources */,
-				28E9B99216C3037E00A52E4D /* Fakes.m in Sources */,
+				28E9B99216C3037E00A52E4D /* FakeTask.m in Sources */,
 				28E9B9D816C3275200A52E4D /* ApplicationTestRunner.m in Sources */,
 				28E9B9DA16C3275200A52E4D /* LogicTestRunner.m in Sources */,
 				28E9B9DC16C3275200A52E4D /* TestRunner.m in Sources */,

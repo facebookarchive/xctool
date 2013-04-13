@@ -2,7 +2,7 @@
 #import <SenTestingKit/SenTestingKit.h>
 
 #import "Action.h"
-#import "Fakes.h"
+#import "FakeTask.h"
 #import "Options.h"
 #import "RunTestsAction.h"
 #import "TaskUtil.h"
