@@ -23,9 +23,9 @@
 
 - (void)testBuildActionPassesSDKParamToXcodebuild
 {
-  NSArray *fakeTasks = @[[TestUtil fakeTaskWithExitStatus:0
-                                           standardOutput:[NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-showBuildSettings.txt" encoding:NSUTF8StringEncoding error:nil]
-                                            standardError:@""],
+  NSArray *fakeTasks = @[[FakeTask fakeTaskWithExitStatus:0
+                                           standardOutputPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"
+                                            standardErrorPath:nil],
                          [[[FakeTask alloc] init] autorelease],
                          ];
   
@@ -52,9 +52,9 @@
 
 - (void)testBuildActionTriggersBuildForProjectAndScheme
 {
-  NSArray *fakeTasks = @[[TestUtil fakeTaskWithExitStatus:0
-                                           standardOutput:[NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-showBuildSettings.txt" encoding:NSUTF8StringEncoding error:nil]
-                                            standardError:@""],
+  NSArray *fakeTasks = @[[FakeTask fakeTaskWithExitStatus:0
+                                           standardOutputPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"
+                                            standardErrorPath:nil],
                          [[[FakeTask alloc] init] autorelease],
                          ];
   
@@ -81,9 +81,9 @@
 
 - (void)testBuildActionTriggersBuildForWorkspaceAndScheme
 {
-  NSArray *fakeTasks = @[[TestUtil fakeTaskWithExitStatus:0
-                                           standardOutput:[NSString stringWithContentsOfFile:TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt" encoding:NSUTF8StringEncoding error:nil]
-                                            standardError:@""],
+  NSArray *fakeTasks = @[[FakeTask fakeTaskWithExitStatus:0
+                                           standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt"
+                                            standardErrorPath:nil],
                          [[[FakeTask alloc] init] autorelease],
                          ];
   
@@ -109,9 +109,9 @@
 
 - (void)testBuildActionPassesConfigurationParamToXcodebuild
 {
-  NSArray *fakeTasks = @[[TestUtil fakeTaskWithExitStatus:0
-                                           standardOutput:[NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-showBuildSettings.txt" encoding:NSUTF8StringEncoding error:nil]
-                                            standardError:@""],
+  NSArray *fakeTasks = @[[FakeTask fakeTaskWithExitStatus:0
+                                           standardOutputPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"
+                                            standardErrorPath:nil],
                          [[[FakeTask alloc] init] autorelease],
                          ];
   
@@ -139,11 +139,11 @@
 - (void)testIfBuildActionFailsThenExitStatusShouldBeOne
 {
   void (^testWithExitStatus)(int) = ^(int exitStatus) {
-    NSArray *fakeTasks = @[[TestUtil fakeTaskWithExitStatus:0
-                                             standardOutput:[NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-showBuildSettings.txt" encoding:NSUTF8StringEncoding error:nil]
-                                              standardError:@""],
+    NSArray *fakeTasks = @[[FakeTask fakeTaskWithExitStatus:0
+                                             standardOutputPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"
+                                              standardErrorPath:nil],
                            // This exit status should get returned...
-                           [TestUtil fakeTaskWithExitStatus:exitStatus],
+                           [FakeTask fakeTaskWithExitStatus:exitStatus],
                            ];
     
     XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];

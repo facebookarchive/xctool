@@ -24,9 +24,9 @@
 
 - (void)testCleanActionTriggersCleanForProjectAndSchemeAndTests
 {
-  NSArray *fakeTasks = @[[TestUtil fakeTaskWithExitStatus:0
-                                           standardOutput:[NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-showBuildSettings.txt" encoding:NSUTF8StringEncoding error:nil]
-                                            standardError:@""],
+  NSArray *fakeTasks = @[[FakeTask fakeTaskWithExitStatus:0
+                                       standardOutputPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"
+                                        standardErrorPath:nil],
                          [[[FakeTask alloc] init] autorelease],
                          [[[FakeTask alloc] init] autorelease],
                          ];

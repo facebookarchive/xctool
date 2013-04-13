@@ -71,9 +71,9 @@
   
   // We'll expect to see one call to xcodebuild with -showBuildSettings - we have to fetch the OBJROOT
   // and SYMROOT variables so we can build the tests in the correct location.
-  NSTask *task1 = [TestUtil fakeTaskWithExitStatus:0
-                                    standardOutput:[NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-showBuildSettings.txt" encoding:NSUTF8StringEncoding error:nil]
-                                     standardError:nil];
+  NSTask *task1 = [FakeTask fakeTaskWithExitStatus:0
+                                standardOutputPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"
+                                 standardErrorPath:nil];
   NSArray *task1ExpectedArguments = @[
                                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                                       @"-scheme", @"TestProject-Library",
@@ -84,9 +84,9 @@
   
   
   // We'll expect to see another xcodebuild call to build the test target.
-  NSTask *task2 = [TestUtil fakeTaskWithExitStatus:0
-                                    standardOutput:[NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-build.txt" encoding:NSUTF8StringEncoding error:nil]
-                                     standardError:nil];
+  NSTask *task2 = [FakeTask fakeTaskWithExitStatus:0
+                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-build.txt"
+                                 standardErrorPath:nil];
   NSArray *task2ExpectedArguments = @[
                                       @"-configuration", @"Debug",
                                       @"-sdk", @"iphonesimulator6.0",
@@ -99,9 +99,9 @@
                                       ];
 
   // We'll expect to see another xcodebuild call to build the test target.
-  NSTask *task3 = [TestUtil fakeTaskWithExitStatus:0
-                                    standardOutput:[NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-build.txt" encoding:NSUTF8StringEncoding error:nil]
-                                     standardError:nil];
+  NSTask *task3 = [FakeTask fakeTaskWithExitStatus:0
+                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-build.txt"
+                                 standardErrorPath:nil];
   NSArray *task3ExpectedArguments = @[
                                       @"-configuration", @"Debug",
                                       @"-sdk", @"iphonesimulator6.0",
@@ -145,9 +145,9 @@
   
   // We'll expect to see one call to xcodebuild with -showBuildSettings - we have to fetch the OBJROOT
   // and SYMROOT variables so we can build the tests in the correct location.
-  NSTask *task1 = [TestUtil fakeTaskWithExitStatus:0
-                                    standardOutput:[NSString stringWithContentsOfFile:TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt" encoding:NSUTF8StringEncoding error:nil]
-                                     standardError:nil];
+  NSTask *task1 = [FakeTask fakeTaskWithExitStatus:0
+                                standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt"
+                                 standardErrorPath:nil];
   NSArray *task1ExpectedArguments = @[
                                       @"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
                                       @"-scheme", @"TestProject-Library",
@@ -157,9 +157,9 @@
                                       ];
   
   // We'll expect to see another xcodebuild call to build the TestProject-LibraryTests
-  NSTask *task2 = [TestUtil fakeTaskWithExitStatus:0
-                                    standardOutput:[NSString stringWithContentsOfFile:TEST_DATA @"TestWorkspace-Library-TestProject-LibraryTests-build.txt" encoding:NSUTF8StringEncoding error:nil]
-                                     standardError:nil];
+  NSTask *task2 = [FakeTask fakeTaskWithExitStatus:0
+                                standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-LibraryTests-build.txt"
+                                 standardErrorPath:nil];
   NSArray *task2ExpectedArguments = @[
                                       @"-configuration", @"Debug",
                                       @"-sdk", @"iphonesimulator6.0",
@@ -171,9 +171,9 @@
                                       @"build",
                                       ];
 
-  NSTask *task3 = [TestUtil fakeTaskWithExitStatus:0
-                                    standardOutput:[NSString stringWithContentsOfFile:TEST_DATA @"TestWorkspace-Library-TestProject-LibraryTests-build.txt" encoding:NSUTF8StringEncoding error:nil]
-                                     standardError:nil];
+  NSTask *task3 = [FakeTask fakeTaskWithExitStatus:0
+                                standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-LibraryTests-build.txt"
+                                 standardErrorPath:nil];
   NSArray *task3ExpectedArguments = @[
                                       @"-configuration", @"Debug",
                                       @"-sdk", @"iphonesimulator6.0",
@@ -186,9 +186,9 @@
                                       ];
   
   // We'll expect to see another xcodebuild call to build the TestProject-LibraryTests2
-  NSTask *task4 = [TestUtil fakeTaskWithExitStatus:0
-                                    standardOutput:[NSString stringWithContentsOfFile:TEST_DATA @"TestWorkspace-Library-TestProject-LibraryTests-build.txt" encoding:NSUTF8StringEncoding error:nil]
-                                     standardError:nil];
+  NSTask *task4 = [FakeTask fakeTaskWithExitStatus:0
+                                standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-LibraryTests-build.txt"
+                                 standardErrorPath:nil];
   NSArray *task4ExpectedArguments = @[
                                       @"-configuration", @"Debug",
                                       @"-sdk", @"iphonesimulator6.0",
@@ -201,9 +201,9 @@
                                       ];
   
   // We'll expect to see another xcodebuild call to build the TestProject-LibraryTests2
-  NSTask *task5 = [TestUtil fakeTaskWithExitStatus:0
-                                    standardOutput:[NSString stringWithContentsOfFile:TEST_DATA @"TestWorkspace-Library-TestProject-LibraryTests-build.txt" encoding:NSUTF8StringEncoding error:nil]
-                                     standardError:nil];
+  NSTask *task5 = [FakeTask fakeTaskWithExitStatus:0
+                                standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-LibraryTests-build.txt"
+                                 standardErrorPath:nil];
   NSArray *task5ExpectedArguments = @[
                                       @"-configuration", @"Debug",
                                       @"-sdk", @"iphonesimulator6.0",
@@ -249,9 +249,9 @@
   
   // We'll expect to see one call to xcodebuild with -showBuildSettings - we have to fetch the OBJROOT
   // and SYMROOT variables so we can build the tests in the correct location.
-  NSTask *task1 = [TestUtil fakeTaskWithExitStatus:0
-                                    standardOutput:[NSString stringWithContentsOfFile:TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt" encoding:NSUTF8StringEncoding error:nil]
-                                     standardError:nil];
+  NSTask *task1 = [FakeTask fakeTaskWithExitStatus:0
+                                standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt"
+                                 standardErrorPath:nil];
   NSArray *task1ExpectedArguments = @[
                                       @"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
                                       @"-scheme", @"TestProject-Library",
@@ -261,9 +261,9 @@
                                       ];
   
   // We'll expect to see another xcodebuild call to build the TestProject-LibraryTests
-  NSTask *task2 = [TestUtil fakeTaskWithExitStatus:0
-                                    standardOutput:[NSString stringWithContentsOfFile:TEST_DATA @"TestWorkspace-Library-TestProject-LibraryTests-build.txt" encoding:NSUTF8StringEncoding error:nil]
-                                     standardError:nil];
+  NSTask *task2 = [FakeTask fakeTaskWithExitStatus:0
+                                standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-LibraryTests-build.txt"
+                                 standardErrorPath:nil];
   NSArray *task2ExpectedArguments = @[
                                       @"-configuration", @"Debug",
                                       @"-sdk", @"iphonesimulator6.0",

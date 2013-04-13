@@ -115,46 +115,4 @@
   return @{@"stdout" : standardOutput, @"stderr" : standardError};
 }
 
-+ (NSTask *)fakeTaskWithExitStatus:(int)exitStatus
-                    standardOutput:(NSString *)standardOutput
-                     standardError:(NSString *)standardError {
-  FakeTask *fakeTask = [[[FakeTask alloc] init] autorelease];
-  
-  fakeTask.onLaunchBlock = ^{
-    // pretend that launch closes standardOutput / standardError pipes
-    NSTask *task = fakeTask;
-    
-    NSFileHandle *(^fileHandleForWriting)(id) = ^(id pipeOrFileHandle) {
-      if ([pipeOrFileHandle isKindOfClass:[NSPipe class]]) {
-        return [pipeOrFileHandle fileHandleForWriting];
-      } else {
-        return (NSFileHandle *)pipeOrFileHandle;
-      }
-    };
-    
-    if (standardOutput) {
-      [fileHandleForWriting([task standardOutput]) writeData:[standardOutput dataUsingEncoding:NSUTF8StringEncoding]];
-    }
-    
-    if (standardError) {
-      [fileHandleForWriting([task standardOutput]) writeData:[standardError dataUsingEncoding:NSUTF8StringEncoding]];
-    }
-    
-    [fileHandleForWriting([task standardOutput]) closeFile];
-    [fileHandleForWriting([task standardError]) closeFile];
-  };
-  
-  fakeTask.terminationStatus = exitStatus;
-  
-  return fakeTask;
-}
-
-+ (NSTask *)fakeTaskWithExitStatus:(int)exitStatus {
-  return [self fakeTaskWithExitStatus:exitStatus standardOutput:nil standardError:nil];
-}
-
-+ (NSTask *)fakeTask {
-  return [self fakeTaskWithExitStatus:0 standardOutput:nil standardError:nil];
-}
-
 @end

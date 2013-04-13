@@ -139,9 +139,9 @@
   
   // We'll expect to see one call to xcodebuild with -showBuildSettings - we have to fetch the OBJROOT
   // and SYMROOT variables so we can build the tests in the correct location.
-  NSTask *task1 = [TestUtil fakeTaskWithExitStatus:0
-                                standardOutput:[NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-showBuildSettings.txt" encoding:NSUTF8StringEncoding error:nil]
-                                 standardError:nil];
+  NSTask *task1 = [FakeTask fakeTaskWithExitStatus:0
+                                standardOutputPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"
+                                 standardErrorPath:nil];
   NSArray *task1ExpectedArguments = @[
                                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                                       @"-scheme", @"TestProject-Library",
@@ -151,9 +151,9 @@
                                       ];
   
   // And, another to get build settings for the test target.
-  NSTask *task2 = [TestUtil fakeTaskWithExitStatus:0
-                                standardOutput:[NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings.txt" encoding:NSUTF8StringEncoding error:nil]
-                                 standardError:nil];
+  NSTask *task2 = [FakeTask fakeTaskWithExitStatus:0
+                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings.txt"
+                                 standardErrorPath:nil];
   NSArray *task2ExpectedArguments = @[
                                       @"-configuration", @"Debug",
                                       @"-sdk", @"iphonesimulator6.0",
@@ -166,10 +166,9 @@
                                       ];
   
   // And, another to actually run the tests.  The tests DO fail, so it exit status should be 1.
-  NSTask *task3 = [TestUtil fakeTaskWithExitStatus:1
-                                standardOutput:[NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results.txt" encoding:NSUTF8StringEncoding error:nil]
-                                 standardError:nil];
-//  [task3 setLaunchPath:@"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.0.sdk/Developer/usr/bin/otest"];
+  NSTask *task3 = [FakeTask fakeTaskWithExitStatus:1
+                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results.txt"
+                                 standardErrorPath:nil];
   NSArray *task3ExpectedArguments = @[
                                       @"-NSTreatUnknownArgumentsAsOpen", @"NO",
                                       @"-ApplePersistenceIgnoreState", @"YES",
@@ -206,9 +205,9 @@
   
   // We'll expect to see one call to xcodebuild with -showBuildSettings - we have to fetch the OBJROOT
   // and SYMROOT variables so we can build the tests in the correct location.
-  NSTask *task1 = [TestUtil fakeTaskWithExitStatus:0
-                                standardOutput:[NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-showBuildSettings.txt" encoding:NSUTF8StringEncoding error:nil]
-                                 standardError:nil];
+  NSTask *task1 = [FakeTask fakeTaskWithExitStatus:0
+                                standardOutputPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"
+                                 standardErrorPath:nil];
   NSArray *task1Arguments = @[
                               @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                               @"-scheme", @"TestProject-Library",
@@ -219,14 +218,14 @@
   
   NSArray *(^tasksThatFetchSettingsThenRun)(NSString *, NSString *) = ^(NSString *version, NSString *outputPath){
     // And, another to get build settings for the test target.
-    NSTask *settingsTask = [TestUtil fakeTaskWithExitStatus:0
-                                         standardOutput:[NSString stringWithContentsOfFile:outputPath encoding:NSUTF8StringEncoding error:nil]
-                                          standardError:nil];
+    NSTask *settingsTask = [FakeTask fakeTaskWithExitStatus:0
+                                         standardOutputPath:outputPath
+                                          standardErrorPath:nil];
     
     // And, another to actually run the tests.  The tests DO fail, so it exit status should be 1.
-    NSTask *runTask = [TestUtil fakeTaskWithExitStatus:1
-                                    standardOutput:[NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results.txt" encoding:NSUTF8StringEncoding error:nil]
-                                     standardError:nil];
+    NSTask *runTask = [FakeTask fakeTaskWithExitStatus:1
+                                    standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results.txt"
+                                     standardErrorPath:nil];
     return @[settingsTask, runTask];
   };
   

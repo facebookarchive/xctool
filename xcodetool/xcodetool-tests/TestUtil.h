@@ -15,12 +15,4 @@
 
 + (NSDictionary *)runWithFakeStreams:(XcodeTool *)tool;
 
-+ (NSTask *)fakeTaskWithExitStatus:(int)exitStatus
-                    standardOutput:(NSString *)standardOutput
-                     standardError:(NSString *)standardError;
-
-+ (NSTask *)fakeTaskWithExitStatus:(int)exitStatus;
-
-+ (NSTask *)fakeTask;
-
 @end

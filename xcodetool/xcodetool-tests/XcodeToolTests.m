@@ -48,9 +48,9 @@
 
 - (void)testCallingWithShowBuildSettingsPassesThroughToXcodebuild
 {
-  NSArray *fakeTasks = @[[TestUtil fakeTaskWithExitStatus:0
-                                           standardOutput:[NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-showBuildSettings.txt" encoding:NSUTF8StringEncoding error:nil]
-                                            standardError:@""],
+  NSArray *fakeTasks = @[[FakeTask fakeTaskWithExitStatus:0
+                                       standardOutputPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"
+                                        standardErrorPath:nil],
                          ];
 
   XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];

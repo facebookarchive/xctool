@@ -7,10 +7,19 @@
                 standardOutputPath:(NSString *)standardOutputPath
                  standardErrorPath:(NSString *)standardErrorPath
 {
-  NSString *standardOutput = [NSString stringWithContentsOfFile:standardOutputPath encoding:NSUTF8StringEncoding error:nil];
-  NSString *standardError = [NSString stringWithContentsOfFile:standardErrorPath encoding:NSUTF8StringEncoding error:nil];
+  NSString *standardOutput = nil;
+  NSString *standardError = nil;
+  
+  if (standardOutputPath) {
+    standardOutput = [NSString stringWithContentsOfFile:standardOutputPath encoding:NSUTF8StringEncoding error:nil];
+  }
+  
+  if (standardErrorPath) {
+    standardError = [NSString stringWithContentsOfFile:standardErrorPath encoding:NSUTF8StringEncoding error:nil];
+  }
+  
   FakeTask *fakeTask = [[[FakeTask alloc] init] autorelease];
-
+  
   fakeTask.onLaunchBlock = ^{
     // pretend that launch closes standardOutput / standardError pipes
     NSTask *task = fakeTask;
@@ -28,7 +37,7 @@
     }
 
     if (standardError) {
-      [fileHandleForWriting([task standardOutput]) writeData:[standardError dataUsingEncoding:NSUTF8StringEncoding]];
+      [fileHandleForWriting([task standardError]) writeData:[standardError dataUsingEncoding:NSUTF8StringEncoding]];
     }
 
     [fileHandleForWriting([task standardOutput]) closeFile];
