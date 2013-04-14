@@ -1,45 +1,16 @@
+// Copyright 2004-present Facebook. All Rights Reserved.
 
-#import "LogicTestRunner.h"
+
+#import "OCUnitIOSLogicTestRunner.h"
 
 #import "PJSONKit.h"
 #import "TaskUtil.h"
 #import "XcodeToolUtil.h"
 
-@implementation LogicTestRunner
+@implementation OCUnitIOSLogicTestRunner
 
-- (NSTask *)otestTaskForMacOSXWithTestBundle:(NSString *)testBundlePath
+- (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath
 {
-  NSAssert([_buildSettings[@"SDK_NAME"] hasPrefix:@"macosx"], @"Should be a macosx SDK.");
-
-  // TODO: In Xcode, if you use GCC_ENABLE_OBJC_GC = supported, Xcode will run your test twice
-  // with GC on and GC off.  We should eventually do the same.
-  BOOL enableGC = ([_buildSettings[@"GCC_ENABLE_OBJC_GC"] isEqualToString:@"supported"] ||
-                   [_buildSettings[@"GCC_ENABLE_OBJC_GC"] isEqualToString:@"required"]);
-
-  NSMutableDictionary *env = [NSMutableDictionary dictionaryWithDictionary:
-                              [[NSProcessInfo processInfo] environment]];
-  [env addEntriesFromDictionary:@{
-   @"DYLD_INSERT_LIBRARIES" : [PathToFBXcodetoolBinaries() stringByAppendingPathComponent:@"otest-lib-osx.dylib"],
-   @"DYLD_FRAMEWORK_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
-   @"DYLD_LIBRARY_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
-   @"DYLD_FALLBACK_FRAMEWORK_PATH" : [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"],
-   @"NSUnbufferedIO" : @"YES",
-   @"OBJC_DISABLE_GC" : !enableGC ? @"YES" : @"NO",
-   }];
-
-
-  NSTask *task = TaskInstance();
-  [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Tools/otest"]];
-  // When invoking otest directly, the last arg needs to be the the test bundle.
-  [task setArguments:[[self otestArguments] arrayByAddingObject:testBundlePath]];
-  [task setEnvironment:env];
-
-  return task;
-}
-
-- (NSTask *)otestTaskForIPhoneSimulatorWithTestBundle:(NSString *)testBundlePath
-{
-  NSAssert([_buildSettings[@"SDK_NAME"] hasPrefix:@"iphonesimulator"], @"Should be an iphonesimulator SDK.");
   NSString *version = [_buildSettings[@"SDK_NAME"] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
   NSString *simulatorHome = [NSString stringWithFormat:@"%@/Library/Application Support/iPhone Simulator/%@", NSHomeDirectory(), version];
 
@@ -66,11 +37,10 @@
 
 - (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock error:(NSString **)error
 {
-  NSString *testBundlePath = [NSString stringWithFormat:@"%@/%@",
-                              _buildSettings[@"BUILT_PRODUCTS_DIR"],
-                              _buildSettings[@"FULL_PRODUCT_NAME"]
-                              ];
+  NSString *sdkName = _buildSettings[@"SDK_NAME"];
+  NSAssert([sdkName hasPrefix:@"iphonesimulator"], @"Unexpected SDK name: %@", sdkName);
 
+  NSString *testBundlePath = [self testBundlePath];
   BOOL bundleExists = [[NSFileManager defaultManager] fileExistsAtPath:testBundlePath];
 
   if ([[[NSProcessInfo processInfo] processName] isEqualToString:@"otest"]) {
@@ -79,17 +49,8 @@
   }
 
   if (bundleExists) {
-    NSTask *task = nil;
-    
-    NSString *sdkName = _buildSettings[@"SDK_NAME"];
-    if ([sdkName hasPrefix:@"iphonesimulator"]) {
-      task = [self otestTaskForIPhoneSimulatorWithTestBundle:testBundlePath];
-    } else if ([sdkName hasPrefix:@"macosx"]) {
-      task = [self otestTaskForMacOSXWithTestBundle:testBundlePath];
-    } else {
-      NSAssert(FALSE, @"Unexpected SDK name: %@", sdkName);
-    }
-    
+    NSTask *task = [self otestTaskWithTestBundle:testBundlePath];
+
     LaunchTaskAndFeedOuputLinesToBlock(task, outputLineBlock);
     
     return [task terminationStatus] == 0 ? YES : NO;

@@ -21,4 +21,6 @@
 
 - (NSArray *)otestArguments;
 
+- (NSString *)testBundlePath;
+
 @end

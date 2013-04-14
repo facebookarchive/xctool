@@ -161,4 +161,12 @@
            ];
 }
 
+- (NSString *)testBundlePath
+{
+  return [NSString stringWithFormat:@"%@/%@",
+          _buildSettings[@"BUILT_PRODUCTS_DIR"],
+          _buildSettings[@"FULL_PRODUCT_NAME"]
+          ];
+}
+
 @end

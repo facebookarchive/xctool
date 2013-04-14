@@ -4,7 +4,6 @@
 
 #import "Action.h"
 #import "ApplicationTestRunner.h"
-#import "LogicTestRunner.h"
 #import "NSFileHandle+Print.h"
 #import "Options.h"
 #import "PJSONKit.h"

@@ -4,7 +4,8 @@
 #import <launch.h>
 
 #import "ApplicationTestRunner.h"
-#import "LogicTestRunner.h"
+#import "OCUnitIOSLogicTestRunner.h"
+#import "OCUnitOSXLogicTestRunner.h"
 #import "Options.h"
 #import "Reporter.h"
 #import "TaskUtil.h"
@@ -235,15 +236,25 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
   assert(allSettings.count == 1);
   NSDictionary *testableBuildSettings = allSettings[testableTarget];
 
+  NSString *sdkName = testableBuildSettings[@"SDK_NAME"];
+  BOOL hasTestHost = testableBuildSettings[@"TEST_HOST"] != nil;
+
   Class testRunnerClass = {0};
   NSString *testType = nil;
 
-  if (testableBuildSettings[@"TEST_HOST"] != nil) {
-    testRunnerClass = [ApplicationTestRunner class];
+  if (hasTestHost) {
     testType = @"application-test";
+    testRunnerClass = [ApplicationTestRunner class];
   } else {
-    testRunnerClass = [LogicTestRunner class];
     testType = @"logic-test";
+
+    if ([sdkName hasPrefix:@"iphonesimulator"]) {
+      testRunnerClass = [OCUnitIOSLogicTestRunner class];
+    } else if ([sdkName hasPrefix:@"macosx"]) {
+      testRunnerClass = [OCUnitOSXLogicTestRunner class];
+    } else {
+      NSAssert(NO, @"Unexpected SDK: @", sdkName);
+    }
   }
 
   OCUnitTestRunner *testRunner = [[[testRunnerClass alloc]
