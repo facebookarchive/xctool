@@ -67,8 +67,8 @@
 		28E9B9D816C3275200A52E4D /* ApplicationTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9D216C3275200A52E4D /* ApplicationTestRunner.m */; };
 		28E9B9D916C3275200A52E4D /* LogicTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9D416C3275200A52E4D /* LogicTestRunner.m */; };
 		28E9B9DA16C3275200A52E4D /* LogicTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9D416C3275200A52E4D /* LogicTestRunner.m */; };
-		28E9B9DB16C3275200A52E4D /* TestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9D616C3275200A52E4D /* TestRunner.m */; };
-		28E9B9DC16C3275200A52E4D /* TestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9D616C3275200A52E4D /* TestRunner.m */; };
+		28E9B9DB16C3275200A52E4D /* OCUnitTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9D616C3275200A52E4D /* OCUnitTestRunner.m */; };
+		28E9B9DC16C3275200A52E4D /* OCUnitTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9D616C3275200A52E4D /* OCUnitTestRunner.m */; };
 		28E9B9E216C33C5900A52E4D /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9E116C33C5900A52E4D /* Reporter.m */; };
 		28E9B9E316C33C5900A52E4D /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9E116C33C5900A52E4D /* Reporter.m */; };
 		28E9B9E616C341C000A52E4D /* RawReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9E516C341C000A52E4D /* RawReporter.m */; };
@@ -171,8 +171,8 @@
 		28E9B9D216C3275200A52E4D /* ApplicationTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ApplicationTestRunner.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		28E9B9D316C3275200A52E4D /* LogicTestRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogicTestRunner.h; sourceTree = "<group>"; };
 		28E9B9D416C3275200A52E4D /* LogicTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LogicTestRunner.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		28E9B9D516C3275200A52E4D /* TestRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestRunner.h; sourceTree = "<group>"; };
-		28E9B9D616C3275200A52E4D /* TestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestRunner.m; sourceTree = "<group>"; };
+		28E9B9D516C3275200A52E4D /* OCUnitTestRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUnitTestRunner.h; sourceTree = "<group>"; };
+		28E9B9D616C3275200A52E4D /* OCUnitTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitTestRunner.m; sourceTree = "<group>"; };
 		28E9B9DE16C3278D00A52E4D /* iPhoneSimulatorRemoteClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iPhoneSimulatorRemoteClient.h; sourceTree = "<group>"; };
 		28E9B9E016C33C5800A52E4D /* Reporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reporter.h; sourceTree = "<group>"; };
 		28E9B9E116C33C5900A52E4D /* Reporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reporter.m; sourceTree = "<group>"; };
@@ -296,8 +296,8 @@
 				287A37DF16C711E000319E81 /* SimulatorLauncher.h */,
 				287A37E016C711E000319E81 /* SimulatorLauncher.m */,
 				283CCA4A16C2EA3800F2E343 /* Supporting Files */,
-				28E9B9D516C3275200A52E4D /* TestRunner.h */,
-				28E9B9D616C3275200A52E4D /* TestRunner.m */,
+				28E9B9D516C3275200A52E4D /* OCUnitTestRunner.h */,
+				28E9B9D616C3275200A52E4D /* OCUnitTestRunner.m */,
 				287BF08216F1A97900590E06 /* XcodeSubjectInfo.h */,
 				287BF08316F1A97900590E06 /* XcodeSubjectInfo.m */,
 				28ACFC8116FBA888004BAF33 /* TaskUtil.h */,
@@ -488,7 +488,7 @@
 				28E9B97F16C2F1C600A52E4D /* XcodeToolUtil.m in Sources */,
 				28E9B9D716C3275200A52E4D /* ApplicationTestRunner.m in Sources */,
 				28E9B9D916C3275200A52E4D /* LogicTestRunner.m in Sources */,
-				28E9B9DB16C3275200A52E4D /* TestRunner.m in Sources */,
+				28E9B9DB16C3275200A52E4D /* OCUnitTestRunner.m in Sources */,
 				28E9B9E216C33C5900A52E4D /* Reporter.m in Sources */,
 				28E9B9E616C341C000A52E4D /* RawReporter.m in Sources */,
 				28E9B9EB16C34F2B00A52E4D /* TextReporter.m in Sources */,
@@ -523,7 +523,7 @@
 				28E9B99216C3037E00A52E4D /* FakeTask.m in Sources */,
 				28E9B9D816C3275200A52E4D /* ApplicationTestRunner.m in Sources */,
 				28E9B9DA16C3275200A52E4D /* LogicTestRunner.m in Sources */,
-				28E9B9DC16C3275200A52E4D /* TestRunner.m in Sources */,
+				28E9B9DC16C3275200A52E4D /* OCUnitTestRunner.m in Sources */,
 				28E9B9E316C33C5900A52E4D /* Reporter.m in Sources */,
 				28E9B9E716C341C000A52E4D /* RawReporter.m in Sources */,
 				28E9B9EC16C34F2B00A52E4D /* TextReporter.m in Sources */,

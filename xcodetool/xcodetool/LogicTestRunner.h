@@ -1,9 +1,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "TestRunner.h"
+#import "OCUnitTestRunner.h"
 
-@interface LogicTestRunner : TestRunner {
+@interface LogicTestRunner : OCUnitTestRunner {
 }
 
 @end

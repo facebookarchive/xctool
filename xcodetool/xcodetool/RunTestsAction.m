@@ -245,7 +245,7 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
     testType = @"logic-test";
   }
 
-  TestRunner *testRunner = [[[testRunnerClass alloc]
+  OCUnitTestRunner *testRunner = [[[testRunnerClass alloc]
                              initWithBuildSettings:testableBuildSettings
                              senTestList:senTestList
                              senTestInvertScope:senTestInvertScope

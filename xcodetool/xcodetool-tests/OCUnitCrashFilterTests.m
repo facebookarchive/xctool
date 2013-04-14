@@ -2,7 +2,7 @@
 #import <SenTestingKit/SenTestingKit.h>
 
 #import "OCUnitCrashFilter.h"
-#import "TestRunner.h"
+#import "OCUnitTestRunner.h"
 
 @interface FakeReporter : NSObject
 

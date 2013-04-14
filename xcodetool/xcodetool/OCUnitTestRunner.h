@@ -1,7 +1,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface TestRunner : NSObject {
+@interface OCUnitTestRunner : NSObject {
   NSDictionary *_buildSettings;
   NSString *_senTestList;
   BOOL _senTestInvertScope;

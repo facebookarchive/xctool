@@ -1,12 +1,12 @@
 
-#import "TestRunner.h"
+#import "OCUnitTestRunner.h"
 
 #import <QuartzCore/QuartzCore.h>
 
 #import "OCUnitCrashFilter.h"
 #import "PJSONKit.h"
 
-@implementation TestRunner
+@implementation OCUnitTestRunner
 
 - (id)initWithBuildSettings:(NSDictionary *)buildSettings
                 senTestList:(NSString *)senTestList
