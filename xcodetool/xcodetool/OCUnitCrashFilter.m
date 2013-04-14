@@ -5,6 +5,8 @@
 
 #import <QuartzCore/QuartzCore.h>
 
+#import "Reporter.h"
+
 @implementation OCUnitCrashFilter
 
 - (id)init
@@ -33,29 +35,29 @@
 {
   NSString *eventName = event[@"event"];
 
-  if ([eventName isEqualToString:@"begin-test"]) {
+  if ([eventName isEqualToString:kReporter_Events_BeginTest]) {
     NSAssert(self.currentTestEvent == nil, @"Got 'begin-test' before receiving the 'end-test' event from the last test.");
     self.currentTestEvent = event;
     self.currentTestEventTimestamp = CACurrentMediaTime();
     self.currentTestOutput = [NSMutableString string];
 
     for (NSMutableDictionary *testSuiteEvent in [self.currentTestSuiteEventTestCountStack reverseObjectEnumerator]) {
-      testSuiteEvent[@"testCaseCount"] = @([testSuiteEvent[@"testCaseCount"] intValue] + 1);
+      testSuiteEvent[kReporter_EndTestSuite_TestCaseCountKey] = @([testSuiteEvent[kReporter_EndTestSuite_TestCaseCountKey] intValue] + 1);
     }
-  } else if ([eventName isEqualToString:@"end-test"]) {
+  } else if ([eventName isEqualToString:kReporter_Events_EndTest]) {
     NSAssert(self.currentTestEvent != nil, @"Got 'end-test' event before getting the 'begin-test' event.");
     self.lastTestEvent = self.currentTestEvent;
     self.currentTestEvent = nil;
     self.currentTestEventTimestamp = 0;
     self.currentTestOutput = nil;
 
-    BOOL succeeded = [event[@"succeeded"] boolValue];
+    BOOL succeeded = [event[kReporter_EndTest_SucceededKey] boolValue];
     if (!succeeded) {
       for (NSMutableDictionary *testSuiteEvent in [self.currentTestSuiteEventTestCountStack reverseObjectEnumerator]) {
-        testSuiteEvent[@"totalFailureCount"] = @([testSuiteEvent[@"totalFailureCount"] intValue] + 1);
+        testSuiteEvent[kReporter_EndTestSuite_TotalFailureCountKey] = @([testSuiteEvent[kReporter_EndTestSuite_TotalFailureCountKey] intValue] + 1);
       }
     }
-  } else if ([eventName isEqualToString:@"begin-test-suite"]) {
+  } else if ([eventName isEqualToString:kReporter_Events_BeginTestSuite]) {
     [self.currentTestSuiteEventStack addObject:event];
 
     // Keep track of when the suite started, so that we can generate a complete
@@ -66,16 +68,16 @@
     // event later (if tests crash).
     [self.currentTestSuiteEventTestCountStack addObject:
      [NSMutableDictionary dictionaryWithDictionary:@{
-      @"totalFailureCount" : @0,
-      @"testCaseCount" : @0,
+      kReporter_EndTestSuite_TotalFailureCountKey : @0,
+      kReporter_EndTestSuite_TestCaseCountKey : @0,
       }]];
-  } else if ([eventName isEqualToString:@"end-test-suite"]) {
+  } else if ([eventName isEqualToString:kReporter_Events_EndTestSuite]) {
     [self.currentTestSuiteEventStack removeLastObject];
     [self.currentTestSuiteEventTimestampStack removeLastObject];
     [self.currentTestSuiteEventTestCountStack removeLastObject];
-  } else if ([eventName isEqualToString:@"test-output"]) {
+  } else if ([eventName isEqualToString:kReporter_Events_TestOuput]) {
     NSAssert(self.currentTestEvent != nil, @"'test-output' event should only come during a test.");
-    [self.currentTestOutput appendString:event[@"output"]];
+    [self.currentTestOutput appendString:event[kReporter_TestOutput_OutputKey]];
   }
 }
 
@@ -87,23 +89,23 @@
     // It looks like we've crashed in the middle of running a test.  Record this test as a failure
     // in the test suite counts.
     for (NSMutableDictionary *testSuiteEvent in [self.currentTestSuiteEventTestCountStack reverseObjectEnumerator]) {
-      testSuiteEvent[@"totalFailureCount"] = @([testSuiteEvent[@"totalFailureCount"] intValue] + 1);
+      testSuiteEvent[kReporter_EndTestSuite_TotalFailureCountKey] = @([testSuiteEvent[kReporter_EndTestSuite_TotalFailureCountKey] intValue] + 1);
     }
 
     // Fire another 'test-output' event - we'll include the crash report as if it
     // was written to stdout in the test.
     [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
-     @"event" : @"test-output",
-     @"output" : concatenatedCrashReports,
+     @"event" : kReporter_Events_TestOuput,
+     kReporter_TestOutput_OutputKey : concatenatedCrashReports,
      }];
     
     // Fire a fake 'end-test' event.
     [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
-     @"event" : @"end-test",
-     @"test" : self.currentTestEvent[@"test"],
-     @"succeeded" : @NO,
-     @"totalDuration" : @(CACurrentMediaTime() - self.currentTestEventTimestamp),
-     @"output" : [self.currentTestOutput stringByAppendingString:concatenatedCrashReports],
+     @"event" : kReporter_Events_EndTest,
+     kReporter_EndTest_TestKey : self.currentTestEvent[kReporter_EndTest_TestKey],
+     kReporter_EndTest_SucceededKey : @NO,
+     kReporter_EndTest_TotalDurationKey : @(CACurrentMediaTime() - self.currentTestEventTimestamp),
+     kReporter_EndTest_OutputKey : [self.currentTestOutput stringByAppendingString:concatenatedCrashReports],
      }];
   } else if (self.currentTestSuiteEventStack.count > 0) {
     // We've crashed outside of a running test.  Usually this means the previously run test
@@ -123,27 +125,29 @@
        @"over-released, it'll trigger an EXC_BAD_ACCESS crash when draining the pool.\n"
        @"\n"
        @"%@",
-       self.lastTestEvent[@"test"],
+       self.lastTestEvent[kReporter_EndTest_TestKey],
        concatenatedCrashReports];
     [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
-     @"event" : @"begin-test",
-     @"test" : testName,
+     @"event" : kReporter_Events_BeginTest,
+     kReporter_BeginTest_TestKey : testName,
      }];
     [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
-     @"event" : @"test-output",
-     @"output" : output,
+     @"event" : kReporter_Events_TestOuput,
+     kReporter_TestOutput_OutputKey : output,
      }];
     [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
-     @"event" : @"end-test",
-     @"test" : testName,
-     @"succeeded" : @NO,
-     @"totalDuration" : @(0),
-     @"output" : output,
+     @"event" : kReporter_Events_EndTest,
+     kReporter_EndTest_TestKey : testName,
+     kReporter_EndTest_SucceededKey : @NO,
+     kReporter_EndTest_TotalDurationKey : @(0),
+     kReporter_EndTest_OutputKey : output,
      }];
     
     for (NSMutableDictionary *testSuiteEvent in [self.currentTestSuiteEventTestCountStack reverseObjectEnumerator]) {
-      testSuiteEvent[@"testCaseCount"] = @([testSuiteEvent[@"testCaseCount"] intValue] + 1);
-      testSuiteEvent[@"totalFailureCount"] = @([testSuiteEvent[@"totalFailureCount"] intValue] + 1);
+      testSuiteEvent[kReporter_EndTestSuite_TestCaseCountKey] =
+        @([testSuiteEvent[kReporter_EndTestSuite_TestCaseCountKey] intValue] + 1);
+      testSuiteEvent[kReporter_EndTestSuite_TotalFailureCountKey] =
+        @([testSuiteEvent[kReporter_EndTestSuite_TotalFailureCountKey] intValue] + 1);
     }
   }
 
@@ -155,11 +159,11 @@
     NSDictionary *testSuiteCounts = self.currentTestSuiteEventTestCountStack[i];
 
     [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
-     @"event" : @"end-test-suite",
-     @"suite" : testSuite[@"suite"],
-     @"totalDuration" : @(CACurrentMediaTime() - testSuiteTimestamp),
-     @"testCaseCount" : testSuiteCounts[@"testCaseCount"],
-     @"totalFailureCount" : testSuiteCounts[@"totalFailureCount"],
+     @"event" : kReporter_Events_EndTestSuite,
+     kReporter_EndTestSuite_SuiteKey : testSuite[kReporter_EndTestSuite_SuiteKey],
+     kReporter_EndTestSuite_TotalDurationKey : @(CACurrentMediaTime() - testSuiteTimestamp),
+     kReporter_EndTestSuite_TestCaseCountKey : testSuiteCounts[kReporter_EndTestSuite_TestCaseCountKey],
+     kReporter_EndTestSuite_TotalFailureCountKey : testSuiteCounts[kReporter_EndTestSuite_TotalFailureCountKey],
      }];
   }
 }

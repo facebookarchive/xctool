@@ -7,6 +7,8 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
+#import "../../xcodetool/xcodetool/Reporter.h"
+
 #import "PJSONKit.h"
 #import "dyld-interposing.h"
 
@@ -54,8 +56,8 @@ static void SenTestLog_testSuiteDidStart(id self, SEL sel, NSNotification *notif
 {
   SenTestRun *run = [notification run];
   PrintJSON(@{
-            @"event" : @"begin-test-suite",
-            @"suite" : [[run test] description],
+            @"event" : kReporter_Events_BeginTestSuite,
+            kReporter_BeginTestSuite_SuiteKey : [[run test] description],
             });
 }
 
@@ -63,13 +65,13 @@ static void SenTestLog_testSuiteDidStop(id self, SEL sel, NSNotification *notifi
 {
   SenTestRun *run = [notification run];
   PrintJSON(@{
-            @"event" : @"end-test-suite",
-            @"suite" : [[run test] description],
-            @"testCaseCount" : @([run testCaseCount]),
-            @"totalFailureCount" : @([run totalFailureCount]),
-            @"unexpectedExceptionCount" : @([run unexpectedExceptionCount]),
-            @"testDuration" : @([run testDuration]),
-            @"totalDuration" : @([run totalDuration]),
+            @"event" : kReporter_Events_EndTestSuite,
+            kReporter_EndTestSuite_SuiteKey : [[run test] description],
+            kReporter_EndTestSuite_TestCaseCountKey : @([run testCaseCount]),
+            kReporter_EndTestSuite_TotalFailureCountKey : @([run totalFailureCount]),
+            kReporter_EndTestSuite_UnexpectedExceptionCountKey : @([run unexpectedExceptionCount]),
+            kReporter_EndTestSuite_TestDurationKey: @([run testDuration]),
+            kReporter_EndTestSuite_TotalDurationKey : @([run totalDuration]),
             });
 }
 
@@ -77,8 +79,8 @@ static void SenTestLog_testCaseDidStart(id self, SEL sel, NSNotification *notifi
 {
   SenTestRun *run = [notification run];
   PrintJSON(@{
-            @"event" : @"begin-test",
-            @"test" : [[run test] description],
+            @"event" : kReporter_Events_BeginTest,
+            kReporter_BeginTest_TestKey : [[run test] description],
             });
   
   [__testException release];
@@ -91,21 +93,21 @@ static void SenTestLog_testCaseDidStop(id self, SEL sel, NSNotification *notific
 {
   SenTestRun *run = [notification run];
   NSMutableDictionary *json = [NSMutableDictionary dictionaryWithDictionary:@{
-                               @"event" : @"end-test",
-                               @"test" : [[run test] description],
-                               @"succeeded" : [run hasSucceeded] ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO],
-                               @"totalDuration" : @([run totalDuration]),
-                               @"output" : __testOutput,
+                               @"event" : kReporter_Events_EndTest,
+                               kReporter_EndTest_TestKey : [[run test] description],
+                               kReporter_EndTest_SucceededKey : [run hasSucceeded] ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO],
+                               kReporter_EndTest_TotalDurationKey : @([run totalDuration]),
+                               kReporter_EndTest_OutputKey : __testOutput,
                                }];
   
   if (__testException != nil) {
     [json setObject:@{
-     @"filePathInProject" : [__testException filePathInProject],
-     @"lineNumber" : [__testException lineNumber],
-     @"reason" : [__testException reason],
-     @"name" : [__testException name],
+     kReporter_EndTest_Exception_FilePathInProjectKey : [__testException filePathInProject],
+     kReporter_EndTest_Exception_LineNumberKey : [__testException lineNumber],
+     kReporter_EndTest_Exception_ReasonKey : [__testException reason],
+     kReporter_EndTest_Exception_NameKey : [__testException name],
      }
-             forKey:@"exception"];
+             forKey:kReporter_EndTest_ExceptionKey];
   }
   
   PrintJSON(json);
@@ -156,7 +158,7 @@ static ssize_t ___write_nocancel(int fildes, const void *buf, size_t nbyte)
   if (fildes == STDOUT_FILENO || fildes == STDERR_FILENO) {
     if (__testIsRunning && nbyte > 0) {
       NSString *output = [[NSString alloc] initWithBytes:buf length:nbyte encoding:NSUTF8StringEncoding];
-      PrintJSON(@{@"event": @"test-output", @"output": output});
+      PrintJSON(@{@"event": kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey: output});
       [__testOutput appendString:output];
       [output release];
     }
@@ -173,7 +175,7 @@ static ssize_t __write(int fildes, const void *buf, size_t nbyte)
   if (fildes == STDOUT_FILENO || fildes == STDERR_FILENO) {
     if (__testIsRunning && nbyte > 0) {
       NSString *output = [[NSString alloc] initWithBytes:buf length:nbyte encoding:NSUTF8StringEncoding];
-      PrintJSON(@{@"event": @"test-output", @"output": output});
+      PrintJSON(@{@"event": kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey: output});
       [__testOutput appendString:output];
       [output release];
     }
@@ -222,7 +224,7 @@ static ssize_t ___writev_nocancel(int fildes, const struct iovec *iov, int iovcn
   if (fildes == STDOUT_FILENO || fildes == STDERR_FILENO) {
     if (__testIsRunning && iovcnt > 0) {
       NSString *buffer = CreateStringFromIOV(iov, iovcnt);
-      PrintJSON(@{@"event": @"test-output", @"output": buffer});
+      PrintJSON(@{@"event": kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey: buffer});
       [__testOutput appendString:buffer];
       [buffer release];
     }
@@ -239,7 +241,7 @@ static ssize_t __writev(int fildes, const struct iovec *iov, int iovcnt)
   if (fildes == STDOUT_FILENO || fildes == STDERR_FILENO) {
     if (__testIsRunning && iovcnt > 0) {
       NSString *buffer = CreateStringFromIOV(iov, iovcnt);
-      PrintJSON(@{@"event": @"test-output", @"output": buffer});
+      PrintJSON(@{@"event": kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey: buffer});
       [__testOutput appendString:buffer];
       [buffer release];
     }

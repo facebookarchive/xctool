@@ -3,6 +3,7 @@
 
 #import "Options.h"
 #import "PJSONKit.h"
+#import "Reporter.h"
 #import "TaskUtil.h"
 #import "XcodeToolUtil.h"
 
@@ -25,7 +26,7 @@
 
   [options.reporters makeObjectsPerformSelector:@selector(handleEvent:)
                                      withObject:@{
-   @"event": @"begin-xcodebuild",
+   @"event": kReporter_Events_BeginXcodebuild,
    @"command": command,
    @"title": options.scheme,
    }];

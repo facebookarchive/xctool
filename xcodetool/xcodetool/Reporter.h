@@ -1,6 +1,75 @@
 
 #import <Foundation/Foundation.h>
 
+#define kReporter_Events_BeginOCUnit @"begin-ocunit"
+#define kReporter_Events_EndOCUnit @"end-ocunit"
+#define kReporter_Events_BeginTestSuite @"begin-test-suite"
+#define kReporter_Events_EndTestSuite @"end-test-suite"
+#define kReporter_Events_BeginTest @"begin-test"
+#define kReporter_Events_EndTest @"end-test"
+#define kReporter_Events_TestOuput @"test-output"
+#define kReporter_Events_BeginXcodebuild @"begin-xcodebuild"
+#define kReporter_Events_EndXcodebuild @"end-xcodebuild"
+#define kReporter_Events_BeginBuildCommand @"begin-build-command"
+#define kReporter_Events_EndBuildCommand @"end-build-command"
+#define kReporter_Events_BeginBuildTarget @"begin-build-target"
+#define kReporter_Events_EndBuildTarget @"end-build-target"
+
+#define kReporter_BeginOCUnit_BundleNameKey @"bundleName"
+#define kReporter_BeginOCUnit_SDKNameKey @"sdkName"
+#define kReporter_BeginOCUnit_TestTypeKey @"testType"
+
+#define kReporter_EndOCUnit_BundleNameKey @"bundleName"
+#define kReporter_EndOCUnit_SDKNameKey @"sdkName"
+#define kReporter_EndOCUnit_TestTypeKey @"testType"
+#define kReporter_EndOCUnit_SucceededKey @"succeeded"
+#define kReporter_EndOCUnit_FailureReasonKey @"failureReason"
+
+#define kReporter_BeginTestSuite_SuiteKey @"suite"
+
+#define kReporter_EndTestSuite_SuiteKey @"suite"
+#define kReporter_EndTestSuite_TestCaseCountKey @"testCaseCount"
+#define kReporter_EndTestSuite_TotalFailureCountKey @"totalFailureCount"
+#define kReporter_EndTestSuite_UnexpectedExceptionCountKey @"unexpectedExceptionCount"
+#define kReporter_EndTestSuite_TestDurationKey @"testDuration"
+#define kReporter_EndTestSuite_TotalDurationKey @"totalDuration"
+
+#define kReporter_BeginTest_TestKey @"test"
+
+#define kReporter_EndTest_TestKey @"test"
+#define kReporter_EndTest_SucceededKey @"succeeded"
+#define kReporter_EndTest_TotalDurationKey @"totalDuration"
+#define kReporter_EndTest_OutputKey @"output"
+#define kReporter_EndTest_ExceptionKey @"exception"
+#define kReporter_EndTest_Exception_FilePathInProjectKey @"filePathInProject"
+#define kReporter_EndTest_Exception_LineNumberKey @"lineNumber"
+#define kReporter_EndTest_Exception_ReasonKey @"reason"
+#define kReporter_EndTest_Exception_NameKey @"name"
+
+#define kReporter_TestOutput_OutputKey @"output"
+
+#define kReporter_BeginBuildCommand_TitleKey @"title"
+#define kReporter_BeginBuildCommand_CommandKey @"command"
+
+#define kReporter_EndBuildCommand_TitleKey @"title"
+#define kReporter_EndBuildCommand_SucceededKey @"succeeded"
+#define kReporter_EndBuildCommand_FailureReasonKey @"failureReason"
+#define kReporter_EndBuildCommand_DurationKey @"duration"
+
+#define kReporter_BeginBuildTarget_ProjectKey @"project"
+#define kReporter_BeginBuildTarget_TargetKey @"target"
+#define kReporter_BeginBuildTarget_ConfigurationKey @"configuration"
+
+#define kReporter_EndBuildTarget_ProjectKey @"project"
+#define kReporter_EndBuildTarget_TargetKey @"target"
+#define kReporter_EndBuildTarget_ConfigurationKey @"configuration"
+
+#define kReporter_BeginXcodebuild_CommandKey @"command"
+#define kReporter_BeginXcodebuild_TitleKey @"command"
+
+#define kReporter_EndXcodebuild_CommandKey @"command"
+#define kReporter_EndXcodebuild_TitleKey @"command"
+
 @class Action;
 @class Options;
 

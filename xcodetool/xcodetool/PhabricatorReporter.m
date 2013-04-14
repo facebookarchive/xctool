@@ -57,7 +57,10 @@
 - (void)endBuildTarget:(NSDictionary *)event
 {
   [_results addObject:@{
-   @"name" : [NSString stringWithFormat:@"%@: Build %@:%@", [self projectOrWorkspaceName], event[@"project"], event[@"target"]],
+   @"name" : [NSString stringWithFormat:@"%@: Build %@:%@",
+              [self projectOrWorkspaceName],
+              event[kReporter_EndBuildTarget_ProjectKey],
+              event[kReporter_EndBuildTarget_TargetKey]],
    @"link" : [NSNull null],
    @"result" : (_currentTargetFailures.count == 0) ? @"pass" : @"broken",
    @"userdata" : [_currentTargetFailures componentsJoinedByString:@"=================================\n"],
@@ -76,9 +79,11 @@
 
 - (void)endBuildCommand:(NSDictionary *)event
 {
-  BOOL succeeded = [event[@"succeeded"] boolValue];
+  BOOL succeeded = [event[kReporter_EndBuildCommand_SucceededKey] boolValue];
   if (!succeeded) {
-    NSString *commandAndFailure = [_currentBuildCommand[@"command"] stringByAppendingString:event[@"failureReason"]];
+    NSString *commandAndFailure =
+      [_currentBuildCommand[kReporter_BeginBuildCommand_CommandKey]
+       stringByAppendingString:event[kReporter_EndBuildCommand_FailureReasonKey]];
     [_currentTargetFailures addObject:commandAndFailure];
   }
 
@@ -116,22 +121,24 @@
 
 - (void)endTest:(NSDictionary *)event
 {
-  NSMutableString *userdata = [NSMutableString stringWithString:event[@"output"]];
+  NSMutableString *userdata = [NSMutableString stringWithString:event[kReporter_EndTest_OutputKey]];
 
   // Include exception, if any.
-  NSDictionary *exception = event[@"exception"];
+  NSDictionary *exception = event[kReporter_EndTest_ExceptionKey];
   if (exception) {
     [userdata appendFormat:@"%@:%d: %@: %@",
-     exception[@"filePathInProject"],
-     [exception[@"lineNumber"] intValue],
-     exception[@"name"],
-     exception[@"reason"]];
+     exception[kReporter_EndTest_Exception_FilePathInProjectKey],
+     [exception[kReporter_EndTest_Exception_LineNumberKey] intValue],
+     exception[kReporter_EndTest_Exception_NameKey],
+     exception[kReporter_EndTest_Exception_ReasonKey]];
   }
 
   [_results addObject:@{
-   @"name" : [NSString stringWithFormat:@"%@: %@", [self projectOrWorkspaceName], event[@"test"]],
+   @"name" : [NSString stringWithFormat:@"%@: %@",
+              [self projectOrWorkspaceName],
+              event[kReporter_EndTest_TestKey]],
    @"link" : [NSNull null],
-   @"result" : [event[@"succeeded"] boolValue] ? @"pass" : @"fail",
+   @"result" : [event[kReporter_EndTest_SucceededKey] boolValue] ? @"pass" : @"fail",
    @"userdata" : userdata,
    @"coverage" : [NSNull null],
    @"extra" : [NSNull null],

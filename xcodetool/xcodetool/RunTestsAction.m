@@ -6,6 +6,7 @@
 #import "ApplicationTestRunner.h"
 #import "LogicTestRunner.h"
 #import "Options.h"
+#import "Reporter.h"
 #import "TaskUtil.h"
 #import "XcodeSubjectInfo.h"
 #import "XcodeToolUtil.h"
@@ -253,14 +254,13 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
                              standardError:nil
                              reporters:reporters] autorelease];
 
-  NSDictionary *commonEventInfo = @{
-                                    @"bundleName": testableBuildSettings[@"FULL_PRODUCT_NAME"],
-                                    @"sdkName": testableBuildSettings[@"SDK_NAME"],
-                                    @"testType": testType,
+  NSDictionary *commonEventInfo = @{kReporter_BeginOCUnit_BundleNameKey: testableBuildSettings[@"FULL_PRODUCT_NAME"],
+                                    kReporter_BeginOCUnit_SDKNameKey: testableBuildSettings[@"SDK_NAME"],
+                                    kReporter_BeginOCUnit_TestTypeKey: testType,
                                     };
 
   NSMutableDictionary *beginEvent = [NSMutableDictionary dictionaryWithDictionary:@{
-                                     @"event": @"begin-ocunit",
+                                     @"event": kReporter_Events_BeginOCUnit,
                                      }];
   [beginEvent addEntriesFromDictionary:commonEventInfo];
   [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:beginEvent];
@@ -269,9 +269,9 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
   BOOL succeeded = [testRunner runTestsWithError:&error];
 
   NSMutableDictionary *endEvent = [NSMutableDictionary dictionaryWithDictionary:@{
-                                   @"event": @"end-ocunit",
-                                   @"succeeded" : @(succeeded),
-                                   @"failureReason" : (error ? error : [NSNull null]),
+                                   @"event": kReporter_Events_EndOCUnit,
+                                   kReporter_EndOCUnit_SucceededKey: @(succeeded),
+                                   kReporter_EndOCUnit_FailureReasonKey: (error ? error : [NSNull null]),
                                    }];
   [endEvent addEntriesFromDictionary:commonEventInfo];
   [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:endEvent];

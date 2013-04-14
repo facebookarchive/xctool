@@ -271,7 +271,9 @@
 
 - (void)beginXcodebuild:(NSDictionary *)event
 {
-  [self.reportWriter printLine:@"xcodebuild <bold>%@<reset> <underline>%@<reset>", event[@"command"], event[@"title"]];
+  [self.reportWriter printLine:@"xcodebuild <bold>%@<reset> <underline>%@<reset>",
+   event[kReporter_BeginXcodebuild_CommandKey],
+   event[kReporter_BeginXcodebuild_TitleKey]];
   [self.reportWriter increaseIndent];
 }
 
@@ -283,7 +285,10 @@
 
 - (void)beginBuildTarget:(NSDictionary *)event
 {
-  [self.reportWriter printLine:@"<bold>%@<reset> / <bold>%@<reset> (%@)", event[@"project"], event[@"target"], event[@"configuration"]];
+  [self.reportWriter printLine:@"<bold>%@<reset> / <bold>%@<reset> (%@)",
+   event[kReporter_BeginBuildTarget_ProjectKey],
+   event[kReporter_BeginBuildTarget_TargetKey],
+   event[kReporter_BeginBuildTarget_ConfigurationKey]];
   [self.reportWriter increaseIndent];
 }
 
@@ -295,7 +300,9 @@
 
 - (void)beginBuildCommand:(NSDictionary *)event
 {
-  [self.reportWriter updateLine:@"%@ %@", [self emptyIndicatorString], [self condensedBuildCommandTitle:event[@"title"]]];
+  [self.reportWriter updateLine:@"%@ %@",
+   [self emptyIndicatorString],
+   [self condensedBuildCommandTitle:event[kReporter_BeginBuildCommand_TitleKey]]];
   self.currentBuildCommandEvent = event;
 }
 
@@ -317,22 +324,23 @@
     return [NSString stringWithFormat:@"%@(%d ms)<reset>", color, (int)(duration * 1000)];
   };
 
-  BOOL succeeded = [event[@"succeeded"] boolValue];
+  BOOL succeeded = [event[kReporter_EndBuildCommand_SucceededKey] boolValue];
   NSString *indicator = succeeded ? [self passIndicatorString] : [self failIndicatorString];
 
   [self.reportWriter updateLine:@"%@ %@ %@",
    indicator,
-   [self condensedBuildCommandTitle:event[@"title"]],
-   formattedBuildDuration([event[@"duration"] floatValue])];
+   [self condensedBuildCommandTitle:event[kReporter_EndBuildCommand_TitleKey]],
+   formattedBuildDuration([event[kReporter_EndBuildCommand_DurationKey] floatValue])];
   [self.reportWriter printNewline];
 
   if (!succeeded) {
     [self printDivider];
     [self.reportWriter disableIndent];
 
-    [self.reportWriter printLine:@"<faint>%@<reset>", self.currentBuildCommandEvent[@"command"]];
+    [self.reportWriter printLine:@"<faint>%@<reset>",
+     self.currentBuildCommandEvent[kReporter_BeginBuildCommand_CommandKey]];
     [self.reportWriter printLine:@"%@",
-     [event[@"failureReason"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
+     [event[kReporter_EndBuildCommand_FailureReasonKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
     
     [self.reportWriter enableIndent];
     [self printDivider];
@@ -343,10 +351,10 @@
 
 - (void)beginOcunit:(NSDictionary *)event
 {
-  NSArray *attributes = @[event[@"sdkName"], event[@"testType"]];
+  NSArray *attributes = @[event[kReporter_BeginOCUnit_SDKNameKey], event[kReporter_BeginOCUnit_TestTypeKey]];
 
   [self.reportWriter printLine:@"<bold>run-test<reset> <underline>%@<reset> (%@)",
-   event[@"bundleName"],
+   event[kReporter_BeginOCUnit_BundleNameKey],
    [attributes componentsJoinedByString:@", "]];
   [self.reportWriter increaseIndent];
 }
@@ -355,14 +363,15 @@
 {
   [self.reportWriter decreaseIndent];
   
-  if (![event[@"succeeded"] boolValue] && ![event[@"failureReason"] isEqual:[NSNull null]]) {
-    [self.reportWriter printLine:@"<bold>failed<reset>: %@", event[@"failureReason"]];
+  if (![event[kReporter_EndOCUnit_SucceededKey] boolValue] &&
+      ![event[kReporter_EndOCUnit_FailureReasonKey] isEqual:[NSNull null]]) {
+    [self.reportWriter printLine:@"<bold>failed<reset>: %@", event[kReporter_EndOCUnit_FailureReasonKey]];
   }
 }
 
 - (void)beginTestSuite:(NSDictionary *)event
 {
-  NSString *suite = event[@"suite"];
+  NSString *suite = event[kReporter_BeginTestSuite_SuiteKey];
   
   if (![suite isEqualToString:@"All tests"] && ![suite hasSuffix:@".octest(Tests)"]) {
     if ([suite hasPrefix:@"/"]) {
@@ -376,15 +385,15 @@
 
 - (void)endTestSuite:(NSDictionary *)event
 {
-  NSString *suite = event[@"suite"];
-  int testCaseCount = [event[@"testCaseCount"] intValue];
-  int totalFailureCount = [event[@"totalFailureCount"] intValue];
+  NSString *suite = event[kReporter_EndTestSuite_SuiteKey];
+  int testCaseCount = [event[kReporter_EndTestSuite_TestCaseCountKey] intValue];
+  int totalFailureCount = [event[kReporter_EndTestSuite_TotalFailureCountKey] intValue];
   
   if (![suite isEqualToString:@"All tests"] && ![suite hasSuffix:@".octest(Tests)"]) {
     [self.reportWriter printLine:@"<bold>%d of %d tests passed %@<reset>",
      (testCaseCount - totalFailureCount),
      testCaseCount,
-     [self formattedTestDuration:[event[@"totalDuration"] floatValue] withColor:NO]
+     [self formattedTestDuration:[event[kReporter_EndTestSuite_TotalDurationKey] floatValue] withColor:NO]
      ];
     [self.reportWriter decreaseIndent];
     [self.reportWriter printNewline];
@@ -392,7 +401,7 @@
     [self.reportWriter printLine:@"<bold>%d of %d tests passed %@<reset>",
      (testCaseCount - totalFailureCount),
      testCaseCount,
-     [self formattedTestDuration:[event[@"totalDuration"] floatValue] withColor:NO]
+     [self formattedTestDuration:[event[kReporter_EndTestSuite_TotalDurationKey] floatValue] withColor:NO]
      ];
     [self.reportWriter printNewline];
   }
@@ -400,7 +409,7 @@
 
 - (void)beginTest:(NSDictionary *)event
 {
-  [self.reportWriter updateLine:@"%@ %@", [self emptyIndicatorString], event[@"test"]];
+  [self.reportWriter updateLine:@"%@ %@", [self emptyIndicatorString], event[kReporter_BeginTest_TestKey]];
   self.testHadOutput = NO;
 }
 
@@ -415,7 +424,7 @@
   [self.reportWriter enableIndent];
 
   self.testHadOutput = YES;
-  self.testOutputEndsInNewline = [event[@"output"] hasSuffix:@"\n"];
+  self.testOutputEndsInNewline = [event[kReporter_TestOutput_OutputKey] hasSuffix:@"\n"];
 }
 
 - (NSString *)formattedTestDuration:(float)duration withColor:(BOOL)withColor
@@ -441,11 +450,11 @@
 
 - (void)endTest:(NSDictionary *)event
 {
-  BOOL succeeded = [event[@"succeeded"] boolValue];
-  BOOL showInfo = !succeeded || ([event[@"output"] length] > 0);
+  BOOL succeeded = [event[kReporter_EndTest_SucceededKey] boolValue];
+  BOOL showInfo = !succeeded || ([event[kReporter_EndTest_OutputKey] length] > 0);
   NSString *indicator = nil;
   
-  if ([event[@"succeeded"] boolValue]) {
+  if (succeeded) {
     indicator = [self passIndicatorString];
   } else {
     indicator = [self failIndicatorString];
@@ -460,13 +469,13 @@
     [self.reportWriter disableIndent];
     
     // Show exception, if any.
-    NSDictionary *exception = event[@"exception"];
+    NSDictionary *exception = event[kReporter_EndTest_ExceptionKey];
     if (exception) {
       [self.reportWriter printLine:@"<faint>%@:%d: %@: %@<reset>",
-       exception[@"filePathInProject"],
-       [exception[@"lineNumber"] intValue],
-       exception[@"name"],
-       exception[@"reason"]];
+       exception[kReporter_EndTest_Exception_FilePathInProjectKey],
+       [exception[kReporter_EndTest_Exception_LineNumberKey] intValue],
+       exception[kReporter_EndTest_Exception_NameKey],
+       exception[kReporter_EndTest_Exception_ReasonKey]];
     }
     
     [self.reportWriter enableIndent];
@@ -475,8 +484,8 @@
   
   [self.reportWriter updateLine:@"%@ %@ %@",
    indicator,
-   event[@"test"],
-   [self formattedTestDuration:[event[@"totalDuration"] floatValue] withColor:YES]
+   event[kReporter_EndTest_TestKey],
+   [self formattedTestDuration:[event[kReporter_EndTest_TotalDurationKey] floatValue] withColor:YES]
    ];
   [self.reportWriter printNewline];
 

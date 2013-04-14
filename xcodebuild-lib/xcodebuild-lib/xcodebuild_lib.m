@@ -4,6 +4,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "../../xcodetool/xcodetool/Reporter.h"
+
 static int __stdoutHandle;
 static FILE *__stdout;
 static int __stderrHandle;
@@ -126,9 +128,9 @@ static void AnnounceBeginSection(IDEActivityLogSection *section)
   
   if ([sectionTypeString isEqualToString:kDomainTypeBuildItem]) {
     PrintJSON(@{
-              @"event" : @"begin-build-command",
-              @"title" : section.title,
-              @"command" : section.commandDetailDescription,
+              @"event" : kReporter_Events_BeginBuildCommand,
+              kReporter_BeginBuildCommand_TitleKey : section.title,
+              kReporter_BeginBuildCommand_CommandKey : section.commandDetailDescription,
               });
   } else if ([sectionTypeString hasPrefix:kDomainTypeProductItemPrefix]) {
     NSString *project = nil;
@@ -136,10 +138,10 @@ static void AnnounceBeginSection(IDEActivityLogSection *section)
     NSString *configuration = nil;
     GetProjectTargetConfigurationFromHeader(section.title, &project, &target, &configuration);
     PrintJSON(@{
-              @"event" : @"begin-build-target",
-              @"project" : project,
-              @"target" : target,
-              @"configuration" : configuration,
+              @"event" : kReporter_Events_BeginBuildTarget,
+              kReporter_BeginBuildTarget_ProjectKey : project,
+              kReporter_BeginBuildTarget_TargetKey : target,
+              kReporter_BeginBuildTarget_ConfigurationKey : configuration,
               });
   }
 }
@@ -150,14 +152,14 @@ static void AnnounceEndSection(IDEActivityLogSection *section)
   
   if ([sectionTypeString isEqualToString:kDomainTypeBuildItem]) {
     PrintJSON(@{
-              @"event" : @"end-build-command",
-              @"title" : section.title,
-              @"succeeded" : (section.resultCode == 0) ? @YES : @NO,
+              @"event" : kReporter_Events_EndBuildCommand,
+              kReporter_EndBuildCommand_TitleKey : section.title,
+              kReporter_EndBuildCommand_SucceededKey : (section.resultCode == 0) ? @YES : @NO,
               // Sometimes things will fail and 'emittedOutputText' will be nil.  We've seen this
               // happen when Xcode's Copy command fails.  In this case, just send an empty string
               // so Reporters don't have to worry about this sometimes being [NSNull null].
-              @"failureReason" : section.emittedOutputText ?: @"",
-              @"duration" : @(section.timeStoppedRecording - section.timeStartedRecording),
+              kReporter_EndBuildCommand_FailureReasonKey : section.emittedOutputText ?: @"",
+              kReporter_EndBuildCommand_DurationKey : @(section.timeStoppedRecording - section.timeStartedRecording),
               });
   } else if ([sectionTypeString hasPrefix:kDomainTypeProductItemPrefix]) {
     NSString *project = nil;
@@ -165,10 +167,10 @@ static void AnnounceEndSection(IDEActivityLogSection *section)
     NSString *configuration = nil;
     GetProjectTargetConfigurationFromHeader(section.title, &project, &target, &configuration);
     PrintJSON(@{
-              @"event" : @"end-build-target",
-              @"project" : project,
-              @"target" : target,
-              @"configuration" : configuration,
+              @"event" : kReporter_Events_EndBuildTarget,
+              kReporter_EndBuildTarget_ProjectKey : project,
+              kReporter_EndBuildTarget_TargetKey : target,
+              kReporter_EndBuildTarget_ConfigurationKey : configuration,
               });
   }
 }
