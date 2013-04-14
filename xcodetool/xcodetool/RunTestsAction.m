@@ -253,27 +253,28 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
                              standardError:nil
                              reporters:reporters] autorelease];
 
-  NSString *title = testableBuildSettings[@"FULL_PRODUCT_NAME"];
-  NSString *titleExtra = [NSString stringWithFormat:@"%@, %@", testType, testableBuildSettings[@"SDK_NAME"]];
+  NSDictionary *commonEventInfo = @{
+                                    @"bundleName": testableBuildSettings[@"FULL_PRODUCT_NAME"],
+                                    @"sdkName": testableBuildSettings[@"SDK_NAME"],
+                                    @"testType": testType,
+                                    };
 
-  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                              withObject:@{
-   @"event": @"begin-octest",
-   @"title": title,
-   @"titleExtra": titleExtra,
-   }];
+  NSMutableDictionary *beginEvent = [NSMutableDictionary dictionaryWithDictionary:@{
+                                     @"event": @"begin-octest",
+                                     }];
+  [beginEvent addEntriesFromDictionary:commonEventInfo];
+  [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:beginEvent];
 
   NSString *error = nil;
   BOOL succeeded = [testRunner runTestsWithError:&error];
 
-  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                              withObject:@{
-   @"event": @"end-octest",
-   @"title": title,
-   @"titleExtra": titleExtra,
-   @"succeeded" : @(succeeded),
-   @"failureReason" : (error ? error : [NSNull null]),
-   }];
+  NSMutableDictionary *endEvent = [NSMutableDictionary dictionaryWithDictionary:@{
+                                   @"event": @"end-octest",
+                                   @"succeeded" : @(succeeded),
+                                   @"failureReason" : (error ? error : [NSNull null]),
+                                   }];
+  [endEvent addEntriesFromDictionary:commonEventInfo];
+  [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:endEvent];
 
   return succeeded;
 }

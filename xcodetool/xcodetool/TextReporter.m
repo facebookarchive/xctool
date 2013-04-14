@@ -343,9 +343,11 @@
 
 - (void)beginOctest:(NSDictionary *)event
 {
-  [self.reportWriter printLine:@"<bold>run-test<reset> <underline>%@<reset> %@",
-   event[@"title"],
-   (event[@"titleExtra"] != nil) ? [NSString stringWithFormat:@"(%@)", event[@"titleExtra"]] : @""];
+  NSArray *attributes = @[event[@"sdkName"], event[@"testType"]];
+
+  [self.reportWriter printLine:@"<bold>run-test<reset> <underline>%@<reset> (%@)",
+   event[@"bundleName"],
+   [attributes componentsJoinedByString:@", "]];
   [self.reportWriter increaseIndent];
 }
 
