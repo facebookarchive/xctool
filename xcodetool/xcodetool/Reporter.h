@@ -28,8 +28,8 @@
 - (void)endBuildCommand:(NSDictionary *)event;
 - (void)beginXcodebuild:(NSDictionary *)event;
 - (void)endXcodebuild:(NSDictionary *)event;
-- (void)beginOctest:(NSDictionary *)event;
-- (void)endOctest:(NSDictionary *)event;
+- (void)beginOcunit:(NSDictionary *)event;
+- (void)endOcunit:(NSDictionary *)event;
 - (void)beginTestSuite:(NSDictionary *)event;
 - (void)endTestSuite:(NSDictionary *)event;
 - (void)beginTest:(NSDictionary *)event;

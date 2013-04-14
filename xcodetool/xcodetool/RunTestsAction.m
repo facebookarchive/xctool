@@ -260,7 +260,7 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
                                     };
 
   NSMutableDictionary *beginEvent = [NSMutableDictionary dictionaryWithDictionary:@{
-                                     @"event": @"begin-octest",
+                                     @"event": @"begin-ocunit",
                                      }];
   [beginEvent addEntriesFromDictionary:commonEventInfo];
   [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:beginEvent];
@@ -269,7 +269,7 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
   BOOL succeeded = [testRunner runTestsWithError:&error];
 
   NSMutableDictionary *endEvent = [NSMutableDictionary dictionaryWithDictionary:@{
-                                   @"event": @"end-octest",
+                                   @"event": @"end-ocunit",
                                    @"succeeded" : @(succeeded),
                                    @"failureReason" : (error ? error : [NSNull null]),
                                    }];

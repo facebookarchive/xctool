@@ -341,7 +341,7 @@
   self.currentBuildCommandEvent = event;
 }
 
-- (void)beginOctest:(NSDictionary *)event
+- (void)beginOcunit:(NSDictionary *)event
 {
   NSArray *attributes = @[event[@"sdkName"], event[@"testType"]];
 
@@ -351,7 +351,7 @@
   [self.reportWriter increaseIndent];
 }
 
-- (void)endOctest:(NSDictionary *)event
+- (void)endOcunit:(NSDictionary *)event
 {
   [self.reportWriter decreaseIndent];
   

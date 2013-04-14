@@ -94,11 +94,11 @@
 {
 }
 
-- (void)beginOctest:(NSDictionary *)event
+- (void)beginOcunit:(NSDictionary *)event
 {
 }
 
-- (void)endOctest:(NSDictionary *)event
+- (void)endOcunit:(NSDictionary *)event
 {
 }
 
