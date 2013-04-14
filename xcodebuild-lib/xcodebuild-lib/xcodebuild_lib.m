@@ -158,7 +158,7 @@ static void AnnounceEndSection(IDEActivityLogSection *section)
               // Sometimes things will fail and 'emittedOutputText' will be nil.  We've seen this
               // happen when Xcode's Copy command fails.  In this case, just send an empty string
               // so Reporters don't have to worry about this sometimes being [NSNull null].
-              kReporter_EndBuildCommand_FailureReasonKey : section.emittedOutputText ?: @"",
+              kReporter_EndBuildCommand_EmittedOutputTextKey : section.emittedOutputText ?: @"",
               kReporter_EndBuildCommand_DurationKey : @(section.timeStoppedRecording - section.timeStartedRecording),
               });
   } else if ([sectionTypeString hasPrefix:kDomainTypeProductItemPrefix]) {

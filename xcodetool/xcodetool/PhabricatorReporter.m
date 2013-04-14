@@ -82,7 +82,7 @@
   if (!succeeded) {
     NSString *commandAndFailure =
       [_currentBuildCommand[kReporter_BeginBuildCommand_CommandKey]
-       stringByAppendingString:event[kReporter_EndBuildCommand_FailureReasonKey]];
+       stringByAppendingString:event[kReporter_EndBuildCommand_EmittedOutputTextKey]];
     [_currentTargetFailures addObject:commandAndFailure];
   }
 

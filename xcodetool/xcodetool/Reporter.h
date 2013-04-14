@@ -54,7 +54,7 @@
 
 #define kReporter_EndBuildCommand_TitleKey @"title"
 #define kReporter_EndBuildCommand_SucceededKey @"succeeded"
-#define kReporter_EndBuildCommand_FailureReasonKey @"failureReason"
+#define kReporter_EndBuildCommand_EmittedOutputTextKey @"emittedOutputText"
 #define kReporter_EndBuildCommand_DurationKey @"duration"
 
 #define kReporter_BeginBuildTarget_ProjectKey @"project"

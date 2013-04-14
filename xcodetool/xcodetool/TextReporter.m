@@ -177,6 +177,11 @@
   return _isPretty ? @"<green>\u2713<reset>" : @"~";
 }
 
+- (NSString *)warningIndicatorString
+{
+  return _isPretty ? @"<yellow>\u26A0<reset>" : @"!";
+}
+
 - (NSString *)failIndicatorString
 {
   return _isPretty ? @"<red>\u2717<reset>" : @"X";
@@ -325,7 +330,19 @@
   };
 
   BOOL succeeded = [event[kReporter_EndBuildCommand_SucceededKey] boolValue];
-  NSString *indicator = succeeded ? [self passIndicatorString] : [self failIndicatorString];
+  NSString *outputText = [event[kReporter_EndBuildCommand_EmittedOutputTextKey]
+                          stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+
+  NSString *indicator = nil;
+  if (succeeded) {
+    if ([outputText rangeOfString:@"warning:"].location != NSNotFound) {
+      indicator = [self warningIndicatorString];
+    } else {
+      indicator = [self passIndicatorString];
+    }
+  } else {
+    indicator = [self failIndicatorString];
+  }
 
   [self.reportWriter updateLine:@"%@ %@ %@",
    indicator,
@@ -333,14 +350,20 @@
    formattedBuildDuration([event[kReporter_EndBuildCommand_DurationKey] floatValue])];
   [self.reportWriter printNewline];
 
-  if (!succeeded) {
+  BOOL showInfo = !succeeded || (outputText.length > 0);
+
+  if (showInfo) {
     [self printDivider];
     [self.reportWriter disableIndent];
 
-    [self.reportWriter printLine:@"<faint>%@<reset>",
-     self.currentBuildCommandEvent[kReporter_BeginBuildCommand_CommandKey]];
-    [self.reportWriter printLine:@"%@",
-     [event[kReporter_EndBuildCommand_FailureReasonKey] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
+    // If the command failed, it's always interesting to see the full command being run.
+    if (!succeeded) {
+      [self.reportWriter printLine:@"<faint>%@<reset>", self.currentBuildCommandEvent[kReporter_BeginBuildCommand_CommandKey]];
+    }
+
+    if (outputText.length > 0) {
+      [self.reportWriter printLine:@"<faint>%@<reset>", outputText];
+    }
     
     [self.reportWriter enableIndent];
     [self printDivider];
