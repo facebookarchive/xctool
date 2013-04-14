@@ -7,25 +7,6 @@
 
 @implementation LogicTestRunner
 
-- (NSArray *)otestArgumentsForTestBundle:(NSString *)testBundlePath
-{
-  // These are the same arguments Xcode would use when invoking otest.  To capture these, we
-  // just ran a test case from Xcode that dumped 'argv'.  It's a little tricky to do that outside
-  // of the 'main' function, but you can use _NSGetArgc and _NSGetArgv.  See --
-  // http://unixjunkie.blogspot.com/2006/07/access-argc-and-argv-from-anywhere.html
-  return @[
-           // Not sure exactly what this does...
-           @"-NSTreatUnknownArgumentsAsOpen", @"NO",
-           // Not sure exactly what this does...
-           @"-ApplePersistenceIgnoreState", @"YES",
-           // SenTest is one of Self, All, None,
-           // or TestClassName[/testCaseName][,TestClassName2]
-           @"-SenTest", _senTestList,
-           // SenTestInvertScope optionally inverts whatever SenTest would normally select.
-           @"-SenTestInvertScope", _senTestInvertScope ? @"YES" : @"NO",
-           testBundlePath];
-}
-
 - (NSTask *)otestTaskForMacOSXWithTestBundle:(NSString *)testBundlePath
 {
   NSAssert([_buildSettings[@"SDK_NAME"] hasPrefix:@"macosx"], @"Should be a macosx SDK.");
@@ -49,8 +30,8 @@
 
   NSTask *task = TaskInstance();
   [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Tools/otest"]];
-  [task setArguments:[@[] arrayByAddingObjectsFromArray:
-                      [self otestArgumentsForTestBundle:testBundlePath]]];
+  // When invoking otest directly, the last arg needs to be the the test bundle.
+  [task setArguments:[[self otestArguments] arrayByAddingObject:testBundlePath]];
   [task setEnvironment:env];
 
   return task;
@@ -76,17 +57,9 @@
                                     @"DYLD_INSERT_LIBRARIES" : [PathToFBXcodetoolBinaries() stringByAppendingPathComponent:@"otest-lib-ios.dylib"],
                                     };
 
-  NSArray *taskArguments = @[
-                             @"-NSTreatUnknownArgumentsAsOpen", @"NO",
-                             @"-ApplePersistenceIgnoreState", @"YES",
-                             @"-SenTestInvertScope", _senTestInvertScope ? @"YES" : @"NO",
-                             @"-SenTest", _senTestList,
-                             testBundlePath,
-                             ];
-
   NSTask *task = TaskInstance();
   [task setLaunchPath:[NSString stringWithFormat:@"%@/Developer/usr/bin/otest", _buildSettings[@"SDKROOT"]]];
-  [task setArguments:taskArguments];
+  [task setArguments:[[self otestArguments] arrayByAddingObject:testBundlePath]];
   [task setEnvironment:taskEnvironment];
   return task;
 }

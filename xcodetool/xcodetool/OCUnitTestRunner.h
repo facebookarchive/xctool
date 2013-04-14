@@ -19,4 +19,6 @@
 
 - (BOOL)runTestsWithError:(NSString **)error;
 
+- (NSArray *)otestArguments;
+
 @end

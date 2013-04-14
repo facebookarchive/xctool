@@ -142,4 +142,23 @@
   return succeeded;
 }
 
+- (NSArray *)otestArguments
+{
+  // These are the same arguments Xcode would use when invoking otest.  To capture these, we
+  // just ran a test case from Xcode that dumped 'argv'.  It's a little tricky to do that outside
+  // of the 'main' function, but you can use _NSGetArgc and _NSGetArgv.  See --
+  // http://unixjunkie.blogspot.com/2006/07/access-argc-and-argv-from-anywhere.html
+  return @[
+           // Not sure exactly what this does...
+           @"-NSTreatUnknownArgumentsAsOpen", @"NO",
+           // Not sure exactly what this does...
+           @"-ApplePersistenceIgnoreState", @"YES",
+           // SenTest is one of Self, All, None,
+           // or TestClassName[/testCaseName][,TestClassName2]
+           @"-SenTest", _senTestList,
+           // SenTestInvertScope optionally inverts whatever SenTest would normally select.
+           @"-SenTestInvertScope", _senTestInvertScope ? @"YES" : @"NO",
+           ];
+}
+
 @end

@@ -51,11 +51,7 @@
   [sessionConfig setSimulatedDeviceFamily:@1];
   [sessionConfig setSimulatedApplicationShouldWaitForDebugger:NO];
   
-  [sessionConfig setSimulatedApplicationLaunchArgs:@[
-   @"-NSTreatUnknownArgumentsAsOpen", @"NO",
-   @"-SenTestInvertScope", _senTestInvertScope ? @"YES" : @"NO",
-   @"-SenTest", _senTestList,
-   ]];
+  [sessionConfig setSimulatedApplicationLaunchArgs:[self otestArguments]];
   NSMutableDictionary *launchEnvironment = [NSMutableDictionary dictionaryWithDictionary:@{
                                             @"CFFIXED_USER_HOME" : appSupportDir,
                                             @"DYLD_FRAMEWORK_PATH" : _buildSettings[@"TARGET_BUILD_DIR"],
@@ -161,22 +157,18 @@
                          ];
   
   NSTask *task = [[[NSTask alloc] init] autorelease];
-  task.launchPath = testHostPath;
-  task.arguments = @[@"-ApplePersistenceIgnoreState", @"YES",
-                     @"-NSTreatUnknownArgumentsAsOpen", @"NO",
-                     @"-SenTestInvertScope", _senTestInvertScope ? @"YES" : @"NO",
-                     @"-SenTest", _senTestList,
-                     ];
-  task.environment = @{
-                       @"DYLD_INSERT_LIBRARIES" : [libraries componentsJoinedByString:@":"],
-                       @"DYLD_FRAMEWORK_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
-                       @"DYLD_LIBRARY_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
-                       @"DYLD_FALLBACK_FRAMEWORK_PATH" : [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"],
-                       @"NSUnbufferedIO" : @"YES",
-                       @"OBJC_DISABLE_GC" : !enableGC ? @"YES" : @"NO",
-                       @"XCInjectBundle" : [_buildSettings[@"BUILT_PRODUCTS_DIR"] stringByAppendingPathComponent:_buildSettings[@"FULL_PRODUCT_NAME"]],
-                       @"XCInjectBundleInto" : testHostPath,
-                       };
+  [task setLaunchPath:testHostPath];
+  [task setArguments:[self otestArguments]];
+  [task setEnvironment:@{
+   @"DYLD_INSERT_LIBRARIES" : [libraries componentsJoinedByString:@":"],
+   @"DYLD_FRAMEWORK_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
+   @"DYLD_LIBRARY_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
+   @"DYLD_FALLBACK_FRAMEWORK_PATH" : [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"],
+   @"NSUnbufferedIO" : @"YES",
+   @"OBJC_DISABLE_GC" : !enableGC ? @"YES" : @"NO",
+   @"XCInjectBundle" : [_buildSettings[@"BUILT_PRODUCTS_DIR"] stringByAppendingPathComponent:_buildSettings[@"FULL_PRODUCT_NAME"]],
+   @"XCInjectBundleInto" : testHostPath,
+   }];
   
   LaunchTaskAndFeedOuputLinesToBlock(task, outputLineBlock);
   
