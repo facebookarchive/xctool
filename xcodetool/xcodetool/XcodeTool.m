@@ -3,7 +3,6 @@
 #import "XcodeToolUtil.h"
 
 #import "Action.h"
-#import "ApplicationTestRunner.h"
 #import "NSFileHandle+Print.h"
 #import "Options.h"
 #import "PJSONKit.h"

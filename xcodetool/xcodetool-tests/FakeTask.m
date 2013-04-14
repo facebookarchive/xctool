@@ -1,3 +1,5 @@
+// Copyright 2004-present Facebook. All Rights Reserved.
+
 
 #import "FakeTask.h"
 
@@ -23,7 +25,7 @@
 {
   [_fakeStandardOutputPath release];
   [_fakeStandardErrorPath release];
-  
+
   [_launchPath release];
   [_arguments release];
   [_environment release];
@@ -35,7 +37,7 @@
 - (void)launch
 {
   NSMutableString *command = [NSMutableString string];
-  
+
   if (_fakeStandardOutputPath) {
     [command appendFormat:@"cat \"%@\" > /dev/stdout;", _fakeStandardOutputPath];
   }
@@ -43,9 +45,9 @@
   if (_fakeStandardErrorPath) {
     [command appendFormat:@"cat \"%@\" > /dev/stderr;", _fakeStandardErrorPath];
   }
-  
+
   [command appendFormat:@"exit %d", _fakeExitStatus];
-  
+
   NSTask *realTask = [[[NSTask alloc] init] autorelease];
   [realTask setLaunchPath:@"/bin/bash"];
   [realTask setArguments:@[@"-c", command]];

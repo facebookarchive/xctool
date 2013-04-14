@@ -3,7 +3,7 @@
 
 #import "OCUnitTestRunner.h"
 
-@interface ApplicationTestRunner : OCUnitTestRunner {
+@interface OCUnitOSXAppTestRunner : OCUnitTestRunner {
 }
 
 @end

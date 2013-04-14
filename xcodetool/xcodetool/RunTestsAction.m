@@ -3,8 +3,9 @@
 
 #import <launch.h>
 
-#import "ApplicationTestRunner.h"
+#import "OCUnitIOSAppTestRunner.h"
 #import "OCUnitIOSLogicTestRunner.h"
+#import "OCUnitOSXAppTestRunner.h"
 #import "OCUnitOSXLogicTestRunner.h"
 #import "Options.h"
 #import "Reporter.h"
@@ -244,7 +245,15 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
 
   if (hasTestHost) {
     testType = @"application-test";
-    testRunnerClass = [ApplicationTestRunner class];
+
+    if ([sdkName hasPrefix:@"iphonesimulator"]) {
+      testRunnerClass = [OCUnitIOSAppTestRunner class];
+    } else if ([sdkName hasPrefix:@"macosx"]) {
+      testRunnerClass = [OCUnitOSXAppTestRunner class];
+    } else {
+      NSAssert(NO, @"Unexpected SDK: @", sdkName);
+    }
+
   } else {
     testType = @"logic-test";
 
