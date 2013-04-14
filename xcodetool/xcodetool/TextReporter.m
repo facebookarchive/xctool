@@ -351,7 +351,11 @@
 
 - (void)beginOcunit:(NSDictionary *)event
 {
-  NSArray *attributes = @[event[kReporter_BeginOCUnit_SDKNameKey], event[kReporter_BeginOCUnit_TestTypeKey]];
+  NSArray *attributes = @[event[kReporter_BeginOCUnit_SDKNameKey],
+                          event[kReporter_BeginOCUnit_TestTypeKey],
+                          [NSString stringWithFormat:@"GC %@",
+                           [event[kReporter_BeginOCUnit_GCEnabledKey] boolValue] ? @"ON" : @"OFF"]];
+
 
   [self.reportWriter printLine:@"<bold>run-test<reset> <underline>%@<reset> (%@)",
    event[kReporter_BeginOCUnit_BundleNameKey],

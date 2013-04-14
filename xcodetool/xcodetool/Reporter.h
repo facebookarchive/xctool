@@ -18,6 +18,7 @@
 #define kReporter_BeginOCUnit_BundleNameKey @"bundleName"
 #define kReporter_BeginOCUnit_SDKNameKey @"sdkName"
 #define kReporter_BeginOCUnit_TestTypeKey @"testType"
+#define kReporter_BeginOCUnit_GCEnabledKey @"gcEnabled"
 
 #define kReporter_EndOCUnit_BundleNameKey @"bundleName"
 #define kReporter_EndOCUnit_SDKNameKey @"sdkName"

@@ -8,18 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		282BFE1B171602C60022F9FF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 282BFE1A171602C60022F9FF /* Cocoa.framework */; };
-		282BFE2A1716044C0022F9FF /* PJSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A33C9316CEC5D500C5EE2A /* PJSONKit.m */; };
 		282BFE2B1716044C0022F9FF /* otest_lib.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCA9916C2EE4C00F2E343 /* otest_lib.m */; };
 		283CCA9A16C2EE4C00F2E343 /* otest_lib.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCA9916C2EE4C00F2E343 /* otest_lib.m */; };
 		287A37E916C7776E00319E81 /* dyld-interposing.h in Headers */ = {isa = PBXBuildFile; fileRef = 287A37E816C7776E00319E81 /* dyld-interposing.h */; };
-		28A33C9416CEC5D500C5EE2A /* PJSONKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 28A33C9216CEC5D500C5EE2A /* PJSONKit.h */; };
-		28A33C9516CEC5D500C5EE2A /* PJSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A33C9316CEC5D500C5EE2A /* PJSONKit.m */; };
 		28E9B9DF16C32E9A00A52E4D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283CCA9416C2EE4C00F2E343 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		281B80BE16CB989D0032430F /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGELOG.md; sourceTree = "<group>"; };
-		281B80C116CB989D0032430F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		282BFE19171602C60022F9FF /* otest-lib-osx.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "otest-lib-osx.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		282BFE1A171602C60022F9FF /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		282BFE1D171602C60022F9FF /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -32,8 +27,6 @@
 		283CCA9716C2EE4C00F2E343 /* otest-lib-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "otest-lib-Prefix.pch"; sourceTree = "<group>"; };
 		283CCA9916C2EE4C00F2E343 /* otest_lib.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = otest_lib.m; sourceTree = "<group>"; };
 		287A37E816C7776E00319E81 /* dyld-interposing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dyld-interposing.h"; sourceTree = "<group>"; };
-		28A33C9216CEC5D500C5EE2A /* PJSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PJSONKit.h; sourceTree = "<group>"; };
-		28A33C9316CEC5D500C5EE2A /* PJSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PJSONKit.m; sourceTree = "<group>"; };
 		28E9B98216C2F2D400A52E4D /* otest-lib-ios.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "otest-lib-ios.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -57,18 +50,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		281B80BD16CB989D0032430F /* JSONKit */ = {
-			isa = PBXGroup;
-			children = (
-				28A33C9216CEC5D500C5EE2A /* PJSONKit.h */,
-				28A33C9316CEC5D500C5EE2A /* PJSONKit.m */,
-				281B80BE16CB989D0032430F /* CHANGELOG.md */,
-				281B80C116CB989D0032430F /* README.md */,
-			);
-			name = JSONKit;
-			path = ../Vendor/JSONKit;
-			sourceTree = "<group>";
-		};
 		282BFE1C171602C60022F9FF /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -85,7 +66,6 @@
 				282BFE29171602F80022F9FF /* otest-lib-osx.xcconfig */,
 				28E9B98216C2F2D400A52E4D /* otest-lib-ios.xcconfig */,
 				283CCA8E16C2EE4C00F2E343 /* Frameworks */,
-				281B80BD16CB989D0032430F /* JSONKit */,
 				283CCA9516C2EE4C00F2E343 /* otest-lib */,
 				283CCA8D16C2EE4C00F2E343 /* Products */,
 			);
@@ -144,7 +124,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				287A37E916C7776E00319E81 /* dyld-interposing.h in Headers */,
-				28A33C9416CEC5D500C5EE2A /* PJSONKit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -217,7 +196,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				282BFE2A1716044C0022F9FF /* PJSONKit.m in Sources */,
 				282BFE2B1716044C0022F9FF /* otest_lib.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -227,7 +205,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				283CCA9A16C2EE4C00F2E343 /* otest_lib.m in Sources */,
-				28A33C9516CEC5D500C5EE2A /* PJSONKit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,7 +9,6 @@
 
 #import "../../xcodetool/xcodetool/Reporter.h"
 
-#import "PJSONKit.h"
 #import "dyld-interposing.h"
 
 static int __stdoutHandle;
@@ -37,7 +36,7 @@ static void SwizzleClassSelectorForFunction(Class cls, SEL sel, IMP newImp)
 void PrintJSON(id JSONObject)
 {
   NSError *error = nil;
-  NSData *data = [JSONObject XT_JSONDataWithOptions:XT_JKSerializeOptionNone error:&error];
+  NSData *data = [NSJSONSerialization dataWithJSONObject:JSONObject options:0 error:&error];
   
   if (error) {
     fprintf(__stderr,

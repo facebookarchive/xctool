@@ -18,11 +18,6 @@
 
   NSString *testHostPath = _buildSettings[@"TEST_HOST"];
 
-  // TODO: In Xcode, if you use GCC_ENABLE_OBJC_GC = supported, Xcode will run your test twice
-  // with GC on and GC off.  We should eventually do the same.
-  BOOL enableGC = ([_buildSettings[@"GCC_ENABLE_OBJC_GC"] isEqualToString:@"supported"] ||
-                   [_buildSettings[@"GCC_ENABLE_OBJC_GC"] isEqualToString:@"required"]);
-
   NSArray *libraries = @[[PathToFBXcodetoolBinaries() stringByAppendingPathComponent:@"otest-lib-osx.dylib"],
                          [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection"],
                          ];
@@ -36,7 +31,7 @@
    @"DYLD_LIBRARY_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
    @"DYLD_FALLBACK_FRAMEWORK_PATH" : [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"],
    @"NSUnbufferedIO" : @"YES",
-   @"OBJC_DISABLE_GC" : !enableGC ? @"YES" : @"NO",
+   @"OBJC_DISABLE_GC" : !_garbageCollection ? @"YES" : @"NO",
    @"XCInjectBundle" : [_buildSettings[@"BUILT_PRODUCTS_DIR"] stringByAppendingPathComponent:_buildSettings[@"FULL_PRODUCT_NAME"]],
    @"XCInjectBundleInto" : testHostPath,
    }];

@@ -11,6 +11,7 @@
 - (id)initWithBuildSettings:(NSDictionary *)buildSettings
                 senTestList:(NSString *)senTestList
          senTestInvertScope:(BOOL)senTestInvertScope
+          garbageCollection:(BOOL)garbageCollection
              standardOutput:(NSFileHandle *)standardOutput
               standardError:(NSFileHandle *)standardError
                   reporters:(NSArray *)reporters
@@ -19,6 +20,7 @@
     _buildSettings = [buildSettings retain];
     _senTestList = [senTestList retain];
     _senTestInvertScope = senTestInvertScope;
+    _garbageCollection = garbageCollection;
     _standardOutput = [standardOutput retain];
     _standardError = [standardError retain];
     _reporters = [reporters retain];

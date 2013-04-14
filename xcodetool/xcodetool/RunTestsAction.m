@@ -238,63 +238,83 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
   NSDictionary *testableBuildSettings = allSettings[testableTarget];
 
   NSString *sdkName = testableBuildSettings[@"SDK_NAME"];
-  BOOL hasTestHost = testableBuildSettings[@"TEST_HOST"] != nil;
+  BOOL isApplicationTest = testableBuildSettings[@"TEST_HOST"] != nil;
 
-  Class testRunnerClass = {0};
-  NSString *testType = nil;
+  // array of [class, (bool) GC Enabled]
+  NSMutableArray *testConfigurations = [NSMutableArray array];
 
-  if (hasTestHost) {
-    testType = @"application-test";
-
-    if ([sdkName hasPrefix:@"iphonesimulator"]) {
-      testRunnerClass = [OCUnitIOSAppTestRunner class];
-    } else if ([sdkName hasPrefix:@"macosx"]) {
-      testRunnerClass = [OCUnitOSXAppTestRunner class];
+  if ([sdkName hasPrefix:@"iphonesimulator"]) {
+    if (isApplicationTest) {
+      [testConfigurations addObject:@[[OCUnitIOSAppTestRunner class], @NO]];
     } else {
-      NSAssert(NO, @"Unexpected SDK: @", sdkName);
+      [testConfigurations addObject:@[[OCUnitIOSLogicTestRunner class], @NO]];
+    }
+  } else if ([sdkName hasPrefix:@"macosx"]) {
+    Class testClass = {0};
+    if (isApplicationTest) {
+      testClass = [OCUnitOSXAppTestRunner class];
+    } else {
+      testClass = [OCUnitOSXLogicTestRunner class];
     }
 
+    NSString *enableGC = testableBuildSettings[@"GCC_ENABLE_OBJC_GC"];
+
+    if ([enableGC isEqualToString:@"required"]) {
+      [testConfigurations addObject:@[testClass, @YES]];
+    } else if ([enableGC isEqualToString:@"supported"]) {
+      // If GC is marked as 'supported', Apple's normal unit-testing harness will run tests twice,
+      // once with GC off and once with GC on.
+      [testConfigurations addObject:@[testClass, @YES]];
+      [testConfigurations addObject:@[testClass, @NO]];
+    } else {
+      [testConfigurations addObject:@[testClass, @NO]];
+    }
   } else {
-    testType = @"logic-test";
-
-    if ([sdkName hasPrefix:@"iphonesimulator"]) {
-      testRunnerClass = [OCUnitIOSLogicTestRunner class];
-    } else if ([sdkName hasPrefix:@"macosx"]) {
-      testRunnerClass = [OCUnitOSXLogicTestRunner class];
-    } else {
-      NSAssert(NO, @"Unexpected SDK: @", sdkName);
-    }
+    NSAssert(NO, @"Unexpected SDK: %@", sdkName);
   }
 
-  OCUnitTestRunner *testRunner = [[[testRunnerClass alloc]
-                             initWithBuildSettings:testableBuildSettings
-                             senTestList:senTestList
-                             senTestInvertScope:senTestInvertScope
-                             standardOutput:nil
-                             standardError:nil
-                             reporters:reporters] autorelease];
+  BOOL succeeded = YES;
 
-  NSDictionary *commonEventInfo = @{kReporter_BeginOCUnit_BundleNameKey: testableBuildSettings[@"FULL_PRODUCT_NAME"],
-                                    kReporter_BeginOCUnit_SDKNameKey: testableBuildSettings[@"SDK_NAME"],
-                                    kReporter_BeginOCUnit_TestTypeKey: testType,
-                                    };
+  for (NSArray *testConfiguration in testConfigurations) {
+    Class testRunnerClass = testConfiguration[0];
+    BOOL garbageCollectionEnabled = [testConfiguration[1] boolValue];
 
-  NSMutableDictionary *beginEvent = [NSMutableDictionary dictionaryWithDictionary:@{
-                                     @"event": kReporter_Events_BeginOCUnit,
+    OCUnitTestRunner *testRunner = [[[testRunnerClass alloc]
+                                     initWithBuildSettings:testableBuildSettings
+                                     senTestList:senTestList
+                                     senTestInvertScope:senTestInvertScope
+                                     garbageCollection:garbageCollectionEnabled
+                                     standardOutput:nil
+                                     standardError:nil
+                                     reporters:reporters] autorelease];
+
+    NSDictionary *commonEventInfo = @{kReporter_BeginOCUnit_BundleNameKey: testableBuildSettings[@"FULL_PRODUCT_NAME"],
+                                      kReporter_BeginOCUnit_SDKNameKey: testableBuildSettings[@"SDK_NAME"],
+                                      kReporter_BeginOCUnit_TestTypeKey: isApplicationTest ? @"application-test" : @"logic-test",
+                                      kReporter_BeginOCUnit_GCEnabledKey: @(garbageCollectionEnabled),
+                                      };
+
+    NSMutableDictionary *beginEvent = [NSMutableDictionary dictionaryWithDictionary:@{
+                                       @"event": kReporter_Events_BeginOCUnit,
+                                       }];
+    [beginEvent addEntriesFromDictionary:commonEventInfo];
+    [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:beginEvent];
+
+    NSString *error = nil;
+    BOOL configurationSucceeded = [testRunner runTestsWithError:&error];
+
+    if (!configurationSucceeded) {
+      succeeded = NO;
+    }
+
+    NSMutableDictionary *endEvent = [NSMutableDictionary dictionaryWithDictionary:@{
+                                     @"event": kReporter_Events_EndOCUnit,
+                                                 kReporter_EndOCUnit_SucceededKey: @(succeeded),
+                                             kReporter_EndOCUnit_FailureReasonKey: (error ? error : [NSNull null]),
                                      }];
-  [beginEvent addEntriesFromDictionary:commonEventInfo];
-  [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:beginEvent];
-
-  NSString *error = nil;
-  BOOL succeeded = [testRunner runTestsWithError:&error];
-
-  NSMutableDictionary *endEvent = [NSMutableDictionary dictionaryWithDictionary:@{
-                                   @"event": kReporter_Events_EndOCUnit,
-                                   kReporter_EndOCUnit_SucceededKey: @(succeeded),
-                                   kReporter_EndOCUnit_FailureReasonKey: (error ? error : [NSNull null]),
-                                   }];
-  [endEvent addEntriesFromDictionary:commonEventInfo];
-  [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:endEvent];
+    [endEvent addEntriesFromDictionary:commonEventInfo];
+    [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:endEvent];
+  }
 
   return succeeded;
 }
