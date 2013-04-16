@@ -4,7 +4,6 @@
 #import "OCUnitOSXAppTestRunner.h"
 
 #import "LineReader.h"
-#import "PJSONKit.h"
 #import "SimulatorLauncher.h"
 #import "TaskUtil.h"
 #import "XcodeToolUtil.h"

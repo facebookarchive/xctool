@@ -4,7 +4,6 @@
 #import <sys/stat.h>
 
 #import "Options.h"
-#import "PJSONKit.h"
 #import "PhabricatorReporter.h"
 #import "RawReporter.h"
 #import "TextReporter.h"

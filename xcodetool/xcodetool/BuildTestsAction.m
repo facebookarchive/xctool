@@ -2,7 +2,6 @@
 #import "BuildTestsAction.h"
 
 #import "Options.h"
-#import "PJSONKit.h"
 #import "Reporter.h"
 #import "TaskUtil.h"
 #import "XcodeSubjectInfo.h"
@@ -63,7 +62,13 @@
    }];
 
   LaunchTaskAndFeedOuputLinesToBlock(buildTask, ^(NSString *line){
-    [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:[line XT_objectFromJSONString]];
+    NSError *error = nil;
+    NSDictionary *event = [NSJSONSerialization JSONObjectWithData:[line dataUsingEncoding:NSUTF8StringEncoding]
+                                                          options:0
+                                                            error:&error];
+    NSCAssert(error == nil, @"Got error while trying to deserialize event '%@': %@", line, [error localizedFailureReason]);
+
+    [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:event];
   });
 
   [reporters makeObjectsPerformSelector:@selector(handleEvent:)

@@ -4,7 +4,6 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "OCUnitCrashFilter.h"
-#import "PJSONKit.h"
 
 @implementation OCUnitTestRunner
 
@@ -86,8 +85,9 @@
 
   void (^feedOutputToBlock)(NSString *) = ^(NSString *line) {
     NSError *parseError = nil;
-    NSDictionary *event = [line XT_objectFromJSONStringWithParseOptions:XT_JKParseOptionNone error:&parseError];
-
+    NSDictionary *event = [NSJSONSerialization JSONObjectWithData:[line dataUsingEncoding:NSUTF8StringEncoding]
+                                                          options:0
+                                                            error:&parseError];
     if (parseError) {
       [NSException raise:NSGenericException format:@"Failed to parse test output: %@", [parseError localizedFailureReason]];
     }

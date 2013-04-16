@@ -4,7 +4,6 @@
 #import "PhabricatorReporter.h"
 
 #import "Options.h"
-#import "PJSONKit.h"
 
 @implementation PhabricatorReporter
 
@@ -151,7 +150,12 @@
 
 - (NSString *)arcUnitJSON
 {
-  return [_results XT_JSONStringWithOptions:XT_JKSerializeOptionPretty error:nil];
+  NSError *error = nil;
+  NSData *data =  [NSJSONSerialization dataWithJSONObject:_results
+                                                  options:NSJSONWritingPrettyPrinted
+                                                    error:&error];
+  NSAssert(error == nil, @"Failed while trying to encode as JSON: %@", error);
+  return [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
 }
 
 - (void)close

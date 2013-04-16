@@ -3,7 +3,6 @@
 
 #import "OCUnitOSXLogicTestRunner.h"
 
-#import "PJSONKit.h"
 #import "TaskUtil.h"
 #import "XcodeToolUtil.h"
 

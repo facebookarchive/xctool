@@ -5,7 +5,6 @@
 #import "Action.h"
 #import "NSFileHandle+Print.h"
 #import "Options.h"
-#import "PJSONKit.h"
 #import "RawReporter.h"
 #import "TaskUtil.h"
 #import "TextReporter.h"
@@ -83,8 +82,9 @@
     }
     
     NSError *JSONError = nil;
-    NSArray *argumentsList = [argumentsString XT_objectFromJSONStringWithParseOptions:XT_JKParseOptionComments error:&JSONError];
-    
+    NSArray *argumentsList = [NSJSONSerialization JSONObjectWithData:[argumentsString dataUsingEncoding:NSUTF8StringEncoding]
+                                                             options:0
+                                                               error:&JSONError];
     if (JSONError) {
       [_standardError printString:@"ERROR: couldn't parse json: %@: %@\n", argumentsString, [JSONError localizedDescription]];
       _exitStatus = 1;

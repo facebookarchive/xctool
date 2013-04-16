@@ -4,7 +4,6 @@
 #import <SenTestingKit/SenTestingKit.h>
 
 #import "Options.h"
-#import "PJSONKit.h"
 #import "PhabricatorReporter.h"
 #import "TestUtil.h"
 
@@ -29,7 +28,9 @@
       break;
     }
 
-    [reporter handleEvent:[line XT_objectFromJSONString]];
+    [reporter handleEvent:[NSJSONSerialization JSONObjectWithData:[line dataUsingEncoding:NSUTF8StringEncoding]
+                                                          options:0
+                                                            error:nil]];
   }
 
   return reporter;
@@ -42,7 +43,9 @@
   options.scheme = @"TestProject-Library";
   PhabricatorReporter *reporter = [self reporterPumpedWithEventsFrom:TEST_DATA @"RawReporter-build-good.txt" options:options];
 
-  NSArray *results = [[reporter arcUnitJSON] XT_objectFromJSONString];
+  NSArray *results = [NSJSONSerialization JSONObjectWithData:[[reporter arcUnitJSON] dataUsingEncoding:NSUTF8StringEncoding]
+                                                     options:0
+                                                       error:nil];
   assertThat(results, notNilValue());
   assertThat(results,
              equalTo(@[
@@ -72,7 +75,9 @@
   options.scheme = @"TestProject-Library";
   PhabricatorReporter *reporter = [self reporterPumpedWithEventsFrom:TEST_DATA @"RawReporter-build-bad.txt" options:options];
 
-  NSArray *results = [[reporter arcUnitJSON] XT_objectFromJSONString];
+  NSArray *results = [NSJSONSerialization JSONObjectWithData:[[reporter arcUnitJSON] dataUsingEncoding:NSUTF8StringEncoding]
+                                                     options:0
+                                                       error:nil];
   assertThat(results, notNilValue());
   assertThat(results,
              equalTo(@[
@@ -102,7 +107,9 @@
   options.scheme = @"TestProject-Library";
   PhabricatorReporter *reporter = [self reporterPumpedWithEventsFrom:TEST_DATA @"RawReporter-runtests.txt" options:options];
 
-  NSArray *results = [[reporter arcUnitJSON] XT_objectFromJSONString];
+  NSArray *results = [NSJSONSerialization JSONObjectWithData:[[reporter arcUnitJSON] dataUsingEncoding:NSUTF8StringEncoding]
+                                                     options:0
+                                                       error:nil];
   assertThat(results, notNilValue());
   assertThat(results,
              equalTo(@[
