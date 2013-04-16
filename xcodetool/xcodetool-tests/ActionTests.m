@@ -59,7 +59,7 @@
                                ]];
   FakeAction *action = [[[FakeAction alloc] init] autorelease];
   assertThatBool(action.showHelp, equalToBool(NO));
-  
+
   NSString *errorMessage = nil;
   NSUInteger consumed = [action consumeArguments:arguments errorMessage:&errorMessage];
   assertThat(errorMessage, equalTo(nil));
@@ -76,7 +76,7 @@
                                ]];
   FakeAction *action = [[[FakeAction alloc] init] autorelease];
   assertThatBool(action.showHelp, equalToBool(NO));
-  
+
   NSString *errorMessage = nil;
   NSUInteger consumed = [action consumeArguments:arguments errorMessage:&errorMessage];
   assertThat(errorMessage, equalTo(nil));

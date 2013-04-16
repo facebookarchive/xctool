@@ -28,9 +28,9 @@
 {
   XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
   tool.arguments = @[@"-help"];
-  
+
   NSDictionary *result = [TestUtil runWithFakeStreams:tool];
-  
+
   assertThatInt(tool.exitStatus, equalToInt(1));
   assertThat((result[@"stderr"]), startsWith(@"usage: xcodetool"));
 }
@@ -39,9 +39,9 @@
 {
   XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
   tool.arguments = @[];
-  
+
   NSDictionary *result = [TestUtil runWithFakeStreams:tool];
-  
+
   assertThatInt(tool.exitStatus, equalToInt(1));
   assertThat((result[@"stderr"]), startsWith(@"ERROR:"));
 }

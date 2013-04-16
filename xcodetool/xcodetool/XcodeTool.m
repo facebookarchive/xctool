@@ -23,14 +23,14 @@
 - (void)printUsage
 {
   [_standardError printString:@"usage: xcodetool [BASE OPTIONS] [ACTION [ACTION ARGUMENTS]] ...\n\n"];
-  
+
   [_standardError printString:@"Examples:\n"];
   for (Class actionClass in [Options actionClasses]) {
     NSString *actionName = [actionClass name];
     NSArray *options = [actionClass options];
-    
+
     NSMutableString *buffer = [NSMutableString string];
-    
+
     for (NSDictionary *option in options) {
       if (option[kActionOptionParamName]) {
         [buffer appendFormat:@" [-%@ %@]", option[kActionOptionName], option[kActionOptionParamName]];
@@ -38,27 +38,27 @@
         [buffer appendFormat:@" [-%@]", option[kActionOptionName]];
       }
     }
-    
+
     [_standardError printString:@"    xcodetool [BASE OPTIONS] %@%@", actionName, buffer];
     [_standardError printString:@"\n"];
   }
-  
+
   [_standardError printString:@"\n"];
-  
+
   [_standardError printString:@"Base Options:\n"];
   [_standardError printString:@"%@", [Options actionUsage]];
-  
+
   for (Class actionClass in [Options actionClasses]) {
     NSString *actionName = [actionClass name];
     NSString *actionUsage = [actionClass actionUsage];
-    
+
     if (actionUsage.length > 0) {
       [_standardError printString:@"\n"];
       [_standardError printString:@"Options for '%@' action:\n", actionName];
       [_standardError printString:@"%@", actionUsage];
     }
   }
-  
+
   [_standardError printString:@"\n"];
 }
 
@@ -66,9 +66,9 @@
 {
   Options *options = [[[Options alloc] init] autorelease];
   XcodeSubjectInfo *xcodeSubjectInfo = [[[XcodeSubjectInfo alloc] init] autorelease];
-  
+
   NSString *errorMessage = nil;
-  
+
   NSFileManager *fm = [NSFileManager defaultManager];
   if ([fm isReadableFileAtPath:@".xcodetool-args"]) {
     NSError *readError = nil;
@@ -80,7 +80,7 @@
       _exitStatus = 1;
       return;
     }
-    
+
     NSError *JSONError = nil;
     NSArray *argumentsList = [NSJSONSerialization JSONObjectWithData:[argumentsString dataUsingEncoding:NSUTF8StringEncoding]
                                                              options:0
@@ -90,7 +90,7 @@
       _exitStatus = 1;
       return;
     }
-    
+
     [options consumeArguments:[NSMutableArray arrayWithArray:argumentsList] errorMessage:&errorMessage];
     if (errorMessage != nil) {
       [_standardError printString:@"ERROR: %@\n", errorMessage];
@@ -106,13 +106,13 @@
     _exitStatus = 1;
     return;
   }
-  
+
   if (options.showHelp) {
     [self printUsage];
     _exitStatus = 1;
     return;
   }
-  
+
   if (options.showBuildSettings) {
     NSTask *task = TaskInstance();
     [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
@@ -131,7 +131,7 @@
     _exitStatus = 1;
     return;
   }
-  
+
   for (Reporter *reporter in options.reporters) {
     NSString *error = nil;
     if (![reporter openWithStandardOutput:_standardOutput error:&error]) {
@@ -140,7 +140,7 @@
       return;
     }
   }
-  
+
   for (Action *action in options.actions) {
     [options.reporters makeObjectsPerformSelector:@selector(beginAction:) withObject:action];
 
@@ -155,7 +155,7 @@
       break;
     }
   }
-  
+
   [options.reporters makeObjectsPerformSelector:@selector(close)];
 }
 

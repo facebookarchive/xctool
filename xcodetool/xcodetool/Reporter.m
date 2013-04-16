@@ -17,7 +17,7 @@
                               @"plain": [PlainTextReporter class],
                               @"phabricator": [PhabricatorReporter class],
                               };
-  
+
   Class reporterClass = reporters[name];
 
   Reporter *reporter = [[[reporterClass alloc] init] autorelease];
@@ -62,7 +62,7 @@
 {
   NSString *event = eventDict[@"event"];
   NSMutableString *selectorName = [NSMutableString string];
-  
+
   int i = 0;
   for (NSString *part in [event componentsSeparatedByString:@"-"]) {
     if (i++ == 0) {
@@ -72,7 +72,7 @@
     }
   }
   [selectorName appendString:@":"];
-  
+
   SEL sel = sel_registerName([selectorName UTF8String]);
   [self performSelector:sel withObject:eventDict];
 }

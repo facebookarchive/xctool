@@ -67,7 +67,7 @@
 - (NSString *)formattedStringWithFormat:(NSString *)format arguments:(va_list)argList
 {
   NSMutableString *str = [[[NSMutableString alloc] initWithFormat:format arguments:argList] autorelease];
-  
+
   NSDictionary *ansiTags = @{@"<red>": @"\x1b[31m",
                              @"<green>": @"\x1b[32m",
                              @"<yellow>": @"\x1b[33m",
@@ -80,7 +80,7 @@
                              @"<underline>": @"\x1b[4m",
                              @"<reset>": @"\x1b[0m",
                              };
-  
+
   for (NSString *ansiTag in [ansiTags allKeys]) {
     NSString *replaceWith = self.useColorOutput ? ansiTags[ansiTag] : @"";
     [str replaceOccurrencesOfString:ansiTag withString:replaceWith options:0 range:NSMakeRange(0, [str length])];
@@ -90,7 +90,7 @@
     [str insertString:[@"" stringByPaddingToLength:(_indent * 2) withString:@" " startingAtIndex:0]
               atIndex:0];
   }
-  
+
   return str;
 }
 
@@ -197,10 +197,10 @@
   struct winsize w = {0};
   ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
   int width = w.ws_col > 0 ? w.ws_col : 80;
-  
+
   NSString *dashStr = nil;
   NSString *indicatorStr = nil;
-  
+
   if (_isPretty) {
     dashStr = @"\u2501";
     indicatorStr = @"\u2533";
@@ -210,11 +210,11 @@
   }
 
   NSString *dividier = [@"" stringByPaddingToLength:width withString:dashStr startingAtIndex:0];
-  
+
   if (showDownLine) {
     dividier = [dividier stringByReplacingCharactersInRange:NSMakeRange(self.reportWriter.indent * 2, 1) withString:indicatorStr];
   }
-  
+
   [self.reportWriter disableIndent];
   [self.reportWriter updateLine:@"<faint>%@<reset>", dividier];
   [self.reportWriter printNewline];
@@ -230,7 +230,7 @@
 {
   NSArray *parts = [title componentsSeparatedByString:@" "];
   NSMutableArray *newParts = [NSMutableArray array];
-  
+
   for (NSString *part in parts) {
     if ([part rangeOfString:@"/"].length != 0) {
       // Looks like a path...
@@ -239,7 +239,7 @@
       [newParts addObject:part];
     }
   }
-  
+
   return [newParts componentsJoinedByString:@" "];
 }
 
@@ -364,7 +364,7 @@
     if (outputText.length > 0) {
       [self.reportWriter printLine:@"<faint>%@<reset>", outputText];
     }
-    
+
     [self.reportWriter enableIndent];
     [self printDivider];
   }
@@ -389,7 +389,7 @@
 - (void)endOcunit:(NSDictionary *)event
 {
   [self.reportWriter decreaseIndent];
-  
+
   if (![event[kReporter_EndOCUnit_SucceededKey] boolValue] &&
       ![event[kReporter_EndOCUnit_FailureReasonKey] isEqual:[NSNull null]]) {
     [self.reportWriter printLine:@"<bold>failed<reset>: %@", event[kReporter_EndOCUnit_FailureReasonKey]];
@@ -399,12 +399,12 @@
 - (void)beginTestSuite:(NSDictionary *)event
 {
   NSString *suite = event[kReporter_BeginTestSuite_SuiteKey];
-  
+
   if (![suite isEqualToString:@"All tests"] && ![suite hasSuffix:@".octest(Tests)"]) {
     if ([suite hasPrefix:@"/"]) {
       suite = [suite lastPathComponent];
     }
-    
+
     [self.reportWriter printLine:@"<bold>suite<reset> <underline>%@<reset>", suite];
     [self.reportWriter increaseIndent];
   }
@@ -415,7 +415,7 @@
   NSString *suite = event[kReporter_EndTestSuite_SuiteKey];
   int testCaseCount = [event[kReporter_EndTestSuite_TestCaseCountKey] intValue];
   int totalFailureCount = [event[kReporter_EndTestSuite_TotalFailureCountKey] intValue];
-  
+
   if (![suite isEqualToString:@"All tests"] && ![suite hasSuffix:@".octest(Tests)"]) {
     [self.reportWriter printLine:@"<bold>%d of %d tests passed %@<reset>",
      (testCaseCount - totalFailureCount),
@@ -445,7 +445,7 @@
     [self.reportWriter printNewline];
     [self printDivider];
   }
-  
+
   [self.reportWriter disableIndent];
   [self.reportWriter printString:@"<faint>%@<reset>", event[@"output"]];
   [self.reportWriter enableIndent];
@@ -457,7 +457,7 @@
 - (NSString *)formattedTestDuration:(float)duration withColor:(BOOL)withColor
 {
   NSString *color = nil;
-  
+
   if (duration <= 0.05f) {
     color = @"<faint><green>";
   } else if (duration <= 0.2f) {
@@ -467,7 +467,7 @@
   } else {
     color = @"<red>";
   }
-  
+
   if (withColor) {
     return [NSString stringWithFormat:@"%@(%d ms)<reset>", color, (int)(duration * 1000)];
   } else {
@@ -480,7 +480,7 @@
   BOOL succeeded = [event[kReporter_EndTest_SucceededKey] boolValue];
   BOOL showInfo = !succeeded || ([event[kReporter_EndTest_OutputKey] length] > 0);
   NSString *indicator = nil;
-  
+
   if (succeeded) {
     indicator = [self passIndicatorString];
   } else {
@@ -492,9 +492,9 @@
       [self.reportWriter printNewline];
       [self printDivider];
     }
-    
+
     [self.reportWriter disableIndent];
-    
+
     // Show exception, if any.
     NSDictionary *exception = event[kReporter_EndTest_ExceptionKey];
     if (exception) {
@@ -504,11 +504,11 @@
        exception[kReporter_EndTest_Exception_NameKey],
        exception[kReporter_EndTest_Exception_ReasonKey]];
     }
-    
+
     [self.reportWriter enableIndent];
     [self printDividerWithDownLine:YES];
   }
-  
+
   [self.reportWriter updateLine:@"%@ %@ %@",
    indicator,
    event[kReporter_EndTest_TestKey],

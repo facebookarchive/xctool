@@ -34,11 +34,11 @@
 - (OCUnitCrashFilter *)filterWithEvents:(NSArray *)events
 {
   OCUnitCrashFilter *filter = [[[OCUnitCrashFilter alloc] init] autorelease];
-  
+
   for (NSDictionary *event in events) {
     [filter handleEvent:event];
   }
-  
+
   return filter;
 }
 
@@ -69,18 +69,18 @@
      ]];
   assertThatBool([filter testRunWasUnfinished], equalToBool(YES));
   assertThat(filter.currentTestEvent, notNilValue());
-  
+
   NSMutableArray *generatedEvents = [NSMutableArray array];
   [filter fireEventsToSimulateTestRunFinishing:@[[FakeReporter fakeReporterThatSavesTo:generatedEvents]]
                                fullProductName:@"TestProject-LibraryTests.octest"
                       concatenatedCrashReports:@"CONCATENATED_CRASH_REPORTS_GO_HERE"];
-  
+
   assertThatInteger((generatedEvents.count), equalToInteger(5));
-  
+
   // We should see another 'test-output' event with the crash report text.
   assertThat(generatedEvents[0][@"event"], equalTo(@"test-output"));
   assertThat(generatedEvents[0][@"output"], equalTo(@"CONCATENATED_CRASH_REPORTS_GO_HERE"));
-  
+
   // The test should get marked as a failure
   assertThat(generatedEvents[1][@"event"], equalTo(@"end-test"));
   assertThat(generatedEvents[1][@"test"], equalTo(@"-[OtherTests testSomething]"));
@@ -99,7 +99,7 @@
   // it immediately afterwards.  If we over-release something that's already been
   // added to the autorelease pool, then the test runner will crash with EXC_BAD_ACCESS
   // as soon as the pool is drained.
-  
+
   OCUnitCrashFilter *filter =
     [self filterWithEvents:@[
      @{@"event" : @"begin-test-suite", @"suite" : @"All tests"},
@@ -109,25 +109,25 @@
      @{@"event" : @"end-test", @"test" : @"-[OtherTests testSomething]", @"succeeded" : @YES, @"output" : @"", @"totalDuration" : @1.0},
      ]];
   assertThatBool([filter testRunWasUnfinished], equalToBool(YES));
-  
+
   NSMutableArray *generatedEvents = [NSMutableArray array];
   [filter fireEventsToSimulateTestRunFinishing:@[[FakeReporter fakeReporterThatSavesTo:generatedEvents]]
                                fullProductName:@"TestProject-LibraryTests.octest"
                       concatenatedCrashReports:@"CONCATENATED_CRASH_REPORTS_GO_HERE"];
-  
+
   assertThatInteger((generatedEvents.count), equalToInteger(6));
-  
+
   // The test should get marked as a failure
   assertThat(generatedEvents[0][@"event"], equalTo(@"begin-test"));
   assertThat(generatedEvents[0][@"test"], equalTo(@"TestProject-LibraryTests.octest_CRASHED"));
 
   assertThat(generatedEvents[1][@"event"], equalTo(@"test-output"));
   assertThat(generatedEvents[1][@"output"], startsWith(@"The tests crashed"));
-  
+
   assertThat(generatedEvents[2][@"event"], equalTo(@"end-test"));
   assertThat(generatedEvents[2][@"test"], equalTo(@"TestProject-LibraryTests.octest_CRASHED"));
   assertThat(generatedEvents[2][@"succeeded"], equalTo(@NO));
-  
+
   // And 'end-test-suite' events should get sent for each of the suites we were in.
   assertThat(generatedEvents[3][@"event"], equalTo(@"end-test-suite"));
   assertThat(generatedEvents[4][@"event"], equalTo(@"end-test-suite"));

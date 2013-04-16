@@ -29,15 +29,15 @@
                                 kActionOptionName: name,
                      kActionOptionSetFlagSelector: [NSString stringWithUTF8String:sel_getName(setFlagSEL)],
      }];
-  
+
   if (aliases) {
     action[kActionOptionAliases] = aliases;
   }
-  
+
   if (description) {
     action[kActionOptionDescription] = description;
   }
-  
+
   return action;
 }
 
@@ -52,11 +52,11 @@
                               kActionOptionName: name,
                      kActionOptionMapToSelector: [NSString stringWithUTF8String:sel_getName(mapToSEL)],
    }];
-  
+
   if (aliases) {
     action[kActionOptionAliases] = aliases;
   }
-  
+
   if (description) {
     action[kActionOptionDescription] = description;
   }
@@ -77,33 +77,33 @@
                       kActionOptionMatcherBlock: matcherBlock,
                      kActionOptionMapToSelector: [NSString stringWithUTF8String:sel_getName(mapToSEL)],
    }];
-  
+
   if (description) {
     action[kActionOptionDescription] = description;
   }
   if (paramName) {
     action[kActionOptionParamName] = paramName;
   }
-  
+
   return action;
 }
 
 + (NSString *)actionUsage
 {
   NSMutableString *buffer = [NSMutableString string];
-  
+
   for (NSDictionary *option in [self options]) {
     if (option[kActionOptionDescription] == nil) {
       continue;
     }
-    
+
     [buffer appendString:@"    "];
-    
+
     NSMutableString *optionExample = [NSMutableString string];
-    
+
     if (option[kActionOptionName]) {
       [optionExample appendFormat:@"-%@", option[kActionOptionName]];
-      
+
       if (option[kActionOptionParamName]) {
         [optionExample appendString:@" "];
         [optionExample appendString:option[kActionOptionParamName]];
@@ -116,24 +116,24 @@
     [buffer appendString:option[kActionOptionDescription]];
     [buffer appendString:@"\n"];
   }
-  
+
   return buffer;
 }
 
 - (NSUInteger)consumeArguments:(NSMutableArray *)arguments errorMessage:(NSString **)errorMessage
 {
   NSArray *options = [[self class] options];
-  
+
   NSDictionary *(^namedOptionMatchingArgument)(NSString *) = ^(NSString *argument){
     if ([argument hasPrefix:@"-"]) {
       argument = [argument substringFromIndex:1];
     }
-    
+
     for (NSDictionary *option in options) {
       if ([option[kActionOptionName] isEqualToString:argument]) {
         return option;
       }
-      
+
       NSArray *aliases = option[kActionOptionAliases];
       if (aliases != nil &&
           [aliases isNotEqualTo:[NSNull null]] &&
@@ -141,7 +141,7 @@
         return option;
       }
     }
-    
+
     return (NSDictionary *)nil;
   };
 
@@ -149,22 +149,22 @@
     if ([argument hasPrefix:@"-"]) {
       argument = [argument substringFromIndex:1];
     }
-    
+
     for (NSDictionary *option in options) {
       BOOL (^matcherBlock)(NSString *) = option[kActionOptionMatcherBlock];
       if (matcherBlock && matcherBlock(argument)) {
         return option;
       }
     }
-    
+
     return (NSDictionary *)nil;
   };
-  
+
   int count = 0;
   while (arguments.count > 0) {
     NSString *argument = arguments[0];
     NSDictionary *matchingNamedOption = namedOptionMatchingArgument(argument);
-    
+
     // Does it match a named option?
     if (matchingNamedOption) {
       if (matchingNamedOption[kActionOptionSetFlagSelector]) {
@@ -182,7 +182,7 @@
         continue;
       }
     }
-    
+
     // How about a matcher block?
     NSDictionary *matchingMatcherOption = matcherOptionMatchingArgument(argument);
     if (matchingMatcherOption) {
@@ -192,7 +192,7 @@
       [arguments removeObjectsInRange:NSMakeRange(0, 1)];
       continue;
     }
-    
+
     // No match.
     break;
   }

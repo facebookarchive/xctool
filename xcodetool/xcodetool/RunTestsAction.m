@@ -72,17 +72,17 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
 {
   launch_data_t getJobsMessage = launch_data_new_string(LAUNCH_KEY_GETJOBS);
   launch_data_t response = launch_msg(getJobsMessage);
-  
+
   assert(launch_data_get_type(response) == LAUNCH_DATA_DICTIONARY);
-  
+
   launch_data_dict_iterate(response, GetJobsIterator, ^(const launch_data_t launch_data, const char *keyCString){
     NSString *key = [NSString stringWithCString:keyCString encoding:NSUTF8StringEncoding];
-    
+
     NSArray *strings = @[@"com.apple.iphonesimulator",
                          @"UIKitApplication",
                          @"SimulatorBridge",
                          ];
-    
+
     BOOL matches = NO;
     for (NSString *str in strings) {
       if ([key rangeOfString:str options:NSCaseInsensitiveSearch].length > 0) {
@@ -90,17 +90,17 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
         break;
       }
     }
-    
+
     if (matches) {
       launch_data_t stopMessage = launch_data_alloc(LAUNCH_DATA_DICTIONARY);
       launch_data_dict_insert(stopMessage, launch_data_new_string([key UTF8String]), LAUNCH_KEY_REMOVEJOB);
       launch_data_t stopResponse = launch_msg(stopMessage);
-      
+
       launch_data_free(stopMessage);
       launch_data_free(stopResponse);
     }
   });
-  
+
   launch_data_free(response);
   launch_data_free(getJobsMessage);
 }
@@ -108,25 +108,25 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
 - (NSArray *)onlyListAsTargetsAndSenTestList
 {
   NSMutableArray *results = [NSMutableArray array];
-  
+
   for (NSString *only in self.onlyList) {
     NSRange colonRange = [only rangeOfString:@":"];
     NSString *target = nil;
     NSString *senTestList = nil;
-    
+
     if (colonRange.length > 0) {
       target = [only substringToIndex:colonRange.location];
       senTestList = [only substringFromIndex:colonRange.location + 1];
     } else {
       target = only;
     }
-    
+
     [results addObject:@{
      @"target": target,
      @"senTestList": senTestList ? senTestList : [NSNull null]
      }];
   }
-  
+
   return results;
 }
 
@@ -138,34 +138,34 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
     // If specified test SDKs aren't provided, just inherit the main SDK.
     self.testSDK = options.sdk;
   }
-  
+
   NSMutableArray *supportedTestSDKs = [NSMutableArray array];
   for (NSString *sdk in [GetAvailableSDKsAndAliases() allKeys]) {
     if ([sdk hasPrefix:@"iphonesimulator"] || [sdk hasPrefix:@"macosx"]) {
       [supportedTestSDKs addObject:sdk];
     }
   }
-  
+
   // We'll only test the iphonesimulator SDKs right now.
   if (![supportedTestSDKs containsObject:self.testSDK]) {
     *errorMessage = [NSString stringWithFormat:@"run-tests: '%@' is not a supported SDK for testing.", self.testSDK];
     return NO;
   }
-  
+
   for (NSDictionary *only in [self onlyListAsTargetsAndSenTestList]) {
     if ([xcodeSubjectInfo testableWithTarget:only[@"target"]] == nil) {
       *errorMessage = [NSString stringWithFormat:@"run-tests: '%@' is not a testing target in this scheme.", only[@"target"]];
       return NO;
     }
   }
-  
+
   return YES;
 }
 
 - (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   NSArray *testables = nil;
-  
+
   if (self.onlyList.count == 0) {
     // Use whatever we found in the scheme.
     testables = xcodeSubjectInfo.testables;
@@ -177,17 +177,17 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
       if (matchingTestable) {
         NSMutableDictionary *newTestable = [NSMutableDictionary dictionaryWithDictionary:matchingTestable];
         newTestable[@"senTestInvertScope"] = @NO;
-        
+
         if (only[@"senTestList"] != [NSNull null]) {
           newTestable[@"senTestList"] = only[@"senTestList"];
         }
-        
+
         [newTestables addObject:newTestable];
       }
     }
     testables = newTestables;
   }
-  
+
   if (self.killSimulator) {
     [self killSimulatorJobs];
   }
@@ -198,7 +198,7 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
          xcodeSubjectInfo:xcodeSubjectInfo]) {
     return NO;
   }
-  
+
   return YES;
 }
 

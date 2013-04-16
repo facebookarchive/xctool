@@ -98,7 +98,7 @@
      @"event" : kReporter_Events_TestOuput,
      kReporter_TestOutput_OutputKey : concatenatedCrashReports,
      }];
-    
+
     // Fire a fake 'end-test' event.
     [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
      @"event" : kReporter_Events_EndTest,
@@ -142,7 +142,7 @@
      kReporter_EndTest_TotalDurationKey : @(0),
      kReporter_EndTest_OutputKey : output,
      }];
-    
+
     for (NSMutableDictionary *testSuiteEvent in [self.currentTestSuiteEventTestCountStack reverseObjectEnumerator]) {
       testSuiteEvent[kReporter_EndTestSuite_TestCaseCountKey] =
         @([testSuiteEvent[kReporter_EndTestSuite_TestCaseCountKey] intValue] + 1);

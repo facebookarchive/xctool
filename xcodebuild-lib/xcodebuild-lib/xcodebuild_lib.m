@@ -18,11 +18,11 @@ static void SwizzleSelectorForFunction(Class cls, SEL sel, IMP newImp)
 {
   Method originalMethod = class_getInstanceMethod(cls, sel);
   const char *typeEncoding = method_getTypeEncoding(originalMethod);
-  
+
   NSString *newSelectorName = [NSString stringWithFormat:@"__%s_%s", class_getName(cls), sel_getName(sel)];
   SEL newSelector = sel_registerName([newSelectorName UTF8String]);
   class_addMethod(cls, newSelector, newImp, typeEncoding);
-  
+
   Method newMethod = class_getInstanceMethod(cls, newSelector);
   method_exchangeImplementations(originalMethod, newMethod);
 }
@@ -66,36 +66,36 @@ static void GetProjectTargetConfigurationFromHeader(NSString *header,
 {
   // Pull out the pieces from the header that looks like --
   // === BUILD NATIVE TARGET TestTest OF PROJECT TestTest WITH THE DEFAULT CONFIGURATION (Release) ===
-  
+
   NSScanner *scanner = [NSScanner scannerWithString:header];
   [scanner setCharactersToBeSkipped:nil];
-  
+
   if (![scanner scanUpToString:@"TARGET " intoString:nil]) {
     goto Error;
   }
-  
+
   [scanner scanString:@"TARGET " intoString:nil];
-  
+
   if (![scanner scanUpToString:@" OF PROJECT " intoString:target]) {
     goto Error;
   }
-  
+
   [scanner scanString:@" OF PROJECT " intoString:nil];
-  
+
   if (![scanner scanUpToString:@" WITH " intoString:project]) {
     goto Error;
   }
-  
+
   if (![scanner scanUpToString:@" CONFIGURATION " intoString:nil]) {
     goto Error;
   }
-  
+
   [scanner scanString:@" CONFIGURATION " intoString:nil];
-  
+
   if (![scanner scanUpToString:@" ===" intoString:configuration]) {
     goto Error;
   }
-  
+
   return;
 Error:
   fprintf(__stderr,
@@ -108,7 +108,7 @@ static void PrintJSON(id JSONObject)
 {
   NSError *error = nil;
   NSData *data = [NSJSONSerialization dataWithJSONObject:JSONObject options:0 error:&error];
-  
+
   if (error) {
     fprintf(__stderr,
             "ERROR: Error generating JSON for object: %s: %s\n",
@@ -116,7 +116,7 @@ static void PrintJSON(id JSONObject)
             [[error localizedFailureReason] UTF8String]);
     exit(1);
   }
-  
+
   fwrite([data bytes], 1, [data length], __stdout);
   fputs("\n", __stdout);
   fflush(__stdout);
@@ -125,7 +125,7 @@ static void PrintJSON(id JSONObject)
 static void AnnounceBeginSection(IDEActivityLogSection *section)
 {
   NSString *sectionTypeString = [section.domainType description];
-  
+
   if ([sectionTypeString isEqualToString:kDomainTypeBuildItem]) {
     PrintJSON(@{
               @"event" : kReporter_Events_BeginBuildCommand,
@@ -149,7 +149,7 @@ static void AnnounceBeginSection(IDEActivityLogSection *section)
 static void AnnounceEndSection(IDEActivityLogSection *section)
 {
   NSString *sectionTypeString = [section.domainType description];
-  
+
   if ([sectionTypeString isEqualToString:kDomainTypeBuildItem]) {
     PrintJSON(@{
               @"event" : kReporter_Events_EndBuildCommand,
@@ -179,9 +179,9 @@ static void Xcode3CommandLineBuildLogRecorder__emitSection(id self, SEL cmd, IDE
 {
   // Call through to the original implementation.
   objc_msgSend(self, sel_getUid("__Xcode3CommandLineBuildLogRecorder__emitSection:"), section);
-  
+
   [__begunLogSections addObject:section];
-  
+
   if ([__endedLogSections containsObject:section]) {
     // We've gotten the end message before the begin message.
     AnnounceBeginSection(section);
@@ -195,9 +195,9 @@ static void Xcode3CommandLineBuildLogRecorder__finishEmittingClosedSection(id se
 {
   // Call through to the original implementation.
   objc_msgSend(self, sel_getUid("__Xcode3CommandLineBuildLogRecorder__finishEmittingClosedSection:"), section);
-  
+
   [__endedLogSections addObject:section];
-  
+
   if ([__begunLogSections containsObject:section]) {
     AnnounceEndSection(section);
   }
@@ -209,14 +209,14 @@ __attribute__((constructor)) static void EntryPoint()
   __stdout = fdopen(__stdoutHandle, "w");
   __stderrHandle = dup(STDERR_FILENO);
   __stderr = fdopen(__stderrHandle, "w");
-  
+
   // Prevent xcodebuild from outputing anything over stdout / stderr as it normally would.
   freopen("/dev/null", "w", stdout);
   freopen("/dev/null", "w", stderr);
-  
+
   __begunLogSections = [[NSMutableSet alloc] initWithCapacity:0];
   __endedLogSections = [[NSMutableSet alloc] initWithCapacity:0];
-  
+
   // Override -[Xcode3CommandLineBuildLogRecorder _emitSection:(IDEActivityLogSection *)section]
   // This method is called once for every line item in the log, and is meant to announce the action
   // that will be done. e.g., this would get called to print out the clang command that's about to
@@ -230,7 +230,7 @@ __attribute__((constructor)) static void EntryPoint()
   SwizzleSelectorForFunction(NSClassFromString(@"Xcode3CommandLineBuildLogRecorder"),
                              @selector(_finishEmittingClosedSection:),
                              (IMP)Xcode3CommandLineBuildLogRecorder__finishEmittingClosedSection);
-  
+
   // Unset so we don't cascade into other process that get spawned from xcodebuild.
   unsetenv("DYLD_INSERT_LIBRARIES");
 }

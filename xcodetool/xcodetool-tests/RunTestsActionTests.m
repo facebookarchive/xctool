@@ -68,7 +68,7 @@
                                 standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
                                  standardErrorPath:nil]
                   ]);
-  
+
   [TestUtil assertThatOptionsValidateWithArgumentList:@[
    @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
    @"-scheme", @"TestProject-Library",
@@ -86,7 +86,7 @@
                                 standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
                                  standardErrorPath:nil]
                   ]);
-  
+
   Options *options = [TestUtil validatedOptionsFromArgumentList:@[
                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                       @"-scheme", @"TestProject-Library",
@@ -104,7 +104,7 @@
                                 standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
                                  standardErrorPath:nil]
                   ]);
-  
+
   // This should run w/out exception
   [TestUtil validatedOptionsFromArgumentList:@[
                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
@@ -112,13 +112,13 @@
                       @"-sdk", @"iphonesimulator6.1",
                       @"run-tests",
                       ]];
-  
+
   ReturnFakeTasks(@[
                   [FakeTask fakeTaskWithExitStatus:0
                                 standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
                                  standardErrorPath:nil]
                   ]);
-  
+
   [TestUtil assertThatOptionsValidateWithArgumentList:@[
    @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
    @"-scheme", @"TestProject-Library",
@@ -130,13 +130,13 @@
 - (void)testRunTestsAction
 {
   XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
-  
+
   tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                      @"-scheme", @"TestProject-Library",
                      @"-configuration", @"Debug",
                      @"-sdk", @"iphonesimulator6.0",
                      @"run-tests"];
-  
+
   // We'll expect to see one call to xcodebuild with -showBuildSettings - we have to fetch the OBJROOT
   // and SYMROOT variables so we can build the tests in the correct location.
   NSTask *task1 = [FakeTask fakeTaskWithExitStatus:0
@@ -149,7 +149,7 @@
                                       @"-sdk", @"iphonesimulator6.0",
                                       @"-showBuildSettings"
                                       ];
-  
+
   // And, another to get build settings for the test target.
   NSTask *task2 = [FakeTask fakeTaskWithExitStatus:0
                                 standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings.txt"
@@ -164,7 +164,7 @@
                                       @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates/PrecompiledHeaders",
                                       @"-showBuildSettings"
                                       ];
-  
+
   // And, another to actually run the tests.  The tests DO fail, so it exit status should be 1.
   NSTask *task3 = [FakeTask fakeTaskWithExitStatus:1
                                 standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results.txt"
@@ -176,16 +176,16 @@
                                       @"-SenTestInvertScope", @"NO",
                                       @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
                                       ];
-  
+
   NSArray *sequenceOfTasks = @[task1, task2, task3];
   __block NSUInteger sequenceOffset = 0;
-  
+
   SetTaskInstanceBlock(^(void){
     return [sequenceOfTasks objectAtIndex:sequenceOffset++];
   });
-  
+
   [TestUtil runWithFakeStreams:tool];
-  
+
   assertThat(task1.arguments, equalTo(task1ExpectedArguments));
   assertThat(task2.arguments, equalTo(task2ExpectedArguments));
   assertThat(task3.arguments, equalTo(task3ExpectedArguments));
@@ -195,14 +195,14 @@
 - (void)testCanRunTestsAgainstDifferentTestSDK
 {
   XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
-  
+
   tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                      @"-scheme", @"TestProject-Library",
                      @"-configuration", @"Debug",
                      @"-sdk", @"iphonesimulator6.0",
                      @"run-tests", @"-test-sdk", @"iphonesimulator5.0",
                      ];
-  
+
   // We'll expect to see one call to xcodebuild with -showBuildSettings - we have to fetch the OBJROOT
   // and SYMROOT variables so we can build the tests in the correct location.
   NSTask *task1 = [FakeTask fakeTaskWithExitStatus:0
@@ -215,20 +215,20 @@
                               @"-sdk", @"iphonesimulator6.0",
                               @"-showBuildSettings"
                               ];
-  
+
   NSArray *(^tasksThatFetchSettingsThenRun)(NSString *, NSString *) = ^(NSString *version, NSString *outputPath){
     // And, another to get build settings for the test target.
     NSTask *settingsTask = [FakeTask fakeTaskWithExitStatus:0
                                          standardOutputPath:outputPath
                                           standardErrorPath:nil];
-    
+
     // And, another to actually run the tests.  The tests DO fail, so it exit status should be 1.
     NSTask *runTask = [FakeTask fakeTaskWithExitStatus:1
                                     standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results.txt"
                                      standardErrorPath:nil];
     return @[settingsTask, runTask];
   };
-  
+
   NSArray *(^argumentsForTasksThatFetchSettingsThenRun)(NSString *, NSString *) = ^(NSString *version, NSString *outputPath){
     // And, another to get build settings for the test target.
     NSArray *settingsTaskArguments = @[
@@ -241,7 +241,7 @@
                                        @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates/PrecompiledHeaders",
                                        @"-showBuildSettings"
                                        ];
-    
+
     // And, another to actually run the tests.  The tests DO fail, so it exit status should be 1.
     NSArray *runTaskArguments = @[
                                   @"-NSTreatUnknownArgumentsAsOpen", @"NO",
@@ -250,30 +250,30 @@
                                   @"-SenTestInvertScope", @"NO",
                                   @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
                                   ];
-    
+
     return @[settingsTaskArguments, runTaskArguments];
   };
-  
+
   NSMutableArray *sequenceOfTasks = [NSMutableArray array];
   [sequenceOfTasks addObject:task1];
   [sequenceOfTasks addObjectsFromArray:tasksThatFetchSettingsThenRun(@"5.0", TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings-5.0.txt")];
-  
+
   NSMutableArray *sequenceOfArguments = [NSMutableArray array];
   [sequenceOfArguments addObject:task1Arguments];
   [sequenceOfArguments addObjectsFromArray:argumentsForTasksThatFetchSettingsThenRun(@"5.0", TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings-5.0.txt")];
-  
+
   __block NSUInteger sequenceOffset = 0;
-  
+
   SetTaskInstanceBlock(^(void){
     return [sequenceOfTasks objectAtIndex:sequenceOffset++];
   });
-  
+
   [TestUtil runWithFakeStreams:tool];
-  
+
   for (int i = 0; i < sequenceOfTasks.count; i++) {
     assertThat([sequenceOfTasks[i] arguments], equalTo(sequenceOfArguments[i]));
   }
-  
+
   assertThatInt(tool.exitStatus, equalToInt(1));
 }
 

@@ -21,10 +21,10 @@ int *_NSGetArgc(void);
 - (void)testEnabledThisAlsoPasses
 {
   NSLog(@"testEnabledThisAlsoPasses");
-  
+
   int argc = *_NSGetArgc();
   char **argv = *_NSGetArgv();
-  
+
   for (int i = 0; i < argc; i++) {
     printf("i = %d >> %s\n", i, argv[i]);
   }

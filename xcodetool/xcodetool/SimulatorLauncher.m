@@ -28,7 +28,7 @@
     self.launchError = error;
     return NO;
   }
-  
+
   while (!_didQuit && !_didFailToStart) {
     CFRunLoopRun();
   }
@@ -42,7 +42,7 @@
     _didEndWithError = [error retain];
   }
   _didQuit = YES;
-  
+
   CFRunLoopStop(CFRunLoopGetCurrent());
 }
 
@@ -54,7 +54,7 @@
     self.launchError = error;
     _didFailToStart = YES;
   }
-  
+
   CFRunLoopStop(CFRunLoopGetCurrent());
 }
 

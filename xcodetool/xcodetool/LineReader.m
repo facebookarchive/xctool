@@ -22,12 +22,12 @@
 - (void)processBuffer
 {
   NSUInteger offset = 0;
-  
+
   for (;;) {
     NSRange newlineRange = [_buffer rangeOfString:@"\n"
                                           options:0
                                             range:NSMakeRange(offset, [_buffer length] - offset)];
-    
+
     if (newlineRange.length == 0) {
       break;
     } else {
@@ -48,12 +48,12 @@
 - (void)dataAvailableNotification:(NSNotification *)notification
 {
   NSData *data = [_fileHandle availableData];
-  
+
   if (data.length > 0) {
     [self appendDataToBuffer:data];
     [self processBuffer];
   }
-  
+
   [_fileHandle waitForDataInBackgroundAndNotify];
 }
 

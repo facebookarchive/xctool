@@ -10,9 +10,9 @@ NSDictionary *BuildSettingsFromOutput(NSString *output)
 {
   NSScanner *scanner = [NSScanner scannerWithString:output];
   [scanner setCharactersToBeSkipped:nil];
-  
+
   NSMutableDictionary *settings = [NSMutableDictionary dictionary];
-  
+
   if ([scanner scanString:@"Build settings from command line:\n" intoString:NULL]) {
     // Advance until we hit an empty line.
     while (![scanner scanString:@"\n" intoString:NULL]) {
@@ -24,38 +24,38 @@ NSDictionary *BuildSettingsFromOutput(NSString *output)
   for (;;) {
     NSString *target = nil;
     NSMutableDictionary *targetSettings = [NSMutableDictionary dictionary];
-    
+
     if (![scanner scanString:@"Build settings for action build and target " intoString:NULL]) {
       break;
     }
-    
+
     [scanner scanUpToString:@":\n" intoString:&target];
     [scanner scanString:@":\n" intoString:NULL];
-    
+
     for (;;) {
-      
+
       if ([scanner scanString:@"\n" intoString:NULL]) {
         // We know we've reached the end when we see one empty line.
         break;
       }
-      
+
       // Each line / setting looks like: "    SOME_KEY = some value\n"
       NSString *key = nil;
       NSString *value = nil;
-      
+
       [scanner scanString:@"    " intoString:NULL];
       [scanner scanUpToString:@" = " intoString:&key];
       [scanner scanString:@" = " intoString:NULL];
-      
+
       [scanner scanUpToString:@"\n" intoString:&value];
       [scanner scanString:@"\n" intoString:NULL];
-      
+
       targetSettings[key] = (value == nil) ? @"" : value;
     }
-    
+
     settings[target] = targetSettings;
   }
-  
+
   return settings;
 }
 
@@ -63,12 +63,12 @@ NSString *AbsoluteExecutablePath(void)
 {
   char execRelativePath[1024] = {0};
   uint32_t execRelativePathSize = sizeof(execRelativePath);
-  
+
   _NSGetExecutablePath(execRelativePath, &execRelativePathSize);
-  
+
   char execAbsolutePath[1024] = {0};
   assert(realpath((const char *)execRelativePath, execAbsolutePath) != NULL);
-  
+
   return [NSString stringWithUTF8String:execAbsolutePath];
 }
 
@@ -94,32 +94,32 @@ NSString *XcodeDeveloperDirPath(void)
     [task setEnvironment:@{}];
     path = LaunchTaskAndCaptureOutput(task)[@"stdout"];
     [task release];
-    
+
     path = [path stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
     [path retain];
   }
-  
+
   return path;
 }
 
 NSString *MakeTempFileWithPrefix(NSString *prefix)
 {
   const char *template = [[NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.XXXXXXX", prefix]] UTF8String];
-  
+
   char tempPath[PATH_MAX] = {0};
   strcpy(tempPath, template);
-  
+
   int handle = mkstemp(tempPath);
   assert(handle != -1);
   close(handle);
-  
+
   return [NSString stringWithFormat:@"%s", tempPath];
 }
 
 NSDictionary *GetAvailableSDKsAndAliases()
 {
   static NSMutableDictionary *result = nil;
-  
+
   if (result == nil) {
     result = [[NSMutableDictionary alloc] initWithCapacity:0];
     // Get a list of available SDKs in the form of:
@@ -136,7 +136,7 @@ NSDictionary *GetAvailableSDKsAndAliases()
      @"/usr/bin/xcodebuild -showsdks | perl -ne '/-sdk (.*?)([\\d\\.]+)$/ && print \"$1 $2\n\"'",
      ]];
     [task setEnvironment:@{}];
-    
+
     NSArray *lines = [LaunchTaskAndCaptureOutput(task)[@"stdout"] componentsSeparatedByString:@"\n"];
     lines = [lines subarrayWithRange:NSMakeRange(0, lines.count - 1)];
 

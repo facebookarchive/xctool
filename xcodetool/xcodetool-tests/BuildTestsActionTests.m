@@ -30,7 +30,7 @@
                                 standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
                                  standardErrorPath:nil]
                   ]);
-  
+
   Options *options = [TestUtil validatedOptionsFromArgumentList:@[
                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                       @"-scheme", @"TestProject-Library",
@@ -49,7 +49,7 @@
                                 standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
                                  standardErrorPath:nil]
                   ]);
-  
+
   [TestUtil assertThatOptionsValidateWithArgumentList:@[
    @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
    @"-scheme", @"TestProject-Library",
@@ -62,13 +62,13 @@
 - (void)testBuildTestsAction
 {
   XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
-  
+
   tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                      @"-scheme", @"TestProject-Library",
                      @"-configuration", @"Debug",
                      @"-sdk", @"iphonesimulator6.0",
                      @"build-tests"];
-  
+
   // We'll expect to see one call to xcodebuild with -showBuildSettings - we have to fetch the OBJROOT
   // and SYMROOT variables so we can build the tests in the correct location.
   NSTask *task1 = [FakeTask fakeTaskWithExitStatus:0
@@ -81,8 +81,8 @@
                                       @"-sdk", @"iphonesimulator6.0",
                                       @"-showBuildSettings"
                                       ];
-  
-  
+
+
   // We'll expect to see another xcodebuild call to build the test target.
   NSTask *task2 = [FakeTask fakeTaskWithExitStatus:0
                                 standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-build.txt"
@@ -112,16 +112,16 @@
                                       @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates/PrecompiledHeaders",
                                       @"build",
                                       ];
-  
+
   NSArray *sequenceOfTasks = @[task1, task2, task3];
   __block NSUInteger sequenceOffset = 0;
-  
+
   SetTaskInstanceBlock(^(void){
     return [sequenceOfTasks objectAtIndex:sequenceOffset++];
   });
-  
+
   [TestUtil runWithFakeStreams:tool];
-  
+
   assertThat(task1.arguments, equalTo(task1ExpectedArguments));
   assertThat(task2.arguments, equalTo(task2ExpectedArguments));
   assertThat(task3.arguments, equalTo(task3ExpectedArguments));
@@ -136,13 +136,13 @@
   // TestProject-LibraryTest2.  This a lame way to setup dependencies (they should be explicit),
   // but we're seeing this in the wild and should support it.
   XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
-  
+
   tool.arguments = @[@"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
                      @"-scheme", @"TestProject-Library",
                      @"-configuration", @"Debug",
                      @"-sdk", @"iphonesimulator6.0",
                      @"build-tests"];
-  
+
   // We'll expect to see one call to xcodebuild with -showBuildSettings - we have to fetch the OBJROOT
   // and SYMROOT variables so we can build the tests in the correct location.
   NSTask *task1 = [FakeTask fakeTaskWithExitStatus:0
@@ -155,7 +155,7 @@
                                       @"-sdk", @"iphonesimulator6.0",
                                       @"-showBuildSettings"
                                       ];
-  
+
   // We'll expect to see another xcodebuild call to build the TestProject-LibraryTests
   NSTask *task2 = [FakeTask fakeTaskWithExitStatus:0
                                 standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-LibraryTests-build.txt"
@@ -184,7 +184,7 @@
                                       @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
                                       @"build",
                                       ];
-  
+
   // We'll expect to see another xcodebuild call to build the TestProject-LibraryTests2
   NSTask *task4 = [FakeTask fakeTaskWithExitStatus:0
                                 standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-LibraryTests-build.txt"
@@ -199,7 +199,7 @@
                                       @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
                                       @"build",
                                       ];
-  
+
   // We'll expect to see another xcodebuild call to build the TestProject-LibraryTests2
   NSTask *task5 = [FakeTask fakeTaskWithExitStatus:0
                                 standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-LibraryTests-build.txt"
@@ -214,16 +214,16 @@
                                       @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
                                       @"build",
                                       ];
-  
+
   NSArray *sequenceOfTasks = @[task1, task2, task3, task4, task5];
   __block NSUInteger sequenceOffset = 0;
-  
+
   SetTaskInstanceBlock(^(void){
     return [sequenceOfTasks objectAtIndex:sequenceOffset++];
   });
-  
+
   [TestUtil runWithFakeStreams:tool];
-  
+
   assertThat(task1.arguments, equalTo(task1ExpectedArguments));
   assertThat(task2.arguments, equalTo(task2ExpectedArguments));
   assertThat(task3.arguments, equalTo(task3ExpectedArguments));
@@ -240,13 +240,13 @@
   // TestProject-LibraryTest2.  This a lame way to setup dependencies (they should be explicit),
   // but we're seeing this in the wild and should support it.
   XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
-  
+
   tool.arguments = @[@"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
                      @"-scheme", @"TestProject-Library",
                      @"-configuration", @"Debug",
                      @"-sdk", @"iphonesimulator6.0",
                      @"build-tests", @"-only", @"TestProject-LibraryTests"];
-  
+
   // We'll expect to see one call to xcodebuild with -showBuildSettings - we have to fetch the OBJROOT
   // and SYMROOT variables so we can build the tests in the correct location.
   NSTask *task1 = [FakeTask fakeTaskWithExitStatus:0
@@ -259,7 +259,7 @@
                                       @"-sdk", @"iphonesimulator6.0",
                                       @"-showBuildSettings"
                                       ];
-  
+
   // We'll expect to see another xcodebuild call to build the TestProject-LibraryTests
   NSTask *task2 = [FakeTask fakeTaskWithExitStatus:0
                                 standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-LibraryTests-build.txt"
@@ -274,16 +274,16 @@
                                       @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
                                       @"build",
                                       ];
-  
+
   NSArray *sequenceOfTasks = @[task1, task2];
   __block NSUInteger sequenceOffset = 0;
-  
+
   SetTaskInstanceBlock(^(void){
     return [sequenceOfTasks objectAtIndex:sequenceOffset++];
   });
-  
+
   [TestUtil runWithFakeStreams:tool];
-  
+
   assertThat(task1.arguments, equalTo(task1ExpectedArguments));
   assertThat(task2.arguments, equalTo(task2ExpectedArguments));
   assertThatInt(tool.exitStatus, equalToInt(0));

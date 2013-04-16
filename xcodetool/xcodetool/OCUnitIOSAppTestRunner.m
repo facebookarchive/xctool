@@ -13,7 +13,7 @@
 - (DTiPhoneSimulatorSessionConfig *)sessionForAppUninstaller:(NSString *)bundleID
 {
   assert(bundleID != nil);
-  
+
   NSString *sdkVersion = [_buildSettings[@"SDK_NAME"] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
   DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKVersion:sdkVersion];
   DTiPhoneSimulatorApplicationSpecifier *appSpec = [DTiPhoneSimulatorApplicationSpecifier specifierWithApplicationPath:
@@ -40,18 +40,18 @@
                              NSHomeDirectory(), sdkVersion];
   NSString *ideBundleInjectionLibPath = @"/../../Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection";
   NSString *testBundlePath = [NSString stringWithFormat:@"%@/%@", _buildSettings[@"BUILT_PRODUCTS_DIR"], _buildSettings[@"FULL_PRODUCT_NAME"]];
-  
+
   DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKVersion:sdkVersion];
   DTiPhoneSimulatorApplicationSpecifier *appSpec =
   [DTiPhoneSimulatorApplicationSpecifier specifierWithApplicationPath:testHostAppPath];
-  
+
   DTiPhoneSimulatorSessionConfig *sessionConfig = [[[DTiPhoneSimulatorSessionConfig alloc] init] autorelease];
   [sessionConfig setApplicationToSimulateOnStart:appSpec];
   [sessionConfig setSimulatedSystemRoot:systemRoot];
   // Always run as iPhone (family = 1)
   [sessionConfig setSimulatedDeviceFamily:@1];
   [sessionConfig setSimulatedApplicationShouldWaitForDebugger:NO];
-  
+
   [sessionConfig setSimulatedApplicationLaunchArgs:[self otestArguments]];
   NSMutableDictionary *launchEnvironment = [NSMutableDictionary dictionaryWithDictionary:@{
                                             @"CFFIXED_USER_HOME" : appSupportDir,
@@ -71,10 +71,10 @@
   [sessionConfig setSimulatedApplicationLaunchEnvironment:launchEnvironment];
   [sessionConfig setSimulatedApplicationStdOutPath:outputPath];
   [sessionConfig setSimulatedApplicationStdErrPath:outputPath];
-  
+
   //[sessionConfig setLocalizedClientName:[NSString stringWithFormat:@"1234"]];
   [sessionConfig setLocalizedClientName:[NSString stringWithUTF8String:getprogname()]];
-  
+
   return sessionConfig;
 }
 
@@ -92,7 +92,7 @@
   NSString *exitModePath = MakeTempFileWithPrefix(@"exit-mode");
   NSString *outputPath = MakeTempFileWithPrefix(@"output");
   NSFileHandle *outputHandle = [NSFileHandle fileHandleForReadingAtPath:outputPath];
-  
+
   LineReader *reader = [[[LineReader alloc] initWithFileHandle:outputHandle] autorelease];
   reader.didReadLineBlock = feedOutputToBlock;
 
@@ -101,24 +101,24 @@
      @"SAVE_EXIT_MODE_TO" : exitModePath,
      }
                                            outputPath:outputPath];
-  
+
   [sessionConfig setSimulatedApplicationStdOutPath:outputPath];
   [sessionConfig setSimulatedApplicationStdErrPath:outputPath];
-  
+
   SimulatorLauncher *launcher = [[[SimulatorLauncher alloc] initWithSessionConfig:sessionConfig] autorelease];
-  
+
   [reader startReading];
-  
+
   [launcher launchAndWaitForExit];
-  
+
   [reader stopReading];
   [reader finishReadingToEndOfFile];
-  
+
   NSDictionary *exitMode = [NSDictionary dictionaryWithContentsOfFile:exitModePath];
-  
+
   [[NSFileManager defaultManager] removeItemAtPath:outputPath error:nil];
   [[NSFileManager defaultManager] removeItemAtPath:exitModePath error:nil];
-  
+
   return [exitMode[@"via"] isEqualToString:@"exit"] && ([exitMode[@"status"] intValue] == 0);
 }
 
@@ -133,17 +133,17 @@
   NSString *testHostPlistPath = [[testHostPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Info.plist"];
   NSDictionary *plist = [NSDictionary dictionaryWithContentsOfFile:testHostPlistPath];
   NSString *testHostBundleID = plist[@"CFBundleIdentifier"];
-  
+
   if (![self uninstallApplication:testHostBundleID]) {
     *error = [NSString stringWithFormat:@"Failed to uninstall the test host app '%@' before running tests.", testHostBundleID];
     return NO;
   }
-  
+
   if (![self runTestsInSimulator:testHostAppPath feedOutputToBlock:outputLineBlock]) {
     *error = [NSString stringWithFormat:@"Failed to run tests"];
     return NO;
   }
-  
+
   return YES;
 }
 

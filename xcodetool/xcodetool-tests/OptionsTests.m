@@ -262,7 +262,7 @@
                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                       @"-scheme", @"TestProject-Library",
                       ]];
-  
+
   NSString *errorMessage = nil;
   BOOL valid = [action validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] options:nil];
   assertThatBool(valid, equalToBool(YES));

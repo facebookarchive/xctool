@@ -129,21 +129,21 @@
     NSString *actionName = [actionClass name];
     verbToClass[actionName] = actionClass;
   }
-  
+
   NSUInteger consumed = 0;
-  
+
   NSMutableArray *argumentList = [NSMutableArray arrayWithArray:arguments];
   while (argumentList.count > 0) {
     consumed += [super consumeArguments:argumentList errorMessage:errorMessage];
-    
+
     if (argumentList.count == 0) {
       break;
     }
-    
+
     NSString *argument = argumentList[0];
     [argumentList removeObjectAtIndex:0];
     consumed++;
-    
+
     if (verbToClass[argument]) {
       Action *action = [[[verbToClass[argument] alloc] init] autorelease];
       consumed += [action consumeArguments:argumentList errorMessage:errorMessage];
@@ -153,7 +153,7 @@
       break;
     }
   }
-  
+
   return consumed;
 }
 
@@ -174,22 +174,22 @@
     *errorMessage = @"Either -workspace or -project must be specified, but not both.";
     return NO;
   }
-  
+
   if (self.scheme == nil) {
     *errorMessage = @"Missing the required -scheme argument.";
     return NO;
   }
-  
+
   if (self.workspace != nil && !isDirectory(self.workspace)) {
     *errorMessage = [NSString stringWithFormat:@"Specified workspace doesn't exist: %@", self.workspace];
     return NO;
   }
-  
+
   if (self.project != nil && !isDirectory(self.project)) {
     *errorMessage = [NSString stringWithFormat:@"Specified project doesn't exist: %@", self.project];
     return NO;
   }
-  
+
   NSArray *schemePaths = nil;
   if (self.workspace != nil) {
     schemePaths = [XcodeSubjectInfo schemePathsInWorkspace:self.workspace];
@@ -201,7 +201,7 @@
   for (NSString *schemePath in schemePaths) {
     [schemeNames addObject:[[schemePath lastPathComponent] stringByDeletingPathExtension]];
   }
-  
+
   if (![schemeNames containsObject:self.scheme]) {
     *errorMessage = [NSString stringWithFormat:
                      @"Can't find scheme '%@'. Possible schemes include: %@",
@@ -209,7 +209,7 @@
                      [schemeNames componentsJoinedByString:@", "]];
     return NO;
   }
-  
+
   if (self.sdk != nil) {
     NSDictionary *sdksAndAliases = GetAvailableSDKsAndAliases();
 
@@ -241,24 +241,24 @@
 
     [self.reporters addObject:reporter];
   }
-  
+
   xcodeSubjectInfo.subjectWorkspace = self.workspace;
   xcodeSubjectInfo.subjectProject = self.project;
   xcodeSubjectInfo.subjectScheme = self.scheme;
   xcodeSubjectInfo.subjectXcodeBuildArguments = [self xcodeBuildArgumentsForSubject];
-  
+
   if (self.sdk == nil) {
     self.sdk = xcodeSubjectInfo.sdkName;
   }
-  
+
   if (self.configuration == nil) {
     self.configuration = xcodeSubjectInfo.configuration;
   }
-  
+
   if (self.reporters.count == 0) {
     [self.reporters addObject:[Reporter reporterWithName:@"pretty" outputPath:@"-" options:self]];
   }
-  
+
   for (Action *action in self.actions) {
     BOOL valid = [action validateOptions:errorMessage xcodeSubjectInfo:xcodeSubjectInfo options:self];
     if (!valid) {
@@ -277,33 +277,33 @@
 - (NSArray *)commonXcodeBuildArgumentsIncludingSDK:(BOOL)includingSDK
 {
   NSMutableArray *arguments = [NSMutableArray array];
-  
+
   if (self.configuration != nil) {
     [arguments addObjectsFromArray:@[@"-configuration", self.configuration]];
   }
-  
+
   if (self.sdk != nil && includingSDK) {
     [arguments addObjectsFromArray:@[@"-sdk", self.sdk]];
   }
-  
+
   if (self.arch != nil) {
     [arguments addObjectsFromArray:@[@"-arch", self.arch]];
   }
-  
+
   if (self.toolchain != nil) {
     [arguments addObjectsFromArray:@[@"-toolchain", self.toolchain]];
   }
-  
+
   if (self.xcconfig != nil) {
     [arguments addObjectsFromArray:@[@"-xcconfig", self.xcconfig]];
   }
-  
+
   if (self.jobs != nil) {
     [arguments addObjectsFromArray:@[@"-jobs", self.jobs]];
   }
-  
+
   [arguments addObjectsFromArray:self.buildSettings];
-  
+
   return arguments;
 }
 
@@ -317,15 +317,15 @@
   // The subject being the thing we're building or testing, which is a workspace/scheme combo
   // or a project/scheme combo.
   NSMutableArray *arguments = [NSMutableArray array];
-  
+
   if (self.workspace != nil && self.scheme != nil) {
     [arguments addObjectsFromArray:@[@"-workspace", self.workspace, @"-scheme", self.scheme]];
   } else if (self.project != nil && self.scheme != nil) {
     [arguments addObjectsFromArray:@[@"-project", self.project, @"-scheme", self.scheme]];
   }
-  
+
   [arguments addObjectsFromArray:[self commonXcodeBuildArguments]];
-  
+
   return arguments;
 }
 

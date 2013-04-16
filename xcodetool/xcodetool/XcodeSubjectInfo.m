@@ -28,7 +28,7 @@ static NSString *StringByStandardizingPath(NSString *path)
   if (workspaceBasePath.length == 0) {
     workspaceBasePath = @".";
   }
-  
+
   NSURL *URL = [NSURL fileURLWithPath:[workspacePath stringByAppendingPathComponent:@"contents.xcworkspacedata"]];
   NSError *error = nil;
   NSXMLDocument *doc = [[[NSXMLDocument alloc] initWithContentsOfURL:URL
@@ -38,7 +38,7 @@ static NSString *StringByStandardizingPath(NSString *path)
     NSLog(@"Error in parsing: %@: %@", workspacePath, error);
     abort();
   }
-  
+
   __block NSString *(^fullLocation)(NSXMLNode*, NSString *) = ^(NSXMLNode *node, NSString *containerPath) {
 
     if (node == nil || ![@[@"FileRef", @"Group", @"Workspace"] containsObject:node.name]) {
@@ -76,23 +76,23 @@ static NSString *StringByStandardizingPath(NSString *path)
   NSMutableArray *projectFiles = [NSMutableArray array];
   for (NSXMLElement *node in fileRefNodes) {
     NSString *location = [[node attributeForName:@"location"] stringValue];
-    
+
     if ([location hasSuffix:@".xcodeproj"]) {
       [projectFiles addObject:StringByStandardizingPath(fullLocation(node, workspaceBasePath))];
     }
   }
-  
+
   return projectFiles;
 }
 
 + (NSArray *)schemePathsInWorkspace:(NSString *)workspace
 {
   NSMutableArray *schemes = [NSMutableArray array];
-  
+
   for (NSString *projectPath in [XcodeSubjectInfo projectPathsInWorkspace:workspace]) {
     [schemes addObjectsFromArray:[XcodeSubjectInfo schemePathsInContainer:projectPath]];
   }
-  
+
   [schemes addObjectsFromArray:[XcodeSubjectInfo schemePathsInContainer:workspace]];
 
   return schemes;
@@ -102,7 +102,7 @@ static NSString *StringByStandardizingPath(NSString *path)
 {
   NSMutableArray *schemes = [NSMutableArray array];
   NSFileManager *fm = [NSFileManager defaultManager];
-  
+
   // Collect shared schemes (those that have 'Shared' checked in the Schemes Manager).
   NSString *sharedSchemesPath = [project stringByAppendingPathComponent:@"xcshareddata/xcschemes"];
   NSArray *sharedContents = [fm contentsOfDirectoryAtPath:sharedSchemesPath
@@ -114,7 +114,7 @@ static NSString *StringByStandardizingPath(NSString *path)
       }
     }
   }
-  
+
   // Collect user-specific schemes.
   NSString *userdataPath = [project stringByAppendingPathComponent:@"xcuserdata"];
   NSArray *userContents = [fm contentsOfDirectoryAtPath:userdataPath
@@ -124,7 +124,7 @@ static NSString *StringByStandardizingPath(NSString *path)
       if ([file hasSuffix:@".xcuserdatad"]) {
         NSString *userSchemesPath = [[userdataPath stringByAppendingPathComponent:file] stringByAppendingPathComponent:@"xcschemes"];
         NSArray *userSchemesContents = [fm contentsOfDirectoryAtPath:userSchemesPath error:nil];
-        
+
         for (NSString *file in userSchemesContents) {
           if ([file hasSuffix:@".xcscheme"]) {
             [schemes addObject:[userSchemesPath stringByAppendingPathComponent:file]];
@@ -133,7 +133,7 @@ static NSString *StringByStandardizingPath(NSString *path)
       }
     }
   }
-  
+
   return schemes;
 }
 
@@ -158,32 +158,32 @@ static NSString *StringByStandardizingPath(NSString *path)
     NSLog(@"Error in parsing: %@: %@", schemePath, error);
     abort();
   }
-  
+
   NSArray *testableReferenceNodes = [doc nodesForXPath:@"//TestableReference[@skipped='NO']" error:nil];
-  
+
   NSMutableArray *testables = [NSMutableArray array];
   for (NSXMLElement *node in testableReferenceNodes) {
     NSArray *buildableReferences = [node nodesForXPath:@"BuildableReference" error:nil];
-    
+
     assert(buildableReferences.count == 1);
     NSXMLElement *buildableReference = buildableReferences[0];
-    
+
     NSString *referencedContainer = [[buildableReference attributeForName:@"ReferencedContainer"] stringValue];
     assert([referencedContainer hasPrefix:@"container:"]);
-    
+
     NSString *projectPath = StringByStandardizingPath([basePath stringByAppendingPathComponent:[referencedContainer substringFromIndex:@"container:".length]]);
     assert([[NSFileManager defaultManager] fileExistsAtPath:projectPath]);
-    
+
     NSString *executable = [[buildableReference attributeForName:@"BuildableName"] stringValue];
     NSString *target = [[buildableReference attributeForName:@"BlueprintName"] stringValue];
-    
+
     NSArray *skippedTestsNodes = [node nodesForXPath:@"SkippedTests/Test" error:nil];
     NSMutableArray *testsToSkip = [NSMutableArray array];
     for (NSXMLElement *node in skippedTestsNodes) {
       NSString *test = [[node attributeForName:@"Identifier"] stringValue];
       [testsToSkip addObject:test];
     }
-    
+
     NSString *senTestList = nil;
     BOOL senTestInvertScope = NO;
     if (testsToSkip.count > 0) {
@@ -193,10 +193,10 @@ static NSString *StringByStandardizingPath(NSString *path)
       senTestList = @"All";
       senTestInvertScope = NO;
     }
-    
+
     [testables addObject:@{@"projectPath" : projectPath, @"target": target, @"executable": executable, @"senTestInvertScope": @(senTestInvertScope), @"senTestList": senTestList}];
   }
-  
+
   return testables;
 }
 
@@ -210,30 +210,30 @@ static NSString *StringByStandardizingPath(NSString *path)
     NSLog(@"Error in parsing: %@: %@", schemePath, error);
     abort();
   }
-  
+
   NSArray *buildActionEntryNodes = [doc nodesForXPath:@"//BuildActionEntry[@buildForTesting='YES']" error:nil];
-  
+
   NSMutableArray *buildables = [NSMutableArray array];
   for (NSXMLElement *node in buildActionEntryNodes) {
     NSArray *buildableReferences = [node nodesForXPath:@"BuildableReference" error:nil];
-    
+
     assert(buildableReferences.count == 1);
     NSXMLElement *buildableReference = buildableReferences[0];
-    
+
     NSString *referencedContainer = [[buildableReference attributeForName:@"ReferencedContainer"] stringValue];
     assert([referencedContainer hasPrefix:@"container:"]);
-    
+
     NSString *projectPath = StringByStandardizingPath([basePath stringByAppendingPathComponent:[referencedContainer substringFromIndex:@"container:".length]]);
     assert([[NSFileManager defaultManager] fileExistsAtPath:projectPath]);
-    
+
     NSString *target = [[buildableReference attributeForName:@"BlueprintName"] stringValue];
-    
+
     [buildables addObject:@{
      @"projectPath" : projectPath,
      @"target": target,
      }];
   }
-  
+
   return buildables;
 }
 
@@ -242,11 +242,11 @@ static NSString *StringByStandardizingPath(NSString *path)
   if (_didPopulate) {
     return;
   }
-  
+
   assert(self.subjectXcodeBuildArguments != nil);
   assert(self.subjectScheme != nil);
   assert(self.subjectWorkspace != nil || self.subjectProject != nil);
-  
+
   // First we need to know the OBJROOT and SYMROOT settings for the project we're testing.
   NSTask *task = TaskInstance();
   [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
@@ -255,10 +255,10 @@ static NSString *StringByStandardizingPath(NSString *path)
    @"DYLD_INSERT_LIBRARIES" : [PathToFBXcodetoolBinaries() stringByAppendingPathComponent:@"xcodebuild-fastsettings-lib.dylib"],
    @"SHOW_ONLY_BUILD_SETTINGS_FOR_FIRST_BUILDABLE" : @"YES"
    }];
-  
+
   NSDictionary *result = LaunchTaskAndCaptureOutput(task);
   NSDictionary *settings = BuildSettingsFromOutput(result[@"stdout"]);
-  
+
   assert(settings.count == 1);
   NSDictionary *firstBuildable = [settings allValues][0];
   // The following control where our build output goes - we need to make sure we build the tests
@@ -268,26 +268,26 @@ static NSString *StringByStandardizingPath(NSString *path)
   self.sharedPrecompsDir = firstBuildable[@"SHARED_PRECOMPS_DIR"];
   self.sdkName = firstBuildable[@"SDK_NAME"];
   self.configuration = firstBuildable[@"CONFIGURATION"];
-  
+
   NSString *(^basePathFromSchemePath)(NSString *) = ^(NSString *schemePath){
     for (;;) {
       assert(schemePath.length > 0);
-      
+
       if ([schemePath hasSuffix:@".xcodeproj"] || [schemePath hasSuffix:@".xcworkspace"]) {
         schemePath = [schemePath stringByDeletingLastPathComponent];
         break;
       }
-      
+
       schemePath = [schemePath stringByDeletingLastPathComponent];
     }
-    
+
     if (schemePath.length == 0) {
       schemePath = @".";
     }
-    
+
     return schemePath;
   };
-  
+
   if (self.subjectWorkspace) {
     NSString *matchingSchemePath = nil;
     NSArray *schemePaths = [XcodeSubjectInfo schemePathsInWorkspace:self.subjectWorkspace];
@@ -296,9 +296,9 @@ static NSString *StringByStandardizingPath(NSString *path)
         matchingSchemePath = schemePath;
       }
     }
-    
+
     NSSet *projectPathsInWorkspace = [NSSet setWithArray:[XcodeSubjectInfo projectPathsInWorkspace:self.subjectWorkspace]];
-    
+
     NSArray *(^itemsMatchingProjectPath)(NSArray *) = ^(NSArray *items) {
       NSMutableArray *newItems = [NSMutableArray array];
       for (NSDictionary *item in items) {
@@ -308,12 +308,12 @@ static NSString *StringByStandardizingPath(NSString *path)
       }
       return newItems;
     };
-    
+
     NSArray *testables = [self testablesInSchemePath:matchingSchemePath
                                         basePath:basePathFromSchemePath(matchingSchemePath)];
     NSArray *buildablesForTest = [self buildablesForTestInSchemePath:matchingSchemePath
                                                         basePath:basePathFromSchemePath(matchingSchemePath)];
-    
+
     // It's possible that the scheme references projects that aren't part of the workspace.  When
     // Xcode encounters these, it just skips them so we'll do the same.
     self.testables = itemsMatchingProjectPath(testables);
@@ -326,13 +326,13 @@ static NSString *StringByStandardizingPath(NSString *path)
         matchingSchemePath = schemePath;
       }
     }
-    
+
     self.testables = [self testablesInSchemePath:matchingSchemePath
                                         basePath:basePathFromSchemePath(matchingSchemePath)];
     self.buildablesForTest = [self buildablesForTestInSchemePath:matchingSchemePath
                                                         basePath:basePathFromSchemePath(matchingSchemePath)];
   }
-  
+
   _didPopulate = YES;
 }
 

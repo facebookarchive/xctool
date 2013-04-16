@@ -24,10 +24,10 @@ static void SwizzleClassSelectorForFunction(Class cls, SEL sel, IMP newImp)
 {
   Class clscls = object_getClass((id)cls);
   Method originalMethod = class_getClassMethod(cls, sel);
-  
+
   NSString *selectorName = [NSString stringWithFormat:@"__%s_%s", class_getName(cls), sel_getName(sel)];
   SEL newSelector = sel_registerName([selectorName cStringUsingEncoding:[NSString defaultCStringEncoding]]);
-  
+
   class_addMethod(clscls, newSelector, newImp, method_getTypeEncoding(originalMethod));
   Method replacedMethod = class_getClassMethod(cls, newSelector);
   method_exchangeImplementations(originalMethod, replacedMethod);
@@ -37,7 +37,7 @@ void PrintJSON(id JSONObject)
 {
   NSError *error = nil;
   NSData *data = [NSJSONSerialization dataWithJSONObject:JSONObject options:0 error:&error];
-  
+
   if (error) {
     fprintf(__stderr,
             "ERROR: Error generating JSON for object: %s: %s\n",
@@ -45,7 +45,7 @@ void PrintJSON(id JSONObject)
             [[error localizedFailureReason] UTF8String]);
     exit(1);
   }
-  
+
   fwrite([data bytes], 1, [data length], __stdout);
   fputs("\n", __stdout);
   fflush(__stdout);
@@ -81,7 +81,7 @@ static void SenTestLog_testCaseDidStart(id self, SEL sel, NSNotification *notifi
             @"event" : kReporter_Events_BeginTest,
             kReporter_BeginTest_TestKey : [[run test] description],
             });
-  
+
   [__testException release];
   __testException = nil;
   __testIsRunning = YES;
@@ -98,7 +98,7 @@ static void SenTestLog_testCaseDidStop(id self, SEL sel, NSNotification *notific
                                kReporter_EndTest_TotalDurationKey : @([run totalDuration]),
                                kReporter_EndTest_OutputKey : __testOutput,
                                }];
-  
+
   if (__testException != nil) {
     [json setObject:@{
      kReporter_EndTest_Exception_FilePathInProjectKey : [__testException filePathInProject],
@@ -108,9 +108,9 @@ static void SenTestLog_testCaseDidStop(id self, SEL sel, NSNotification *notific
      }
              forKey:kReporter_EndTest_ExceptionKey];
   }
-  
+
   PrintJSON(json);
-  
+
   __testIsRunning = NO;
   [__testOutput release];
   __testOutput = nil;
@@ -129,7 +129,7 @@ static void SaveExitMode(NSDictionary *exitMode)
 {
   NSDictionary *env = [[NSProcessInfo processInfo] environment];
   NSString *saveExitModeTo = [env objectForKey:@"SAVE_EXIT_MODE_TO"];
-  
+
   if (saveExitModeTo) {
     assert([exitMode writeToFile:saveExitModeTo atomically:YES] == YES);
   }
@@ -187,31 +187,31 @@ DYLD_INTERPOSE(__write, write);
 
 static NSString *CreateStringFromIOV(const struct iovec *iov, int iovcnt) {
   NSMutableData *buffer = [[NSMutableData alloc] initWithCapacity:0];
-  
+
   for (int i = 0; i < iovcnt; i++) {
     [buffer appendBytes:iov[i].iov_base length:iov[i].iov_len];
   }
-  
+
   NSMutableData *bufferWithoutNulls = [[NSMutableData alloc] initWithLength:buffer.length];
-  
+
   NSUInteger offset = 0;
   uint8_t *bufferBytes = (uint8_t *)[buffer mutableBytes];
   uint8_t *bufferWithoutNullsBytes = (uint8_t *)[bufferWithoutNulls mutableBytes];
-  
+
   for (NSUInteger i = 0; i < buffer.length; i++) {
     uint8_t byte = bufferBytes[i];
     if (byte != 0) {
       bufferWithoutNullsBytes[offset++] = byte;
     }
   }
-  
+
   [bufferWithoutNulls setLength:offset];
-  
+
   NSString *str = [[NSString alloc] initWithData:bufferWithoutNulls encoding:NSUTF8StringEncoding];
-  
+
   [buffer release];
   [bufferWithoutNulls release];
-  
+
   return str;
 }
 
@@ -257,7 +257,7 @@ __attribute__((constructor)) static void EntryPoint()
   __stdout = fdopen(__stdoutHandle, "w");
   __stderrHandle = dup(STDERR_FILENO);
   __stderr = fdopen(__stderrHandle, "w");
-  
+
   void (^doSwizzleBlock)() = [^{
     SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"), @selector(testSuiteDidStart:), (IMP)SenTestLog_testSuiteDidStart);
     SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"), @selector(testSuiteDidStop:), (IMP)SenTestLog_testSuiteDidStop);
@@ -265,7 +265,7 @@ __attribute__((constructor)) static void EntryPoint()
     SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"), @selector(testCaseDidStop:), (IMP)SenTestLog_testCaseDidStop);
     SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"), @selector(testCaseDidFail:), (IMP)SenTestLog_testCaseDidFail);
   } copy];
-  
+
   if ([[[NSProcessInfo processInfo] processName] isEqualToString:@"otest"]) {
     // This is a logic test, and the test bundle is loaded directly by otest.
     __block id observer = [[NSNotificationCenter defaultCenter] addObserverForName:NSBundleDidLoadNotification object:nil queue:nil usingBlock:[^(NSNotification *notification) {
@@ -284,8 +284,8 @@ __attribute__((constructor)) static void EntryPoint()
     // if the process exits immediately upon startup.  A short pause here is enough to make the
     // right things happen.
     [NSThread sleepForTimeInterval:0.1];
-  }  
-  
+  }
+
   // Unset so we don't cascade into other process that get spawned from xcodebuild.
   unsetenv("DYLD_INSERT_LIBRARIES");
 }

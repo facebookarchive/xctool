@@ -18,11 +18,11 @@
   if (![BuildAction runXcodeBuildCommand:@"clean" withOptions:options]) {
     return NO;
   }
-  
+
   if (![BuildTestsAction buildTestables:xcodeSubjectInfo.testables command:@"clean" options:options xcodeSubjectInfo:xcodeSubjectInfo]) {
     return NO;
   }
-  
+
   return YES;
 }
 

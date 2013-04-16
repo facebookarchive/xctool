@@ -28,18 +28,18 @@
                                             standardErrorPath:nil],
                          [[[FakeTask alloc] init] autorelease],
                          ];
-  
+
   XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
   ReturnFakeTasks(fakeTasks);
-  
+
   tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                      @"-scheme", @"TestProject-Library",
                      @"-sdk", @"iphonesimulator6.0",
                      @"build",
                      ];
-  
+
   [TestUtil runWithFakeStreams:tool];
-  
+
   assertThat([fakeTasks[1] arguments],
              equalTo(@[
                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
@@ -57,18 +57,18 @@
                                             standardErrorPath:nil],
                          [[[FakeTask alloc] init] autorelease],
                          ];
-  
+
   XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
   ReturnFakeTasks(fakeTasks);
-  
+
   tool.arguments = @[
                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                      @"-scheme", @"TestProject-Library",
                      @"build",
                      ];
-  
+
   [TestUtil runWithFakeStreams:tool];
-  
+
   assertThat([fakeTasks[1] arguments],
              equalTo(@[
                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
@@ -86,17 +86,17 @@
                                             standardErrorPath:nil],
                          [[[FakeTask alloc] init] autorelease],
                          ];
-  
+
   XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
   ReturnFakeTasks(fakeTasks);
-  
+
   tool.arguments = @[@"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
                      @"-scheme", @"TestProject-Library",
                      @"build",
                      ];
-  
+
   [TestUtil runWithFakeStreams:tool];
-  
+
   assertThat([fakeTasks[1] arguments],
              equalTo(@[
                      @"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
@@ -114,18 +114,18 @@
                                             standardErrorPath:nil],
                          [[[FakeTask alloc] init] autorelease],
                          ];
-  
+
   XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
   ReturnFakeTasks(fakeTasks);
-  
+
   tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                      @"-scheme", @"TestProject-Library",
                      @"-configuration", @"SOME_CONFIGURATION",
                      @"build",
                      ];
-  
+
   [TestUtil runWithFakeStreams:tool];
-  
+
   assertThat(([fakeTasks[1] arguments]),
              equalTo(@[
                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
@@ -145,21 +145,21 @@
                            // This exit status should get returned...
                            [FakeTask fakeTaskWithExitStatus:exitStatus],
                            ];
-    
+
     XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
     ReturnFakeTasks(fakeTasks);
-    
+
     tool.arguments = @[
                        @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
                        @"build",
                        ];
-    
+
     [TestUtil runWithFakeStreams:tool];
-    
+
     assertThatInt(tool.exitStatus, equalToInt(exitStatus));
   };
-  
+
   // Pretend xcodebuild succeeds, and so we should succeed.
   testWithExitStatus(0);
   // Pretend xcodebuild fails w/ exit code 1, and so fbxcodetest should fail.

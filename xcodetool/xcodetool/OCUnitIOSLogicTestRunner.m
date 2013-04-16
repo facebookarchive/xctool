@@ -51,7 +51,7 @@
     NSTask *task = [self otestTaskWithTestBundle:testBundlePath];
 
     LaunchTaskAndFeedOuputLinesToBlock(task, outputLineBlock);
-    
+
     return [task terminationStatus] == 0 ? YES : NO;
   } else {
     *error = [NSString stringWithFormat:@"Test bundle not found at: %@", testBundlePath];

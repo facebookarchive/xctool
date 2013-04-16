@@ -30,18 +30,18 @@
                          [[[FakeTask alloc] init] autorelease],
                          [[[FakeTask alloc] init] autorelease],
                          ];
-  
+
   XcodeTool *tool = [[[XcodeTool alloc] init] autorelease];
   ReturnFakeTasks(fakeTasks);
-  
+
   tool.arguments = @[
                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                      @"-scheme", @"TestProject-Library",
                      @"clean",
                      ];
-  
+
   [TestUtil runWithFakeStreams:tool];
-  
+
   assertThat([fakeTasks[1] arguments],
              equalTo(@[
                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",

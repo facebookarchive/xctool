@@ -12,7 +12,7 @@ int MobileInstallationUninstall(CFStringRef bundleID, CFDictionaryRef installati
 - (void)applicationDidFinishLaunching:(UIApplication *)application
 {
   NSArray *args = [[NSProcessInfo processInfo] arguments];
-  
+
   NSString *bundleID = args[1];
   NSLog(@"Uninstalling '%@' ...", bundleID);
   MobileInstallationUninstall((CFStringRef)bundleID, nil, NULL);

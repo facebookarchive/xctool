@@ -21,11 +21,11 @@ static void SwizzleSelectorForFunction(Class cls, SEL sel, IMP newImp)
 {
   Method originalMethod = class_getInstanceMethod(cls, sel);
   const char *typeEncoding = method_getTypeEncoding(originalMethod);
-  
+
   NSString *newSelectorName = [NSString stringWithFormat:@"__%s_%s", class_getName(cls), sel_getName(sel)];
   SEL newSelector = sel_registerName([newSelectorName UTF8String]);
   class_addMethod(cls, newSelector, newImp, typeEncoding);
-  
+
   Method newMethod = class_getInstanceMethod(cls, newSelector);
   method_exchangeImplementations(originalMethod, newMethod);
 }
@@ -36,7 +36,7 @@ static NSArray *IDEBuildSchemeAction_buildablesForAllSchemeCommandsIncludingDepe
 
   NSString *showOnlyBuildsettingsForTarget = [[NSProcessInfo processInfo] environment][@"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET"];
   NSString *showOnlyBuildsettingsForFirstBuildable = [[NSProcessInfo processInfo] environment][@"SHOW_ONLY_BUILD_SETTINGS_FOR_FIRST_BUILDABLE"];
-  
+
   if (showOnlyBuildsettingsForTarget != nil) {
     for (Xcode3TargetProduct *buildable in buildables) {
       if ([[[buildable xcode3Target] name] isEqualToString:showOnlyBuildsettingsForTarget]) {
@@ -56,7 +56,7 @@ __attribute__((constructor)) static void EntryPoint()
   SwizzleSelectorForFunction(NSClassFromString(@"IDEBuildSchemeAction"),
                              @selector(buildablesForAllSchemeCommandsIncludingDependencies:),
                              (IMP)IDEBuildSchemeAction_buildablesForAllSchemeCommandsIncludingDependencies);
-  
+
   // Unset so we don't cascade into other process that get spawned from xcodebuild.
   unsetenv("DYLD_INSERT_LIBRARIES");
 }
