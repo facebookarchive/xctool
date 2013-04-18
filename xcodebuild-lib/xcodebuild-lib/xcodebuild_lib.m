@@ -4,7 +4,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "../../xcodetool/xcodetool/Reporter.h"
+#import "../../xctool/xctool/Reporter.h"
 
 static int __stdoutHandle;
 static FILE *__stdout;

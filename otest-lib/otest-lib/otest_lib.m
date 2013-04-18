@@ -7,7 +7,7 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
-#import "../../xcodetool/xcodetool/Reporter.h"
+#import "../../xctool/xctool/Reporter.h"
 
 #import "dyld-interposing.h"
 

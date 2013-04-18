@@ -1,8 +1,0 @@
-//
-// Prefix header for all source files of the 'fbxcodetool' target in the 'fbxcodetool' project
-//
-
-#ifdef __OBJC__
-  #import <Foundation/Foundation.h>
-  #define JSONKIT_PREFIX XT_
-#endif
