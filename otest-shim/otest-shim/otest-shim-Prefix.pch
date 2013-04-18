@@ -1,0 +1,6 @@
+//
+// Prefix header for all source files of the 'otest-shim' target in the 'otest-shim' project
+//
+
+#ifdef __OBJC__
+#endif

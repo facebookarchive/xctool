@@ -58,7 +58,7 @@
                                             @"DYLD_FRAMEWORK_PATH" : _buildSettings[@"TARGET_BUILD_DIR"],
                                             @"DYLD_LIBRARY_PATH" : _buildSettings[@"TARGET_BUILD_DIR"],
                                             @"DYLD_INSERT_LIBRARIES" : [@[
-                                                                        [PathToXCToolBinaries() stringByAppendingPathComponent:@"otest-lib-ios.dylib"],
+                                                                        [PathToXCToolBinaries() stringByAppendingPathComponent:@"otest-shim-ios.dylib"],
                                                                         ideBundleInjectionLibPath,
                                                                         ] componentsJoinedByString:@":"],
                                             @"DYLD_ROOT_PATH" : _buildSettings[@"SDKROOT"],

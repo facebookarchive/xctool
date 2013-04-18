@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "283CCA8B16C2EE4C00F2E343"
-               BuildableName = "otest-lib-ios.dylib"
-               BlueprintName = "otest-lib-ios"
-               ReferencedContainer = "container:../otest-lib/otest-lib.xcodeproj">
+               BuildableName = "otest-shim-ios.dylib"
+               BlueprintName = "otest-shim-ios"
+               ReferencedContainer = "container:../otest-shim/otest-shim.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "282BFE18171602C60022F9FF"
-               BuildableName = "otest-lib-osx.dylib"
-               BlueprintName = "otest-lib-osx"
-               ReferencedContainer = "container:../otest-lib/otest-lib.xcodeproj">
+               BuildableName = "otest-shim-osx.dylib"
+               BlueprintName = "otest-shim-osx"
+               ReferencedContainer = "container:../otest-shim/otest-shim.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry

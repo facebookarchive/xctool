@@ -24,7 +24,7 @@
                                     @"IPHONE_SIMULATOR_ROOT" : _buildSettings[@"SDKROOT"],
                                     @"IPHONE_SIMULATOR_VERSIONS" : @"iPhone Simulator (external launch) , iPhone OS 6.0 (unknown/10A403)",
                                     @"NSUnbufferedIO" : @"YES",
-                                    @"DYLD_INSERT_LIBRARIES" : [PathToXCToolBinaries() stringByAppendingPathComponent:@"otest-lib-ios.dylib"],
+                                    @"DYLD_INSERT_LIBRARIES" : [PathToXCToolBinaries() stringByAppendingPathComponent:@"otest-shim-ios.dylib"],
                                     };
 
   NSTask *task = TaskInstance();

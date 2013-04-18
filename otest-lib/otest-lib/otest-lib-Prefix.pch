@@ -1,7 +1,0 @@
-//
-// Prefix header for all source files of the 'otest-lib' target in the 'otest-lib' project
-//
-
-#ifdef __OBJC__
-  #define JSONKIT_PREFIX XT_
-#endif

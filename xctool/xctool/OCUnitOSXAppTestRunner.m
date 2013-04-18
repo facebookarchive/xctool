@@ -17,7 +17,7 @@
 
   NSString *testHostPath = _buildSettings[@"TEST_HOST"];
 
-  NSArray *libraries = @[[PathToXCToolBinaries() stringByAppendingPathComponent:@"otest-lib-osx.dylib"],
+  NSArray *libraries = @[[PathToXCToolBinaries() stringByAppendingPathComponent:@"otest-shim-osx.dylib"],
                          [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection"],
                          ];
 

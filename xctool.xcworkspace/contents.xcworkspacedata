@@ -11,7 +11,7 @@
       location = "group:xcodebuild-lib/xcodebuild-lib.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:otest-lib/otest-lib.xcodeproj">
+      location = "group:otest-shim/otest-shim.xcodeproj">
    </FileRef>
    <Group
       location = "group:xcodebuild-lib/../Configurations"
