@@ -252,7 +252,7 @@ static NSString *StringByStandardizingPath(NSString *path)
   [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
   [task setArguments:[self.subjectXcodeBuildArguments arrayByAddingObject:@"-showBuildSettings"]];
   [task setEnvironment:@{
-   @"DYLD_INSERT_LIBRARIES" : [PathToXCToolBinaries() stringByAppendingPathComponent:@"xcodebuild-fastsettings-lib.dylib"],
+   @"DYLD_INSERT_LIBRARIES" : [PathToXCToolBinaries() stringByAppendingPathComponent:@"xcodebuild-fastsettings-shim.dylib"],
    @"SHOW_ONLY_BUILD_SETTINGS_FOR_FIRST_BUILDABLE" : @"YES"
    }];
 

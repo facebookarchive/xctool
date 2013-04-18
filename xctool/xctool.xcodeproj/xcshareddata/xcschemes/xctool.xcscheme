@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "283CCAA816C2EE7200F2E343"
-               BuildableName = "xcodebuild-lib.dylib"
-               BlueprintName = "xcodebuild-lib"
-               ReferencedContainer = "container:../xcodebuild-lib/xcodebuild-lib.xcodeproj">
+               BuildableName = "xcodebuild-shim.dylib"
+               BlueprintName = "xcodebuild-shim"
+               ReferencedContainer = "container:../xcodebuild-shim/xcodebuild-shim.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -57,9 +57,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "287A380D16C876A800319E81"
-               BuildableName = "xcodebuild-fastsettings-lib.dylib"
-               BlueprintName = "xcodebuild-fastsettings-lib"
-               ReferencedContainer = "container:../xcodebuild-lib/xcodebuild-lib.xcodeproj">
+               BuildableName = "xcodebuild-fastsettings-shim.dylib"
+               BlueprintName = "xcodebuild-fastsettings-shim"
+               ReferencedContainer = "container:../xcodebuild-shim/xcodebuild-shim.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry

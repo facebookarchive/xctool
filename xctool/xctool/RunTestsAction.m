@@ -228,7 +228,7 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
                               @"-showBuildSettings",
                               ]]];
   [settingsTask setEnvironment:@{
-   @"DYLD_INSERT_LIBRARIES" : [PathToXCToolBinaries() stringByAppendingPathComponent:@"xcodebuild-fastsettings-lib.dylib"],
+   @"DYLD_INSERT_LIBRARIES" : [PathToXCToolBinaries() stringByAppendingPathComponent:@"xcodebuild-fastsettings-shim.dylib"],
    @"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET" : testableTarget,
    }];
 

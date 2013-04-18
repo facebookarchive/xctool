@@ -8,23 +8,24 @@
 
 /* Begin PBXBuildFile section */
 		283CCAAD16C2EE7200F2E343 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283CCAAC16C2EE7200F2E343 /* Cocoa.framework */; };
-		283CCAB716C2EE7200F2E343 /* xcodebuild_lib.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCAB616C2EE7200F2E343 /* xcodebuild_lib.m */; };
+		283CCAB716C2EE7200F2E343 /* xcodebuild_shim.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCAB616C2EE7200F2E343 /* xcodebuild_shim.m */; };
+		285F6F74171FD297001295EC /* xcodebuild-fastsettings-shim-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 285F6F73171FD297001295EC /* xcodebuild-fastsettings-shim-Prefix.pch */; };
 		287A380F16C876A800319E81 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283CCAAC16C2EE7200F2E343 /* Cocoa.framework */; };
-		287A381516C876A800319E81 /* xcodebuild_fastsettings_lib.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A381416C876A800319E81 /* xcodebuild_fastsettings_lib.m */; };
+		287A381516C876A800319E81 /* xcodebuild_fastsettings_shim.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A381416C876A800319E81 /* xcodebuild_fastsettings_shim.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		283CCAA916C2EE7200F2E343 /* xcodebuild-lib.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "xcodebuild-lib.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		283CCAA916C2EE7200F2E343 /* xcodebuild-shim.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "xcodebuild-shim.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		283CCAAC16C2EE7200F2E343 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		283CCAAF16C2EE7200F2E343 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		283CCAB016C2EE7200F2E343 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		283CCAB116C2EE7200F2E343 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		283CCAB416C2EE7200F2E343 /* xcodebuild-lib-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "xcodebuild-lib-Prefix.pch"; sourceTree = "<group>"; };
-		283CCAB616C2EE7200F2E343 /* xcodebuild_lib.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = xcodebuild_lib.m; sourceTree = "<group>"; };
-		287A380E16C876A800319E81 /* xcodebuild-fastsettings-lib.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "xcodebuild-fastsettings-lib.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
-		287A381216C876A800319E81 /* xcodebuild-fastsettings-lib-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "xcodebuild-fastsettings-lib-Prefix.pch"; sourceTree = "<group>"; };
-		287A381416C876A800319E81 /* xcodebuild_fastsettings_lib.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = xcodebuild_fastsettings_lib.m; sourceTree = "<group>"; };
-		28E9B98116C2F2CE00A52E4D /* xcodebuild-lib.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "xcodebuild-lib.xcconfig"; sourceTree = "<group>"; };
+		283CCAB416C2EE7200F2E343 /* xcodebuild-shim-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "xcodebuild-shim-Prefix.pch"; sourceTree = "<group>"; };
+		283CCAB616C2EE7200F2E343 /* xcodebuild_shim.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = xcodebuild_shim.m; sourceTree = "<group>"; };
+		285F6F72171FD14F001295EC /* xcodebuild-shim.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "xcodebuild-shim.xcconfig"; sourceTree = "<group>"; };
+		285F6F73171FD297001295EC /* xcodebuild-fastsettings-shim-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "xcodebuild-fastsettings-shim-Prefix.pch"; sourceTree = "<group>"; };
+		287A380E16C876A800319E81 /* xcodebuild-fastsettings-shim.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "xcodebuild-fastsettings-shim.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		287A381416C876A800319E81 /* xcodebuild_fastsettings_shim.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = xcodebuild_fastsettings_shim.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,19 +51,19 @@
 		283CCAA016C2EE7200F2E343 = {
 			isa = PBXGroup;
 			children = (
-				28E9B98116C2F2CE00A52E4D /* xcodebuild-lib.xcconfig */,
+				285F6F72171FD14F001295EC /* xcodebuild-shim.xcconfig */,
 				283CCAAB16C2EE7200F2E343 /* Frameworks */,
 				283CCAAA16C2EE7200F2E343 /* Products */,
-				287A381016C876A800319E81 /* xcodebuild-fastsettings-lib */,
-				283CCAB216C2EE7200F2E343 /* xcodebuild-lib */,
+				287A381016C876A800319E81 /* xcodebuild-fastsettings-shim */,
+				283CCAB216C2EE7200F2E343 /* xcodebuild-shim */,
 			);
 			sourceTree = "<group>";
 		};
 		283CCAAA16C2EE7200F2E343 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				283CCAA916C2EE7200F2E343 /* xcodebuild-lib.dylib */,
-				287A380E16C876A800319E81 /* xcodebuild-fastsettings-lib.dylib */,
+				283CCAA916C2EE7200F2E343 /* xcodebuild-shim.dylib */,
+				287A380E16C876A800319E81 /* xcodebuild-fastsettings-shim.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -86,36 +87,36 @@
 			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
-		283CCAB216C2EE7200F2E343 /* xcodebuild-lib */ = {
+		283CCAB216C2EE7200F2E343 /* xcodebuild-shim */ = {
 			isa = PBXGroup;
 			children = (
-				283CCAB616C2EE7200F2E343 /* xcodebuild_lib.m */,
+				283CCAB616C2EE7200F2E343 /* xcodebuild_shim.m */,
 				283CCAB316C2EE7200F2E343 /* Supporting Files */,
 			);
-			path = "xcodebuild-lib";
+			path = "xcodebuild-shim";
 			sourceTree = "<group>";
 		};
 		283CCAB316C2EE7200F2E343 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				283CCAB416C2EE7200F2E343 /* xcodebuild-lib-Prefix.pch */,
+				283CCAB416C2EE7200F2E343 /* xcodebuild-shim-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		287A381016C876A800319E81 /* xcodebuild-fastsettings-lib */ = {
+		287A381016C876A800319E81 /* xcodebuild-fastsettings-shim */ = {
 			isa = PBXGroup;
 			children = (
-				287A381416C876A800319E81 /* xcodebuild_fastsettings_lib.m */,
+				287A381416C876A800319E81 /* xcodebuild_fastsettings_shim.m */,
 				287A381116C876A800319E81 /* Supporting Files */,
 			);
-			path = "xcodebuild-fastsettings-lib";
+			path = "xcodebuild-fastsettings-shim";
 			sourceTree = "<group>";
 		};
 		287A381116C876A800319E81 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				287A381216C876A800319E81 /* xcodebuild-fastsettings-lib-Prefix.pch */,
+				285F6F73171FD297001295EC /* xcodebuild-fastsettings-shim-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -134,15 +135,16 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				285F6F74171FD297001295EC /* xcodebuild-fastsettings-shim-Prefix.pch in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		283CCAA816C2EE7200F2E343 /* xcodebuild-lib */ = {
+		283CCAA816C2EE7200F2E343 /* xcodebuild-shim */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 283CCABA16C2EE7200F2E343 /* Build configuration list for PBXNativeTarget "xcodebuild-lib" */;
+			buildConfigurationList = 283CCABA16C2EE7200F2E343 /* Build configuration list for PBXNativeTarget "xcodebuild-shim" */;
 			buildPhases = (
 				283CCAA516C2EE7200F2E343 /* Sources */,
 				283CCAA616C2EE7200F2E343 /* Frameworks */,
@@ -152,14 +154,14 @@
 			);
 			dependencies = (
 			);
-			name = "xcodebuild-lib";
-			productName = "xcodebuild-lib";
-			productReference = 283CCAA916C2EE7200F2E343 /* xcodebuild-lib.dylib */;
+			name = "xcodebuild-shim";
+			productName = "xcodebuild-shim";
+			productReference = 283CCAA916C2EE7200F2E343 /* xcodebuild-shim.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
-		287A380D16C876A800319E81 /* xcodebuild-fastsettings-lib */ = {
+		287A380D16C876A800319E81 /* xcodebuild-fastsettings-shim */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 287A381816C876A800319E81 /* Build configuration list for PBXNativeTarget "xcodebuild-fastsettings-lib" */;
+			buildConfigurationList = 287A381816C876A800319E81 /* Build configuration list for PBXNativeTarget "xcodebuild-fastsettings-shim" */;
 			buildPhases = (
 				287A380A16C876A800319E81 /* Sources */,
 				287A380B16C876A800319E81 /* Frameworks */,
@@ -169,9 +171,9 @@
 			);
 			dependencies = (
 			);
-			name = "xcodebuild-fastsettings-lib";
-			productName = "xcodebuild-fastsettings-lib";
-			productReference = 287A380E16C876A800319E81 /* xcodebuild-fastsettings-lib.dylib */;
+			name = "xcodebuild-fastsettings-shim";
+			productName = "xcodebuild-fastsettings-shim";
+			productReference = 287A380E16C876A800319E81 /* xcodebuild-fastsettings-shim.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
 /* End PBXNativeTarget section */
@@ -183,7 +185,7 @@
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Fred Potter";
 			};
-			buildConfigurationList = 283CCAA416C2EE7200F2E343 /* Build configuration list for PBXProject "xcodebuild-lib" */;
+			buildConfigurationList = 283CCAA416C2EE7200F2E343 /* Build configuration list for PBXProject "xcodebuild-shim" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -195,8 +197,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				283CCAA816C2EE7200F2E343 /* xcodebuild-lib */,
-				287A380D16C876A800319E81 /* xcodebuild-fastsettings-lib */,
+				283CCAA816C2EE7200F2E343 /* xcodebuild-shim */,
+				287A380D16C876A800319E81 /* xcodebuild-fastsettings-shim */,
 			);
 		};
 /* End PBXProject section */
@@ -206,7 +208,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				283CCAB716C2EE7200F2E343 /* xcodebuild_lib.m in Sources */,
+				283CCAB716C2EE7200F2E343 /* xcodebuild_shim.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,7 +216,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				287A381516C876A800319E81 /* xcodebuild_fastsettings_lib.m in Sources */,
+				287A381516C876A800319E81 /* xcodebuild_fastsettings_shim.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -223,7 +225,6 @@
 /* Begin XCBuildConfiguration section */
 		283CCAB816C2EE7200F2E343 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 28E9B98116C2F2CE00A52E4D /* xcodebuild-lib.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
@@ -255,7 +256,7 @@
 		};
 		283CCAB916C2EE7200F2E343 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 28E9B98116C2F2CE00A52E4D /* xcodebuild-lib.xcconfig */;
+			baseConfigurationReference = 285F6F72171FD14F001295EC /* xcodebuild-shim.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
@@ -284,9 +285,9 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				"GCC_ENABLE_OBJC_GC[arch=x86_64]" = supported;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "xcodebuild-lib/xcodebuild-lib-Prefix.pch";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "xcodebuild-shim/xcodebuild-shim-Prefix.pch";
+				PRODUCT_NAME = "xcodebuild-shim";
 			};
 			name = Debug;
 		};
@@ -295,9 +296,9 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "xcodebuild-lib/xcodebuild-lib-Prefix.pch";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "xcodebuild-shim/xcodebuild-shim-Prefix.pch";
+				PRODUCT_NAME = "xcodebuild-shim";
 			};
 			name = Release;
 		};
@@ -306,8 +307,8 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "xcodebuild-fastsettings-lib/xcodebuild-fastsettings-lib-Prefix.pch";
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "xcodebuild-fastsettings-shim/xcodebuild-fastsettings-shim-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -317,8 +318,8 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "xcodebuild-fastsettings-lib/xcodebuild-fastsettings-lib-Prefix.pch";
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "xcodebuild-fastsettings-shim/xcodebuild-fastsettings-shim-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -326,7 +327,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		283CCAA416C2EE7200F2E343 /* Build configuration list for PBXProject "xcodebuild-lib" */ = {
+		283CCAA416C2EE7200F2E343 /* Build configuration list for PBXProject "xcodebuild-shim" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				283CCAB816C2EE7200F2E343 /* Debug */,
@@ -335,7 +336,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		283CCABA16C2EE7200F2E343 /* Build configuration list for PBXNativeTarget "xcodebuild-lib" */ = {
+		283CCABA16C2EE7200F2E343 /* Build configuration list for PBXNativeTarget "xcodebuild-shim" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				283CCABB16C2EE7200F2E343 /* Debug */,
@@ -344,7 +345,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		287A381816C876A800319E81 /* Build configuration list for PBXNativeTarget "xcodebuild-fastsettings-lib" */ = {
+		287A381816C876A800319E81 /* Build configuration list for PBXNativeTarget "xcodebuild-fastsettings-shim" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				287A381616C876A800319E81 /* Debug */,

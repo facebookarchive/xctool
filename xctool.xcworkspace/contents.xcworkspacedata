@@ -8,7 +8,7 @@
       location = "group:app-uninstaller/app-uninstaller.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:xcodebuild-lib/xcodebuild-lib.xcodeproj">
+      location = "group:xcodebuild-shim/xcodebuild-shim.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:otest-shim/otest-shim.xcodeproj">

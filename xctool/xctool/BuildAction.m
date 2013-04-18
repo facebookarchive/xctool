@@ -19,7 +19,7 @@
   [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
   [task setArguments:[[options xcodeBuildArgumentsForSubject] arrayByAddingObject:command]];
   [task setEnvironment:@{
-   @"DYLD_INSERT_LIBRARIES" : [PathToXCToolBinaries() stringByAppendingPathComponent:@"xcodebuild-lib.dylib"],
+   @"DYLD_INSERT_LIBRARIES" : [PathToXCToolBinaries() stringByAppendingPathComponent:@"xcodebuild-shim.dylib"],
    @"PATH": @"/usr/bin:/bin:/usr/sbin:/sbin",
    }];
 
