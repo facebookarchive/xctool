@@ -60,7 +60,11 @@
 
 - (void)handleEvent:(NSDictionary *)eventDict
 {
+  NSAssert(([eventDict count] > 0), @"Event was empty.");
+
   NSString *event = eventDict[@"event"];
+  NSAssert(event != nil && [event length] > 0, @"Event name was empty for event: %@", eventDict);
+
   NSMutableString *selectorName = [NSMutableString string];
 
   int i = 0;
