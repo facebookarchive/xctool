@@ -139,12 +139,11 @@
 
   for (NSDictionary *buildable in buildableList) {
     BOOL add;
-    if ([[buildable[@"executable"] pathExtension] isEqualToString:@"octest"]) {
-      // Only add test targets that match the list.
+    if (targets.count > 0 && [[buildable[@"executable"] pathExtension] isEqualToString:@"octest"]) {
+      // If we're filtering by target, only add targets that match.
       add = [targets containsObject:buildable[@"target"]];
     } else {
-      // Always add non-test dependents, since they'll be libraries needed to build the test.
-      add = YES;
+      add = ![buildable[@"skipped"] boolValue];
     }
     if (add) {
       [result addObject:buildable];
@@ -175,9 +174,7 @@
     }
   }];
 
-  if (self.onlyList.count > 0) {
-    buildableList = [self buildableList:buildableList matchingTargets:self.onlyList];
-  }
+  buildableList = [self buildableList:buildableList matchingTargets:self.onlyList];
 
   if (![BuildTestsAction buildTestables:buildableList
                           command:@"build"

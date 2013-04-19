@@ -159,10 +159,12 @@ static NSString *StringByStandardizingPath(NSString *path)
     abort();
   }
 
-  NSArray *testableReferenceNodes = [doc nodesForXPath:@"//TestableReference[@skipped='NO']" error:nil];
+  NSArray *testableReferenceNodes = [doc nodesForXPath:@"//TestableReference" error:nil];
 
   NSMutableArray *testables = [NSMutableArray array];
   for (NSXMLElement *node in testableReferenceNodes) {
+    NSNumber *skipped =
+      [[[node attributeForName:@"skipped"] stringValue] isEqualToString:@"YES"] ? @YES : @NO;
     NSArray *buildableReferences = [node nodesForXPath:@"BuildableReference" error:nil];
 
     assert(buildableReferences.count == 1);
@@ -194,7 +196,7 @@ static NSString *StringByStandardizingPath(NSString *path)
       senTestInvertScope = NO;
     }
 
-    [testables addObject:@{@"projectPath" : projectPath, @"target": target, @"executable": executable, @"senTestInvertScope": @(senTestInvertScope), @"senTestList": senTestList}];
+    [testables addObject:@{@"projectPath" : projectPath, @"target": target, @"executable": executable, @"senTestInvertScope": @(senTestInvertScope), @"senTestList": senTestList, @"skipped": skipped}];
   }
 
   return testables;

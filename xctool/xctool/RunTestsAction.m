@@ -167,8 +167,14 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
   NSArray *testables = nil;
 
   if (self.onlyList.count == 0) {
-    // Use whatever we found in the scheme.
-    testables = xcodeSubjectInfo.testables;
+    // Use whatever we found in the scheme, except for skipped tests.
+    NSMutableArray *unskipped = [NSMutableArray array];
+    for (NSDictionary *testable in xcodeSubjectInfo.testables) {
+      if (![testable[@"skipped"] boolValue]) {
+        [unskipped addObject:testable];
+      }
+    }
+    testables = unskipped;
   } else {
     // Munge the list of testables from the scheme to only include those given.
     NSMutableArray *newTestables = [NSMutableArray array];
