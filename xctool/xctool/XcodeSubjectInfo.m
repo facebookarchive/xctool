@@ -227,10 +227,12 @@ static NSString *StringByStandardizingPath(NSString *path)
     assert([[NSFileManager defaultManager] fileExistsAtPath:projectPath]);
 
     NSString *target = [[buildableReference attributeForName:@"BlueprintName"] stringValue];
+    NSString *executable = [[buildableReference attributeForName:@"BuildableName"] stringValue];
 
     [buildables addObject:@{
      @"projectPath" : projectPath,
      @"target": target,
+     @"executable":executable,
      }];
   }
 

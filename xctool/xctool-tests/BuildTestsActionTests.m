@@ -260,11 +260,41 @@
                                       @"-showBuildSettings"
                                       ];
 
-  // We'll expect to see another xcodebuild call to build the TestProject-LibraryTests
+  // We'll expect to see another xcodebuild call to build the TestProject-Library
   NSTask *task2 = [FakeTask fakeTaskWithExitStatus:0
                                 standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-LibraryTests-build.txt"
                                  standardErrorPath:nil];
   NSArray *task2ExpectedArguments = @[
+                                      @"-configuration", @"Debug",
+                                      @"-sdk", @"iphonesimulator6.0",
+                                      @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
+                                      @"-target", @"TestProject-Library",
+                                      @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
+                                      @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
+                                      @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
+                                      @"build",
+                                      ];
+
+  // We'll expect to see another xcodebuild call to build the TestProject-OtherLibrary
+  NSTask *task3 = [FakeTask fakeTaskWithExitStatus:0
+                                standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-LibraryTests-build.txt"
+                                 standardErrorPath:nil];
+  NSArray *task3ExpectedArguments = @[
+                                      @"-configuration", @"Debug",
+                                      @"-sdk", @"iphonesimulator6.0",
+                                      @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
+                                      @"-target", @"TestProject-OtherLib",
+                                      @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
+                                      @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
+                                      @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
+                                      @"build",
+                                      ];
+
+  // We'll expect to see another xcodebuild call to build the TestProject-LibraryTests
+  NSTask *task4 = [FakeTask fakeTaskWithExitStatus:0
+                                standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-LibraryTests-build.txt"
+                                 standardErrorPath:nil];
+  NSArray *task4ExpectedArguments = @[
                                       @"-configuration", @"Debug",
                                       @"-sdk", @"iphonesimulator6.0",
                                       @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
@@ -275,7 +305,8 @@
                                       @"build",
                                       ];
 
-  NSArray *sequenceOfTasks = @[task1, task2];
+
+  NSArray *sequenceOfTasks = @[task1, task2, task3, task4];
   __block NSUInteger sequenceOffset = 0;
 
   SetTaskInstanceBlock(^(void){
@@ -286,6 +317,8 @@
 
   assertThat(task1.arguments, equalTo(task1ExpectedArguments));
   assertThat(task2.arguments, equalTo(task2ExpectedArguments));
+  assertThat(task3.arguments, equalTo(task3ExpectedArguments));
+  assertThat(task4.arguments, equalTo(task4ExpectedArguments));
   assertThatInt(tool.exitStatus, equalToInt(0));
 }
 

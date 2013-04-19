@@ -138,7 +138,15 @@
   NSMutableArray *result = [NSMutableArray array];
 
   for (NSDictionary *buildable in buildableList) {
-    if ([targets containsObject:buildable[@"target"]]) {
+    BOOL add;
+    if ([[buildable[@"executable"] pathExtension] isEqualToString:@"octest"]) {
+      // Only add test targets that match the list.
+      add = [targets containsObject:buildable[@"target"]];
+    } else {
+      // Always add non-test dependents, since they'll be libraries needed to build the test.
+      add = YES;
+    }
+    if (add) {
       [result addObject:buildable];
     }
   }
