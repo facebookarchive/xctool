@@ -42,7 +42,7 @@
   NSString *testBundlePath = [self testBundlePath];
   BOOL bundleExists = [[NSFileManager defaultManager] fileExistsAtPath:testBundlePath];
 
-  if ([[[NSProcessInfo processInfo] processName] isEqualToString:@"otest"]) {
+  if (IsRunningUnderTest()) {
     // If we're running under test, pretend the bundle exists even if it doesn't.
     bundleExists = YES;
   }

@@ -7,3 +7,4 @@ NSString *PathToXCToolBinaries(void);
 NSString *XcodeDeveloperDirPath(void);
 NSString *MakeTempFileWithPrefix(NSString *prefix);
 NSDictionary *GetAvailableSDKsAndAliases();
+BOOL IsRunningUnderTest();

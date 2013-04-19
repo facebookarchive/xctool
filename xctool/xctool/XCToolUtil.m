@@ -74,7 +74,7 @@ NSString *AbsoluteExecutablePath(void)
 
 NSString *PathToXCToolBinaries(void)
 {
-  if ([[NSString stringWithUTF8String:getprogname()] isEqualToString:@"otest"]) {
+  if (IsRunningUnderTest()) {
     // We're running in the test harness.  Turns out DYLD_LIBRARY_PATH contains the path our
     // build products.
     return [NSProcessInfo processInfo].environment[@"DYLD_LIBRARY_PATH"];
@@ -156,4 +156,11 @@ NSDictionary *GetAvailableSDKsAndAliases()
   }
 
   return result;
+}
+
+BOOL IsRunningUnderTest()
+{
+  NSString *processName = [[NSProcessInfo processInfo] processName];
+  return ([processName isEqualToString:@"otest"] ||
+          [processName isEqualToString:@"otest-x86_64"]);
 }
