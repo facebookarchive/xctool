@@ -79,6 +79,9 @@
 		28FFB00616FF5A2B000CCE2A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FFB00416FF5A21000CCE2A /* QuartzCore.framework */; };
 		324BB4C51725BD990073A862 /* XcodeTargetMatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 324BB4C41725BD990073A862 /* XcodeTargetMatch.m */; };
 		324BB4C61725BDA20073A862 /* XcodeTargetMatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 324BB4C41725BD990073A862 /* XcodeTargetMatch.m */; };
+		32707EE21725FE7F00AF2F53 /* TestActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 32707EE11725FE7F00AF2F53 /* TestActionTests.m */; };
+		32A90C541725F05800C2349E /* TestAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 32A90C521725F05800C2349E /* TestAction.m */; };
+		32A90C551725F05800C2349E /* TestAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 32A90C521725F05800C2349E /* TestAction.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -185,6 +188,10 @@
 		28FFB00416FF5A21000CCE2A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		324BB4C31725BD990073A862 /* XcodeTargetMatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XcodeTargetMatch.h; sourceTree = "<group>"; };
 		324BB4C41725BD990073A862 /* XcodeTargetMatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodeTargetMatch.m; sourceTree = "<group>"; };
+		32707EE11725FE7F00AF2F53 /* TestActionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestActionTests.m; sourceTree = "<group>"; };
+		32707EE31725FE9500AF2F53 /* TestActionInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestActionInternal.h; sourceTree = "<group>"; };
+		32A90C521725F05800C2349E /* TestAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestAction.m; sourceTree = "<group>"; };
+		32A90C531725F05800C2349E /* TestAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestAction.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -227,6 +234,9 @@
 				283479AC16E2A736003C3B77 /* BuildTestsAction.m */,
 				283479B316E2B39B003C3B77 /* RunTestsAction.h */,
 				283479B416E2B39B003C3B77 /* RunTestsAction.m */,
+				32A90C521725F05800C2349E /* TestAction.m */,
+				32A90C531725F05800C2349E /* TestAction.h */,
+				32707EE31725FE9500AF2F53 /* TestActionInternal.h */,
 			);
 			name = Actions;
 			sourceTree = "<group>";
@@ -335,6 +345,7 @@
 				28E9B99116C3037E00A52E4D /* FakeTask.m */,
 				28AC9E2F16DB3478009E5B9A /* OptionsTests.m */,
 				283479A416E1B242003C3B77 /* RunTestsActionTests.m */,
+				32707EE11725FE7F00AF2F53 /* TestActionTests.m */,
 				283CCAC616C2EE9900F2E343 /* Supporting Files */,
 				283479B716E3EBE5003C3B77 /* TestUtil.h */,
 				283479B816E3EBE5003C3B77 /* TestUtil.m */,
@@ -502,6 +513,7 @@
 				288B9FB8171A50C1008F0BDF /* OCUnitOSXLogicTestRunner.m in Sources */,
 				288B9FBC171A5509008F0BDF /* OCUnitOSXAppTestRunner.m in Sources */,
 				324BB4C51725BD990073A862 /* XcodeTargetMatch.m in Sources */,
+				32A90C541725F05800C2349E /* TestAction.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -545,6 +557,8 @@
 				288B9FB9171A50C1008F0BDF /* OCUnitOSXLogicTestRunner.m in Sources */,
 				288B9FBD171A5509008F0BDF /* OCUnitOSXAppTestRunner.m in Sources */,
 				324BB4C61725BDA20073A862 /* XcodeTargetMatch.m in Sources */,
+				32A90C551725F05800C2349E /* TestAction.m in Sources */,
+				32707EE21725FE7F00AF2F53 /* TestActionTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

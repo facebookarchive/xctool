@@ -6,6 +6,7 @@
 #import "CleanAction.h"
 #import "Reporter.h"
 #import "RunTestsAction.h"
+#import "TestAction.h"
 #import "XCToolUtil.h"
 #import "XcodeSubjectInfo.h"
 #import "XcodeTargetMatch.h"
@@ -18,6 +19,7 @@
            [BuildAction class],
            [BuildTestsAction class],
            [RunTestsAction class],
+           [TestAction class],
            ];
 }
 
