@@ -64,7 +64,7 @@
 - (void)testWorkspaceOrProjectAreRequired
 {
   [TestUtil assertThatOptionsValidateWithArgumentList:@[]
-                            failsWithMessage:@"Either -workspace or -project must be specified."];
+                                     failsWithMessage:@"Either -workspace, -project, or -find-target must be specified."];
   [TestUtil assertThatOptionsValidateWithArgumentList:@[
    @"-workspace", @"Something.xcworkspace",
    @"-project", @"Something.xcodeproj"
@@ -139,6 +139,25 @@
    @"-scheme", @"TestProject-Library-Bogus",
    ]
                             failsWithMessage:@"Can't find scheme 'TestProject-Library-Bogus'. Possible schemes include: TestProject-Library"];
+}
+
+- (void)testFindTargetWorks
+{
+  Options *options = [TestUtil optionsFromArgumentList:@[@"-find-target", @"foo"]];
+  assertThat(options.findTarget, equalTo(@"foo"));
+}
+
+- (void)testFindTargetPathWorks
+{
+  Options *options = [TestUtil optionsFromArgumentList:@[@"-find-target", @"foo", @"-find-target-path", @"bar"]];
+  assertThat(options.findTarget, equalTo(@"foo"));
+  assertThat(options.findTargetPath, equalTo(@"bar"));
+}
+
+- (void)testFindTargetPathRequiresFindTarget
+{
+  [TestUtil assertThatOptionsValidateWithArgumentList:@[@"-workspace", @"blah", @"-find-target-path", @"foo"]
+                                     failsWithMessage:@"If -find-target-path is specified, -find-target must be specified."];
 }
 
 - (void)testSDKMustBeValid

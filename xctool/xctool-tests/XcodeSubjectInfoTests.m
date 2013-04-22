@@ -4,6 +4,7 @@
 #import <SenTestingKit/SenTestingKit.h>
 
 #import "XcodeSubjectInfo.h"
+#import "XcodeTargetMatch.h"
 
 @interface XcodeSubjectInfoTests : SenTestCase
 @end
@@ -69,6 +70,21 @@
   // With Xcode, even plain projects have a workspace - it's just nested within the xcodeprojec
   NSArray *paths = [XcodeSubjectInfo projectPathsInWorkspace:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj/project.xcworkspace"];
   assertThat(paths, equalTo(@[TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"]));
+}
+
+- (void)testFindProject
+{
+  // TestProject-LibraryTests
+  XcodeTargetMatch *match;
+  BOOL ret = [XcodeSubjectInfo findTarget:@"TestProject-LibraryTests"
+                              inDirectory:TEST_DATA @"TestWorkspace-Library"
+                          bestTargetMatch:&match];
+  assertThatBool(ret, equalToBool(YES));
+  assertThat(match.workspacePath, equalTo(nil));
+  assertThat(
+    match.projectPath,
+    containsString(@"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj"));
+  assertThat(match.schemeName, equalTo(@"TestProject-Library"));
 }
 
 @end

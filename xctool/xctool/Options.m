@@ -6,8 +6,9 @@
 #import "CleanAction.h"
 #import "Reporter.h"
 #import "RunTestsAction.h"
-#import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
+#import "XcodeSubjectInfo.h"
+#import "XcodeTargetMatch.h"
 
 @implementation Options
 
@@ -42,6 +43,16 @@
                      description:@"sheme to use for building or testing"
                        paramName:@"NAME"
                            mapTo:@selector(setScheme:)],
+    [Action actionOptionWithName:@"find-target"
+                         aliases:nil
+                     description:@"Search for the workspace/project/scheme to build the target"
+                       paramName:@"TARGET"
+                           mapTo:@selector(setFindTarget:)],
+    [Action actionOptionWithName:@"find-target-path"
+                         aliases:nil
+                     description:@"Path to search for -find-target."
+                       paramName:@"PATH"
+                           mapTo:@selector(setFindTargetPath:)],
     [Action actionOptionWithName:@"sdk"
                          aliases:nil
                      description:@"sdk to use for building (e.g. 6.0, 6.1)"
@@ -167,13 +178,35 @@
     return (BOOL)(exists && isDirectory);
   };
 
-  if (self.workspace == nil && self.project == nil) {
-    *errorMessage = @"Either -workspace or -project must be specified.";
+  if (self.workspace == nil && self.project == nil && self.findTarget == nil) {
+    *errorMessage = @"Either -workspace, -project, or -find-target must be specified.";
     return NO;
   } else if (self.workspace != nil && self.project != nil) {
     *errorMessage = @"Either -workspace or -project must be specified, but not both.";
     return NO;
+  } else if (self.findTarget != nil && (self.workspace != nil || self.project != nil || self.scheme != nil)) {
+    *errorMessage = @"If -find-target is specified, -workspace, -project, and -scheme must not be specified.";
+    return NO;
   }
+
+  if (self.findTargetPath != nil && self.findTarget == nil) {
+    *errorMessage = @"If -find-target-path is specified, -find-target must be specified.";
+    return NO;
+  }
+
+  if (self.findTarget != nil) {
+    XcodeTargetMatch *targetMatch;
+    if (![XcodeSubjectInfo findTarget:self.findTarget
+                          inDirectory:self.findTargetPath ?: @"."
+                      bestTargetMatch:&targetMatch]) {
+      *errorMessage = [NSString stringWithFormat:@"Couldn't find workspace/project and scheme for target: %@", self.findTarget];
+      return NO;
+    }
+
+    self.workspace = targetMatch.workspacePath;
+    self.project = targetMatch.projectPath;
+    self.scheme = targetMatch.schemeName;
+  };
 
   if (self.scheme == nil) {
     *errorMessage = @"Missing the required -scheme argument.";

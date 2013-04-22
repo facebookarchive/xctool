@@ -77,6 +77,8 @@
 		28E9B9EC16C34F2B00A52E4D /* TextReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9EA16C34F2B00A52E4D /* TextReporter.m */; };
 		28FFB00516FF5A21000CCE2A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FFB00416FF5A21000CCE2A /* QuartzCore.framework */; };
 		28FFB00616FF5A2B000CCE2A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FFB00416FF5A21000CCE2A /* QuartzCore.framework */; };
+		324BB4C51725BD990073A862 /* XcodeTargetMatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 324BB4C41725BD990073A862 /* XcodeTargetMatch.m */; };
+		324BB4C61725BDA20073A862 /* XcodeTargetMatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 324BB4C41725BD990073A862 /* XcodeTargetMatch.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -181,6 +183,8 @@
 		28E9B9E916C34F2B00A52E4D /* TextReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextReporter.h; sourceTree = "<group>"; };
 		28E9B9EA16C34F2B00A52E4D /* TextReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextReporter.m; sourceTree = "<group>"; };
 		28FFB00416FF5A21000CCE2A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		324BB4C31725BD990073A862 /* XcodeTargetMatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XcodeTargetMatch.h; sourceTree = "<group>"; };
+		324BB4C41725BD990073A862 /* XcodeTargetMatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodeTargetMatch.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -291,6 +295,8 @@
 				28E9B9D616C3275200A52E4D /* OCUnitTestRunner.m */,
 				287BF08216F1A97900590E06 /* XcodeSubjectInfo.h */,
 				287BF08316F1A97900590E06 /* XcodeSubjectInfo.m */,
+				324BB4C31725BD990073A862 /* XcodeTargetMatch.h */,
+				324BB4C41725BD990073A862 /* XcodeTargetMatch.m */,
 				28ACFC8116FBA888004BAF33 /* TaskUtil.h */,
 				28ACFC8216FBA888004BAF33 /* TaskUtil.m */,
 				283EAF10170288FE00CE0A0C /* OCUnitCrashFilter.h */,
@@ -495,6 +501,7 @@
 				283EAF591704C22000CE0A0C /* PhabricatorReporter.m in Sources */,
 				288B9FB8171A50C1008F0BDF /* OCUnitOSXLogicTestRunner.m in Sources */,
 				288B9FBC171A5509008F0BDF /* OCUnitOSXAppTestRunner.m in Sources */,
+				324BB4C51725BD990073A862 /* XcodeTargetMatch.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -537,6 +544,7 @@
 				283EAF5D1704C62E00CE0A0C /* PhabricatorReporterTests.m in Sources */,
 				288B9FB9171A50C1008F0BDF /* OCUnitOSXLogicTestRunner.m in Sources */,
 				288B9FBD171A5509008F0BDF /* OCUnitOSXAppTestRunner.m in Sources */,
+				324BB4C61725BDA20073A862 /* XcodeTargetMatch.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

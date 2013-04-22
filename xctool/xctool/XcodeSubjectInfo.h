@@ -1,6 +1,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class XcodeTargetMatch;
+
 /**
  * XcodeSubjectInfo offers up info about the subject (either a workspace/scheme pair, or
  * project/scheme pair) being built or tested.
@@ -40,6 +42,15 @@
  * directory since either may contain xcscheme files.
  */
 + (NSArray *)schemePathsInContainer:(NSString *)project;
+
+/**
+ * Searches for the target in all the workspaces under the specified directory.
+ * If found, returns YES and sets *bestTargetMatchOut appropriately.
+ * Otherwise, returns NO.
+ */
++ (BOOL)findTarget:(NSString *)target
+       inDirectory:(NSString *)directory
+   bestTargetMatch:(XcodeTargetMatch **)bestTargetMatchOut;
 
 - (NSDictionary *)testableWithTarget:(NSString *)target;
 
