@@ -159,6 +159,7 @@ static NSString *BasePathFromSchemePath(NSString *schemePath) {
 
 + (BOOL)findTarget:(NSString *)target
        inDirectory:(NSString *)directory
+      excludePaths:(NSArray *)excludePaths
    bestTargetMatch:(XcodeTargetMatch **)bestTargetMatchOut
 {
   NSFileManager *fm = [NSFileManager defaultManager];
@@ -177,6 +178,11 @@ static NSString *BasePathFromSchemePath(NSString *schemePath) {
     NSNumber *isDirectory;
     [url getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:NULL];
     if (![isDirectory boolValue]) {
+      continue;
+    }
+
+    if ([excludePaths containsObject:fileName]) {
+      [dirEnum skipDescendents];
       continue;
     }
 

@@ -55,6 +55,11 @@
                      description:@"Path to search for -find-target."
                        paramName:@"PATH"
                            mapTo:@selector(setFindTargetPath:)],
+    [Action actionOptionWithName:@"find-target-exclude-paths"
+                         aliases:nil
+                     description:@"Colon-separated list of paths to exclude for -find-target."
+                       paramName:@"PATHS"
+                           mapTo:@selector(setFindTargetExcludePathsFromString:)],
     [Action actionOptionWithName:@"sdk"
                          aliases:nil
                      description:@"sdk to use for building (e.g. 6.0, 6.1)"
@@ -122,6 +127,7 @@
   self.reporters = nil;
   self.buildSettings = nil;
   self.actions = nil;
+  self.findTargetExcludePaths = nil;
   [super dealloc];
 }
 
@@ -200,6 +206,7 @@
     XcodeTargetMatch *targetMatch;
     if (![XcodeSubjectInfo findTarget:self.findTarget
                           inDirectory:self.findTargetPath ?: @"."
+                         excludePaths:self.findTargetExcludePaths ?: @[]
                       bestTargetMatch:&targetMatch]) {
       *errorMessage = [NSString stringWithFormat:@"Couldn't find workspace/project and scheme for target: %@", self.findTarget];
       return NO;
@@ -387,6 +394,11 @@
   [arguments addObjectsFromArray:[self commonXcodeBuildArguments]];
 
   return arguments;
+}
+
+- (void)setFindTargetExcludePathsFromString:(NSString *)string
+{
+  self.findTargetExcludePaths = [string componentsSeparatedByString:@":"];
 }
 
 @end

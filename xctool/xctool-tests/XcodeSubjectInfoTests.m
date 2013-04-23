@@ -78,6 +78,7 @@
   XcodeTargetMatch *match;
   BOOL ret = [XcodeSubjectInfo findTarget:@"TestProject-LibraryTests"
                               inDirectory:TEST_DATA @"TestWorkspace-Library"
+                             excludePaths:@[]
                           bestTargetMatch:&match];
   assertThatBool(ret, equalToBool(YES));
   assertThat(match.workspacePath, equalTo(nil));

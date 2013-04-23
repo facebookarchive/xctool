@@ -50,6 +50,7 @@
  */
 + (BOOL)findTarget:(NSString *)target
        inDirectory:(NSString *)directory
+      excludePaths:(NSArray *)excludePaths
    bestTargetMatch:(XcodeTargetMatch **)bestTargetMatchOut;
 
 - (NSDictionary *)testableWithTarget:(NSString *)target;
