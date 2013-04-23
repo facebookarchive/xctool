@@ -16,4 +16,7 @@ if [[ $? -ne 0 ]]; then
   exit 1
 fi
 
-"$XCTOOL_DIR"/build/xctool "$@"
+# Will be a short git hash or just '.' if we're not in a git repo.
+REVISION=$(git rev-parse --short HEAD 2> /dev/null || echo ".")
+
+"$XCTOOL_DIR"/build/$REVISION/Products/Release/xctool "$@"
