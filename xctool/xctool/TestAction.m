@@ -67,7 +67,9 @@
 
 - (void)addOnly:(NSString *)argument
 {
-  [_buildTestsAction.onlyList addObject:argument];
+  // build-tests takes only a target argument, where run-tests takes Target:Class/method.
+  NSString *buildTestsOnlyArg = [[argument componentsSeparatedByString:@":"] objectAtIndex:0];
+  [_buildTestsAction.onlyList addObject:buildTestsOnlyArg];
   [_runTestsAction.onlyList addObject:argument];
 }
 
