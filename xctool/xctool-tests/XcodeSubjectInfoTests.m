@@ -74,10 +74,9 @@
 
 - (void)testFindProject
 {
-  // TestProject-LibraryTests
   XcodeTargetMatch *match;
   BOOL ret = [XcodeSubjectInfo findTarget:@"TestProject-LibraryTests"
-                              inDirectory:TEST_DATA @"TestWorkspace-Library"
+                              inDirectory:TEST_DATA @"TestWorkspace-Library/TestProject-Library"
                              excludePaths:@[]
                           bestTargetMatch:&match];
   assertThatBool(ret, equalToBool(YES));
@@ -85,6 +84,23 @@
   assertThat(
     match.projectPath,
     containsString(@"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj"));
+  assertThat(match.schemeName, equalTo(@"TestProject-Library"));
+}
+
+- (void)testFindWorkspacePreferredOverProject
+{
+  XcodeTargetMatch *match;
+  BOOL ret = [XcodeSubjectInfo findTarget:@"TestProject-LibraryTests"
+                              inDirectory:TEST_DATA @"TestWorkspace-Library"
+                             excludePaths:@[]
+                          bestTargetMatch:&match];
+  assertThatBool(ret, equalToBool(YES));
+  assertThat(
+    match.workspacePath,
+    containsString(@"TestWorkspace-Library/TestWorkspace-Library.xcworkspace"));
+  assertThat(
+    match.projectPath,
+    equalTo(nil));
   assertThat(match.schemeName, equalTo(@"TestProject-Library"));
 }
 

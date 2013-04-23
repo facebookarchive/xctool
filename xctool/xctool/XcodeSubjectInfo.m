@@ -201,15 +201,25 @@ static NSString *BasePathFromSchemePath(NSString *schemePath) {
     NSArray *targetMatches = nil;
 
     NSString *containerPath = [url path];
-    NSArray *schemePaths = [self schemePathsInContainer:containerPath];
+    NSMutableSet *schemePathsSet =
+      [NSMutableSet setWithArray:[self schemePathsInContainer:containerPath]];
+
+    if (isWorkspace) {
+      for (NSString *projectPath in [self projectPathsInWorkspace:containerPath]) {
+        [schemePathsSet addObjectsFromArray:[self schemePathsInContainer:projectPath]];
+      }
+    }
+
     if ([self findTarget:target
-           inSchemePaths:schemePaths
+           inSchemePaths:[schemePathsSet allObjects]
            targetMatches:&targetMatches]) {
       for (XcodeTargetMatch *targetMatch in targetMatches) {
         BOOL betterMatch;
         if (!bestTargetMatch) {
           betterMatch = YES;
         } else if (targetMatch.numTargetsInScheme < bestTargetMatch.numTargetsInScheme) {
+          betterMatch = YES;
+        } else if (isWorkspace && !bestTargetMatch.workspacePath) {
           betterMatch = YES;
         } else {
           betterMatch = NO;
