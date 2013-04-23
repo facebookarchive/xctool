@@ -139,15 +139,7 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
     self.testSDK = options.sdk;
   }
 
-  NSMutableArray *supportedTestSDKs = [NSMutableArray array];
-  for (NSString *sdk in [GetAvailableSDKsAndAliases() allKeys]) {
-    if ([sdk hasPrefix:@"iphonesimulator"] || [sdk hasPrefix:@"macosx"]) {
-      [supportedTestSDKs addObject:sdk];
-    }
-  }
-
-  // We'll only test the iphonesimulator SDKs right now.
-  if (![supportedTestSDKs containsObject:self.testSDK]) {
+  if (![self validateSDK:self.testSDK]) {
     *errorMessage = [NSString stringWithFormat:@"run-tests: '%@' is not a supported SDK for testing.", self.testSDK];
     return NO;
   }
@@ -350,6 +342,19 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
   }
 
   return succeeded;
+}
+
+- (BOOL)validateSDK:(NSString *)sdk
+{
+  NSMutableArray *supportedTestSDKs = [NSMutableArray array];
+  for (NSString *sdk in [GetAvailableSDKsAndAliases() allKeys]) {
+    if ([sdk hasPrefix:@"iphonesimulator"] || [sdk hasPrefix:@"macosx"]) {
+      [supportedTestSDKs addObject:sdk];
+    }
+  }
+
+  // We'll only test the iphonesimulator SDKs right now.
+  return [supportedTestSDKs containsObject:sdk];
 }
 
 @end

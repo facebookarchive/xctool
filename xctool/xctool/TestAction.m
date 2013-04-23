@@ -108,4 +108,9 @@
   return YES;
 }
 
+- (BOOL)validateSDK:(NSString *)sdk
+{
+  return [_buildTestsAction validateSDK:sdk] && [_runTestsAction validateSDK:sdk];
+}
+
 @end

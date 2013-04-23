@@ -60,4 +60,21 @@
                                        failsWithMessage:@"build-tests: 'BOGUS_TARGET' is not a testing target in this scheme."];
 }
 
+- (void)testSDKFallback
+{
+  ReturnFakeTasks(@[
+                  [FakeTask fakeTaskWithExitStatus:0
+                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                                 standardErrorPath:nil]
+                  ]);
+
+  Options *options = [TestUtil validatedOptionsFromArgumentList:@[
+                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                      @"-scheme", @"TestProject-Library",
+                      @"test",
+                      ]];
+  assertThat(options.sdk, equalTo(@"iphonesimulator"));
+  assertThat(options.arch, equalTo(@"i386"));
+}
+
 @end
