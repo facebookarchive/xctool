@@ -258,31 +258,35 @@
   return [newParts componentsJoinedByString:@" "];
 }
 
-- (void)beginAction:(Action *)action
+- (void)beginAction:(NSDictionary *)event
 {
-  _actionStartedTime = CACurrentMediaTime();
+  NSString *name = event[kReporter_BeginAction_NameKey];
+  
   _testsTotal = 0;
   _testsPassed = 0;
 
-  [self.reportWriter printLine:@"<bold>=== %@ ===<reset>", [[[action class] name] uppercaseString]];
+  [self.reportWriter printLine:@"<bold>=== %@ ===<reset>", [name uppercaseString]];
   [self.reportWriter printNewline];
   [self.reportWriter increaseIndent];
 }
 
-- (void)endAction:(Action *)action succeeded:(BOOL)succeeded
+- (void)endAction:(NSDictionary *)event
 {
   [self.reportWriter decreaseIndent];
 
-  CFTimeInterval duration = (CACurrentMediaTime() - _actionStartedTime);
+  NSString *name = event[kReporter_BeginAction_NameKey];
+  BOOL succeeded = [event[kReporter_EndAction_SucceededKey] boolValue];
+  double duration = [event[kReporter_EndAction_DurationKey] doubleValue];
+
   NSString *message = nil;
   NSString *status = succeeded ? @"SUCCEEDED" : @"FAILED";
 
-  if ([action isKindOfClass:[RunTestsAction class]]) {
+  if ([name isEqualToString:@"run-tests"] || [name isEqualToString:@"test"]) {
     message = [NSString stringWithFormat:@"%lu of %lu tests passed", _testsPassed, _testsTotal];
   }
 
   [self.reportWriter printLine:@"<bold>** %@ %@%@ **<reset> <faint>(%03d ms)<reset>",
-   [[[action class] name] uppercaseString],
+   [name uppercaseString],
    status,
    message != nil ? [@": " stringByAppendingString:message] : @"",
    (int)(duration * 1000)];

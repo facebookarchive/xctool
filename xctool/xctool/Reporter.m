@@ -130,8 +130,8 @@ void ReportMessage(NSArray *reporters, ReporterMessageLevel level, NSString *for
   [self performSelector:sel withObject:eventDict];
 }
 
-- (void)beginAction:(Action *)action {}
-- (void)endAction:(Action *)action succeeded:(BOOL)succeeded {}
+- (void)beginAction:(NSDictionary *)event {}
+- (void)endAction:(NSDictionary *)event {}
 - (void)beginBuildTarget:(NSDictionary *)event {}
 - (void)endBuildTarget:(NSDictionary *)event {}
 - (void)beginBuildCommand:(NSDictionary *)event {}

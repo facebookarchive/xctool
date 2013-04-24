@@ -20,10 +20,20 @@
 
 - (void)passThrough:(NSDictionary *)event
 {
-  [self.outputHandle writeData:[NSJSONSerialization dataWithJSONObject:event options:0 error:nil]];
+  NSError *error = nil;
+  NSData *eventData = [NSJSONSerialization dataWithJSONObject:event
+                                                      options:0
+                                                        error:&error];
+  NSAssert(eventData != nil,
+           @"Failed to encode event with error: %@ for event: %@",
+           [error localizedFailureReason], event);
+
+  [self.outputHandle writeData:eventData];
   [self.outputHandle writeData:[@"\n" dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
+- (void)beginAction:(NSDictionary *)event { [self passThrough:event]; }
+- (void)endAction:(NSDictionary *)event { [self passThrough:event]; }
 - (void)beginBuildTarget:(NSDictionary *)event { [self passThrough:event]; }
 - (void)endBuildTarget:(NSDictionary *)event { [self passThrough:event]; }
 - (void)beginBuildCommand:(NSDictionary *)event { [self passThrough:event]; }

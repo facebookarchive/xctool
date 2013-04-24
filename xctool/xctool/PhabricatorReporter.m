@@ -53,11 +53,11 @@
 };
 
 
-- (void)beginAction:(Action *)action
+- (void)beginAction:(NSDictionary *)event
 {
 }
 
-- (void)endAction:(Action *)action succeeded:(BOOL)succeeded
+- (void)endAction:(NSDictionary *)event
 {
 }
 

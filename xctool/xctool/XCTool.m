@@ -15,7 +15,8 @@
 //
 
 #import "XCTool.h"
-#import "XCToolUtil.h"
+
+#import <QuartzCore/QuartzCore.h>
 
 #import "Action.h"
 #import "NSFileHandle+Print.h"
@@ -24,6 +25,7 @@
 #import "TaskUtil.h"
 #import "TextReporter.h"
 #import "XcodeSubjectInfo.h"
+#import "XCToolUtil.h"
 
 @implementation XCTool
 
@@ -164,13 +166,24 @@
   }
 
   for (Action *action in options.actions) {
-    [options.reporters makeObjectsPerformSelector:@selector(beginAction:) withObject:action];
+    CFTimeInterval startTime = CACurrentMediaTime();
+    [options.reporters makeObjectsPerformSelector:@selector(handleEvent:)
+                                       withObject:@{
+     @"event": kReporter_Events_BeginAction,
+     kReporter_BeginAction_NameKey: [[action class] name],
+     }];
 
     BOOL succeeded = [action performActionWithOptions:options xcodeSubjectInfo:xcodeSubjectInfo];
 
-    for (Reporter *reporter in options.reporters) {
-      [reporter endAction:action succeeded:succeeded];
-    }
+    CFTimeInterval stopTime = CACurrentMediaTime();
+
+    [options.reporters makeObjectsPerformSelector:@selector(handleEvent:)
+                                       withObject:@{
+     @"event": kReporter_Events_EndAction,
+     kReporter_EndAction_NameKey: [[action class] name],
+     kReporter_EndAction_SucceededKey: @(succeeded),
+     kReporter_EndAction_DurationKey: @(stopTime - startTime),
+     }];
 
     if (!succeeded) {
       _exitStatus = 1;

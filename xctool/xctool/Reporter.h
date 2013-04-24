@@ -16,6 +16,8 @@
 
 #import <Foundation/Foundation.h>
 
+#define kReporter_Events_BeginAction @"begin-action"
+#define kReporter_Events_EndAction @"end-action"
 #define kReporter_Events_BeginOCUnit @"begin-ocunit"
 #define kReporter_Events_EndOCUnit @"end-ocunit"
 #define kReporter_Events_BeginTestSuite @"begin-test-suite"
@@ -30,6 +32,12 @@
 #define kReporter_Events_BeginBuildTarget @"begin-build-target"
 #define kReporter_Events_EndBuildTarget @"end-build-target"
 #define kReporter_Events_Message @"message"
+
+#define kReporter_BeginAction_NameKey @"name"
+
+#define kReporter_EndAction_NameKey @"name"
+#define kReporter_EndAction_SucceededKey @"succeeded"
+#define kReporter_EndAction_DurationKey @"duration"
 
 #define kReporter_BeginOCUnit_BundleNameKey @"bundleName"
 #define kReporter_BeginOCUnit_SDKNameKey @"sdkName"
@@ -122,8 +130,8 @@ void ReportMessage(NSArray *reporters, ReporterMessageLevel level, NSString *for
 
 - (void)handleEvent:(NSDictionary *)event;
 
-- (void)beginAction:(Action *)action;
-- (void)endAction:(Action *)action succeeded:(BOOL)succeeded;
+- (void)beginAction:(NSDictionary *)event;
+- (void)endAction:(NSDictionary *)event;
 - (void)beginBuildTarget:(NSDictionary *)event;
 - (void)endBuildTarget:(NSDictionary *)event;
 - (void)beginBuildCommand:(NSDictionary *)event;
