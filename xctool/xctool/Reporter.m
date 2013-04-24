@@ -19,8 +19,8 @@
 #import <sys/stat.h>
 
 #import "Options.h"
+#import "JSONStreamReporter.h"
 #import "PhabricatorReporter.h"
-#import "RawReporter.h"
 #import "TextReporter.h"
 
 NSString *ReporterMessageLevelToString(ReporterMessageLevel level) {
@@ -61,7 +61,7 @@ void ReportMessage(NSArray *reporters, ReporterMessageLevel level, NSString *for
 
 + (Reporter *)reporterWithName:(NSString *)name outputPath:(NSString *)outputPath options:(Options *)options
 {
-  NSDictionary *reporters = @{@"raw": [RawReporter class],
+  NSDictionary *reporters = @{@"json-stream": [JSONStreamReporter class],
                               @"pretty": [PrettyTextReporter class],
                               @"plain": [PlainTextReporter class],
                               @"phabricator": [PhabricatorReporter class],

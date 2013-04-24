@@ -14,9 +14,9 @@
 // limitations under the License.
 //
 
-#import "RawReporter.h"
+#import "JSONStreamReporter.h"
 
-@implementation RawReporter
+@implementation JSONStreamReporter
 
 - (void)passThrough:(NSDictionary *)event
 {

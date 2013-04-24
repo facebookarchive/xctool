@@ -19,9 +19,9 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "Action.h"
+#import "JSONStreamReporter.h"
 #import "NSFileHandle+Print.h"
 #import "Options.h"
-#import "RawReporter.h"
 #import "TaskUtil.h"
 #import "TextReporter.h"
 #import "XcodeSubjectInfo.h"

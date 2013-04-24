@@ -71,8 +71,8 @@
 		28E9B9DC16C3275200A52E4D /* OCUnitTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9D616C3275200A52E4D /* OCUnitTestRunner.m */; };
 		28E9B9E216C33C5900A52E4D /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9E116C33C5900A52E4D /* Reporter.m */; };
 		28E9B9E316C33C5900A52E4D /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9E116C33C5900A52E4D /* Reporter.m */; };
-		28E9B9E616C341C000A52E4D /* RawReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9E516C341C000A52E4D /* RawReporter.m */; };
-		28E9B9E716C341C000A52E4D /* RawReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9E516C341C000A52E4D /* RawReporter.m */; };
+		28E9B9E616C341C000A52E4D /* JSONStreamReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9E516C341C000A52E4D /* JSONStreamReporter.m */; };
+		28E9B9E716C341C000A52E4D /* JSONStreamReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9E516C341C000A52E4D /* JSONStreamReporter.m */; };
 		28E9B9EB16C34F2B00A52E4D /* TextReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9EA16C34F2B00A52E4D /* TextReporter.m */; };
 		28E9B9EC16C34F2B00A52E4D /* TextReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9EA16C34F2B00A52E4D /* TextReporter.m */; };
 		28FFB00516FF5A21000CCE2A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FFB00416FF5A21000CCE2A /* QuartzCore.framework */; };
@@ -181,8 +181,8 @@
 		28E9B9DE16C3278D00A52E4D /* iPhoneSimulatorRemoteClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iPhoneSimulatorRemoteClient.h; sourceTree = "<group>"; };
 		28E9B9E016C33C5800A52E4D /* Reporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reporter.h; sourceTree = "<group>"; };
 		28E9B9E116C33C5900A52E4D /* Reporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reporter.m; sourceTree = "<group>"; };
-		28E9B9E416C341C000A52E4D /* RawReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RawReporter.h; sourceTree = "<group>"; };
-		28E9B9E516C341C000A52E4D /* RawReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RawReporter.m; sourceTree = "<group>"; };
+		28E9B9E416C341C000A52E4D /* JSONStreamReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONStreamReporter.h; sourceTree = "<group>"; };
+		28E9B9E516C341C000A52E4D /* JSONStreamReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONStreamReporter.m; sourceTree = "<group>"; };
 		28E9B9E916C34F2B00A52E4D /* TextReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextReporter.h; sourceTree = "<group>"; };
 		28E9B9EA16C34F2B00A52E4D /* TextReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextReporter.m; sourceTree = "<group>"; };
 		28FFB00416FF5A21000CCE2A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -377,8 +377,8 @@
 		28E9B9E816C341DA00A52E4D /* Reporters */ = {
 			isa = PBXGroup;
 			children = (
-				28E9B9E416C341C000A52E4D /* RawReporter.h */,
-				28E9B9E516C341C000A52E4D /* RawReporter.m */,
+				28E9B9E416C341C000A52E4D /* JSONStreamReporter.h */,
+				28E9B9E516C341C000A52E4D /* JSONStreamReporter.m */,
 				28E9B9E016C33C5800A52E4D /* Reporter.h */,
 				28E9B9E116C33C5900A52E4D /* Reporter.m */,
 				28E9B9E916C34F2B00A52E4D /* TextReporter.h */,
@@ -496,7 +496,7 @@
 				28E9B9D916C3275200A52E4D /* OCUnitIOSLogicTestRunner.m in Sources */,
 				28E9B9DB16C3275200A52E4D /* OCUnitTestRunner.m in Sources */,
 				28E9B9E216C33C5900A52E4D /* Reporter.m in Sources */,
-				28E9B9E616C341C000A52E4D /* RawReporter.m in Sources */,
+				28E9B9E616C341C000A52E4D /* JSONStreamReporter.m in Sources */,
 				28E9B9EB16C34F2B00A52E4D /* TextReporter.m in Sources */,
 				287A37DE16C711AF00319E81 /* LineReader.m in Sources */,
 				287A37E116C711E000319E81 /* SimulatorLauncher.m in Sources */,
@@ -534,7 +534,7 @@
 				28E9B9DA16C3275200A52E4D /* OCUnitIOSLogicTestRunner.m in Sources */,
 				28E9B9DC16C3275200A52E4D /* OCUnitTestRunner.m in Sources */,
 				28E9B9E316C33C5900A52E4D /* Reporter.m in Sources */,
-				28E9B9E716C341C000A52E4D /* RawReporter.m in Sources */,
+				28E9B9E716C341C000A52E4D /* JSONStreamReporter.m in Sources */,
 				28E9B9EC16C34F2B00A52E4D /* TextReporter.m in Sources */,
 				287A37E216C711E000319E81 /* SimulatorLauncher.m in Sources */,
 				28046D2D16D7603B000AA15C /* Action.m in Sources */,
