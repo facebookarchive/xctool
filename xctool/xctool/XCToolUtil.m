@@ -155,6 +155,19 @@ NSDictionary *GetAvailableSDKsAndAliases()
     NSArray *lines = [LaunchTaskAndCaptureOutput(task)[@"stdout"] componentsSeparatedByString:@"\n"];
     lines = [lines subarrayWithRange:NSMakeRange(0, lines.count - 1)];
 
+    if (IsRunningUnderTest()) {
+      // Fake it so developers don't have to install all of these SDKs.
+      lines = @[
+                @"macosx 10.7",
+                @"macosx 10.8",
+                @"iphoneos 6.1",
+                @"iphonesimulator 5.0",
+                @"iphonesimulator 5.1",
+                @"iphonesimulator 6.0",
+                @"iphonesimulator 6.1",
+                ];
+    }
+
     for (NSString *line in lines) {
       NSArray *parts = [line componentsSeparatedByString:@" "];
       NSString *sdkName = parts[0];
