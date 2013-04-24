@@ -37,15 +37,7 @@
 
 - (void)testReporterOptionsSetupReporters
 {
-  ReturnFakeTasks(@[
-                  [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil]
-                  ]);
-
-  NSArray *reporters = [[TestUtil validatedOptionsFromArgumentList:@[
-                         @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                         @"-scheme", @"TestProject-Library",
+  NSArray *reporters = [[TestUtil validatedReporterOptionsFromArgumentList:@[
                          @"-reporter", @"pretty",
                          @"-reporter", @"plain:out.txt"]] reporters];
 
@@ -189,26 +181,9 @@
 
 - (void)testReporterMustBeValid
 {
-  ReturnFakeTasks(@[
-                  [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil]
-                  ]);
-  [TestUtil assertThatOptionsValidateWithArgumentList:@[
-   @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-   @"-scheme", @"TestProject-Library",
-   @"-sdk", @"iphonesimulator",
+  [TestUtil assertThatReporterOptionsValidateWithArgumentList:@[
    @"-reporter", @"pretty"]];
-
-  ReturnFakeTasks(@[
-                  [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil]
-                  ]);
-  [TestUtil assertThatOptionsValidateWithArgumentList:@[
-   @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-   @"-scheme", @"TestProject-Library",
-   @"-sdk", @"iphonesimulator",
+  [TestUtil assertThatReporterOptionsValidateWithArgumentList:@[
    @"-reporter", @"blah",
    ]
                                      failsWithMessage:[NSString stringWithFormat:
@@ -272,18 +247,13 @@
 
 - (void)testDefaultReporterIsPrettyIfNotSpecified
 {
-  ReturnFakeTasks(@[
-                  [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil]
-                  ]);
   Options *action = [TestUtil optionsFromArgumentList:@[
                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                       @"-scheme", @"TestProject-Library",
                       ]];
 
   NSString *errorMessage = nil;
-  BOOL valid = [action validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] options:nil];
+  BOOL valid = [action validateReporterOptions:&errorMessage];
   assertThatBool(valid, equalToBool(YES));
   assertThatBool(([action.reporters[0] isKindOfClass:[TextReporter class]]), equalToBool(YES));
 }

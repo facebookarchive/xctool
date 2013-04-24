@@ -22,5 +22,6 @@
 - (void)beginTest:(NSDictionary *)event { [self passThrough:event]; }
 - (void)endTest:(NSDictionary *)event { [self passThrough:event]; }
 - (void)testOutput:(NSDictionary *)event { [self passThrough:event]; }
+- (void)message:(NSDictionary *)event { [self passThrough:event]; }
 
 @end

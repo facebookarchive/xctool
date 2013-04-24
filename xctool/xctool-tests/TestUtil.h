@@ -8,6 +8,11 @@
 
 + (Options *)optionsFromArgumentList:(NSArray *)argumentList;
 
++ (Options *)validatedReporterOptionsFromArgumentList:(NSArray *)argumentList;
+
++ (void)assertThatReporterOptionsValidateWithArgumentList:(NSArray *)argumentList;
++ (void)assertThatReporterOptionsValidateWithArgumentList:(NSArray *)argumentList failsWithMessage:(NSString *)message;
+
 + (Options *)validatedOptionsFromArgumentList:(NSArray *)argumentList;
 
 + (void)assertThatOptionsValidateWithArgumentList:(NSArray *)argumentList;

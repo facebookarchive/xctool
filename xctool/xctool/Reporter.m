@@ -8,6 +8,40 @@
 #import "RawReporter.h"
 #import "TextReporter.h"
 
+NSString *ReporterMessageLevelToString(ReporterMessageLevel level) {
+  switch (level) {
+    case REPORTER_MESSAGE_DEBUG:
+      return @"Debug";
+    case REPORTER_MESSAGE_VERBOSE:
+      return @"Verbose";
+    case REPORTER_MESSAGE_INFO:
+      return @"Info";
+    case REPORTER_MESSAGE_WARNING:
+      return @"Warning";
+    case REPORTER_MESSAGE_ERROR:
+      return @"Error";
+  }
+}
+
+void ReportMessage(NSArray *reporters, ReporterMessageLevel level, NSString *format, ...) {
+  va_list args;
+  va_start(args, format);
+  NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
+
+  NSDate *now = [NSDate date];
+  NSDictionary *event = @{
+    @"event": kReporter_Events_Message,
+    kReporter_Message_MessageKey: message,
+    kReporter_Message_TimestampKey: [NSNumber numberWithDouble:[now timeIntervalSince1970]],
+    kReporter_Message_LevelKey: ReporterMessageLevelToString(level),
+  };
+
+  for (Reporter *reporter in reporters) {
+    [reporter message:event];
+  }
+  va_end(args);
+}
+
 @implementation Reporter
 
 + (Reporter *)reporterWithName:(NSString *)name outputPath:(NSString *)outputPath options:(Options *)options
@@ -96,6 +130,7 @@
 - (void)beginTest:(NSDictionary *)event {}
 - (void)endTest:(NSDictionary *)event {}
 - (void)testOutput:(NSDictionary *)event {}
+- (void)message:(NSDictionary *)event {}
 
 - (void)close
 {

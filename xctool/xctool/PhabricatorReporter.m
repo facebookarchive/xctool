@@ -148,6 +148,10 @@
 {
 }
 
+- (void)message:(NSDictionary *)event
+{
+}
+
 - (NSString *)arcUnitJSON
 {
   NSError *error = nil;

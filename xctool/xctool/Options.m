@@ -176,6 +176,30 @@
   return consumed;
 }
 
+- (BOOL)validateReporterOptions:(NSString **)errorMessage
+{
+  for (NSString *reporterOption in _reporterOptions) {
+    NSArray *optionParts = [reporterOption componentsSeparatedByString:@":"];
+    NSString *name = optionParts[0];
+    NSString *outputFile = (optionParts.count > 1) ? optionParts[1] : @"-";
+
+    Reporter *reporter = [Reporter reporterWithName:name outputPath:outputFile options:self];
+
+    if (reporter == nil) {
+      *errorMessage = [NSString stringWithFormat:@"No reporter with name '%@' found.", name];
+      return NO;
+    }
+
+    [self.reporters addObject:reporter];
+  }
+
+  if (self.reporters.count == 0) {
+    [self.reporters addObject:[Reporter reporterWithName:@"pretty" outputPath:@"-" options:self]];
+  }
+
+  return YES;
+}
+
 - (BOOL)validateOptions:(NSString **)errorMessage
           xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
          options:(Options *)options
@@ -210,6 +234,16 @@
                       bestTargetMatch:&targetMatch]) {
       *errorMessage = [NSString stringWithFormat:@"Couldn't find workspace/project and scheme for target: %@", self.findTarget];
       return NO;
+    }
+
+    if (targetMatch.workspacePath) {
+      ReportMessage(self.reporters, REPORTER_MESSAGE_INFO,
+        @"Found target %@. Using workspace path %@, scheme %@.",
+        self.findTarget, targetMatch.workspacePath, targetMatch.schemeName);
+    } else {
+      ReportMessage(self.reporters, REPORTER_MESSAGE_INFO,
+        @"Found target %@. Using project path %@, scheme %@.",
+        self.findTarget, targetMatch.projectPath, targetMatch.schemeName);
     }
 
     self.workspace = targetMatch.workspacePath;
@@ -269,21 +303,6 @@
     self.sdk = sdksAndAliases[self.sdk];
   }
 
-  for (NSString *reporterOption in _reporterOptions) {
-    NSArray *optionParts = [reporterOption componentsSeparatedByString:@":"];
-    NSString *name = optionParts[0];
-    NSString *outputFile = (optionParts.count > 1) ? optionParts[1] : @"-";
-
-    Reporter *reporter = [Reporter reporterWithName:name outputPath:outputFile options:self];
-
-    if (reporter == nil) {
-      *errorMessage = [NSString stringWithFormat:@"No reporter with name '%@' found.", name];
-      return NO;
-    }
-
-    [self.reporters addObject:reporter];
-  }
-
   xcodeSubjectInfo.subjectWorkspace = self.workspace;
   xcodeSubjectInfo.subjectProject = self.project;
   xcodeSubjectInfo.subjectScheme = self.scheme;
@@ -320,10 +339,6 @@
 
   if (self.configuration == nil) {
     self.configuration = xcodeSubjectInfo.configuration;
-  }
-
-  if (self.reporters.count == 0) {
-    [self.reporters addObject:[Reporter reporterWithName:@"pretty" outputPath:@"-" options:self]];
   }
 
   for (Action *action in self.actions) {

@@ -40,5 +40,6 @@
 - (NSArray *)commonXcodeBuildArgumentsIncludingSDK:(BOOL)includingSDK;
 - (NSArray *)commonXcodeBuildArguments;
 - (NSArray *)xcodeBuildArgumentsForSubject;
+- (BOOL)validateReporterOptions:(NSString **)errorMessage;
 
 @end

@@ -125,7 +125,7 @@
     return;
   }
 
-  if (![options validateOptions:&errorMessage xcodeSubjectInfo:xcodeSubjectInfo options:options]) {
+  if (![options validateReporterOptions:&errorMessage]) {
     [_standardError printString:@"ERROR: %@\n\n", errorMessage];
     [self printUsage];
     _exitStatus = 1;
@@ -139,6 +139,13 @@
       _exitStatus = 1;
       return;
     }
+  }
+
+  if (![options validateOptions:&errorMessage xcodeSubjectInfo:xcodeSubjectInfo options:options]) {
+    [_standardError printString:@"ERROR: %@\n\n", errorMessage];
+    [self printUsage];
+    _exitStatus = 1;
+    return;
   }
 
   for (Action *action in options.actions) {

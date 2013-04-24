@@ -454,6 +454,19 @@
   self.testOutputEndsInNewline = [event[kReporter_TestOutput_OutputKey] hasSuffix:@"\n"];
 }
 
+- (void)message:(NSDictionary *)event
+{
+  NSDate *timestamp = [NSDate dateWithTimeIntervalSince1970:[event[kReporter_Message_TimestampKey] doubleValue]];
+  NSString *now = [timestamp descriptionWithCalendarFormat:@"%Y-%m-%d %H:%M:%S"
+                                                  timeZone:[NSTimeZone localTimeZone]
+                                                    locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
+  [self.reportWriter printLine:@"[%@|%@] %@",
+       now,
+       event[kReporter_Message_LevelKey],
+       event[kReporter_Message_MessageKey]];
+  [self.reportWriter printNewline];
+}
+
 - (NSString *)formattedTestDuration:(float)duration withColor:(BOOL)withColor
 {
   NSString *color = nil;

@@ -14,6 +14,7 @@
 #define kReporter_Events_EndBuildCommand @"end-build-command"
 #define kReporter_Events_BeginBuildTarget @"begin-build-target"
 #define kReporter_Events_EndBuildTarget @"end-build-target"
+#define kReporter_Events_Message @"message"
 
 #define kReporter_BeginOCUnit_BundleNameKey @"bundleName"
 #define kReporter_BeginOCUnit_SDKNameKey @"sdkName"
@@ -71,8 +72,24 @@
 #define kReporter_EndXcodebuild_CommandKey @"command"
 #define kReporter_EndXcodebuild_TitleKey @"command"
 
+#define kReporter_Message_MessageKey @"message"
+#define kReporter_Message_TimestampKey @"timestamp"
+#define kReporter_Message_LevelKey @"level"
+
 @class Action;
 @class Options;
+
+typedef enum {
+  REPORTER_MESSAGE_DEBUG,
+  REPORTER_MESSAGE_VERBOSE,
+  REPORTER_MESSAGE_INFO,
+  REPORTER_MESSAGE_WARNING,
+  REPORTER_MESSAGE_ERROR,
+} ReporterMessageLevel;
+
+NSString *ReporterMessageLevelToString(ReporterMessageLevel level);
+
+void ReportMessage(NSArray *reporters, ReporterMessageLevel level, NSString *format, ...) NS_FORMAT_FUNCTION(3, 4);
 
 @interface Reporter : NSObject
 {
@@ -105,6 +122,7 @@
 - (void)beginTest:(NSDictionary *)event;
 - (void)endTest:(NSDictionary *)event;
 - (void)testOutput:(NSDictionary *)event;
+- (void)message:(NSDictionary *)event;
 
 /**
  To be called before any action is run.
