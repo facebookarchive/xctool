@@ -24,7 +24,10 @@ XCTOOL_PATH="$BUILD_OUTPUT_DIR"/Products/Release/xctool
 # Skip building if we already have the latest build.  If we already have a
 # build for the latest revision, and we're in a git repo, and if there have
 # been no file changes to the xctool code, then skip building.
-if [[ -e "$XCTOOL_PATH" && $REVISION != "." && $HAS_GIT_CHANGES == "NO" ]];
+#
+# If we're being told to test, we should always build.
+if [[ -e "$XCTOOL_PATH" && $REVISION != "." && $HAS_GIT_CHANGES == "NO" && \
+      "$1" != "TEST_AFTER_BUILD=YES" ]];
 then
   echo -n "Skipping build since product already exists at '$XCTOOL_PATH' and "
   echo    "no file changes have been made on top of the last commit."
