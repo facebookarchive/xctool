@@ -43,6 +43,6 @@ if [ "$BUILD_NEEDED" -eq 1 ]; then
 fi
 
 # Will be a short git hash or just '.' if we're not in a git repo.
-REVISION=$(git rev-parse --short HEAD 2> /dev/null || echo ".")
+REVISION=$((git log -n 1 --format=%h "$XCTOOL_DIR" 2> /dev/null) || echo ".")
 
 "$XCTOOL_DIR"/build/$REVISION/Products/Release/xctool "$@"

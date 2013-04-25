@@ -6,8 +6,7 @@ set -e
 XCTOOL_DIR=$(cd $(dirname $0); pwd)
 
 # Will be a short git hash or just '.' if we're not in a git repo.
-REVISION=$(\
-  (cd "$XCTOOL_DIR" && git rev-parse --short HEAD 2> /dev/null) || echo ".")
+REVISION=$((git log -n 1 --format=%h "$XCTOOL_DIR" 2> /dev/null) || echo ".")
 
 BUILD_OUTPUT_DIR="$XCTOOL_DIR"/build/$REVISION
 XCTOOL_PATH="$BUILD_OUTPUT_DIR"/Products/Release/xctool

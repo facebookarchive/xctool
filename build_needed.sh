@@ -6,8 +6,7 @@ set -e
 XCTOOL_DIR=$(cd $(dirname $0); pwd)
 
 # Will be a short git hash or just '.' if we're not in a git repo.
-REVISION=$(\
-  (cd "$XCTOOL_DIR" && git rev-parse --short HEAD 2> /dev/null) || echo ".")
+REVISION=$((git log -n 1 --format=%h "$XCTOOL_DIR" 2> /dev/null) || echo ".")
 
 # If we're in a git repo, figure out if any changes have been made to xctool.
 if [[ "$REVISION" != "." ]]; then
