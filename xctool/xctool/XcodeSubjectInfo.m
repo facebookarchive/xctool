@@ -64,7 +64,13 @@ static NSString *BasePathFromSchemePath(NSString *schemePath) {
     workspaceBasePath = @".";
   }
 
-  NSURL *URL = [NSURL fileURLWithPath:[workspacePath stringByAppendingPathComponent:@"contents.xcworkspacedata"]];
+  NSString *path = [workspacePath stringByAppendingPathComponent:@"contents.xcworkspacedata"];
+  if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+    // Git might leave empty directories around with no workspace data.
+    return @[];
+  }
+
+  NSURL *URL = [NSURL fileURLWithPath:path];
   NSError *error = nil;
   NSXMLDocument *doc = [[[NSXMLDocument alloc] initWithContentsOfURL:URL
                                                              options:0

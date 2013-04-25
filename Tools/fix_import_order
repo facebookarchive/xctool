@@ -1,6 +1,0 @@
-#!/bin/sh
-set -e
-if [ "`git rev-parse --show-cdup`" != "" ]; then
-   cd `git rev-parse --show-cdup`;
-fi
-php Configurations/Arcanist/lint/linter/FacebookObjcImportOrderLinter.php $1
