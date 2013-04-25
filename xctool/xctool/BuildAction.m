@@ -33,10 +33,12 @@
   NSTask *task = TaskInstance();
   [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
   [task setArguments:[[options xcodeBuildArgumentsForSubject] arrayByAddingObject:command]];
-  [task setEnvironment:@{
+  NSMutableDictionary *environment = [NSMutableDictionary dictionaryWithDictionary:[[NSProcessInfo processInfo] environment]];
+  [environment addEntriesFromDictionary:@{
    @"DYLD_INSERT_LIBRARIES" : [PathToXCToolBinaries() stringByAppendingPathComponent:@"xcodebuild-shim.dylib"],
    @"PATH": @"/usr/bin:/bin:/usr/sbin:/sbin",
-   }];
+  }];
+  [task setEnvironment:environment];
 
   [options.reporters makeObjectsPerformSelector:@selector(handleEvent:)
                                      withObject:@{
