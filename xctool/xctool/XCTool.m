@@ -158,6 +158,9 @@
     }
   }
 
+  // After this point, we can start reporting messages.
+  RegisterReporters(options.reporters);
+
   if (![options validateOptions:&errorMessage xcodeSubjectInfo:xcodeSubjectInfo options:options]) {
     [_standardError printString:@"ERROR: %@\n\n", errorMessage];
     [self printUsage];
@@ -192,6 +195,9 @@
   }
 
   [options.reporters makeObjectsPerformSelector:@selector(close)];
+
+  // After this point, we can no longer report messages.
+  UnregisterReporters(options.reporters);
 }
 
 

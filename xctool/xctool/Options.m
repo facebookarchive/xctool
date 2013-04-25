@@ -252,11 +252,11 @@
     }
 
     if (targetMatch.workspacePath) {
-      ReportMessage(self.reporters, REPORTER_MESSAGE_INFO,
+      ReportMessage(REPORTER_MESSAGE_INFO,
         @"Found target %@. Using workspace path %@, scheme %@.",
         self.findTarget, targetMatch.workspacePath, targetMatch.schemeName);
     } else {
-      ReportMessage(self.reporters, REPORTER_MESSAGE_INFO,
+      ReportMessage(REPORTER_MESSAGE_INFO,
         @"Found target %@. Using project path %@, scheme %@.",
         self.findTarget, targetMatch.projectPath, targetMatch.schemeName);
     }

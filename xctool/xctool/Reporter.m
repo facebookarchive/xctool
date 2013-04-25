@@ -38,9 +38,24 @@ NSString *ReporterMessageLevelToString(ReporterMessageLevel level) {
   }
 }
 
-void ReportMessage(NSArray *reporters, ReporterMessageLevel level, NSString *format, ...) {
+static NSArray *RegisteredReporters = nil;
+
+void RegisterReporters(NSArray *reporters) {
+  NSCAssert(RegisteredReporters == nil, @"Cannot register reporters twice.");
+  NSCAssert(reporters != nil, @"Must have array of reporters to register.");
+  RegisteredReporters = [reporters retain];
+}
+
+void UnregisterReporters(NSArray *reporters) {
+  NSCAssert(reporters == RegisteredReporters, @"Cannot unregister reporters without first registering.");
+  [RegisteredReporters release];
+  RegisteredReporters = nil;
+}
+
+void ReportMessage(ReporterMessageLevel level, NSString *format, ...) {
   va_list args;
   va_start(args, format);
+
   NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
 
   NSDate *now = [NSDate date];
@@ -51,7 +66,7 @@ void ReportMessage(NSArray *reporters, ReporterMessageLevel level, NSString *for
     kReporter_Message_LevelKey: ReporterMessageLevelToString(level),
   };
 
-  for (Reporter *reporter in reporters) {
+  for (Reporter *reporter in RegisteredReporters) {
     [reporter message:event];
   }
   va_end(args);

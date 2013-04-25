@@ -112,7 +112,10 @@ typedef enum {
 
 NSString *ReporterMessageLevelToString(ReporterMessageLevel level);
 
-void ReportMessage(NSArray *reporters, ReporterMessageLevel level, NSString *format, ...) NS_FORMAT_FUNCTION(3, 4);
+void RegisterReporters(NSArray *reporters);
+void UnregisterReporters(NSArray *reporters);
+
+void ReportMessage(ReporterMessageLevel level, NSString *format, ...) NS_FORMAT_FUNCTION(2, 3);
 
 @interface Reporter : NSObject
 {
