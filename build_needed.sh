@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -e
+
+# We need an absolute path to the dir we're in.
+XCTOOL_DIR=$(cd $(dirname $0); pwd)
+
+# Will be a short git hash or just '.' if we're not in a git repo.
+REVISION=$(\
+  (cd "$XCTOOL_DIR" && git rev-parse --short HEAD 2> /dev/null) || echo ".")
+
+# If we're in a git repo, figure out if any changes have been made to xctool.
+if [[ "$REVISION" != "." ]]; then
+  NUM_CHANGES=$(\
+    (cd "$XCTOOL_DIR" && git status --porcelain "$XCTOOL_DIR") | wc -l)
+  HAS_GIT_CHANGES=$([[ $NUM_CHANGES -gt 0 ]] && echo YES || echo NO)
+else
+  HAS_GIT_CHANGES=NO
+fi
+
+BUILD_OUTPUT_DIR="$XCTOOL_DIR"/build/$REVISION
+XCTOOL_PATH="$BUILD_OUTPUT_DIR"/Products/Release/xctool
+
+if [[ -e "$XCTOOL_PATH" && $REVISION != "." && $HAS_GIT_CHANGES == "NO" && \
+      "$1" != "TEST_AFTER_BUILD=YES" ]];
+then
+  echo 0
+else
+  echo 1
+fi
+
+# vim: set tabstop=2 shiftwidth=2 filetype=sh:

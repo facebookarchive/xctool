@@ -9,25 +9,17 @@ XCTOOL_DIR=$(cd $(dirname $0); pwd)
 REVISION=$(\
   (cd "$XCTOOL_DIR" && git rev-parse --short HEAD 2> /dev/null) || echo ".")
 
-# If we're in a git repo, figure out if any changes have been made to xctool.
-if [[ "$REVISION" != "." ]]; then
-  NUM_CHANGES=$(\
-    (cd "$XCTOOL_DIR" && git status --porcelain "$XCTOOL_DIR") | wc -l)
-  HAS_GIT_CHANGES=$([[ $NUM_CHANGES -gt 0 ]] && echo YES || echo NO)
-else
-  HAS_GIT_CHANGES=NO
-fi
-
 BUILD_OUTPUT_DIR="$XCTOOL_DIR"/build/$REVISION
 XCTOOL_PATH="$BUILD_OUTPUT_DIR"/Products/Release/xctool
+BUILD_NEEDED_TOOL_PATH="$XCTOOL_DIR"/build_needed.sh
+BUILD_NEEDED=$($BUILD_NEEDED_TOOL_PATH $*)
 
 # Skip building if we already have the latest build.  If we already have a
 # build for the latest revision, and we're in a git repo, and if there have
 # been no file changes to the xctool code, then skip building.
 #
 # If we're being told to test, we should always build.
-if [[ -e "$XCTOOL_PATH" && $REVISION != "." && $HAS_GIT_CHANGES == "NO" && \
-      "$1" != "TEST_AFTER_BUILD=YES" ]];
+if [ "$BUILD_NEEDED" -eq 0 ]
 then
   echo -n "Skipping build since product already exists at '$XCTOOL_PATH' and "
   echo    "no file changes have been made on top of the last commit."
