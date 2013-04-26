@@ -77,6 +77,26 @@
                                        failsWithMessage:@"build-tests: 'BOGUS_TARGET' is not a testing target in this scheme."];
 }
 
+- (void)testSkipDependenciesIsCollected
+{
+  // The subject being the workspace/scheme or project/target we're testing.
+  ReturnFakeTasks(@[
+                  [FakeTask fakeTaskWithExitStatus:0
+                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                                 standardErrorPath:nil]
+                  ]);
+
+  Options *options = [TestUtil validatedOptionsFromArgumentList:@[
+                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                      @"-scheme", @"TestProject-Library",
+                      @"-sdk", @"iphonesimulator6.1",
+                      @"test", @"-only", @"TestProject-LibraryTests",
+                      @"-skip-deps"
+                      ]];
+  TestAction *action = options.actions[0];
+  assertThatBool(action.skipDependencies, equalToBool(YES));
+}
+
 - (void)testSDKFallback
 {
   ReturnFakeTasks(@[

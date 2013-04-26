@@ -23,5 +23,6 @@
 - (NSArray *)onlyList;
 - (BuildTestsAction *)buildTestsAction;
 - (RunTestsAction *)runTestsAction;
+- (BOOL)skipDependencies;
 
 @end

@@ -37,6 +37,10 @@
                    description:@"build only a specific test TARGET"
                      paramName:@"TARGET"
                          mapTo:@selector(addOnly:)],
+    [Action actionOptionWithName:@"skip-deps"
+                         aliases:nil
+                     description:@"Only build the target, not its dependencies"
+                         setFlag:@selector(setSkipDependencies:)],
   ];
 }
 
@@ -150,7 +154,8 @@
   return YES;
 }
 
-- (NSMutableArray *)buildableList:(NSArray *)buildableList matchingTargets:(NSArray *)targets
+- (NSMutableArray *)buildableList:(NSArray *)buildableList
+                  matchingTargets:(NSArray *)targets
 {
   NSMutableArray *result = [NSMutableArray array];
 
@@ -159,6 +164,8 @@
     if (targets.count > 0 && [[buildable[@"executable"] pathExtension] isEqualToString:@"octest"]) {
       // If we're filtering by target, only add targets that match.
       add = [targets containsObject:buildable[@"target"]];
+    } else if (_skipDependencies) {
+      add = NO;
     } else {
       add = ![buildable[@"skipped"] boolValue];
     }

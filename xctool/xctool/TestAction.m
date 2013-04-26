@@ -52,6 +52,10 @@
                          aliases:nil
                      description:@"kill simulator before testing starts"
                          setFlag:@selector(setKillSimulator:)],
+    [Action actionOptionWithName:@"skip-deps"
+                         aliases:nil
+                     description:@"Only build the target, not its dependencies"
+                         setFlag:@selector(setSkipDependencies:)],
     ];
 }
 
@@ -80,6 +84,11 @@
   _runTestsAction.killSimulator = killSimulator;
 }
 
+- (void)setSkipDependencies:(BOOL)skipDependencies
+{
+  _buildTestsAction.skipDependencies = skipDependencies;
+}
+
 - (void)addOnly:(NSString *)argument
 {
   // build-tests takes only a target argument, where run-tests takes Target:Class/method.
@@ -91,6 +100,11 @@
 - (NSArray *)onlyList
 {
   return _buildTestsAction.onlyList;
+}
+
+- (BOOL)skipDependencies
+{
+  return _buildTestsAction.skipDependencies;
 }
 
 - (BOOL)validateOptions:(NSString **)errorMessage

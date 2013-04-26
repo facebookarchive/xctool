@@ -19,6 +19,7 @@
 @interface BuildTestsAction : Action
 
 @property (nonatomic, retain) NSMutableArray *onlyList;
+@property (nonatomic, assign) BOOL skipDependencies;
 
 + (BOOL)buildTestable:(NSDictionary *)testable
             reporters:(NSArray *)reporters
