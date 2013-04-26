@@ -161,43 +161,47 @@
   // After this point, we can start reporting messages.
   RegisterReporters(options.reporters);
 
-  if (![options validateOptions:&errorMessage xcodeSubjectInfo:xcodeSubjectInfo options:options]) {
-    [_standardError printString:@"ERROR: %@\n\n", errorMessage];
-    [self printUsage];
-    _exitStatus = 1;
-    return;
-  }
-
-  for (Action *action in options.actions) {
-    CFTimeInterval startTime = CACurrentMediaTime();
-    [options.reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                                       withObject:@{
-     @"event": kReporter_Events_BeginAction,
-     kReporter_BeginAction_NameKey: [[action class] name],
-     }];
-
-    BOOL succeeded = [action performActionWithOptions:options xcodeSubjectInfo:xcodeSubjectInfo];
-
-    CFTimeInterval stopTime = CACurrentMediaTime();
-
-    [options.reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                                       withObject:@{
-     @"event": kReporter_Events_EndAction,
-     kReporter_EndAction_NameKey: [[action class] name],
-     kReporter_EndAction_SucceededKey: @(succeeded),
-     kReporter_EndAction_DurationKey: @(stopTime - startTime),
-     }];
-
-    if (!succeeded) {
+  // We want to make sure we always unregister the reporters, even if validation fails,
+  // so we use a try-finally block.
+  @try {
+    if (![options validateOptions:&errorMessage xcodeSubjectInfo:xcodeSubjectInfo options:options]) {
+      [_standardError printString:@"ERROR: %@\n\n", errorMessage];
+      [self printUsage];
       _exitStatus = 1;
-      break;
+      return;
     }
+
+    for (Action *action in options.actions) {
+      CFTimeInterval startTime = CACurrentMediaTime();
+      [options.reporters makeObjectsPerformSelector:@selector(handleEvent:)
+                                         withObject:@{
+       @"event": kReporter_Events_BeginAction,
+       kReporter_BeginAction_NameKey: [[action class] name],
+       }];
+
+      BOOL succeeded = [action performActionWithOptions:options xcodeSubjectInfo:xcodeSubjectInfo];
+
+      CFTimeInterval stopTime = CACurrentMediaTime();
+
+      [options.reporters makeObjectsPerformSelector:@selector(handleEvent:)
+                                         withObject:@{
+       @"event": kReporter_Events_EndAction,
+       kReporter_EndAction_NameKey: [[action class] name],
+       kReporter_EndAction_SucceededKey: @(succeeded),
+       kReporter_EndAction_DurationKey: @(stopTime - startTime),
+       }];
+
+      if (!succeeded) {
+        _exitStatus = 1;
+        break;
+      }
+    }
+  } @finally {
+    [options.reporters makeObjectsPerformSelector:@selector(close)];
+
+    // After this point, we can no longer report messages.
+    UnregisterReporters(options.reporters);
   }
-
-  [options.reporters makeObjectsPerformSelector:@selector(close)];
-
-  // After this point, we can no longer report messages.
-  UnregisterReporters(options.reporters);
 }
 
 
