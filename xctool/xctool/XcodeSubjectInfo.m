@@ -20,6 +20,9 @@
 #import "XCToolUtil.h"
 #import "XcodeTargetMatch.h"
 
+// We consider a DerivedData "recently modified" within this interval.
+static const NSTimeInterval RECENTLY_MODIFIED_DERIVED_DATA_INTERVAL = 60 * 15;
+
 static NSString *StringByStandardizingPath(NSString *path)
 {
   NSMutableArray *stack = [NSMutableArray array];
@@ -178,6 +181,144 @@ static NSString *BasePathFromSchemePath(NSString *schemePath) {
   return schemes;
 }
 
++ (BOOL)         directory:(NSURL *)dirURL
+containsFilesModifiedSince:(NSDate *)sinceDate
+              modifiedDate:(NSDate **)modifiedDate
+{
+  NSFileManager *fm = [NSFileManager defaultManager];
+  NSDirectoryEnumerator *dirEnum = [fm enumeratorAtURL:dirURL
+                            includingPropertiesForKeys:@[NSURLContentModificationDateKey]
+                                               options:0
+                                          errorHandler:NULL];
+  for (NSURL *url in dirEnum) {
+    NSDate *modificationDate;
+    [url getResourceValue:&modificationDate forKey:NSURLContentModificationDateKey error:NULL];
+
+    if (modificationDate &&
+        [modificationDate compare:sinceDate] == NSOrderedDescending) {
+      *modifiedDate = modificationDate;
+      return YES;
+    }
+  }
+
+  return NO;
+}
+
++ (BOOL)findWorkspacePathForDerivedDataURL:(NSURL *)derivedDataWorkspaceURL
+                             workspacePath:(NSString **)workspacePath
+{
+  NSFileManager *fm = [NSFileManager defaultManager];
+
+  // Yes, Xcode really uses lower-case "i" for the info.plist inside a DerivedData subdirectory.
+  NSURL *infoPlistURL = [derivedDataWorkspaceURL URLByAppendingPathComponent:@"info.plist"];
+
+  NSDictionary *workspaceInfoPlist =
+    [NSDictionary dictionaryWithContentsOfFile:[infoPlistURL path]];
+  NSString *result = [workspaceInfoPlist objectForKey:@"WorkspacePath"];
+
+  if ([fm fileExistsAtPath:result]) {
+    *workspacePath = result;
+    return YES;
+  } else {
+    return NO;
+  }
+}
+
++ (NSArray *)workspacePathsForRelativeDerivedDataURL:(NSURL *)derivedDataWorkspaceURL
+{
+  NSFileManager *fm = [NSFileManager defaultManager];
+
+  NSMutableArray *result = [NSMutableArray array];
+
+  NSArray *derivedDataContentURLs = [fm contentsOfDirectoryAtURL:derivedDataWorkspaceURL
+                                      includingPropertiesForKeys:@[NSURLIsDirectoryKey]
+                                                         options:0
+                                                           error:NULL];
+  for (NSURL *url in derivedDataContentURLs) {
+    NSNumber *isDirectory;
+    [url getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:NULL];
+    if (![isDirectory boolValue]) {
+      continue;
+    }
+
+    NSString *workspacePath;
+    if ([self findWorkspacePathForDerivedDataURL:url
+                                   workspacePath:&workspacePath]) {
+      [result addObject:workspacePath];
+    }
+  }
+
+  return result;
+}
+
++ (NSDictionary *)workspacePathsModifiedSince:(NSDate *)sinceDate
+                                  inDirectory:(NSString *)directory
+                                 excludePaths:(NSArray *)excludePaths
+{
+  NSFileManager *fm = [NSFileManager defaultManager];
+  NSMutableDictionary *workspacePathModifyDates = [NSMutableDictionary dictionary];
+
+  NSDictionary *xcodePrefs = [NSDictionary dictionaryWithContentsOfFile:
+    [@"~/Library/Preferences/com.apple.dt.Xcode.plist" stringByExpandingTildeInPath]];
+  NSString *derivedDataLocation = [xcodePrefs objectForKey:@"IDECustomDerivedDataLocation"] ?:
+    [@"~/Library/Developer/Xcode/DerivedData" stringByExpandingTildeInPath];
+
+  // This location might be absolute or relative. If relative, we have to search under
+  // the directory for the specified DerivedData paths.
+  if ([derivedDataLocation isAbsolutePath]) {
+    NSURL *dirURL = [NSURL fileURLWithPath:derivedDataLocation isDirectory:YES];
+    NSArray *derivedDataWorkspaceURLs = [fm contentsOfDirectoryAtURL:dirURL
+                                          includingPropertiesForKeys:@[]
+                                                             options:0
+                                                               error:NULL];
+    for (NSURL *derivedDataWorkspaceURL in derivedDataWorkspaceURLs) {
+      NSDate *modifiedDate;
+      if ([self                 directory:derivedDataWorkspaceURL
+               containsFilesModifiedSince:sinceDate
+                             modifiedDate:&modifiedDate]) {
+        NSString *workspacePath;
+        if ([self findWorkspacePathForDerivedDataURL:derivedDataWorkspaceURL
+                                       workspacePath:&workspacePath]) {
+          [workspacePathModifyDates setObject:modifiedDate
+                                       forKey:workspacePath];
+        }
+      }
+    }
+  } else {
+    NSURL *dirURL = [NSURL fileURLWithPath:directory isDirectory:YES];
+    NSDirectoryEnumerator *dirEnum = [fm enumeratorAtURL:dirURL
+                                         includingPropertiesForKeys:@[NSURLNameKey, NSURLContentModificationDateKey]
+                                                 options:0
+                                            errorHandler:NULL];
+    for (NSURL *url in dirEnum) {
+      NSString *fileName;
+      [url getResourceValue:&fileName forKey:NSURLNameKey error:NULL];
+
+      if ([excludePaths containsObject:fileName]) {
+        [dirEnum skipDescendents];
+        continue;
+      }
+
+      if (![fileName isEqualToString:derivedDataLocation]) {
+        continue;
+      }
+
+      NSDate *modifiedDate;
+      if ([self                  directory:url
+                containsFilesModifiedSince:sinceDate
+                              modifiedDate:&modifiedDate]) {
+        NSArray *workspacePaths = [self workspacePathsForRelativeDerivedDataURL:url];
+        for (NSString *workspacePath in workspacePaths) {
+          [workspacePathModifyDates setObject:modifiedDate
+                                       forKey:workspacePath];
+        }
+      }
+    }
+  }
+
+  return workspacePathModifyDates;
+}
+
 + (BOOL)findTarget:(NSString *)target
        inDirectory:(NSString *)directory
       excludePaths:(NSArray *)excludePaths
@@ -192,6 +333,11 @@ static NSString *BasePathFromSchemePath(NSString *schemePath) {
                     errorHandler:NULL];
 
   XcodeTargetMatch *bestTargetMatch = nil;
+
+  NSDictionary *recentlyModifiedWorkspaces =
+    [self workspacePathsModifiedSince:[NSDate dateWithTimeIntervalSinceNow:-1 * RECENTLY_MODIFIED_DERIVED_DATA_INTERVAL]
+                          inDirectory:directory
+                         excludePaths:excludePaths];
 
   for (NSURL *url in dirEnum) {
     NSString *fileName;
@@ -234,9 +380,17 @@ static NSString *BasePathFromSchemePath(NSString *schemePath) {
     if ([self findTarget:target
            inSchemePaths:[schemePathsSet allObjects]
            targetMatches:&targetMatches]) {
+      NSDate *recentlyModifiedWorkspaceDate =
+        [recentlyModifiedWorkspaces objectForKey:containerPath];
+
       for (XcodeTargetMatch *targetMatch in targetMatches) {
         BOOL betterMatch;
         if (!bestTargetMatch) {
+          betterMatch = YES;
+        } else if (recentlyModifiedWorkspaceDate && !bestTargetMatch.recentlyModifiedWorkspaceDate) {
+          betterMatch = YES;
+        } else if (recentlyModifiedWorkspaceDate &&
+                   [recentlyModifiedWorkspaceDate compare:bestTargetMatch.recentlyModifiedWorkspaceDate] == NSOrderedDescending) {
           betterMatch = YES;
         } else if (targetMatch.numTargetsInScheme < bestTargetMatch.numTargetsInScheme) {
           betterMatch = YES;
@@ -250,6 +404,9 @@ static NSString *BasePathFromSchemePath(NSString *schemePath) {
           bestTargetMatch = targetMatch;
           if (isWorkspace) {
             bestTargetMatch.workspacePath = containerPath;
+            if (recentlyModifiedWorkspaceDate) {
+              bestTargetMatch.recentlyModifiedWorkspaceDate = recentlyModifiedWorkspaceDate;
+            }
           } else if (isProject) {
             bestTargetMatch.projectPath = containerPath;
           }

@@ -19,14 +19,17 @@
 @implementation XcodeTargetMatch
 
 - (NSString *)description {
-  return [NSString stringWithFormat:@"%@ workspace: %@ project: %@ scheme: %@ num targets: %lu",
-    [super description], _workspacePath, _projectPath, _schemeName, _numTargetsInScheme];
+  return [NSString stringWithFormat:@"%@ workspace: %@ project: %@ scheme: %@ num targets: %lu "
+    @"modify date: %@",
+    [super description], _workspacePath, _projectPath, _schemeName, _numTargetsInScheme,
+    _recentlyModifiedWorkspaceDate];
 }
 
 - (void)dealloc {
   [_workspacePath release];
   [_projectPath release];
   [_schemeName release];
+  [_recentlyModifiedWorkspaceDate release];
   [super dealloc];
 }
 
