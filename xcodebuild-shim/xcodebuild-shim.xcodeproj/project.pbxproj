@@ -225,6 +225,7 @@
 /* Begin XCBuildConfiguration section */
 		283CCAB816C2EE7200F2E343 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 285F6F72171FD14F001295EC /* xcodebuild-shim.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
