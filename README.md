@@ -13,8 +13,8 @@ few extra features:
   Surprisingly, Apple's command-line _xcodebuild_ tool does not run your
 product's tests the same way as _Xcode.app_.  xcodebuild doesn't
 understand which targets in your scheme are test targets, which test
-suites or cases you've disabled, or how to run simulator-based,
-application tests.
+suites or cases you might have disabled in your scheme, or how to run
+simulator-based, application tests.
 
   If you use [application
 tests](http://developer.apple.com/library/mac/#documentation/developertools/Conceptual/UnitTesting/08-Glossary/glossary.html#//apple_ref/doc/uid/TP40002143-CH8-SW1),
@@ -25,10 +25,10 @@ you've probably seen xcodebuild skipping them with this message:
 	application-hosted tests (TEST_HOST set).
 	```
 
-  *xctool* looks at your Xcode scheme and is able to reproduce the same
-test run you would get with Xcode.app via _Cmd-U_ or 
-_Product &rarr; Test_, including running application
-tests that require the iOS simulator.
+  *xctool* fixes this - it looks at your Xcode scheme and is able to
+reproduce the same test run you would get with Xcode.app via _Cmd-U_ or 
+_Product &rarr; Test_, including running application tests that require
+the iOS simulator.
 
 * **Structured output of build and test results.**
 
@@ -223,8 +223,8 @@ symbols for pretty output (the default).
 * __phabricator__: outputs a JSON array of build/test results which can
 be fed into the [Phabricator](http://phabricator.org/) code-review tool.
 * __json-stream__: a stream of build/test events as JSON dictionaries,
-one per line.  The structure looks like
-[this](https://gist.github.com/fpotter/e8a0de3d3c81eaf58d20).
+one per line [(example
+output)](https://gist.github.com/fpotter/82ffcc3d9a49d10ee41b).
 
 You could also __add your own__ Reporter - see
 [Reporter.h](https://github.com/facebook/xctool/blob/master/xctool/xctool/Reporter.h).
