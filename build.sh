@@ -25,18 +25,23 @@ then
   exit 0
 fi
 
-# We're using a hack to trick otest-lib into building as a dylib for the iOS
+# We're using a hack to trick otest-shim into building as a dylib for the iOS
 # simulator.  Part of that hack requires us to specify paths to the SDK dirs
 # ourselves and so we need to know the version numbers for the installed SDK.
 # Configurations/iOS-Simulator-Dylib.xcconfig has more info.
 #
-# We choose the oldest available SDK here - this way otest-shim is most
-# compatible. e.g. if otest-shim targeted iOS 6.1 but a test bundle (or test
-# host) targetted 5.0, you'd see errors.
+# We choose the oldest available SDK that's >= 5.0 - this way otest-shim is
+# most compatible. e.g. if otest-shim targeted iOS 6.1 but a test bundle (or
+# test host) targetted 5.0, you'd see errors.  We don't go older than 5.0 since
+# we depend on some iOS 5+ APIs.
 XT_IOS_SDK_VERSION=$(xcodebuild -showsdks | grep iphonesimulator | \
-  head -n 1 | perl -ne '/iphonesimulator(.*?)$/ && print $1')
+  perl -ne '/iphonesimulator(.*?)$/ && $1 >= 5.0 && print' | \
+  head -n 1 | \
+  perl -ne '/iphonesimulator(.*?)$/ && print $1')
 XT_IOS_SDK_VERSION_EXPANDED=$(xcodebuild -showsdks | grep iphonesimulator | \
-  head -n 1 | perl -ne '/iphonesimulator(\d)\.(\d)$/ && print "${1}${2}000"')
+  perl -ne '/iphonesimulator(\d)\.(\d)$/ && $1 >= 5 && print' | \
+  head -n 1 | \
+  perl -ne '/iphonesimulator(\d)\.(\d)$/ && print "${1}${2}000"')
 
 # We pass OBJROOT, SYMROOT, and SHARED_PRECOMPS_DIR so that we can be sure
 # no build output ends up in DerivedData.
