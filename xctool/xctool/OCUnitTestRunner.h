@@ -21,6 +21,8 @@
   NSString *_senTestList;
   BOOL _senTestInvertScope;
   BOOL _garbageCollection;
+  BOOL _freshSimulator;
+  BOOL _freshInstall;
   NSFileHandle *_standardOutput;
   NSFileHandle *_standardError;
   NSArray *_reporters;
@@ -30,6 +32,8 @@
                 senTestList:(NSString *)senTestList
          senTestInvertScope:(BOOL)senTestInvertScope
           garbageCollection:(BOOL)garbageCollection
+             freshSimulator:(BOOL)freshSimulator
+               freshInstall:(BOOL)freshInstall
              standardOutput:(NSFileHandle *)standardOutput
               standardError:(NSFileHandle *)standardError
                   reporters:(NSArray *)reporters;
