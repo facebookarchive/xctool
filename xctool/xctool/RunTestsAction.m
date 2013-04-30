@@ -16,8 +16,6 @@
 
 #import "RunTestsAction.h"
 
-#import <launch.h>
-
 #import "OCUnitIOSAppTestRunner.h"
 #import "OCUnitIOSLogicTestRunner.h"
 #import "OCUnitOSXAppTestRunner.h"
@@ -27,11 +25,6 @@
 #import "TaskUtil.h"
 #import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
-
-static void GetJobsIterator(const launch_data_t launch_data, const char *key, void *context) {
-  void (^block)(const launch_data_t, const char *) = context;
-  block(launch_data, key);
-}
 
 @implementation RunTestsAction
 
@@ -54,10 +47,16 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
                      description:@"SPEC is TARGET[:Class/case[,Class2/case2]]"
                        paramName:@"SPEC"
                            mapTo:@selector(addOnly:)],
-    [Action actionOptionWithName:@"killSimulator"
+    [Action actionOptionWithName:@"freshSimulator"
                          aliases:nil
-                     description:@"kill simulator before testing starts"
-                         setFlag:@selector(setKillSimulator:)],
+                     description:
+     @"Start fresh simulator for each application test target"
+                         setFlag:@selector(setFreshSimulator:)],
+    [Action actionOptionWithName:@"freshInstall"
+                         aliases:nil
+                     description:
+     @"Use clean install of TEST_HOST for every app test run"
+                         setFlag:@selector(setFreshInstall:)],
     ];
 }
 
@@ -80,45 +79,6 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
   [self.onlyList addObject:argument];
 }
 
-/**
- Kill any active simulator plus any other iOS services it started via launchd.
- */
-- (void)killSimulatorJobs
-{
-  launch_data_t getJobsMessage = launch_data_new_string(LAUNCH_KEY_GETJOBS);
-  launch_data_t response = launch_msg(getJobsMessage);
-
-  assert(launch_data_get_type(response) == LAUNCH_DATA_DICTIONARY);
-
-  launch_data_dict_iterate(response, GetJobsIterator, ^(const launch_data_t launch_data, const char *keyCString){
-    NSString *key = [NSString stringWithCString:keyCString encoding:NSUTF8StringEncoding];
-
-    NSArray *strings = @[@"com.apple.iphonesimulator",
-                         @"UIKitApplication",
-                         @"SimulatorBridge",
-                         ];
-
-    BOOL matches = NO;
-    for (NSString *str in strings) {
-      if ([key rangeOfString:str options:NSCaseInsensitiveSearch].length > 0) {
-        matches = YES;
-        break;
-      }
-    }
-
-    if (matches) {
-      launch_data_t stopMessage = launch_data_alloc(LAUNCH_DATA_DICTIONARY);
-      launch_data_dict_insert(stopMessage, launch_data_new_string([key UTF8String]), LAUNCH_KEY_REMOVEJOB);
-      launch_data_t stopResponse = launch_msg(stopMessage);
-
-      launch_data_free(stopMessage);
-      launch_data_free(stopResponse);
-    }
-  });
-
-  launch_data_free(response);
-  launch_data_free(getJobsMessage);
-}
 
 - (NSArray *)onlyListAsTargetsAndSenTestList
 {
@@ -201,12 +161,10 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
     testables = newTestables;
   }
 
-  if (self.killSimulator) {
-    [self killSimulatorJobs];
-  }
-
   if (![self runTestables:testables
                   testSDK:self.testSDK
+           freshSimulator:[self freshSimulator]
+             freshInstall:[self freshInstall]
                   options:options
          xcodeSubjectInfo:xcodeSubjectInfo]) {
     return NO;
@@ -222,6 +180,8 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
   sharedPrecompsDir:(NSString *)sharedPrecompsDir
      xcodeArguments:(NSArray *)xcodeArguments
             testSDK:(NSString *)testSDK
+     freshSimulator:(BOOL)freshSimulator
+       freshInstall:(BOOL)freshInstall
         senTestList:(NSString *)senTestList
  senTestInvertScope:(BOOL)senTestInvertScope
 {
@@ -297,6 +257,8 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
                                      senTestList:senTestList
                                      senTestInvertScope:senTestInvertScope
                                      garbageCollection:garbageCollectionEnabled
+                                     freshSimulator:freshSimulator
+                                     freshInstall:freshInstall
                                      standardOutput:nil
                                      standardError:nil
                                      reporters:reporters] autorelease];
@@ -334,6 +296,8 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
 
 - (BOOL)runTestables:(NSArray *)testables
              testSDK:(NSString *)testSDK
+      freshSimulator:(BOOL)freshSimulator
+        freshInstall:(BOOL)freshInstall
              options:(Options *)options
     xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
@@ -350,6 +314,8 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
          sharedPrecompsDir:xcodeSubjectInfo.sharedPrecompsDir
             xcodeArguments:[options commonXcodeBuildArgumentsIncludingSDK:NO]
                    testSDK:testSDK
+            freshSimulator:freshSimulator
+              freshInstall:freshInstall
                senTestList:senTestList
         senTestInvertScope:senTestInvertScope]) {
       succeeded = NO;
