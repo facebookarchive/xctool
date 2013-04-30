@@ -48,14 +48,20 @@
                      description:@"SPEC is TARGET[:Class/case[,Class2/case2]]"
                        paramName:@"SPEC"
                            mapTo:@selector(addOnly:)],
-    [Action actionOptionWithName:@"killSimulator"
-                         aliases:nil
-                     description:@"kill simulator before testing starts"
-                         setFlag:@selector(setKillSimulator:)],
     [Action actionOptionWithName:@"skip-deps"
                          aliases:nil
                      description:@"Only build the target, not its dependencies"
                          setFlag:@selector(setSkipDependencies:)],
+    [Action actionOptionWithName:@"freshSimulator"
+                         aliases:nil
+                     description:
+     @"Start fresh simulator for each application test target"
+                         setFlag:@selector(setFreshSimulator:)],
+    [Action actionOptionWithName:@"freshInstall"
+                         aliases:nil
+                     description:
+     @"Use clean install of TEST_HOST for every app test run"
+                         setFlag:@selector(setFreshInstall:)],
     ];
 }
 
@@ -79,9 +85,14 @@
   _runTestsAction.testSDK = testSDK;
 }
 
-- (void)setKillSimulator:(BOOL)killSimulator
+- (void)setFreshSimulator:(BOOL)freshSimulator
 {
-  _runTestsAction.killSimulator = killSimulator;
+  [_runTestsAction setFreshSimulator:freshSimulator];
+}
+
+- (void)setFreshInstall:(BOOL)freshInstall
+{
+  [_runTestsAction setFreshInstall:freshInstall];
 }
 
 - (void)setSkipDependencies:(BOOL)skipDependencies
