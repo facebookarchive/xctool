@@ -7,21 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		283D426217305E0B00BD827B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 283D425F17305E0B00BD827B /* main.m */; };
+		283D426317305E0B00BD827B /* mobile-installation-helper-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 283D426017305E0B00BD827B /* mobile-installation-helper-Info.plist */; };
 		283EA65E16C6F9A0009CE8D3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283EA65D16C6F9A0009CE8D3 /* UIKit.framework */; };
 		283EA66016C6F9A0009CE8D3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283EA65F16C6F9A0009CE8D3 /* Foundation.framework */; };
 		283EA66216C6F9A0009CE8D3 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283EA66116C6F9A0009CE8D3 /* CoreGraphics.framework */; };
-		283EA66A16C6F9A0009CE8D3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 283EA66916C6F9A0009CE8D3 /* main.m */; };
 		287A37E616C728D400319E81 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 287A37E516C728D400319E81 /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		283EA65A16C6F9A0009CE8D3 /* app-uninstaller.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "app-uninstaller.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		283D425F17305E0B00BD827B /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		283D426017305E0B00BD827B /* mobile-installation-helper-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "mobile-installation-helper-Info.plist"; sourceTree = "<group>"; };
+		283EA65A16C6F9A0009CE8D3 /* mobile-installation-helper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "mobile-installation-helper.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		283EA65D16C6F9A0009CE8D3 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		283EA65F16C6F9A0009CE8D3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		283EA66116C6F9A0009CE8D3 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		283EA66516C6F9A0009CE8D3 /* app-uninstaller-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "app-uninstaller-Info.plist"; sourceTree = "<group>"; };
-		283EA66916C6F9A0009CE8D3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		283EA67A16C6F9E6009CE8D3 /* app-installer.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "app-installer.xcconfig"; sourceTree = "<group>"; };
+		283EA67A16C6F9E6009CE8D3 /* mobile-installation-helper.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "mobile-installation-helper.xcconfig"; sourceTree = "<group>"; };
 		287A37E516C728D400319E81 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -39,12 +40,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		283D425D17305E0B00BD827B /* mobile-installation-helper */ = {
+			isa = PBXGroup;
+			children = (
+				283D425F17305E0B00BD827B /* main.m */,
+				283D426017305E0B00BD827B /* mobile-installation-helper-Info.plist */,
+			);
+			path = "mobile-installation-helper";
+			sourceTree = "<group>";
+		};
 		283EA65116C6F9A0009CE8D3 = {
 			isa = PBXGroup;
 			children = (
 				287A37E516C728D400319E81 /* Default-568h@2x.png */,
-				283EA67A16C6F9E6009CE8D3 /* app-installer.xcconfig */,
-				283EA66316C6F9A0009CE8D3 /* app-uninstaller */,
+				283EA67A16C6F9E6009CE8D3 /* mobile-installation-helper.xcconfig */,
+				283D425D17305E0B00BD827B /* mobile-installation-helper */,
 				283EA65C16C6F9A0009CE8D3 /* Frameworks */,
 				283EA65B16C6F9A0009CE8D3 /* Products */,
 			);
@@ -53,7 +63,7 @@
 		283EA65B16C6F9A0009CE8D3 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				283EA65A16C6F9A0009CE8D3 /* app-uninstaller.app */,
+				283EA65A16C6F9A0009CE8D3 /* mobile-installation-helper.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -68,21 +78,12 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		283EA66316C6F9A0009CE8D3 /* app-uninstaller */ = {
-			isa = PBXGroup;
-			children = (
-				283EA66516C6F9A0009CE8D3 /* app-uninstaller-Info.plist */,
-				283EA66916C6F9A0009CE8D3 /* main.m */,
-			);
-			path = "app-uninstaller";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		283EA65916C6F9A0009CE8D3 /* app-uninstaller */ = {
+		283EA65916C6F9A0009CE8D3 /* mobile-installation-helper */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 283EA67716C6F9A0009CE8D3 /* Build configuration list for PBXNativeTarget "app-uninstaller" */;
+			buildConfigurationList = 283EA67716C6F9A0009CE8D3 /* Build configuration list for PBXNativeTarget "mobile-installation-helper" */;
 			buildPhases = (
 				283EA65616C6F9A0009CE8D3 /* Sources */,
 				283EA65716C6F9A0009CE8D3 /* Frameworks */,
@@ -92,9 +93,9 @@
 			);
 			dependencies = (
 			);
-			name = "app-uninstaller";
+			name = "mobile-installation-helper";
 			productName = "app-uninstaller";
-			productReference = 283EA65A16C6F9A0009CE8D3 /* app-uninstaller.app */;
+			productReference = 283EA65A16C6F9A0009CE8D3 /* mobile-installation-helper.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -106,7 +107,7 @@
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Fred Potter";
 			};
-			buildConfigurationList = 283EA65516C6F9A0009CE8D3 /* Build configuration list for PBXProject "app-uninstaller" */;
+			buildConfigurationList = 283EA65516C6F9A0009CE8D3 /* Build configuration list for PBXProject "mobile-installation-helper" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -118,7 +119,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				283EA65916C6F9A0009CE8D3 /* app-uninstaller */,
+				283EA65916C6F9A0009CE8D3 /* mobile-installation-helper */,
 			);
 		};
 /* End PBXProject section */
@@ -129,6 +130,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				287A37E616C728D400319E81 /* Default-568h@2x.png in Resources */,
+				283D426317305E0B00BD827B /* mobile-installation-helper-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,7 +141,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				283EA66A16C6F9A0009CE8D3 /* main.m in Sources */,
+				283D426217305E0B00BD827B /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -148,7 +150,7 @@
 /* Begin XCBuildConfiguration section */
 		283EA67516C6F9A0009CE8D3 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 283EA67A16C6F9E6009CE8D3 /* app-installer.xcconfig */;
+			baseConfigurationReference = 283EA67A16C6F9E6009CE8D3 /* mobile-installation-helper.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -176,7 +178,7 @@
 		};
 		283EA67616C6F9A0009CE8D3 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 283EA67A16C6F9E6009CE8D3 /* app-installer.xcconfig */;
+			baseConfigurationReference = 283EA67A16C6F9E6009CE8D3 /* mobile-installation-helper.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -199,11 +201,11 @@
 		};
 		283EA67816C6F9A0009CE8D3 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 283EA67A16C6F9E6009CE8D3 /* app-installer.xcconfig */;
+			baseConfigurationReference = 283EA67A16C6F9E6009CE8D3 /* mobile-installation-helper.xcconfig */;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				INFOPLIST_FILE = "app-uninstaller/app-uninstaller-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "mobile-installation-helper/mobile-installation-helper-Info.plist";
+				PRODUCT_NAME = "mobile-installation-helper";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -211,11 +213,11 @@
 		};
 		283EA67916C6F9A0009CE8D3 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 283EA67A16C6F9E6009CE8D3 /* app-installer.xcconfig */;
+			baseConfigurationReference = 283EA67A16C6F9E6009CE8D3 /* mobile-installation-helper.xcconfig */;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				INFOPLIST_FILE = "app-uninstaller/app-uninstaller-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "mobile-installation-helper/mobile-installation-helper-Info.plist";
+				PRODUCT_NAME = "mobile-installation-helper";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -224,7 +226,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		283EA65516C6F9A0009CE8D3 /* Build configuration list for PBXProject "app-uninstaller" */ = {
+		283EA65516C6F9A0009CE8D3 /* Build configuration list for PBXProject "mobile-installation-helper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				283EA67516C6F9A0009CE8D3 /* Debug */,
@@ -233,7 +235,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		283EA67716C6F9A0009CE8D3 /* Build configuration list for PBXNativeTarget "app-uninstaller" */ = {
+		283EA67716C6F9A0009CE8D3 /* Build configuration list for PBXNativeTarget "mobile-installation-helper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				283EA67816C6F9A0009CE8D3 /* Debug */,

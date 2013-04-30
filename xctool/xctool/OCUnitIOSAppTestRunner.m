@@ -76,25 +76,6 @@ static void KillSimulatorJobs()
 
 @implementation OCUnitIOSAppTestRunner
 
-- (DTiPhoneSimulatorSessionConfig *)sessionForAppUninstaller:(NSString *)bundleID
-{
-  assert(bundleID != nil);
-
-  NSString *sdkVersion = [_buildSettings[@"SDK_NAME"] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
-  DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKVersion:sdkVersion];
-  DTiPhoneSimulatorApplicationSpecifier *appSpec = [DTiPhoneSimulatorApplicationSpecifier specifierWithApplicationPath:
-                                                    [PathToXCToolBinaries() stringByAppendingPathComponent:@"app-uninstaller.app"]];
-  DTiPhoneSimulatorSessionConfig *sessionConfig = [[[DTiPhoneSimulatorSessionConfig alloc] init] autorelease];
-  [sessionConfig setApplicationToSimulateOnStart:appSpec];
-  [sessionConfig setSimulatedSystemRoot:systemRoot];
-  // Always run as iPhone (family = 1)
-  [sessionConfig setSimulatedDeviceFamily:@1];
-  [sessionConfig setSimulatedApplicationShouldWaitForDebugger:NO];
-  [sessionConfig setLocalizedClientName:@"xctool"];
-  [sessionConfig setSimulatedApplicationLaunchArgs:@[bundleID]];
-  return sessionConfig;
-}
-
 - (DTiPhoneSimulatorSessionConfig *)sessionConfigForRunningTestsWithEnvironment:(NSDictionary *)environment
                                                                      outputPath:(NSString *)outputPath
 {
@@ -119,36 +100,51 @@ static void KillSimulatorJobs()
   [sessionConfig setSimulatedApplicationShouldWaitForDebugger:NO];
 
   [sessionConfig setSimulatedApplicationLaunchArgs:[self otestArguments]];
-  NSMutableDictionary *launchEnvironment = [NSMutableDictionary dictionaryWithDictionary:@{
-                                            @"CFFIXED_USER_HOME" : appSupportDir,
-                                            @"DYLD_FRAMEWORK_PATH" : _buildSettings[@"TARGET_BUILD_DIR"],
-                                            @"DYLD_LIBRARY_PATH" : _buildSettings[@"TARGET_BUILD_DIR"],
-                                            @"DYLD_INSERT_LIBRARIES" : [@[
-                                                                        [PathToXCToolBinaries() stringByAppendingPathComponent:@"otest-shim-ios.dylib"],
-                                                                        ideBundleInjectionLibPath,
-                                                                        ] componentsJoinedByString:@":"],
-                                            @"DYLD_ROOT_PATH" : _buildSettings[@"SDKROOT"],
-                                            @"IPHONE_SIMULATOR_ROOT" : _buildSettings[@"SDKROOT"],
-                                            @"NSUnbufferedIO" : @"YES",
-                                            @"XCInjectBundle" : testBundlePath,
-                                            @"XCInjectBundleInto" : testHostPath,
-                                            }];
+
+  NSMutableDictionary *launchEnvironment = [NSMutableDictionary dictionary];
   [launchEnvironment addEntriesFromDictionary:environment];
+  [launchEnvironment addEntriesFromDictionary:@{
+   @"CFFIXED_USER_HOME" : appSupportDir,
+   @"DYLD_FRAMEWORK_PATH" : _buildSettings[@"TARGET_BUILD_DIR"],
+   @"DYLD_LIBRARY_PATH" : _buildSettings[@"TARGET_BUILD_DIR"],
+   @"DYLD_INSERT_LIBRARIES" : [@[
+                                 [PathToXCToolBinaries() stringByAppendingPathComponent:@"otest-shim-ios.dylib"],
+                               ideBundleInjectionLibPath,
+                               ] componentsJoinedByString:@":"],
+   @"DYLD_ROOT_PATH" : _buildSettings[@"SDKROOT"],
+   @"IPHONE_SIMULATOR_ROOT" : _buildSettings[@"SDKROOT"],
+   @"NSUnbufferedIO" : @"YES",
+   @"XCInjectBundle" : testBundlePath,
+   @"XCInjectBundleInto" : testHostPath,
+   }];
   [sessionConfig setSimulatedApplicationLaunchEnvironment:launchEnvironment];
+  
   [sessionConfig setSimulatedApplicationStdOutPath:outputPath];
   [sessionConfig setSimulatedApplicationStdErrPath:outputPath];
 
-  //[sessionConfig setLocalizedClientName:[NSString stringWithFormat:@"1234"]];
-  [sessionConfig setLocalizedClientName:[NSString stringWithUTF8String:getprogname()]];
+  [sessionConfig setLocalizedClientName:@"xctool"];
 
   return sessionConfig;
 }
 
-- (BOOL)uninstallApplication:(NSString *)bundleID
+- (BOOL)runMobileInstallationHelperWithArguments:(NSArray *)arguments
 {
-  assert(bundleID != nil);
-  DTiPhoneSimulatorSessionConfig *config = [self sessionForAppUninstaller:bundleID];
-  SimulatorLauncher *launcher = [[[SimulatorLauncher alloc] initWithSessionConfig:config] autorelease];
+  NSString *sdkVersion = [_buildSettings[@"SDK_NAME"] stringByReplacingOccurrencesOfString:@"iphonesimulator"
+                                                                                withString:@""];
+  DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKVersion:sdkVersion];
+  DTiPhoneSimulatorApplicationSpecifier *appSpec = [DTiPhoneSimulatorApplicationSpecifier specifierWithApplicationPath:
+                                                    [PathToXCToolBinaries() stringByAppendingPathComponent:@"mobile-installation-helper.app"]];
+  DTiPhoneSimulatorSessionConfig *sessionConfig = [[[DTiPhoneSimulatorSessionConfig alloc] init] autorelease];
+  [sessionConfig setApplicationToSimulateOnStart:appSpec];
+  [sessionConfig setSimulatedSystemRoot:systemRoot];
+  // Always run as iPhone (family = 1)
+  [sessionConfig setSimulatedDeviceFamily:@1];
+  [sessionConfig setSimulatedApplicationShouldWaitForDebugger:NO];
+  [sessionConfig setLocalizedClientName:@"xctool"];
+  [sessionConfig setSimulatedApplicationLaunchArgs:arguments];
+  [sessionConfig setSimulatedApplicationLaunchEnvironment:@{}];
+
+  SimulatorLauncher *launcher = [[[SimulatorLauncher alloc] initWithSessionConfig:sessionConfig] autorelease];
 
   return [launcher launchAndWaitForExit];
 }
@@ -211,12 +207,43 @@ static void KillSimulatorJobs()
     ReportMessage(REPORTER_MESSAGE_INFO,
                   @"Uninstalling '%@' to get a fresh install.",
                   testHostBundleID);
-    if (![self uninstallApplication:testHostBundleID]) {
-      *error = [NSString stringWithFormat:@"Failed to uninstall the test host app '%@' before running tests.", testHostBundleID];
+    BOOL uninstalled = [self runMobileInstallationHelperWithArguments:@[
+                        @"uninstall",
+                        testHostBundleID,
+                        ]];
+    if (!uninstalled) {
+      *error = [NSString stringWithFormat:
+                @"Failed to uninstall the test host app '%@' "
+                @"before running tests.",
+                testHostBundleID];
       return NO;
     }
   }
 
+  // Always install the app before running it.  We've observed that
+  // DTiPhoneSimulatorSession does not reliably set the application launch
+  // environment.  If the app is not already installed on the simulator and you
+  // set the launch environment via (setSimulatedApplicationLaunchEnvironment:),
+  // then _sometimes_ the environment gets set right and sometimes not.  This
+  // would make test sometimes not run, since the test runner depends on
+  // DYLD_INSERT_LIBARIES getting passed to the test host app.
+  //
+  // By making sure the app is already installed, we guarantee the environment
+  // is always set correctly.
+  ReportMessage(REPORTER_MESSAGE_INFO, @"Installing '%@' ...", testHostAppPath);
+  BOOL installed = [self runMobileInstallationHelperWithArguments:@[
+                    @"install",
+                    testHostAppPath,
+                    ]];
+  if (!installed) {
+    *error = [NSString stringWithFormat:
+              @"Failed to install the test host app '%@'.",
+              testHostBundleID];
+    return NO;
+  }
+
+  ReportMessage(REPORTER_MESSAGE_INFO,
+                @"Launching test host and running tests...");
   if (![self runTestsInSimulator:testHostAppPath feedOutputToBlock:outputLineBlock]) {
     *error = [NSString stringWithFormat:@"Failed to run tests"];
     return NO;

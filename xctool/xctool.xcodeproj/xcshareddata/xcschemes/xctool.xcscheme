@@ -71,9 +71,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "283EA65916C6F9A0009CE8D3"
-               BuildableName = "app-uninstaller.app"
-               BlueprintName = "app-uninstaller"
-               ReferencedContainer = "container:../app-uninstaller/app-uninstaller.xcodeproj">
+               BuildableName = "mobile-installation-helper.app"
+               BlueprintName = "mobile-installation-helper"
+               ReferencedContainer = "container:../mobile-installation-helper/mobile-installation-helper.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
