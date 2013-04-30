@@ -483,7 +483,6 @@
        now,
        event[kReporter_Message_LevelKey],
        event[kReporter_Message_MessageKey]];
-  [self.reportWriter printNewline];
 }
 
 - (NSString *)formattedTestDuration:(float)duration withColor:(BOOL)withColor
