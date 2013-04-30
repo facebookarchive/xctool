@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		283D426217305E0B00BD827B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 283D425F17305E0B00BD827B /* main.m */; };
-		283D426317305E0B00BD827B /* mobile-installation-helper-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 283D426017305E0B00BD827B /* mobile-installation-helper-Info.plist */; };
 		283EA65E16C6F9A0009CE8D3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283EA65D16C6F9A0009CE8D3 /* UIKit.framework */; };
 		283EA66016C6F9A0009CE8D3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283EA65F16C6F9A0009CE8D3 /* Foundation.framework */; };
 		283EA66216C6F9A0009CE8D3 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283EA66116C6F9A0009CE8D3 /* CoreGraphics.framework */; };
@@ -130,7 +129,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				287A37E616C728D400319E81 /* Default-568h@2x.png in Resources */,
-				283D426317305E0B00BD827B /* mobile-installation-helper-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
