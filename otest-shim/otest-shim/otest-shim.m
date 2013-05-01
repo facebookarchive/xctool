@@ -273,33 +273,37 @@ __attribute__((constructor)) static void EntryPoint()
   __stderrHandle = dup(STDERR_FILENO);
   __stderr = fdopen(__stderrHandle, "w");
 
-  void (^doSwizzleBlock)() = [^{
-    SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"), @selector(testSuiteDidStart:), (IMP)SenTestLog_testSuiteDidStart);
-    SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"), @selector(testSuiteDidStop:), (IMP)SenTestLog_testSuiteDidStop);
-    SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"), @selector(testCaseDidStart:), (IMP)SenTestLog_testCaseDidStart);
-    SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"), @selector(testCaseDidStop:), (IMP)SenTestLog_testCaseDidStop);
-    SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"), @selector(testCaseDidFail:), (IMP)SenTestLog_testCaseDidFail);
-  } copy];
+  // We need to swizzle SenTestLog (part of SenTestingKit), but the test bundle
+  // (which links SenTestingKit) hasn't been loaded yet.  It'd be nice if we
+  // could use NSBundleDidLoadNotification to wait for it to load, but that
+  // notification only happens if a bundle is loaded via -[NSBundle load] and in
+  // the case of application tests, the bundle is loaded via
+  // CFBundleLoadExecutable... so, no notification.
+  //
+  // Let's wait for the test runner to start, then swizzle.
+  __block id observer = [[NSNotificationCenter defaultCenter]
+                         addObserverForName:@"SenTestSuiteDidStartNotification"
+                         object:nil
+                         queue:nil
+                         usingBlock:[^(NSNotification *notification) {
+    [[NSNotificationCenter defaultCenter] removeObserver:observer];
 
-  if ([[[NSProcessInfo processInfo] processName] isEqualToString:@"otest"]) {
-    // This is a logic test, and the test bundle is loaded directly by otest.
-    __block id observer = [[NSNotificationCenter defaultCenter] addObserverForName:NSBundleDidLoadNotification object:nil queue:nil usingBlock:[^(NSNotification *notification) {
-      if (NSClassFromString(@"SenTestObserver")) {
-        [[NSNotificationCenter defaultCenter] removeObserver:observer];
-        doSwizzleBlock();
-      }
-    } copy]];
-  } else {
-    // This must be an application test and we're running the simulator.  The test bundle gets
-    // started by adding an operation to the run loop.  So, before that happens, let's add our own
-    // operation to do the swizzling as soon as the run loop is going.
-    [doSwizzleBlock performSelector:@selector(invoke) withObject:nil afterDelay:0.0];
-
-    // HACK! DTiPhoneSimulatorSessionDelegate's session:didStart:withError: will fail to be called
-    // if the process exits immediately upon startup.  A short pause here is enough to make the
-    // right things happen.
-    [NSThread sleepForTimeInterval:0.1];
-  }
+    SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
+                                    @selector(testSuiteDidStart:),
+                                    (IMP)SenTestLog_testSuiteDidStart);
+    SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
+                                    @selector(testSuiteDidStop:),
+                                    (IMP)SenTestLog_testSuiteDidStop);
+    SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
+                                    @selector(testCaseDidStart:),
+                                    (IMP)SenTestLog_testCaseDidStart);
+    SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
+                                    @selector(testCaseDidStop:),
+                                    (IMP)SenTestLog_testCaseDidStop);
+    SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
+                                    @selector(testCaseDidFail:),
+                                    (IMP)SenTestLog_testCaseDidFail);
+  } copy]];
 
   // Unset so we don't cascade into other process that get spawned from xcodebuild.
   unsetenv("DYLD_INSERT_LIBRARIES");
