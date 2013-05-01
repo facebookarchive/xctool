@@ -37,6 +37,11 @@
                BlueprintName = "TestProject-LibraryTests"
                ReferencedContainer = "container:TestProject-Library.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "DisabledTests">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
    </TestAction>

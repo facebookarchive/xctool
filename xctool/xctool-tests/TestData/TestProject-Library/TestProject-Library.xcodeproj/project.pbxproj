@@ -17,6 +17,7 @@
 		2828293F16B11F0F00426B92 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2828293D16B11F0F00426B92 /* InfoPlist.strings */; };
 		2828294216B11F0F00426B92 /* SomeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2828294116B11F0F00426B92 /* SomeTests.m */; };
 		28A33D1316CF4FFD00C5EE2A /* OtherTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A33D1216CF4FFD00C5EE2A /* OtherTests.m */; };
+		28B3C3AF1731B33C00EC75E5 /* DisabledTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28B3C3AE1731B33C00EC75E5 /* DisabledTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -47,6 +48,8 @@
 		2828294116B11F0F00426B92 /* SomeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SomeTests.m; sourceTree = "<group>"; };
 		28A33D1116CF4FFD00C5EE2A /* OtherTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OtherTests.h; sourceTree = "<group>"; };
 		28A33D1216CF4FFD00C5EE2A /* OtherTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OtherTests.m; sourceTree = "<group>"; };
+		28B3C3AD1731B33C00EC75E5 /* DisabledTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisabledTests.h; sourceTree = "<group>"; };
+		28B3C3AE1731B33C00EC75E5 /* DisabledTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisabledTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +130,8 @@
 				2828293B16B11F0F00426B92 /* Supporting Files */,
 				28A33D1116CF4FFD00C5EE2A /* OtherTests.h */,
 				28A33D1216CF4FFD00C5EE2A /* OtherTests.m */,
+				28B3C3AD1731B33C00EC75E5 /* DisabledTests.h */,
+				28B3C3AE1731B33C00EC75E5 /* DisabledTests.m */,
 			);
 			path = "TestProject-LibraryTests";
 			sourceTree = "<group>";
@@ -246,6 +251,7 @@
 			files = (
 				2828294216B11F0F00426B92 /* SomeTests.m in Sources */,
 				28A33D1316CF4FFD00C5EE2A /* OtherTests.m in Sources */,
+				28B3C3AF1731B33C00EC75E5 /* DisabledTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
