@@ -11,6 +11,7 @@
 		282BFE2B1716044C0022F9FF /* otest-shim.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCA9916C2EE4C00F2E343 /* otest-shim.m */; };
 		283CCA9A16C2EE4C00F2E343 /* otest-shim.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCA9916C2EE4C00F2E343 /* otest-shim.m */; };
 		287A37E916C7776E00319E81 /* dyld-interposing.h in Headers */ = {isa = PBXBuildFile; fileRef = 287A37E816C7776E00319E81 /* dyld-interposing.h */; };
+		28A094B41731DA3500838CDD /* dyld_priv.h in Headers */ = {isa = PBXBuildFile; fileRef = 28A094B31731DA3500838CDD /* dyld_priv.h */; };
 		28E9B9DF16C32E9A00A52E4D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283CCA9416C2EE4C00F2E343 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
@@ -27,6 +28,7 @@
 		283CCA9716C2EE4C00F2E343 /* otest-shim-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "otest-shim-Prefix.pch"; sourceTree = "<group>"; };
 		283CCA9916C2EE4C00F2E343 /* otest-shim.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "otest-shim.m"; sourceTree = "<group>"; };
 		287A37E816C7776E00319E81 /* dyld-interposing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dyld-interposing.h"; sourceTree = "<group>"; };
+		28A094B31731DA3500838CDD /* dyld_priv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dyld_priv.h; sourceTree = "<group>"; };
 		28E9B98216C2F2D400A52E4D /* otest-shim-ios.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "otest-shim-ios.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -66,7 +68,7 @@
 				282BFE29171602F80022F9FF /* otest-shim-osx.xcconfig */,
 				28E9B98216C2F2D400A52E4D /* otest-shim-ios.xcconfig */,
 				283CCA8E16C2EE4C00F2E343 /* Frameworks */,
-				283CCA9516C2EE4C00F2E343 /* otest-lib */,
+				283CCA9516C2EE4C00F2E343 /* otest-shim */,
 				283CCA8D16C2EE4C00F2E343 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -91,9 +93,10 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		283CCA9516C2EE4C00F2E343 /* otest-lib */ = {
+		283CCA9516C2EE4C00F2E343 /* otest-shim */ = {
 			isa = PBXGroup;
 			children = (
+				28A094B31731DA3500838CDD /* dyld_priv.h */,
 				287A37E816C7776E00319E81 /* dyld-interposing.h */,
 				283CCA9916C2EE4C00F2E343 /* otest-shim.m */,
 				283CCA9616C2EE4C00F2E343 /* Supporting Files */,
@@ -124,6 +127,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				287A37E916C7776E00319E81 /* dyld-interposing.h in Headers */,
+				28A094B41731DA3500838CDD /* dyld_priv.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
