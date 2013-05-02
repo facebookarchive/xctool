@@ -57,7 +57,7 @@
                            mapTo:@selector(setProject:)],
     [Action actionOptionWithName:@"scheme"
                          aliases:nil
-                     description:@"sheme to use for building or testing"
+                     description:@"scheme to use for building or testing"
                        paramName:@"NAME"
                            mapTo:@selector(setScheme:)],
     [Action actionOptionWithName:@"find-target"
