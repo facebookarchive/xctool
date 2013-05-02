@@ -147,12 +147,13 @@
     NSMutableArray *newTestables = [NSMutableArray array];
     for (NSDictionary *only in [self onlyListAsTargetsAndSenTestList]) {
       NSDictionary *matchingTestable = [xcodeSubjectInfo testableWithTarget:only[@"target"]];
+
       if (matchingTestable) {
         NSMutableDictionary *newTestable = [NSMutableDictionary dictionaryWithDictionary:matchingTestable];
-        newTestable[@"senTestInvertScope"] = @NO;
 
         if (only[@"senTestList"] != [NSNull null]) {
           newTestable[@"senTestList"] = only[@"senTestList"];
+          newTestable[@"senTestInvertScope"] = @NO;
         }
 
         [newTestables addObject:newTestable];
