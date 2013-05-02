@@ -14,17 +14,19 @@
 // limitations under the License.
 //
 
+#import <mach-o/dyld.h>
+#import <mach-o/dyld_images.h>
 #import <objc/message.h>
 #import <objc/runtime.h>
 #import <sys/uio.h>
 
 #import <Foundation/Foundation.h>
-
 #import <SenTestingKit/SenTestingKit.h>
 
 #import "../../xctool/xctool/Reporter.h"
 
 #import "dyld-interposing.h"
+#import "dyld_priv.h"
 
 static int __stdoutHandle;
 static FILE *__stdout;
@@ -266,6 +268,34 @@ static ssize_t __writev(int fildes, const struct iovec *iov, int iovcnt)
 }
 DYLD_INTERPOSE(__writev, writev);
 
+static const char *DyldImageStateChangeHandler(enum dyld_image_states state,
+                                               uint32_t infoCount,
+                                               const struct dyld_image_info info[])
+{
+  for (uint32_t i = 0; i < infoCount; i++) {
+    if (strstr(info[i].imageFilePath, "SenTestingKit.framework/SenTestingKit") != NULL) {
+      // Since the 'SenTestLog' class now exists, we can swizzle it!
+      SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
+                                      @selector(testSuiteDidStart:),
+                                      (IMP)SenTestLog_testSuiteDidStart);
+      SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
+                                      @selector(testSuiteDidStop:),
+                                      (IMP)SenTestLog_testSuiteDidStop);
+      SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
+                                      @selector(testCaseDidStart:),
+                                      (IMP)SenTestLog_testCaseDidStart);
+      SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
+                                      @selector(testCaseDidStop:),
+                                      (IMP)SenTestLog_testCaseDidStop);
+      SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
+                                      @selector(testCaseDidFail:),
+                                      (IMP)SenTestLog_testCaseDidFail);
+    }
+  }
+
+  return NULL;
+}
+
 __attribute__((constructor)) static void EntryPoint()
 {
   __stdoutHandle = dup(STDOUT_FILENO);
@@ -273,34 +303,14 @@ __attribute__((constructor)) static void EntryPoint()
   __stderrHandle = dup(STDERR_FILENO);
   __stderr = fdopen(__stderrHandle, "w");
 
-  void (^doSwizzleBlock)() = [^{
-    SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"), @selector(testSuiteDidStart:), (IMP)SenTestLog_testSuiteDidStart);
-    SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"), @selector(testSuiteDidStop:), (IMP)SenTestLog_testSuiteDidStop);
-    SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"), @selector(testCaseDidStart:), (IMP)SenTestLog_testCaseDidStart);
-    SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"), @selector(testCaseDidStop:), (IMP)SenTestLog_testCaseDidStop);
-    SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"), @selector(testCaseDidFail:), (IMP)SenTestLog_testCaseDidFail);
-  } copy];
-
-  if ([[[NSProcessInfo processInfo] processName] isEqualToString:@"otest"]) {
-    // This is a logic test, and the test bundle is loaded directly by otest.
-    __block id observer = [[NSNotificationCenter defaultCenter] addObserverForName:NSBundleDidLoadNotification object:nil queue:nil usingBlock:[^(NSNotification *notification) {
-      if (NSClassFromString(@"SenTestObserver")) {
-        [[NSNotificationCenter defaultCenter] removeObserver:observer];
-        doSwizzleBlock();
-      }
-    } copy]];
-  } else {
-    // This must be an application test and we're running the simulator.  The test bundle gets
-    // started by adding an operation to the run loop.  So, before that happens, let's add our own
-    // operation to do the swizzling as soon as the run loop is going.
-    [doSwizzleBlock performSelector:@selector(invoke) withObject:nil afterDelay:0.0];
-
-    // HACK! DTiPhoneSimulatorSessionDelegate's session:didStart:withError: will fail to be called
-    // if the process exits immediately upon startup.  A short pause here is enough to make the
-    // right things happen.
-    [NSThread sleepForTimeInterval:0.1];
-  }
+  // We need to swizzle SenTestLog (part of SenTestingKit), but the test bundle
+  // which links SenTestingKit hasn't been loaded yet.  Let's register to get
+  // notified when libraries are initialized and we'll watch for SenTestingKit.
+  dyld_register_image_state_change_handler(dyld_image_state_initialized,
+                                           NO,
+                                           DyldImageStateChangeHandler);
 
   // Unset so we don't cascade into other process that get spawned from xcodebuild.
   unsetenv("DYLD_INSERT_LIBRARIES");
 }
+
