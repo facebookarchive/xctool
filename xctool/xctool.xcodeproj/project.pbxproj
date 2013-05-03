@@ -82,6 +82,9 @@
 		32707EE21725FE7F00AF2F53 /* TestActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 32707EE11725FE7F00AF2F53 /* TestActionTests.m */; };
 		32A90C541725F05800C2349E /* TestAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 32A90C521725F05800C2349E /* TestAction.m */; };
 		32A90C551725F05800C2349E /* TestAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 32A90C521725F05800C2349E /* TestAction.m */; };
+		37520901173311B500AC05F9 /* JUnitReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 37520900173311B500AC05F9 /* JUnitReporter.m */; };
+		37520902173311BC00AC05F9 /* JUnitReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 37520900173311B500AC05F9 /* JUnitReporter.m */; };
+		37520905173401D100AC05F9 /* JUnitReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37520904173401D100AC05F9 /* JUnitReporterTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -192,6 +195,9 @@
 		32707EE31725FE9500AF2F53 /* TestActionInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestActionInternal.h; sourceTree = "<group>"; };
 		32A90C521725F05800C2349E /* TestAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestAction.m; sourceTree = "<group>"; };
 		32A90C531725F05800C2349E /* TestAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestAction.h; sourceTree = "<group>"; };
+		375208FF173311B500AC05F9 /* JUnitReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JUnitReporter.h; sourceTree = "<group>"; };
+		37520900173311B500AC05F9 /* JUnitReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JUnitReporter.m; sourceTree = "<group>"; };
+		37520904173401D100AC05F9 /* JUnitReporterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JUnitReporterTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -352,6 +358,7 @@
 				287BF04C16F1A6EB00590E06 /* XcodeSubjectInfoTests.m */,
 				283EAF151702BB0600CE0A0C /* OCUnitCrashFilterTests.m */,
 				283EAF5C1704C62E00CE0A0C /* PhabricatorReporterTests.m */,
+				37520904173401D100AC05F9 /* JUnitReporterTests.m */,
 			);
 			path = "xctool-tests";
 			sourceTree = "<group>";
@@ -385,6 +392,8 @@
 				28E9B9EA16C34F2B00A52E4D /* TextReporter.m */,
 				283EAF571704C22000CE0A0C /* PhabricatorReporter.h */,
 				283EAF581704C22000CE0A0C /* PhabricatorReporter.m */,
+				375208FF173311B500AC05F9 /* JUnitReporter.h */,
+				37520900173311B500AC05F9 /* JUnitReporter.m */,
 			);
 			name = Reporters;
 			sourceTree = "<group>";
@@ -514,6 +523,7 @@
 				288B9FBC171A5509008F0BDF /* OCUnitOSXAppTestRunner.m in Sources */,
 				324BB4C51725BD990073A862 /* XcodeTargetMatch.m in Sources */,
 				32A90C541725F05800C2349E /* TestAction.m in Sources */,
+				37520901173311B500AC05F9 /* JUnitReporter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -559,6 +569,8 @@
 				324BB4C61725BDA20073A862 /* XcodeTargetMatch.m in Sources */,
 				32A90C551725F05800C2349E /* TestAction.m in Sources */,
 				32707EE21725FE7F00AF2F53 /* TestActionTests.m in Sources */,
+				37520902173311BC00AC05F9 /* JUnitReporter.m in Sources */,
+				37520905173401D100AC05F9 /* JUnitReporterTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

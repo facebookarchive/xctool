@@ -20,6 +20,7 @@
 
 #import "Options.h"
 #import "JSONStreamReporter.h"
+#import "JUnitReporter.h"
 #import "PhabricatorReporter.h"
 #import "TextReporter.h"
 
@@ -77,6 +78,7 @@ void ReportMessage(ReporterMessageLevel level, NSString *format, ...) {
 + (Reporter *)reporterWithName:(NSString *)name outputPath:(NSString *)outputPath options:(Options *)options
 {
   NSDictionary *reporters = @{@"json-stream": [JSONStreamReporter class],
+                              @"junit": [JUnitReporter class],
                               @"pretty": [PrettyTextReporter class],
                               @"plain": [PlainTextReporter class],
                               @"phabricator": [PhabricatorReporter class],
