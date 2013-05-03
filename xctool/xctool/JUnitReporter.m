@@ -10,8 +10,12 @@
 #import "RunTestsAction.h"
 
 @implementation JUnitReporter {
-    NSString *_currentSuiteName;
-    NSMutableString *_currentSuiteXML;
+    NSMutableArray *_suites;
+    NSMutableDictionary *_currentSuite;
+    int _totalTests;
+    int _totalFailures;
+    int _totalErrors;
+    float _totalTime;
 }
 
 - (id)init
@@ -26,32 +30,6 @@
   [super dealloc];
 }
 
-- (BOOL)openWithStandardOutput:(NSFileHandle *)standardOutput error:(NSString **)error
-{
-    if ([self.outputPath isEqualToString:@"-"]) {
-        _outputHandle = [standardOutput retain];
-        return YES;
-    } else {
-        NSFileManager *fileManager = [[NSFileManager alloc] init];
-        BOOL isDirectory = NO;
-        BOOL exists = [fileManager fileExistsAtPath:self.outputPath isDirectory:&isDirectory];
-        
-        if (exists && !isDirectory) {
-            *error = [NSString stringWithFormat:@"Output path is not a directory '%@'.", self.outputPath];
-            return NO;
-        } else if (!exists) {
-            NSError *createDirError = nil;
-            [fileManager createDirectoryAtPath:self.outputPath withIntermediateDirectories:YES attributes:nil error:&createDirError];
-            if (createDirError) {
-                *error = [NSString stringWithFormat:@"Failed to create output directory '%@'.", self.outputPath];
-                return NO;
-            }
-        }
-        
-        return YES;
-    }
-}
-
 - (void)beginAction:(NSDictionary *)event {}
 - (void)endAction:(NSDictionary *)event {}
 - (void)beginBuildTarget:(NSDictionary *)event {}
@@ -62,18 +40,46 @@
 - (void)endXcodebuild:(NSDictionary *)event {}
 
 - (void)beginOcunit:(NSDictionary *)event {
+    _suites = [NSMutableArray new];
 }
 
 - (void)endOcunit:(NSDictionary *)event {
+    NSMutableString *xml = [NSMutableString new];
+    [xml appendString:@"<?xml version='1.0' encoding='UTF-8' ?>\n"];
+    
+    [xml appendFormat:@"<testsuites name='AllTests' time='%f' tests='%i' failures='%i' errors='%i'>\n", _totalTime, _totalTests, _totalFailures, _totalErrors];
+    
+    for (NSDictionary *suite in _suites) {
+        [xml appendFormat:@"<testsuite name='%@' tests='%i' errors='%i' failures='%i' time='%f'>\n",
+         suite[@"name"], [suite[@"testCaseCount"] intValue], [suite[@"unexpectedExceptionCount"] intValue], [suite[@"totalFailureCount"] intValue], [suite[@"totalDuration"] floatValue]];
+        
+        for (NSDictionary *test in suite[@"tests"]) {
+            [xml appendFormat:@"<testcase classname='%@' name='%@' time='%f' />\n", test[@"classname"], test[@"name"], [test[@"time"] floatValue]];
+        }
+        
+        [xml appendString:@"</testsuite>\n"];
+    }
+    
+    [xml appendString:@"</testsuites>\n"];
+    
+    [_outputHandle writeData:[xml dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
 - (void)beginTestSuite:(NSDictionary *)event {
-    _currentSuiteName = event[@"suite"];
-    _currentSuiteXML = [NSMutableString new];
+    NSString *name = event[@"suite"];
+    if (name) {
+        _currentSuite = [NSMutableDictionary new];
+        _currentSuite[@"name"] = name;
+        _currentSuite[@"tests"] = [NSMutableArray new];
+        _totalTests = 0;
+        _totalTime = 0.0f;
+        _totalFailures = 0;
+        _totalErrors = 0;
+    }
 }
 
 - (void)endTestSuite:(NSDictionary *)event {
-    if (!_currentSuiteName) {
+    if (!_currentSuite) {
         return;
     }
     
@@ -82,30 +88,26 @@
     NSNumber *totalFailureCount = event[@"totalFailureCount"];
     NSNumber *unexpectedExceptionCount = event[@"unexpectedExceptionCount"];
     
-    NSString *header = [NSString stringWithFormat:
-                        @"<?xml version='1.0' encoding='UTF-8' ?>\n"
-                        @"<testsuite name='%@' tests='%i' errors='%i' failures='%i' time='%f'>\n",
-                        _currentSuiteName, [testCaseCount intValue], [unexpectedExceptionCount intValue], [totalFailureCount intValue], [totalDuration floatValue]];
-    NSString *footer = @"</testsuite>\n";
+    _totalTests += [testCaseCount intValue];
+    _totalTime += [totalDuration floatValue];
+    _totalFailures += [totalFailureCount intValue];
+    _totalErrors += [unexpectedExceptionCount intValue];
     
-    NSString *fullString = [NSString stringWithFormat:@"%@%@%@", header, _currentSuiteXML, footer];
-    NSString *testSuiteFileName = [NSString stringWithFormat:@"TEST-%@.xml", _currentSuiteName];
+    _currentSuite[@"testCaseCount"] = testCaseCount;
+    _currentSuite[@"totalDuration"] = totalDuration;
+    _currentSuite[@"totalFailureCount"] = totalFailureCount;
+    _currentSuite[@"unexpectedExceptionCount"] = unexpectedExceptionCount;
     
-    if (_outputHandle) {
-        [_outputHandle writeData:[fullString dataUsingEncoding:NSUTF8StringEncoding]];
-    } else {
-        NSString *filePath = [self.outputPath stringByAppendingPathComponent:testSuiteFileName];
-        [fullString writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
-    }
-    
-    _currentSuiteName = nil;
-    _currentSuiteXML = nil;
+    [_suites addObject:_currentSuite];
+    _currentSuite = nil;
 }
 
 - (void)beginTest:(NSDictionary *)event {
 }
 
 - (void)endTest:(NSDictionary *)event {
+    NSMutableArray *tests = _currentSuite[@"tests"];
+    
     NSString *testName = event[@"test"];
     NSNumber *duration = event[@"totalDuration"];
     
@@ -115,8 +117,7 @@
     NSString *className = splitTestName[0];
     NSString *methodName = splitTestName[1];
     
-    NSString *xmlJUnitOutput = [NSString stringWithFormat:@"<testcase classname='%@' name='%@' time='%f' />\n", className, methodName, [duration floatValue]];
-    [_currentSuiteXML appendString:xmlJUnitOutput];
+    [tests addObject:@{@"classname":className, @"name":methodName, @"time":duration}];
 }
 
 - (void)testOutput:(NSDictionary *)event {
