@@ -16,6 +16,7 @@
 
 #import "Options.h"
 
+#import "ArchiveAction.h"
 #import "BuildAction.h"
 #import "BuildTestsAction.h"
 #import "CleanAction.h"
@@ -35,6 +36,7 @@
            [BuildTestsAction class],
            [RunTestsAction class],
            [TestAction class],
+           [ArchiveAction class],
            ];
 }
 
