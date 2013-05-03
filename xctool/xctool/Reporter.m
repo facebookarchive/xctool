@@ -22,6 +22,7 @@
 #import "JSONStreamReporter.h"
 #import "PhabricatorReporter.h"
 #import "TextReporter.h"
+#import "JUnitReporter.h"
 
 NSString *ReporterMessageLevelToString(ReporterMessageLevel level) {
   switch (level) {
@@ -80,6 +81,7 @@ void ReportMessage(ReporterMessageLevel level, NSString *format, ...) {
                               @"pretty": [PrettyTextReporter class],
                               @"plain": [PlainTextReporter class],
                               @"phabricator": [PhabricatorReporter class],
+                              @"junit": [JUnitReporter class],
                               };
 
   Class reporterClass = reporters[name];
