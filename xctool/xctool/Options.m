@@ -22,6 +22,7 @@
 #import "Reporter.h"
 #import "RunTestsAction.h"
 #import "TestAction.h"
+#import "ArchiveAction.h"
 #import "XCToolUtil.h"
 #import "XcodeSubjectInfo.h"
 #import "XcodeTargetMatch.h"
@@ -35,6 +36,7 @@
            [BuildTestsAction class],
            [RunTestsAction class],
            [TestAction class],
+           [ArchiveAction class],
            ];
 }
 
