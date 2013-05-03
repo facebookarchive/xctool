@@ -84,6 +84,8 @@
 		32A90C551725F05800C2349E /* TestAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 32A90C521725F05800C2349E /* TestAction.m */; };
 		C9D5B9891733CC2100011C1F /* ArchiveAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D5B9881733CC2100011C1F /* ArchiveAction.m */; };
 		C9D5B98A1733CC2500011C1F /* ArchiveAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D5B9881733CC2100011C1F /* ArchiveAction.m */; };
+		C9DE7BD71734100B0092A463 /* JUnitReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = C9DE7BD61734100A0092A463 /* JUnitReporter.m */; };
+		C9DE7BD81734100B0092A463 /* JUnitReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = C9DE7BD61734100A0092A463 /* JUnitReporter.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -196,6 +198,8 @@
 		32A90C531725F05800C2349E /* TestAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestAction.h; sourceTree = "<group>"; };
 		C9D5B9871733CC2100011C1F /* ArchiveAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArchiveAction.h; sourceTree = "<group>"; };
 		C9D5B9881733CC2100011C1F /* ArchiveAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArchiveAction.m; sourceTree = "<group>"; };
+		C9DE7BD51734100A0092A463 /* JUnitReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JUnitReporter.h; sourceTree = "<group>"; };
+		C9DE7BD61734100A0092A463 /* JUnitReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JUnitReporter.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -391,6 +395,8 @@
 				28E9B9EA16C34F2B00A52E4D /* TextReporter.m */,
 				283EAF571704C22000CE0A0C /* PhabricatorReporter.h */,
 				283EAF581704C22000CE0A0C /* PhabricatorReporter.m */,
+				C9DE7BD51734100A0092A463 /* JUnitReporter.h */,
+				C9DE7BD61734100A0092A463 /* JUnitReporter.m */,
 			);
 			name = Reporters;
 			sourceTree = "<group>";
@@ -521,6 +527,7 @@
 				324BB4C51725BD990073A862 /* XcodeTargetMatch.m in Sources */,
 				32A90C541725F05800C2349E /* TestAction.m in Sources */,
 				C9D5B9891733CC2100011C1F /* ArchiveAction.m in Sources */,
+				C9DE7BD71734100B0092A463 /* JUnitReporter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -567,6 +574,7 @@
 				32A90C551725F05800C2349E /* TestAction.m in Sources */,
 				32707EE21725FE7F00AF2F53 /* TestActionTests.m in Sources */,
 				C9D5B98A1733CC2500011C1F /* ArchiveAction.m in Sources */,
+				C9DE7BD81734100B0092A463 /* JUnitReporter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
