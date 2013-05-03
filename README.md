@@ -5,8 +5,15 @@ __xctool__ is a replacement for Apple's __xcodebuild__ that makes it
 easier to build and test iOS and Mac products.  It's especially helpful
 for continuous integration.
 
-It's a drop-in replacement for __xcodebuild__ that adds a
-few extra features:
+[ [Features](#features) &bull; [Requirements](#requirements) &bull; [Usage](#usage)
+&bull; [Reporters](#reporters) &bull;
+[Configuration](#configuration-xctool-args) &bull; 
+[Contributing](#contributing) &bull; [License](#license) ]
+
+## Features
+
+__xctool__ is drop-in replacement for xcodebuild that adds a few extra
+features:
 
 * **Runs the same tests as Xcode.app.**
 
