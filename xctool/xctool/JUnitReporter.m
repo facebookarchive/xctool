@@ -91,6 +91,8 @@
 - (void)close {
     if (_outputHandle) {
         [super close];
+        [_outputHandle release];
+        _outputHandle = nil;
     }
 }
 
