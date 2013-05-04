@@ -11,7 +11,6 @@
 @interface XUnitReporter : Reporter
 
 @property (nonatomic, retain) NSXMLDocument *xmlDocument;
-@property (nonatomic, retain) NSXMLElement *testSuitesRootElement;
 @property (nonatomic, strong) NSFileHandle *outputHandle;
 
 @end

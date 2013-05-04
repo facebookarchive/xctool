@@ -81,7 +81,7 @@ void ReportMessage(ReporterMessageLevel level, NSString *format, ...) {
                               @"pretty": [PrettyTextReporter class],
                               @"plain": [PlainTextReporter class],
                               @"phabricator": [PhabricatorReporter class],
-							  @"xunit": [XUnitReporter class]
+                              @"xunit": [XUnitReporter class]
                               };
 
   Class reporterClass = reporters[name];

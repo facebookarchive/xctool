@@ -10,24 +10,22 @@
 #import "XUnitReporter.h"
 
 @implementation XUnitReporter {
-
-	NSMutableArray *_testResults;
+	NSXMLElement *_testSuitesRootElement;
+	NSMutableArray *_testEvents;
 }
 
 - (id)init
 {
 	if (self = [super init]) {
-		NSError *xmlError = nil;
-		_testSuitesRootElement = [[NSXMLElement alloc] initWithXMLString:@"<testsuites></testsuites>" error:&xmlError];
+		_testSuitesRootElement = [[NSXMLElement alloc] initWithXMLString:@"<testsuites></testsuites>" error:nil];
 		_xmlDocument = [[NSXMLDocument alloc] initWithRootElement:_testSuitesRootElement];
-		
 	}
 	return self;
 }
 
 - (void)beginTestSuite:(NSDictionary *)event
 {
-	_testResults = [NSMutableArray array];
+	_testEvents = [NSMutableArray array];
 }
 
 - (void)endTestSuite:(NSDictionary *)event
@@ -48,11 +46,15 @@
 		NSXMLElement *suiteElement = [[NSXMLElement alloc] initWithXMLString:suiteString error:&xmlError];
 		
 		if (xmlError == nil) {
-			for (NSDictionary *testResult in _testResults) {
+			for (NSDictionary *testResult in _testEvents) {
 				NSString *testName = [testResult valueForKey:kReporter_EndTest_TestKey];
-				// TODO: remove the leading '-[SUITE_NAME' and trailing ']' from the name
-				NSRange suiteNameRange = [testName rangeOfString:[NSString stringWithFormat:@"-[%@ ", suiteName]];
-				testName = [[[testName stringByReplacingCharactersInRange:suiteNameRange withString:@""] stringByReplacingOccurrencesOfString:@"]" withString:@""] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+
+				NSRange suiteNameRange = [testName rangeOfString:[NSString stringWithFormat:@"-[%@", suiteName]];
+				if (suiteNameRange.location != NSNotFound) {
+					testName = [testName stringByReplacingCharactersInRange:suiteNameRange withString:@""];
+					testName = [testName stringByReplacingOccurrencesOfString:@"]" withString:@""];
+					testName = [testName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+				}
 				
 				NSString *testTime = [NSString stringWithFormat:@"%f", [[testResult valueForKey:kReporter_EndTest_TotalDurationKey] doubleValue]];
 
@@ -82,7 +84,7 @@
 
 - (void)endTest:(NSDictionary *)event
 {
-	[_testResults addObject:event];
+	[_testEvents addObject:event];
 }
 
 - (void)close

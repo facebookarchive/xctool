@@ -14,7 +14,6 @@
 @interface XUnitReporterTests : SenTestCase
 @end
 
-
 @implementation XUnitReporterTests
 
 - (XUnitReporter *)reporterPumpedWithEventsFrom:(NSString *)path options:(Options *)options
@@ -30,7 +29,6 @@
 		}
 		[reporter handleEvent:[NSJSONSerialization JSONObjectWithData:[line dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil]];
 	}
-	
 	return reporter;
 }
 
@@ -45,8 +43,7 @@
 	NSString *resultsString = [results XMLString];
 	
 	assertThat(results, notNilValue());
-	assertThat(resultsString,
-			   equalTo(@"<testsuites></testsuites>"));
+	assertThat(resultsString, equalTo(@"<testsuites></testsuites>"));
 }
 
 - (void)testBadBuild
@@ -62,8 +59,7 @@
 	NSLog(@"%@", resultsString);
 	
 	assertThat(results, notNilValue());
-	assertThat(resultsString,
-			   equalTo(@"<testsuites></testsuites>"));
+	assertThat(resultsString, equalTo(@"<testsuites></testsuites>"));
 }
 
 - (void)testTestResults
@@ -79,8 +75,7 @@
 	NSString *expectedResults = [NSString stringWithFormat:@"<testsuites><testsuite errors=\"0\" failures=\"1\" hostname=\"%@\" name=\"SomeTests\" tests=\"6\" time=\"0.757224\"><testcase classname=\"SomeTests\" name=\"testOutputMerging\" time=\"0.000138\"></testcase><testcase classname=\"SomeTests\" name=\"testPrintSDK\" time=\"0.000504\"></testcase><testcase classname=\"SomeTests\" name=\"testStream\" time=\"0.752635\"></testcase><testcase classname=\"SomeTests\" name=\"testWillFail\" time=\"0.000118\"><failure message=\"SenTestFailureException: 'a' should be equal to 'b' Strings aren't equal\" type=\"Failure\">/Users/fpotter/fb/git/fbobjc/Tools/xctool/xctool/xctool-tests/TestData/TestProject-Library/TestProject-LibraryTests/SomeTests.m:40</failure></testcase><testcase classname=\"SomeTests\" name=\"testWillPass\" time=\"0.000032\"></testcase></testsuite></testsuites>", [[NSHost currentHost] name]];;
 	
 	assertThat(results, notNilValue());
-	assertThat(resultsString,
-			   equalTo(expectedResults));
+	assertThat(resultsString, equalTo(expectedResults));
 }
 
 
