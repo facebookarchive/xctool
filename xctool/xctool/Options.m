@@ -114,6 +114,10 @@
                          aliases:nil
                      description:@"display a list of build settings and values"
                          setFlag:@selector(setShowBuildSettings:)],
+    [Action actionOptionWithName:@"version"
+                         aliases:nil
+                     description:@"print version and exit"
+                         setFlag:@selector(setShowVersion:)],
     [Action actionOptionWithMatcher:^(NSString *argument){
       // Anything that looks like KEY=VALUE - xcodebuild will accept options like this.
       return (BOOL)([argument rangeOfString:@"="].length > 0 ? YES : NO);

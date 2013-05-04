@@ -24,6 +24,7 @@
 #import "Options.h"
 #import "TaskUtil.h"
 #import "TextReporter.h"
+#import "Version.h"
 #import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
 
@@ -127,6 +128,12 @@
   if (options.showHelp) {
     [self printUsage];
     _exitStatus = 1;
+    return;
+  }
+
+  if (options.showVersion) {
+    [_standardOutput printString:@"%@\n", XCToolVersionString];
+    _exitStatus = 0;
     return;
   }
 

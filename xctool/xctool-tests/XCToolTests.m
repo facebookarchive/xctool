@@ -19,6 +19,7 @@
 #import "FakeTask.h"
 #import "TaskUtil.h"
 #import "TestUtil.h"
+#import "Version.h"
 #import "XCTool.h"
 #import "XCToolUtil.h"
 
@@ -48,6 +49,18 @@
 
   assertThatInt(tool.exitStatus, equalToInt(1));
   assertThat((result[@"stderr"]), startsWith(@"usage: xctool"));
+}
+
+- (void)testCanPrintVersion
+{
+  XCTool *tool = [[[XCTool alloc] init] autorelease];
+  tool.arguments = @[@"-version"];
+
+  NSDictionary *result = [TestUtil runWithFakeStreams:tool];
+
+  assertThatInt(tool.exitStatus, equalToInt(0));
+  assertThat((result[@"stdout"]),
+             equalTo([NSString stringWithFormat:@"%@\n", XCToolVersionString]));
 }
 
 - (void)testCallingWithNoArgsDefaultsToBuild
