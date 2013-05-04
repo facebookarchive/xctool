@@ -49,6 +49,7 @@
 @property (nonatomic, retain) NSMutableArray *reporters;
 
 @property (nonatomic, assign) BOOL showHelp;
+@property (nonatomic, assign) BOOL showVersion;
 
 @property (nonatomic, retain) NSMutableArray *actions;
 

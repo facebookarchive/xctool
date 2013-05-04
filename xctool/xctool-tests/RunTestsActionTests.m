@@ -187,8 +187,8 @@
   NSArray *task3ExpectedArguments = @[
                                       @"-NSTreatUnknownArgumentsAsOpen", @"NO",
                                       @"-ApplePersistenceIgnoreState", @"YES",
-                                      @"-SenTest", @"All",
-                                      @"-SenTestInvertScope", @"NO",
+                                      @"-SenTest", @"DisabledTests",
+                                      @"-SenTestInvertScope", @"YES",
                                       @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
                                       ];
 
@@ -261,8 +261,8 @@
     NSArray *runTaskArguments = @[
                                   @"-NSTreatUnknownArgumentsAsOpen", @"NO",
                                   @"-ApplePersistenceIgnoreState", @"YES",
-                                  @"-SenTest", @"All",
-                                  @"-SenTestInvertScope", @"NO",
+                                  @"-SenTest", @"DisabledTests",
+                                  @"-SenTestInvertScope", @"YES",
                                   @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
                                   ];
 

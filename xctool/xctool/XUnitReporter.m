@@ -34,9 +34,8 @@
 {
 	NSString *suiteName = [event valueForKey:kReporter_EndTestSuite_SuiteKey];
 	// Skip the wrapper test suites
-	if ([suiteName rangeOfString:@"Multiple Selected Tests"].location == NSNotFound &&
-		[suiteName rangeOfString:@".octest(Tests)"].location == NSNotFound &&
-		[suiteName rangeOfString:@"All tests"].location == NSNotFound) {
+	BOOL process = ([suiteName rangeOfString:@"Multiple Selected Tests"].location == NSNotFound && [suiteName rangeOfString:@".octest(Tests)"].location == NSNotFound && [suiteName rangeOfString:@"All tests"].location == NSNotFound);
+	if (process) {
 		NSInteger tests = [[event valueForKey:kReporter_EndTestSuite_TestCaseCountKey] integerValue];
 		NSInteger failures = [[event valueForKey:kReporter_EndTestSuite_TotalFailureCountKey] integerValue];
 		NSString *totalTime = [NSString stringWithFormat:@"%f", [[event valueForKey:kReporter_EndTestSuite_TotalDurationKey] doubleValue]];

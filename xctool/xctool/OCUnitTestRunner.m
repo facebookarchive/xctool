@@ -62,11 +62,21 @@
   return NO;
 }
 
-- (NSArray *)allCrashReports
+- (NSArray *)collectCrashReportPaths
 {
+  NSFileManager *fm = [NSFileManager defaultManager];
+  NSString *diagnosticReportsPath = [@"~/Library/Logs/DiagnosticReports" stringByStandardizingPath];
+
+  BOOL isDirectory = NO;
+  BOOL fileExists = [fm fileExistsAtPath:diagnosticReportsPath
+                             isDirectory:&isDirectory];
+  if (!fileExists || !isDirectory) {
+    return @[];
+  }
+
   NSError *error = nil;
-  NSArray *allContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[@"~/Library/Logs/DiagnosticReports" stringByStandardizingPath]
-                                                                             error:&error];
+  NSArray *allContents = [fm contentsOfDirectoryAtPath:diagnosticReportsPath
+                                                 error:&error];
   NSAssert(error == nil, @"Failed getting contents of directory: %@", error);
 
   NSMutableArray *matchingContents = [NSMutableArray array];
@@ -116,7 +126,7 @@
     didReceiveTestEvents = YES;
   };
 
-  NSSet *crashReportsAtStart = [NSSet setWithArray:[self allCrashReports]];
+  NSSet *crashReportsAtStart = [NSSet setWithArray:[self collectCrashReportPaths]];
 
   BOOL succeeded = [self runTestsAndFeedOutputTo:feedOutputToBlock error:error];
 
@@ -144,11 +154,11 @@
     // The test runner must have crashed.
 
     // Wait for a moment to see if a crash report shows up.
-    NSSet *crashReportsAtEnd = [NSSet setWithArray:[self allCrashReports]];
+    NSSet *crashReportsAtEnd = [NSSet setWithArray:[self collectCrashReportPaths]];
     CFTimeInterval start = CACurrentMediaTime();
     while ([crashReportsAtEnd isEqualToSet:crashReportsAtStart] && (CACurrentMediaTime() - start < 10.0)) {
       [NSThread sleepForTimeInterval:0.25];
-      crashReportsAtEnd = [NSSet setWithArray:[self allCrashReports]];
+      crashReportsAtEnd = [NSSet setWithArray:[self collectCrashReportPaths]];
     }
 
     NSMutableSet *crashReportsGenerated = [NSMutableSet setWithSet:crashReportsAtEnd];

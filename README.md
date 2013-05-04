@@ -5,8 +5,15 @@ __xctool__ is a replacement for Apple's __xcodebuild__ that makes it
 easier to build and test iOS and Mac products.  It's especially helpful
 for continuous integration.
 
-It's a drop-in replacement for __xcodebuild__ that adds a
-few extra features:
+[ [Features](#features) &bull; [Requirements](#requirements) &bull; [Usage](#usage)
+&bull; [Reporters](#reporters) &bull;
+[Configuration](#configuration-xctool-args) &bull; 
+[Contributing](#contributing) &bull; [License](#license) ]
+
+## Features
+
+__xctool__ is drop-in replacement for xcodebuild that adds a few extra
+features:
 
 * **Runs the same tests as Xcode.app.**
 
@@ -255,8 +262,18 @@ over those in the _.xctool-args_ file.
 
 Bug fixes, improvements, and especially new
 [Reporter](https://github.com/facebook/xctool/blob/master/xctool/xctool/Reporter.h)
-implementations are welcome.  Submit a [pull
-request](https://help.github.com/articles/using-pull-requests).
+implementations are welcome. 
+
+Before submitting a [pull
+request](https://help.github.com/articles/using-pull-requests), please
+be sure to sign the [Facebook
+Contributor License
+Agreement](https://developers.facebook.com/opensource/cla).  We can't
+accept pull requests unless it's been signed.
+
+Be sure to make your changes on a feature branch rather than master.
+And, submit a separate pull request for each self-contained
+change.
 
 ## License
 

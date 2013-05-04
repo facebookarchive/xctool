@@ -39,6 +39,8 @@
 		283EAF591704C22000CE0A0C /* PhabricatorReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 283EAF581704C22000CE0A0C /* PhabricatorReporter.m */; };
 		283EAF5A1704C22000CE0A0C /* PhabricatorReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 283EAF581704C22000CE0A0C /* PhabricatorReporter.m */; };
 		283EAF5D1704C62E00CE0A0C /* PhabricatorReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 283EAF5C1704C62E00CE0A0C /* PhabricatorReporterTests.m */; };
+		2864A3FA1734E52800BBF3B1 /* Version.m in Sources */ = {isa = PBXBuildFile; fileRef = 2864A3F91734E52800BBF3B1 /* Version.m */; };
+		2864A3FB1734E52800BBF3B1 /* Version.m in Sources */ = {isa = PBXBuildFile; fileRef = 2864A3F91734E52800BBF3B1 /* Version.m */; };
 		287A37DE16C711AF00319E81 /* LineReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A37DD16C711AE00319E81 /* LineReader.m */; };
 		287A37E116C711E000319E81 /* SimulatorLauncher.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A37E016C711E000319E81 /* SimulatorLauncher.m */; };
 		287A37E216C711E000319E81 /* SimulatorLauncher.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A37E016C711E000319E81 /* SimulatorLauncher.m */; };
@@ -152,6 +154,8 @@
 		283EAF571704C22000CE0A0C /* PhabricatorReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhabricatorReporter.h; sourceTree = "<group>"; };
 		283EAF581704C22000CE0A0C /* PhabricatorReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhabricatorReporter.m; sourceTree = "<group>"; };
 		283EAF5C1704C62E00CE0A0C /* PhabricatorReporterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhabricatorReporterTests.m; sourceTree = "<group>"; };
+		2864A3F81734E52800BBF3B1 /* Version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Version.h; sourceTree = "<group>"; };
+		2864A3F91734E52800BBF3B1 /* Version.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Version.m; sourceTree = "<group>"; };
 		287A37DC16C711AE00319E81 /* LineReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LineReader.h; sourceTree = "<group>"; };
 		287A37DD16C711AE00319E81 /* LineReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LineReader.m; sourceTree = "<group>"; };
 		287A37DF16C711E000319E81 /* SimulatorLauncher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimulatorLauncher.h; sourceTree = "<group>"; };
@@ -317,6 +321,8 @@
 				28ACFC8216FBA888004BAF33 /* TaskUtil.m */,
 				283EAF10170288FE00CE0A0C /* OCUnitCrashFilter.h */,
 				283EAF11170288FE00CE0A0C /* OCUnitCrashFilter.m */,
+				2864A3F81734E52800BBF3B1 /* Version.h */,
+				2864A3F91734E52800BBF3B1 /* Version.m */,
 			);
 			path = xctool;
 			sourceTree = "<group>";
@@ -524,6 +530,7 @@
 				324BB4C51725BD990073A862 /* XcodeTargetMatch.m in Sources */,
 				32A90C541725F05800C2349E /* TestAction.m in Sources */,
 				2C19C5EA1733705600F1DB38 /* XUnitReporter.m in Sources */,
+				2864A3FA1734E52800BBF3B1 /* Version.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -571,6 +578,7 @@
 				32707EE21725FE7F00AF2F53 /* TestActionTests.m in Sources */,
 				2C19C5EB1733705600F1DB38 /* XUnitReporter.m in Sources */,
 				2CCC14441734318E00C66822 /* XUnitReporterTests.m in Sources */,
+				2864A3FB1734E52800BBF3B1 /* Version.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
