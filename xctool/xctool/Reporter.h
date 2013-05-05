@@ -60,8 +60,12 @@
 #define kReporter_EndTestSuite_TotalDurationKey @"totalDuration"
 
 #define kReporter_BeginTest_TestKey @"test"
+#define kReporter_BeginTest_ClassNameKey @"className"
+#define kReporter_BeginTest_MethodNameKey @"methodName"
 
 #define kReporter_EndTest_TestKey @"test"
+#define kReporter_EndTest_ClassNameKey @"className"
+#define kReporter_EndTest_MethodNameKey @"methodName"
 #define kReporter_EndTest_SucceededKey @"succeeded"
 #define kReporter_EndTest_TotalDurationKey @"totalDuration"
 #define kReporter_EndTest_OutputKey @"output"
