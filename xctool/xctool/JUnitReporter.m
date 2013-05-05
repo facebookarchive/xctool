@@ -1,35 +1,27 @@
-//
-//  JUnitReporter.m
-//  xctool
-//
-//  Created by Greg Haines on 5/2/13.
-//  Copyright (c) 2013 Fred Potter. All rights reserved.
-//
-
 #import "JUnitReporter.h"
 
 
 #pragma mark Private Interface
 @interface JUnitReporter ()
+
 @property (nonatomic, retain) NSMutableArray *testResults;
 @property (nonatomic, retain) NSDateFormatter *formatter;
 @property (nonatomic, retain) NSRegularExpression *regex;
+
 - (void)writeTestSuite:(NSDictionary *)event;
 - (void)write:(NSString *)string;
 - (NSString *)xmlEscape:(NSString *)string;
+
 @end
 
 #pragma mark Implementation
 @implementation JUnitReporter
 
-#pragma mark Properties
-@synthesize testResults, formatter;
-
 #pragma mark Memory Management
 - (id)init {
     if (self = [super init]) {
-        formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];
+        _formatter = [[NSDateFormatter alloc] init];
+        [_formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];
         self.regex = [NSRegularExpression regularExpressionWithPattern:@"^-\\[\\w+ (\\w+)\\]$"
                                                                options:0
                                                                  error:nil];
@@ -100,7 +92,13 @@
 - (void)writeTestSuite:(NSDictionary *)event {
     NSString *suiteName = [self xmlEscape:event[kReporter_EndTestSuite_SuiteKey]];
     [self write:@"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"];
-    [self write:[NSString stringWithFormat:@"<testsuite errors=\"%d\" failures=\"%d\" hostname=\"%@\" name=\"%@\" tests=\"%d\" time=\"%f\" timestamp=\"%@\">\n", [event[kReporter_EndTestSuite_UnexpectedExceptionCountKey] intValue], [event[kReporter_EndTestSuite_TotalFailureCountKey] intValue], @"", suiteName, [event[kReporter_EndTestSuite_TestCaseCountKey] intValue], [event[kReporter_EndTestSuite_TotalDurationKey] floatValue], [self.formatter stringFromDate:[NSDate date]]]];
+    [self write:[NSString stringWithFormat:@"<testsuite errors=\"%d\" failures=\"%d\" hostname=\"%@\" name=\"%@\" tests=\"%d\" time=\"%f\" timestamp=\"%@\">\n",
+                 [event[kReporter_EndTestSuite_UnexpectedExceptionCountKey] intValue],
+                 [event[kReporter_EndTestSuite_TotalFailureCountKey] intValue],
+                 @"", suiteName,
+                 [event[kReporter_EndTestSuite_TestCaseCountKey] intValue],
+                 [event[kReporter_EndTestSuite_TotalDurationKey] floatValue],
+                 [self.formatter stringFromDate:[NSDate date]]]];
     for (NSDictionary *testResult in self.testResults) {
         NSString *testName = testResult[kReporter_EndTest_TestKey];
         NSTextCheckingResult *match = [self.regex firstMatchInString:testName
@@ -115,7 +113,10 @@
         [self write:[NSString stringWithFormat:@"\t<testcase classname=\"%@\" name=\"%@\" time=\"%f\">\n", suiteName, [self xmlEscape:testName], [testResult[kReporter_EndTest_TotalDurationKey] floatValue]]];
         if (![testResult[kReporter_EndTest_SucceededKey] boolValue]) {
             NSDictionary *exception = testResult[kReporter_EndTest_ExceptionKey];
-            [self write:[NSString stringWithFormat:@"\t\t<failure message=\"%@\" type=\"Failure\">%@:%d</failure>\n", [self xmlEscape:exception[kReporter_EndTest_Exception_ReasonKey]], [self xmlEscape:exception[kReporter_EndTest_Exception_FilePathInProjectKey]], [exception[kReporter_EndTest_Exception_LineNumberKey] intValue]]];
+            [self write:[NSString stringWithFormat:@"\t\t<failure message=\"%@\" type=\"Failure\">%@:%d</failure>\n",
+                         [self xmlEscape:exception[kReporter_EndTest_Exception_ReasonKey]],
+                         [self xmlEscape:exception[kReporter_EndTest_Exception_FilePathInProjectKey]],
+                         [exception[kReporter_EndTest_Exception_LineNumberKey] intValue]]];
         }
         NSString *output = testResult[kReporter_EndTest_OutputKey];
         if (output && output.length > 0) {
@@ -131,15 +132,11 @@
 }
 
 - (NSString *)xmlEscape:(NSString *)string {
-    NSString *result;
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    result = [[[[[[string stringByReplacingOccurrencesOfString:@"&" withString:@"&amp;"]
+    return [[[[[string stringByReplacingOccurrencesOfString:@"&" withString:@"&amp;"]
         stringByReplacingOccurrencesOfString:@"\"" withString:@"&quot;"]
        stringByReplacingOccurrencesOfString:@"'" withString:@"&#39;"]
       stringByReplacingOccurrencesOfString:@">" withString:@"&gt;"]
-     stringByReplacingOccurrencesOfString:@"<" withString:@"&lt;"] retain];
-    [pool drain];
-    return [result autorelease];
+     stringByReplacingOccurrencesOfString:@"<" withString:@"&lt;"];
 }
 
 @end

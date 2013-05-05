@@ -1,11 +1,3 @@
-//
-//  JUnitReporterTests.m
-//  xctool
-//
-//  Created by Greg Haines on 5/3/13.
-//  Copyright (c) 2013 Fred Potter. All rights reserved.
-//
-
 #import <SenTestingKit/SenTestingKit.h>
 
 #import "JUnitReporter.h"
