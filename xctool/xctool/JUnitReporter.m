@@ -6,7 +6,6 @@
 
 @property (nonatomic, retain) NSMutableArray *testResults;
 @property (nonatomic, retain) NSDateFormatter *formatter;
-@property (nonatomic, retain) NSRegularExpression *regex;
 
 - (void)writeTestSuite:(NSDictionary *)event;
 - (void)write:(NSString *)string;
@@ -22,9 +21,6 @@
     if (self = [super init]) {
         _formatter = [[NSDateFormatter alloc] init];
         [_formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];
-        self.regex = [NSRegularExpression regularExpressionWithPattern:@"^-\\[\\w+ (\\w+)\\]$"
-                                                               options:0
-                                                                 error:nil];
     }
     return self;
 }
@@ -32,7 +28,6 @@
 - (void)dealloc {
     self.testResults = nil;
     self.formatter = nil;
-    self.regex = nil;
     [super dealloc];
 }
 
@@ -90,27 +85,21 @@
 
 #pragma mark Private Methods
 - (void)writeTestSuite:(NSDictionary *)event {
-    NSString *suiteName = [self xmlEscape:event[kReporter_EndTestSuite_SuiteKey]];
     [self write:@"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"];
-    [self write:[NSString stringWithFormat:@"<testsuite errors=\"%d\" failures=\"%d\" hostname=\"%@\" name=\"%@\" tests=\"%d\" time=\"%f\" timestamp=\"%@\">\n",
+    [self write:[NSString stringWithFormat:@"<testsuite errors=\"%d\" failures=\"%d\" hostname=\"%@\" \
+name=\"%@\" tests=\"%d\" time=\"%f\" timestamp=\"%@\">\n",
                  [event[kReporter_EndTestSuite_UnexpectedExceptionCountKey] intValue],
                  [event[kReporter_EndTestSuite_TotalFailureCountKey] intValue],
-                 @"", suiteName,
+                 @"", // Hostname, leaving blank since it would require linking to SystemConfiguration.framewwork
+                 [self xmlEscape:event[kReporter_EndTestSuite_SuiteKey]],
                  [event[kReporter_EndTestSuite_TestCaseCountKey] intValue],
                  [event[kReporter_EndTestSuite_TotalDurationKey] floatValue],
                  [self.formatter stringFromDate:[NSDate date]]]];
     for (NSDictionary *testResult in self.testResults) {
-        NSString *testName = testResult[kReporter_EndTest_TestKey];
-        NSTextCheckingResult *match = [self.regex firstMatchInString:testName
-                                                             options:0
-                                                               range:NSMakeRange(0, [testName length])];
-        if (match) {
-            NSRange firstGroupRange = [match rangeAtIndex:1];
-            if (firstGroupRange.location != NSNotFound) {
-                testName = [testName substringWithRange:firstGroupRange];
-            }
-        }
-        [self write:[NSString stringWithFormat:@"\t<testcase classname=\"%@\" name=\"%@\" time=\"%f\">\n", suiteName, [self xmlEscape:testName], [testResult[kReporter_EndTest_TotalDurationKey] floatValue]]];
+        [self write:[NSString stringWithFormat:@"\t<testcase classname=\"%@\" name=\"%@\" time=\"%f\">\n",
+                     [self xmlEscape:testResult[kReporter_EndTest_ClassNameKey]],
+                     [self xmlEscape:testResult[kReporter_EndTest_MethodNameKey]],
+                     [testResult[kReporter_EndTest_TotalDurationKey] floatValue]]];
         if (![testResult[kReporter_EndTest_SucceededKey] boolValue]) {
             NSDictionary *exception = testResult[kReporter_EndTest_ExceptionKey];
             [self write:[NSString stringWithFormat:@"\t\t<failure message=\"%@\" type=\"Failure\">%@:%d</failure>\n",
