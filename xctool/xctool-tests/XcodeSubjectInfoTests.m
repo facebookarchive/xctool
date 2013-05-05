@@ -18,6 +18,7 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
+#import "XCToolUtil.h"
 #import "XcodeSubjectInfo.h"
 #import "XcodeTargetMatch.h"
 
@@ -117,6 +118,15 @@
     match.projectPath,
     equalTo(nil));
   assertThat(match.schemeName, equalTo(@"TestProject-Library"));
+}
+
+- (void)testCanParseBuildSettingsWithSpacesInTheName
+{
+  NSString *output = [NSString stringWithContentsOfFile:TEST_DATA @"TargetNamesWithSpaces-showBuildSettings.txt"
+                                               encoding:NSUTF8StringEncoding
+                                                  error:nil];
+  NSDictionary *settings = BuildSettingsFromOutput(output);
+  assertThat([settings allKeys][0], equalTo(@"Target Name With Spaces"));
 }
 
 @end
