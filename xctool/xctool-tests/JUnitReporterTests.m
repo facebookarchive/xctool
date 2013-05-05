@@ -68,32 +68,34 @@
     [timeRegex release];
     timeRegex = nil;
     STAssertEqualObjects(@"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
-<testsuite errors=\"0\" failures=\"1\" hostname=\"\" name=\"SomeTests\" tests=\"6\" time=\"\" timestamp=\"\">\n\
-\t<testcase classname=\"SomeTests\" name=\"testOutputMerging\" time=\"\">\n\
-\t\t<system-out>stdout-line1\n\
+<testsuites name=\"(null)\" tests=\"6\" failures=\"1\" errors=\"0\" time=\"\">\n\
+\t<testsuite name=\"SomeTests\" tests=\"6\" failures=\"1\" errors=\"0\" time=\"\" timestamp=\"\">\n\
+\t\t<testcase classname=\"SomeTests\" name=\"testOutputMerging\" time=\"\">\n\
+\t\t\t<system-out>stdout-line1\n\
 stderr-line1\n\
 stdout-line2\n\
 stdout-line3\n\
 stderr-line2\n\
 stderr-line3\n\
 </system-out>\n\
-\t</testcase>\n\
-\t<testcase classname=\"SomeTests\" name=\"testPrintSDK\" time=\"\">\n\
-\t\t<system-out>2013-03-28 11:35:43.956 otest[64678:707] SDK: 6.1\n\
+\t\t</testcase>\n\
+\t\t<testcase classname=\"SomeTests\" name=\"testPrintSDK\" time=\"\">\n\
+\t\t\t<system-out>2013-03-28 11:35:43.956 otest[64678:707] SDK: 6.1\n\
 </system-out>\n\
-\t</testcase>\n\
-\t<testcase classname=\"SomeTests\" name=\"testStream\" time=\"\">\n\
-\t\t<system-out>2013-03-28 11:35:43.957 otest[64678:707] &gt;&gt;&gt;&gt; i = 0\n\
+\t\t</testcase>\n\
+\t\t<testcase classname=\"SomeTests\" name=\"testStream\" time=\"\">\n\
+\t\t\t<system-out>2013-03-28 11:35:43.957 otest[64678:707] &gt;&gt;&gt;&gt; i = 0\n\
 2013-03-28 11:35:44.208 otest[64678:707] &gt;&gt;&gt;&gt; i = 1\n\
 2013-03-28 11:35:44.459 otest[64678:707] &gt;&gt;&gt;&gt; i = 2\n\
 </system-out>\n\
-\t</testcase>\n\
-\t<testcase classname=\"SomeTests\" name=\"testWillFail\" time=\"\">\n\
-\t\t<failure message=\"&#39;a&#39; should be equal to &#39;b&#39; Strings aren&#39;t equal\" type=\"Failure\">/Users/fpotter/fb/git/fbobjc/Tools/xctool/xctool/xctool-tests/TestData/TestProject-Library/TestProject-LibraryTests/SomeTests.m:40</failure>\n\
-\t</testcase>\n\
-\t<testcase classname=\"SomeTests\" name=\"testWillPass\" time=\"\">\n\
-\t</testcase>\n\
-</testsuite>\n\
+\t\t</testcase>\n\
+\t\t<testcase classname=\"SomeTests\" name=\"testWillFail\" time=\"\">\n\
+\t\t\t<failure message=\"&#39;a&#39; should be equal to &#39;b&#39; Strings aren&#39;t equal\" type=\"Failure\">/Users/fpotter/fb/git/fbobjc/Tools/xctool/xctool/xctool-tests/TestData/TestProject-Library/TestProject-LibraryTests/SomeTests.m:40</failure>\n\
+\t\t</testcase>\n\
+\t\t<testcase classname=\"SomeTests\" name=\"testWillPass\" time=\"\">\n\
+\t\t</testcase>\n\
+\t</testsuite>\n\
+</testsuites>\n\
 ", xmlStr, @"JUnit XML should match");
     [xmlStr release];
     xmlStr = nil;

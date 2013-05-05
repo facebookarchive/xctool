@@ -4,11 +4,16 @@
 #pragma mark Private Interface
 @interface JUnitReporter ()
 
+@property (nonatomic, retain) NSMutableArray *testSuites;
 @property (nonatomic, retain) NSMutableArray *testResults;
 @property (nonatomic, retain) NSDateFormatter *formatter;
+@property (nonatomic) int totalTests;
+@property (nonatomic) int totalFailures;
+@property (nonatomic) int totalErrors;
+@property (nonatomic) float totalTime;
 
-- (void)writeTestSuite:(NSDictionary *)event;
 - (void)write:(NSString *)string;
+- (void)writeWithFormat:(NSString *)format, ... NS_FORMAT_FUNCTION(1,2);
 - (NSString *)xmlEscape:(NSString *)string;
 
 @end
@@ -26,23 +31,19 @@
 }
 
 - (void)dealloc {
+    self.testSuites = nil;
     self.testResults = nil;
     self.formatter = nil;
     [super dealloc];
 }
 
 #pragma mark Reporter
-- (BOOL)openWithStandardOutput:(NSFileHandle *)standardOutput error:(NSString **)error {
-    BOOL success;
-    if ([self.outputPath isEqualToString:@"-"]) {
-        _outputHandle = [standardOutput retain];
-        success = YES;
-    } else {
-        BOOL isDir;
-        success = ([[NSFileManager defaultManager] fileExistsAtPath:self.outputPath isDirectory:&isDir] && isDir &&
-                [[NSFileManager defaultManager] isWritableFileAtPath:self.outputPath]);
-    }
-    return success;
+- (void)beginOcunit:(NSDictionary *)event {
+    self.testSuites = [NSMutableArray array];
+    self.totalTests = 0;
+    self.totalFailures = 0;
+    self.totalErrors = 0;
+    self.totalTime = 0.0;
 }
 
 - (void)beginTestSuite:(NSDictionary *)event {
@@ -55,77 +56,86 @@
 
 - (void)endTestSuite:(NSDictionary *)event {
     if (self.testResults) { // Prevents nested suites
-        if (_outputHandle) { // To stdout
-            [self writeTestSuite:event];
-        } else { // To file
-            NSString *testSuitePath = [[self.outputPath stringByAppendingPathComponent:event[kReporter_EndTestSuite_SuiteKey]] stringByAppendingPathExtension:@"xml"];
-            if ([[NSFileManager defaultManager] createFileAtPath:testSuitePath contents:nil attributes:nil]) {
-                _outputHandle = [[NSFileHandle fileHandleForWritingAtPath:testSuitePath] retain];
-                if (_outputHandle) {
-                    [self writeTestSuite:event];
-                    [self close];
-                } else {
-                    NSLog(@"Error opening file for suite: %@", testSuitePath);
-                }
-            } else {
-                NSLog(@"Error creating file for suite: %@", testSuitePath);
-            }
-        }
+        self.totalTests += [event[kReporter_EndTestSuite_TestCaseCountKey] intValue];
+        self.totalFailures += [event[kReporter_EndTestSuite_TotalFailureCountKey] intValue];
+        self.totalErrors += [event[kReporter_EndTestSuite_UnexpectedExceptionCountKey] intValue];
+        self.totalTime += [event[kReporter_EndTestSuite_TotalDurationKey] floatValue];
+        [self.testSuites addObject:@{
+            @"event": event,
+            @"results": self.testResults
+        }];
         self.testResults = nil;
     }
 }
 
-- (void)close {
-    if (_outputHandle) {
-        [super close];
-        [_outputHandle release];
-        _outputHandle = nil;
+- (void)endOcunit:(NSDictionary *)event {
+    [self write:@"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"];
+    [self writeWithFormat:@"<testsuites name=\"%@\" tests=\"%d\" failures=\"%d\" "\
+                 "errors=\"%d\" time=\"%f\">\n",
+                 [self xmlEscape:event[kReporter_EndOCUnit_BundleNameKey]],
+                 self.totalTests, self.totalFailures, self.totalErrors, self.totalTime];
+    for (NSDictionary *testSuite in self.testSuites) {
+        NSDictionary *suiteEvent = testSuite[@"event"];
+        NSArray *suiteResults = testSuite[@"results"];
+        [self writeWithFormat:@"\t<testsuite name=\"%@\" tests=\"%d\" failures=\"%d\" "\
+                     "errors=\"%d\" time=\"%f\" timestamp=\"%@\">\n",
+                     [self xmlEscape:suiteEvent[kReporter_EndTestSuite_SuiteKey]],
+                     [suiteEvent[kReporter_EndTestSuite_TestCaseCountKey] intValue],
+                     [suiteEvent[kReporter_EndTestSuite_TotalFailureCountKey] intValue],
+                     [suiteEvent[kReporter_EndTestSuite_UnexpectedExceptionCountKey] intValue],
+                     [suiteEvent[kReporter_EndTestSuite_TotalDurationKey] floatValue],
+                     [self.formatter stringFromDate:[NSDate date]]];
+        for (NSDictionary *testResult in suiteResults) {
+            [self writeWithFormat:@"\t\t<testcase classname=\"%@\" name=\"%@\" time=\"%f\">\n",
+                         [self xmlEscape:testResult[kReporter_EndTest_ClassNameKey]],
+                         [self xmlEscape:testResult[kReporter_EndTest_MethodNameKey]],
+                         [testResult[kReporter_EndTest_TotalDurationKey] floatValue]];
+            if (![testResult[kReporter_EndTest_SucceededKey] boolValue]) {
+                NSDictionary *exception = testResult[kReporter_EndTest_ExceptionKey];
+                [self writeWithFormat:@"\t\t\t<failure message=\"%@\" type=\"Failure\">%@:%d</failure>\n",
+                             [self xmlEscape:exception[kReporter_EndTest_Exception_ReasonKey]],
+                             [self xmlEscape:exception[kReporter_EndTest_Exception_FilePathInProjectKey]],
+                             [exception[kReporter_EndTest_Exception_LineNumberKey] intValue]];
+            }
+            NSString *output = testResult[kReporter_EndTest_OutputKey];
+            if (output && output.length > 0) {
+                [self writeWithFormat:@"\t\t\t<system-out>%@</system-out>\n", [self xmlEscape:output]];
+            }
+            [self write:@"\t\t</testcase>\n"];
+        }
+        [self write:@"\t</testsuite>\n"];
     }
+    [self write:@"</testsuites>\n"];
+    self.testSuites = nil;
 }
 
 #pragma mark Private Methods
-- (void)writeTestSuite:(NSDictionary *)event {
-    [self write:@"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"];
-    [self write:[NSString stringWithFormat:@"<testsuite errors=\"%d\" failures=\"%d\" hostname=\"%@\" \
-name=\"%@\" tests=\"%d\" time=\"%f\" timestamp=\"%@\">\n",
-                 [event[kReporter_EndTestSuite_UnexpectedExceptionCountKey] intValue],
-                 [event[kReporter_EndTestSuite_TotalFailureCountKey] intValue],
-                 @"", // Hostname, leaving blank since it would require linking to SystemConfiguration.framewwork
-                 [self xmlEscape:event[kReporter_EndTestSuite_SuiteKey]],
-                 [event[kReporter_EndTestSuite_TestCaseCountKey] intValue],
-                 [event[kReporter_EndTestSuite_TotalDurationKey] floatValue],
-                 [self.formatter stringFromDate:[NSDate date]]]];
-    for (NSDictionary *testResult in self.testResults) {
-        [self write:[NSString stringWithFormat:@"\t<testcase classname=\"%@\" name=\"%@\" time=\"%f\">\n",
-                     [self xmlEscape:testResult[kReporter_EndTest_ClassNameKey]],
-                     [self xmlEscape:testResult[kReporter_EndTest_MethodNameKey]],
-                     [testResult[kReporter_EndTest_TotalDurationKey] floatValue]]];
-        if (![testResult[kReporter_EndTest_SucceededKey] boolValue]) {
-            NSDictionary *exception = testResult[kReporter_EndTest_ExceptionKey];
-            [self write:[NSString stringWithFormat:@"\t\t<failure message=\"%@\" type=\"Failure\">%@:%d</failure>\n",
-                         [self xmlEscape:exception[kReporter_EndTest_Exception_ReasonKey]],
-                         [self xmlEscape:exception[kReporter_EndTest_Exception_FilePathInProjectKey]],
-                         [exception[kReporter_EndTest_Exception_LineNumberKey] intValue]]];
-        }
-        NSString *output = testResult[kReporter_EndTest_OutputKey];
-        if (output && output.length > 0) {
-            [self write:[NSString stringWithFormat:@"\t\t<system-out>%@</system-out>\n", [self xmlEscape:output]]];
-        }
-        [self write:@"\t</testcase>\n"];
-    }
-    [self write:@"</testsuite>\n"];
-}
-
 - (void)write:(NSString *)string {
     [self.outputHandle writeData:[string dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
+- (void)writeWithFormat:(NSString *)format, ... {
+    va_list args;
+    va_start(args, format);
+    NSString *msg = [[NSString alloc] initWithFormat:format arguments:args];
+    [self write:msg];
+    [msg release];
+    msg = nil;
+    va_end(args);
+}
+
 - (NSString *)xmlEscape:(NSString *)string {
-    return [[[[[string stringByReplacingOccurrencesOfString:@"&" withString:@"&amp;"]
-        stringByReplacingOccurrencesOfString:@"\"" withString:@"&quot;"]
-       stringByReplacingOccurrencesOfString:@"'" withString:@"&#39;"]
-      stringByReplacingOccurrencesOfString:@">" withString:@"&gt;"]
-     stringByReplacingOccurrencesOfString:@"<" withString:@"&lt;"];
+    NSMutableString *mutString = nil;
+    if (string) {
+        mutString = [NSMutableString stringWithString:string];
+        NSRange fullRange = NSMakeRange(0, [mutString length]);
+        [mutString replaceOccurrencesOfString:@"&" withString:@"&amp;" options:0 range:fullRange];
+        [mutString replaceOccurrencesOfString:@"\"" withString:@"&quot;" options:0 range:fullRange];
+        [mutString replaceOccurrencesOfString:@"'" withString:@"&#39;" options:0 range:fullRange];
+        [mutString replaceOccurrencesOfString:@">" withString:@"&gt;" options:0 range:fullRange];
+        [mutString replaceOccurrencesOfString:@"<" withString:@"&lt;" options:0 range:fullRange];
+    }
+    return mutString;
 }
 
 @end
