@@ -118,7 +118,10 @@
                                                           options:0
                                                             error:&parseError];
     if (parseError) {
-      [NSException raise:NSGenericException format:@"Failed to parse test output: %@", [parseError localizedFailureReason]];
+      [NSException raise:NSGenericException
+                  format:@"Failed to parse test output '%@' with error '%@'.",
+       line,
+       [parseError localizedFailureReason]];
     }
 
     [_reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:event];
