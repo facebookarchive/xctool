@@ -19,6 +19,7 @@
 	if (self = [super init]) {
 		_testSuitesRootElement = [[NSXMLElement alloc] initWithXMLString:@"<testsuites></testsuites>" error:nil];
 		_xmlDocument = [[NSXMLDocument alloc] initWithRootElement:_testSuitesRootElement];
+		[_xmlDocument setCharacterEncoding:@"UTF-8"];
 	}
 	return self;
 }
