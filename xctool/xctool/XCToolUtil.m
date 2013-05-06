@@ -40,12 +40,21 @@ NSDictionary *BuildSettingsFromOutput(NSString *output)
     NSString *target = nil;
     NSMutableDictionary *targetSettings = [NSMutableDictionary dictionary];
 
+    // Line with look like...
+    // 'Build settings for action build and target SomeTarget:'
+    //
+    // or, if there are spaces in the target name...
+    // 'Build settings for action build and target "Some Target Name":'
     if (![scanner scanString:@"Build settings for action build and target " intoString:NULL]) {
       break;
     }
 
     [scanner scanUpToString:@":\n" intoString:&target];
     [scanner scanString:@":\n" intoString:NULL];
+
+    // Target names with spaces will be quoted.
+    target = [target stringByTrimmingCharactersInSet:
+              [NSCharacterSet characterSetWithCharactersInString:@"\""]];
 
     for (;;) {
 

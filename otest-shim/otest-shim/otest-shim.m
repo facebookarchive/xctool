@@ -273,7 +273,11 @@ static const char *DyldImageStateChangeHandler(enum dyld_image_states state,
                                                const struct dyld_image_info info[])
 {
   for (uint32_t i = 0; i < infoCount; i++) {
-    if (strstr(info[i].imageFilePath, "SenTestingKit.framework/SenTestingKit") != NULL) {
+    // Sometimes the image path will be something like...
+    //   '.../SenTestingKit.framework/SenTestingKit'
+    // Other times it could be...
+    //   '.../SenTestingKit.framework/Versions/A/SenTestingKit'
+    if (strstr(info[i].imageFilePath, "SenTestingKit.framework") != NULL) {
       // Since the 'SenTestLog' class now exists, we can swizzle it!
       SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
                                       @selector(testSuiteDidStart:),
@@ -310,7 +314,7 @@ __attribute__((constructor)) static void EntryPoint()
                                            NO,
                                            DyldImageStateChangeHandler);
 
-  // Unset so we don't cascade into other process that get spawned from xcodebuild.
+  // Unset so we don't cascade into any other process that might be spawned.
   unsetenv("DYLD_INSERT_LIBRARIES");
 }
 
