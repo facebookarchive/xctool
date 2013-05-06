@@ -89,7 +89,9 @@
     [self.currentTestSuiteEventTimestampStack removeLastObject];
     [self.currentTestSuiteEventTestCountStack removeLastObject];
   } else if ([eventName isEqualToString:kReporter_Events_TestOuput]) {
-    NSAssert(self.currentTestEvent != nil, @"'test-output' event should only come during a test.");
+    NSAssert(_currentTestEvent != nil,
+             @"'test-output' event should only come during a test: %@",
+             event);
     [self.currentTestOutput appendString:event[kReporter_TestOutput_OutputKey]];
   }
 }
