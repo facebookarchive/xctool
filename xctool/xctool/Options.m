@@ -205,18 +205,10 @@
     NSString *outputFile = (optionParts.count > 1) ? optionParts[1] : @"-";
 
     Reporter *reporter = [Reporter reporterWithName:name outputPath:outputFile options:self];
-      
+
     if (reporter == nil) {
       *errorMessage = [NSString stringWithFormat:@"No reporter with name '%@' found.", name];
       return NO;
-    }
-      
-    if ( [reporter respondsToSelector:@selector(setReporterOptions:)] ) {
-        NSArray *arrayWithoutNameOrPath = [NSArray array];
-        if ([optionParts count] > 2) {
-             arrayWithoutNameOrPath = [optionParts subarrayWithRange:NSMakeRange(2, [optionParts count]-2)];
-        }
-        [reporter performSelector:@selector(setReporterOptions:) withObject:arrayWithoutNameOrPath];
     }
 
     [self.reporters addObject:reporter];
