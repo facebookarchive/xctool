@@ -114,6 +114,10 @@
 @class Action;
 @class Options;
 
+@protocol ExportedReporter
+@optional
++ (NSString *) reporterName;
+@end
 typedef enum {
   REPORTER_MESSAGE_DEBUG,
   REPORTER_MESSAGE_VERBOSE,
@@ -146,7 +150,7 @@ void ReportStatusMessage(NSArray *reporters, ReporterMessageLevel level, NSStrin
 {
   NSFileHandle *_outputHandle;
 }
-
++ (NSArray *) availableReporters;
 + (Reporter *)reporterWithName:(NSString *)name outputPath:(NSString *)outputPath options:(Options *)options;
 
 // The reporter will stream output to here.  Usually this will be "-" to route

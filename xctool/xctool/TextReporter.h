@@ -40,8 +40,8 @@
 
 @end
 
-@interface PrettyTextReporter : TextReporter
+@interface PrettyTextReporter : TextReporter<ExportedReporter>
 @end
 
-@interface PlainTextReporter : TextReporter
+@interface PlainTextReporter : TextReporter<ExportedReporter>
 @end

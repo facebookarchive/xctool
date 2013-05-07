@@ -42,6 +42,15 @@
 
 + (NSArray *)options
 {
+  NSMutableString *reporters = [NSMutableString string];
+  for (NSString *reporterName in [Reporter availableReporters]) {
+    [reporters appendFormat:@"%@,", reporterName];
+  }
+  if ( [reporters length] > 0 ) {
+    [reporters deleteCharactersInRange:NSMakeRange([reporters length]-1, 1)];
+  }
+  
+  
   return
   @[[Action actionOptionWithName:@"help"
                          aliases:@[@"h", @"usage"]
@@ -109,7 +118,7 @@
                            mapTo:@selector(setXcconfig:)],
     [Action actionOptionWithName:@"reporter"
                          aliases:nil
-                     description:@"add reporter"
+                     description:[NSString stringWithFormat:@"add reporter (%@)", reporters]
                        paramName:@"TYPE[:FILE]"
                            mapTo:@selector(addReporter:)],
     [Action actionOptionWithName:@"showBuildSettings"

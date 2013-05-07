@@ -676,6 +676,11 @@
   return self;
 }
 
++ (NSString *) reporterName {
+  return @"pretty";
+}
+
+
 @end
 
 @implementation PlainTextReporter
@@ -687,5 +692,10 @@
   }
   return self;
 }
+
++ (NSString *) reporterName {
+  return @"plain";
+}
+
 
 @end
