@@ -125,17 +125,12 @@
 }
 
 - (NSString *)xmlEscape:(NSString *)string {
-    NSMutableString *mutString = nil;
+    NSString *xmlStr = nil;
     if (string) {
-        mutString = [NSMutableString stringWithString:string];
-        NSRange fullRange = NSMakeRange(0, [mutString length]);
-        [mutString replaceOccurrencesOfString:@"&" withString:@"&amp;" options:0 range:fullRange];
-        [mutString replaceOccurrencesOfString:@"\"" withString:@"&quot;" options:0 range:fullRange];
-        [mutString replaceOccurrencesOfString:@"'" withString:@"&#39;" options:0 range:fullRange];
-        [mutString replaceOccurrencesOfString:@">" withString:@"&gt;" options:0 range:fullRange];
-        [mutString replaceOccurrencesOfString:@"<" withString:@"&lt;" options:0 range:fullRange];
+        xmlStr = (NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)string, NULL);
+        [xmlStr autorelease];
     }
-    return mutString;
+    return xmlStr;
 }
 
 @end
