@@ -59,21 +59,30 @@
 				
 				NSString *testTime = [NSString stringWithFormat:@"%f", [[testResult valueForKey:kReporter_EndTest_TotalDurationKey] doubleValue]];
 
-				BOOL passed = [[testResult valueForKey:kReporter_EndTest_SucceededKey] boolValue];
+				BOOL passed = [testResult[kReporter_EndTest_SucceededKey] boolValue];
 				
 				NSString *testString = [NSString stringWithFormat:@"<testcase classname=\"%@\" name=\"%@\" time=\"%@\"></testcase>", suiteName, testName, testTime];
 				NSXMLElement *testElement = [[NSXMLElement alloc] initWithXMLString:testString error:&xmlError];
 				if (passed == NO) {
 					NSDictionary *exception = testResult[kReporter_EndTest_ExceptionKey];
 					NSString *message = [NSString stringWithFormat:@"%@: %@", exception[kReporter_EndTest_Exception_NameKey], exception[kReporter_EndTest_Exception_ReasonKey]];
-					if ([testResult[kReporter_EndTest_OutputKey] isEqualToString: @""] == NO) {
-						message = [NSString stringWithFormat:@"%@ - %@", testResult[kReporter_EndTest_OutputKey], message];
-					}
 					NSString *location = [NSString stringWithFormat:@"%@:%@", exception[kReporter_EndTest_Exception_FilePathInProjectKey], exception[kReporter_EndTest_Exception_LineNumberKey]];
 					
 					NSString *failureString = [NSString stringWithFormat:@"<failure message=\"%@\" type=\"Failure\">%@</failure>", message, location];
 					NSXMLElement *failureElement = [[NSXMLElement alloc] initWithXMLString:failureString error:&xmlError];
-					[testElement addChild:failureElement];
+					if (xmlError == nil) {
+						[testElement addChild:failureElement];
+						xmlError = nil;
+					}
+					
+					if ([testResult[kReporter_EndTest_OutputKey] length] > 0) {
+						NSString *outputString = [NSString stringWithFormat:@"<system-out>%@</system-out>", testResult[kReporter_EndTest_OutputKey]];
+						NSXMLElement *outputElement = [[NSXMLElement alloc] initWithXMLString:outputString error:&xmlError];
+						if (xmlError == nil) {
+							[testElement addChild:outputElement];
+						}
+					}
+					
 				}
 				[suiteElement addChild:testElement];
 			}

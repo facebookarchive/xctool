@@ -43,7 +43,7 @@
 	NSString *resultsString = [results XMLString];
 	
 	assertThat(results, notNilValue());
-	assertThat(resultsString, equalTo(@"<testsuites></testsuites>"));
+	assertThat(resultsString, equalTo(@"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><testsuites></testsuites>"));
 }
 
 - (void)testBadBuild
@@ -56,10 +56,8 @@
 	NSXMLDocument *results = reporter.xmlDocument;
 	NSString *resultsString = [results XMLString];
 	
-	NSLog(@"%@", resultsString);
-	
 	assertThat(results, notNilValue());
-	assertThat(resultsString, equalTo(@"<testsuites></testsuites>"));
+	assertThat(resultsString, equalTo(@"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><testsuites></testsuites>"));
 }
 
 - (void)testTestResults
@@ -72,7 +70,7 @@
 	NSXMLDocument *results = reporter.xmlDocument;
 	NSString *resultsString = [results XMLString];
 	
-	NSString *expectedResults = [NSString stringWithFormat:@"<testsuites><testsuite errors=\"0\" failures=\"1\" hostname=\"%@\" name=\"SomeTests\" tests=\"6\" time=\"0.757224\"><testcase classname=\"SomeTests\" name=\"testOutputMerging\" time=\"0.000138\"></testcase><testcase classname=\"SomeTests\" name=\"testPrintSDK\" time=\"0.000504\"></testcase><testcase classname=\"SomeTests\" name=\"testStream\" time=\"0.752635\"></testcase><testcase classname=\"SomeTests\" name=\"testWillFail\" time=\"0.000118\"><failure message=\"SenTestFailureException: 'a' should be equal to 'b' Strings aren't equal\" type=\"Failure\">/Users/fpotter/fb/git/fbobjc/Tools/xctool/xctool/xctool-tests/TestData/TestProject-Library/TestProject-LibraryTests/SomeTests.m:40</failure></testcase><testcase classname=\"SomeTests\" name=\"testWillPass\" time=\"0.000032\"></testcase></testsuite></testsuites>", [[NSHost currentHost] name]];;
+	NSString *expectedResults = [NSString stringWithFormat:@"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><testsuites><testsuite errors=\"0\" failures=\"1\" hostname=\"%@\" name=\"SomeTests\" tests=\"6\" time=\"0.757224\"><testcase classname=\"SomeTests\" name=\"testOutputMerging\" time=\"0.000138\"></testcase><testcase classname=\"SomeTests\" name=\"testPrintSDK\" time=\"0.000504\"></testcase><testcase classname=\"SomeTests\" name=\"testStream\" time=\"0.752635\"></testcase><testcase classname=\"SomeTests\" name=\"testWillFail\" time=\"0.000118\"><failure message=\"SenTestFailureException: 'a' should be equal to 'b' Strings aren't equal\" type=\"Failure\">/Users/fpotter/fb/git/fbobjc/Tools/xctool/xctool/xctool-tests/TestData/TestProject-Library/TestProject-LibraryTests/SomeTests.m:40</failure><system-out>2013-03-28 11:35:43.957 otest[64678:707] >>>> i = 0\n2013-03-28 11:35:44.208 otest[64678:707] >>>> i = 1\n2013-03-28 11:35:44.459 otest[64678:707] >>>> i = 2\n</system-out></testcase><testcase classname=\"SomeTests\" name=\"testWillPass\" time=\"0.000032\"></testcase></testsuite></testsuites>", [[NSHost currentHost] name]];;
 	
 	assertThat(results, notNilValue());
 	assertThat(resultsString, equalTo(expectedResults));
