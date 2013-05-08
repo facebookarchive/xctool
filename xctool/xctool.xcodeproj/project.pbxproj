@@ -79,6 +79,9 @@
 		28E9B9EC16C34F2B00A52E4D /* TextReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9EA16C34F2B00A52E4D /* TextReporter.m */; };
 		28FFB00516FF5A21000CCE2A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FFB00416FF5A21000CCE2A /* QuartzCore.framework */; };
 		28FFB00616FF5A2B000CCE2A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FFB00416FF5A21000CCE2A /* QuartzCore.framework */; };
+		2C19C5EA1733705600F1DB38 /* XUnitReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C19C5E91733705600F1DB38 /* XUnitReporter.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		2C19C5EB1733705600F1DB38 /* XUnitReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C19C5E91733705600F1DB38 /* XUnitReporter.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		2CCC14441734318E00C66822 /* XUnitReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CCC14431734318E00C66822 /* XUnitReporterTests.m */; };
 		324BB4C51725BD990073A862 /* XcodeTargetMatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 324BB4C41725BD990073A862 /* XcodeTargetMatch.m */; };
 		324BB4C61725BDA20073A862 /* XcodeTargetMatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 324BB4C41725BD990073A862 /* XcodeTargetMatch.m */; };
 		32707EE21725FE7F00AF2F53 /* TestActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 32707EE11725FE7F00AF2F53 /* TestActionTests.m */; };
@@ -192,6 +195,9 @@
 		28E9B9E916C34F2B00A52E4D /* TextReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextReporter.h; sourceTree = "<group>"; };
 		28E9B9EA16C34F2B00A52E4D /* TextReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextReporter.m; sourceTree = "<group>"; };
 		28FFB00416FF5A21000CCE2A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		2C19C5E81733705600F1DB38 /* XUnitReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XUnitReporter.h; sourceTree = "<group>"; };
+		2C19C5E91733705600F1DB38 /* XUnitReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XUnitReporter.m; sourceTree = "<group>"; };
+		2CCC14431734318E00C66822 /* XUnitReporterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XUnitReporterTests.m; sourceTree = "<group>"; };
 		324BB4C31725BD990073A862 /* XcodeTargetMatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XcodeTargetMatch.h; sourceTree = "<group>"; };
 		324BB4C41725BD990073A862 /* XcodeTargetMatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodeTargetMatch.m; sourceTree = "<group>"; };
 		32707EE11725FE7F00AF2F53 /* TestActionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestActionTests.m; sourceTree = "<group>"; };
@@ -364,6 +370,7 @@
 				287BF04C16F1A6EB00590E06 /* XcodeSubjectInfoTests.m */,
 				283EAF151702BB0600CE0A0C /* OCUnitCrashFilterTests.m */,
 				283EAF5C1704C62E00CE0A0C /* PhabricatorReporterTests.m */,
+				2CCC14431734318E00C66822 /* XUnitReporterTests.m */,
 			);
 			path = "xctool-tests";
 			sourceTree = "<group>";
@@ -397,6 +404,8 @@
 				28E9B9EA16C34F2B00A52E4D /* TextReporter.m */,
 				283EAF571704C22000CE0A0C /* PhabricatorReporter.h */,
 				283EAF581704C22000CE0A0C /* PhabricatorReporter.m */,
+				2C19C5E81733705600F1DB38 /* XUnitReporter.h */,
+				2C19C5E91733705600F1DB38 /* XUnitReporter.m */,
 			);
 			name = Reporters;
 			sourceTree = "<group>";
@@ -526,6 +535,7 @@
 				288B9FBC171A5509008F0BDF /* OCUnitOSXAppTestRunner.m in Sources */,
 				324BB4C51725BD990073A862 /* XcodeTargetMatch.m in Sources */,
 				32A90C541725F05800C2349E /* TestAction.m in Sources */,
+				2C19C5EA1733705600F1DB38 /* XUnitReporter.m in Sources */,
 				2864A3FA1734E52800BBF3B1 /* Version.m in Sources */,
 				C9D5B9891733CC2100011C1F /* ArchiveAction.m in Sources */,
 			);
@@ -573,6 +583,8 @@
 				324BB4C61725BDA20073A862 /* XcodeTargetMatch.m in Sources */,
 				32A90C551725F05800C2349E /* TestAction.m in Sources */,
 				32707EE21725FE7F00AF2F53 /* TestActionTests.m in Sources */,
+				2C19C5EB1733705600F1DB38 /* XUnitReporter.m in Sources */,
+				2CCC14441734318E00C66822 /* XUnitReporterTests.m in Sources */,
 				2864A3FB1734E52800BBF3B1 /* Version.m in Sources */,
 				C9D5B98A1733CC2500011C1F /* ArchiveAction.m in Sources */,
 			);
