@@ -51,7 +51,7 @@
 
 - (void)testGoodBuild
 {
-  Options *options = [[Options alloc] init];
+  Options *options = [[[Options alloc] init] autorelease];
   options.workspace = TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj";
   options.scheme = @"TestProject-Library";
   PhabricatorReporter *reporter = [self reporterPumpedWithEventsFrom:TEST_DATA @"JSONStreamReporter-build-good.txt" options:options];
@@ -83,7 +83,7 @@
 
 - (void)testBadBuild
 {
-  Options *options = [[Options alloc] init];
+  Options *options = [[[Options alloc] init] autorelease];
   options.workspace = TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj";
   options.scheme = @"TestProject-Library";
   PhabricatorReporter *reporter = [self reporterPumpedWithEventsFrom:TEST_DATA @"JSONStreamReporter-build-bad.txt" options:options];
@@ -115,7 +115,7 @@
 
 - (void)testTestResults
 {
-  Options *options = [[Options alloc] init];
+  Options *options = [[[Options alloc] init] autorelease];
   options.workspace = TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj";
   options.scheme = @"TestProject-Library";
   PhabricatorReporter *reporter = [self reporterPumpedWithEventsFrom:TEST_DATA @"JSONStreamReporter-runtests.txt" options:options];
