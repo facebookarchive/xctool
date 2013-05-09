@@ -17,9 +17,12 @@
 #import <Foundation/Foundation.h>
 
 @interface OCUnitTestRunner : NSObject {
+@public
   NSDictionary *_buildSettings;
   NSString *_senTestList;
   BOOL _senTestInvertScope;
+  NSArray *_arguments;
+  NSDictionary *_environment;
   BOOL _garbageCollection;
   BOOL _freshSimulator;
   BOOL _freshInstall;
@@ -31,6 +34,8 @@
 - (id)initWithBuildSettings:(NSDictionary *)buildSettings
                 senTestList:(NSString *)senTestList
          senTestInvertScope:(BOOL)senTestInvertScope
+                  arguments:(NSArray *)arguments
+                environment:(NSDictionary *)environment
           garbageCollection:(BOOL)garbageCollection
              freshSimulator:(BOOL)freshSimulator
                freshInstall:(BOOL)freshInstall

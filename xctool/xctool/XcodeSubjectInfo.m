@@ -472,6 +472,56 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   return [buildActionEntryNodes count];
 }
 
++ (NSDictionary *)argumentsAndEnvironmentForTestAction:(NSXMLDocument *)doc
+{
+  NSError *error = nil;
+
+  NSArray *testActionNodes = [doc nodesForXPath:@"//TestAction" error:&error];
+  NSAssert(error == nil, @"Failed to get nodes: %@", [error localizedFailureReason]);
+  NSAssert([testActionNodes count] == 1,
+           @"Should only have 1 test action but had: %@", testActionNodes);
+
+  BOOL shouldUseLaunchSchemeArgsEnv =
+    [[[testActionNodes[0] attributeForName:@"shouldUseLaunchSchemeArgsEnv"] stringValue]
+     isEqualToString:@"YES"];
+  NSString *searchAction = shouldUseLaunchSchemeArgsEnv ? @"LaunchAction" : @"TestAction";
+
+  NSArray *commandLineArgumentNodes =
+    [doc nodesForXPath:[NSString stringWithFormat:@"//%@//CommandLineArgument",
+                        searchAction]
+                 error:&error];
+  NSAssert(error == nil, @"Failed to get nodes: %@", [error localizedFailureReason]);
+  NSArray *environmentVariableNodes =
+    [doc nodesForXPath:[NSString stringWithFormat:@"//%@//EnvironmentVariable",
+                        searchAction]
+                 error:&error];
+  NSAssert(error == nil, @"Failed to get nodes: %@", [error localizedFailureReason]);
+
+  NSMutableArray *arguments = [NSMutableArray array];
+  NSMutableDictionary *environment = [NSMutableDictionary dictionary];
+
+  for (NSXMLElement *node in commandLineArgumentNodes) {
+    NSString *argument = [[node attributeForName:@"argument"] stringValue];
+    BOOL isEnabled = [[[node attributeForName:@"isEnabled"] stringValue] isEqualToString:@"YES"];
+
+    if (isEnabled) {
+      [arguments addObject:argument];
+    }
+  }
+
+  for (NSXMLElement *node in environmentVariableNodes) {
+    NSString *key = [[node attributeForName:@"key"] stringValue];
+    NSString *value = [[node attributeForName:@"value"] stringValue];
+    BOOL isEnabled = [[[node attributeForName:@"isEnabled"] stringValue] isEqualToString:@"YES"];
+
+    if (isEnabled) {
+      environment[key] = value;
+    }
+  }
+
+  return @{@"arguments" : arguments, @"environment" : environment};
+}
+
 + (NSArray *)testablesInSchemePath:(NSString *)schemePath basePath:(NSString *)basePath
 {
   NSError *error = nil;
@@ -482,6 +532,8 @@ containsFilesModifiedSince:(NSDate *)sinceDate
     NSLog(@"Error in parsing: %@: %@", schemePath, error);
     abort();
   }
+
+  NSDictionary *argumentsAndEnvironment = [self argumentsAndEnvironmentForTestAction:doc];
 
   NSArray *testableReferenceNodes = [doc nodesForXPath:@"//TestableReference" error:nil];
 
@@ -523,7 +575,17 @@ containsFilesModifiedSince:(NSDate *)sinceDate
       senTestInvertScope = NO;
     }
 
-    [testables addObject:@{@"projectPath" : projectPath, @"target": target, @"executable": executable, @"senTestInvertScope": @(senTestInvertScope), @"senTestList": senTestList, @"skipped": skipped}];
+    NSMutableDictionary *testable =
+      [NSMutableDictionary dictionaryWithDictionary:@{
+       @"projectPath" : projectPath,
+       @"target": target,
+       @"executable": executable,
+       @"senTestInvertScope": @(senTestInvertScope),
+       @"senTestList": senTestList,
+       @"skipped": skipped}];;
+    [testable addEntriesFromDictionary:argumentsAndEnvironment];
+    
+    [testables addObject:testable];
   }
 
   return testables;

@@ -257,6 +257,8 @@
                                      initWithBuildSettings:testableBuildSettings
                                      senTestList:senTestList
                                      senTestInvertScope:senTestInvertScope
+                                     arguments:testable[@"arguments"]
+                                     environment:testable[@"environment"]
                                      garbageCollection:garbageCollectionEnabled
                                      freshSimulator:freshSimulator
                                      freshInstall:freshInstall

@@ -34,6 +34,8 @@
    @"NSUnbufferedIO" : @"YES",
    @"OBJC_DISABLE_GC" : !_garbageCollection ? @"YES" : @"NO",
    }];
+  // Incorporate any env vars that came from the scheme itself.
+  [env addEntriesFromDictionary:_environment];
 
   NSTask *task = [[[NSTask alloc] init] autorelease];
   [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Tools/otest"]];

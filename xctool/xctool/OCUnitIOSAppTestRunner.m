@@ -117,6 +117,8 @@ static void KillSimulatorJobs()
    @"XCInjectBundle" : testBundlePath,
    @"XCInjectBundleInto" : testHostPath,
    }];
+  // Incorporate any env vars that came from the scheme itself.
+  [launchEnvironment addEntriesFromDictionary:_environment];
   [sessionConfig setSimulatedApplicationLaunchEnvironment:launchEnvironment];
   
   [sessionConfig setSimulatedApplicationStdOutPath:outputPath];

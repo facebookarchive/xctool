@@ -129,4 +129,81 @@
   assertThat([settings allKeys][0], equalTo(@"Target Name With Spaces"));
 }
 
+- (void)testCanParseTestablesFromScheme
+{
+  NSArray *testables = [XcodeSubjectInfo testablesInSchemePath:
+   TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj/xcshareddata/"
+   @"xcschemes/TestProject-Library.xcscheme"
+                                 basePath:
+   TEST_DATA @"TestProject-Library"
+   ];
+
+  assertThat(testables,
+             equalTo(@[@{
+                     @"arguments" : @[],
+                     @"environment" : @{},
+                     @"executable" : @"TestProject-LibraryTests.octest",
+                     @"projectPath" : @"xctool-tests/TestData/TestProject-Library/TestProject-Library.xcodeproj",
+                     @"senTestInvertScope" : @1,
+                     @"senTestList" : @"DisabledTests",
+                     @"skipped" : @0,
+                     @"target" : @"TestProject-LibraryTests",
+                     }]));
+}
+
+/**
+ * Xcode's default is to run your test with the same command-line arguments
+ * and environment settings you've assigned in the "Run" action of your scheme.
+ */
+- (void)testTestablesIncludeArgsAndEnvFromRunAction
+{
+  NSArray *testables = [XcodeSubjectInfo testablesInSchemePath:
+                        TEST_DATA @"TestsWithArgAndEnvSettingsInRunAction/"
+                        @"TestsWithArgAndEnvSettings.xcodeproj/xcshareddata/"
+                        @"xcschemes/TestsWithArgAndEnvSettings.xcscheme"
+                                                      basePath:
+                        TEST_DATA @"TestsWithArgAndEnvSettingsInRunAction"
+                        ];
+
+  assertThat(testables,
+             equalTo(@[@{
+                     @"arguments" : @[@"-RunArg", @"RunArgValue"],
+                     @"environment" : @{@"RunEnvKey" : @"RunEnvValue"},
+                     @"executable" : @"TestsWithArgAndEnvSettingsTests.octest",
+                     @"projectPath" : @"xctool-tests/TestData/TestsWithArgAndEnvSettingsInRunAction/TestsWithArgAndEnvSettings.xcodeproj",
+                     @"senTestInvertScope" : @0,
+                     @"senTestList" : @"All",
+                     @"skipped" : @0,
+                     @"target" : @"TestsWithArgAndEnvSettingsTests",
+                     }]));
+}
+
+/**
+ * Xcode's default is to run your test with the same command-line arguments
+ * and environment settings you've assigned in the "Run" action of your scheme,
+ * BUT you can also specify explicit arg/env settings just for tests.
+ */
+- (void)testTestablesIncludeArgsAndEnvFromTestAction
+{
+  NSArray *testables = [XcodeSubjectInfo testablesInSchemePath:
+                        TEST_DATA @"TestsWithArgAndEnvSettingsInTestAction/"
+                        @"TestsWithArgAndEnvSettings.xcodeproj/xcshareddata/"
+                        @"xcschemes/TestsWithArgAndEnvSettings.xcscheme"
+                                                      basePath:
+                        TEST_DATA @"TestsWithArgAndEnvSettingsInTestAction"
+                        ];
+
+  assertThat(testables,
+             equalTo(@[@{
+                     @"arguments" : @[@"-TestArg", @"TestArgValue"],
+                     @"environment" : @{@"TestEnvKey" : @"TestEnvValue"},
+                     @"executable" : @"TestsWithArgAndEnvSettingsTests.octest",
+                     @"projectPath" : @"xctool-tests/TestData/TestsWithArgAndEnvSettingsInTestAction/TestsWithArgAndEnvSettings.xcodeproj",
+                     @"senTestInvertScope" : @0,
+                     @"senTestList" : @"All",
+                     @"skipped" : @0,
+                     @"target" : @"TestsWithArgAndEnvSettingsTests",
+                     }]));
+}
+
 @end

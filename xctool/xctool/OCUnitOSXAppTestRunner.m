@@ -34,10 +34,8 @@
                          [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection"],
                          ];
 
-  NSTask *task = [[[NSTask alloc] init] autorelease];
-  [task setLaunchPath:testHostPath];
-  [task setArguments:[self otestArguments]];
-  [task setEnvironment:@{
+  NSMutableDictionary *env = [NSMutableDictionary dictionary];
+  [env addEntriesFromDictionary:@{
    @"DYLD_INSERT_LIBRARIES" : [libraries componentsJoinedByString:@":"],
    @"DYLD_FRAMEWORK_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
    @"DYLD_LIBRARY_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
@@ -47,6 +45,12 @@
    @"XCInjectBundle" : [_buildSettings[@"BUILT_PRODUCTS_DIR"] stringByAppendingPathComponent:_buildSettings[@"FULL_PRODUCT_NAME"]],
    @"XCInjectBundleInto" : testHostPath,
    }];
+  [env addEntriesFromDictionary:_environment];
+
+  NSTask *task = [[[NSTask alloc] init] autorelease];
+  [task setLaunchPath:testHostPath];
+  [task setArguments:[self otestArguments]];
+  [task setEnvironment:env];
 
   LaunchTaskAndFeedOuputLinesToBlock(task, outputLineBlock);
 
