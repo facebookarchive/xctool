@@ -18,6 +18,7 @@
 
 #import "Options.h"
 #import "PhabricatorReporter.h"
+#import "Reporter+Testing.h"
 #import "TestUtil.h"
 
 @interface PhabricatorReporterTests : SenTestCase
@@ -25,38 +26,16 @@
 
 @implementation PhabricatorReporterTests
 
-- (PhabricatorReporter *)reporterPumpedWithEventsFrom:(NSString *)path options:(Options *)options
-{
-  PhabricatorReporter *reporter = (PhabricatorReporter *)[Reporter reporterWithName:@"phabricator"
-                                                                         outputPath:@"-"
-                                                                            options:options];
-  [reporter openWithStandardOutput:[NSFileHandle fileHandleWithNullDevice] error:nil];
-
-  NSString *pathContents = [NSString stringWithContentsOfFile:path
-                                                     encoding:NSUTF8StringEncoding
-                                                        error:nil];
-
-  for (NSString *line in [pathContents componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]]) {
-    if (line.length == 0) {
-      break;
-    }
-
-    [reporter handleEvent:[NSJSONSerialization JSONObjectWithData:[line dataUsingEncoding:NSUTF8StringEncoding]
-                                                          options:0
-                                                            error:nil]];
-  }
-
-  return reporter;
-}
-
 - (void)testGoodBuild
 {
   Options *options = [[[Options alloc] init] autorelease];
   options.workspace = TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj";
   options.scheme = @"TestProject-Library";
-  PhabricatorReporter *reporter = [self reporterPumpedWithEventsFrom:TEST_DATA @"JSONStreamReporter-build-good.txt" options:options];
 
-  NSArray *results = [NSJSONSerialization JSONObjectWithData:[[reporter arcUnitJSON] dataUsingEncoding:NSUTF8StringEncoding]
+  NSData *outputData =
+    [PhabricatorReporter outputDataWithEventsFromFile:TEST_DATA @"JSONStreamReporter-build-good.txt"
+                                              options:options];
+  NSArray *results = [NSJSONSerialization JSONObjectWithData:outputData
                                                      options:0
                                                        error:nil];
   assertThat(results, notNilValue());
@@ -86,9 +65,11 @@
   Options *options = [[[Options alloc] init] autorelease];
   options.workspace = TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj";
   options.scheme = @"TestProject-Library";
-  PhabricatorReporter *reporter = [self reporterPumpedWithEventsFrom:TEST_DATA @"JSONStreamReporter-build-bad.txt" options:options];
 
-  NSArray *results = [NSJSONSerialization JSONObjectWithData:[[reporter arcUnitJSON] dataUsingEncoding:NSUTF8StringEncoding]
+  NSData *outputData =
+    [PhabricatorReporter outputDataWithEventsFromFile:TEST_DATA @"JSONStreamReporter-build-bad.txt"
+                                              options:options];
+  NSArray *results = [NSJSONSerialization JSONObjectWithData:outputData
                                                      options:0
                                                        error:nil];
   assertThat(results, notNilValue());
@@ -118,11 +99,14 @@
   Options *options = [[[Options alloc] init] autorelease];
   options.workspace = TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj";
   options.scheme = @"TestProject-Library";
-  PhabricatorReporter *reporter = [self reporterPumpedWithEventsFrom:TEST_DATA @"JSONStreamReporter-runtests.txt" options:options];
 
-  NSArray *results = [NSJSONSerialization JSONObjectWithData:[[reporter arcUnitJSON] dataUsingEncoding:NSUTF8StringEncoding]
+  NSData *outputData =
+    [PhabricatorReporter outputDataWithEventsFromFile:TEST_DATA @"JSONStreamReporter-runtests.txt"
+                                              options:options];
+  NSArray *results = [NSJSONSerialization JSONObjectWithData:outputData
                                                      options:0
                                                        error:nil];
+
   assertThat(results, notNilValue());
   assertThat(results,
              equalTo(@[

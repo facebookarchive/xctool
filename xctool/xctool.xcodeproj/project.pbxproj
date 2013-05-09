@@ -52,6 +52,7 @@
 		288B9FB9171A50C1008F0BDF /* OCUnitOSXLogicTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 288B9FB7171A50C1008F0BDF /* OCUnitOSXLogicTestRunner.m */; };
 		288B9FBC171A5509008F0BDF /* OCUnitOSXAppTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 288B9FBB171A5509008F0BDF /* OCUnitOSXAppTestRunner.m */; };
 		288B9FBD171A5509008F0BDF /* OCUnitOSXAppTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 288B9FBB171A5509008F0BDF /* OCUnitOSXAppTestRunner.m */; };
+		288DD463173B5F9000F1093C /* Reporter+Testing.m in Sources */ = {isa = PBXBuildFile; fileRef = 288DD462173B5F9000F1093C /* Reporter+Testing.m */; };
 		28AC9E3016DB3478009E5B9A /* OptionsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28AC9E2F16DB3478009E5B9A /* OptionsTests.m */; };
 		28ACFC8316FBA888004BAF33 /* TaskUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 28ACFC8216FBA888004BAF33 /* TaskUtil.m */; };
 		28ACFC8416FBA888004BAF33 /* TaskUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 28ACFC8216FBA888004BAF33 /* TaskUtil.m */; };
@@ -166,6 +167,8 @@
 		288B9FB7171A50C1008F0BDF /* OCUnitOSXLogicTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitOSXLogicTestRunner.m; sourceTree = "<group>"; };
 		288B9FBA171A5509008F0BDF /* OCUnitOSXAppTestRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUnitOSXAppTestRunner.h; sourceTree = "<group>"; };
 		288B9FBB171A5509008F0BDF /* OCUnitOSXAppTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitOSXAppTestRunner.m; sourceTree = "<group>"; };
+		288DD461173B5F9000F1093C /* Reporter+Testing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Reporter+Testing.h"; sourceTree = "<group>"; };
+		288DD462173B5F9000F1093C /* Reporter+Testing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Reporter+Testing.m"; sourceTree = "<group>"; };
 		28AC9E2F16DB3478009E5B9A /* OptionsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = OptionsTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		28ACFC8116FBA888004BAF33 /* TaskUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskUtil.h; sourceTree = "<group>"; };
 		28ACFC8216FBA888004BAF33 /* TaskUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskUtil.m; sourceTree = "<group>"; };
@@ -364,6 +367,8 @@
 				287BF04C16F1A6EB00590E06 /* XcodeSubjectInfoTests.m */,
 				283EAF151702BB0600CE0A0C /* OCUnitCrashFilterTests.m */,
 				283EAF5C1704C62E00CE0A0C /* PhabricatorReporterTests.m */,
+				288DD461173B5F9000F1093C /* Reporter+Testing.h */,
+				288DD462173B5F9000F1093C /* Reporter+Testing.m */,
 			);
 			path = "xctool-tests";
 			sourceTree = "<group>";
@@ -575,6 +580,7 @@
 				32707EE21725FE7F00AF2F53 /* TestActionTests.m in Sources */,
 				2864A3FB1734E52800BBF3B1 /* Version.m in Sources */,
 				C9D5B98A1733CC2500011C1F /* ArchiveAction.m in Sources */,
+				288DD463173B5F9000F1093C /* Reporter+Testing.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
