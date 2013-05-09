@@ -115,15 +115,18 @@ void ReportMessage(ReporterMessageLevel level, NSString *format, ...) {
   } else {
     NSFileManager *fileManager = [NSFileManager defaultManager];
       
-    NSString *path = [self.outputPath stringByDeletingLastPathComponent];
-    BOOL isDirectory;
-    BOOL exists = [fileManager fileExistsAtPath:path isDirectory:&isDirectory];
-    if (!exists) {
-      if (![fileManager createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil]) {
-        *error = [NSString stringWithFormat:@"Failed to create folder at '%@'.", path];
-        return NO;
+    NSString *basePath = [self.outputPath stringByDeletingLastPathComponent];
+
+    if ([basePath length] > 0) {
+      BOOL isDirectory;
+      BOOL exists = [fileManager fileExistsAtPath:basePath isDirectory:&isDirectory];
+      if (!exists) {
+        if (![fileManager createDirectoryAtPath:basePath withIntermediateDirectories:YES attributes:nil error:nil]) {
+          *error = [NSString stringWithFormat:@"Failed to create folder at '%@'.", basePath];
+          return NO;
+        }
+        exists = isDirectory = YES;
       }
-      exists = isDirectory = YES;
     }
     
     if (![fileManager createFileAtPath:self.outputPath contents:nil attributes:nil]) {
