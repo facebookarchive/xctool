@@ -80,7 +80,7 @@
      @{@"event" : @"begin-test-suite", @"suite" : @"All tests"},
      @{@"event" : @"begin-test-suite", @"suite" : @"/path/to/TestProject-LibraryTests.octest(Tests)"},
      @{@"event" : @"begin-test-suite", @"suite" : @"OtherTests"},
-     @{@"event" : @"begin-test", @"test" : @"-[OtherTests testSomething]"},
+     @{@"event" : @"begin-test", @"test" : @"-[OtherTests testSomething]", @"className" : @"OtherTests", @"methodName" : @"testSomething"},
      ]];
   assertThatBool([filter testRunWasUnfinished], equalToBool(YES));
   assertThat(filter.currentTestEvent, notNilValue());
@@ -99,6 +99,8 @@
   // The test should get marked as a failure
   assertThat(generatedEvents[1][@"event"], equalTo(@"end-test"));
   assertThat(generatedEvents[1][@"test"], equalTo(@"-[OtherTests testSomething]"));
+  assertThat(generatedEvents[1][@"className"], equalTo(@"OtherTests"));
+  assertThat(generatedEvents[1][@"methodName"], equalTo(@"testSomething"));
   assertThat(generatedEvents[1][@"succeeded"], equalTo(@NO));
 
   // And 'end-test-suite' events should get sent for each of the suites we were in.
@@ -120,8 +122,8 @@
      @{@"event" : @"begin-test-suite", @"suite" : @"All tests"},
      @{@"event" : @"begin-test-suite", @"suite" : @"/path/to/TestProject-LibraryTests.octest(Tests)"},
      @{@"event" : @"begin-test-suite", @"suite" : @"OtherTests"},
-     @{@"event" : @"begin-test", @"test" : @"-[OtherTests testSomething]"},
-     @{@"event" : @"end-test", @"test" : @"-[OtherTests testSomething]", @"succeeded" : @YES, @"output" : @"", @"totalDuration" : @1.0},
+     @{@"event" : @"begin-test", @"test" : @"-[OtherTests testSomething]", @"className" : @"OtherTests", @"methodName" : @"testSomething"},
+     @{@"event" : @"end-test", @"test" : @"-[OtherTests testSomething]", @"className" : @"OtherTests", @"methodName" : @"testSomething", @"succeeded" : @YES, @"output" : @"", @"totalDuration" : @1.0},
      ]];
   assertThatBool([filter testRunWasUnfinished], equalToBool(YES));
 
@@ -141,6 +143,8 @@
 
   assertThat(generatedEvents[2][@"event"], equalTo(@"end-test"));
   assertThat(generatedEvents[2][@"test"], equalTo(@"TestProject-LibraryTests.octest_CRASHED"));
+  assertThat(generatedEvents[2][@"className"], equalTo(@"TestProject-LibraryTests.octest"));
+  assertThat(generatedEvents[2][@"methodName"], equalTo(@"CRASHED"));
   assertThat(generatedEvents[2][@"succeeded"], equalTo(@NO));
 
   // And 'end-test-suite' events should get sent for each of the suites we were in.
