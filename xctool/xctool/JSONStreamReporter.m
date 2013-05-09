@@ -18,6 +18,10 @@
 
 @implementation JSONStreamReporter
 
++ (NSString *) reporterName {
+    return @"json-stream";
+}
+
 - (void)passThrough:(NSDictionary *)event
 {
   NSError *error = nil;

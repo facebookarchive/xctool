@@ -23,6 +23,8 @@
 #import "PhabricatorReporter.h"
 #import "TextReporter.h"
 
+#import <objc/runtime.h>
+
 NSString *ReporterMessageLevelToString(ReporterMessageLevel level) {
   switch (level) {
     case REPORTER_MESSAGE_DEBUG:
@@ -39,6 +41,7 @@ NSString *ReporterMessageLevelToString(ReporterMessageLevel level) {
 }
 
 static NSArray *RegisteredReporters = nil;
+static NSDictionary *systemReporters = nil;
 
 void RegisterReporters(NSArray *reporters) {
   NSCAssert(RegisteredReporters == nil, @"Cannot register reporters twice.");
@@ -74,15 +77,43 @@ void ReportMessage(ReporterMessageLevel level, NSString *format, ...) {
 
 @implementation Reporter
 
++ (void)initialize {
+  [super initialize];
+  int classCount = objc_getClassList(NULL, 0);
+  if ( classCount > 0 ) {
+    NSMutableDictionary *m_systemReporters = [NSMutableDictionary dictionaryWithCapacity:classCount];
+    Class *classes = (Class*)malloc(sizeof(Class)*classCount);;
+    
+    objc_getClassList(classes, classCount);
+    for (int i=0; i<classCount; i++) {
+      Class cls = classes[i];
+      
+      if ( !class_conformsToProtocol(cls, @protocol(ExportedReporter)) ) {
+        continue;
+      }
+      NSString *reporterName = nil;
+      if ( [cls respondsToSelector:@selector(reporterName)]) {
+        reporterName = [[cls performSelector:@selector(reporterName)] lowercaseString];
+      } else {
+        reporterName =  [[NSStringFromClass(cls) lowercaseString] stringByReplacingOccurrencesOfString:@"reporter" withString:@""];
+      }
+      
+      [m_systemReporters setObject:cls forKey:reporterName];
+    }
+    free(classes);
+    
+    systemReporters = [m_systemReporters copy];
+  }
+}
+
++ (NSArray *) availableReporters {
+  return [systemReporters allKeys];
+}
+
 + (Reporter *)reporterWithName:(NSString *)name outputPath:(NSString *)outputPath options:(Options *)options
 {
-  NSDictionary *reporters = @{@"json-stream": [JSONStreamReporter class],
-                              @"pretty": [PrettyTextReporter class],
-                              @"plain": [PlainTextReporter class],
-                              @"phabricator": [PhabricatorReporter class],
-                              };
-
-  Class reporterClass = reporters[name];
+    
+  Class reporterClass = systemReporters[name];
 
   Reporter *reporter = [[[reporterClass alloc] init] autorelease];
   reporter.outputPath = outputPath;
