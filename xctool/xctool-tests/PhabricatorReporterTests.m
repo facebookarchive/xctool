@@ -55,6 +55,8 @@
   options.workspace = TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj";
   options.scheme = @"TestProject-Library";
   PhabricatorReporter *reporter = [self reporterPumpedWithEventsFrom:TEST_DATA @"JSONStreamReporter-build-good.txt" options:options];
+  [options release];
+  options = nil;
 
   NSArray *results = [NSJSONSerialization JSONObjectWithData:[[reporter arcUnitJSON] dataUsingEncoding:NSUTF8StringEncoding]
                                                      options:0
@@ -87,6 +89,8 @@
   options.workspace = TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj";
   options.scheme = @"TestProject-Library";
   PhabricatorReporter *reporter = [self reporterPumpedWithEventsFrom:TEST_DATA @"JSONStreamReporter-build-bad.txt" options:options];
+  [options release];
+  options = nil;
 
   NSArray *results = [NSJSONSerialization JSONObjectWithData:[[reporter arcUnitJSON] dataUsingEncoding:NSUTF8StringEncoding]
                                                      options:0
@@ -119,6 +123,8 @@
   options.workspace = TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj";
   options.scheme = @"TestProject-Library";
   PhabricatorReporter *reporter = [self reporterPumpedWithEventsFrom:TEST_DATA @"JSONStreamReporter-runtests.txt" options:options];
+  [options release];
+  options = nil;
 
   NSArray *results = [NSJSONSerialization JSONObjectWithData:[[reporter arcUnitJSON] dataUsingEncoding:NSUTF8StringEncoding]
                                                      options:0
