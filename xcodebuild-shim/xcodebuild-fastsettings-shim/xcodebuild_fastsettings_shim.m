@@ -19,6 +19,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "Swizzle.h"
+
 // class-dump'ed from:
 // /Applications/Xcode.app/Contents/PlugIns/Xcode3Core.ideplugin/Contents/Frameworks/DevToolsCore.framework/DevToolsCore
 @interface Xcode3Target : NSObject
@@ -31,19 +33,6 @@
 
 @interface Xcode3TargetProduct : Xcode3TargetBuildable
 @end
-
-static void SwizzleSelectorForFunction(Class cls, SEL sel, IMP newImp)
-{
-  Method originalMethod = class_getInstanceMethod(cls, sel);
-  const char *typeEncoding = method_getTypeEncoding(originalMethod);
-
-  NSString *newSelectorName = [NSString stringWithFormat:@"__%s_%s", class_getName(cls), sel_getName(sel)];
-  SEL newSelector = sel_registerName([newSelectorName UTF8String]);
-  class_addMethod(cls, newSelector, newImp, typeEncoding);
-
-  Method newMethod = class_getInstanceMethod(cls, newSelector);
-  method_exchangeImplementations(originalMethod, newMethod);
-}
 
 static NSArray *IDEBuildSchemeAction_buildablesForAllSchemeCommandsIncludingDependencies(id self, SEL cmd, BOOL arg)
 {
@@ -68,7 +57,7 @@ static NSArray *IDEBuildSchemeAction_buildablesForAllSchemeCommandsIncludingDepe
 
 __attribute__((constructor)) static void EntryPoint()
 {
-  SwizzleSelectorForFunction(NSClassFromString(@"IDEBuildSchemeAction"),
+  XTSwizzleSelectorForFunction(NSClassFromString(@"IDEBuildSchemeAction"),
                              @selector(buildablesForAllSchemeCommandsIncludingDependencies:),
                              (IMP)IDEBuildSchemeAction_buildablesForAllSchemeCommandsIncludingDependencies);
 

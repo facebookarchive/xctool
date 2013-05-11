@@ -29,7 +29,7 @@ static FILE *__stderr;
 static NSMutableSet *__begunLogSections = nil;
 static NSMutableSet *__endedLogSections = nil;
 
-static void SwizzleSelectorForFunction(Class cls, SEL sel, IMP newImp)
+static void XTSwizzleSelectorForFunction(Class cls, SEL sel, IMP newImp)
 {
   Method originalMethod = class_getInstanceMethod(cls, sel);
   const char *typeEncoding = method_getTypeEncoding(originalMethod);
@@ -236,13 +236,13 @@ __attribute__((constructor)) static void EntryPoint()
   // This method is called once for every line item in the log, and is meant to announce the action
   // that will be done. e.g., this would get called to print out the clang command that's about to
   // be executed.
-  SwizzleSelectorForFunction(NSClassFromString(@"Xcode3CommandLineBuildLogRecorder"),
+  XTSwizzleSelectorForFunction(NSClassFromString(@"Xcode3CommandLineBuildLogRecorder"),
                              @selector(_emitSection:),
                              (IMP)Xcode3CommandLineBuildLogRecorder__emitSection);
   // Override -[Xcode3CommandLineBuildLogRecorder _finishEmittingClosedSection:(IDEActivityLogSection *)section]
   // This method is called once for every line item in the log, and is meant to announce the result
   // of something.  e.g., this would print out the error text (if any) from a clang command that just ran.
-  SwizzleSelectorForFunction(NSClassFromString(@"Xcode3CommandLineBuildLogRecorder"),
+  XTSwizzleSelectorForFunction(NSClassFromString(@"Xcode3CommandLineBuildLogRecorder"),
                              @selector(_finishEmittingClosedSection:),
                              (IMP)Xcode3CommandLineBuildLogRecorder__finishEmittingClosedSection);
 
