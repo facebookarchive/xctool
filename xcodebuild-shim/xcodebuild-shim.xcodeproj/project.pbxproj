@@ -12,6 +12,10 @@
 		285F6F74171FD297001295EC /* xcodebuild-fastsettings-shim-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 285F6F73171FD297001295EC /* xcodebuild-fastsettings-shim-Prefix.pch */; };
 		287A380F16C876A800319E81 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283CCAAC16C2EE7200F2E343 /* Cocoa.framework */; };
 		287A381516C876A800319E81 /* xcodebuild_fastsettings_shim.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A381416C876A800319E81 /* xcodebuild_fastsettings_shim.m */; };
+		28897FC2173E50C5004BA024 /* Swizzle.h in Headers */ = {isa = PBXBuildFile; fileRef = 28897FC0173E50C5004BA024 /* Swizzle.h */; };
+		28897FC3173E50C5004BA024 /* Swizzle.h in Headers */ = {isa = PBXBuildFile; fileRef = 28897FC0173E50C5004BA024 /* Swizzle.h */; };
+		28897FC4173E50C5004BA024 /* Swizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 28897FC1173E50C5004BA024 /* Swizzle.m */; };
+		28897FC5173E50C5004BA024 /* Swizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 28897FC1173E50C5004BA024 /* Swizzle.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +30,8 @@
 		285F6F73171FD297001295EC /* xcodebuild-fastsettings-shim-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "xcodebuild-fastsettings-shim-Prefix.pch"; sourceTree = "<group>"; };
 		287A380E16C876A800319E81 /* xcodebuild-fastsettings-shim.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "xcodebuild-fastsettings-shim.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		287A381416C876A800319E81 /* xcodebuild_fastsettings_shim.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = xcodebuild_fastsettings_shim.m; sourceTree = "<group>"; };
+		28897FC0173E50C5004BA024 /* Swizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Swizzle.h; sourceTree = "<group>"; };
+		28897FC1173E50C5004BA024 /* Swizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Swizzle.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +60,7 @@
 				285F6F72171FD14F001295EC /* xcodebuild-shim.xcconfig */,
 				283CCAAB16C2EE7200F2E343 /* Frameworks */,
 				283CCAAA16C2EE7200F2E343 /* Products */,
+				28897FBF173E50C5004BA024 /* Common */,
 				287A381016C876A800319E81 /* xcodebuild-fastsettings-shim */,
 				283CCAB216C2EE7200F2E343 /* xcodebuild-shim */,
 			);
@@ -121,6 +128,16 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		28897FBF173E50C5004BA024 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				28897FC0173E50C5004BA024 /* Swizzle.h */,
+				28897FC1173E50C5004BA024 /* Swizzle.m */,
+			);
+			name = Common;
+			path = ../Common;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -128,6 +145,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				28897FC2173E50C5004BA024 /* Swizzle.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,6 +154,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				285F6F74171FD297001295EC /* xcodebuild-fastsettings-shim-Prefix.pch in Headers */,
+				28897FC3173E50C5004BA024 /* Swizzle.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -209,6 +228,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				283CCAB716C2EE7200F2E343 /* xcodebuild_shim.m in Sources */,
+				28897FC4173E50C5004BA024 /* Swizzle.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -217,6 +237,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				287A381516C876A800319E81 /* xcodebuild_fastsettings_shim.m in Sources */,
+				28897FC5173E50C5004BA024 /* Swizzle.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -24,6 +24,7 @@
 #import <SenTestingKit/SenTestingKit.h>
 
 #import "../../xctool/xctool/Reporter.h"
+#import "Swizzle.h"
 
 #import "dyld-interposing.h"
 #import "dyld_priv.h"
@@ -64,19 +65,6 @@ static NSArray *CreateParseTestName(NSString *fullTestName)
     }
   }
   return [[NSArray alloc] initWithObjects:className, methodName, nil];
-}
-
-static void SwizzleClassSelectorForFunction(Class cls, SEL sel, IMP newImp)
-{
-  Class clscls = object_getClass((id)cls);
-  Method originalMethod = class_getClassMethod(cls, sel);
-
-  NSString *selectorName = [NSString stringWithFormat:@"__%s_%s", class_getName(cls), sel_getName(sel)];
-  SEL newSelector = sel_registerName([selectorName cStringUsingEncoding:[NSString defaultCStringEncoding]]);
-
-  class_addMethod(clscls, newSelector, newImp, method_getTypeEncoding(originalMethod));
-  Method replacedMethod = class_getClassMethod(cls, newSelector);
-  method_exchangeImplementations(originalMethod, replacedMethod);
 }
 
 static void PrintJSON(id JSONObject)
@@ -338,19 +326,19 @@ static const char *DyldImageStateChangeHandler(enum dyld_image_states state,
     //   '.../SenTestingKit.framework/Versions/A/SenTestingKit'
     if (strstr(info[i].imageFilePath, "SenTestingKit.framework") != NULL) {
       // Since the 'SenTestLog' class now exists, we can swizzle it!
-      SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
+      XTSwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
                                       @selector(testSuiteDidStart:),
                                       (IMP)SenTestLog_testSuiteDidStart);
-      SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
+      XTSwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
                                       @selector(testSuiteDidStop:),
                                       (IMP)SenTestLog_testSuiteDidStop);
-      SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
+      XTSwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
                                       @selector(testCaseDidStart:),
                                       (IMP)SenTestLog_testCaseDidStart);
-      SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
+      XTSwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
                                       @selector(testCaseDidStop:),
                                       (IMP)SenTestLog_testCaseDidStop);
-      SwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
+      XTSwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
                                       @selector(testCaseDidFail:),
                                       (IMP)SenTestLog_testCaseDidFail);
     }

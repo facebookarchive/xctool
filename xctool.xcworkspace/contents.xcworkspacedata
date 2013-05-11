@@ -14,6 +14,16 @@
       location = "group:otest-shim/otest-shim.xcodeproj">
    </FileRef>
    <Group
+      location = "group:Common"
+      name = "Common">
+      <FileRef
+         location = "group:Swizzle.h">
+      </FileRef>
+      <FileRef
+         location = "group:Swizzle.m">
+      </FileRef>
+   </Group>
+   <Group
       location = "group:xcodebuild-lib/../Configurations"
       name = "Configurations">
       <FileRef
