@@ -20,11 +20,11 @@
 #import "BuildTestsAction.h"
 #import "FakeTask.h"
 #import "Options.h"
+#import "Options+Testing.h"
 #import "RunTestsAction.h"
 #import "TestAction.h"
 #import "TestActionInternal.h"
 #import "TaskUtil.h"
-#import "TestUtil.h"
 #import "XCToolUtil.h"
 #import "XcodeSubjectInfo.h"
 
@@ -42,91 +42,70 @@
 
 - (void)testOnlyListIsCollected
 {
-  // The subject being the workspace/scheme or project/target we're testing.
-  ReturnFakeTasks(@[
-                  [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil]
-                  ]);
-
-  Options *options = [TestUtil validatedOptionsFromArgumentList:@[
-                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                      @"-scheme", @"TestProject-Library",
-                      @"-sdk", @"iphonesimulator6.1",
-                      @"test", @"-only", @"TestProject-LibraryTests",
-                      ]];
+  Options *options = [[Options optionsFrom:@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-sdk", @"iphonesimulator6.1",
+                       @"test", @"-only", @"TestProject-LibraryTests",
+                       ]] assertOptionsValidateWithBuildSettingsFromFile:
+                      TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                      ];
   TestAction *action = options.actions[0];
   assertThat(([action onlyList]), equalTo(@[@"TestProject-LibraryTests"]));
 }
 
 - (void)testOnlyListRequiresValidTarget
 {
-  // The subject being the workspace/scheme or project/target we're testing.
-  ReturnFakeTasks(@[
-                  [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil]
-                  ]);
-
-  [TestUtil assertThatOptionsValidateWithArgumentList:@[
-   @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-   @"-scheme", @"TestProject-Library",
-   @"-sdk", @"iphonesimulator6.1",
-   @"test", @"-only", @"BOGUS_TARGET",
-   ]
-                                       failsWithMessage:@"build-tests: 'BOGUS_TARGET' is not a testing target in this scheme."];
+  [[Options optionsFrom:@[
+    @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+    @"-scheme", @"TestProject-Library",
+    @"-sdk", @"iphonesimulator6.1",
+    @"test", @"-only", @"BOGUS_TARGET",
+    ]]
+   assertOptionsFailToValidateWithError:
+   @"build-tests: 'BOGUS_TARGET' is not a testing target in this scheme."
+   withBuildSettingsFromFile:
+   TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+   ];
 }
 
 - (void)testSkipDependenciesIsCollected
 {
-  // The subject being the workspace/scheme or project/target we're testing.
-  ReturnFakeTasks(@[
-                  [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil]
-                  ]);
-
-  Options *options = [TestUtil validatedOptionsFromArgumentList:@[
-                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                      @"-scheme", @"TestProject-Library",
-                      @"-sdk", @"iphonesimulator6.1",
-                      @"test", @"-only", @"TestProject-LibraryTests",
-                      @"-skip-deps"
-                      ]];
+  Options *options = [[Options optionsFrom:@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-sdk", @"iphonesimulator6.1",
+                       @"test", @"-only", @"TestProject-LibraryTests",
+                       @"-skip-deps"
+                       ]] assertOptionsValidateWithBuildSettingsFromFile:
+                      TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                      ];
   TestAction *action = options.actions[0];
   assertThatBool(action.skipDependencies, equalToBool(YES));
 }
 
 - (void)testSDKFallback
 {
-  ReturnFakeTasks(@[
-                  [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil]
-                  ]);
-
-  Options *options = [TestUtil validatedOptionsFromArgumentList:@[
-                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                      @"-scheme", @"TestProject-Library",
-                      @"test",
-                      ]];
+  Options *options = [[Options optionsFrom:@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"test",
+                       ]] assertOptionsValidateWithBuildSettingsFromFile:
+                      TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                      ];
   assertThat(options.sdk, equalTo(@"iphonesimulator"));
   assertThat(options.arch, equalTo(@"i386"));
 }
 
 - (void)testOnlyParsing
 {
-  ReturnFakeTasks(@[
-                  [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil]
-                  ]);
-
-  Options *options = [TestUtil validatedOptionsFromArgumentList:@[
-                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                      @"-scheme", @"TestProject-Library",
-                      @"test", @"-only", @"TestProject-LibraryTests:ClassName/methodName"
-                      ]];
+  Options *options = [[Options optionsFrom:@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"test", @"-only", @"TestProject-LibraryTests:ClassName/methodName"
+                       ]] assertOptionsValidateWithBuildSettingsFromFile:
+                      TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                      ];
   assertThat([options.actions[0] buildTestsAction].onlyList, equalTo(@[@"TestProject-LibraryTests"]));
   assertThat([options.actions[0] runTestsAction].onlyList, equalTo(@[@"TestProject-LibraryTests:ClassName/methodName"]));
 }

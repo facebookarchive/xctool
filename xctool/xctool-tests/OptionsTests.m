@@ -20,9 +20,10 @@
 
 #import "Action.h"
 #import "FakeTask.h"
+#import "NSTask+Testing.h"
 #import "Options.h"
+#import "Options+Testing.h"
 #import "TaskUtil.h"
-#import "TestUtil.h"
 #import "TextReporter.h"
 #import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
@@ -34,175 +35,184 @@
 
 - (void)testHelpOptionSetsFlag
 {
-  assertThatBool([(Options *)[TestUtil optionsFromArgumentList:@[@"-h"]] showHelp], equalToBool(YES));
-  assertThatBool([(Options *)[TestUtil optionsFromArgumentList:@[@"-help"]] showHelp], equalToBool(YES));
+  assertThatBool([[Options optionsFrom:@[@"-h"]] showHelp], equalToBool(YES));
+  assertThatBool([[Options optionsFrom:@[@"-help"]] showHelp], equalToBool(YES));
 }
 
 - (void)testOptionsPassThrough
 {
-  assertThat(([[TestUtil optionsFromArgumentList:@[@"-configuration", @"SomeConfig"]] configuration]), equalTo(@"SomeConfig"));
-  assertThat(([[TestUtil optionsFromArgumentList:@[@"-arch", @"SomeArch"]] arch]), equalTo(@"SomeArch"));
-  assertThat(([[TestUtil optionsFromArgumentList:@[@"-sdk", @"SomeSDK"]] sdk]), equalTo(@"SomeSDK"));
-  assertThat(([[TestUtil optionsFromArgumentList:@[@"-workspace", @"SomeWorkspace"]] workspace]), equalTo(@"SomeWorkspace"));
-  assertThat(([[TestUtil optionsFromArgumentList:@[@"-project", @"SomeProject"]] project]), equalTo(@"SomeProject"));
-  assertThat(([[TestUtil optionsFromArgumentList:@[@"-toolchain", @"SomeToolChain"]] toolchain]), equalTo(@"SomeToolChain"));
-  assertThat(([[TestUtil optionsFromArgumentList:@[@"-xcconfig", @"something.xcconfig"]] xcconfig]), equalTo(@"something.xcconfig"));
-  assertThat(([[TestUtil optionsFromArgumentList:@[@"-jobs", @"10"]] jobs]), equalTo(@"10"));
+  assertThat(([[Options optionsFrom:@[@"-configuration", @"SomeConfig"]] configuration]), equalTo(@"SomeConfig"));
+  assertThat(([[Options optionsFrom:@[@"-arch", @"SomeArch"]] arch]), equalTo(@"SomeArch"));
+  assertThat(([[Options optionsFrom:@[@"-sdk", @"SomeSDK"]] sdk]), equalTo(@"SomeSDK"));
+  assertThat(([[Options optionsFrom:@[@"-workspace", @"SomeWorkspace"]] workspace]), equalTo(@"SomeWorkspace"));
+  assertThat(([[Options optionsFrom:@[@"-project", @"SomeProject"]] project]), equalTo(@"SomeProject"));
+  assertThat(([[Options optionsFrom:@[@"-toolchain", @"SomeToolChain"]] toolchain]), equalTo(@"SomeToolChain"));
+  assertThat(([[Options optionsFrom:@[@"-xcconfig", @"something.xcconfig"]] xcconfig]), equalTo(@"something.xcconfig"));
+  assertThat(([[Options optionsFrom:@[@"-jobs", @"10"]] jobs]), equalTo(@"10"));
 }
 
 - (void)testReporterOptionsSetupReporters
 {
-  NSArray *reporters = [[TestUtil validatedReporterOptionsFromArgumentList:@[
+  Options *options = [Options optionsFrom:@[
                          @"-reporter", @"pretty",
-                         @"-reporter", @"plain:out.txt"]] reporters];
+                         @"-reporter", @"plain:out.txt"
+                      ]];
+  [options assertReporterOptionsValidate];
 
-  assertThatInteger(reporters.count, equalToInteger(2));
+  NSArray *reporters = [options reporters];
+  assertThatInteger([reporters count], equalToInteger(2));
   assertThatBool(([reporters[0] isKindOfClass:[PrettyTextReporter class]]), equalToBool(YES));
   assertThatBool(([reporters[1] isKindOfClass:[PlainTextReporter class]]), equalToBool(YES));
 }
 
 - (void)testBuildSettingsAreCollected
 {
-  NSArray *buildSettings = [[TestUtil optionsFromArgumentList:@[@"-configuration", @"Release", @"ABC=123", @"DEF=456"]] buildSettings];
+  Options *options = [Options optionsFrom:@[
+                      @"-configuration", @"Release",
+                      @"ABC=123",
+                      @"DEF=456"
+                      ]];
+
+  NSArray *buildSettings = [options buildSettings];
   assertThatInteger(buildSettings.count, equalToInteger(2));
   assertThat(buildSettings, equalTo(@[@"ABC=123", @"DEF=456"]));
 }
 
 - (void)testWorkspaceOrProjectAreRequired
 {
-  [TestUtil assertThatOptionsValidateWithArgumentList:@[]
-                                     failsWithMessage:@"Either -workspace, -project, or -find-target must be specified."];
-  [TestUtil assertThatOptionsValidateWithArgumentList:@[
-   @"-workspace", @"Something.xcworkspace",
-   @"-project", @"Something.xcodeproj"
-   ]
-                            failsWithMessage:@"Either -workspace or -project must be specified, but not both."];
+  [[Options optionsFrom:@[]]
+   assertOptionsFailToValidateWithError:
+   @"Either -workspace, -project, or -find-target must be specified."];
+
+  [[Options optionsFrom:@[
+    @"-workspace", @"Something.xcworkspace",
+    @"-project", @"Something.xcodeproj"
+    ]]
+   assertOptionsFailToValidateWithError:
+   @"Either -workspace or -project must be specified, but not both."];
 }
 
 - (void)testSchemeIsRequired
 {
-  [TestUtil assertThatOptionsValidateWithArgumentList:@[@"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace"]
-                            failsWithMessage:@"Missing the required -scheme argument."];
+  [[Options optionsFrom:@[
+    @"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace"
+    ]]
+   assertOptionsFailToValidateWithError:
+   @"Missing the required -scheme argument."];
 }
 
 - (void)testWorkspaceMustBeADirectory
 {
-  [TestUtil assertThatOptionsValidateWithArgumentList:@[
-   @"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library-Bogus.xcworkspace",
-   @"-scheme", @"SomeScheme",
-   ]
-                            failsWithMessage:@"Specified workspace doesn't exist: " TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library-Bogus.xcworkspace"];
+  [[Options optionsFrom:@[
+    @"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library-Bogus.xcworkspace",
+    @"-scheme", @"SomeScheme",
+    ]]
+   assertOptionsFailToValidateWithError:
+   @"Specified workspace doesn't exist: " TEST_DATA
+   @"TestWorkspace-Library/TestWorkspace-Library-Bogus.xcworkspace"];
 }
 
 - (void)testProjectMustBeADirectory
 {
-  [TestUtil assertThatOptionsValidateWithArgumentList:@[
-   @"-project", TEST_DATA @"TestProject-Library/TestProject-Library-Bogus.xcodeproj",
-   @"-scheme", @"SomeScheme",
-   ]
-                            failsWithMessage:@"Specified project doesn't exist: " TEST_DATA @"TestProject-Library/TestProject-Library-Bogus.xcodeproj"];
+  [[Options optionsFrom:@[
+    @"-project", TEST_DATA @"TestProject-Library/TestProject-Library-Bogus.xcodeproj",
+    @"-scheme", @"SomeScheme",
+    ]]
+   assertOptionsFailToValidateWithError:
+   @"Specified project doesn't exist: " TEST_DATA
+   @"TestProject-Library/TestProject-Library-Bogus.xcodeproj"];
 }
 
 - (void)testSchemeMustBeValid
 {
-  ReturnFakeTasks(@[
-                  [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil]
-                  ]);
   // When we're working with projects...
-  [TestUtil assertThatOptionsValidateWithArgumentList:@[
+  [[Options optionsFrom:@[
    @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-   @"-scheme", @"TestProject-Library"]];
+   @"-scheme", @"TestProject-Library"
+   ]]
+   assertOptionsValidateWithBuildSettingsFromFile:
+   TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"];
 
-  ReturnFakeTasks(@[
-                  [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil]
-                  ]);
-  [TestUtil assertThatOptionsValidateWithArgumentList:@[
-   @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-   @"-scheme", @"TestProject-Library-Bogus",
-   ]
-                            failsWithMessage:@"Can't find scheme 'TestProject-Library-Bogus'. Possible schemes include: TestProject-Library"];
+  [[Options optionsFrom:@[
+    @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+    @"-scheme", @"TestProject-Library-Bogus",
+    ]]
+   assertOptionsFailToValidateWithError:
+   @"Can't find scheme 'TestProject-Library-Bogus'. Possible schemes include: TestProject-Library"
+   withBuildSettingsFromFile:
+   TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"];
 
-  ReturnFakeTasks(@[
-                  [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil]
-                  ]);
+
   // When we're working with workspaces...
-  [TestUtil assertThatOptionsValidateWithArgumentList:@[
-   @"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
-   @"-scheme", @"TestProject-Library"]];
+  [[Options optionsFrom:@[
+    @"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
+    @"-scheme", @"TestProject-Library"
+    ]]
+   assertOptionsValidateWithBuildSettingsFromFile:
+   TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt"];
 
-  ReturnFakeTasks(@[
-                  [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil]
-                  ]);
-  [TestUtil assertThatOptionsValidateWithArgumentList:@[
-   @"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
-   @"-scheme", @"TestProject-Library-Bogus",
-   ]
-                            failsWithMessage:@"Can't find scheme 'TestProject-Library-Bogus'. Possible schemes include: TestProject-Library"];
+  [[Options optionsFrom:@[
+    @"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
+    @"-scheme", @"TestProject-Library-Bogus",
+    ]]
+   assertOptionsFailToValidateWithError:
+   @"Can't find scheme 'TestProject-Library-Bogus'. Possible schemes include: TestProject-Library"
+   withBuildSettingsFromFile:
+   TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt"];
 }
 
 - (void)testFindTargetWorks
 {
-  Options *options = [TestUtil optionsFromArgumentList:@[@"-find-target", @"foo"]];
+  Options *options = [Options optionsFrom:@[@"-find-target", @"foo"]];
   assertThat(options.findTarget, equalTo(@"foo"));
 }
 
 - (void)testFindTargetPathWorks
 {
-  Options *options = [TestUtil optionsFromArgumentList:@[@"-find-target", @"foo", @"-find-target-path", @"bar"]];
+  Options *options = [Options optionsFrom:@[@"-find-target", @"foo", @"-find-target-path", @"bar"]];
   assertThat(options.findTarget, equalTo(@"foo"));
   assertThat(options.findTargetPath, equalTo(@"bar"));
 }
 
 - (void)testFindTargetPathRequiresFindTarget
 {
-  [TestUtil assertThatOptionsValidateWithArgumentList:@[@"-workspace", @"blah", @"-find-target-path", @"foo"]
-                                     failsWithMessage:@"If -find-target-path is specified, -find-target must be specified."];
+  [[Options optionsFrom:@[@"-workspace", @"blah", @"-find-target-path", @"foo"]]
+   assertOptionsFailToValidateWithError:@"If -find-target-path is specified, -find-target must be specified."];
 }
 
 - (void)testSDKMustBeValid
 {
-  ReturnFakeTasks(@[
-                  [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil]
-                  ]);
-  [TestUtil assertThatOptionsValidateWithArgumentList:@[
-   @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-   @"-scheme", @"TestProject-Library",
-   @"-sdk", @"macosx10.7"]];
+  [[Options optionsFrom:@[
+    @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+    @"-scheme", @"TestProject-Library",
+    @"-sdk", @"macosx10.7",
+    ]]
+   assertOptionsValidateWithBuildSettingsFromFile:
+   TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"];
 
-  ReturnFakeTasks(@[
-                  [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil]
-                  ]);
-  [TestUtil assertThatOptionsValidateWithArgumentList:@[
-   @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-   @"-scheme", @"TestProject-Library",
-   @"-sdk", @"BOGUSSDK",
-   ]
-                            failsWithMessage:[NSString stringWithFormat:
-                                              @"SDK 'BOGUSSDK' doesn't exist.  Possible SDKs include: %@",
-                                              [[GetAvailableSDKsAndAliases() allKeys] componentsJoinedByString:@", "]]];
+  [[Options optionsFrom:@[
+    @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+    @"-scheme", @"TestProject-Library",
+    @"-sdk", @"BOGUSSDK",
+    ]]
+   assertOptionsFailToValidateWithError:
+   [NSString stringWithFormat:
+    @"SDK 'BOGUSSDK' doesn't exist.  Possible SDKs include: %@",
+    [[GetAvailableSDKsAndAliases() allKeys] componentsJoinedByString:@", "]]
+   withBuildSettingsFromFile:
+   TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"];
 }
 
 - (void)testReporterMustBeValid
 {
-  [TestUtil assertThatReporterOptionsValidateWithArgumentList:@[
-   @"-reporter", @"pretty"]];
-  [TestUtil assertThatReporterOptionsValidateWithArgumentList:@[
-   @"-reporter", @"blah",
-   ]
-                                     failsWithMessage:[NSString stringWithFormat:
-                                                       @"No reporter with name 'blah' found."]];
+  [[Options optionsFrom:@[
+    @"-reporter", @"pretty"
+    ]] assertReporterOptionsValidate];
+
+  [[Options optionsFrom:@[
+    @"-reporter", @"blah"
+    ]] assertReporterOptionsFailToValidateWithError:
+   @"No reporter with name 'blah' found."];
 }
 
 - (void)testArgumentsFlowThroughToCommonXcodebuildArguments
@@ -216,7 +226,7 @@
                          @"SOMEKEY=SOMEVAL",
                          @"SOMEKEY2=SOMEVAL2"
                          ];
-  Options *action = [TestUtil optionsFromArgumentList:arguments];
+  Options *action = [Options optionsFrom:arguments];
   assertThat([action commonXcodeBuildArguments], equalTo(arguments));
 }
 
@@ -225,7 +235,7 @@
   NSArray *arguments = @[@"-workspace", @"path/to/Something.xcworkspace",
                          @"-scheme", @"Something",
                          ];
-  Options *action = [TestUtil optionsFromArgumentList:arguments];
+  Options *action = [Options optionsFrom:arguments];
   assertThat([action xcodeBuildArgumentsForSubject], equalTo(arguments));
 }
 
@@ -234,24 +244,20 @@
   NSArray *arguments = @[@"-project", @"path/to/Something.xcodeproj",
                          @"-scheme", @"Something",
                          ];
-  Options *action = [TestUtil optionsFromArgumentList:arguments];
+  Options *action = [Options optionsFrom:arguments];
   assertThat([action xcodeBuildArgumentsForSubject], equalTo(arguments));
 }
 
 - (void)testCanSpecifyLatestInsteadOfSpecificSDKVersion
 {
-  ReturnFakeTasks(@[
-                  [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil]
-                  ]);
-
-  NSArray *arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                         @"-scheme", @"TestProject-Library",
-                         @"-sdk", @"iphonesimulator",
-                         ];
-  Options *action = [TestUtil validatedOptionsFromArgumentList:arguments];
-  assertThat([action xcodeBuildArgumentsForSubject],
+  Options *options = [[Options optionsFrom:@[
+                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                      @"-scheme", @"TestProject-Library",
+                      @"-sdk", @"iphonesimulator",
+                      ]] assertOptionsValidateWithBuildSettingsFromFile:
+                      TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                      ];
+  assertThat([options xcodeBuildArgumentsForSubject],
              equalTo(@[
                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                      @"-scheme", @"TestProject-Library",
@@ -262,43 +268,33 @@
 
 - (void)testDefaultReporterIsPrettyIfNotSpecified
 {
-  Options *action = [TestUtil optionsFromArgumentList:@[
-                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                      @"-scheme", @"TestProject-Library",
-                      ]];
-
-  NSString *errorMessage = nil;
-  BOOL valid = [action validateReporterOptions:&errorMessage];
-  assertThatBool(valid, equalToBool(YES));
-  assertThatBool(([action.reporters[0] isKindOfClass:[TextReporter class]]), equalToBool(YES));
+  Options *options = [[Options optionsFrom:@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       ]] assertOptionsValidateWithBuildSettingsFromFile:
+                      TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                      ];
+  assertThatBool(([options.reporters[0] isKindOfClass:[TextReporter class]]),
+                 equalToBool(YES));
 }
 
 - (void)testSDKDefaultsToSubjectsSDK
 {
   // The subject being the workspace/scheme or project/target we're testing.
-  ReturnFakeTasks(@[
-                  [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil]
-                  ]);
-
-  Options *action = [TestUtil validatedOptionsFromArgumentList:@[
-                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                      @"-scheme", @"TestProject-Library",
-                      ]];
-  assertThat(action.sdk, equalTo(@"iphoneos6.1"));
+  Options *options = [[Options optionsFrom:@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       ]] assertOptionsValidateWithBuildSettingsFromFile:
+                      TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                      ];
+  assertThat(options.sdk, equalTo(@"iphoneos6.1"));
 }
 
 - (void)testHelpOptionSetsPrintUsage
 {
-  assertThatBool([TestUtil optionsFromArgumentList:@[@"-help"]].showHelp, equalToBool(YES));
+  assertThatBool([Options optionsFrom:@[@"-help"]].showHelp, equalToBool(YES));
+  assertThatBool([Options optionsFrom:@[@"-h"]].showHelp, equalToBool(YES));
 }
-
-- (void)testShortHelpOptionSetsPrintUsage
-{
-  assertThatBool([TestUtil optionsFromArgumentList:@[@"-h"]].showHelp, equalToBool(YES));
-}
-
 
 - (void)testActionsAreRecorded
 {
@@ -310,7 +306,7 @@
     return result;
   };
 
-  assertThat(classNamesFromArray([TestUtil optionsFromArgumentList:@[
+  assertThat(classNamesFromArray([Options optionsFrom:@[
                                   @"clean",
                                   @"build",
                                   @"build-tests",
@@ -326,16 +322,13 @@
 
 - (void)testDefaultActionIsBuildIfNotSpecified
 {
-  ReturnFakeTasks(@[
-                  [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil]
-                  ]);
-
-  Options *options = [TestUtil validatedOptionsFromArgumentList:@[
-                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                      @"-scheme", @"TestProject-Library",
-                      ]];
+  Options *options = [[Options optionsFrom:@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       ]] assertOptionsValidateWithBuildSettingsFromFile:
+                      TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                      ];
+  assertThat(options.sdk, equalTo(@"iphoneos6.1"));
 
   assertThatInteger(options.actions.count, equalToInteger(1));
   Action *action = options.actions[0];

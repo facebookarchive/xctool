@@ -21,6 +21,7 @@
 #import "Options.h"
 #import "TaskUtil.h"
 #import "TestUtil.h"
+#import "XCTool.h"
 #import "XCToolUtil.h"
 #import "xcodeSubjectInfo.h"
 
