@@ -19,11 +19,13 @@
 #import "Action.h"
 #import "FakeTask.h"
 #import "Options.h"
+#import "Options+Testing.h"
 #import "RunTestsAction.h"
 #import "TaskUtil.h"
 #import "TestUtil.h"
+#import "XCTool.h"
 #import "XCToolUtil.h"
-#import "xcodeSubjectInfo.h"
+#import "XcodeSubjectInfo.h"
 
 @interface RunTestsActionTests : SenTestCase
 @end
@@ -39,107 +41,83 @@
 
 - (void)testTestSDKIsCollected
 {
-  // The subject being the workspace/scheme or project/target we're testing.
-  ReturnFakeTasks(@[
-                  [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil]
-                  ]);
-
-  Options *options = [TestUtil validatedOptionsFromArgumentList:@[
-                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                      @"-scheme", @"TestProject-Library",
-                      @"-sdk", @"iphonesimulator6.1",
-                      @"run-tests", @"-test-sdk", @"iphonesimulator6.0"
-                      ]];
+  Options *options = [[Options optionsFrom:@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-sdk", @"iphonesimulator6.1",
+                       @"run-tests", @"-test-sdk", @"iphonesimulator6.0"
+                       ]] assertOptionsValidateWithBuildSettingsFromFile:
+                      TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                      ];
   RunTestsAction *action = options.actions[0];
   assertThat((action.testSDK), equalTo(@"iphonesimulator6.0"));
 }
 
 - (void)testOnlyListIsCollected
 {
-  // The subject being the workspace/scheme or project/target we're testing.
-  ReturnFakeTasks(@[
-                  [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil]
-                  ]);
-
-  Options *options = [TestUtil validatedOptionsFromArgumentList:@[
-                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                      @"-scheme", @"TestProject-Library",
-                      @"-sdk", @"iphonesimulator6.1",
-                      @"run-tests", @"-only", @"TestProject-LibraryTests",
-                      ]];
+  Options *options = [[Options optionsFrom:@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-sdk", @"iphonesimulator6.1",
+                       @"run-tests", @"-only", @"TestProject-LibraryTests",
+                       ]] assertOptionsValidateWithBuildSettingsFromFile:
+                      TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                      ];
   RunTestsAction *action = options.actions[0];
   assertThat((action.onlyList), equalTo(@[@"TestProject-LibraryTests"]));
 }
 
 - (void)testOnlyListRequiresValidTarget
 {
-  // The subject being the workspace/scheme or project/target we're testing.
-  ReturnFakeTasks(@[
-                  [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil]
-                  ]);
-
-  [TestUtil assertThatOptionsValidateWithArgumentList:@[
-   @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-   @"-scheme", @"TestProject-Library",
-   @"-sdk", @"iphonesimulator6.1",
-   @"run-tests", @"-only", @"BOGUS_TARGET",
-   ]
-                                       failsWithMessage:@"run-tests: 'BOGUS_TARGET' is not a testing target in this scheme."];
+  [[Options optionsFrom:@[
+    @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+    @"-scheme", @"TestProject-Library",
+    @"-sdk", @"iphonesimulator6.1",
+    @"run-tests", @"-only", @"BOGUS_TARGET",
+    ]]
+   assertOptionsFailToValidateWithError:
+   @"run-tests: 'BOGUS_TARGET' is not a testing target in this scheme."
+   withBuildSettingsFromFile:
+   TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+   ];
 }
 
 - (void)testWithSDKsDefaultsToValueOfSDKIfNotSupplied
 {
-  // The subject being the workspace/scheme or project/target we're testing.
-  ReturnFakeTasks(@[
-                  [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil]
-                  ]);
-
-  Options *options = [TestUtil validatedOptionsFromArgumentList:@[
-                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                      @"-scheme", @"TestProject-Library",
-                      @"-sdk", @"iphonesimulator6.1",
-                      @"run-tests",
-                      ]];
+  Options *options = [[Options optionsFrom:@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-sdk", @"iphonesimulator6.1",
+                       @"run-tests",
+                       ]] assertOptionsValidateWithBuildSettingsFromFile:
+                      TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                      ];
   RunTestsAction *action = options.actions[0];
   assertThat(action.testSDK, equalTo(@"iphonesimulator6.1"));
 }
 
 - (void)testOnlyAllowSimulatorSDKsForTesting
 {
-  ReturnFakeTasks(@[
-                  [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil]
-                  ]);
+  [[Options optionsFrom:@[
+    @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+    @"-scheme", @"TestProject-Library",
+    @"-sdk", @"iphonesimulator6.1",
+    @"run-tests",
+    ]] assertOptionsValidateWithBuildSettingsFromFile:
+   TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+   ];
 
-  // This should run w/out exception
-  [TestUtil validatedOptionsFromArgumentList:@[
-                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                      @"-scheme", @"TestProject-Library",
-                      @"-sdk", @"iphonesimulator6.1",
-                      @"run-tests",
-                      ]];
-
-  ReturnFakeTasks(@[
-                  [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil]
-                  ]);
-
-  [TestUtil assertThatOptionsValidateWithArgumentList:@[
-   @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-   @"-scheme", @"TestProject-Library",
-   @"-sdk", @"iphoneos6.1",
-   @"run-tests"]
-                            failsWithMessage:@"run-tests: 'iphoneos6.1' is not a supported SDK for testing."];
+  [[Options optionsFrom:@[
+    @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+    @"-scheme", @"TestProject-Library",
+    @"-sdk", @"iphoneos6.1",
+    @"run-tests"
+    ]]
+   assertOptionsFailToValidateWithError:
+   @"run-tests: 'iphoneos6.1' is not a supported SDK for testing."
+   withBuildSettingsFromFile:
+   TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+   ];
 }
 
 - (void)testRunTestsAction

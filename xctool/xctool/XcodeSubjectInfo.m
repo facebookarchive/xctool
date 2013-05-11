@@ -571,6 +571,25 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   return buildables;
 }
 
+- (NSDictionary *)buildSettingsForFirstBuildable
+{
+  NSTask *task = TaskInstance();
+  [task setLaunchPath:
+   [XcodeDeveloperDirPath() stringByAppendingPathComponent:
+    @"usr/bin/xcodebuild"]];
+  [task setArguments:
+   [self.subjectXcodeBuildArguments arrayByAddingObject:@"-showBuildSettings"]];
+  [task setEnvironment:@{
+   @"DYLD_INSERT_LIBRARIES" :
+     [PathToXCToolBinaries() stringByAppendingPathComponent:
+      @"xcodebuild-fastsettings-shim.dylib"],
+   @"SHOW_ONLY_BUILD_SETTINGS_FOR_FIRST_BUILDABLE" : @"YES"
+   }];
+
+  NSDictionary *result = LaunchTaskAndCaptureOutput(task);
+  return BuildSettingsFromOutput(result[@"stdout"]);
+}
+
 - (void)populate
 {
   if (_didPopulate) {
@@ -582,17 +601,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   assert(self.subjectWorkspace != nil || self.subjectProject != nil);
 
   // First we need to know the OBJROOT and SYMROOT settings for the project we're testing.
-  NSTask *task = TaskInstance();
-  [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
-  [task setArguments:[self.subjectXcodeBuildArguments arrayByAddingObject:@"-showBuildSettings"]];
-  [task setEnvironment:@{
-   @"DYLD_INSERT_LIBRARIES" : [PathToXCToolBinaries() stringByAppendingPathComponent:@"xcodebuild-fastsettings-shim.dylib"],
-   @"SHOW_ONLY_BUILD_SETTINGS_FOR_FIRST_BUILDABLE" : @"YES"
-   }];
-
-  NSDictionary *result = LaunchTaskAndCaptureOutput(task);
-  NSDictionary *settings = BuildSettingsFromOutput(result[@"stdout"]);
-
+  NSDictionary *settings = [self buildSettingsForFirstBuildable];
   assert(settings.count == 1);
   NSDictionary *firstBuildable = [settings allValues][0];
   // The following control where our build output goes - we need to make sure we build the tests

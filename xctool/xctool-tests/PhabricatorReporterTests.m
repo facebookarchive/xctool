@@ -19,7 +19,6 @@
 #import "Options.h"
 #import "PhabricatorReporter.h"
 #import "Reporter+Testing.h"
-#import "TestUtil.h"
 
 @interface PhabricatorReporterTests : SenTestCase
 @end

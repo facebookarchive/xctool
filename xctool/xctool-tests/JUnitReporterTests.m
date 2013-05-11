@@ -4,7 +4,6 @@
 #import "JUnitReporter.h"
 #import "Options.h"
 #import "Reporter+Testing.h"
-#import "TestUtil.h"
 
 @interface JUnitReporterTests : SenTestCase
 @end

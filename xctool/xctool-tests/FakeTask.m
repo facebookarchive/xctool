@@ -16,6 +16,8 @@
 
 #import "FakeTask.h"
 
+#import "NSTask+Testing.h"
+
 @implementation FakeTask
 
 + (NSTask *)fakeTaskWithExitStatus:(int)exitStatus

@@ -18,100 +18,10 @@
 
 #import "FakeTask.h"
 #import "Options.h"
+#import "XCTool.h"
 #import "XcodeSubjectInfo.h"
 
 @implementation TestUtil
-
-+ (Options *)optionsFromArgumentList:(NSArray *)argumentList
-{
-  Options *options = [[[Options alloc] init] autorelease];
-  NSString *errorMessage = nil;
-  [options consumeArguments:[NSMutableArray arrayWithArray:argumentList] errorMessage:&errorMessage];
-
-  if (errorMessage != nil) {
-    [NSException raise:NSGenericException format:@"Failed to parse options: %@", errorMessage];
-  }
-
-  return options;
-}
-
-+ (Options *)validatedReporterOptionsFromArgumentList:(NSArray *)argumentList
-{
-  Options *options = [self optionsFromArgumentList:argumentList];
-  NSString *errorMessage = nil;
-  BOOL valid = [options validateReporterOptions:&errorMessage];
-
-  if (!valid) {
-    [NSException raise:NSGenericException format:@"Options are invalid: %@", errorMessage];
-  }
-
-  return options;
-}
-
-+ (Options *)validatedOptionsFromArgumentList:(NSArray *)argumentList
-{
-  Options *options = [self optionsFromArgumentList:argumentList];
-  NSString *errorMessage = nil;
-  BOOL valid = [options validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] options:options];
-
-  if (!valid) {
-    [NSException raise:NSGenericException format:@"Options are invalid: %@", errorMessage];
-  }
-
-  return options;
-}
-
-+ (void)assertThatReporterOptionsValidateWithArgumentList:(NSArray *)argumentList
-{
-  Options *options = [self optionsFromArgumentList:argumentList];
-  NSString *errorMessage = nil;
-
-  BOOL valid = [options validateReporterOptions:&errorMessage];
-
-  if (!valid) {
-    [NSException raise:NSGenericException format:@"Expected validation to pass but failed with '%@'", errorMessage];
-  }
-}
-
-+ (void)assertThatOptionsValidateWithArgumentList:(NSArray *)argumentList
-{
-  Options *options = [self optionsFromArgumentList:argumentList];
-  NSString *errorMessage = nil;
-
-  BOOL valid = [options validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] options:options];
-
-  if (!valid) {
-    [NSException raise:NSGenericException format:@"Expected validation to pass but failed with '%@'", errorMessage];
-  }
-}
-
-+ (void)assertThatReporterOptionsValidateWithArgumentList:(NSArray *)argumentList failsWithMessage:(NSString *)message
-{
-  Options *options = [self optionsFromArgumentList:argumentList];
-  NSString *errorMessage = nil;
-
-  BOOL valid = [options validateReporterOptions:&errorMessage];
-
-  if (valid) {
-    [NSException raise:NSGenericException format:@"Expected validation to failed, but passed."];
-  } else if (!valid && ![message isEqualToString:errorMessage]) {
-    [NSException raise:NSGenericException format:@"Expected validation to fail with message '%@' but instead failed with '%@'", message, errorMessage];
-  }
-}
-
-+ (void)assertThatOptionsValidateWithArgumentList:(NSArray *)argumentList failsWithMessage:(NSString *)message
-{
-  Options *options = [self optionsFromArgumentList:argumentList];
-  NSString *errorMessage = nil;
-
-  BOOL valid = [options validateOptions:&errorMessage xcodeSubjectInfo:[[[XcodeSubjectInfo alloc] init] autorelease] options:options];
-
-  if (valid) {
-    [NSException raise:NSGenericException format:@"Expected validation to failed, but passed."];
-  } else if (!valid && ![message isEqualToString:errorMessage]) {
-    [NSException raise:NSGenericException format:@"Expected validation to fail with message '%@' but instead failed with '%@'", message, errorMessage];
-  }
-}
 
 + (NSDictionary *)runWithFakeStreams:(XCTool *)tool
 {
