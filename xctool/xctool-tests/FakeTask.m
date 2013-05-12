@@ -16,7 +16,10 @@
 
 #import "FakeTask.h"
 
-#import "NSTask+Testing.h"
+#import <objc/message.h>
+#import <objc/runtime.h>
+
+#import "FakeTaskManager.h"
 
 @implementation FakeTask
 
@@ -25,21 +28,57 @@
                  standardErrorPath:(NSString *)standardErrorPath
 {
   FakeTask *task = [[[FakeTask alloc] init] autorelease];
-  task->_fakeExitStatus = exitStatus;
-  task->_fakeStandardOutputPath = [standardOutputPath retain];
-  task->_fakeStandardErrorPath = [standardErrorPath retain];
+  [task pretendExitStatusOf:exitStatus];
+  [task pretendTaskReturnsStandardOutput:
+   [NSString stringWithContentsOfFile:standardOutputPath
+                             encoding:NSUTF8StringEncoding
+                                error:nil]];
+  [task pretendTaskReturnsStandardError:
+   [NSString stringWithContentsOfFile:standardErrorPath
+                             encoding:NSUTF8StringEncoding
+                                error:nil]];
   return task;
 }
 
 + (NSTask *)fakeTaskWithExitStatus:(int)exitStatus
 {
-  return [self fakeTaskWithExitStatus:exitStatus standardOutputPath:nil standardErrorPath:nil];
+  return [self fakeTaskWithExitStatus:exitStatus
+                   standardOutputPath:nil
+                    standardErrorPath:nil];
+}
+
+- (void)pretendTaskReturnsStandardOutput:(NSString *)str
+{
+  if (str != _pretendStandardOutput) {
+    [_pretendStandardOutput release];
+    _pretendStandardOutput = [str retain];
+  }
+}
+
+- (void)pretendTaskReturnsStandardError:(NSString *)str
+{
+  if (str != _pretendStandardError) {
+    [_pretendStandardError release];
+    _pretendStandardError = [str retain];
+  }
+}
+
+- (void)pretendExitStatusOf:(int)exitStatus
+{
+  _pretendExitStatus = exitStatus;
+}
+
+- (id)init
+{
+  if (self = [super init]) {
+  }
+  return self;
 }
 
 - (void)dealloc
 {
-  [_fakeStandardOutputPath release];
-  [_fakeStandardErrorPath release];
+  [_pretendStandardOutput release];
+  [_pretendStandardError release];
 
   [_launchPath release];
   [_arguments release];
@@ -51,37 +90,102 @@
 
 - (void)launch
 {
-  NSMutableString *command = [NSMutableString string];
-
-  if (_fakeStandardOutputPath) {
-    [command appendFormat:@"cat \"%@\" > /dev/stdout;", _fakeStandardOutputPath];
+  FakeTaskManager *manager = [FakeTaskManager sharedManager];
+  if ([manager fakeTasksAreEnabled]) {
+    [manager recordLaunchedTask:self];
+    [manager callLaunchHandlersWithTask:self];
   }
 
-  if (_fakeStandardErrorPath) {
-    [command appendFormat:@"cat \"%@\" > /dev/stderr;", _fakeStandardErrorPath];
+  NSData *pretendStandardOutputData = nil;
+  if (_pretendStandardOutput) {
+    pretendStandardOutputData = [_pretendStandardOutput
+                                 dataUsingEncoding:NSUTF8StringEncoding];
+  } else {
+    pretendStandardOutputData = [NSData dataWithBytes:NULL length:0];
   }
 
-  [command appendFormat:@"exit %d", _fakeExitStatus];
+  NSData *pretendStandardErrorData = nil;
+  if (_pretendStandardError) {
+    pretendStandardErrorData = [_pretendStandardError
+                                dataUsingEncoding:NSUTF8StringEncoding];
+  } else {
+    pretendStandardErrorData = [NSData dataWithBytes:NULL length:0];
+  }
 
-  NSTask *realTask = [[[NSTask alloc] init] autorelease];
-  [realTask setLaunchPath:@"/bin/bash"];
-  [realTask setArguments:@[@"-c", command]];
-  [realTask setEnvironment:@{}];
+  const void *pretendStandardOutputBytes = [pretendStandardOutputData bytes];
+  const void *pretendStandardErrorBytes = [pretendStandardErrorData bytes];
+  NSUInteger pretendStandardOutputLength = [pretendStandardOutputData length];
+  NSUInteger pretendStandardErrorLength = [pretendStandardErrorData length];
 
-  [realTask setStandardOutput:([self standardOutput] ?: [NSFileHandle fileHandleWithNullDevice])];
-  [realTask setStandardError:([self standardError] ?: [NSFileHandle fileHandleWithNullDevice])];
+  int standardOutputWriteFd = -1;
+  BOOL standardOutputIsAPipe = NO;
+  if ([_standardOutput isKindOfClass:[NSPipe class]]) {
+    standardOutputWriteFd = [[_standardOutput fileHandleForWriting] fileDescriptor];
+    standardOutputIsAPipe = YES;
+  } else if ([_standardOutput isKindOfClass:[NSFileHandle class]]) {
+    standardOutputWriteFd = [_standardOutput fileDescriptor];
+    standardOutputIsAPipe = NO;
+  }
 
-  [realTask launch];
+  int standardErrorWriteFd = -1;
+  BOOL standardErrorIsAPipe = NO;
+  if ([_standardError isKindOfClass:[NSPipe class]]) {
+    standardErrorWriteFd = [[_standardError fileHandleForWriting] fileDescriptor];
+    standardErrorIsAPipe = YES;
+  } else if ([_standardError isKindOfClass:[NSFileHandle class]]) {
+    standardErrorWriteFd = [_standardError fileDescriptor];
+    standardErrorIsAPipe = NO;
+  }
 
   [self setIsRunning:YES];
-  [realTask waitUntilExit];
-  [self setTerminationStatus:[realTask terminationStatus]];
+
+  pid_t forkedPid = fork();
+  NSAssert(forkedPid != -1, @"fork() failed with: %s", strerror(errno));
+
+  if (forkedPid == 0) {
+    if (standardOutputWriteFd != -1) {
+      write(standardOutputWriteFd,
+            pretendStandardOutputBytes,
+            pretendStandardOutputLength);
+    }
+    if (standardErrorWriteFd != -1) {
+      write(standardErrorWriteFd,
+            pretendStandardErrorBytes,
+            pretendStandardErrorLength);
+    }
+
+    // When the process exits, the last open handles to the write side of the
+    // stdout/stderr pipes will be 'widowed' and the other side will see EOFs.
+    exit(0);
+  } else {
+    // If we're working with pipes, we need to make sure we close the
+    // write side in the host process - otherwise the pipe never becomes
+    // 'widowed' and so the EOF never comes.
+    if (standardOutputIsAPipe) {
+      close(standardOutputWriteFd);
+    }
+    if (standardErrorIsAPipe) {
+      close(standardErrorWriteFd);
+    }
+
+    int pidStatus = 0;
+    waitpid(forkedPid, &pidStatus, 0);
+  }
+
+  [self setTerminationStatus:_pretendExitStatus];
   [self setIsRunning:NO];
 }
 
 - (void)waitUntilExit
 {
   // no-op
+}
+
+- (NSString *)description
+{
+  return [NSString stringWithFormat:@"<FakeTask launchPath='%@', arguments=%@>",
+          [self launchPath],
+          [self arguments]];
 }
 
 @end
