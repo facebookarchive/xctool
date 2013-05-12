@@ -18,9 +18,9 @@
 
 @interface FakeTask : NSTask
 {
-  int _fakeExitStatus;
-  NSString *_fakeStandardOutputPath;
-  NSString *_fakeStandardErrorPath;
+  NSString *_pretendStandardOutput;
+  NSString *_pretendStandardError;
+  int _pretendExitStatus;
 }
 
 @property (nonatomic, retain) NSString *launchPath;
@@ -30,6 +30,28 @@
 @property (nonatomic, retain) id standardError;
 @property (nonatomic, assign) int terminationStatus;
 @property (nonatomic, assign) BOOL isRunning;
+
+/**
+ * If YES (default), this task will be included in the list of launched
+ * tasks that's accessible from runWithFakeTasks:onTaskLaunch:.  We use this 
+ * to exclude tasks we don't care about interacting with during tests.
+ */
+@property (nonatomic, assign) BOOL includeInLaunchedTasks;
+
+/**
+ * When launched, pretend the task writes this str to stdout.
+ */
+- (void)pretendTaskReturnsStandardOutput:(NSString *)str;
+
+/**
+ * When launched, pretend the task writes this str to stderr.
+ */
+- (void)pretendTaskReturnsStandardError:(NSString *)str;
+
+/**
+ * When launched, pretend the task exits with this status.
+ */
+- (void)pretendExitStatusOf:(int)exitStatus;
 
 + (NSTask *)fakeTaskWithExitStatus:(int)exitStatus
                 standardOutputPath:(NSString *)standardOutputPath
