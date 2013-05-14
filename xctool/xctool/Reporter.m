@@ -180,6 +180,9 @@ void ReportMessage(ReporterMessageLevel level, NSString *format, ...) {
 - (void)testOutput:(NSDictionary *)event {}
 - (void)message:(NSDictionary *)event {}
 
+- (void)beginRun:(NSDictionary *)event {};
+- (void)endRun:(NSDictionary *)event {};
+
 - (void)close
 {
   // Be sure everything gets flushed.
