@@ -32,6 +32,10 @@
   [self.outputHandle writeData:[@"\n" dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
+- (void)setReporterOptions: (NSDictionary *) data {
+    NSLog(@"%@", data);
+}
+
 - (void)beginAction:(NSDictionary *)event { [self passThrough:event]; }
 - (void)endAction:(NSDictionary *)event { [self passThrough:event]; }
 - (void)beginBuildTarget:(NSDictionary *)event { [self passThrough:event]; }
