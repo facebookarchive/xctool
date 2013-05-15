@@ -109,21 +109,30 @@ NSString *PathToXCToolBinaries(void)
 
 NSString *XcodeDeveloperDirPath(void)
 {
-  static NSString *path = nil;
-
-  if (path == nil) {
-    NSTask *task = [[NSTask alloc] init];
+  NSString *(^getPath)() = ^{
+    NSTask *task = [[[NSTask alloc] init] autorelease];
     [task setLaunchPath:@"/usr/bin/xcode-select"];
     [task setArguments:@[@"--print-path"]];
     [task setEnvironment:@{}];
-    path = LaunchTaskAndCaptureOutput(task)[@"stdout"];
-    [task release];
 
-    path = [path stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-    [path retain];
+    NSString *path = LaunchTaskAndCaptureOutput(task)[@"stdout"];
+    path = [path stringByTrimmingCharactersInSet:
+            [NSCharacterSet newlineCharacterSet]];
+
+    return path;
+  };
+
+  static NSString *savedPath = nil;
+
+  if (IsRunningUnderTest()) {
+    // Under test, we'd like to always invoke the task so it can be tested.
+    return getPath();
+  } else {
+    if (savedPath == nil) {
+      savedPath = [getPath() retain];
+    }
+    return savedPath;
   }
-
-  return path;
 }
 
 NSString *MakeTempFileWithPrefix(NSString *prefix)
@@ -142,10 +151,8 @@ NSString *MakeTempFileWithPrefix(NSString *prefix)
 
 NSDictionary *GetAvailableSDKsAndAliases()
 {
-  static NSMutableDictionary *result = nil;
-
-  if (result == nil) {
-    result = [[NSMutableDictionary alloc] initWithCapacity:0];
+  NSMutableDictionary *(^getSdksAndAliases)(void) = ^{
+    NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
     // Get a list of available SDKs in the form of:
     //   "macosx 10.7"
     //   "macosx 10.8"
@@ -164,19 +171,6 @@ NSDictionary *GetAvailableSDKsAndAliases()
     NSArray *lines = [LaunchTaskAndCaptureOutput(task)[@"stdout"] componentsSeparatedByString:@"\n"];
     lines = [lines subarrayWithRange:NSMakeRange(0, lines.count - 1)];
 
-    if (IsRunningUnderTest()) {
-      // Fake it so developers don't have to install all of these SDKs.
-      lines = @[
-                @"macosx 10.7",
-                @"macosx 10.8",
-                @"iphoneos 6.1",
-                @"iphonesimulator 5.0",
-                @"iphonesimulator 5.1",
-                @"iphonesimulator 6.0",
-                @"iphonesimulator 6.1",
-                ];
-    }
-
     for (NSString *line in lines) {
       NSArray *parts = [line componentsSeparatedByString:@" "];
       NSString *sdkName = parts[0];
@@ -190,9 +184,21 @@ NSDictionary *GetAvailableSDKsAndAliases()
       // to the newest 'iphoneos' SDK.
       result[sdkName] = sdk;
     }
-  }
 
-  return result;
+    return result;
+  };
+
+  static NSMutableDictionary *savedResult = nil;
+
+  if (IsRunningUnderTest()) {
+    // Under test, we'd like to always invoke the task so it can be tested.
+    return getSdksAndAliases();
+  } else {
+    if (savedResult == nil) {
+      savedResult = [getSdksAndAliases() retain];
+    }
+    return savedResult;
+  }
 }
 
 BOOL IsRunningUnderTest()
