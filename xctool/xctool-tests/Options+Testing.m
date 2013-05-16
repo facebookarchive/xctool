@@ -1,31 +1,11 @@
 
 #import "Options+Testing.h"
 
+#import "FakeTask.h"
+#import "FakeTaskManager.h"
+#import "LaunchHandlers.h"
 #import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
-
-@interface FakeXcodeSubjectInfo : XcodeSubjectInfo
-{
-}
-
-@property (nonatomic, retain) NSDictionary *fakeBuildSettings;
-
-@end
-
-@implementation FakeXcodeSubjectInfo
-
-- (void)dealloc
-{
-  [_fakeBuildSettings release];
-  [super dealloc];
-}
-
-- (NSDictionary *)buildSettingsForFirstBuildable
-{
-  return _fakeBuildSettings;
-}
-
-@end
 
 @implementation Options (Testing)
 
@@ -93,8 +73,9 @@
   }
 }
 
-- (void)assertOptionsFailToValidateWithError:(NSString *)message
-                   withBuildSettingsFromFile:(NSString *)path
+- (void)evaluateOptionsWithBuildSettingsFromFile:(NSString *)path
+                                           valid:(BOOL *)validOut
+                                           error:(NSString **)errorOut
 {
   NSString *contents = [NSString stringWithContentsOfFile:path
                                                  encoding:NSUTF8StringEncoding
@@ -104,13 +85,40 @@
                 format:@"Failed to read file from: %@", path];
   }
 
-  FakeXcodeSubjectInfo *subjectInfo = [[[FakeXcodeSubjectInfo alloc] init] autorelease];
-  [subjectInfo setFakeBuildSettings:BuildSettingsFromOutput(contents)];
+  XcodeSubjectInfo *subjectInfo = [[[XcodeSubjectInfo alloc] init] autorelease];
 
+  __block NSString *error = nil;
+  __block BOOL valid = NO;
+
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+     [[^(FakeTask *task){
+      if ([[task launchPath] hasSuffix:@"xcodebuild"] &&
+          [[task arguments] containsObject:@"-showBuildSettings"]) {
+        [task pretendTaskReturnsStandardOutput:contents];
+      }
+    } copy] autorelease],
+     ]];
+
+    valid = [self validateOptions:&error
+                 xcodeSubjectInfo:subjectInfo
+                          options:self];
+    
+  }];
+
+  *validOut = valid;
+  *errorOut = error;
+}
+
+- (void)assertOptionsFailToValidateWithError:(NSString *)message
+                   withBuildSettingsFromFile:(NSString *)path
+{
   NSString *errorMessage = nil;
-  BOOL valid = [self validateOptions:&errorMessage
-                    xcodeSubjectInfo:subjectInfo
-                             options:self];
+  BOOL valid = NO;
+
+  [self evaluateOptionsWithBuildSettingsFromFile:path
+                                           valid:&valid
+                                           error:&errorMessage];
 
   if (valid) {
     [NSException raise:NSGenericException
@@ -127,21 +135,12 @@
 {
   [self assertReporterOptionsValidate];
   
-  NSString *contents = [NSString stringWithContentsOfFile:path
-                                                 encoding:NSUTF8StringEncoding
-                                                    error:nil];
-  if (contents == nil) {
-    [NSException raise:NSGenericException
-                format:@"Failed to read file from: %@", path];
-  }
-
-  FakeXcodeSubjectInfo *subjectInfo = [[[FakeXcodeSubjectInfo alloc] init] autorelease];
-  [subjectInfo setFakeBuildSettings:BuildSettingsFromOutput(contents)];
-
   NSString *errorMessage = nil;
-  BOOL valid = [self validateOptions:&errorMessage
-                    xcodeSubjectInfo:subjectInfo
-                             options:self];
+  BOOL valid = NO;
+
+  [self evaluateOptionsWithBuildSettingsFromFile:path
+                                           valid:&valid
+                                           error:&errorMessage];
 
   if (!valid) {
     [NSException raise:NSGenericException
