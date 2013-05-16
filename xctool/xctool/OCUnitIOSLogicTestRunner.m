@@ -40,7 +40,7 @@
                                     @"DYLD_INSERT_LIBRARIES" : [PathToXCToolBinaries() stringByAppendingPathComponent:@"otest-shim-ios.dylib"],
                                     };
 
-  NSTask *task = TaskInstance();
+  NSTask *task = [[[NSTask alloc] init] autorelease];
   [task setLaunchPath:[NSString stringWithFormat:@"%@/Developer/usr/bin/otest", _buildSettings[@"SDKROOT"]]];
   [task setArguments:[[self otestArguments] arrayByAddingObject:testBundlePath]];
   [task setEnvironment:taskEnvironment];

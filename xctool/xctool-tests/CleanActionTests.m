@@ -18,6 +18,8 @@
 
 #import "Action.h"
 #import "FakeTask.h"
+#import "FakeTaskManager.h"
+#import "LaunchHandlers.h"
 #import "Options.h"
 #import "RunTestsAction.h"
 #import "TaskUtil.h"
@@ -34,49 +36,49 @@
 - (void)setUp
 {
   [super setUp];
-  SetTaskInstanceBlock(nil);
-  ReturnFakeTasks(nil);
 }
 
 - (void)testCleanActionTriggersCleanForProjectAndSchemeAndTests
 {
-  NSArray *fakeTasks = @[[FakeTask fakeTaskWithExitStatus:0
-                                       standardOutputPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"
-                                        standardErrorPath:nil],
-                         [[[FakeTask alloc] init] autorelease],
-                         [[[FakeTask alloc] init] autorelease],
-                         ];
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+     // Make sure -showBuildSettings returns some data
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
+                                                     scheme:@"TestProject-Library"
+                                               settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
+     ]];
 
-  XCTool *tool = [[[XCTool alloc] init] autorelease];
-  ReturnFakeTasks(fakeTasks);
+    XCTool *tool = [[[XCTool alloc] init] autorelease];
 
-  tool.arguments = @[
-                     @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                     @"-scheme", @"TestProject-Library",
-                     @"clean",
-                     ];
+    tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"clean",
+                       ];
 
-  [TestUtil runWithFakeStreams:tool];
+    [TestUtil runWithFakeStreams:tool];
 
-  assertThat([fakeTasks[1] arguments],
-             equalTo(@[
-                     @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                     @"-scheme", @"TestProject-Library",
-                     @"-configuration", @"Debug",
-                     @"-sdk", @"iphonesimulator6.0",
-                     @"clean",
-                     ]));
-  assertThat([fakeTasks[2] arguments],
-             equalTo(@[
-                     @"-configuration", @"Debug",
-                     @"-sdk", @"iphonesimulator6.0",
-                     @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                     @"-target", @"TestProject-LibraryTests",
-                     @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates",
-                     @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products",
-                     @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates/PrecompiledHeaders",
-                     @"clean",
-                     ]));
+    NSArray *launchedTasks = [[FakeTaskManager sharedManager] launchedTasks];
+    assertThatInteger([launchedTasks count], equalToInteger(2));
+    assertThat([launchedTasks[0] arguments],
+               equalTo(@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-configuration", @"Debug",
+                       @"-sdk", @"iphonesimulator6.0",
+                       @"clean",
+                       ]));
+    assertThat([launchedTasks[1] arguments],
+               equalTo(@[
+                       @"-configuration", @"Debug",
+                       @"-sdk", @"iphonesimulator6.0",
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-target", @"TestProject-LibraryTests",
+                       @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates",
+                       @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products",
+                       @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates/PrecompiledHeaders",
+                       @"clean",
+                       ]));
+  }];
 }
 
 @end

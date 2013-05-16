@@ -18,12 +18,16 @@
 
 #import "Action.h"
 #import "FakeTask.h"
+#import "FakeTaskManager.h"
+#import "LaunchHandlers.h"
 #import "Options.h"
 #import "TaskUtil.h"
 #import "TestUtil.h"
 #import "XCTool.h"
 #import "XCToolUtil.h"
 #import "xcodeSubjectInfo.h"
+
+void _CFAutoreleasePoolPrintPools();
 
 @interface BuildActionTests : SenTestCase
 @end
@@ -33,151 +37,165 @@
 - (void)setUp
 {
   [super setUp];
-  SetTaskInstanceBlock(nil);
-  ReturnFakeTasks(nil);
 }
+
 
 - (void)testBuildActionPassesSDKParamToXcodebuild
 {
-  NSArray *fakeTasks = @[[FakeTask fakeTaskWithExitStatus:0
-                                           standardOutputPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"
-                                            standardErrorPath:nil],
-                         [[[FakeTask alloc] init] autorelease],
-                         ];
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+     // Make sure -showBuildSettings returns some data
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
+                                                           scheme:@"TestProject-Library"
+                                                     settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
+    ]];
 
-  XCTool *tool = [[[XCTool alloc] init] autorelease];
-  ReturnFakeTasks(fakeTasks);
+    XCTool *tool = [[[XCTool alloc] init] autorelease];
 
-  tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                     @"-scheme", @"TestProject-Library",
-                     @"-sdk", @"iphonesimulator6.0",
-                     @"build",
-                     ];
+    tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-sdk", @"iphonesimulator6.0",
+                       @"build",
+                       ];
 
-  [TestUtil runWithFakeStreams:tool];
+    [TestUtil runWithFakeStreams:tool];
 
-  assertThat([fakeTasks[1] arguments],
-             equalTo(@[
-                     @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                     @"-scheme", @"TestProject-Library",
-                     @"-configuration", @"Debug",
-                     @"-sdk", @"iphonesimulator6.0",
-                     @"build",
-                     ]));
+    assertThat([[[FakeTaskManager sharedManager] launchedTasks][0] arguments],
+               equalTo(@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-configuration", @"Debug",
+                       @"-sdk", @"iphonesimulator6.0",
+                       @"build",
+                       ]));
+  }];
 }
 
 - (void)testBuildActionTriggersBuildForProjectAndScheme
 {
-  NSArray *fakeTasks = @[[FakeTask fakeTaskWithExitStatus:0
-                                           standardOutputPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"
-                                            standardErrorPath:nil],
-                         [[[FakeTask alloc] init] autorelease],
-                         ];
-
-  XCTool *tool = [[[XCTool alloc] init] autorelease];
-  ReturnFakeTasks(fakeTasks);
-
-  tool.arguments = @[
-                     @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                     @"-scheme", @"TestProject-Library",
-                     @"build",
-                     ];
-
-  [TestUtil runWithFakeStreams:tool];
-
-  assertThat([fakeTasks[1] arguments],
-             equalTo(@[
-                     @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                     @"-scheme", @"TestProject-Library",
-                     @"-configuration", @"Debug",
-                     @"-sdk", @"iphonesimulator6.0",
-                     @"build",
-                     ]));
-}
-
-- (void)testBuildActionTriggersBuildForWorkspaceAndScheme
-{
-  NSArray *fakeTasks = @[[FakeTask fakeTaskWithExitStatus:0
-                                           standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt"
-                                            standardErrorPath:nil],
-                         [[[FakeTask alloc] init] autorelease],
-                         ];
-
-  XCTool *tool = [[[XCTool alloc] init] autorelease];
-  ReturnFakeTasks(fakeTasks);
-
-  tool.arguments = @[@"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
-                     @"-scheme", @"TestProject-Library",
-                     @"build",
-                     ];
-
-  [TestUtil runWithFakeStreams:tool];
-
-  assertThat([fakeTasks[1] arguments],
-             equalTo(@[
-                     @"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
-                     @"-scheme", @"TestProject-Library",
-                     @"-configuration", @"Debug",
-                     @"-sdk", @"iphonesimulator6.0",
-                     @"build",
-                     ]));
-}
-
-- (void)testBuildActionPassesConfigurationParamToXcodebuild
-{
-  NSArray *fakeTasks = @[[FakeTask fakeTaskWithExitStatus:0
-                                           standardOutputPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"
-                                            standardErrorPath:nil],
-                         [[[FakeTask alloc] init] autorelease],
-                         ];
-
-  XCTool *tool = [[[XCTool alloc] init] autorelease];
-  ReturnFakeTasks(fakeTasks);
-
-  tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                     @"-scheme", @"TestProject-Library",
-                     @"-configuration", @"SOME_CONFIGURATION",
-                     @"build",
-                     ];
-
-  [TestUtil runWithFakeStreams:tool];
-
-  assertThat(([fakeTasks[1] arguments]),
-             equalTo(@[
-                     @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                     @"-scheme", @"TestProject-Library",
-                     @"-configuration", @"SOME_CONFIGURATION",
-                     @"-sdk", @"iphonesimulator6.0",
-                     @"build",
-                     ]));
-}
-
-- (void)testIfBuildActionFailsThenExitStatusShouldBeOne
-{
-  void (^testWithExitStatus)(int) = ^(int exitStatus) {
-    NSArray *fakeTasks = @[[FakeTask fakeTaskWithExitStatus:0
-                                             standardOutputPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"
-                                              standardErrorPath:nil],
-                           // This exit status should get returned...
-                           [FakeTask fakeTaskWithExitStatus:exitStatus],
-                           ];
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+     // Make sure -showBuildSettings returns some data
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
+                                                           scheme:@"TestProject-Library"
+                                                     settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
+     ]];
 
     XCTool *tool = [[[XCTool alloc] init] autorelease];
-    ReturnFakeTasks(fakeTasks);
 
-    tool.arguments = @[
-                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+    tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
                        @"build",
                        ];
 
     [TestUtil runWithFakeStreams:tool];
 
-    assertThatInt(tool.exitStatus, equalToInt(exitStatus));
+    assertThat([[[FakeTaskManager sharedManager] launchedTasks][0] arguments],
+               equalTo(@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-configuration", @"Debug",
+                       @"-sdk", @"iphonesimulator6.0",
+                       @"build",
+                       ]));
+  }];
+}
+
+- (void)testBuildActionTriggersBuildForWorkspaceAndScheme
+{
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+     // Make sure -showBuildSettings returns some data
+     [LaunchHandlers handlerForShowBuildSettingsWithWorkspace:TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace"
+                                                       scheme:@"TestProject-Library"
+                                                 settingsPath:TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt"],
+     ]];
+
+    XCTool *tool = [[[XCTool alloc] init] autorelease];
+
+    tool.arguments = @[@"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
+                       @"-scheme", @"TestProject-Library",
+                       @"build",
+                       ];
+
+    [TestUtil runWithFakeStreams:tool];
+
+    assertThat([[[FakeTaskManager sharedManager] launchedTasks][0] arguments],
+               equalTo(@[
+                       @"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
+                       @"-scheme", @"TestProject-Library",
+                       @"-configuration", @"Debug",
+                       @"-sdk", @"iphonesimulator6.0",
+                       @"build",
+                       ]));
+  }];
+}
+
+- (void)testBuildActionPassesConfigurationParamToXcodebuild
+{
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+     // Make sure -showBuildSettings returns some data
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
+                                                     scheme:@"TestProject-Library"
+                                               settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
+     ]];
+
+    XCTool *tool = [[[XCTool alloc] init] autorelease];
+
+    tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-configuration", @"SOME_CONFIGURATION",
+                       @"build",
+                       ];
+
+    [TestUtil runWithFakeStreams:tool];
+
+    assertThat([[[FakeTaskManager sharedManager] launchedTasks][0] arguments],
+               equalTo(@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-configuration", @"SOME_CONFIGURATION",
+                       @"-sdk", @"iphonesimulator6.0",
+                       @"build",
+                       ]));
+  }];
+}
+
+- (void)testIfBuildActionFailsThenExitStatusShouldBeOne
+{
+  void (^testWithExitStatus)(int) = ^(int exitStatus) {
+    [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+      [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+       // Make sure -showBuildSettings returns some data
+       [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
+                                                       scheme:@"TestProject-Library"
+                                                 settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
+       [[^(FakeTask *task){
+        if ([[task launchPath] hasSuffix:@"xcodebuild"] &&
+            [[task arguments] containsObject:@"build"]) {
+          // Pretend the task has a specific exit code.
+          [task pretendExitStatusOf:exitStatus];
+        }
+      } copy] autorelease],
+       ]];
+
+      XCTool *tool = [[[XCTool alloc] init] autorelease];
+
+      tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                         @"-scheme", @"TestProject-Library",
+                         @"build",
+                         ];
+
+      [TestUtil runWithFakeStreams:tool];
+
+      assertThatInt(tool.exitStatus, equalToInt(exitStatus));
+    }];
   };
 
   // Pretend xcodebuild succeeds, and so we should succeed.
   testWithExitStatus(0);
+
   // Pretend xcodebuild fails w/ exit code 1, and so fbxcodetest should fail.
   testWithExitStatus(1);
 }

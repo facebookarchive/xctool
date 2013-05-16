@@ -17,6 +17,8 @@
 #import <SenTestingKit/SenTestingKit.h>
 
 #import "FakeTask.h"
+#import "FakeTaskManager.h"
+#import "LaunchHandlers.h"
 #import "TaskUtil.h"
 #import "TestUtil.h"
 #import "Version.h"
@@ -31,8 +33,6 @@
 - (void)setUp
 {
   [super setUp];
-  SetTaskInstanceBlock(nil);
-  ReturnFakeTasks(nil);
 }
 
 - (void)tearDown
@@ -76,28 +76,32 @@
 
 - (void)testCallingWithShowBuildSettingsPassesThroughToXcodebuild
 {
-  NSArray *fakeTasks = @[[FakeTask fakeTaskWithExitStatus:0
-                                       standardOutputPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"
-                                        standardErrorPath:nil],
-                         ];
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+     // Make sure -showBuildSettings returns some data
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
+                                                     scheme:@"TestProject-Library"
+                                               settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"
+                                                       hide:NO],
+     ]];
 
-  XCTool *tool = [[[XCTool alloc] init] autorelease];
-  ReturnFakeTasks(fakeTasks);
+    XCTool *tool = [[[XCTool alloc] init] autorelease];
 
-  tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                     @"-scheme", @"TestProject-Library",
-                     @"-showBuildSettings",
-                     ];
+    tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-showBuildSettings",
+                       ];
 
-  NSDictionary *output = [TestUtil runWithFakeStreams:tool];
+    NSDictionary *output = [TestUtil runWithFakeStreams:tool];
 
-  assertThat(([fakeTasks[0] arguments]),
-             equalTo(@[
-                     @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                     @"-scheme", @"TestProject-Library",
-                     @"-showBuildSettings",
-                     ]));
-  assertThat(output[@"stdout"], startsWith(@"Build settings"));
+    assertThat([[[FakeTaskManager sharedManager] launchedTasks][0] arguments],
+               equalTo(@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-showBuildSettings",
+                       ]));
+    assertThat(output[@"stdout"], startsWith(@"Build settings"));
+  }];
 }
 
 @end
