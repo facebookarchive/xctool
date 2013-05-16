@@ -19,6 +19,8 @@
 #import "Action.h"
 #import "BuildTestsAction.h"
 #import "FakeTask.h"
+#import "FakeTaskManager.h"
+#import "LaunchHandlers.h"
 #import "Options.h"
 #import "Options+Testing.h"
 #import "RunTestsAction.h"
@@ -36,8 +38,6 @@
 - (void)setUp
 {
   [super setUp];
-  SetTaskInstanceBlock(nil);
-  ReturnFakeTasks(nil);
 }
 
 - (void)testOnlyListIsCollected

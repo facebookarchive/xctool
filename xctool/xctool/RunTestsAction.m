@@ -190,7 +190,7 @@
   NSString *testableTarget = testable[@"target"];
 
   // Collect build settings for this test target.
-  NSTask *settingsTask = TaskInstance();
+  NSTask *settingsTask = [[[NSTask alloc] init] autorelease];
   [settingsTask setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
   [settingsTask setArguments:[xcodeArguments arrayByAddingObjectsFromArray:@[
                               @"-sdk", testSDK,

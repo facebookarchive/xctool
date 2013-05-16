@@ -19,6 +19,8 @@
 #import "Action.h"
 #import "BuildTestsAction.h"
 #import "FakeTask.h"
+#import "FakeTaskManager.h"
+#import "LaunchHandlers.h"
 #import "Options.h"
 #import "Options+Testing.h"
 #import "TaskUtil.h"
@@ -35,8 +37,6 @@
 - (void)setUp
 {
   [super setUp];
-  SetTaskInstanceBlock(nil);
-  ReturnFakeTasks(nil);
 }
 
 - (void)testOnlyListIsCollected
@@ -86,175 +86,124 @@
 
 - (void)testBuildTestsAction
 {
-  XCTool *tool = [[[XCTool alloc] init] autorelease];
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+     // Make sure -showBuildSettings returns some data
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
+                                                     scheme:@"TestProject-Library"
+                                               settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
+     ]];
 
-  tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                     @"-scheme", @"TestProject-Library",
-                     @"-configuration", @"Debug",
-                     @"-sdk", @"iphonesimulator6.0",
-                     @"build-tests"];
+    XCTool *tool = [[[XCTool alloc] init] autorelease];
 
-  // We'll expect to see one call to xcodebuild with -showBuildSettings - we have to fetch the OBJROOT
-  // and SYMROOT variables so we can build the tests in the correct location.
-  NSTask *task1 = [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil];
-  NSArray *task1ExpectedArguments = @[
-                                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                                      @"-scheme", @"TestProject-Library",
-                                      @"-configuration", @"Debug",
-                                      @"-sdk", @"iphonesimulator6.0",
-                                      @"-showBuildSettings"
-                                      ];
+    tool.arguments = @[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-configuration", @"Debug",
+                       @"-sdk", @"iphonesimulator6.0",
+                       @"build-tests"
+                       ];
 
+    [TestUtil runWithFakeStreams:tool];
 
-  // We'll expect to see another xcodebuild call to build the test target.
-  NSTask *task2 = [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-build.txt"
-                                 standardErrorPath:nil];
-  NSArray *task2ExpectedArguments = @[
-                                      @"-configuration", @"Debug",
-                                      @"-sdk", @"iphonesimulator6.0",
-                                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                                      @"-target", @"TestProject-Library",
-                                      @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates",
-                                      @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products",
-                                      @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates/PrecompiledHeaders",
-                                      @"build",
-                                      ];
-
-  // We'll expect to see another xcodebuild call to build the test target.
-  NSTask *task3 = [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-build.txt"
-                                 standardErrorPath:nil];
-  NSArray *task3ExpectedArguments = @[
-                                      @"-configuration", @"Debug",
-                                      @"-sdk", @"iphonesimulator6.0",
-                                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                                      @"-target", @"TestProject-LibraryTests",
-                                      @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates",
-                                      @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products",
-                                      @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates/PrecompiledHeaders",
-                                      @"build",
-                                      ];
-
-  NSArray *sequenceOfTasks = @[task1, task2, task3];
-  __block NSUInteger sequenceOffset = 0;
-
-  SetTaskInstanceBlock(^(void){
-    return [sequenceOfTasks objectAtIndex:sequenceOffset++];
-  });
-
-  [TestUtil runWithFakeStreams:tool];
-
-  assertThat(task1.arguments, equalTo(task1ExpectedArguments));
-  assertThat(task2.arguments, equalTo(task2ExpectedArguments));
-  assertThat(task3.arguments, equalTo(task3ExpectedArguments));
-  assertThatInt(tool.exitStatus, equalToInt(0));
+    NSArray *launchedTasks = [[FakeTaskManager sharedManager] launchedTasks];
+    assertThatInteger([launchedTasks count], equalToInteger(2));
+    assertThat([launchedTasks[0] arguments],
+               equalTo(@[
+                       @"-configuration", @"Debug",
+                       @"-sdk", @"iphonesimulator6.0",
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-target", @"TestProject-Library",
+                       @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates",
+                       @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products",
+                       @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates/PrecompiledHeaders",
+                       @"build",
+                       ]));
+    assertThat([launchedTasks[1] arguments],
+               equalTo(@[
+                       @"-configuration", @"Debug",
+                       @"-sdk", @"iphonesimulator6.0",
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-target", @"TestProject-LibraryTests",
+                       @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates",
+                       @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products",
+                       @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates/PrecompiledHeaders",
+                       @"build",
+                       ]));
+    assertThatInt(tool.exitStatus, equalToInt(0));
+  }];
 }
 
 - (void)testBuildTestsActionWillBuildEverythingMarkedAsBuildForTest
 {
-  // In TestWorkspace-Library, we have a target TestProject-LibraryTest2 that depends on
-  // TestProject-OtherLib, but it isn't marked as an explicit dependency.  The only way that
-  // dependency gets built is that it's added to the scheme as build-for-test above
-  // TestProject-LibraryTest2.  This a lame way to setup dependencies (they should be explicit),
-  // but we're seeing this in the wild and should support it.
-  XCTool *tool = [[[XCTool alloc] init] autorelease];
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+     // Make sure -showBuildSettings returns some data
+     [LaunchHandlers handlerForShowBuildSettingsWithWorkspace:TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace"
+                                                       scheme:@"TestProject-Library"
+                                                 settingsPath:TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt"],
+     ]];
 
-  tool.arguments = @[@"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
-                     @"-scheme", @"TestProject-Library",
-                     @"-configuration", @"Debug",
-                     @"-sdk", @"iphonesimulator6.0",
-                     @"build-tests"];
+    XCTool *tool = [[[XCTool alloc] init] autorelease];
 
-  // We'll expect to see one call to xcodebuild with -showBuildSettings - we have to fetch the OBJROOT
-  // and SYMROOT variables so we can build the tests in the correct location.
-  NSTask *task1 = [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil];
-  NSArray *task1ExpectedArguments = @[
-                                      @"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
-                                      @"-scheme", @"TestProject-Library",
-                                      @"-configuration", @"Debug",
-                                      @"-sdk", @"iphonesimulator6.0",
-                                      @"-showBuildSettings"
-                                      ];
+    tool.arguments = @[
+                       @"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
+                       @"-scheme", @"TestProject-Library",
+                       @"-configuration", @"Debug",
+                       @"-sdk", @"iphonesimulator6.0",
+                       @"build-tests"
+                       ];
 
-  // We'll expect to see another xcodebuild call to build the TestProject-LibraryTests
-  NSTask *task2 = [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-LibraryTests-build.txt"
-                                 standardErrorPath:nil];
-  NSArray *task2ExpectedArguments = @[
-                                      @"-configuration", @"Debug",
-                                      @"-sdk", @"iphonesimulator6.0",
-                                      @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
-                                      @"-target", @"TestProject-Library",
-                                      @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
-                                      @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
-                                      @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
-                                      @"build",
-                                      ];
+    [TestUtil runWithFakeStreams:tool];
 
-  NSTask *task3 = [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-LibraryTests-build.txt"
-                                 standardErrorPath:nil];
-  NSArray *task3ExpectedArguments = @[
-                                      @"-configuration", @"Debug",
-                                      @"-sdk", @"iphonesimulator6.0",
-                                      @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
-                                      @"-target", @"TestProject-OtherLib",
-                                      @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
-                                      @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
-                                      @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
-                                      @"build",
-                                      ];
-
-  // We'll expect to see another xcodebuild call to build the TestProject-LibraryTests2
-  NSTask *task4 = [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-LibraryTests-build.txt"
-                                 standardErrorPath:nil];
-  NSArray *task4ExpectedArguments = @[
-                                      @"-configuration", @"Debug",
-                                      @"-sdk", @"iphonesimulator6.0",
-                                      @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
-                                      @"-target", @"TestProject-LibraryTests",
-                                      @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
-                                      @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
-                                      @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
-                                      @"build",
-                                      ];
-
-  // We'll expect to see another xcodebuild call to build the TestProject-LibraryTests2
-  NSTask *task5 = [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-LibraryTests-build.txt"
-                                 standardErrorPath:nil];
-  NSArray *task5ExpectedArguments = @[
-                                      @"-configuration", @"Debug",
-                                      @"-sdk", @"iphonesimulator6.0",
-                                      @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
-                                      @"-target", @"TestProject-LibraryTests2",
-                                      @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
-                                      @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
-                                      @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
-                                      @"build",
-                                      ];
-
-  NSArray *sequenceOfTasks = @[task1, task2, task3, task4, task5];
-  __block NSUInteger sequenceOffset = 0;
-
-  SetTaskInstanceBlock(^(void){
-    return [sequenceOfTasks objectAtIndex:sequenceOffset++];
-  });
-
-  [TestUtil runWithFakeStreams:tool];
-
-  assertThat(task1.arguments, equalTo(task1ExpectedArguments));
-  assertThat(task2.arguments, equalTo(task2ExpectedArguments));
-  assertThat(task3.arguments, equalTo(task3ExpectedArguments));
-  assertThat(task4.arguments, equalTo(task4ExpectedArguments));
-  assertThat(task5.arguments, equalTo(task5ExpectedArguments));
-  assertThatInt(tool.exitStatus, equalToInt(0));
+    NSArray *launchedTasks = [[FakeTaskManager sharedManager] launchedTasks];
+    assertThatInteger([launchedTasks count], equalToInteger(4));
+    assertThat([launchedTasks[0] arguments],
+               equalTo(@[
+                       @"-configuration", @"Debug",
+                       @"-sdk", @"iphonesimulator6.0",
+                       @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-target", @"TestProject-Library",
+                       @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
+                       @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
+                       @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
+                       @"build"
+                       ]));
+    assertThat([launchedTasks[1] arguments],
+               equalTo(@[
+                       @"-configuration", @"Debug",
+                       @"-sdk", @"iphonesimulator6.0",
+                       @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-target", @"TestProject-OtherLib",
+                       @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
+                       @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
+                       @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
+                       @"build",
+                       ]));
+    assertThat([launchedTasks[2] arguments],
+               equalTo(@[
+                       @"-configuration", @"Debug",
+                       @"-sdk", @"iphonesimulator6.0",
+                       @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-target", @"TestProject-LibraryTests",
+                       @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
+                       @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
+                       @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
+                       @"build",
+                       ]));
+    assertThat([launchedTasks[3] arguments],
+               equalTo(@[
+                       @"-configuration", @"Debug",
+                       @"-sdk", @"iphonesimulator6.0",
+                       @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-target", @"TestProject-LibraryTests2",
+                       @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
+                       @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
+                       @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
+                       @"build",
+                       ]));
+    assertThatInt(tool.exitStatus, equalToInt(0));
+  }];
 }
 
 - (void)testBuildTestsCanBuildASingleTarget
@@ -264,143 +213,105 @@
   // dependency gets built is that it's added to the scheme as build-for-test above
   // TestProject-LibraryTest2.  This a lame way to setup dependencies (they should be explicit),
   // but we're seeing this in the wild and should support it.
-  XCTool *tool = [[[XCTool alloc] init] autorelease];
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+     // Make sure -showBuildSettings returns some data
+     [LaunchHandlers handlerForShowBuildSettingsWithWorkspace:TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace"
+                                                       scheme:@"TestProject-Library"
+                                                 settingsPath:TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt"],
+     ]];
 
-  tool.arguments = @[@"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
-                     @"-scheme", @"TestProject-Library",
-                     @"-configuration", @"Debug",
-                     @"-sdk", @"iphonesimulator6.0",
-                     @"build-tests", @"-only", @"TestProject-LibraryTests"];
+    XCTool *tool = [[[XCTool alloc] init] autorelease];
 
-  // We'll expect to see one call to xcodebuild with -showBuildSettings - we have to fetch the OBJROOT
-  // and SYMROOT variables so we can build the tests in the correct location.
-  NSTask *task1 = [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil];
-  NSArray *task1ExpectedArguments = @[
-                                      @"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
-                                      @"-scheme", @"TestProject-Library",
-                                      @"-configuration", @"Debug",
-                                      @"-sdk", @"iphonesimulator6.0",
-                                      @"-showBuildSettings"
-                                      ];
+    tool.arguments = @[
+                       @"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
+                       @"-scheme", @"TestProject-Library",
+                       @"-configuration", @"Debug",
+                       @"-sdk", @"iphonesimulator6.0",
+                       @"build-tests", @"-only", @"TestProject-LibraryTests"
+                       ];
 
-  // We'll expect to see another xcodebuild call to build the TestProject-Library
-  NSTask *task2 = [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-LibraryTests-build.txt"
-                                 standardErrorPath:nil];
-  NSArray *task2ExpectedArguments = @[
-                                      @"-configuration", @"Debug",
-                                      @"-sdk", @"iphonesimulator6.0",
-                                      @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
-                                      @"-target", @"TestProject-Library",
-                                      @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
-                                      @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
-                                      @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
-                                      @"build",
-                                      ];
+    [TestUtil runWithFakeStreams:tool];
 
-  // We'll expect to see another xcodebuild call to build the TestProject-OtherLibrary
-  NSTask *task3 = [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-LibraryTests-build.txt"
-                                 standardErrorPath:nil];
-  NSArray *task3ExpectedArguments = @[
-                                      @"-configuration", @"Debug",
-                                      @"-sdk", @"iphonesimulator6.0",
-                                      @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
-                                      @"-target", @"TestProject-OtherLib",
-                                      @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
-                                      @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
-                                      @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
-                                      @"build",
-                                      ];
-
-  // We'll expect to see another xcodebuild call to build the TestProject-LibraryTests
-  NSTask *task4 = [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-LibraryTests-build.txt"
-                                 standardErrorPath:nil];
-  NSArray *task4ExpectedArguments = @[
-                                      @"-configuration", @"Debug",
-                                      @"-sdk", @"iphonesimulator6.0",
-                                      @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
-                                      @"-target", @"TestProject-LibraryTests",
-                                      @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
-                                      @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
-                                      @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
-                                      @"build",
-                                      ];
-
-
-  NSArray *sequenceOfTasks = @[task1, task2, task3, task4];
-  __block NSUInteger sequenceOffset = 0;
-
-  SetTaskInstanceBlock(^(void){
-    return [sequenceOfTasks objectAtIndex:sequenceOffset++];
-  });
-
-  [TestUtil runWithFakeStreams:tool];
-
-  assertThat(task1.arguments, equalTo(task1ExpectedArguments));
-  assertThat(task2.arguments, equalTo(task2ExpectedArguments));
-  assertThat(task3.arguments, equalTo(task3ExpectedArguments));
-  assertThat(task4.arguments, equalTo(task4ExpectedArguments));
-  assertThatInt(tool.exitStatus, equalToInt(0));
+    NSArray *launchedTasks = [[FakeTaskManager sharedManager] launchedTasks];
+    assertThatInteger([launchedTasks count], equalToInteger(3));
+    assertThat([launchedTasks[0] arguments],
+               equalTo(@[
+                       @"-configuration", @"Debug",
+                       @"-sdk", @"iphonesimulator6.0",
+                       @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-target", @"TestProject-Library",
+                       @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
+                       @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
+                       @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
+                       @"build",
+                       ]));
+    assertThat([launchedTasks[1] arguments],
+               equalTo(@[
+                       @"-configuration", @"Debug",
+                       @"-sdk", @"iphonesimulator6.0",
+                       @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-target", @"TestProject-OtherLib",
+                       @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
+                       @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
+                       @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
+                       @"build",
+                       ]));
+    assertThat([launchedTasks[2] arguments],
+               equalTo(@[
+                       @"-configuration", @"Debug",
+                       @"-sdk", @"iphonesimulator6.0",
+                       @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-target", @"TestProject-LibraryTests",
+                       @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
+                       @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
+                       @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
+                       @"build",
+                       ]));
+    assertThatInt(tool.exitStatus, equalToInt(0));
+  }];
 }
 
 
 - (void)testSkipDependencies
 {
-  XCTool *tool = [[[XCTool alloc] init] autorelease];
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+     // Make sure -showBuildSettings returns some data
+     [LaunchHandlers handlerForShowBuildSettingsWithWorkspace:TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace"
+                                                       scheme:@"TestProject-Library"
+                                                 settingsPath:TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt"],
+     ]];
 
-  tool.arguments = @[@"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
-                     @"-scheme", @"TestProject-Library",
-                     @"-configuration", @"Debug",
-                     @"-sdk", @"iphonesimulator6.0",
-                     @"build-tests",
-                     @"-only", @"TestProject-LibraryTests",
-                     @"-skip-deps"];
+    XCTool *tool = [[[XCTool alloc] init] autorelease];
 
-  // We'll expect to see one call to xcodebuild with -showBuildSettings - we have to fetch the OBJROOT
-  // and SYMROOT variables so we can build the tests in the correct location.
-  NSTask *task1 = [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt"
-                                 standardErrorPath:nil];
-  NSArray *task1ExpectedArguments = @[
-                                      @"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
-                                      @"-scheme", @"TestProject-Library",
-                                      @"-configuration", @"Debug",
-                                      @"-sdk", @"iphonesimulator6.0",
-                                      @"-showBuildSettings"
-                                      ];
+    tool.arguments = @[
+                       @"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
+                       @"-scheme", @"TestProject-Library",
+                       @"-configuration", @"Debug",
+                       @"-sdk", @"iphonesimulator6.0",
+                       @"build-tests",
+                       @"-only", @"TestProject-LibraryTests",
+                       @"-skip-deps"
+                       ];
 
-  // We'll expect to see another xcodebuild call to build the TestProject-LibraryTests
-  NSTask *task2 = [FakeTask fakeTaskWithExitStatus:0
-                                standardOutputPath:TEST_DATA @"TestWorkspace-Library-TestProject-LibraryTests-build.txt"
-                                 standardErrorPath:nil];
-  NSArray *task2ExpectedArguments = @[
-                                      @"-configuration", @"Debug",
-                                      @"-sdk", @"iphonesimulator6.0",
-                                      @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
-                                      @"-target", @"TestProject-LibraryTests",
-                                      @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
-                                      @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
-                                      @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
-                                      @"build",
-                                      ];
+    [TestUtil runWithFakeStreams:tool];
 
-
-  NSArray *sequenceOfTasks = @[task1, task2];
-  __block NSUInteger sequenceOffset = 0;
-
-  SetTaskInstanceBlock(^(void){
-    return [sequenceOfTasks objectAtIndex:sequenceOffset++];
-  });
-
-  [TestUtil runWithFakeStreams:tool];
-
-  assertThat(task1.arguments, equalTo(task1ExpectedArguments));
-  assertThat(task2.arguments, equalTo(task2ExpectedArguments));
-  assertThatInt(tool.exitStatus, equalToInt(0));
+    NSArray *launchedTasks = [[FakeTaskManager sharedManager] launchedTasks];
+    assertThatInteger([launchedTasks count], equalToInteger(1));
+    assertThat([launchedTasks[0] arguments],
+               equalTo(@[
+                       @"-configuration", @"Debug",
+                       @"-sdk", @"iphonesimulator6.0",
+                       @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-target", @"TestProject-LibraryTests",
+                       @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
+                       @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
+                       @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
+                       @"build",
+                       ]));
+    assertThatInt(tool.exitStatus, equalToInt(0));
+  }];
 }
 
 @end

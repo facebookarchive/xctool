@@ -65,7 +65,7 @@
                             ]];
 
   // Build the test target.
-  NSTask *buildTask = TaskInstance();
+  NSTask *buildTask = [[[NSTask alloc] init] autorelease];
   [buildTask setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
   [buildTask setArguments:taskArguments];
   NSMutableDictionary *environment = [NSMutableDictionary dictionaryWithDictionary:[[NSProcessInfo processInfo] environment]];

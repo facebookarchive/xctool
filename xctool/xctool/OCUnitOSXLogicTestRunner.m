@@ -35,7 +35,7 @@
    @"OBJC_DISABLE_GC" : !_garbageCollection ? @"YES" : @"NO",
    }];
 
-  NSTask *task = TaskInstance();
+  NSTask *task = [[[NSTask alloc] init] autorelease];
   [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Tools/otest"]];
   // When invoking otest directly, the last arg needs to be the the test bundle.
   [task setArguments:[[self otestArguments] arrayByAddingObject:testBundlePath]];

@@ -573,7 +573,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 
 - (NSDictionary *)buildSettingsForFirstBuildable
 {
-  NSTask *task = TaskInstance();
+  NSTask *task = [[[NSTask alloc] init] autorelease];
   [task setLaunchPath:
    [XcodeDeveloperDirPath() stringByAppendingPathComponent:
     @"usr/bin/xcodebuild"]];

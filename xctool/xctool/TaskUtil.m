@@ -18,43 +18,6 @@
 
 #import <poll.h>
 
-static NSMutableArray *__fakeTasks = nil;
-static NSTask *(^__TaskInstanceBlock)(void) = nil;
-
-NSTask *TaskInstance(void)
-{
-  if (__TaskInstanceBlock == nil) {
-    return [[[NSTask alloc] init] autorelease];
-  } else {
-    return __TaskInstanceBlock();
-  }
-}
-
-void SetTaskInstanceBlock(NSTask *(^taskInstanceBlock)())
-{
-  if (__TaskInstanceBlock != taskInstanceBlock) {
-    [__TaskInstanceBlock release];
-    __TaskInstanceBlock = [taskInstanceBlock copy];
-  }
-}
-
-void ReturnFakeTasks(NSArray *tasks)
-{
-  [__fakeTasks release];
-  __fakeTasks = [[NSMutableArray arrayWithArray:tasks] retain];
-
-  if (tasks == nil) {
-    SetTaskInstanceBlock(nil);
-  } else {
-    SetTaskInstanceBlock(^{
-      assert(__fakeTasks.count > 0);
-      NSTask *task = __fakeTasks[0];
-      [__fakeTasks removeObjectAtIndex:0];
-      return task;
-    });
-  }
-}
-
 NSDictionary *LaunchTaskAndCaptureOutput(NSTask *task)
 {
   NSPipe *stdoutPipe = [NSPipe pipe];

@@ -30,7 +30,7 @@
 
 + (BOOL)runXcodeBuildCommand:(NSString *)command withOptions:(Options *)options
 {
-  NSTask *task = TaskInstance();
+  NSTask *task = [[[NSTask alloc] init] autorelease];
   [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
   [task setArguments:[[options xcodeBuildArgumentsForSubject] arrayByAddingObject:command]];
   NSMutableDictionary *environment = [NSMutableDictionary dictionaryWithDictionary:[[NSProcessInfo processInfo] environment]];
