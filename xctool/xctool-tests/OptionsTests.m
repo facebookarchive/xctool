@@ -20,6 +20,7 @@
 
 #import "Action.h"
 #import "FakeTask.h"
+#import "NSTask+Testing.h"
 #import "Options.h"
 #import "Options+Testing.h"
 #import "TaskUtil.h"
