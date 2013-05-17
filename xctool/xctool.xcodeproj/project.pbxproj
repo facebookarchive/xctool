@@ -58,6 +58,8 @@
 		288B9FBC171A5509008F0BDF /* OCUnitOSXAppTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 288B9FBB171A5509008F0BDF /* OCUnitOSXAppTestRunner.m */; };
 		288B9FBD171A5509008F0BDF /* OCUnitOSXAppTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 288B9FBB171A5509008F0BDF /* OCUnitOSXAppTestRunner.m */; };
 		288DD463173B5F9000F1093C /* Reporter+Testing.m in Sources */ = {isa = PBXBuildFile; fileRef = 288DD462173B5F9000F1093C /* Reporter+Testing.m */; };
+		28A5A8ED1746D2AA001733A9 /* Swizzler.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A5A8EC1746D2AA001733A9 /* Swizzler.m */; };
+		28A5A8F01746D2B9001733A9 /* SwizzlerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A5A8EF1746D2B9001733A9 /* SwizzlerTests.m */; };
 		28AC9E3016DB3478009E5B9A /* OptionsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28AC9E2F16DB3478009E5B9A /* OptionsTests.m */; };
 		28ACFC8316FBA888004BAF33 /* TaskUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 28ACFC8216FBA888004BAF33 /* TaskUtil.m */; };
 		28ACFC8416FBA888004BAF33 /* TaskUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 28ACFC8216FBA888004BAF33 /* TaskUtil.m */; };
@@ -186,6 +188,9 @@
 		288B9FBB171A5509008F0BDF /* OCUnitOSXAppTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitOSXAppTestRunner.m; sourceTree = "<group>"; };
 		288DD461173B5F9000F1093C /* Reporter+Testing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Reporter+Testing.h"; sourceTree = "<group>"; };
 		288DD462173B5F9000F1093C /* Reporter+Testing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Reporter+Testing.m"; sourceTree = "<group>"; };
+		28A5A8EB1746D2AA001733A9 /* Swizzler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Swizzler.h; sourceTree = "<group>"; };
+		28A5A8EC1746D2AA001733A9 /* Swizzler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Swizzler.m; sourceTree = "<group>"; };
+		28A5A8EF1746D2B9001733A9 /* SwizzlerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwizzlerTests.m; sourceTree = "<group>"; };
 		28AC9E2F16DB3478009E5B9A /* OptionsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = OptionsTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		28ACFC8116FBA888004BAF33 /* TaskUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskUtil.h; sourceTree = "<group>"; };
 		28ACFC8216FBA888004BAF33 /* TaskUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskUtil.m; sourceTree = "<group>"; };
@@ -398,6 +403,9 @@
 				28897FB8173CB512004BA024 /* Options+Testing.m */,
 				2889806E174435AD004BA024 /* LaunchHandlers.h */,
 				2889806F174435AD004BA024 /* LaunchHandlers.m */,
+				28A5A8EB1746D2AA001733A9 /* Swizzler.h */,
+				28A5A8EC1746D2AA001733A9 /* Swizzler.m */,
+				28A5A8EF1746D2B9001733A9 /* SwizzlerTests.m */,
 			);
 			path = "xctool-tests";
 			sourceTree = "<group>";
@@ -630,6 +638,8 @@
 				28897FD0173E6215004BA024 /* Swizzle.m in Sources */,
 				288980601742B675004BA024 /* FakeTaskManager.m in Sources */,
 				28898070174435AD004BA024 /* LaunchHandlers.m in Sources */,
+				28A5A8ED1746D2AA001733A9 /* Swizzler.m in Sources */,
+				28A5A8F01746D2B9001733A9 /* SwizzlerTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
