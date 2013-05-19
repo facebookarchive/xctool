@@ -175,7 +175,7 @@
 }
 
 - (BOOL)runTestable:(NSDictionary *)testable
-          reproters:(NSArray *)reporters
+          reporters:(NSArray *)reporters
             objRoot:(NSString *)objRoot
             symRoot:(NSString *)symRoot
   sharedPrecompsDir:(NSString *)sharedPrecompsDir
@@ -311,7 +311,7 @@
     NSString *senTestList = testable[@"senTestList"];
 
     if (![self runTestable:testable
-                 reproters:options.reporters
+                 reporters:options.reporters
                    objRoot:xcodeSubjectInfo.objRoot
                    symRoot:xcodeSubjectInfo.symRoot
          sharedPrecompsDir:xcodeSubjectInfo.sharedPrecompsDir
