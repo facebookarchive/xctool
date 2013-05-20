@@ -24,24 +24,18 @@
 
 - (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath
 {
-  NSMutableDictionary *env = [NSMutableDictionary dictionaryWithDictionary:
-                              [[NSProcessInfo processInfo] environment]];
-  [env addEntriesFromDictionary:@{
-   @"DYLD_INSERT_LIBRARIES" : [PathToXCToolBinaries() stringByAppendingPathComponent:@"otest-shim-osx.dylib"],
-   @"DYLD_FRAMEWORK_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
-   @"DYLD_LIBRARY_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
-   @"DYLD_FALLBACK_FRAMEWORK_PATH" : [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"],
-   @"NSUnbufferedIO" : @"YES",
-   @"OBJC_DISABLE_GC" : !_garbageCollection ? @"YES" : @"NO",
-   }];
-  // Incorporate any env vars that came from the scheme itself.
-  [env addEntriesFromDictionary:_environment];
-
   NSTask *task = [[[NSTask alloc] init] autorelease];
   [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Tools/otest"]];
   // When invoking otest directly, the last arg needs to be the the test bundle.
   [task setArguments:[[self otestArguments] arrayByAddingObject:testBundlePath]];
-  [task setEnvironment:env];
+  [task setEnvironment:[self otestEnvironmentWithOverrides:@{
+                        @"DYLD_INSERT_LIBRARIES" : [PathToXCToolBinaries() stringByAppendingPathComponent:@"otest-shim-osx.dylib"],
+                        @"DYLD_FRAMEWORK_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
+                        @"DYLD_LIBRARY_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
+                        @"DYLD_FALLBACK_FRAMEWORK_PATH" : [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"],
+                        @"NSUnbufferedIO" : @"YES",
+                        @"OBJC_DISABLE_GC" : !_garbageCollection ? @"YES" : @"NO",
+                        }]];
 
   return task;
 }

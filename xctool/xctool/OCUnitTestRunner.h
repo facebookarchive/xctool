@@ -46,6 +46,7 @@
 - (BOOL)runTestsWithError:(NSString **)error;
 
 - (NSArray *)otestArguments;
+- (NSDictionary *)otestEnvironmentWithOverrides:(NSDictionary *)overrides;
 
 - (NSString *)testBundlePath;
 

@@ -355,4 +355,71 @@
   }];
 }
 
+/**
+ Xcode will let you use macros like $(SOMEVAR) in the arguments or environment
+ variables specified in your scheme.
+ */
+- (void)testSchemeArgsAndEnvCanUseMacroExpansion
+{
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+     // Make sure -showBuildSettings returns some data
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestsWithArgAndEnvSettingsWithMacroExpansion/TestsWithArgAndEnvSettings.xcodeproj"
+                                                     scheme:@"TestsWithArgAndEnvSettings"
+                                               settingsPath:TEST_DATA @"TestsWithArgAndEnvSettingsWithMacroExpansion-TestsWithArgAndEnvSettings-showBuildSettings.txt"],
+     // We're going to call -showBuildSettings on the test target.
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestsWithArgAndEnvSettingsWithMacroExpansion/TestsWithArgAndEnvSettings.xcodeproj"
+                                                     target:@"TestsWithArgAndEnvSettingsTests"
+                                               settingsPath:TEST_DATA @"TestsWithArgAndEnvSettingsWithMacroExpansion-TestsWithArgAndEnvSettings-TestsWithArgAndEnvSettingsTests-showBuildSettings.txt"
+                                                       hide:NO],
+     ]];
+
+    XCTool *tool = [[[XCTool alloc] init] autorelease];
+
+    tool.arguments = @[@"-project", TEST_DATA @"TestsWithArgAndEnvSettingsWithMacroExpansion/TestsWithArgAndEnvSettings.xcodeproj",
+                       @"-scheme", @"TestsWithArgAndEnvSettings",
+                       @"run-tests",
+                       ];
+
+    __block OCUnitTestRunner *runner = nil;
+
+    [Swizzler whileSwizzlingSelector:@selector(runTestsWithError:)
+                 forInstancesOfClass:[OCUnitTestRunner class]
+                           withBlock:
+     ^(id self, SEL sel){
+       // Don't actually run anything and just save a reference to the runner.
+       runner = [self retain];
+       // Pretend tests succeeded.
+       return YES;
+     }
+                            runBlock:
+     ^{
+       [TestUtil runWithFakeStreams:tool];
+
+       assertThat(runner, notNilValue());
+       assertThat(runner->_arguments,
+                  equalTo(@[]));
+       assertThat(runner->_environment,
+                  equalTo(@{
+                          @"RunEnvKey" : @"RunEnvValue",
+                          @"ARCHS" : @"x86_64",
+                          @"DYLD_INSERT_LIBRARIES" : @"ThisShouldNotGetOverwrittenByOtestShim",
+                          }));
+
+
+       NSMutableDictionary *expectedEnv = [NSMutableDictionary dictionary];
+       [expectedEnv addEntriesFromDictionary:[[NSProcessInfo processInfo] environment]];
+       expectedEnv[@"DYLD_INSERT_LIBRARIES"] = @"ThisShouldNotGetOverwrittenByOtestShim:/pretend/this/is/otest-shim.dylib";
+       expectedEnv[@"RunEnvKey"] = @"RunEnvValue";
+       expectedEnv[@"ARCHS"] = @"x86_64";
+
+       assertThat([runner otestEnvironmentWithOverrides:@{
+                   @"DYLD_INSERT_LIBRARIES" : @"/pretend/this/is/otest-shim.dylib"}],
+                  equalTo(expectedEnv));
+     }];
+
+    [runner release];
+  }];
+}
+
 @end

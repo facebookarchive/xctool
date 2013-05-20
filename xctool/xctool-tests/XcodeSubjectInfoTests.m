@@ -142,6 +142,8 @@
              equalTo(@[@{
                      @"arguments" : @[],
                      @"environment" : @{},
+                     @"macroExpansionProjectPath" : [NSNull null],
+                     @"macroExpansionTarget" : [NSNull null],
                      @"executable" : @"TestProject-LibraryTests.octest",
                      @"projectPath" : @"xctool-tests/TestData/TestProject-Library/TestProject-Library.xcodeproj",
                      @"senTestInvertScope" : @1,
@@ -169,6 +171,8 @@
              equalTo(@[@{
                      @"arguments" : @[@"-RunArg", @"RunArgValue"],
                      @"environment" : @{@"RunEnvKey" : @"RunEnvValue"},
+                     @"macroExpansionProjectPath" : [NSNull null],
+                     @"macroExpansionTarget" : [NSNull null],
                      @"executable" : @"TestsWithArgAndEnvSettingsTests.octest",
                      @"projectPath" : @"xctool-tests/TestData/TestsWithArgAndEnvSettingsInRunAction/TestsWithArgAndEnvSettings.xcodeproj",
                      @"senTestInvertScope" : @0,
@@ -197,8 +201,43 @@
              equalTo(@[@{
                      @"arguments" : @[@"-TestArg", @"TestArgValue"],
                      @"environment" : @{@"TestEnvKey" : @"TestEnvValue"},
+                     @"macroExpansionProjectPath" : [NSNull null],
+                     @"macroExpansionTarget" : [NSNull null],
                      @"executable" : @"TestsWithArgAndEnvSettingsTests.octest",
                      @"projectPath" : @"xctool-tests/TestData/TestsWithArgAndEnvSettingsInTestAction/TestsWithArgAndEnvSettings.xcodeproj",
+                     @"senTestInvertScope" : @0,
+                     @"senTestList" : @"All",
+                     @"skipped" : @0,
+                     @"target" : @"TestsWithArgAndEnvSettingsTests",
+                     }]));
+}
+
+/**
+ The macro expansion is what lets arguments or environment contain $(VARS) that
+ get exanded based on the build settings.
+ */
+- (void)testTestableIncludesInfoForMacroExpansion
+{
+  NSArray *testables = [XcodeSubjectInfo testablesInSchemePath:
+                        TEST_DATA @"TestsWithArgAndEnvSettingsWithMacroExpansion/"
+                        @"TestsWithArgAndEnvSettings.xcodeproj/xcshareddata/"
+                        @"xcschemes/TestsWithArgAndEnvSettings.xcscheme"
+                                                      basePath:
+                        TEST_DATA @"TestsWithArgAndEnvSettingsWithMacroExpansion"
+                        ];
+
+  assertThat(testables,
+             equalTo(@[@{
+                     @"macroExpansionProjectPath" : @"xctool-tests/TestData/TestsWithArgAndEnvSettingsWithMacroExpansion/TestsWithArgAndEnvSettings.xcodeproj",
+                     @"macroExpansionTarget" : @"TestsWithArgAndEnvSettings",
+                     @"arguments" : @[],
+                     @"environment" : @{
+                        @"RunEnvKey" : @"RunEnvValue",
+                        @"ARCHS" : @"$(ARCHS)",
+                        @"DYLD_INSERT_LIBRARIES" : @"ThisShouldNotGetOverwrittenByOtestShim",
+                     },
+                     @"executable" : @"TestsWithArgAndEnvSettingsTests.octest",
+                     @"projectPath" : @"xctool-tests/TestData/TestsWithArgAndEnvSettingsWithMacroExpansion/TestsWithArgAndEnvSettings.xcodeproj",
                      @"senTestInvertScope" : @0,
                      @"senTestList" : @"All",
                      @"skipped" : @0,

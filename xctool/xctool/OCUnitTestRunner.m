@@ -206,6 +206,41 @@
   return args;
 }
 
+- (NSDictionary *)otestEnvironmentWithOverrides:(NSDictionary *)overrides
+{
+  NSMutableDictionary *env = [NSMutableDictionary dictionary];
+
+  NSArray *layers = @[
+                      // Xcode will let your regular environment pass-thru to
+                      // the test.
+                      [[NSProcessInfo processInfo] environment],
+                      // Any special environment vars set in the scheme.
+                      _environment,
+                      // Whatever values we need to make the test run at all for
+                      // ios/mac or logic/application tests.
+                      overrides,
+                      ];
+  for (NSDictionary *layer in layers) {
+    [layer enumerateKeysAndObjectsUsingBlock:^(id key, id val, BOOL *stop){
+      if ([key isEqualToString:@"DYLD_INSERT_LIBRARIES"]) {
+        // It's possible that the scheme (or regular host environment) has its
+        // own value for DYLD_INSERT_LIBRARIES.  In that case, we don't want to
+        // stomp on it when insert otest-shim.
+        NSString *existingVal = env[key];
+        if (existingVal) {
+          env[key] = [existingVal stringByAppendingFormat:@":%@", val];
+        } else {
+          env[key] = val;
+        }
+      } else {
+        env[key] = val;
+      }
+    }];
+  }
+
+  return env;
+}
+
 - (NSString *)testBundlePath
 {
   return [NSString stringWithFormat:@"%@/%@",
