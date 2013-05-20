@@ -21,13 +21,14 @@
 @property (nonatomic, retain) NSMutableArray *onlyList;
 @property (nonatomic, assign) BOOL skipDependencies;
 
-+ (BOOL)buildTestable:(NSDictionary *)testable
-            reporters:(NSArray *)reporters
-              objRoot:(NSString *)objRoot
-              symRoot:(NSString *)symRoot
-    sharedPrecompsDir:(NSString *)sharedPrecompsDir
-       xcodeArguments:(NSArray *)xcodeArguments
-         xcodeCommand:(NSString *)xcodeCommand;
++ (BOOL)buildWorkspace:(NSString *)path
+                scheme:(NSString *)scheme
+             reporters:(NSArray *)reporters
+               objRoot:(NSString *)objRoot
+               symRoot:(NSString *)symRoot
+     sharedPrecompsDir:(NSString *)sharedPrecompsDir
+        xcodeArguments:(NSArray *)xcodeArguments
+          xcodeCommand:(NSString *)xcodeCommand;
 
 + (BOOL)buildTestables:(NSArray *)testables
                command:(NSString *)command
