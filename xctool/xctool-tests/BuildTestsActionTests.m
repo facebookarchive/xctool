@@ -23,11 +23,20 @@
 #import "LaunchHandlers.h"
 #import "Options.h"
 #import "Options+Testing.h"
+#import "SchemeGenerator.h"
+#import "Swizzler.h"
 #import "TaskUtil.h"
 #import "TestUtil.h"
 #import "XCTool.h"
 #import "XCToolUtil.h"
 #import "xcodeSubjectInfo.h"
+
+static NSString *kTestProjectTestProjectLibraryTargetID         = @"2828291F16B11F0F00426B92";
+static NSString *kTestProjectTestProjectLibraryTestTargetID     = @"2828293016B11F0F00426B92";
+static NSString *kTestWorkspaceTestProjectLibraryTargetID       = @"28A33CCF16CF03EA00C5EE2A";
+static NSString *kTestWorkspaceTestProjectLibraryTestsTargetID  = @"28A33CE016CF03EA00C5EE2A";
+static NSString *kTestWorkspaceTestProjectLibraryTests2TargetID = @"28ADB42416E40E23006301ED";
+static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E42E9A006301ED";
 
 @interface BuildTestsActionTests : SenTestCase
 @end
@@ -94,6 +103,11 @@
                                                settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
      ]];
 
+    NSString *mockWorkspacePath = @"/tmp/nowhere/build_tests_tmp.xcworkspace";
+    id mockSchemeGenerator = mock([SchemeGenerator class]);
+    [given([mockSchemeGenerator writeWorkspaceNamed:@"build_tests_tmp"])
+     willReturn:mockWorkspacePath];
+
     XCTool *tool = [[[XCTool alloc] init] autorelease];
 
     tool.arguments = @[
@@ -104,33 +118,32 @@
                        @"build-tests"
                        ];
 
-    [TestUtil runWithFakeStreams:tool];
+    [Swizzler whileSwizzlingSelector:@selector(schemeGenerator)
+                            forClass:[SchemeGenerator class]
+                           withBlock:^(Class c, SEL sel){ return mockSchemeGenerator; }
+                            runBlock:^{ [TestUtil runWithFakeStreams:tool]; }];
 
     NSArray *launchedTasks = [[FakeTaskManager sharedManager] launchedTasks];
-    assertThatInteger([launchedTasks count], equalToInteger(2));
+    assertThatInteger([launchedTasks count], equalToInteger(1));
     assertThat([launchedTasks[0] arguments],
                equalTo(@[
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
-                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                       @"-target", @"TestProject-Library",
-                       @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates",
-                       @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products",
-                       @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates/PrecompiledHeaders",
-                       @"build",
-                       ]));
-    assertThat([launchedTasks[1] arguments],
-               equalTo(@[
-                       @"-configuration", @"Debug",
-                       @"-sdk", @"iphonesimulator6.0",
-                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                       @"-target", @"TestProject-LibraryTests",
+                       @"-workspace", mockWorkspacePath,
+                       @"-scheme", @"build_tests_tmp",
                        @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates",
                        @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products",
                        @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates/PrecompiledHeaders",
                        @"build",
                        ]));
     assertThatInt(tool.exitStatus, equalToInt(0));
+
+    NSString *projectPath = TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj";
+    [verify(mockSchemeGenerator) addBuildableWithID:kTestProjectTestProjectLibraryTargetID
+                                          inProject:projectPath];
+    [verify(mockSchemeGenerator) addBuildableWithID:kTestProjectTestProjectLibraryTestTargetID
+                                          inProject:projectPath];
+    [verify(mockSchemeGenerator) writeWorkspaceNamed:@"build_tests_tmp"];
   }];
 }
 
@@ -144,6 +157,11 @@
                                                  settingsPath:TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt"],
      ]];
 
+    NSString *mockWorkspacePath = @"/tmp/nowhere/build_tests_tmp.xcworkspace";
+    id mockSchemeGenerator = mock([SchemeGenerator class]);
+    [given([mockSchemeGenerator writeWorkspaceNamed:@"build_tests_tmp"])
+     willReturn:mockWorkspacePath];
+
     XCTool *tool = [[[XCTool alloc] init] autorelease];
 
     tool.arguments = @[
@@ -154,55 +172,36 @@
                        @"build-tests"
                        ];
 
-    [TestUtil runWithFakeStreams:tool];
+    [Swizzler whileSwizzlingSelector:@selector(schemeGenerator)
+                            forClass:[SchemeGenerator class]
+                           withBlock:^(Class c, SEL sel){ return mockSchemeGenerator; }
+                            runBlock:^{ [TestUtil runWithFakeStreams:tool]; }];
 
     NSArray *launchedTasks = [[FakeTaskManager sharedManager] launchedTasks];
-    assertThatInteger([launchedTasks count], equalToInteger(4));
+    assertThatInteger([launchedTasks count], equalToInteger(1));
     assertThat([launchedTasks[0] arguments],
                equalTo(@[
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
-                       @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
-                       @"-target", @"TestProject-Library",
-                       @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
-                       @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
-                       @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
-                       @"build"
-                       ]));
-    assertThat([launchedTasks[1] arguments],
-               equalTo(@[
-                       @"-configuration", @"Debug",
-                       @"-sdk", @"iphonesimulator6.0",
-                       @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
-                       @"-target", @"TestProject-OtherLib",
-                       @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
-                       @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
-                       @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
-                       @"build",
-                       ]));
-    assertThat([launchedTasks[2] arguments],
-               equalTo(@[
-                       @"-configuration", @"Debug",
-                       @"-sdk", @"iphonesimulator6.0",
-                       @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
-                       @"-target", @"TestProject-LibraryTests",
-                       @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
-                       @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
-                       @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
-                       @"build",
-                       ]));
-    assertThat([launchedTasks[3] arguments],
-               equalTo(@[
-                       @"-configuration", @"Debug",
-                       @"-sdk", @"iphonesimulator6.0",
-                       @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
-                       @"-target", @"TestProject-LibraryTests2",
+                       @"-workspace", mockWorkspacePath,
+                       @"-scheme", @"build_tests_tmp",
                        @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
                        @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
                        @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
                        @"build",
                        ]));
     assertThatInt(tool.exitStatus, equalToInt(0));
+
+    NSString *projectPath = TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj";
+    [verify(mockSchemeGenerator) addBuildableWithID:kTestWorkspaceTestProjectLibraryTargetID
+                                          inProject:projectPath];
+    [verify(mockSchemeGenerator) addBuildableWithID:kTestWorkspaceTestProjectOtherLibTargetID
+                                          inProject:projectPath];
+    [verify(mockSchemeGenerator) addBuildableWithID:kTestWorkspaceTestProjectLibraryTestsTargetID
+                                          inProject:projectPath];
+    [verify(mockSchemeGenerator) addBuildableWithID:kTestWorkspaceTestProjectLibraryTests2TargetID
+                                          inProject:projectPath];
+    [verify(mockSchemeGenerator) writeWorkspaceNamed:@"build_tests_tmp"];
   }];
 }
 
@@ -221,6 +220,11 @@
                                                  settingsPath:TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt"],
      ]];
 
+    NSString *mockWorkspacePath = @"/tmp/nowhere/build_tests_tmp.xcworkspace";
+    id mockSchemeGenerator = mock([SchemeGenerator class]);
+    [given([mockSchemeGenerator writeWorkspaceNamed:@"build_tests_tmp"])
+     willReturn:mockWorkspacePath];
+
     XCTool *tool = [[[XCTool alloc] init] autorelease];
 
     tool.arguments = @[
@@ -231,44 +235,35 @@
                        @"build-tests", @"-only", @"TestProject-LibraryTests"
                        ];
 
-    [TestUtil runWithFakeStreams:tool];
+    [Swizzler whileSwizzlingSelector:@selector(schemeGenerator)
+                            forClass:[SchemeGenerator class]
+                           withBlock:^(Class c, SEL sel){ return mockSchemeGenerator; }
+                            runBlock:^{ [TestUtil runWithFakeStreams:tool]; }];
 
     NSArray *launchedTasks = [[FakeTaskManager sharedManager] launchedTasks];
-    assertThatInteger([launchedTasks count], equalToInteger(3));
+    assertThatInteger([launchedTasks count], equalToInteger(1));
     assertThat([launchedTasks[0] arguments],
                equalTo(@[
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
-                       @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
-                       @"-target", @"TestProject-Library",
-                       @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
-                       @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
-                       @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
-                       @"build",
-                       ]));
-    assertThat([launchedTasks[1] arguments],
-               equalTo(@[
-                       @"-configuration", @"Debug",
-                       @"-sdk", @"iphonesimulator6.0",
-                       @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
-                       @"-target", @"TestProject-OtherLib",
-                       @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
-                       @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
-                       @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
-                       @"build",
-                       ]));
-    assertThat([launchedTasks[2] arguments],
-               equalTo(@[
-                       @"-configuration", @"Debug",
-                       @"-sdk", @"iphonesimulator6.0",
-                       @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
-                       @"-target", @"TestProject-LibraryTests",
+                       @"-workspace", mockWorkspacePath,
+                       @"-scheme", @"build_tests_tmp",
                        @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
                        @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
                        @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
                        @"build",
                        ]));
     assertThatInt(tool.exitStatus, equalToInt(0));
+
+    NSString *projectPath = TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj";
+    [verify(mockSchemeGenerator) addBuildableWithID:kTestWorkspaceTestProjectLibraryTargetID
+                                          inProject:projectPath];
+    [verify(mockSchemeGenerator) addBuildableWithID:kTestWorkspaceTestProjectOtherLibTargetID
+                                          inProject:projectPath];
+    [verify(mockSchemeGenerator) addBuildableWithID:kTestWorkspaceTestProjectLibraryTestsTargetID
+                                          inProject:projectPath];
+    [verifyCount(mockSchemeGenerator, times(3)) addBuildableWithID:(id)anything() inProject:(id)anything()];
+    [verify(mockSchemeGenerator) writeWorkspaceNamed:@"build_tests_tmp"];
   }];
 }
 
@@ -283,6 +278,11 @@
                                                  settingsPath:TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt"],
      ]];
 
+    NSString *mockWorkspacePath = @"/tmp/nowhere/build_tests_tmp.xcworkspace";
+    id mockSchemeGenerator = mock([SchemeGenerator class]);
+    [given([mockSchemeGenerator writeWorkspaceNamed:@"build_tests_tmp"])
+     willReturn:mockWorkspacePath];
+
     XCTool *tool = [[[XCTool alloc] init] autorelease];
 
     tool.arguments = @[
@@ -295,7 +295,10 @@
                        @"-skip-deps"
                        ];
 
-    [TestUtil runWithFakeStreams:tool];
+    [Swizzler whileSwizzlingSelector:@selector(schemeGenerator)
+                            forClass:[SchemeGenerator class]
+                           withBlock:^(Class c, SEL sel){ return mockSchemeGenerator; }
+                            runBlock:^{ [TestUtil runWithFakeStreams:tool]; }];
 
     NSArray *launchedTasks = [[FakeTaskManager sharedManager] launchedTasks];
     assertThatInteger([launchedTasks count], equalToInteger(1));
@@ -303,14 +306,20 @@
                equalTo(@[
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
-                       @"-project", TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj",
-                       @"-target", @"TestProject-LibraryTests",
+                       @"-workspace", mockWorkspacePath,
+                       @"-scheme", @"build_tests_tmp",
                        @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
                        @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
                        @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
                        @"build",
                        ]));
     assertThatInt(tool.exitStatus, equalToInt(0));
+
+    NSString *projectPath = TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj";
+    [verify(mockSchemeGenerator) addBuildableWithID:kTestWorkspaceTestProjectLibraryTestsTargetID
+                                          inProject:projectPath];
+    [verifyCount(mockSchemeGenerator, times(1)) addBuildableWithID:(id)anything() inProject:(id)anything()];
+    [verify(mockSchemeGenerator) writeWorkspaceNamed:@"build_tests_tmp"];
   }];
 }
 

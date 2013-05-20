@@ -18,6 +18,7 @@
 
 #import "Options.h"
 #import "Reporter.h"
+#import "SchemeGenerator.h"
 #import "TaskUtil.h"
 #import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
@@ -44,20 +45,18 @@
   ];
 }
 
-+ (BOOL)buildTestable:(NSDictionary *)testable
-            reporters:(NSArray *)reporters
-              objRoot:(NSString *)objRoot
-              symRoot:(NSString *)symRoot
-    sharedPrecompsDir:(NSString *)sharedPrecompsDir
-       xcodeArguments:(NSArray *)xcodeArguments
-         xcodeCommand:(NSString *)xcodeCommand
++ (BOOL)buildWorkspace:(NSString *)path
+                scheme:(NSString *)scheme
+             reporters:(NSArray *)reporters
+               objRoot:(NSString *)objRoot
+               symRoot:(NSString *)symRoot
+     sharedPrecompsDir:(NSString *)sharedPrecompsDir
+        xcodeArguments:(NSArray *)xcodeArguments
+          xcodeCommand:(NSString *)xcodeCommand
 {
-  NSString *testableProjectPath = testable[@"projectPath"];
-  NSString *testableTarget = testable[@"target"];
-
   NSArray *taskArguments = [xcodeArguments arrayByAddingObjectsFromArray:@[
-                            @"-project", testableProjectPath,
-                            @"-target", testableTarget,
+                            @"-workspace", path,
+                            @"-scheme", scheme,
                             [NSString stringWithFormat:@"OBJROOT=%@", objRoot],
                             [NSString stringWithFormat:@"SYMROOT=%@", symRoot],
                             [NSString stringWithFormat:@"SHARED_PRECOMPS_DIR=%@", sharedPrecompsDir],
@@ -79,7 +78,7 @@
                              withObject:@{
    @"event": kReporter_Events_BeginXcodebuild,
    kReporter_BeginXcodebuild_CommandKey: xcodeCommand,
-   kReporter_BeginXcodebuild_TitleKey: testableTarget,
+   kReporter_BeginXcodebuild_TitleKey: scheme,
    }];
 
   LaunchTaskAndFeedOuputLinesToBlock(buildTask, ^(NSString *line){
@@ -96,7 +95,7 @@
                              withObject:@{
    @"event": kReporter_Events_EndXcodebuild,
    kReporter_EndXcodebuild_CommandKey: xcodeCommand,
-   kReporter_EndXcodebuild_TitleKey: testableTarget,
+   kReporter_EndXcodebuild_TitleKey: scheme,
    }];
 
   return ([buildTask terminationStatus] == 0);
@@ -107,17 +106,22 @@
                options:(Options *)options
       xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
-  for (NSDictionary *testable in testables) {
-    BOOL succeeded = [self buildTestable:testable
-                               reporters:options.reporters
-                                 objRoot:xcodeSubjectInfo.objRoot
-                                 symRoot:xcodeSubjectInfo.symRoot
-                       sharedPrecompsDir:xcodeSubjectInfo.sharedPrecompsDir
-                          xcodeArguments:[options commonXcodeBuildArguments]
-                            xcodeCommand:command];
-    if (!succeeded) {
-      return NO;
-    }
+  SchemeGenerator *schemeGenerator = [SchemeGenerator schemeGenerator];
+  for (NSDictionary *buildable in testables) {
+    [schemeGenerator addBuildableWithID:buildable[@"targetID"] inProject:buildable[@"projectPath"]];
+  }
+  BOOL succeeded = [BuildTestsAction buildWorkspace:[schemeGenerator writeWorkspaceNamed:@"build_tests_tmp"]
+                                             scheme:@"build_tests_tmp"
+                                          reporters:options.reporters
+                                            objRoot:xcodeSubjectInfo.objRoot
+                                            symRoot:xcodeSubjectInfo.symRoot
+                                  sharedPrecompsDir:xcodeSubjectInfo.sharedPrecompsDir
+                                     xcodeArguments:[options commonXcodeBuildArguments]
+                                       xcodeCommand:command];
+  [schemeGenerator cleanupTemporaryDirectories];
+
+  if (!succeeded) {
+    return NO;
   }
   return YES;
 }
@@ -201,9 +205,9 @@
   buildableList = [self buildableList:buildableList matchingTargets:self.onlyList];
 
   if (![BuildTestsAction buildTestables:buildableList
-                          command:@"build"
-                          options:options
-                    xcodeSubjectInfo:xcodeSubjectInfo]) {
+                                command:@"build"
+                                options:options
+                       xcodeSubjectInfo:xcodeSubjectInfo]) {
     return NO;
   }
 

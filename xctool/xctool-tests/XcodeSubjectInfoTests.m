@@ -150,6 +150,7 @@
                      @"senTestList" : @"DisabledTests",
                      @"skipped" : @0,
                      @"target" : @"TestProject-LibraryTests",
+                     @"targetID" : @"2828293016B11F0F00426B92",
                      }]));
 }
 
@@ -179,6 +180,7 @@
                      @"senTestList" : @"All",
                      @"skipped" : @0,
                      @"target" : @"TestsWithArgAndEnvSettingsTests",
+                     @"targetID" : @"288DD482173B7C9800F1093C",
                      }]));
 }
 
@@ -209,6 +211,7 @@
                      @"senTestList" : @"All",
                      @"skipped" : @0,
                      @"target" : @"TestsWithArgAndEnvSettingsTests",
+                     @"targetID" : @"288DD482173B7C9800F1093C",
                      }]));
 }
 
@@ -242,6 +245,7 @@
                      @"senTestList" : @"All",
                      @"skipped" : @0,
                      @"target" : @"TestsWithArgAndEnvSettingsTests",
+                     @"targetID" : @"288DD482173B7C9800F1093C",
                      }]));
 }
 
