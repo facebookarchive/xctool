@@ -117,7 +117,8 @@ static void KillSimulatorJobs()
    @"XCInjectBundle" : testBundlePath,
    @"XCInjectBundleInto" : testHostPath,
    }];
-  [sessionConfig setSimulatedApplicationLaunchEnvironment:launchEnvironment];
+  [sessionConfig setSimulatedApplicationLaunchEnvironment:
+   [self otestEnvironmentWithOverrides:launchEnvironment]];
   
   [sessionConfig setSimulatedApplicationStdOutPath:outputPath];
   [sessionConfig setSimulatedApplicationStdErrPath:outputPath];

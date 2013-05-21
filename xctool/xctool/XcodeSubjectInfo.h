@@ -59,6 +59,13 @@
 + (NSArray *)schemePathsInContainer:(NSString *)project;
 
 /**
+ * Returns a dictionary of info for each test target added to the Test
+ * action of the scheme.
+ */
++ (NSArray *)testablesInSchemePath:(NSString *)schemePath
+                          basePath:(NSString *)basePath;
+
+/**
  * Searches for the target in all the workspaces under the specified directory.
  * If found, returns YES and sets *bestTargetMatchOut appropriately.
  * Otherwise, returns NO.

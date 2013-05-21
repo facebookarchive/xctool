@@ -472,6 +472,118 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   return [buildActionEntryNodes count];
 }
 
+/**
+ Returns the arguments and environment settings that tests should be run with.
+ Depending on how the scheme is configured, these will either be specified as
+ part of the 'Run' action (default) or 'Test' action.
+ */
++ (NSDictionary *)argumentsAndEnvironmentForTestAction:(NSXMLDocument *)doc
+                                              basePath:(NSString *)basePath
+{
+  NSError *error = nil;
+
+  NSArray *testActionNodes = [doc nodesForXPath:@"//TestAction" error:&error];
+  NSAssert(error == nil, @"Failed to get nodes: %@", [error localizedFailureReason]);
+  NSAssert([testActionNodes count] == 1,
+           @"Should only have 1 test action but had: %@", testActionNodes);
+
+  BOOL shouldUseLaunchSchemeArgsEnv =
+    [[[testActionNodes[0] attributeForName:@"shouldUseLaunchSchemeArgsEnv"] stringValue]
+     isEqualToString:@"YES"];
+  NSString *searchAction = shouldUseLaunchSchemeArgsEnv ? @"LaunchAction" : @"TestAction";
+
+  NSArray *commandLineArgumentNodes =
+    [doc nodesForXPath:[NSString stringWithFormat:@"//%@//CommandLineArgument",
+                        searchAction]
+                 error:&error];
+  NSAssert(error == nil, @"Failed to get nodes: %@", [error localizedFailureReason]);
+  NSArray *environmentVariableNodes =
+    [doc nodesForXPath:[NSString stringWithFormat:@"//%@//EnvironmentVariable",
+                        searchAction]
+                 error:&error];
+  NSAssert(error == nil, @"Failed to get nodes: %@", [error localizedFailureReason]);
+
+  NSArray *macroExpansionBuildableReferenceNodes =
+    [doc nodesForXPath:[NSString stringWithFormat:@"//%@//MacroExpansion//BuildableReference",
+                        searchAction]
+                 error:&error];
+  NSAssert(error == nil, @"Failed to get nodes: %@", [error localizedFailureReason]);
+  NSAssert([macroExpansionBuildableReferenceNodes count] == 0 ||
+           [macroExpansionBuildableReferenceNodes count] == 1,
+           @"Should only have 0 or 1 macro expansion nodes: %@",
+           macroExpansionBuildableReferenceNodes);
+
+  NSArray *buildableProductRunnableRefNodes =
+    [doc nodesForXPath:@"//LaunchAction/BuildableProductRunnable/BuildableReference"
+                 error:&error];
+  NSAssert(error == nil, @"Failed to get nodes: %@", [error localizedFailureReason]);
+
+  NSMutableArray *arguments = [NSMutableArray array];
+  NSMutableDictionary *environment = [NSMutableDictionary dictionary];
+
+  for (NSXMLElement *node in commandLineArgumentNodes) {
+    NSString *argument = [[node attributeForName:@"argument"] stringValue];
+    BOOL isEnabled = [[[node attributeForName:@"isEnabled"] stringValue] isEqualToString:@"YES"];
+
+    if (isEnabled) {
+      [arguments addObject:argument];
+    }
+  }
+
+  for (NSXMLElement *node in environmentVariableNodes) {
+    NSString *key = [[node attributeForName:@"key"] stringValue];
+    NSString *value = [[node attributeForName:@"value"] stringValue];
+    BOOL isEnabled = [[[node attributeForName:@"isEnabled"] stringValue] isEqualToString:@"YES"];
+
+    if (isEnabled) {
+      environment[key] = value;
+    }
+  }
+
+  NSString *macroExpansionProjectPath = nil;
+  NSString *macroExpansionTarget = nil;
+
+  if ([macroExpansionBuildableReferenceNodes count] > 0) {
+    NSString *macroExpansionProjectReferencedContainer =
+      [[macroExpansionBuildableReferenceNodes[0] attributeForName:@"ReferencedContainer"] stringValue];
+
+    NSString *projectPath =
+      StringByStandardizingPath([basePath stringByAppendingPathComponent:
+                                 [macroExpansionProjectReferencedContainer substringFromIndex:@"container:".length]]);
+    if ([[NSFileManager defaultManager] fileExistsAtPath:projectPath]) {
+      macroExpansionProjectPath = projectPath;
+      macroExpansionTarget = [[macroExpansionBuildableReferenceNodes[0]
+                               attributeForName:@"BlueprintName"] stringValue];
+    }
+  } else if ([macroExpansionBuildableReferenceNodes count] == 0 &&
+             shouldUseLaunchSchemeArgsEnv &&
+             [buildableProductRunnableRefNodes count] > 0) {
+    // In the Run action, if the target being run is an executable (or perhaps,
+    // just not a library), then it's implied that macro expansion is enabled
+    // and uses the build settings of that target.
+    NSAssert([buildableProductRunnableRefNodes count] == 1,
+             @"Should have found 1 BuildableProductRunnable node which has 1 "
+             @"BuildableReference node.");
+
+    NSString *referencedContainer =
+      [[buildableProductRunnableRefNodes[0] attributeForName:@"ReferencedContainer"] stringValue];
+    NSString *projectPath =
+      StringByStandardizingPath([basePath stringByAppendingPathComponent:
+                                 [referencedContainer substringFromIndex:@"container:".length]]);
+    if ([[NSFileManager defaultManager] fileExistsAtPath:projectPath]) {
+      macroExpansionProjectPath = projectPath;
+      macroExpansionTarget = [[buildableProductRunnableRefNodes[0] attributeForName:@"BlueprintName"] stringValue];
+    }
+  }
+
+  return @{
+           @"arguments" : arguments,
+           @"environment" : environment,
+           @"macroExpansionProjectPath" : macroExpansionProjectPath ?: [NSNull null],
+           @"macroExpansionTarget" : macroExpansionTarget ?: [NSNull null],
+           };
+}
+
 + (NSArray *)testablesInSchemePath:(NSString *)schemePath basePath:(NSString *)basePath
 {
   NSError *error = nil;
@@ -482,6 +594,9 @@ containsFilesModifiedSince:(NSDate *)sinceDate
     NSLog(@"Error in parsing: %@: %@", schemePath, error);
     abort();
   }
+
+  NSDictionary *argumentsAndEnvironment = [self argumentsAndEnvironmentForTestAction:doc
+                                                                            basePath:basePath];
 
   NSArray *testableReferenceNodes = [doc nodesForXPath:@"//TestableReference" error:nil];
 
@@ -523,7 +638,17 @@ containsFilesModifiedSince:(NSDate *)sinceDate
       senTestInvertScope = NO;
     }
 
-    [testables addObject:@{@"projectPath" : projectPath, @"target": target, @"executable": executable, @"senTestInvertScope": @(senTestInvertScope), @"senTestList": senTestList, @"skipped": skipped}];
+    NSMutableDictionary *testable =
+      [NSMutableDictionary dictionaryWithDictionary:@{
+       @"projectPath" : projectPath,
+       @"target": target,
+       @"executable": executable,
+       @"senTestInvertScope": @(senTestInvertScope),
+       @"senTestList": senTestList,
+       @"skipped": skipped}];;
+    [testable addEntriesFromDictionary:argumentsAndEnvironment];
+    
+    [testables addObject:testable];
   }
 
   return testables;

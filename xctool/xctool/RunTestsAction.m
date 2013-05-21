@@ -174,8 +174,54 @@
   return YES;
 }
 
++ (NSString *)stringWithMacrosExpanded:(NSString *)str
+                     fromBuildSettings:(NSDictionary *)settings
+{
+  NSMutableString *result = [NSMutableString stringWithString:str];
+
+  [settings enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *val, BOOL *stop){
+    NSString *macroStr = [[NSString alloc] initWithFormat:@"$(%@)", key];
+    [result replaceOccurrencesOfString:macroStr
+                            withString:val
+                               options:0
+                                 range:NSMakeRange(0, [result length])];
+    [macroStr release];
+  }];
+
+  return result;
+}
+
+- (NSArray *)argumentsWithMacrosExpanded:(NSArray *)arr
+                       fromBuildSettings:(NSDictionary *)settings
+{
+  NSMutableArray *result = [NSMutableArray arrayWithCapacity:[arr count]];
+
+  for (NSString *str in arr) {
+    [result addObject:[[self class] stringWithMacrosExpanded:str
+                                           fromBuildSettings:settings]];
+  }
+
+  return result;
+}
+
+- (NSDictionary *)enviornmentWithMacrosExpanded:(NSDictionary *)dict
+                              fromBuildSettings:(NSDictionary *)settings
+{
+  NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:[dict count]];
+
+  for (NSString *key in [dict allKeys]) {
+    NSString *keyExpanded = [[self class] stringWithMacrosExpanded:key
+                                                 fromBuildSettings:settings];
+    NSString *valExpanded = [[self class] stringWithMacrosExpanded:dict[key]
+                                                 fromBuildSettings:settings];
+    result[keyExpanded] = valExpanded;
+  }
+
+  return result;
+}
+
 - (BOOL)runTestable:(NSDictionary *)testable
-          reproters:(NSArray *)reporters
+          reporters:(NSArray *)reporters
             objRoot:(NSString *)objRoot
             symRoot:(NSString *)symRoot
   sharedPrecompsDir:(NSString *)sharedPrecompsDir
@@ -210,6 +256,18 @@
   NSDictionary *allSettings = BuildSettingsFromOutput(result[@"stdout"]);
   assert(allSettings.count == 1);
   NSDictionary *testableBuildSettings = allSettings[testableTarget];
+
+  NSArray *arguments = testable[@"arguments"];
+  NSDictionary *environment = testable[@"environment"];
+
+  // In Xcode, you can optionally include variables in your args or environment
+  // variables.  i.e. "$(ARCHS)" gets transformed into "armv7".
+  if ([testable[@"macroExpansionProjectPath"] isNotEqualTo:[NSNull null]]) {
+    arguments = [self argumentsWithMacrosExpanded:arguments
+                                fromBuildSettings:testableBuildSettings];
+    environment = [self enviornmentWithMacrosExpanded:environment
+                                    fromBuildSettings:testableBuildSettings];
+  }
 
   NSString *sdkName = testableBuildSettings[@"SDK_NAME"];
   BOOL isApplicationTest = testableBuildSettings[@"TEST_HOST"] != nil;
@@ -257,6 +315,8 @@
                                      initWithBuildSettings:testableBuildSettings
                                      senTestList:senTestList
                                      senTestInvertScope:senTestInvertScope
+                                     arguments:arguments
+                                     environment:environment
                                      garbageCollection:garbageCollectionEnabled
                                      freshSimulator:freshSimulator
                                      freshInstall:freshInstall
@@ -309,7 +369,7 @@
     NSString *senTestList = testable[@"senTestList"];
 
     if (![self runTestable:testable
-                 reproters:options.reporters
+                 reporters:options.reporters
                    objRoot:xcodeSubjectInfo.objRoot
                    symRoot:xcodeSubjectInfo.symRoot
          sharedPrecompsDir:xcodeSubjectInfo.sharedPrecompsDir

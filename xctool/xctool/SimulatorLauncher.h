@@ -20,6 +20,7 @@
 
 @interface SimulatorLauncher : NSObject <DTiPhoneSimulatorSessionDelegate>
 {
+@public
   BOOL _didQuit;
   BOOL _didFailToStart;
   BOOL _didStart;
