@@ -620,7 +620,6 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 
     NSString *executable = [[buildableReference attributeForName:@"BuildableName"] stringValue];
     NSString *target = [[buildableReference attributeForName:@"BlueprintName"] stringValue];
-    NSString *targetID = [[buildableReference attributeForName:@"BlueprintIdentifier"] stringValue];
 
     NSArray *skippedTestsNodes = [node nodesForXPath:@"SkippedTests/Test" error:nil];
     NSMutableArray *testsToSkip = [NSMutableArray array];
@@ -643,11 +642,10 @@ containsFilesModifiedSince:(NSDate *)sinceDate
       [NSMutableDictionary dictionaryWithDictionary:@{
        @"projectPath" : projectPath,
        @"target": target,
-       @"targetID": targetID,
        @"executable": executable,
        @"senTestInvertScope": @(senTestInvertScope),
        @"senTestList": senTestList,
-       @"skipped": skipped}];
+       @"skipped": skipped}];;
     [testable addEntriesFromDictionary:argumentsAndEnvironment];
     
     [testables addObject:testable];
@@ -686,13 +684,11 @@ containsFilesModifiedSince:(NSDate *)sinceDate
     }
 
     NSString *target = [[buildableReference attributeForName:@"BlueprintName"] stringValue];
-    NSString *targetID = [[buildableReference attributeForName:@"BlueprintIdentifier"] stringValue];
     NSString *executable = [[buildableReference attributeForName:@"BuildableName"] stringValue];
 
     [buildables addObject:@{
      @"projectPath" : projectPath,
      @"target": target,
-     @"targetID": targetID,
      @"executable":executable,
      }];
   }
