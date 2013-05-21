@@ -8,7 +8,7 @@
 
 @implementation SwizzlerTests
 
-- (void)testCanSwizzleAndUnswizzleMethod
+- (void)testCanSwizzleAndUnswizzleInstanceMethod
 {
   NSString *str = @"Hello!";
   __block int blockCalledCount = 0;
@@ -35,6 +35,26 @@
   assertThatInt(blockCalledCount, equalToInt(1));
 }
 
+- (void)testCanSwizzleAndUnswizzleClassMethod
+{
+  __block int blockCalledCount = 0;
+  SwizzleReceipt *receipt =
+  [Swizzler swizzleSelector:@selector(string)
+                   forClass:[NSString class]
+                  withBlock:^(id self, SEL sel) {
+                    blockCalledCount++;
+                    return @"sentinel";
+                  }];
+
+  assertThat([NSString string], equalTo(@"sentinel"));
+  assertThatInt(blockCalledCount, equalToInt(1));
+
+  [Swizzler unswizzleFromReceipt:receipt];
+
+  assertThat([NSString string], equalTo(@""));
+  assertThatInt(blockCalledCount, equalToInt(1));
+}
+
 - (void)testWhileSwizzlingHelperWorks
 {
   [Swizzler whileSwizzlingSelector:@selector(lowercaseString)
@@ -45,6 +65,16 @@
                           runBlock:^{
                             assertThat([@"Hello!" lowercaseString],
                                        equalTo(@"HELLO!"));
+                          }];
+
+  [Swizzler whileSwizzlingSelector:@selector(string)
+                          forClass:[NSString class]
+                         withBlock:^(id self, SEL sel){
+                           return @"sentinel";
+                         }
+                          runBlock:^{
+                            assertThat([NSString string],
+                                       equalTo(@"sentinel"));
                           }];
 }
 

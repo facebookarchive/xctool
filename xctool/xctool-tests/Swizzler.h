@@ -1,15 +1,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface SwizzleReceipt : NSObject
-{
-@public
-  IMP _originalIMP;
-  SEL _sel;
-  Class _cls;
-}
-
-@end
+@class SwizzleReceipt;
 
 @interface Swizzler : NSObject
 
@@ -19,6 +11,12 @@
  */
 + (SwizzleReceipt *)swizzleSelector:(SEL)sel
                 forInstancesOfClass:(Class)cls
+                          withBlock:(id)block;
+/**
+ Swizzles class method; returns a receipt for unswizzling.
+ */
++ (SwizzleReceipt *)swizzleSelector:(SEL)sel
+                           forClass:(Class)cls
                           withBlock:(id)block;
 
 /**
@@ -32,6 +30,11 @@
  */
 + (void)whileSwizzlingSelector:(SEL)sel
            forInstancesOfClass:(Class)cls
+                     withBlock:(id)block
+                      runBlock:(void (^)(void))runBlock;
+
++ (void)whileSwizzlingSelector:(SEL)sel
+                      forClass:(Class)cls
                      withBlock:(id)block
                       runBlock:(void (^)(void))runBlock;
 
