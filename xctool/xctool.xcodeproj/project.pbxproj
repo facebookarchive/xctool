@@ -98,6 +98,8 @@
 		37520905173401D100AC05F9 /* JUnitReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37520904173401D100AC05F9 /* JUnitReporterTests.m */; };
 		C9D5B9891733CC2100011C1F /* ArchiveAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D5B9881733CC2100011C1F /* ArchiveAction.m */; };
 		C9D5B98A1733CC2500011C1F /* ArchiveAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D5B9881733CC2100011C1F /* ArchiveAction.m */; };
+		CD522EC217471D6300048AF9 /* SchemeGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = CD522EC117471D6300048AF9 /* SchemeGenerator.m */; };
+		CDD81F2F174ABA2700F42111 /* SchemeGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = CD522EC117471D6300048AF9 /* SchemeGenerator.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -230,6 +232,8 @@
 		37520904173401D100AC05F9 /* JUnitReporterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JUnitReporterTests.m; sourceTree = "<group>"; };
 		C9D5B9871733CC2100011C1F /* ArchiveAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArchiveAction.h; sourceTree = "<group>"; };
 		C9D5B9881733CC2100011C1F /* ArchiveAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArchiveAction.m; sourceTree = "<group>"; };
+		CD522EC017471D6300048AF9 /* SchemeGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SchemeGenerator.h; sourceTree = "<group>"; };
+		CD522EC117471D6300048AF9 /* SchemeGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SchemeGenerator.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -354,6 +358,8 @@
 				283EAF11170288FE00CE0A0C /* OCUnitCrashFilter.m */,
 				2864A3F81734E52800BBF3B1 /* Version.h */,
 				2864A3F91734E52800BBF3B1 /* Version.m */,
+				CD522EC017471D6300048AF9 /* SchemeGenerator.h */,
+				CD522EC117471D6300048AF9 /* SchemeGenerator.m */,
 			);
 			path = xctool;
 			sourceTree = "<group>";
@@ -586,6 +592,7 @@
 				2864A3FA1734E52800BBF3B1 /* Version.m in Sources */,
 				C9D5B9891733CC2100011C1F /* ArchiveAction.m in Sources */,
 				37520901173311B500AC05F9 /* JUnitReporter.m in Sources */,
+				CD522EC217471D6300048AF9 /* SchemeGenerator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -641,6 +648,7 @@
 				28897FD0173E6215004BA024 /* Swizzle.m in Sources */,
 				288980601742B675004BA024 /* FakeTaskManager.m in Sources */,
 				28898070174435AD004BA024 /* LaunchHandlers.m in Sources */,
+				CDD81F2F174ABA2700F42111 /* SchemeGenerator.m in Sources */,
 				28A5A8ED1746D2AA001733A9 /* Swizzler.m in Sources */,
 				28A5A8F01746D2B9001733A9 /* SwizzlerTests.m in Sources */,
 				2868B1C31746ED9C0062F4BA /* OCUnitTestRunnerTests.m in Sources */,
