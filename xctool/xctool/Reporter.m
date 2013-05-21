@@ -125,7 +125,6 @@ void ReportMessage(ReporterMessageLevel level, NSString *format, ...) {
           *error = [NSString stringWithFormat:@"Failed to create folder at '%@'.", basePath];
           return NO;
         }
-        exists = isDirectory = YES;
       }
     }
     

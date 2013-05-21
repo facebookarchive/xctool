@@ -25,6 +25,8 @@
 - (id)initWithBuildSettings:(NSDictionary *)buildSettings
                 senTestList:(NSString *)senTestList
          senTestInvertScope:(BOOL)senTestInvertScope
+                  arguments:(NSArray *)arguments
+                environment:(NSDictionary *)environment
           garbageCollection:(BOOL)garbageCollection
              freshSimulator:(BOOL)freshSimulator
                freshInstall:(BOOL)freshInstall
@@ -36,6 +38,8 @@
     _buildSettings = [buildSettings retain];
     _senTestList = [senTestList retain];
     _senTestInvertScope = senTestInvertScope;
+    _arguments = [arguments retain];
+    _environment = [environment retain];
     _garbageCollection = garbageCollection;
     _freshSimulator = freshSimulator;
     _freshInstall = freshInstall;
@@ -50,6 +54,8 @@
 {
   [_buildSettings release];
   [_senTestList release];
+  [_arguments release];
+  [_environment release];
   [_standardOutput release];
   [_standardError release];
   [_reporters release];
@@ -182,7 +188,7 @@
   // just ran a test case from Xcode that dumped 'argv'.  It's a little tricky to do that outside
   // of the 'main' function, but you can use _NSGetArgc and _NSGetArgv.  See --
   // http://unixjunkie.blogspot.com/2006/07/access-argc-and-argv-from-anywhere.html
-  return @[
+  NSMutableArray *args = [NSMutableArray arrayWithArray:@[
            // Not sure exactly what this does...
            @"-NSTreatUnknownArgumentsAsOpen", @"NO",
            // Not sure exactly what this does...
@@ -192,7 +198,47 @@
            @"-SenTest", _senTestList,
            // SenTestInvertScope optionally inverts whatever SenTest would normally select.
            @"-SenTestInvertScope", _senTestInvertScope ? @"YES" : @"NO",
-           ];
+           ]];
+
+  // Add any argments that might have been specifed in the scheme.
+  [args addObjectsFromArray:_arguments];
+
+  return args;
+}
+
+- (NSDictionary *)otestEnvironmentWithOverrides:(NSDictionary *)overrides
+{
+  NSMutableDictionary *env = [NSMutableDictionary dictionary];
+
+  NSArray *layers = @[
+                      // Xcode will let your regular environment pass-thru to
+                      // the test.
+                      [[NSProcessInfo processInfo] environment],
+                      // Any special environment vars set in the scheme.
+                      _environment,
+                      // Whatever values we need to make the test run at all for
+                      // ios/mac or logic/application tests.
+                      overrides,
+                      ];
+  for (NSDictionary *layer in layers) {
+    [layer enumerateKeysAndObjectsUsingBlock:^(id key, id val, BOOL *stop){
+      if ([key isEqualToString:@"DYLD_INSERT_LIBRARIES"]) {
+        // It's possible that the scheme (or regular host environment) has its
+        // own value for DYLD_INSERT_LIBRARIES.  In that case, we don't want to
+        // stomp on it when insert otest-shim.
+        NSString *existingVal = env[key];
+        if (existingVal) {
+          env[key] = [existingVal stringByAppendingFormat:@":%@", val];
+        } else {
+          env[key] = val;
+        }
+      } else {
+        env[key] = val;
+      }
+    }];
+  }
+
+  return env;
 }
 
 - (NSString *)testBundlePath

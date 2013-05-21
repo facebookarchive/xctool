@@ -41,6 +41,7 @@
 		283EAF5D1704C62E00CE0A0C /* PhabricatorReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 283EAF5C1704C62E00CE0A0C /* PhabricatorReporterTests.m */; };
 		2864A3FA1734E52800BBF3B1 /* Version.m in Sources */ = {isa = PBXBuildFile; fileRef = 2864A3F91734E52800BBF3B1 /* Version.m */; };
 		2864A3FB1734E52800BBF3B1 /* Version.m in Sources */ = {isa = PBXBuildFile; fileRef = 2864A3F91734E52800BBF3B1 /* Version.m */; };
+		2868B1C31746ED9C0062F4BA /* OCUnitTestRunnerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2868B1C21746ED9C0062F4BA /* OCUnitTestRunnerTests.m */; };
 		287A37DE16C711AF00319E81 /* LineReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A37DD16C711AE00319E81 /* LineReader.m */; };
 		287A37E116C711E000319E81 /* SimulatorLauncher.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A37E016C711E000319E81 /* SimulatorLauncher.m */; };
 		287A37E216C711E000319E81 /* SimulatorLauncher.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A37E016C711E000319E81 /* SimulatorLauncher.m */; };
@@ -58,6 +59,8 @@
 		288B9FBC171A5509008F0BDF /* OCUnitOSXAppTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 288B9FBB171A5509008F0BDF /* OCUnitOSXAppTestRunner.m */; };
 		288B9FBD171A5509008F0BDF /* OCUnitOSXAppTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 288B9FBB171A5509008F0BDF /* OCUnitOSXAppTestRunner.m */; };
 		288DD463173B5F9000F1093C /* Reporter+Testing.m in Sources */ = {isa = PBXBuildFile; fileRef = 288DD462173B5F9000F1093C /* Reporter+Testing.m */; };
+		28A5A8ED1746D2AA001733A9 /* Swizzler.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A5A8EC1746D2AA001733A9 /* Swizzler.m */; };
+		28A5A8F01746D2B9001733A9 /* SwizzlerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A5A8EF1746D2B9001733A9 /* SwizzlerTests.m */; };
 		28AC9E3016DB3478009E5B9A /* OptionsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28AC9E2F16DB3478009E5B9A /* OptionsTests.m */; };
 		28ACFC8316FBA888004BAF33 /* TaskUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 28ACFC8216FBA888004BAF33 /* TaskUtil.m */; };
 		28ACFC8416FBA888004BAF33 /* TaskUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 28ACFC8216FBA888004BAF33 /* TaskUtil.m */; };
@@ -166,6 +169,7 @@
 		283EAF5C1704C62E00CE0A0C /* PhabricatorReporterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhabricatorReporterTests.m; sourceTree = "<group>"; };
 		2864A3F81734E52800BBF3B1 /* Version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Version.h; sourceTree = "<group>"; };
 		2864A3F91734E52800BBF3B1 /* Version.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Version.m; sourceTree = "<group>"; };
+		2868B1C21746ED9C0062F4BA /* OCUnitTestRunnerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitTestRunnerTests.m; sourceTree = "<group>"; };
 		287A37DC16C711AE00319E81 /* LineReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LineReader.h; sourceTree = "<group>"; };
 		287A37DD16C711AE00319E81 /* LineReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LineReader.m; sourceTree = "<group>"; };
 		287A37DF16C711E000319E81 /* SimulatorLauncher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimulatorLauncher.h; sourceTree = "<group>"; };
@@ -188,6 +192,9 @@
 		288B9FBB171A5509008F0BDF /* OCUnitOSXAppTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitOSXAppTestRunner.m; sourceTree = "<group>"; };
 		288DD461173B5F9000F1093C /* Reporter+Testing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Reporter+Testing.h"; sourceTree = "<group>"; };
 		288DD462173B5F9000F1093C /* Reporter+Testing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Reporter+Testing.m"; sourceTree = "<group>"; };
+		28A5A8EB1746D2AA001733A9 /* Swizzler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Swizzler.h; sourceTree = "<group>"; };
+		28A5A8EC1746D2AA001733A9 /* Swizzler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Swizzler.m; sourceTree = "<group>"; };
+		28A5A8EF1746D2B9001733A9 /* SwizzlerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwizzlerTests.m; sourceTree = "<group>"; };
 		28AC9E2F16DB3478009E5B9A /* OptionsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = OptionsTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		28ACFC8116FBA888004BAF33 /* TaskUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskUtil.h; sourceTree = "<group>"; };
 		28ACFC8216FBA888004BAF33 /* TaskUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskUtil.m; sourceTree = "<group>"; };
@@ -404,6 +411,10 @@
 				28897FB8173CB512004BA024 /* Options+Testing.m */,
 				2889806E174435AD004BA024 /* LaunchHandlers.h */,
 				2889806F174435AD004BA024 /* LaunchHandlers.m */,
+				28A5A8EB1746D2AA001733A9 /* Swizzler.h */,
+				28A5A8EC1746D2AA001733A9 /* Swizzler.m */,
+				28A5A8EF1746D2B9001733A9 /* SwizzlerTests.m */,
+				2868B1C21746ED9C0062F4BA /* OCUnitTestRunnerTests.m */,
 			);
 			path = "xctool-tests";
 			sourceTree = "<group>";
@@ -638,6 +649,9 @@
 				288980601742B675004BA024 /* FakeTaskManager.m in Sources */,
 				28898070174435AD004BA024 /* LaunchHandlers.m in Sources */,
 				CDD81F2F174ABA2700F42111 /* SchemeGenerator.m in Sources */,
+				28A5A8ED1746D2AA001733A9 /* Swizzler.m in Sources */,
+				28A5A8F01746D2B9001733A9 /* SwizzlerTests.m in Sources */,
+				2868B1C31746ED9C0062F4BA /* OCUnitTestRunnerTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

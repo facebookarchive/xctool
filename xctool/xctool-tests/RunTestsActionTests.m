@@ -20,9 +20,11 @@
 #import "FakeTask.h"
 #import "FakeTaskManager.h"
 #import "LaunchHandlers.h"
+#import "OCUnitTestRunner.h"
 #import "Options.h"
 #import "Options+Testing.h"
 #import "RunTestsAction.h"
+#import "Swizzler.h"
 #import "TaskUtil.h"
 #import "TestUtil.h"
 #import "XCTool.h"
@@ -246,6 +248,177 @@
     assertThat([launchedTasks[1] environment][@"DYLD_ROOT_PATH"],
                equalTo(@"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk"));
     assertThatInt(tool.exitStatus, equalToInt(1));
+  }];
+}
+
+/**
+ By default, Xcode will run your tests with whatever extra args or environment
+ settings you've configured for your Run action in the scheme editor.
+ */
+- (void)testSchemeArgsAndEnvForRunActionArePassedToTestRunner
+{
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+     // Make sure -showBuildSettings returns some data
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestsWithArgAndEnvSettingsInRunAction/TestsWithArgAndEnvSettings.xcodeproj"
+                                                     scheme:@"TestsWithArgAndEnvSettings"
+                                               settingsPath:TEST_DATA @"TestsWithArgAndEnvSettingsInRunAction-TestsWithArgAndEnvSettings-showBuildSettings.txt"],
+     // We're going to call -showBuildSettings on the test target.
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestsWithArgAndEnvSettingsInRunAction/TestsWithArgAndEnvSettings.xcodeproj"
+                                                     target:@"TestsWithArgAndEnvSettingsTests"
+                                               settingsPath:TEST_DATA @"TestsWithArgAndEnvSettingsInRunAction-TestsWithArgAndEnvSettings-TestsWithArgAndEnvSettingsTests-showBuildSettings.txt"
+                                                       hide:NO],
+     ]];
+
+    XCTool *tool = [[[XCTool alloc] init] autorelease];
+
+    tool.arguments = @[@"-project", TEST_DATA @"TestsWithArgAndEnvSettingsInRunAction/TestsWithArgAndEnvSettings.xcodeproj",
+                       @"-scheme", @"TestsWithArgAndEnvSettings",
+                       @"run-tests",
+                       ];
+
+    __block OCUnitTestRunner *runner = nil;
+
+    [Swizzler whileSwizzlingSelector:@selector(runTestsWithError:)
+                 forInstancesOfClass:[OCUnitTestRunner class]
+                           withBlock:
+     ^(id self, SEL sel){
+       // Don't actually run anything and just save a reference to the runner.
+       runner = [self retain];
+       // Pretend tests succeeded.
+       return YES;
+     }
+                            runBlock:
+     ^{
+       [TestUtil runWithFakeStreams:tool];
+
+       assertThat(runner, notNilValue());
+       assertThat(runner->_arguments,
+                  equalTo(@[@"-RunArg", @"RunArgValue"]));
+       assertThat(runner->_environment,
+                  equalTo(@{@"RunEnvKey" : @"RunEnvValue"}));
+     }];
+
+    [runner release];
+  }];
+}
+
+/**
+ Optionally, Xcode can also run your tests with specific args or environment
+ vars that you've configured for your Test action in the scheme editor.
+ */
+- (void)testSchemeArgsAndEnvForTestActionArePassedToTestRunner
+{
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+     // Make sure -showBuildSettings returns some data
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestsWithArgAndEnvSettingsInTestAction/TestsWithArgAndEnvSettings.xcodeproj"
+                                                     scheme:@"TestsWithArgAndEnvSettings"
+                                               settingsPath:TEST_DATA @"TestsWithArgAndEnvSettingsInTestAction-TestsWithArgAndEnvSettings-showBuildSettings.txt"],
+     // We're going to call -showBuildSettings on the test target.
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestsWithArgAndEnvSettingsInTestAction/TestsWithArgAndEnvSettings.xcodeproj"
+                                                     target:@"TestsWithArgAndEnvSettingsTests"
+                                               settingsPath:TEST_DATA @"TestsWithArgAndEnvSettingsInTestAction-TestsWithArgAndEnvSettings-TestsWithArgAndEnvSettingsTests-showBuildSettings.txt"
+                                                       hide:NO],
+     ]];
+
+    XCTool *tool = [[[XCTool alloc] init] autorelease];
+
+    tool.arguments = @[@"-project", TEST_DATA @"TestsWithArgAndEnvSettingsInTestAction/TestsWithArgAndEnvSettings.xcodeproj",
+                       @"-scheme", @"TestsWithArgAndEnvSettings",
+                       @"run-tests",
+                       ];
+
+    __block OCUnitTestRunner *runner = nil;
+
+    [Swizzler whileSwizzlingSelector:@selector(runTestsWithError:)
+                 forInstancesOfClass:[OCUnitTestRunner class]
+                           withBlock:
+     ^(id self, SEL sel){
+       // Don't actually run anything and just save a reference to the runner.
+       runner = [self retain];
+       // Pretend tests succeeded.
+       return YES;
+     }
+                            runBlock:
+     ^{
+       [TestUtil runWithFakeStreams:tool];
+
+       assertThat(runner, notNilValue());
+       assertThat(runner->_arguments,
+                  equalTo(@[@"-TestArg", @"TestArgValue"]));
+       assertThat(runner->_environment,
+                  equalTo(@{@"TestEnvKey" : @"TestEnvValue"}));
+     }];
+
+    [runner release];
+  }];
+}
+
+/**
+ Xcode will let you use macros like $(SOMEVAR) in the arguments or environment
+ variables specified in your scheme.
+ */
+- (void)testSchemeArgsAndEnvCanUseMacroExpansion
+{
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+     // Make sure -showBuildSettings returns some data
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestsWithArgAndEnvSettingsWithMacroExpansion/TestsWithArgAndEnvSettings.xcodeproj"
+                                                     scheme:@"TestsWithArgAndEnvSettings"
+                                               settingsPath:TEST_DATA @"TestsWithArgAndEnvSettingsWithMacroExpansion-TestsWithArgAndEnvSettings-showBuildSettings.txt"],
+     // We're going to call -showBuildSettings on the test target.
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestsWithArgAndEnvSettingsWithMacroExpansion/TestsWithArgAndEnvSettings.xcodeproj"
+                                                     target:@"TestsWithArgAndEnvSettingsTests"
+                                               settingsPath:TEST_DATA @"TestsWithArgAndEnvSettingsWithMacroExpansion-TestsWithArgAndEnvSettings-TestsWithArgAndEnvSettingsTests-showBuildSettings.txt"
+                                                       hide:NO],
+     ]];
+
+    XCTool *tool = [[[XCTool alloc] init] autorelease];
+
+    tool.arguments = @[@"-project", TEST_DATA @"TestsWithArgAndEnvSettingsWithMacroExpansion/TestsWithArgAndEnvSettings.xcodeproj",
+                       @"-scheme", @"TestsWithArgAndEnvSettings",
+                       @"run-tests",
+                       ];
+
+    __block OCUnitTestRunner *runner = nil;
+
+    [Swizzler whileSwizzlingSelector:@selector(runTestsWithError:)
+                 forInstancesOfClass:[OCUnitTestRunner class]
+                           withBlock:
+     ^(id self, SEL sel){
+       // Don't actually run anything and just save a reference to the runner.
+       runner = [self retain];
+       // Pretend tests succeeded.
+       return YES;
+     }
+                            runBlock:
+     ^{
+       [TestUtil runWithFakeStreams:tool];
+
+       assertThat(runner, notNilValue());
+       assertThat(runner->_arguments,
+                  equalTo(@[]));
+       assertThat(runner->_environment,
+                  equalTo(@{
+                          @"RunEnvKey" : @"RunEnvValue",
+                          @"ARCHS" : @"x86_64",
+                          @"DYLD_INSERT_LIBRARIES" : @"ThisShouldNotGetOverwrittenByOtestShim",
+                          }));
+
+
+       NSMutableDictionary *expectedEnv = [NSMutableDictionary dictionary];
+       [expectedEnv addEntriesFromDictionary:[[NSProcessInfo processInfo] environment]];
+       expectedEnv[@"DYLD_INSERT_LIBRARIES"] = @"ThisShouldNotGetOverwrittenByOtestShim:/pretend/this/is/otest-shim.dylib";
+       expectedEnv[@"RunEnvKey"] = @"RunEnvValue";
+       expectedEnv[@"ARCHS"] = @"x86_64";
+
+       assertThat([runner otestEnvironmentWithOverrides:@{
+                   @"DYLD_INSERT_LIBRARIES" : @"/pretend/this/is/otest-shim.dylib"}],
+                  equalTo(expectedEnv));
+     }];
+
+    [runner release];
   }];
 }
 

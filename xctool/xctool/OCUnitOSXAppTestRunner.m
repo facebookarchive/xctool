@@ -37,16 +37,16 @@
   NSTask *task = [[[NSTask alloc] init] autorelease];
   [task setLaunchPath:testHostPath];
   [task setArguments:[self otestArguments]];
-  [task setEnvironment:@{
-   @"DYLD_INSERT_LIBRARIES" : [libraries componentsJoinedByString:@":"],
-   @"DYLD_FRAMEWORK_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
-   @"DYLD_LIBRARY_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
-   @"DYLD_FALLBACK_FRAMEWORK_PATH" : [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"],
-   @"NSUnbufferedIO" : @"YES",
-   @"OBJC_DISABLE_GC" : !_garbageCollection ? @"YES" : @"NO",
-   @"XCInjectBundle" : [_buildSettings[@"BUILT_PRODUCTS_DIR"] stringByAppendingPathComponent:_buildSettings[@"FULL_PRODUCT_NAME"]],
-   @"XCInjectBundleInto" : testHostPath,
-   }];
+  [task setEnvironment:[self otestEnvironmentWithOverrides:@{
+                        @"DYLD_INSERT_LIBRARIES" : [libraries componentsJoinedByString:@":"],
+                        @"DYLD_FRAMEWORK_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
+                        @"DYLD_LIBRARY_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
+                        @"DYLD_FALLBACK_FRAMEWORK_PATH" : [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"],
+                        @"NSUnbufferedIO" : @"YES",
+                        @"OBJC_DISABLE_GC" : !_garbageCollection ? @"YES" : @"NO",
+                        @"XCInjectBundle" : [_buildSettings[@"BUILT_PRODUCTS_DIR"] stringByAppendingPathComponent:_buildSettings[@"FULL_PRODUCT_NAME"]],
+                        @"XCInjectBundleInto" : testHostPath,
+                        }]];
 
   LaunchTaskAndFeedOuputLinesToBlock(task, outputLineBlock);
 
