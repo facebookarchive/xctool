@@ -40,23 +40,23 @@
                           runBlock:
    ^{
      OCUnitIOSAppTestRunner *runner =
-      [[OCUnitIOSAppTestRunner alloc] initWithBuildSettings:testSettings
-                                                senTestList:@"All"
-                                         senTestInvertScope:NO
-                                                  arguments:
+      [[[OCUnitIOSAppTestRunner alloc] initWithBuildSettings:testSettings
+                                                 senTestList:@"All"
+                                          senTestInvertScope:NO
+                                                   arguments:
        @[
        @"-SomeArg", @"SomeVal",
        ]
-                                                environment:
+                                                 environment:
        @{
        @"SomeEnvKey" : @"SomeEnvValue",
        }
-                                          garbageCollection:NO
-                                             freshSimulator:NO
-                                               freshInstall:NO
-                                             standardOutput:[NSFileHandle fileHandleWithNullDevice]
-                                              standardError:[NSFileHandle fileHandleWithNullDevice]
-                                                  reporters:@[]];
+                                           garbageCollection:NO
+                                              freshSimulator:NO
+                                                freshInstall:NO
+                                              standardOutput:[NSFileHandle fileHandleWithNullDevice]
+                                               standardError:[NSFileHandle fileHandleWithNullDevice]
+                                                   reporters:@[]] autorelease];
      NSString *error = nil;
      [runner runTestsWithError:&error];
    }];
@@ -91,23 +91,23 @@
 
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
      OCUnitIOSLogicTestRunner *runner =
-     [[OCUnitIOSLogicTestRunner alloc] initWithBuildSettings:testSettings
-                                               senTestList:@"All"
-                                        senTestInvertScope:NO
-                                                 arguments:
+     [[[OCUnitIOSLogicTestRunner alloc] initWithBuildSettings:testSettings
+                                                  senTestList:@"All"
+                                           senTestInvertScope:NO
+                                                    arguments:
       @[
       @"-SomeArg", @"SomeVal",
       ]
-                                               environment:
+                                                  environment:
       @{
       @"SomeEnvKey" : @"SomeEnvValue",
       }
-                                         garbageCollection:NO
-                                            freshSimulator:NO
-                                              freshInstall:NO
-                                            standardOutput:[NSFileHandle fileHandleWithNullDevice]
-                                             standardError:[NSFileHandle fileHandleWithNullDevice]
-                                                 reporters:@[]];
+                                            garbageCollection:NO
+                                               freshSimulator:NO
+                                                 freshInstall:NO
+                                               standardOutput:[NSFileHandle fileHandleWithNullDevice]
+                                                standardError:[NSFileHandle fileHandleWithNullDevice]
+                                                    reporters:@[]] autorelease];
     NSString *error = nil;
     [runner runTestsWithError:&error];
 
@@ -143,23 +143,23 @@
 
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     OCUnitOSXLogicTestRunner *runner =
-    [[OCUnitOSXLogicTestRunner alloc] initWithBuildSettings:testSettings
-                                                senTestList:@"All"
-                                         senTestInvertScope:NO
-                                                  arguments:
+    [[[OCUnitOSXLogicTestRunner alloc] initWithBuildSettings:testSettings
+                                                 senTestList:@"All"
+                                          senTestInvertScope:NO
+                                                   arguments:
      @[
      @"-SomeArg", @"SomeVal",
      ]
-                                                environment:
+                                                 environment:
      @{
      @"SomeEnvKey" : @"SomeEnvValue",
      }
-                                          garbageCollection:NO
-                                             freshSimulator:NO
-                                               freshInstall:NO
-                                             standardOutput:[NSFileHandle fileHandleWithNullDevice]
-                                              standardError:[NSFileHandle fileHandleWithNullDevice]
-                                                  reporters:@[]];
+                                           garbageCollection:NO
+                                              freshSimulator:NO
+                                                freshInstall:NO
+                                              standardOutput:[NSFileHandle fileHandleWithNullDevice]
+                                               standardError:[NSFileHandle fileHandleWithNullDevice]
+                                                   reporters:@[]] autorelease];
     NSString *error = nil;
     [runner runTestsWithError:&error];
 
@@ -195,23 +195,23 @@
 
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     OCUnitOSXAppTestRunner *runner =
-    [[OCUnitOSXAppTestRunner alloc] initWithBuildSettings:testSettings
-                                                senTestList:@"All"
-                                         senTestInvertScope:NO
-                                                  arguments:
+    [[[OCUnitOSXAppTestRunner alloc] initWithBuildSettings:testSettings
+                                               senTestList:@"All"
+                                        senTestInvertScope:NO
+                                                 arguments:
      @[
      @"-SomeArg", @"SomeVal",
      ]
-                                                environment:
+                                               environment:
      @{
      @"SomeEnvKey" : @"SomeEnvValue",
      }
-                                          garbageCollection:NO
-                                             freshSimulator:NO
-                                               freshInstall:NO
-                                             standardOutput:[NSFileHandle fileHandleWithNullDevice]
-                                              standardError:[NSFileHandle fileHandleWithNullDevice]
-                                                  reporters:@[]];
+                                         garbageCollection:NO
+                                            freshSimulator:NO
+                                              freshInstall:NO
+                                            standardOutput:[NSFileHandle fileHandleWithNullDevice]
+                                             standardError:[NSFileHandle fileHandleWithNullDevice]
+                                                 reporters:@[]] autorelease];
     NSString *error = nil;
     [runner runTestsWithError:&error];
 
