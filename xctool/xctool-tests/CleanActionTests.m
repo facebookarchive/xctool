@@ -22,6 +22,8 @@
 #import "LaunchHandlers.h"
 #import "Options.h"
 #import "RunTestsAction.h"
+#import "SchemeGenerator.h"
+#import "Swizzler.h"
 #import "TaskUtil.h"
 #import "TestUtil.h"
 #import "XCTool.h"
@@ -48,6 +50,11 @@
                                                settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
      ]];
 
+    NSString *mockWorkspacePath = @"/tmp/nowhere/build_tests_tmp.xcworkspace";
+    id mockSchemeGenerator = mock([SchemeGenerator class]);
+    [given([mockSchemeGenerator writeWorkspaceNamed:@"build_tests_tmp"])
+     willReturn:mockWorkspacePath];
+
     XCTool *tool = [[[XCTool alloc] init] autorelease];
 
     tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
@@ -55,7 +62,10 @@
                        @"clean",
                        ];
 
-    [TestUtil runWithFakeStreams:tool];
+    [Swizzler whileSwizzlingSelector:@selector(schemeGenerator)
+                            forClass:[SchemeGenerator class]
+                           withBlock:^(Class c, SEL sel){ return mockSchemeGenerator; }
+                            runBlock:^{ [TestUtil runWithFakeStreams:tool]; }];
 
     NSArray *launchedTasks = [[FakeTaskManager sharedManager] launchedTasks];
     assertThatInteger([launchedTasks count], equalToInteger(2));
@@ -71,8 +81,8 @@
                equalTo(@[
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
-                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                       @"-target", @"TestProject-LibraryTests",
+                       @"-workspace", mockWorkspacePath,
+                       @"-scheme", @"build_tests_tmp",
                        @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates",
                        @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products",
                        @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates/PrecompiledHeaders",
