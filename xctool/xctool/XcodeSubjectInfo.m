@@ -716,7 +716,13 @@ containsFilesModifiedSince:(NSDate *)sinceDate
    }];
 
   NSDictionary *result = LaunchTaskAndCaptureOutput(task);
-  return BuildSettingsFromOutput(result[@"stdout"]);
+  NSString *output = result[@"stdout"];
+  NSString *err = result[@"stderr"];
+  if ([output length] == 0 && [err length] > 0) {
+    NSLog(@"Error running xcodebuild: %@", err);
+    abort();
+  }
+  return BuildSettingsFromOutput(output);
 }
 
 - (void)populate
