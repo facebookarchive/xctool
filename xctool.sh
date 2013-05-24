@@ -47,4 +47,8 @@ REVISION=$((\
   git --git-dir="${XCTOOL_DIR}/.git" log -n 1 --format=%h 2> /dev/null) || \
   echo ".")
 
+if [ "$TRAVIS" = "true" ]; then
+  stty columns 60
+fi
+
 "$XCTOOL_DIR"/build/$REVISION/Products/Release/xctool "$@"
