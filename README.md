@@ -6,6 +6,7 @@ easier to build and test iOS and Mac products.  It's especially helpful
 for continuous integration.
 
 [ [Features](#features) &bull; [Requirements](#requirements) &bull; [Usage](#usage)
+&bull; [Continuous Integration](#continuous-integration)
 &bull; [Reporters](#reporters) &bull;
 [Configuration](#configuration-xctool-args) &bull; 
 [Contributing](#contributing) &bull; [Known Issues](#known-issues) &bull; [License](#license) ]
@@ -195,6 +196,47 @@ path/to/xctool.sh \
 Just as with the __test__ action, you can limit which tests are run with
 the `-only`.  And, you can change which SDK they're run against
 with the `-test-sdk`.
+
+## Continuous Integration
+
+xctool is an excellent choice for running your tests under a continuous
+integration server such as [Travis CI](https://travis-ci.org/) or [Jenkins](http://jenkins-ci.org/).
+In order to your run your tests within a continuous integration environment,
+you must create **Shared Schemes** for your application target and ensure that all dependencies (such as CocoaPods) are added explicitly to the Scheme. To do so:
+
+1. Open up the **Manage Schemes** sheet by selecting the **Product** menu > **Schemes** > **Manage Schemes...**
+1. Locate your application target in the list. Ensure that the **Shared** checkbox in far right hand column of the sheet is checked.
+1. If your application or test targets include cross-project dependencies such as CocoaPods, then you will need to ensure that they have been
+configured as explicit dependencies. To do so:
+    1. Highlight your application target and hit the **Edit...** button to open the Scheme editing sheet.
+    1. Click the **Build** tab in the left-hand panel of the Scheme editor.
+    1. Click the **+** button and add each dependency to the project. CocoaPods will appears as static library named **Pods**.
+    1. Drag the dependency above your application target so that it is built first.
+
+You will now have a new file in the **xcshareddata/xcschemes** directory underneath your Xcode project. This is the
+shared Scheme that you just configured. Check this file into your repository and xctool will be able to find and execute
+your tests on the next CI build.
+
+### Example Travis CI Configuration
+
+[Travis CI](https://travis-ci.org/) is a very popular continuous integration system offered for free to Open Source projects.
+It integrates well with Github and is easy to configure. Once you have set up your shared Scheme for use with xctool, you will
+need to configure a `.travis.yml` file. To make it a bit easier to get started with Travis, you may want to base your
+script off of the following example:
+
+```yml
+language: objective-c
+before_install:
+    - brew update
+    - brew install xctool --HEAD
+script: xctool -workspace MyApp.xcworkspace -scheme 'MyApp' test
+```
+
+You will obviously need to replace 'MyApp.xcworkspace' and 'MyApp' with the name of your project and shared Xcode scheme, respectively.
+
+You can learn more about the Travis CI environment for iOS and OS X application by referring to the
+[About OS X Travis CI Environment](http://about.travis-ci.org/docs/user/osx-ci-environment/) document and find in-depth documentation for
+configuring your project by consulting the [Getting Started](http://about.travis-ci.org/docs/user/getting-started/) page.
 
 ## Reporters
 
