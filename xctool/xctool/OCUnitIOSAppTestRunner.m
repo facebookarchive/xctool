@@ -29,19 +29,31 @@ static void GetJobsIterator(const launch_data_t launch_data, const char *key, vo
   block(launch_data, key);
 }
 
-/**
- Kill any active simulator plus any other iOS services it started via launchd.
- */
-static void KillSimulatorJobs()
+static void StopAndRemoveLaunchdJob(NSString *job)
+{
+  launch_data_t stopMessage = launch_data_alloc(LAUNCH_DATA_DICTIONARY);
+  launch_data_dict_insert(stopMessage,
+                          launch_data_new_string([job UTF8String]),
+                          LAUNCH_KEY_REMOVEJOB);
+  launch_data_t stopResponse = launch_msg(stopMessage);
+
+  launch_data_free(stopMessage);
+  launch_data_free(stopResponse);
+}
+
+static NSArray *GetLaunchdJobsForSimulator()
 {
   launch_data_t getJobsMessage = launch_data_new_string(LAUNCH_KEY_GETJOBS);
   launch_data_t response = launch_msg(getJobsMessage);
 
   assert(launch_data_get_type(response) == LAUNCH_DATA_DICTIONARY);
 
+  NSMutableArray *jobs = [NSMutableArray array];
+
   launch_data_dict_iterate(response,
                            GetJobsIterator,
-                           ^(const launch_data_t launch_data, const char *keyCString){
+                           ^(const launch_data_t launch_data, const char *keyCString)
+  {
     NSString *key = [NSString stringWithCString:keyCString
                                        encoding:NSUTF8StringEncoding];
 
@@ -59,19 +71,31 @@ static void KillSimulatorJobs()
     }
 
     if (matches) {
-      launch_data_t stopMessage = launch_data_alloc(LAUNCH_DATA_DICTIONARY);
-      launch_data_dict_insert(stopMessage,
-                              launch_data_new_string([key UTF8String]),
-                              LAUNCH_KEY_REMOVEJOB);
-      launch_data_t stopResponse = launch_msg(stopMessage);
-
-      launch_data_free(stopMessage);
-      launch_data_free(stopResponse);
+      [jobs addObject:key];
     }
   });
 
   launch_data_free(response);
   launch_data_free(getJobsMessage);
+
+  return jobs;
+}
+
+static void KillSimulatorJobs()
+{
+  NSArray *jobs = GetLaunchdJobsForSimulator();
+
+  // Tell launchd to remove each of them and trust that launchd will make sure
+  // they're dead.  It'll be nice at first (sending SIGTERM) but if the process
+  // doesn't die, it'll follow up with a SIGKILL.
+  for (NSString *job in jobs) {
+    StopAndRemoveLaunchdJob(job);
+  }
+
+  // It can take a moment for each them to die.
+  while ([GetLaunchdJobsForSimulator() count] > 0) {
+    [NSThread sleepForTimeInterval:0.1];
+  }
 }
 
 @implementation OCUnitIOSAppTestRunner
