@@ -66,6 +66,7 @@
 		28ACFC8416FBA888004BAF33 /* TaskUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 28ACFC8216FBA888004BAF33 /* TaskUtil.m */; };
 		28ADB43816E4107F006301ED /* CleanActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28ADB43716E4107F006301ED /* CleanActionTests.m */; };
 		28ADB43B16E410F9006301ED /* BuildActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28ADB43A16E410F9006301ED /* BuildActionTests.m */; };
+		28C267DF17552E6B00AFC459 /* TextReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28C267DE17552E6B00AFC459 /* TextReporterTests.m */; };
 		28E9B97F16C2F1C600A52E4D /* XCToolUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B97E16C2F1C600A52E4D /* XCToolUtil.m */; };
 		28E9B98016C2F1C600A52E4D /* XCToolUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B97E16C2F1C600A52E4D /* XCToolUtil.m */; };
 		28E9B98416C2F2D900A52E4D /* xctool.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 28E9B98316C2F2D900A52E4D /* xctool.xcconfig */; };
@@ -202,6 +203,7 @@
 		28ACFC8216FBA888004BAF33 /* TaskUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskUtil.m; sourceTree = "<group>"; };
 		28ADB43716E4107F006301ED /* CleanActionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CleanActionTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		28ADB43A16E410F9006301ED /* BuildActionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BuildActionTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		28C267DE17552E6B00AFC459 /* TextReporterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextReporterTests.m; sourceTree = "<group>"; };
 		28E9B97D16C2F1C600A52E4D /* XCToolUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCToolUtil.h; sourceTree = "<group>"; };
 		28E9B97E16C2F1C600A52E4D /* XCToolUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCToolUtil.m; sourceTree = "<group>"; };
 		28E9B98316C2F2D900A52E4D /* xctool.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = xctool.xcconfig; sourceTree = "<group>"; };
@@ -422,6 +424,7 @@
 				28A5A8EC1746D2AA001733A9 /* Swizzler.m */,
 				28A5A8EF1746D2B9001733A9 /* SwizzlerTests.m */,
 				2868B1C21746ED9C0062F4BA /* OCUnitTestRunnerTests.m */,
+				28C267DE17552E6B00AFC459 /* TextReporterTests.m */,
 			);
 			path = "xctool-tests";
 			sourceTree = "<group>";
@@ -663,6 +666,7 @@
 				2868B1C31746ED9C0062F4BA /* OCUnitTestRunnerTests.m in Sources */,
 				CDD81F2F174ABA2700F42111 /* SchemeGenerator.m in Sources */,
 				CDD81F52174EAFDC00F42111 /* BufferedReporter.m in Sources */,
+				28C267DF17552E6B00AFC459 /* TextReporterTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
