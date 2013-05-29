@@ -165,9 +165,6 @@
     }
   }
 
-  // After this point, we can start reporting messages.
-  RegisterReporters(options.reporters);
-
   // We want to make sure we always unregister the reporters, even if validation fails,
   // so we use a try-finally block.
   @try {
@@ -205,9 +202,6 @@
     }
   } @finally {
     [options.reporters makeObjectsPerformSelector:@selector(close)];
-
-    // After this point, we can no longer report messages.
-    UnregisterReporters(options.reporters);
   }
 }
 
