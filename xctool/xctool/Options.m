@@ -258,13 +258,13 @@
     }
 
     if (targetMatch.workspacePath) {
-      ReportMessage(
+      ReportStatusMessage(
         _reporters,
         REPORTER_MESSAGE_INFO,
         @"Found target %@. Using workspace path %@, scheme %@.",
         self.findTarget, targetMatch.workspacePath, targetMatch.schemeName);
     } else {
-      ReportMessage(
+      ReportStatusMessage(
         _reporters,
         REPORTER_MESSAGE_INFO,
         @"Found target %@. Using project path %@, scheme %@.",

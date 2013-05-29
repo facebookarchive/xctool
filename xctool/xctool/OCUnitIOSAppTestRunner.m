@@ -222,18 +222,18 @@ static void KillSimulatorJobs()
   NSString *testHostBundleID = plist[@"CFBundleIdentifier"];
 
   if (_freshSimulator) {
-    ReportMessage(_reporters,
-                  REPORTER_MESSAGE_INFO,
-                  @"Stopping any existing iOS simulator jobs to get a "
-                  @"fresh simulator.");
+    ReportStatusMessage(_reporters,
+                        REPORTER_MESSAGE_INFO,
+                        @"Stopping any existing iOS simulator jobs to get a "
+                        @"fresh simulator.");
     KillSimulatorJobs();
   }
 
   if (_freshInstall) {
-    ReportMessage(_reporters,
-                  REPORTER_MESSAGE_INFO,
-                  @"Uninstalling '%@' to get a fresh install.",
-                  testHostBundleID);
+    ReportStatusMessage(_reporters,
+                        REPORTER_MESSAGE_INFO,
+                        @"Uninstalling '%@' to get a fresh install.",
+                        testHostBundleID);
     BOOL uninstalled = [self runMobileInstallationHelperWithArguments:@[
                         @"uninstall",
                         testHostBundleID,
@@ -257,7 +257,7 @@ static void KillSimulatorJobs()
   //
   // By making sure the app is already installed, we guarantee the environment
   // is always set correctly.
-  ReportMessage(_reporters, REPORTER_MESSAGE_INFO, @"Installing '%@' ...", testHostAppPath);
+  ReportStatusMessage(_reporters, REPORTER_MESSAGE_INFO, @"Installing '%@' ...", testHostAppPath);
   BOOL installed = [self runMobileInstallationHelperWithArguments:@[
                     @"install",
                     testHostAppPath,
@@ -269,7 +269,7 @@ static void KillSimulatorJobs()
     return NO;
   }
 
-  ReportMessage(_reporters,
+  ReportStatusMessage(_reporters,
                 REPORTER_MESSAGE_INFO,
                 @"Launching test host and running tests...");
   if (![self runTestsInSimulator:testHostAppPath feedOutputToBlock:outputLineBlock]) {

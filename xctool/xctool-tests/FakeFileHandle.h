@@ -7,6 +7,7 @@
 }
 
 - (NSData *)dataWritten;
+- (NSString *)stringWritten;
 - (int)fileDescriptor;
 - (void)synchronizeFile;
 

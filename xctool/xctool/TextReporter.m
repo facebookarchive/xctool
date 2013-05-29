@@ -169,8 +169,9 @@
 
 - (void)dealloc
 {
-  self.currentBuildCommandEvent = nil;
-  self.reportWriter = nil;
+  [_currentBuildCommandEvent release];
+  [_reportWriter release];
+  [_currentStatusEvent release];
   [super dealloc];
 }
 
@@ -185,6 +186,13 @@
   } else {
     return NO;
   }
+}
+
+- (void)close
+{
+  // Always leave one blank line at the end - it looks a little nicer.
+  [_reportWriter printNewline];
+  [super close];
 }
 
 - (NSString *)passIndicatorString
@@ -265,6 +273,9 @@
   _testsTotal = 0;
   _testsPassed = 0;
 
+  // Ensure there's one blank line between earlier output and this action.
+  [_reportWriter printNewline];
+
   [self.reportWriter printLine:@"<bold>=== %@ ===<reset>", [name uppercaseString]];
   [self.reportWriter printNewline];
   [self.reportWriter increaseIndent];
@@ -290,7 +301,6 @@
    status,
    message != nil ? [@": " stringByAppendingString:message] : @"",
    (int)(duration * 1000)];
-  [self.reportWriter printNewline];
 }
 
 - (void)beginXcodebuild:(NSDictionary *)event
@@ -473,16 +483,41 @@
   self.testOutputEndsInNewline = [event[kReporter_TestOutput_OutputKey] hasSuffix:@"\n"];
 }
 
-- (void)message:(NSDictionary *)event
+- (void)beginStatus:(NSDictionary *)event
 {
-  NSDate *timestamp = [NSDate dateWithTimeIntervalSince1970:[event[kReporter_Message_TimestampKey] doubleValue]];
-  NSString *now = [timestamp descriptionWithCalendarFormat:@"%Y-%m-%d %H:%M:%S"
-                                                  timeZone:[NSTimeZone localTimeZone]
-                                                    locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
-  [self.reportWriter printLine:@"[%@|%@] %@",
-       now,
-       event[kReporter_Message_LevelKey],
-       event[kReporter_Message_MessageKey]];
+  NSAssert(_currentStatusEvent == nil,
+           @"An earlier begin-status event never followed with a end-status event.");
+
+  _currentStatusEvent = [event retain];
+
+  // We purposely don't output a newline - this way endStatus: can have a chance
+  // to send a \r and rewrite the existing line.
+  [_reportWriter updateLine:@"[%@] %@",
+   event[kReporter_BeginStatus_LevelKey],
+   event[kReporter_BeginStatus_MessageKey]
+   ];
+}
+
+- (void)endStatus:(NSDictionary *)event
+{
+  NSAssert(_currentStatusEvent != nil,
+           @"an end-status event must be preceded by a begin-status event.");
+
+  double duration = ([event[kReporter_EndStatus_TimestampKey] doubleValue] -
+                     [_currentStatusEvent[kReporter_BeginStatus_TimestampKey] doubleValue]);
+
+  NSMutableString *line = [NSMutableString string];
+  [line appendFormat:@"[%@] ", event[kReporter_EndStatus_LevelKey]];
+  [line appendString:event[kReporter_EndStatus_MessageKey]];
+  if (duration > 0) {
+    [line appendFormat:@" %@", [self formattedTestDuration:duration withColor:NO]];
+  }
+
+  [_reportWriter updateLine:@"%@", line];
+  [_reportWriter printNewline];
+
+  [_currentStatusEvent release];
+  _currentStatusEvent = nil;
 }
 
 - (NSString *)formattedTestDuration:(float)duration withColor:(BOOL)withColor

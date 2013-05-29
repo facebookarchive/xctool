@@ -27,6 +27,12 @@
   return _dataWritten;
 }
 
+- (NSString *)stringWritten
+{
+  return [[[NSString alloc] initWithData:_dataWritten
+                                encoding:NSUTF8StringEncoding] autorelease];
+}
+
 - (int)fileDescriptor {
   // Not true, but this will appease some callers.
   return STDOUT_FILENO;

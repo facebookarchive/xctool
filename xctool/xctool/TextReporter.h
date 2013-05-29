@@ -26,6 +26,8 @@
 
   NSUInteger _testsTotal;
   NSUInteger _testsPassed;
+
+  NSDictionary *_currentStatusEvent;
 }
 
 @property (nonatomic, retain) NSDictionary *currentBuildCommandEvent;
