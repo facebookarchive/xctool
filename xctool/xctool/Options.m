@@ -248,6 +248,11 @@
   }
 
   if (self.findTarget != nil) {
+    ReportStatusMessageBegin(_reporters,
+                             REPORTER_MESSAGE_INFO,
+                             @"Searching for target '%@' ...",
+                             self.findTarget);
+
     XcodeTargetMatch *targetMatch;
     if (![XcodeSubjectInfo findTarget:self.findTarget
                           inDirectory:self.findTargetPath ?: @"."
@@ -258,13 +263,13 @@
     }
 
     if (targetMatch.workspacePath) {
-      ReportStatusMessage(
+      ReportStatusMessageEnd(
         _reporters,
         REPORTER_MESSAGE_INFO,
         @"Found target %@. Using workspace path %@, scheme %@.",
         self.findTarget, targetMatch.workspacePath, targetMatch.schemeName);
     } else {
-      ReportStatusMessage(
+      ReportStatusMessageEnd(
         _reporters,
         REPORTER_MESSAGE_INFO,
         @"Found target %@. Using project path %@, scheme %@.",

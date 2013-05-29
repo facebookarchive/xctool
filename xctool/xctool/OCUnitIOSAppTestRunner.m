@@ -222,27 +222,41 @@ static void KillSimulatorJobs()
   NSString *testHostBundleID = plist[@"CFBundleIdentifier"];
 
   if (_freshSimulator) {
-    ReportStatusMessage(_reporters,
-                        REPORTER_MESSAGE_INFO,
-                        @"Stopping any existing iOS simulator jobs to get a "
-                        @"fresh simulator.");
+    ReportStatusMessageBegin(_reporters,
+                             REPORTER_MESSAGE_INFO,
+                             @"Stopping any existing iOS simulator jobs to get a "
+                             @"fresh simulator ...");
     KillSimulatorJobs();
+    ReportStatusMessageEnd(_reporters,
+                             REPORTER_MESSAGE_INFO,
+                            @"Stopping any existing iOS simulator jobs to get a "
+                            @"fresh simulator ...");
+
   }
 
   if (_freshInstall) {
-    ReportStatusMessage(_reporters,
-                        REPORTER_MESSAGE_INFO,
-                        @"Uninstalling '%@' to get a fresh install.",
-                        testHostBundleID);
+    ReportStatusMessageBegin(_reporters,
+                             REPORTER_MESSAGE_INFO,
+                             @"Uninstalling '%@' to get a fresh install ...",
+                             testHostBundleID);
     BOOL uninstalled = [self runMobileInstallationHelperWithArguments:@[
                         @"uninstall",
                         testHostBundleID,
                         ]];
-    if (!uninstalled) {
+    if (uninstalled) {
+      ReportStatusMessageEnd(_reporters,
+                             REPORTER_MESSAGE_INFO,
+                             @"Uninstalling '%@' to get a fresh install ...",
+                             testHostBundleID);
+    } else {
       *error = [NSString stringWithFormat:
                 @"Failed to uninstall the test host app '%@' "
                 @"before running tests.",
                 testHostBundleID];
+      ReportStatusMessageEnd(_reporters,
+                             REPORTER_MESSAGE_INFO,
+                             @"Tried to uninstall the test host app '%@' but failed.",
+                             testHostBundleID);
       return NO;
     }
   }
@@ -257,12 +271,24 @@ static void KillSimulatorJobs()
   //
   // By making sure the app is already installed, we guarantee the environment
   // is always set correctly.
-  ReportStatusMessage(_reporters, REPORTER_MESSAGE_INFO, @"Installing '%@' ...", testHostAppPath);
+  ReportStatusMessageBegin(_reporters,
+                           REPORTER_MESSAGE_INFO,
+                           @"Installing '%@' ...",
+                           testHostAppPath);
   BOOL installed = [self runMobileInstallationHelperWithArguments:@[
                     @"install",
                     testHostAppPath,
                     ]];
-  if (!installed) {
+  if (installed) {
+    ReportStatusMessageEnd(_reporters,
+                           REPORTER_MESSAGE_INFO,
+                           @"Installing '%@' ...",
+                           testHostAppPath);
+  } else {
+    ReportStatusMessageEnd(_reporters,
+                           REPORTER_MESSAGE_INFO,
+                           @"Tried to install the test host app '%@' but failed.",
+                           testHostAppPath);
     *error = [NSString stringWithFormat:
               @"Failed to install the test host app '%@'.",
               testHostBundleID];
@@ -270,8 +296,8 @@ static void KillSimulatorJobs()
   }
 
   ReportStatusMessage(_reporters,
-                REPORTER_MESSAGE_INFO,
-                @"Launching test host and running tests...");
+                      REPORTER_MESSAGE_INFO,
+                      @"Launching test host and running tests ...");
   if (![self runTestsInSimulator:testHostAppPath feedOutputToBlock:outputLineBlock]) {
     *error = [NSString stringWithFormat:@"Failed to run tests"];
     return NO;
