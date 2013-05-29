@@ -39,23 +39,58 @@ NSString *ReporterMessageLevelToString(ReporterMessageLevel level) {
   }
 }
 
-void ReportMessage(NSArray *reporters, ReporterMessageLevel level, NSString *format, ...) {
+static void ReportStatusMessageBeginWithTimestamp(NSArray *reporters, double timestamp, ReporterMessageLevel level, NSString *message) {
+  NSDictionary *event = @{@"event": kReporter_Events_BeginStatus,
+                          kReporter_BeginStatus_MessageKey: message,
+                          kReporter_BeginStatus_TimestampKey: @(timestamp),
+                          kReporter_BeginStatus_LevelKey: ReporterMessageLevelToString(level),
+                          };
+  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
+                             withObject:event];
+}
+
+static void ReportStatusMessageEndWithTimestamp(NSArray *reporters, double timestamp, ReporterMessageLevel level, NSString *message) {
+  NSDictionary *event = @{@"event": kReporter_Events_EndStatus,
+                          kReporter_EndStatus_MessageKey: message,
+                          kReporter_EndStatus_TimestampKey: @(timestamp),
+                          kReporter_EndStatus_LevelKey: ReporterMessageLevelToString(level),
+                          };
+  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
+                             withObject:event];
+}
+
+void ReportStatusMessage(NSArray *reporters, ReporterMessageLevel level, NSString *format, ...) {
   va_list args;
   va_start(args, format);
   NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
   va_end(args);
 
-  NSDate *now = [NSDate date];
-  NSDictionary *event = @{
-    @"event": kReporter_Events_Message,
-    kReporter_Message_MessageKey: message,
-    kReporter_Message_TimestampKey: [NSNumber numberWithDouble:[now timeIntervalSince1970]],
-    kReporter_Message_LevelKey: ReporterMessageLevelToString(level),
-  };
-
-  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                             withObject:event];
+  // This is a one-shot status message that has no begin/end, so we send the
+  // same timestamp for both.
+  double now = [[NSDate date] timeIntervalSince1970];
+  ReportStatusMessageBeginWithTimestamp(reporters, now, level, message);
+  ReportStatusMessageEndWithTimestamp(reporters, now, level, message);
 }
+
+void ReportStatusMessageBegin(NSArray *reporters, ReporterMessageLevel level, NSString *format, ...) {
+  va_list args;
+  va_start(args, format);
+  NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
+  va_end(args);
+
+  ReportStatusMessageBeginWithTimestamp(reporters, [[NSDate date] timeIntervalSince1970], level, message);
+}
+
+
+void ReportStatusMessageEnd(NSArray *reporters, ReporterMessageLevel level, NSString *format, ...) {
+  va_list args;
+  va_start(args, format);
+  NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
+  va_end(args);
+
+  ReportStatusMessageEndWithTimestamp(reporters, [[NSDate date] timeIntervalSince1970], level, message);
+}
+
 
 @implementation Reporter
 
@@ -161,7 +196,8 @@ void ReportMessage(NSArray *reporters, ReporterMessageLevel level, NSString *for
 - (void)beginTest:(NSDictionary *)event {}
 - (void)endTest:(NSDictionary *)event {}
 - (void)testOutput:(NSDictionary *)event {}
-- (void)message:(NSDictionary *)event {}
+- (void)beginStatus:(NSDictionary *)event {}
+- (void)endStatus:(NSDictionary *)event {}
 
 - (void)close
 {
