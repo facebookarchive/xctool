@@ -262,18 +262,37 @@
       return NO;
     }
 
+    // If the current dir is '/a/b' and path is '/a/b/foo.txt', then return
+    // 'foo.txt'.
+    NSString *(^pathRelativeToCurrentDir)(NSString *) = ^(NSString *path){
+      NSString *cwd = [[[NSFileManager defaultManager] currentDirectoryPath]
+                       stringByAppendingString:@"/"];
+
+      NSRange range = [path rangeOfString:cwd];
+
+      if (range.location == 0 && range.length > 0) {
+        path = [path stringByReplacingCharactersInRange:range withString:@""];
+      }
+
+      return path;
+    };
+
     if (targetMatch.workspacePath) {
       ReportStatusMessageEnd(
         _reporters,
         REPORTER_MESSAGE_INFO,
         @"Found target %@. Using workspace path %@, scheme %@.",
-        self.findTarget, targetMatch.workspacePath, targetMatch.schemeName);
+        self.findTarget,
+        pathRelativeToCurrentDir(targetMatch.workspacePath),
+        targetMatch.schemeName);
     } else {
       ReportStatusMessageEnd(
         _reporters,
         REPORTER_MESSAGE_INFO,
         @"Found target %@. Using project path %@, scheme %@.",
-        self.findTarget, targetMatch.projectPath, targetMatch.schemeName);
+        self.findTarget,
+        pathRelativeToCurrentDir(targetMatch.projectPath),
+        targetMatch.schemeName);
     }
 
     self.workspace = targetMatch.workspacePath;
