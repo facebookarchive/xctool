@@ -62,6 +62,10 @@
                      description:
      @"Use clean install of TEST_HOST for every app test run"
                          setFlag:@selector(setFreshInstall:)],
+    [Action actionOptionWithName:@"parallelize"
+                         aliases:nil
+                     description:@"Parallelize execution of logic tests"
+                         setFlag:@selector(setParallelize:)],
     ];
 }
 
@@ -93,6 +97,11 @@
 - (void)setFreshInstall:(BOOL)freshInstall
 {
   [_runTestsAction setFreshInstall:freshInstall];
+}
+
+- (void)setParallelize:(BOOL)parallelize
+{
+  [_runTestsAction setParallelize:parallelize];
 }
 
 - (void)setSkipDependencies:(BOOL)skipDependencies

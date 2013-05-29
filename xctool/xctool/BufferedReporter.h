@@ -12,16 +12,22 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//
 
-#import "Action.h"
+#import "Reporter.h"
 
-@interface RunTestsAction : Action
+/*!
+ Buffers calls to the underlying reporter until this reporter is flushed.
+ */
+@interface BufferedReporter : NSObject {
+  Reporter *_underlyingReporter;
+  NSMutableArray *_bufferedEvents;
+}
 
-@property (nonatomic, assign) BOOL freshSimulator;
-@property (nonatomic, assign) BOOL freshInstall;
-@property (nonatomic, assign) BOOL parallelize;
-@property (nonatomic, retain) NSString *testSDK;
-@property (nonatomic, retain) NSMutableArray *onlyList;
++ (instancetype)bufferedReporterWithReporter:(Reporter *)reporter;
+
+/*!
+ Atomically flush all events into the underlying reporter
+ */
+- (void)flush;
 
 @end
