@@ -137,6 +137,9 @@ void ReportMessage(ReporterMessageLevel level, NSString *format, ...) NS_FORMAT_
 
 - (void)handleEvent:(NSDictionary *)event;
 
+// Handler methods for different event types.
+// Messages are routed to these methods via handleEvent, and should not be
+// invoked directly.
 - (void)beginAction:(NSDictionary *)event;
 - (void)endAction:(NSDictionary *)event;
 - (void)beginBuildTarget:(NSDictionary *)event;

@@ -100,6 +100,8 @@
 		C9D5B98A1733CC2500011C1F /* ArchiveAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D5B9881733CC2100011C1F /* ArchiveAction.m */; };
 		CD522EC217471D6300048AF9 /* SchemeGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = CD522EC117471D6300048AF9 /* SchemeGenerator.m */; };
 		CDD81F2F174ABA2700F42111 /* SchemeGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = CD522EC117471D6300048AF9 /* SchemeGenerator.m */; };
+		CDD81F51174EAFDC00F42111 /* BufferedReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = CDD81F50174EAFDC00F42111 /* BufferedReporter.m */; };
+		CDD81F52174EAFDC00F42111 /* BufferedReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = CDD81F50174EAFDC00F42111 /* BufferedReporter.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -234,6 +236,8 @@
 		C9D5B9881733CC2100011C1F /* ArchiveAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArchiveAction.m; sourceTree = "<group>"; };
 		CD522EC017471D6300048AF9 /* SchemeGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SchemeGenerator.h; sourceTree = "<group>"; };
 		CD522EC117471D6300048AF9 /* SchemeGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SchemeGenerator.m; sourceTree = "<group>"; };
+		CDD81F4F174EAFDC00F42111 /* BufferedReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BufferedReporter.h; sourceTree = "<group>"; };
+		CDD81F50174EAFDC00F42111 /* BufferedReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BufferedReporter.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -463,6 +467,8 @@
 				283EAF581704C22000CE0A0C /* PhabricatorReporter.m */,
 				375208FF173311B500AC05F9 /* JUnitReporter.h */,
 				37520900173311B500AC05F9 /* JUnitReporter.m */,
+				CDD81F4F174EAFDC00F42111 /* BufferedReporter.h */,
+				CDD81F50174EAFDC00F42111 /* BufferedReporter.m */,
 			);
 			name = Reporters;
 			sourceTree = "<group>";
@@ -596,6 +602,7 @@
 				C9D5B9891733CC2100011C1F /* ArchiveAction.m in Sources */,
 				37520901173311B500AC05F9 /* JUnitReporter.m in Sources */,
 				CD522EC217471D6300048AF9 /* SchemeGenerator.m in Sources */,
+				CDD81F51174EAFDC00F42111 /* BufferedReporter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -655,6 +662,7 @@
 				28A5A8F01746D2B9001733A9 /* SwizzlerTests.m in Sources */,
 				2868B1C31746ED9C0062F4BA /* OCUnitTestRunnerTests.m in Sources */,
 				CDD81F2F174ABA2700F42111 /* SchemeGenerator.m in Sources */,
+				CDD81F52174EAFDC00F42111 /* BufferedReporter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
