@@ -31,7 +31,8 @@
 #define kReporter_Events_EndBuildCommand @"end-build-command"
 #define kReporter_Events_BeginBuildTarget @"begin-build-target"
 #define kReporter_Events_EndBuildTarget @"end-build-target"
-#define kReporter_Events_Message @"message"
+#define kReporter_Events_BeginStatus @"begin-status"
+#define kReporter_Events_EndStatus @"end-status"
 
 #define kReporter_BeginAction_NameKey @"name"
 
@@ -99,9 +100,13 @@
 #define kReporter_EndXcodebuild_CommandKey @"command"
 #define kReporter_EndXcodebuild_TitleKey @"command"
 
-#define kReporter_Message_MessageKey @"message"
-#define kReporter_Message_TimestampKey @"timestamp"
-#define kReporter_Message_LevelKey @"level"
+#define kReporter_BeginStatus_MessageKey @"message"
+#define kReporter_BeginStatus_TimestampKey @"timestamp"
+#define kReporter_BeginStatus_LevelKey @"level"
+
+#define kReporter_EndStatus_MessageKey @"message"
+#define kReporter_EndStatus_TimestampKey @"timestamp"
+#define kReporter_EndStatus_LevelKey @"level"
 
 @class Action;
 @class Options;
@@ -116,7 +121,23 @@ typedef enum {
 
 NSString *ReporterMessageLevelToString(ReporterMessageLevel level);
 
-void ReportMessage(NSArray *reporters, ReporterMessageLevel level, NSString *format, ...) NS_FORMAT_FUNCTION(3, 4);
+/**
+ Reports a status message to the reporters, meant to express the beginning of
+ an operation.  The caller must call ReportStatusMessageEnd() when the operation
+ has finished.
+ */
+void ReportStatusMessageBegin(NSArray *reporters, ReporterMessageLevel level, NSString *format, ...) NS_FORMAT_FUNCTION(3, 4);
+
+/**
+ Reports a status message to the reporters, meant to express the end of an
+ operation.  StatusMessageBegin() must be called first.
+ */
+void ReportStatusMessageEnd(NSArray *reporters, ReporterMessageLevel level, NSString *format, ...) NS_FORMAT_FUNCTION(3, 4);
+
+/**
+ Reports a one-shot status message to the reporters that has no begin/end.
+ */
+void ReportStatusMessage(NSArray *reporters, ReporterMessageLevel level, NSString *format, ...) NS_FORMAT_FUNCTION(3, 4);
 
 @interface Reporter : NSObject
 {
@@ -152,7 +173,8 @@ void ReportMessage(NSArray *reporters, ReporterMessageLevel level, NSString *for
 - (void)beginTest:(NSDictionary *)event;
 - (void)endTest:(NSDictionary *)event;
 - (void)testOutput:(NSDictionary *)event;
-- (void)message:(NSDictionary *)event;
+- (void)beginStatus:(NSDictionary *)event;
+- (void)endStatus:(NSDictionary *)event;
 
 /**
  To be called before any action is run.
