@@ -41,6 +41,8 @@
 // Everything in the scheme marked as Build for Test
 @property (nonatomic, retain) NSArray *buildablesForTest;
 
+@property (nonatomic, retain) NSArray *reporters;
+
 /**
  * Returns a list of paths to .xcodeproj directories in the workspace.
  */

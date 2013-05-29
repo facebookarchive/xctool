@@ -16,6 +16,7 @@
 
 #import "XcodeSubjectInfo.h"
 
+#import "Reporter.h"
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
 #import "XcodeTargetMatch.h"
@@ -428,6 +429,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   self.configuration = nil;
   self.testables = nil;
   self.buildablesForTest = nil;
+  self.reporters = nil;
   [super dealloc];
 }
 
@@ -728,9 +730,12 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   assert(self.subjectXcodeBuildArguments != nil);
   assert(self.subjectScheme != nil);
   assert(self.subjectWorkspace != nil || self.subjectProject != nil);
+  NSAssert(_reporters != nil, @"Caller should give us the reporters list.");
 
   // First we need to know the OBJROOT and SYMROOT settings for the project we're testing.
+  ReportStatusMessageBegin(_reporters, REPORTER_MESSAGE_INFO, @"Collecting build settings ...");
   NSDictionary *settings = [self buildSettingsForFirstBuildable];
+  ReportStatusMessageEnd(_reporters, REPORTER_MESSAGE_INFO, @"Collecting build settings ...");
   assert(settings.count == 1);
   NSDictionary *firstBuildable = [settings allValues][0];
   // The following control where our build output goes - we need to make sure we build the tests

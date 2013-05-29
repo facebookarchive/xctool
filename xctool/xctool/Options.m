@@ -337,6 +337,7 @@
   xcodeSubjectInfo.subjectProject = self.project;
   xcodeSubjectInfo.subjectScheme = self.scheme;
   xcodeSubjectInfo.subjectXcodeBuildArguments = [self xcodeBuildArgumentsForSubject];
+  xcodeSubjectInfo.reporters = _reporters;
 
   if (self.sdk == nil) {
     BOOL valid = YES;
