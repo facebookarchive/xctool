@@ -172,6 +172,8 @@
   [_currentBuildCommandEvent release];
   [_reportWriter release];
   [_currentStatusEvent release];
+  [_failedTests release];
+  [_currentBundle release];
   [super dealloc];
 }
 
@@ -269,7 +271,8 @@
 - (void)beginAction:(NSDictionary *)event
 {
   NSString *name = event[kReporter_BeginAction_NameKey];
-  
+  self.failedTests = [[[NSMutableArray alloc] init] autorelease];
+
   _testsTotal = 0;
   _testsPassed = 0;
 
@@ -294,6 +297,53 @@
 
   if ([name isEqualToString:@"run-tests"] || [name isEqualToString:@"test"]) {
     message = [NSString stringWithFormat:@"%lu of %lu tests passed", _testsPassed, _testsTotal];
+
+    if ([self.failedTests count] > 0) {
+      [self.reportWriter printLine:@"<bold>Failures:<reset>"];
+      [self.reportWriter printNewline];
+      [self.reportWriter increaseIndent];
+
+      for (int failedIndex = 0; failedIndex < [self.failedTests count]; failedIndex++) {
+        NSDictionary *test = self.failedTests[failedIndex];
+
+        NSDictionary *testEvent = test[@"event"];
+
+        [self.reportWriter printLine:@"%d) %@ (%@)",
+         failedIndex,
+         testEvent[kReporter_EndTest_TestKey],
+         test[@"bundle"]
+         ];
+
+        NSDictionary *exception = testEvent[kReporter_EndTest_ExceptionKey];
+
+        BOOL showInfo = ([testEvent[kReporter_EndTest_OutputKey] length] > 0) || (exception != nil);
+
+        if (showInfo) {
+          [self printDivider];
+        }
+
+        [self.reportWriter disableIndent];
+        [self.reportWriter printString:@"<faint>%@<reset>", testEvent[kReporter_EndTest_OutputKey]];
+        [self.reportWriter enableIndent];
+
+        // Show exception, if any.
+        if (exception) {
+          [self.reportWriter disableIndent];
+          [self.reportWriter printLine:@"<faint>%@:%d: %@: %@<reset>",
+           exception[kReporter_EndTest_Exception_FilePathInProjectKey],
+           [exception[kReporter_EndTest_Exception_LineNumberKey] intValue],
+           exception[kReporter_EndTest_Exception_NameKey],
+           exception[kReporter_EndTest_Exception_ReasonKey]];
+          [self.reportWriter enableIndent];
+        }
+
+        if (showInfo) {
+          [self printDivider];
+        }
+        [self.reportWriter printNewline];
+        [self.reportWriter decreaseIndent];
+      }
+    }
   }
 
   [self.reportWriter printLine:@"<bold>** %@ %@%@ **<reset> <faint>(%03d ms)<reset>",
@@ -412,6 +462,7 @@
   [self.reportWriter printLine:@"<bold>run-test<reset> <underline>%@<reset> (%@)",
    event[kReporter_BeginOCUnit_BundleNameKey],
    [attributes componentsJoinedByString:@", "]];
+  self.currentBundle = event[kReporter_BeginOCUnit_BundleNameKey];
   [self.reportWriter increaseIndent];
 }
 
@@ -575,11 +626,21 @@
     [self printDividerWithDownLine:YES];
   }
 
-  [self.reportWriter updateLine:@"%@ %@ %@",
-   indicator,
-   event[kReporter_EndTest_TestKey],
-   [self formattedTestDuration:[event[kReporter_EndTest_TotalDurationKey] floatValue] withColor:YES]
-   ];
+  NSMutableString *resultLine = [NSMutableString stringWithFormat:@"%@ %@ %@",
+                                 indicator,
+                                 event[kReporter_EndTest_TestKey],
+                                 [self formattedTestDuration:[event[kReporter_EndTest_TotalDurationKey] floatValue] withColor:YES]
+                                 ];
+
+  // If the test failed, add a number linking it to the failure summary.
+  if (!succeeded) {
+    [resultLine appendFormat:@" (%ld)", [self.failedTests count]];
+
+    // Add the test information to the list of failed tests for printing later.
+    [self.failedTests addObject:@{@"bundle": self.currentBundle, @"event": event}];
+  }
+
+  [self.reportWriter updateLine:@"%@", resultLine];
   [self.reportWriter printNewline];
 
   _testsTotal++;
