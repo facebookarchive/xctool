@@ -103,9 +103,9 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                                                settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
      ]];
 
-    NSString *mockWorkspacePath = @"/tmp/nowhere/build_tests_tmp.xcworkspace";
+    NSString *mockWorkspacePath = @"/tmp/nowhere/Tests.xcworkspace";
     id mockSchemeGenerator = mock([SchemeGenerator class]);
-    [given([mockSchemeGenerator writeWorkspaceNamed:@"build_tests_tmp"])
+    [given([mockSchemeGenerator writeWorkspaceNamed:@"Tests"])
      willReturn:mockWorkspacePath];
 
     XCTool *tool = [[[XCTool alloc] init] autorelease];
@@ -130,7 +130,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
                        @"-workspace", mockWorkspacePath,
-                       @"-scheme", @"build_tests_tmp",
+                       @"-scheme", @"Tests",
                        @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates",
                        @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products",
                        @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates/PrecompiledHeaders",
@@ -143,7 +143,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                                           inProject:projectPath];
     [verify(mockSchemeGenerator) addBuildableWithID:kTestProjectTestProjectLibraryTestTargetID
                                           inProject:projectPath];
-    [verify(mockSchemeGenerator) writeWorkspaceNamed:@"build_tests_tmp"];
+    [verify(mockSchemeGenerator) writeWorkspaceNamed:@"Tests"];
   }];
 }
 
@@ -157,9 +157,9 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                                                  settingsPath:TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt"],
      ]];
 
-    NSString *mockWorkspacePath = @"/tmp/nowhere/build_tests_tmp.xcworkspace";
+    NSString *mockWorkspacePath = @"/tmp/nowhere/Tests.xcworkspace";
     id mockSchemeGenerator = mock([SchemeGenerator class]);
-    [given([mockSchemeGenerator writeWorkspaceNamed:@"build_tests_tmp"])
+    [given([mockSchemeGenerator writeWorkspaceNamed:@"Tests"])
      willReturn:mockWorkspacePath];
 
     XCTool *tool = [[[XCTool alloc] init] autorelease];
@@ -184,7 +184,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
                        @"-workspace", mockWorkspacePath,
-                       @"-scheme", @"build_tests_tmp",
+                       @"-scheme", @"Tests",
                        @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
                        @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
                        @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
@@ -201,7 +201,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                                           inProject:projectPath];
     [verify(mockSchemeGenerator) addBuildableWithID:kTestWorkspaceTestProjectLibraryTests2TargetID
                                           inProject:projectPath];
-    [verify(mockSchemeGenerator) writeWorkspaceNamed:@"build_tests_tmp"];
+    [verify(mockSchemeGenerator) writeWorkspaceNamed:@"Tests"];
   }];
 }
 
@@ -220,9 +220,9 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                                                  settingsPath:TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt"],
      ]];
 
-    NSString *mockWorkspacePath = @"/tmp/nowhere/build_tests_tmp.xcworkspace";
+    NSString *mockWorkspacePath = @"/tmp/nowhere/Tests.xcworkspace";
     id mockSchemeGenerator = mock([SchemeGenerator class]);
-    [given([mockSchemeGenerator writeWorkspaceNamed:@"build_tests_tmp"])
+    [given([mockSchemeGenerator writeWorkspaceNamed:@"Tests"])
      willReturn:mockWorkspacePath];
 
     XCTool *tool = [[[XCTool alloc] init] autorelease];
@@ -247,7 +247,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
                        @"-workspace", mockWorkspacePath,
-                       @"-scheme", @"build_tests_tmp",
+                       @"-scheme", @"Tests",
                        @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
                        @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
                        @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
@@ -263,7 +263,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
     [verify(mockSchemeGenerator) addBuildableWithID:kTestWorkspaceTestProjectLibraryTestsTargetID
                                           inProject:projectPath];
     [verifyCount(mockSchemeGenerator, times(3)) addBuildableWithID:(id)anything() inProject:(id)anything()];
-    [verify(mockSchemeGenerator) writeWorkspaceNamed:@"build_tests_tmp"];
+    [verify(mockSchemeGenerator) writeWorkspaceNamed:@"Tests"];
   }];
 }
 
@@ -278,9 +278,9 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                                                  settingsPath:TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt"],
      ]];
 
-    NSString *mockWorkspacePath = @"/tmp/nowhere/build_tests_tmp.xcworkspace";
+    NSString *mockWorkspacePath = @"/tmp/nowhere/Tests.xcworkspace";
     id mockSchemeGenerator = mock([SchemeGenerator class]);
-    [given([mockSchemeGenerator writeWorkspaceNamed:@"build_tests_tmp"])
+    [given([mockSchemeGenerator writeWorkspaceNamed:@"Tests"])
      willReturn:mockWorkspacePath];
 
     XCTool *tool = [[[XCTool alloc] init] autorelease];
@@ -307,7 +307,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
                        @"-workspace", mockWorkspacePath,
-                       @"-scheme", @"build_tests_tmp",
+                       @"-scheme", @"Tests",
                        @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
                        @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Products",
                        @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates/PrecompiledHeaders",
@@ -319,7 +319,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
     [verify(mockSchemeGenerator) addBuildableWithID:kTestWorkspaceTestProjectLibraryTestsTargetID
                                           inProject:projectPath];
     [verifyCount(mockSchemeGenerator, times(1)) addBuildableWithID:(id)anything() inProject:(id)anything()];
-    [verify(mockSchemeGenerator) writeWorkspaceNamed:@"build_tests_tmp"];
+    [verify(mockSchemeGenerator) writeWorkspaceNamed:@"Tests"];
   }];
 }
 

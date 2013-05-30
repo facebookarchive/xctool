@@ -102,8 +102,9 @@
   for (NSDictionary *buildable in testables) {
     [schemeGenerator addBuildableWithID:buildable[@"targetID"] inProject:buildable[@"projectPath"]];
   }
-  BOOL succeeded = [BuildTestsAction buildWorkspace:[schemeGenerator writeWorkspaceNamed:@"build_tests_tmp"]
-                                             scheme:@"build_tests_tmp"
+
+  BOOL succeeded = [BuildTestsAction buildWorkspace:[schemeGenerator writeWorkspaceNamed:@"Tests"]
+                                             scheme:@"Tests"
                                           reporters:options.reporters
                                             objRoot:xcodeSubjectInfo.objRoot
                                             symRoot:xcodeSubjectInfo.symRoot

@@ -50,9 +50,9 @@
                                                settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
      ]];
 
-    NSString *mockWorkspacePath = @"/tmp/nowhere/build_tests_tmp.xcworkspace";
+    NSString *mockWorkspacePath = @"/tmp/nowhere/Tests.xcworkspace";
     id mockSchemeGenerator = mock([SchemeGenerator class]);
-    [given([mockSchemeGenerator writeWorkspaceNamed:@"build_tests_tmp"])
+    [given([mockSchemeGenerator writeWorkspaceNamed:@"Tests"])
      willReturn:mockWorkspacePath];
 
     XCTool *tool = [[[XCTool alloc] init] autorelease];
@@ -82,7 +82,7 @@
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
                        @"-workspace", mockWorkspacePath,
-                       @"-scheme", @"build_tests_tmp",
+                       @"-scheme", @"Tests",
                        @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates",
                        @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products",
                        @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates/PrecompiledHeaders",
