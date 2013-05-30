@@ -274,6 +274,7 @@ be fed into the [Phabricator](http://phabricator.org/) code-review tool.
 * __json-stream__: a stream of build/test events as JSON dictionaries,
 one per line [(example
 output)](https://gist.github.com/fpotter/82ffcc3d9a49d10ee41b).
+* __json-compilation-database__: outputs a [JSON Compilation Database](http://clang.llvm.org/docs/JSONCompilationDatabase.html) of build events which can be used by [Clang Tooling](http://clang.llvm.org/docs/LibTooling.html) based tools, e.g. [OCLint](http://oclint.org).
 
 You could also __add your own__ Reporter - see
 [Reporter.h](https://github.com/facebook/xctool/blob/master/xctool/xctool/Reporter.h).
