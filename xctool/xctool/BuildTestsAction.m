@@ -81,15 +81,7 @@
    kReporter_BeginXcodebuild_TitleKey: scheme,
    }];
 
-  LaunchTaskAndFeedOuputLinesToBlock(buildTask, ^(NSString *line){
-    NSError *error = nil;
-    NSDictionary *event = [NSJSONSerialization JSONObjectWithData:[line dataUsingEncoding:NSUTF8StringEncoding]
-                                                          options:0
-                                                            error:&error];
-    NSCAssert(error == nil, @"Got error while trying to deserialize event '%@': %@", line, [error localizedFailureReason]);
-
-    [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:event];
-  });
+  BOOL succeeded = LaunchXcodebuildTaskAndFeedEventsToReporters(buildTask, reporters);
 
   [reporters makeObjectsPerformSelector:@selector(handleEvent:)
                              withObject:@{
@@ -98,7 +90,7 @@
    kReporter_EndXcodebuild_TitleKey: scheme,
    }];
 
-  return ([buildTask terminationStatus] == 0);
+  return succeeded;
 }
 
 + (BOOL)buildTestables:(NSArray *)testables

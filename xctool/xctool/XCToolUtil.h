@@ -23,3 +23,12 @@ NSString *XcodeDeveloperDirPath(void);
 NSString *MakeTempFileWithPrefix(NSString *prefix);
 NSDictionary *GetAvailableSDKsAndAliases();
 BOOL IsRunningUnderTest();
+
+/**
+ Launches a task that will invoke xcodebuild.  It will automatically feed
+ build events to the provided reporters.
+ 
+ Returns YES if xcodebuild succeeded.
+ */
+BOOL LaunchXcodebuildTaskAndFeedEventsToReporters(NSTask *task,
+                                                  NSArray *reporters);

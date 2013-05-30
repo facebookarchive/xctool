@@ -47,15 +47,7 @@
    @"title": options.scheme,
    }];
 
-  LaunchTaskAndFeedOuputLinesToBlock(task, ^(NSString *line){
-    NSError *error = nil;
-    NSDictionary *event = [NSJSONSerialization JSONObjectWithData:[line dataUsingEncoding:NSUTF8StringEncoding]
-                                                          options:0
-                                                            error:&error];
-    NSCAssert(error == nil, @"Got error while trying to deserialize event '%@': %@", line, [error localizedFailureReason]);
-
-    [options.reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:event];
-  });
+  BOOL succeeded = LaunchXcodebuildTaskAndFeedEventsToReporters(task, options.reporters);
 
   [options.reporters makeObjectsPerformSelector:@selector(handleEvent:)
                                      withObject:@{
@@ -64,7 +56,7 @@
    @"title": options.scheme,
    }];
 
-  return [task terminationStatus] == 0 ? YES : NO;
+  return succeeded;
 }
 
 - (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo

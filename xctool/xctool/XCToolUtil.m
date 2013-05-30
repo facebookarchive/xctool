@@ -207,3 +207,23 @@ BOOL IsRunningUnderTest()
   return ([processName isEqualToString:@"otest"] ||
           [processName isEqualToString:@"otest-x86_64"]);
 }
+
+BOOL LaunchXcodebuildTaskAndFeedEventsToReporters(NSTask *task,
+                                                  NSArray *reporters)
+{
+  LaunchTaskAndFeedOuputLinesToBlock(task, ^(NSString *line){
+    NSError *error = nil;
+    NSDictionary *event = [NSJSONSerialization JSONObjectWithData:[line dataUsingEncoding:NSUTF8StringEncoding]
+                                                          options:0
+                                                            error:&error];
+    NSCAssert(error == nil,
+              @"Got error while trying to deserialize event '%@': %@",
+              line,
+              [error localizedFailureReason]);
+
+    [reporters makeObjectsPerformSelector:@selector(handleEvent:)
+                               withObject:event];
+  });
+
+  return [task terminationStatus] == 0 ? YES : NO;
+}
