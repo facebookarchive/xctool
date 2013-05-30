@@ -93,6 +93,9 @@
 		28E9B9EC16C34F2B00A52E4D /* TextReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9EA16C34F2B00A52E4D /* TextReporter.m */; };
 		28FFB00516FF5A21000CCE2A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FFB00416FF5A21000CCE2A /* QuartzCore.framework */; };
 		28FFB00616FF5A2B000CCE2A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FFB00416FF5A21000CCE2A /* QuartzCore.framework */; };
+		29D99BF81753A3D700ABBD04 /* JSONCompilationDatabaseReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 29D99BF71753A3D700ABBD04 /* JSONCompilationDatabaseReporter.m */; };
+		29D99BFA1753A41B00ABBD04 /* JSONCompilationDatabaseReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 29D99BF71753A3D700ABBD04 /* JSONCompilationDatabaseReporter.m */; };
+		29D99C011756352300ABBD04 /* JSONCompilationDatabaseReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 29D99C001756352300ABBD04 /* JSONCompilationDatabaseReporterTests.m */; };
 		324BB4C51725BD990073A862 /* XcodeTargetMatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 324BB4C41725BD990073A862 /* XcodeTargetMatch.m */; };
 		324BB4C61725BDA20073A862 /* XcodeTargetMatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 324BB4C41725BD990073A862 /* XcodeTargetMatch.m */; };
 		32707EE21725FE7F00AF2F53 /* TestActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 32707EE11725FE7F00AF2F53 /* TestActionTests.m */; };
@@ -235,6 +238,9 @@
 		28E9B9E916C34F2B00A52E4D /* TextReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextReporter.h; sourceTree = "<group>"; };
 		28E9B9EA16C34F2B00A52E4D /* TextReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextReporter.m; sourceTree = "<group>"; };
 		28FFB00416FF5A21000CCE2A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		29D99BF61753A3D700ABBD04 /* JSONCompilationDatabaseReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONCompilationDatabaseReporter.h; sourceTree = "<group>"; };
+		29D99BF71753A3D700ABBD04 /* JSONCompilationDatabaseReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONCompilationDatabaseReporter.m; sourceTree = "<group>"; };
+		29D99C001756352300ABBD04 /* JSONCompilationDatabaseReporterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONCompilationDatabaseReporterTests.m; sourceTree = "<group>"; };
 		324BB4C31725BD990073A862 /* XcodeTargetMatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XcodeTargetMatch.h; sourceTree = "<group>"; };
 		324BB4C41725BD990073A862 /* XcodeTargetMatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodeTargetMatch.m; sourceTree = "<group>"; };
 		32707EE11725FE7F00AF2F53 /* TestActionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestActionTests.m; sourceTree = "<group>"; };
@@ -441,6 +447,7 @@
 				28C81A64175563690072DDB8 /* RecordingReporter.h */,
 				28C81A65175563690072DDB8 /* RecordingReporter.m */,
 				28302E1D175A8B6900C997B2 /* ArchiveActionTests.m */,
+				29D99C001756352300ABBD04 /* JSONCompilationDatabaseReporterTests.m */,
 			);
 			path = "xctool-tests";
 			sourceTree = "<group>";
@@ -488,6 +495,8 @@
 				37520900173311B500AC05F9 /* JUnitReporter.m */,
 				CDD81F4F174EAFDC00F42111 /* BufferedReporter.h */,
 				CDD81F50174EAFDC00F42111 /* BufferedReporter.m */,
+				29D99BF61753A3D700ABBD04 /* JSONCompilationDatabaseReporter.h */,
+				29D99BF71753A3D700ABBD04 /* JSONCompilationDatabaseReporter.m */,
 			);
 			name = Reporters;
 			sourceTree = "<group>";
@@ -622,6 +631,7 @@
 				37520901173311B500AC05F9 /* JUnitReporter.m in Sources */,
 				CD522EC217471D6300048AF9 /* SchemeGenerator.m in Sources */,
 				CDD81F51174EAFDC00F42111 /* BufferedReporter.m in Sources */,
+				29D99BF81753A3D700ABBD04 /* JSONCompilationDatabaseReporter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -687,6 +697,8 @@
 				28C81A63175562050072DDB8 /* ReporterTests.m in Sources */,
 				28C81A66175563690072DDB8 /* RecordingReporter.m in Sources */,
 				28302E1E175A8B6900C997B2 /* ArchiveActionTests.m in Sources */,
+				29D99BFA1753A41B00ABBD04 /* JSONCompilationDatabaseReporter.m in Sources */,
+				29D99C011756352300ABBD04 /* JSONCompilationDatabaseReporterTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
