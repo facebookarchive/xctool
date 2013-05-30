@@ -45,5 +45,11 @@ VALID_ARCHS = i386
 //    building for iOS.
 _OTHER_CFLAGS = -fobjc-abi-version=2 -D__IPHONE_OS_VERSION_MIN_REQUIRED=$(XT_IOS_SDK_VERSION_EXPANDED)
 
-OTHER_CFLAGS = -isysroot $(PLATFORM_DIR)/../iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(XT_IOS_SDK_VERSION).sdk $(_OTHER_CFLAGS) -F$(PLATFORM_DIR)/../iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(XT_IOS_SDK_VERSION).sdk/Developer/Library/Frameworks
-OTHER_LDFLAGS = -isysroot $(PLATFORM_DIR)/../iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(XT_IOS_SDK_VERSION).sdk -F$(PLATFORM_DIR)/../iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(XT_IOS_SDK_VERSION).sdk/Developer/Library/Frameworks
+// define these so includers that need additional cflags can do
+// OTHER_CFLAGS = $(_IOS_SIMULATOR_CFLAGS) -addtional_flags
+_IOS_SIMULATOR_CFLAGS = -isysroot $(PLATFORM_DIR)/../iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(XT_IOS_SDK_VERSION).sdk $(_OTHER_CFLAGS) -F$(PLATFORM_DIR)/../iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(XT_IOS_SDK_VERSION).sdk/Developer/Library/Frameworks
+
+_IOS_SIMULATOR_LDFLAGS = -isysroot $(PLATFORM_DIR)/../iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(XT_IOS_SDK_VERSION).sdk -F$(PLATFORM_DIR)/../iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator$(XT_IOS_SDK_VERSION).sdk/Developer/Library/Frameworks
+
+OTHER_CFLAGS = $(_IOS_SIMULATOR_CFLAGS)
+OTHER_LDFLAGS = $(_IOS_SIMULATOR_LDFLAGS)
