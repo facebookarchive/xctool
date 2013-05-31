@@ -28,40 +28,12 @@
   return @"build";
 }
 
-+ (BOOL)runXcodeBuildCommand:(NSString *)command withOptions:(Options *)options
-{
-  NSTask *task = [[[NSTask alloc] init] autorelease];
-  [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
-  [task setArguments:[[options xcodeBuildArgumentsForSubject] arrayByAddingObject:command]];
-  NSMutableDictionary *environment = [NSMutableDictionary dictionaryWithDictionary:[[NSProcessInfo processInfo] environment]];
-  [environment addEntriesFromDictionary:@{
-   @"DYLD_INSERT_LIBRARIES" : [PathToXCToolBinaries() stringByAppendingPathComponent:@"xcodebuild-shim.dylib"],
-   @"PATH": @"/usr/bin:/bin:/usr/sbin:/sbin",
-  }];
-  [task setEnvironment:environment];
-
-  [options.reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                                     withObject:@{
-   @"event": kReporter_Events_BeginXcodebuild,
-   @"command": command,
-   @"title": options.scheme,
-   }];
-
-  BOOL succeeded = LaunchXcodebuildTaskAndFeedEventsToReporters(task, options.reporters);
-
-  [options.reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                                     withObject:@{
-   @"event": @"end-xcodebuild",
-   @"command": command,
-   @"title": options.scheme,
-   }];
-
-  return succeeded;
-}
-
 - (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
-  return [BuildAction runXcodeBuildCommand:@"build" withOptions:options];
+  return RunXcodebuildAndFeedEventsToReporters([[options xcodeBuildArgumentsForSubject] arrayByAddingObject:@"build"],
+                                               @"build",
+                                               [options scheme],
+                                               [options reporters]);
 }
 
 @end

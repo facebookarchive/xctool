@@ -1,6 +1,8 @@
 #import "ArchiveAction.h"
 
 #import "BuildAction.h"
+#import "Options.h"
+#import "XCToolUtil.h"
 
 @implementation ArchiveAction
 
@@ -11,7 +13,10 @@
 
 - (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
-  return [BuildAction runXcodeBuildCommand:@"archive" withOptions:options];
+  return RunXcodebuildAndFeedEventsToReporters([[options xcodeBuildArgumentsForSubject] arrayByAddingObject:@"archive"],
+                                               @"archive",
+                                               [options scheme],
+                                               [options reporters]);
 }
 
 @end

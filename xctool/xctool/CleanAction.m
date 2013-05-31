@@ -18,6 +18,7 @@
 
 #import "BuildAction.h"
 #import "BuildTestsAction.h"
+#import "Options.h"
 #import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
 
@@ -30,7 +31,10 @@
 
 - (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
-  if (![BuildAction runXcodeBuildCommand:@"clean" withOptions:options]) {
+  if (!RunXcodebuildAndFeedEventsToReporters([[options xcodeBuildArgumentsForSubject] arrayByAddingObject:@"clean"],
+                                             @"clean",
+                                             [options scheme],
+                                             [options reporters])) {
     return NO;
   }
 

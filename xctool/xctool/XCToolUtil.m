@@ -19,6 +19,7 @@
 #import <mach-o/dyld.h>
 
 #import "NSFileHandle+Print.h"
+#import "Reporter.h"
 #import "TaskUtil.h"
 
 NSDictionary *BuildSettingsFromOutput(NSString *output)
@@ -226,4 +227,42 @@ BOOL LaunchXcodebuildTaskAndFeedEventsToReporters(NSTask *task,
   });
 
   return [task terminationStatus] == 0 ? YES : NO;
+}
+
+BOOL RunXcodebuildAndFeedEventsToReporters(NSArray *arguments,
+                                           NSString *command,
+                                           NSString *title,
+                                           NSArray *reporters)
+{
+  NSTask *task = [[[NSTask alloc] init] autorelease];
+  [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
+  [task setArguments:arguments];
+  NSMutableDictionary *environment =
+    [NSMutableDictionary dictionaryWithDictionary:
+     [[NSProcessInfo processInfo] environment]];
+  [environment addEntriesFromDictionary:@{
+   @"DYLD_INSERT_LIBRARIES" : [PathToXCToolBinaries()
+                               stringByAppendingPathComponent:@"xcodebuild-shim.dylib"],
+   @"PATH": @"/usr/bin:/bin:/usr/sbin:/sbin",
+   }];
+  [task setEnvironment:environment];
+
+  NSDictionary *beginEvent = @{@"event": kReporter_Events_BeginXcodebuild,
+                               kReporter_BeginXcodebuild_CommandKey: command,
+                               kReporter_BeginXcodebuild_TitleKey: title,
+                               };
+  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
+                             withObject:beginEvent];
+
+  BOOL succeeded = LaunchXcodebuildTaskAndFeedEventsToReporters(task, reporters);
+
+  NSDictionary *endEvent = @{@"event": kReporter_Events_EndXcodebuild,
+                             kReporter_EndXcodebuild_CommandKey: command,
+                             kReporter_EndXcodebuild_TitleKey: title,
+                             };
+
+  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
+                             withObject:endEvent];
+
+  return succeeded;
 }

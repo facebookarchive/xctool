@@ -63,34 +63,10 @@
                             xcodeCommand,
                             ]];
 
-  // Build the test target.
-  NSTask *buildTask = [[[NSTask alloc] init] autorelease];
-  [buildTask setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
-  [buildTask setArguments:taskArguments];
-  NSMutableDictionary *environment = [NSMutableDictionary dictionaryWithDictionary:[[NSProcessInfo processInfo] environment]];
-  [environment addEntriesFromDictionary:@{
-   @"DYLD_INSERT_LIBRARIES" : [PathToXCToolBinaries() stringByAppendingPathComponent:@"xcodebuild-shim.dylib"],
-   @"PATH": @"/usr/bin:/bin:/usr/sbin:/sbin",
-  }];
-  [buildTask setEnvironment:environment];
-
-  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                             withObject:@{
-   @"event": kReporter_Events_BeginXcodebuild,
-   kReporter_BeginXcodebuild_CommandKey: xcodeCommand,
-   kReporter_BeginXcodebuild_TitleKey: scheme,
-   }];
-
-  BOOL succeeded = LaunchXcodebuildTaskAndFeedEventsToReporters(buildTask, reporters);
-
-  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                             withObject:@{
-   @"event": kReporter_Events_EndXcodebuild,
-   kReporter_EndXcodebuild_CommandKey: xcodeCommand,
-   kReporter_EndXcodebuild_TitleKey: scheme,
-   }];
-
-  return succeeded;
+  return RunXcodebuildAndFeedEventsToReporters(taskArguments,
+                                               @"build",
+                                               xcodeCommand,
+                                               reporters);
 }
 
 + (BOOL)buildTestables:(NSArray *)testables

@@ -32,3 +32,13 @@ BOOL IsRunningUnderTest();
  */
 BOOL LaunchXcodebuildTaskAndFeedEventsToReporters(NSTask *task,
                                                   NSArray *reporters);
+
+/**
+ Sends a 'begin-xcodebuild' event, runs xcodebuild, then sends an
+ 'end-xcodebuild' event.
+ */
+BOOL RunXcodebuildAndFeedEventsToReporters(NSArray *arguments,
+                                           NSString *command,
+                                           NSString *title,
+                                           NSArray *reporters);
+
