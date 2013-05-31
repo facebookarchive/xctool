@@ -63,42 +63,10 @@
                             xcodeCommand,
                             ]];
 
-  // Build the test target.
-  NSTask *buildTask = [[[NSTask alloc] init] autorelease];
-  [buildTask setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
-  [buildTask setArguments:taskArguments];
-  NSMutableDictionary *environment = [NSMutableDictionary dictionaryWithDictionary:[[NSProcessInfo processInfo] environment]];
-  [environment addEntriesFromDictionary:@{
-   @"DYLD_INSERT_LIBRARIES" : [PathToXCToolBinaries() stringByAppendingPathComponent:@"xcodebuild-shim.dylib"],
-   @"PATH": @"/usr/bin:/bin:/usr/sbin:/sbin",
-  }];
-  [buildTask setEnvironment:environment];
-
-  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                             withObject:@{
-   @"event": kReporter_Events_BeginXcodebuild,
-   kReporter_BeginXcodebuild_CommandKey: xcodeCommand,
-   kReporter_BeginXcodebuild_TitleKey: scheme,
-   }];
-
-  LaunchTaskAndFeedOuputLinesToBlock(buildTask, ^(NSString *line){
-    NSError *error = nil;
-    NSDictionary *event = [NSJSONSerialization JSONObjectWithData:[line dataUsingEncoding:NSUTF8StringEncoding]
-                                                          options:0
-                                                            error:&error];
-    NSCAssert(error == nil, @"Got error while trying to deserialize event '%@': %@", line, [error localizedFailureReason]);
-
-    [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:event];
-  });
-
-  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                             withObject:@{
-   @"event": kReporter_Events_EndXcodebuild,
-   kReporter_EndXcodebuild_CommandKey: xcodeCommand,
-   kReporter_EndXcodebuild_TitleKey: scheme,
-   }];
-
-  return ([buildTask terminationStatus] == 0);
+  return RunXcodebuildAndFeedEventsToReporters(taskArguments,
+                                               @"build",
+                                               xcodeCommand,
+                                               reporters);
 }
 
 + (BOOL)buildTestables:(NSArray *)testables
@@ -110,8 +78,9 @@
   for (NSDictionary *buildable in testables) {
     [schemeGenerator addBuildableWithID:buildable[@"targetID"] inProject:buildable[@"projectPath"]];
   }
-  BOOL succeeded = [BuildTestsAction buildWorkspace:[schemeGenerator writeWorkspaceNamed:@"build_tests_tmp"]
-                                             scheme:@"build_tests_tmp"
+
+  BOOL succeeded = [BuildTestsAction buildWorkspace:[schemeGenerator writeWorkspaceNamed:@"Tests"]
+                                             scheme:@"Tests"
                                           reporters:options.reporters
                                             objRoot:xcodeSubjectInfo.objRoot
                                             symRoot:xcodeSubjectInfo.symRoot

@@ -314,6 +314,20 @@
 - (void)endXcodebuild:(NSDictionary *)event
 {
   [self.reportWriter decreaseIndent];
+
+  BOOL xcodebuildHadError = ![event[kReporter_EndXcodebuild_ErrorMessageKey]
+                              isKindOfClass:[NSNull class]];
+
+  if (xcodebuildHadError) {
+    NSString *errorMessage = event[kReporter_EndXcodebuild_ErrorMessageKey];
+
+    [self printDivider];
+    [_reportWriter disableIndent];
+    [_reportWriter printLine:@"%@", [errorMessage stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]]];
+    [_reportWriter enableIndent];
+    [self printDivider];
+  }
+
   [self.reportWriter printNewline];
 }
 

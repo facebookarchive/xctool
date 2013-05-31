@@ -19,6 +19,7 @@
 #import <mach-o/dyld.h>
 
 #import "NSFileHandle+Print.h"
+#import "Reporter.h"
 #import "TaskUtil.h"
 
 NSDictionary *BuildSettingsFromOutput(NSString *output)
@@ -206,4 +207,104 @@ BOOL IsRunningUnderTest()
   NSString *processName = [[NSProcessInfo processInfo] processName];
   return ([processName isEqualToString:@"otest"] ||
           [processName isEqualToString:@"otest-x86_64"]);
+}
+
+BOOL LaunchXcodebuildTaskAndFeedEventsToReporters(NSTask *task,
+                                                  NSArray *reporters,
+                                                  NSString **errorMessageOut,
+                                                  long long *errorCodeOut)
+{
+  __block NSString *errorMessage = nil;
+  __block long long errorCode = LONG_LONG_MIN;
+
+  LaunchTaskAndFeedOuputLinesToBlock(task, ^(NSString *line){
+    NSError *error = nil;
+    NSDictionary *event = [NSJSONSerialization JSONObjectWithData:[line dataUsingEncoding:NSUTF8StringEncoding]
+                                                          options:0
+                                                            error:&error];
+    NSCAssert(error == nil,
+              @"Got error while trying to deserialize event '%@': %@",
+              line,
+              [error localizedFailureReason]);
+
+    if ([event[@"event"] isEqualToString:@"__xcodebuild-error__"]) {
+      // xcodebuild-shim will generate this special event if it sees that
+      // xcodebuild failed with an error message.  We don't want this to bubble
+      // up to reporters itself - instead the caller will capture the error
+      // message and include it in the 'end-xcodebuild' event.
+      errorMessage = [event[@"message"] retain];
+      errorCode = [event[@"code"] longLongValue];
+    } else {
+      [reporters makeObjectsPerformSelector:@selector(handleEvent:)
+                                 withObject:event];
+    }
+  });
+
+  if (errorMessage) {
+    *errorMessageOut = errorMessage;
+    *errorCodeOut = errorCode;
+  }
+
+  return ([task terminationStatus] == 0);
+}
+
+BOOL RunXcodebuildAndFeedEventsToReporters(NSArray *arguments,
+                                           NSString *command,
+                                           NSString *title,
+                                           NSArray *reporters)
+{
+  NSTask *task = [[[NSTask alloc] init] autorelease];
+  [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
+  [task setArguments:arguments];
+  NSMutableDictionary *environment =
+    [NSMutableDictionary dictionaryWithDictionary:
+     [[NSProcessInfo processInfo] environment]];
+  [environment addEntriesFromDictionary:@{
+   @"DYLD_INSERT_LIBRARIES" : [PathToXCToolBinaries()
+                               stringByAppendingPathComponent:@"xcodebuild-shim.dylib"],
+   @"PATH": @"/usr/bin:/bin:/usr/sbin:/sbin",
+   }];
+  [task setEnvironment:environment];
+
+  NSDictionary *beginEvent = @{@"event": kReporter_Events_BeginXcodebuild,
+                               kReporter_BeginXcodebuild_CommandKey: command,
+                               kReporter_BeginXcodebuild_TitleKey: title,
+                               };
+  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
+                             withObject:beginEvent];
+
+  NSString *xcodebuildErrorMessage = nil;
+  long long xcodebuildErrorCode = 0;
+  BOOL succeeded = LaunchXcodebuildTaskAndFeedEventsToReporters(task,
+                                                                reporters,
+                                                                &xcodebuildErrorMessage,
+                                                                &xcodebuildErrorCode);
+
+  NSMutableDictionary *endEvent = [NSMutableDictionary dictionary];
+  [endEvent addEntriesFromDictionary:@{
+   @"event": kReporter_Events_EndXcodebuild,
+   kReporter_EndXcodebuild_CommandKey: command,
+   kReporter_EndXcodebuild_TitleKey: title,
+   kReporter_EndXcodebuild_SucceededKey : @(succeeded),
+   }];
+
+  id errorMessage = [NSNull null];
+  id errorCode = [NSNull null];
+
+  if (!succeeded && xcodebuildErrorMessage != nil) {
+    // xcodebuild failed, not because of a compile error, but because something
+    // was wrong with the workspace/project or scheme.
+    errorMessage = xcodebuildErrorMessage;
+    errorCode = @(xcodebuildErrorCode);
+  }
+
+  [endEvent addEntriesFromDictionary:@{
+   kReporter_EndXcodebuild_ErrorMessageKey: errorMessage,
+   kReporter_EndXcodebuild_ErrorCodeKey: errorCode,
+   }];
+
+  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
+                             withObject:endEvent];
+
+  return succeeded;
 }

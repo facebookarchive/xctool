@@ -218,6 +218,25 @@ static void Xcode3CommandLineBuildLogRecorder__finishEmittingClosedSection(id se
   }
 }
 
+/**
+ xcodebuild will call printErrorString:andFailWithCode: whenever it exits with
+ an error, and we'll turn that into a JSON event.  We won't let this event float
+ up to the reporters they - we'll capture it in 
+ LaunchXcodebuildTaskAndFeedEventsToReporters()
+ */
+static void Xcode3CommandLineBuildTool__printErrorString_andFailWithCode(id self, SEL sel, NSString *str, long long code)
+{
+  PrintJSON(@{
+            @"event" : @"__xcodebuild-error__",
+            @"message" : str,
+            @"code" : @(code),
+            });
+ objc_msgSend(self,
+               @selector(__Xcode3CommandLineBuildTool__printErrorString:andFailWithCode:),
+               str,
+               code);
+}
+
 __attribute__((constructor)) static void EntryPoint()
 {
   __stdoutHandle = dup(STDOUT_FILENO);
@@ -245,6 +264,12 @@ __attribute__((constructor)) static void EntryPoint()
   XTSwizzleSelectorForFunction(NSClassFromString(@"Xcode3CommandLineBuildLogRecorder"),
                              @selector(_finishEmittingClosedSection:),
                              (IMP)Xcode3CommandLineBuildLogRecorder__finishEmittingClosedSection);
+
+  // When xcodebuild is going to fail, it prints out the error via this method.
+  // Let's capture it and write the output in a structured form.
+  XTSwizzleSelectorForFunction(NSClassFromString(@"Xcode3CommandLineBuildTool"),
+                               @selector(_printErrorString:andFailWithCode:),
+                               (IMP)Xcode3CommandLineBuildTool__printErrorString_andFailWithCode);
 
   // Unset so we don't cascade into other process that get spawned from xcodebuild.
   unsetenv("DYLD_INSERT_LIBRARIES");

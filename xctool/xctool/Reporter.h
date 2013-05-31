@@ -95,10 +95,13 @@
 #define kReporter_EndBuildTarget_ConfigurationKey @"configuration"
 
 #define kReporter_BeginXcodebuild_CommandKey @"command"
-#define kReporter_BeginXcodebuild_TitleKey @"command"
+#define kReporter_BeginXcodebuild_TitleKey @"title"
 
 #define kReporter_EndXcodebuild_CommandKey @"command"
-#define kReporter_EndXcodebuild_TitleKey @"command"
+#define kReporter_EndXcodebuild_TitleKey @"title"
+#define kReporter_EndXcodebuild_SucceededKey @"succeeded"
+#define kReporter_EndXcodebuild_ErrorMessageKey @"errorMessage"
+#define kReporter_EndXcodebuild_ErrorCodeKey @"errorCode"
 
 #define kReporter_BeginStatus_MessageKey @"message"
 #define kReporter_BeginStatus_TimestampKey @"timestamp"
