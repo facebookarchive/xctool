@@ -137,9 +137,14 @@
 
   NSSet *crashReportsAtStart = [NSSet setWithArray:[self collectCrashReportPaths]];
 
-  BOOL succeeded = [self runTestsAndFeedOutputTo:feedOutputToBlock error:error];
+  NSString *runTestsError = nil;
+  BOOL succeeded = [self runTestsAndFeedOutputTo:feedOutputToBlock error:&runTestsError];
 
-  if (!succeeded && !didReceiveTestEvents) {
+  if (runTestsError) {
+    *error = runTestsError;
+  }
+
+  if (!succeeded && runTestsError == nil && !didReceiveTestEvents) {
     // otest failed but clearly no tests ran.  We've seen this when a test target had no
     // source files.  In that case, xcodebuild generated the test bundle, but didn't build the
     // actual mach-o bundle/binary (because of no source files!)
