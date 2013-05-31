@@ -99,6 +99,9 @@
 
 #define kReporter_EndXcodebuild_CommandKey @"command"
 #define kReporter_EndXcodebuild_TitleKey @"title"
+#define kReporter_EndXcodebuild_SucceededKey @"succeeded"
+#define kReporter_EndXcodebuild_ErrorMessageKey @"errorMessage"
+#define kReporter_EndXcodebuild_ErrorCodeKey @"errorCode"
 
 #define kReporter_BeginStatus_MessageKey @"message"
 #define kReporter_BeginStatus_TimestampKey @"timestamp"
