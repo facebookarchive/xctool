@@ -152,26 +152,8 @@
 
 - (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
-  NSMutableSet *targetsAdded = [NSMutableSet set];
-  NSMutableArray *buildableList = [NSMutableArray array];
-
-  [xcodeSubjectInfo.buildablesForTest enumerateObjectsUsingBlock:^(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-    NSString *target = item[@"target"];
-    if (![targetsAdded containsObject:target]) {
-      [targetsAdded addObject:target];
-      [buildableList addObject:item];
-    }
-  }];
-
-  [xcodeSubjectInfo.testables enumerateObjectsUsingBlock:^(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-    NSString *target = item[@"target"];
-    if (![targetsAdded containsObject:target]) {
-      [targetsAdded addObject:target];
-      [buildableList addObject:item];
-    }
-  }];
-
-  buildableList = [self buildableList:buildableList matchingTargets:self.onlyList];
+  NSArray *buildableList = [self buildableList:[xcodeSubjectInfo testablesAndBuildablesForTest]
+                               matchingTargets:self.onlyList];
 
   if (![BuildTestsAction buildTestables:buildableList
                                 command:@"build"

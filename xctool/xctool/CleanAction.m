@@ -38,7 +38,11 @@
     return NO;
   }
 
-  if (![BuildTestsAction buildTestables:xcodeSubjectInfo.testables command:@"clean" options:options xcodeSubjectInfo:xcodeSubjectInfo]) {
+  NSArray *buildables = [xcodeSubjectInfo testablesAndBuildablesForTest];
+  if (![BuildTestsAction buildTestables:buildables
+                                command:@"clean"
+                                options:options
+                       xcodeSubjectInfo:xcodeSubjectInfo]) {
     return NO;
   }
 

@@ -44,6 +44,12 @@
 @property (nonatomic, retain) NSArray *reporters;
 
 /**
+ * Returns the contents of 'testables' and 'buildablesForTest' with any
+ * duplicates removed.
+ */
+- (NSArray *)testablesAndBuildablesForTest;
+
+/**
  * Returns a list of paths to .xcodeproj directories in the workspace.
  */
 + (NSArray *)projectPathsInWorkspace:(NSString *)workspace;
