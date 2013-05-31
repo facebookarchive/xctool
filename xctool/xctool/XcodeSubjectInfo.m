@@ -841,4 +841,30 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   return _buildablesForTest;
 }
 
+- (NSArray *)testablesAndBuildablesForTest
+{
+  [self populate];
+
+  NSMutableSet *targetsAdded = [NSMutableSet set];
+  NSMutableArray *result = [NSMutableArray array];
+
+  [_buildablesForTest enumerateObjectsUsingBlock:^(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+    NSString *target = item[@"target"];
+    if (![targetsAdded containsObject:target]) {
+      [targetsAdded addObject:target];
+      [result addObject:item];
+    }
+  }];
+
+  [_testables enumerateObjectsUsingBlock:^(NSDictionary *item, NSUInteger idx, BOOL *stop) {
+    NSString *target = item[@"target"];
+    if (![targetsAdded containsObject:target]) {
+      [targetsAdded addObject:target];
+      [result addObject:item];
+    }
+  }];
+
+  return result;
+}
+
 @end
