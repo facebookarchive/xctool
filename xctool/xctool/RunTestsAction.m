@@ -274,8 +274,9 @@ static NSString* const kTestableMustRunInMainThread = @"mustRunInMainThread";
   // Collect build settings for this test target.
   NSTask *settingsTask = [[[NSTask alloc] init] autorelease];
   [settingsTask setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
+
+  xcodeArguments = ArgumentListByOverriding(xcodeArguments, @"-sdk", _testSDK);
   [settingsTask setArguments:[xcodeArguments arrayByAddingObjectsFromArray:@[
-                              @"-sdk", self.testSDK,
                               @"-project", testableProjectPath,
                               @"-target", testableTarget,
                               [NSString stringWithFormat:@"OBJROOT=%@", objRoot],
@@ -283,6 +284,7 @@ static NSString* const kTestableMustRunInMainThread = @"mustRunInMainThread";
                               [NSString stringWithFormat:@"SHARED_PRECOMPS_DIR=%@", sharedPrecompsDir],
                               @"-showBuildSettings",
                               ]]];
+
   [settingsTask setEnvironment:@{
    @"DYLD_INSERT_LIBRARIES" : [PathToXCToolBinaries() stringByAppendingPathComponent:@"xcodebuild-fastsettings-shim.dylib"],
    @"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET" : testableTarget,
@@ -485,7 +487,7 @@ static NSString* const kTestableMustRunInMainThread = @"mustRunInMainThread";
                                               objRoot:xcodeSubjectInfo.objRoot
                                               symRoot:xcodeSubjectInfo.symRoot
                                     sharedPrecompsDir:xcodeSubjectInfo.sharedPrecompsDir
-                                       xcodeArguments:[options commonXcodeBuildArgumentsIncludingSDK:NO]
+                                       xcodeArguments:[options commonXcodeBuildArguments]
                                           senTestList:senTestList
                                    senTestInvertScope:senTestInvertScope];
 

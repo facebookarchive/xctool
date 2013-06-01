@@ -53,7 +53,6 @@
 
 @property (nonatomic, retain) NSMutableArray *actions;
 
-- (NSArray *)commonXcodeBuildArgumentsIncludingSDK:(BOOL)includingSDK;
 - (NSArray *)commonXcodeBuildArguments;
 - (NSArray *)xcodeBuildArgumentsForSubject;
 - (BOOL)validateReporterOptions:(NSString **)errorMessage;

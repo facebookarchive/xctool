@@ -406,7 +406,7 @@
   return YES;
 }
 
-- (NSArray *)commonXcodeBuildArgumentsIncludingSDK:(BOOL)includingSDK
+- (NSArray *)commonXcodeBuildArguments
 {
   NSMutableArray *arguments = [NSMutableArray array];
 
@@ -414,7 +414,7 @@
     [arguments addObjectsFromArray:@[@"-configuration", self.configuration]];
   }
 
-  if (self.sdk != nil && includingSDK) {
+  if (self.sdk != nil) {
     [arguments addObjectsFromArray:@[@"-sdk", self.sdk]];
   }
 
@@ -437,11 +437,6 @@
   [arguments addObjectsFromArray:self.buildSettings];
 
   return arguments;
-}
-
-- (NSArray *)commonXcodeBuildArguments
-{
-  return [self commonXcodeBuildArgumentsIncludingSDK:YES];
 }
 
 - (NSArray *)xcodeBuildArgumentsForSubject
