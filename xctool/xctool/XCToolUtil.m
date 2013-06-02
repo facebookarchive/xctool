@@ -19,8 +19,10 @@
 #import <mach-o/dyld.h>
 
 #import "NSFileHandle+Print.h"
+#import "Options.h"
 #import "Reporter.h"
 #import "TaskUtil.h"
+#import "XcodeSubjectInfo.h"
 
 NSDictionary *BuildSettingsFromOutput(NSString *output)
 {

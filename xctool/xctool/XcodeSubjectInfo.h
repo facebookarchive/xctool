@@ -25,6 +25,7 @@
 @interface XcodeSubjectInfo : NSObject
 {
   BOOL _didPopulate;
+  NSDictionary *_configurationNameByAction;
 }
 
 @property (nonatomic, retain) NSString *subjectWorkspace;
@@ -36,7 +37,6 @@
 @property (nonatomic, retain) NSString *objRoot;
 @property (nonatomic, retain) NSString *symRoot;
 @property (nonatomic, retain) NSString *sharedPrecompsDir;
-@property (nonatomic, retain) NSString *configuration;
 @property (nonatomic, retain) NSArray *testables;
 // Everything in the scheme marked as Build for Test
 @property (nonatomic, retain) NSArray *buildablesForTest;
@@ -84,5 +84,7 @@
    bestTargetMatch:(XcodeTargetMatch **)bestTargetMatchOut;
 
 - (NSDictionary *)testableWithTarget:(NSString *)target;
+
+- (NSString *)configurationNameForAction:(NSString *)action;
 
 @end

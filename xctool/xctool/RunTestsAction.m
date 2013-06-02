@@ -463,6 +463,9 @@ static NSString* const kTestableMustRunInMainThread = @"mustRunInMainThread";
   NSObject *succeededLock = [[[NSObject alloc] init] autorelease];
   __block BOOL succeeded = YES;
 
+  NSArray *xcodebuildArguments = [options commonXcodeBuildArgumentsForSchemeAction:@"TestAction"
+                                                                  xcodeSubjectInfo:xcodeSubjectInfo];
+
   @autoreleasepool {
     NSMutableArray *blocksToRunInMainThread = [NSMutableArray array];
     NSOperationQueue *operationQueue = [[[NSOperationQueue alloc] init] autorelease];
@@ -487,7 +490,7 @@ static NSString* const kTestableMustRunInMainThread = @"mustRunInMainThread";
                                               objRoot:xcodeSubjectInfo.objRoot
                                               symRoot:xcodeSubjectInfo.symRoot
                                     sharedPrecompsDir:xcodeSubjectInfo.sharedPrecompsDir
-                                       xcodeArguments:[options commonXcodeBuildArguments]
+                                       xcodeArguments:xcodebuildArguments
                                           senTestList:senTestList
                                    senTestInvertScope:senTestInvertScope];
 

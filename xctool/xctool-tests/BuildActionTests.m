@@ -200,4 +200,34 @@ void _CFAutoreleasePoolPrintPools();
   testWithExitStatus(1);
 }
 
+- (void)testConfigurationIsTakenFromScheme
+{
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+     // Make sure -showBuildSettings returns some data
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj"
+                                                     scheme:@"TestProject-Library"
+                                               settingsPath:TEST_DATA @"TestProject-Library-WithDifferentConfigurations-showBuildSettings.txt"],
+     ]];
+
+    XCTool *tool = [[[XCTool alloc] init] autorelease];
+
+    tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"build",
+                       ];
+
+    [TestUtil runWithFakeStreams:tool];
+
+    assertThat([[[FakeTaskManager sharedManager] launchedTasks][0] arguments],
+               equalTo(@[
+                       @"-project", TEST_DATA @"TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-configuration", @"LaunchConfig",
+                       @"-sdk", @"iphoneos6.1",
+                       @"build",
+                       ]));
+  }];
+}
+
 @end
