@@ -14,7 +14,8 @@
 - (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   NSArray *arguments = [[[options xcodeBuildArgumentsForSubject]
-                        arrayByAddingObjectsFromArray:[options commonXcodeBuildArguments]]
+                        arrayByAddingObjectsFromArray:[options commonXcodeBuildArgumentsForSchemeAction:@"ArchiveAction"
+                                                                                       xcodeSubjectInfo:xcodeSubjectInfo]]
                         arrayByAddingObject:@"archive"];
   return RunXcodebuildAndFeedEventsToReporters(arguments,
                                                @"archive",

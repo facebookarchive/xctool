@@ -79,13 +79,15 @@
     [schemeGenerator addBuildableWithID:buildable[@"targetID"] inProject:buildable[@"projectPath"]];
   }
 
+  NSArray *xcodebuildArguments = [options commonXcodeBuildArgumentsForSchemeAction:@"TestAction"
+                                                                  xcodeSubjectInfo:xcodeSubjectInfo];
   BOOL succeeded = [BuildTestsAction buildWorkspace:[schemeGenerator writeWorkspaceNamed:@"Tests"]
                                              scheme:@"Tests"
                                           reporters:options.reporters
                                             objRoot:xcodeSubjectInfo.objRoot
                                             symRoot:xcodeSubjectInfo.symRoot
                                   sharedPrecompsDir:xcodeSubjectInfo.sharedPrecompsDir
-                                     xcodeArguments:[options commonXcodeBuildArguments]
+                                     xcodeArguments:xcodebuildArguments
                                        xcodeCommand:command];
   [schemeGenerator cleanupTemporaryDirectories];
 

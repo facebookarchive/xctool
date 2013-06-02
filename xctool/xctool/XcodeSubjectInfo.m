@@ -59,6 +59,42 @@ static NSString *BasePathFromSchemePath(NSString *schemePath) {
   return schemePath;
 }
 
+static NSDictionary *BuildConfigurationsByActionForSchemePath(NSString *schemePath)
+{
+  NSError *error = nil;
+  NSXMLDocument *doc = [[[NSXMLDocument alloc] initWithContentsOfURL:[NSURL fileURLWithPath:schemePath]
+                                                             options:0
+                                                               error:&error] autorelease];
+  if (error != nil) {
+    NSLog(@"Error in parsing: %@: %@", schemePath, error);
+    abort();
+  }
+
+  NSArray *actionNodeNames = @[@"LaunchAction",
+                               @"TestAction",
+                               @"ArchiveAction",
+                               @"ProfileAction",
+                               @"AnalyzeAction",
+                               ];
+  NSMutableDictionary *results = [NSMutableDictionary dictionary];
+
+  for (NSString *actionNodeName in actionNodeNames) {
+    NSArray *actionNodes = [doc nodesForXPath:[@"//" stringByAppendingString:actionNodeName]
+                                        error:nil];
+    NSCAssert([actionNodes count] == 1,
+              @"Should have gotten exactly one node, but got: %@", actionNodes);
+
+    NSXMLElement *actionNode = actionNodes[0];
+
+    NSString *configuration = [[actionNode attributeForName:@"buildConfiguration"] stringValue];
+    NSCAssert(configuration != nil, @"Should have a 'buildConfiguration'");
+
+    results[actionNodeName] = configuration;
+  }
+
+  return results;
+}
+
 @implementation XcodeSubjectInfo
 
 + (NSArray *)projectPathsInWorkspace:(NSString *)workspacePath
@@ -426,10 +462,10 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   self.sdkName = nil;
   self.objRoot = nil;
   self.symRoot = nil;
-  self.configuration = nil;
   self.testables = nil;
   self.buildablesForTest = nil;
   self.reporters = nil;
+  [_configurationNameByAction release];
   [super dealloc];
 }
 
@@ -744,10 +780,10 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   self.symRoot = firstBuildable[@"SYMROOT"];
   self.sharedPrecompsDir = firstBuildable[@"SHARED_PRECOMPS_DIR"];
   self.sdkName = firstBuildable[@"SDK_NAME"];
-  self.configuration = firstBuildable[@"CONFIGURATION"];
+
+  NSString *matchingSchemePath = nil;
 
   if (self.subjectWorkspace) {
-    NSString *matchingSchemePath = nil;
     NSArray *schemePaths = [XcodeSubjectInfo schemePathsInWorkspace:self.subjectWorkspace];
     for (NSString *schemePath in schemePaths) {
       if ([schemePath hasSuffix:[NSString stringWithFormat:@"/%@.xcscheme", self.subjectScheme]]) {
@@ -777,7 +813,6 @@ containsFilesModifiedSince:(NSDate *)sinceDate
     self.testables = itemsMatchingProjectPath(testables);
     self.buildablesForTest = itemsMatchingProjectPath(buildablesForTest);
   } else {
-    NSString *matchingSchemePath = nil;
     NSArray *schemePaths = [XcodeSubjectInfo schemePathsInContainer:self.subjectProject];
     for (NSString *schemePath in schemePaths) {
       if ([schemePath hasSuffix:[NSString stringWithFormat:@"/%@.xcscheme", self.subjectScheme]]) {
@@ -790,6 +825,9 @@ containsFilesModifiedSince:(NSDate *)sinceDate
     self.buildablesForTest = [[self class] buildablesForTestInSchemePath:matchingSchemePath
                                                                 basePath:BasePathFromSchemePath(matchingSchemePath)];
   }
+
+  _configurationNameByAction =
+    [BuildConfigurationsByActionForSchemePath(matchingSchemePath) retain];
 
   _didPopulate = YES;
 }
@@ -821,12 +859,6 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 {
   [self populate];
   return _symRoot;
-}
-
-- (NSString *)configuration
-{
-  [self populate];
-  return _configuration;
 }
 
 - (NSArray *)testables
@@ -865,6 +897,12 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   }];
 
   return result;
+}
+
+- (NSString *)configurationNameForAction:(NSString *)action
+{
+  [self populate];
+  return _configurationNameByAction[action];
 }
 
 @end

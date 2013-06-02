@@ -355,9 +355,13 @@
   xcodeSubjectInfo.subjectWorkspace = self.workspace;
   xcodeSubjectInfo.subjectProject = self.project;
   xcodeSubjectInfo.subjectScheme = self.scheme;
+
+  // We can pass nil for the scheme action since we don't care to use the
+  // scheme's specific configuration.
+  NSArray *commonXcodeBuildArguments = [options commonXcodeBuildArgumentsForSchemeAction:nil
+                                                                        xcodeSubjectInfo:nil];
   xcodeSubjectInfo.subjectXcodeBuildArguments =
-    [[self xcodeBuildArgumentsForSubject]
-     arrayByAddingObjectsFromArray:[options commonXcodeBuildArguments]];
+    [[self xcodeBuildArgumentsForSubject] arrayByAddingObjectsFromArray:commonXcodeBuildArguments];
   xcodeSubjectInfo.reporters = _reporters;
 
   if (self.sdk == nil) {
@@ -389,10 +393,6 @@
     }
   }
 
-  if (self.configuration == nil) {
-    self.configuration = xcodeSubjectInfo.configuration;
-  }
-
   for (Action *action in self.actions) {
     BOOL valid = [action validateOptions:errorMessage xcodeSubjectInfo:xcodeSubjectInfo options:self];
     if (!valid) {
@@ -408,12 +408,17 @@
   return YES;
 }
 
-- (NSArray *)commonXcodeBuildArguments
+- (NSArray *)commonXcodeBuildArgumentsForSchemeAction:(NSString *)schemeAction
+                                     xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo;
 {
   NSMutableArray *arguments = [NSMutableArray array];
 
-  if (self.configuration != nil) {
-    [arguments addObjectsFromArray:@[@"-configuration", self.configuration]];
+  if (_configuration != nil) {
+    // The -configuration option from the command-line takes precedence.
+    [arguments addObjectsFromArray:@[@"-configuration", _configuration]];
+  } else if (schemeAction && xcodeSubjectInfo) {
+    [arguments addObjectsFromArray:@[@"-configuration",
+                                     [xcodeSubjectInfo configurationNameForAction:schemeAction]]];
   }
 
   if (self.sdk != nil) {

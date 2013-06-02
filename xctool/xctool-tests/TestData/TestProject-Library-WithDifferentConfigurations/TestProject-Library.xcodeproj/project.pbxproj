@@ -1,0 +1,569 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2828292416B11F0F00426B92 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2828292316B11F0F00426B92 /* Foundation.framework */; };
+		2828292916B11F0F00426B92 /* TestProject_Library.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2828292816B11F0F00426B92 /* TestProject_Library.h */; };
+		2828292B16B11F0F00426B92 /* TestProject_Library.m in Sources */ = {isa = PBXBuildFile; fileRef = 2828292A16B11F0F00426B92 /* TestProject_Library.m */; };
+		2828293316B11F0F00426B92 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2828293216B11F0F00426B92 /* SenTestingKit.framework */; };
+		2828293516B11F0F00426B92 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2828293416B11F0F00426B92 /* UIKit.framework */; };
+		2828293616B11F0F00426B92 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2828292316B11F0F00426B92 /* Foundation.framework */; };
+		2828293916B11F0F00426B92 /* libTestProject-Library.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2828292016B11F0F00426B92 /* libTestProject-Library.a */; };
+		2828293F16B11F0F00426B92 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2828293D16B11F0F00426B92 /* InfoPlist.strings */; };
+		2828294216B11F0F00426B92 /* SomeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2828294116B11F0F00426B92 /* SomeTests.m */; };
+		28A33D1316CF4FFD00C5EE2A /* OtherTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A33D1216CF4FFD00C5EE2A /* OtherTests.m */; };
+		28B3C3AF1731B33C00EC75E5 /* DisabledTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28B3C3AE1731B33C00EC75E5 /* DisabledTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2828291E16B11F0F00426B92 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/${PRODUCT_NAME}";
+			dstSubfolderSpec = 16;
+			files = (
+				2828292916B11F0F00426B92 /* TestProject_Library.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		2828292016B11F0F00426B92 /* libTestProject-Library.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libTestProject-Library.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2828292316B11F0F00426B92 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		2828292716B11F0F00426B92 /* TestProject-Library-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestProject-Library-Prefix.pch"; sourceTree = "<group>"; };
+		2828292816B11F0F00426B92 /* TestProject_Library.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestProject_Library.h; sourceTree = "<group>"; };
+		2828292A16B11F0F00426B92 /* TestProject_Library.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestProject_Library.m; sourceTree = "<group>"; };
+		2828293116B11F0F00426B92 /* TestProject-LibraryTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TestProject-LibraryTests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2828293216B11F0F00426B92 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		2828293416B11F0F00426B92 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		2828293C16B11F0F00426B92 /* TestProject-LibraryTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TestProject-LibraryTests-Info.plist"; sourceTree = "<group>"; };
+		2828293E16B11F0F00426B92 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		2828294016B11F0F00426B92 /* SomeTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SomeTests.h; sourceTree = "<group>"; };
+		2828294116B11F0F00426B92 /* SomeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SomeTests.m; sourceTree = "<group>"; };
+		28A33D1116CF4FFD00C5EE2A /* OtherTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OtherTests.h; sourceTree = "<group>"; };
+		28A33D1216CF4FFD00C5EE2A /* OtherTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OtherTests.m; sourceTree = "<group>"; };
+		28B3C3AD1731B33C00EC75E5 /* DisabledTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisabledTests.h; sourceTree = "<group>"; };
+		28B3C3AE1731B33C00EC75E5 /* DisabledTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisabledTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2828291D16B11F0F00426B92 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2828292416B11F0F00426B92 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2828292D16B11F0F00426B92 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2828293316B11F0F00426B92 /* SenTestingKit.framework in Frameworks */,
+				2828293516B11F0F00426B92 /* UIKit.framework in Frameworks */,
+				2828293616B11F0F00426B92 /* Foundation.framework in Frameworks */,
+				2828293916B11F0F00426B92 /* libTestProject-Library.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2828291516B11F0F00426B92 = {
+			isa = PBXGroup;
+			children = (
+				2828292516B11F0F00426B92 /* TestProject-Library */,
+				2828293A16B11F0F00426B92 /* TestProject-LibraryTests */,
+				2828292216B11F0F00426B92 /* Frameworks */,
+				2828292116B11F0F00426B92 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2828292116B11F0F00426B92 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2828292016B11F0F00426B92 /* libTestProject-Library.a */,
+				2828293116B11F0F00426B92 /* TestProject-LibraryTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2828292216B11F0F00426B92 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2828292316B11F0F00426B92 /* Foundation.framework */,
+				2828293216B11F0F00426B92 /* SenTestingKit.framework */,
+				2828293416B11F0F00426B92 /* UIKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2828292516B11F0F00426B92 /* TestProject-Library */ = {
+			isa = PBXGroup;
+			children = (
+				2828292816B11F0F00426B92 /* TestProject_Library.h */,
+				2828292A16B11F0F00426B92 /* TestProject_Library.m */,
+				2828292616B11F0F00426B92 /* Supporting Files */,
+			);
+			path = "TestProject-Library";
+			sourceTree = "<group>";
+		};
+		2828292616B11F0F00426B92 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				2828292716B11F0F00426B92 /* TestProject-Library-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		2828293A16B11F0F00426B92 /* TestProject-LibraryTests */ = {
+			isa = PBXGroup;
+			children = (
+				2828294016B11F0F00426B92 /* SomeTests.h */,
+				2828294116B11F0F00426B92 /* SomeTests.m */,
+				2828293B16B11F0F00426B92 /* Supporting Files */,
+				28A33D1116CF4FFD00C5EE2A /* OtherTests.h */,
+				28A33D1216CF4FFD00C5EE2A /* OtherTests.m */,
+				28B3C3AD1731B33C00EC75E5 /* DisabledTests.h */,
+				28B3C3AE1731B33C00EC75E5 /* DisabledTests.m */,
+			);
+			path = "TestProject-LibraryTests";
+			sourceTree = "<group>";
+		};
+		2828293B16B11F0F00426B92 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				2828293C16B11F0F00426B92 /* TestProject-LibraryTests-Info.plist */,
+				2828293D16B11F0F00426B92 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2828291F16B11F0F00426B92 /* TestProject-Library */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2828294516B11F0F00426B92 /* Build configuration list for PBXNativeTarget "TestProject-Library" */;
+			buildPhases = (
+				2828291C16B11F0F00426B92 /* Sources */,
+				2828291D16B11F0F00426B92 /* Frameworks */,
+				2828291E16B11F0F00426B92 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "TestProject-Library";
+			productName = "TestProject-Library";
+			productReference = 2828292016B11F0F00426B92 /* libTestProject-Library.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		2828293016B11F0F00426B92 /* TestProject-LibraryTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2828294816B11F0F00426B92 /* Build configuration list for PBXNativeTarget "TestProject-LibraryTests" */;
+			buildPhases = (
+				2828292C16B11F0F00426B92 /* Sources */,
+				2828292D16B11F0F00426B92 /* Frameworks */,
+				2828292E16B11F0F00426B92 /* Resources */,
+				2828292F16B11F0F00426B92 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "TestProject-LibraryTests";
+			productName = "TestProject-LibraryTests";
+			productReference = 2828293116B11F0F00426B92 /* TestProject-LibraryTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2828291716B11F0F00426B92 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0450;
+			};
+			buildConfigurationList = 2828291A16B11F0F00426B92 /* Build configuration list for PBXProject "TestProject-Library" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 2828291516B11F0F00426B92;
+			productRefGroup = 2828292116B11F0F00426B92 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2828291F16B11F0F00426B92 /* TestProject-Library */,
+				2828293016B11F0F00426B92 /* TestProject-LibraryTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2828292E16B11F0F00426B92 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2828293F16B11F0F00426B92 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2828292F16B11F0F00426B92 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2828291C16B11F0F00426B92 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2828292B16B11F0F00426B92 /* TestProject_Library.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2828292C16B11F0F00426B92 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2828294216B11F0F00426B92 /* SomeTests.m in Sources */,
+				28A33D1316CF4FFD00C5EE2A /* OtherTests.m in Sources */,
+				28B3C3AF1731B33C00EC75E5 /* DisabledTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		2828293D16B11F0F00426B92 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2828293E16B11F0F00426B92 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		2828294316B11F0F00426B92 /* LaunchConfig */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				SDKROOT = iphoneos;
+			};
+			name = LaunchConfig;
+		};
+		2828294616B11F0F00426B92 /* LaunchConfig */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/TestProject_Library.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TestProject-Library/TestProject-Library-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = LaunchConfig;
+		};
+		2828294916B11F0F00426B92 /* LaunchConfig */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TestProject-Library/TestProject-Library-Prefix.pch";
+				INFOPLIST_FILE = "TestProject-LibraryTests/TestProject-LibraryTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = LaunchConfig;
+		};
+		28302E101759635B00C997B2 /* TestConfig */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				SDKROOT = iphoneos;
+			};
+			name = TestConfig;
+		};
+		28302E111759635B00C997B2 /* TestConfig */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/TestProject_Library.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TestProject-Library/TestProject-Library-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = TestConfig;
+		};
+		28302E121759635B00C997B2 /* TestConfig */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TestProject-Library/TestProject-Library-Prefix.pch";
+				INFOPLIST_FILE = "TestProject-LibraryTests/TestProject-LibraryTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = TestConfig;
+		};
+		28302E131759636700C997B2 /* ArchiveConfig */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				SDKROOT = iphoneos;
+			};
+			name = ArchiveConfig;
+		};
+		28302E141759636700C997B2 /* ArchiveConfig */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/TestProject_Library.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TestProject-Library/TestProject-Library-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = ArchiveConfig;
+		};
+		28302E151759636700C997B2 /* ArchiveConfig */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TestProject-Library/TestProject-Library-Prefix.pch";
+				INFOPLIST_FILE = "TestProject-LibraryTests/TestProject-LibraryTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = ArchiveConfig;
+		};
+		28302E161759636E00C997B2 /* ProfileConfig */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				SDKROOT = iphoneos;
+			};
+			name = ProfileConfig;
+		};
+		28302E171759636E00C997B2 /* ProfileConfig */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/TestProject_Library.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TestProject-Library/TestProject-Library-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = ProfileConfig;
+		};
+		28302E181759636E00C997B2 /* ProfileConfig */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TestProject-Library/TestProject-Library-Prefix.pch";
+				INFOPLIST_FILE = "TestProject-LibraryTests/TestProject-LibraryTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = ProfileConfig;
+		};
+		28302E191759637A00C997B2 /* AnalyzeConfig */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				SDKROOT = iphoneos;
+			};
+			name = AnalyzeConfig;
+		};
+		28302E1A1759637A00C997B2 /* AnalyzeConfig */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/TestProject_Library.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TestProject-Library/TestProject-Library-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = AnalyzeConfig;
+		};
+		28302E1B1759637A00C997B2 /* AnalyzeConfig */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TestProject-Library/TestProject-Library-Prefix.pch";
+				INFOPLIST_FILE = "TestProject-LibraryTests/TestProject-LibraryTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = AnalyzeConfig;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2828291A16B11F0F00426B92 /* Build configuration list for PBXProject "TestProject-Library" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2828294316B11F0F00426B92 /* LaunchConfig */,
+				28302E191759637A00C997B2 /* AnalyzeConfig */,
+				28302E161759636E00C997B2 /* ProfileConfig */,
+				28302E101759635B00C997B2 /* TestConfig */,
+				28302E131759636700C997B2 /* ArchiveConfig */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = LaunchConfig;
+		};
+		2828294516B11F0F00426B92 /* Build configuration list for PBXNativeTarget "TestProject-Library" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2828294616B11F0F00426B92 /* LaunchConfig */,
+				28302E1A1759637A00C997B2 /* AnalyzeConfig */,
+				28302E171759636E00C997B2 /* ProfileConfig */,
+				28302E111759635B00C997B2 /* TestConfig */,
+				28302E141759636700C997B2 /* ArchiveConfig */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = LaunchConfig;
+		};
+		2828294816B11F0F00426B92 /* Build configuration list for PBXNativeTarget "TestProject-LibraryTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2828294916B11F0F00426B92 /* LaunchConfig */,
+				28302E1B1759637A00C997B2 /* AnalyzeConfig */,
+				28302E181759636E00C997B2 /* ProfileConfig */,
+				28302E121759635B00C997B2 /* TestConfig */,
+				28302E151759636700C997B2 /* ArchiveConfig */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = LaunchConfig;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2828291716B11F0F00426B92 /* Project object */;
+}
