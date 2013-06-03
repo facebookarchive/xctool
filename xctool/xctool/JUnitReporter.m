@@ -79,7 +79,7 @@
   [self writeWithFormat:
    @"<testsuites name=\"AllTestUnits\" tests=\"%d\" failures=\"%d\" errors=\"%d\" time=\"%f\">\n",
    self.totalTests, self.totalFailures, self.totalErrors, self.totalTime];
-
+  
   for (NSDictionary *testSuite in self.testSuites) {
     NSDictionary *suiteEvent = testSuite[kJUnitReporter_Suite_Event];
     NSArray *suiteResults = testSuite[kJUnitReporter_Suite_Results];
@@ -98,7 +98,7 @@
        [self xmlEscape:testResult[kReporter_EndTest_ClassNameKey]],
        [self xmlEscape:testResult[kReporter_EndTest_MethodNameKey]],
        [testResult[kReporter_EndTest_TotalDurationKey] floatValue]];
-
+      
       if (![testResult[kReporter_EndTest_SucceededKey] boolValue]) {
         NSDictionary *exception = testResult[kReporter_EndTest_ExceptionKey];
         [self writeWithFormat:
@@ -107,7 +107,7 @@
          [self xmlEscape:exception[kReporter_EndTest_Exception_FilePathInProjectKey]],
          [exception[kReporter_EndTest_Exception_LineNumberKey] intValue]];
       }
-
+      
       NSString *output = testResult[kReporter_EndTest_OutputKey];
       if (output && output.length > 0) {
         [self writeWithFormat:@"\t\t\t<system-out>%@</system-out>\n", [self xmlEscape:output]];
