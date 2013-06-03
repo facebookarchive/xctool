@@ -34,6 +34,8 @@
 @property (nonatomic, assign) BOOL testHadOutput;
 @property (nonatomic, assign) BOOL testOutputEndsInNewline;
 @property (nonatomic, retain) ReportWriter *reportWriter;
+@property (nonatomic, retain) NSMutableArray *failedTests;
+@property (nonatomic, retain) NSString *currentBundle;
 
 @end
 
