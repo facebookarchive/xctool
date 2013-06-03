@@ -1,5 +1,9 @@
 #import "JUnitReporter.h"
 
+#pragma mark Constants
+#define kJUnitReporter_Suite_Event @"event"
+#define kJUnitReporter_Suite_Results @"results"
+
 #pragma mark Private Interface
 @interface JUnitReporter ()
 
@@ -26,6 +30,11 @@
   if (self = [super init]) {
     _formatter = [[NSDateFormatter alloc] init];
     [_formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];
+    self.testSuites = [NSMutableArray array];
+    self.totalTests = 0;
+    self.totalFailures = 0;
+    self.totalErrors = 0;
+    self.totalTime = 0.0;
   }
   return self;
 }
@@ -39,15 +48,6 @@
 }
 
 #pragma mark Reporter
-- (void)beginOcunit:(NSDictionary *)event
-{
-  self.testSuites = [NSMutableArray array];
-  self.totalTests = 0;
-  self.totalFailures = 0;
-  self.totalErrors = 0;
-  self.totalTime = 0.0;
-}
-
 - (void)beginTestSuite:(NSDictionary *)event
 {
   self.testResults = [NSMutableArray array];
@@ -66,24 +66,23 @@
     self.totalErrors += [event[kReporter_EndTestSuite_UnexpectedExceptionCountKey] intValue];
     self.totalTime += [event[kReporter_EndTestSuite_TotalDurationKey] floatValue];
     [self.testSuites addObject:@{
-      @"event": event,
-      @"results": self.testResults
+      kJUnitReporter_Suite_Event: event,
+      kJUnitReporter_Suite_Results: self.testResults
     }];
     self.testResults = nil;
   }
 }
 
-- (void)endOcunit:(NSDictionary *)event
+- (void)close
 {
   [self write:@"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"];
   [self writeWithFormat:
-   @"<testsuites name=\"%@\" tests=\"%d\" failures=\"%d\" errors=\"%d\" time=\"%f\">\n",
-   [self xmlEscape:event[kReporter_EndOCUnit_BundleNameKey]],
+   @"<testsuites name=\"AllTestUnits\" tests=\"%d\" failures=\"%d\" errors=\"%d\" time=\"%f\">\n",
    self.totalTests, self.totalFailures, self.totalErrors, self.totalTime];
-
+  
   for (NSDictionary *testSuite in self.testSuites) {
-    NSDictionary *suiteEvent = testSuite[@"event"];
-    NSArray *suiteResults = testSuite[@"results"];
+    NSDictionary *suiteEvent = testSuite[kJUnitReporter_Suite_Event];
+    NSArray *suiteResults = testSuite[kJUnitReporter_Suite_Results];
     [self writeWithFormat:
      @"\t<testsuite name=\"%@\" tests=\"%d\" failures=\"%d\" errors=\"%d\" "
      @"time=\"%f\" timestamp=\"%@\">\n",
@@ -99,7 +98,7 @@
        [self xmlEscape:testResult[kReporter_EndTest_ClassNameKey]],
        [self xmlEscape:testResult[kReporter_EndTest_MethodNameKey]],
        [testResult[kReporter_EndTest_TotalDurationKey] floatValue]];
-
+      
       if (![testResult[kReporter_EndTest_SucceededKey] boolValue]) {
         NSDictionary *exception = testResult[kReporter_EndTest_ExceptionKey];
         [self writeWithFormat:
@@ -108,7 +107,7 @@
          [self xmlEscape:exception[kReporter_EndTest_Exception_FilePathInProjectKey]],
          [exception[kReporter_EndTest_Exception_LineNumberKey] intValue]];
       }
-
+      
       NSString *output = testResult[kReporter_EndTest_OutputKey];
       if (output && output.length > 0) {
         [self writeWithFormat:@"\t\t\t<system-out>%@</system-out>\n", [self xmlEscape:output]];
@@ -119,6 +118,7 @@
   }
   [self write:@"</testsuites>\n"];
   self.testSuites = nil;
+  [super close];
 }
 
 #pragma mark Private Methods
