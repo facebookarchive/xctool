@@ -272,6 +272,8 @@ symbols for pretty output (the default).
 * __plain__: like _pretty_, but with with no colors or unicode.
 * __phabricator__: outputs a JSON array of build/test results which can
 be fed into the [Phabricator](http://phabricator.org/) code-review tool.
+* __junit__: produces a JUnit/xUnit compatible XML file with test
+results.
 * __json-stream__: a stream of build/test events as JSON dictionaries,
 one per line [(example
 output)](https://gist.github.com/fpotter/82ffcc3d9a49d10ee41b).
