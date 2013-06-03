@@ -36,7 +36,7 @@
   timeRegex = nil;
     STAssertEqualObjects(@"\
 <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
-<testsuites name=\"TestProject-LibraryTests.octest\" tests=\"7\" failures=\"1\" errors=\"0\" time=\"\">\n\
+<testsuites name=\"AllTestUnits\" tests=\"7\" failures=\"1\" errors=\"0\" time=\"\">\n\
 \t<testsuite name=\"OtherTests\" tests=\"1\" failures=\"0\" errors=\"0\" time=\"\" timestamp=\"\">\n\
 \t\t<testcase classname=\"OtherTests\" name=\"testSomething\" time=\"\">\n\
 \t\t</testcase>\n\
