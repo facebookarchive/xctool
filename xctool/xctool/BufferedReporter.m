@@ -18,6 +18,15 @@
 
 @implementation BufferedReporter
 
++ (NSArray *)wrapReporters:(NSArray *)reporters
+{
+  NSMutableArray *bufferedReporters = [NSMutableArray arrayWithCapacity:reporters.count];
+  for (Reporter *reporter in reporters) {
+    [bufferedReporters addObject:[BufferedReporter bufferedReporterWithReporter:reporter]];
+  }
+  return bufferedReporters;
+}
+
 + (instancetype)bufferedReporterWithReporter:(Reporter *)reporter
 {
   BufferedReporter *obj = [[[BufferedReporter alloc] init] autorelease];

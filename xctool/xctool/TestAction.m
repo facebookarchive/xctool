@@ -66,6 +66,11 @@
                          aliases:nil
                      description:@"Parallelize execution of logic tests"
                          setFlag:@selector(setParallelize:)],
+    [Action actionOptionWithName:@"parallelizeSuites"
+                         aliases:nil
+                     description:@"Parallelize test class execution within each target if > 0"
+                       paramName:@"CHUNK_SIZE"
+                           mapTo:@selector(setParallelizeChunkSize:)],
     ];
 }
 
@@ -102,6 +107,11 @@
 - (void)setParallelize:(BOOL)parallelize
 {
   [_runTestsAction setParallelize:parallelize];
+}
+
+- (void)setParallelizeChunkSize:(NSString *)chunkSize
+{
+  [_runTestsAction setParallelizeChunkSize:chunkSize];
 }
 
 - (void)setSkipDependencies:(BOOL)skipDependencies

@@ -19,11 +19,6 @@
 #import <objc/objc-runtime.h>
 #import <stdio.h>
 
-// weakly loading SenTestingKit seem to cause these symbols to resolve to null
-static NSString *SenTestedUnitPath_ = @"SenTestedUnitPath";
-static NSString *SenTestScopeKey_ = @"SenTest";
-static NSString *SenTestScopeSelf_ = @"Self";
-
 @implementation OtestQuery
 
 + (void)run
@@ -32,12 +27,6 @@ static NSString *SenTestScopeSelf_ = @"Self";
   NSBundle *bundle = [NSBundle bundleWithPath:testBundlePath];
   [bundle load];
 
-  NSString *path = [[NSBundle mainBundle] bundlePath];
-
-  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-  [defaults setObject:path forKey:SenTestedUnitPath_];
-  [defaults setObject:SenTestScopeSelf_ forKey:SenTestScopeKey_];
-
   [[NSBundle allFrameworks] makeObjectsPerformSelector:@selector(principalClass)];
   NSArray *testClasses = objc_msgSend(NSClassFromString(@"SenTestCase"), @selector(senAllSubclasses));
   NSMutableArray *testClassNames = [NSMutableArray array];
@@ -45,7 +34,7 @@ static NSString *SenTestScopeSelf_ = @"Self";
     [testClassNames addObject:[NSString stringWithUTF8String:class_getName(testClass)]];
   }
   NSData *json = [NSJSONSerialization dataWithJSONObject:testClassNames options:0 error:nil];
-  [[NSFileHandle fileHandleWithStandardOutput] writeData:json];
+  [(NSFileHandle *)[NSFileHandle fileHandleWithStandardOutput] writeData:json];
 }
 
 @end
