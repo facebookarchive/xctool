@@ -120,7 +120,6 @@
   [options consumeArguments:[NSMutableArray arrayWithArray:self.arguments] errorMessage:&errorMessage];
   if (errorMessage != nil) {
     [_standardError printString:@"ERROR: %@\n", errorMessage];
-    [self printUsage];
     _exitStatus = 1;
     return;
   }
@@ -151,7 +150,6 @@
 
   if (![options validateReporterOptions:&errorMessage]) {
     [_standardError printString:@"ERROR: %@\n\n", errorMessage];
-    [self printUsage];
     _exitStatus = 1;
     return;
   }
@@ -170,7 +168,6 @@
   @try {
     if (![options validateOptions:&errorMessage xcodeSubjectInfo:xcodeSubjectInfo options:options]) {
       [_standardError printString:@"ERROR: %@\n\n", errorMessage];
-      [self printUsage];
       _exitStatus = 1;
       return;
     }
