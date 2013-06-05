@@ -12,27 +12,17 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+//
 
-#import "Reporter.h"
 
-/*!
- Buffers calls to the underlying reporter until this reporter is flushed.
- */
-@interface BufferedReporter : NSObject {
-  Reporter *_underlyingReporter;
-  NSMutableArray *_bufferedEvents;
+#import <Foundation/Foundation.h>
+
+#import "OtestQuery.h"
+
+int main(int argc, const char * argv[])
+{
+  @autoreleasepool {
+    [OtestQuery run];
+  }
+  return 0;
 }
-
-+ (instancetype)bufferedReporterWithReporter:(Reporter *)reporter;
-
-/*!
- Convenience function that wraps an array of Reporters with BufferedReporters.
- */
-+ (NSArray *)wrapReporters:(NSArray *)reporters;
-
-/*!
- Atomically flush all events into the underlying reporter
- */
-- (void)flush;
-
-@end
