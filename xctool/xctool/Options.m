@@ -355,7 +355,9 @@
   xcodeSubjectInfo.subjectWorkspace = self.workspace;
   xcodeSubjectInfo.subjectProject = self.project;
   xcodeSubjectInfo.subjectScheme = self.scheme;
-  xcodeSubjectInfo.subjectXcodeBuildArguments = [self xcodeBuildArgumentsForSubject];
+  xcodeSubjectInfo.subjectXcodeBuildArguments =
+    [[self xcodeBuildArgumentsForSubject]
+     arrayByAddingObjectsFromArray:[options commonXcodeBuildArguments]];
   xcodeSubjectInfo.reporters = _reporters;
 
   if (self.sdk == nil) {
@@ -441,19 +443,14 @@
 
 - (NSArray *)xcodeBuildArgumentsForSubject
 {
-  // The subject being the thing we're building or testing, which is a workspace/scheme combo
-  // or a project/scheme combo.
-  NSMutableArray *arguments = [NSMutableArray array];
-
   if (self.workspace != nil && self.scheme != nil) {
-    [arguments addObjectsFromArray:@[@"-workspace", self.workspace, @"-scheme", self.scheme]];
+    return @[@"-workspace", self.workspace, @"-scheme", self.scheme];
   } else if (self.project != nil && self.scheme != nil) {
-    [arguments addObjectsFromArray:@[@"-project", self.project, @"-scheme", self.scheme]];
+    return @[@"-project", self.project, @"-scheme", self.scheme];
+  } else {
+    NSLog(@"Should have either a workspace or a project.");
+    abort();
   }
-
-  [arguments addObjectsFromArray:[self commonXcodeBuildArguments]];
-
-  return arguments;
 }
 
 - (void)setFindTargetExcludePathsFromString:(NSString *)string

@@ -30,7 +30,10 @@
 
 - (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
-  return RunXcodebuildAndFeedEventsToReporters([[options xcodeBuildArgumentsForSubject] arrayByAddingObject:@"build"],
+  NSArray *arguments = [[[options xcodeBuildArgumentsForSubject]
+                         arrayByAddingObjectsFromArray:[options commonXcodeBuildArguments]]
+                        arrayByAddingObject:@"build"];
+  return RunXcodebuildAndFeedEventsToReporters(arguments,
                                                @"build",
                                                [options scheme],
                                                [options reporters]);

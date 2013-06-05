@@ -256,7 +256,8 @@
                       ]] assertOptionsValidateWithBuildSettingsFromFile:
                       TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
                       ];
-  assertThat([options xcodeBuildArgumentsForSubject],
+  assertThat([[options xcodeBuildArgumentsForSubject]
+              arrayByAddingObjectsFromArray:[options commonXcodeBuildArguments]],
              equalTo(@[
                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                      @"-scheme", @"TestProject-Library",
