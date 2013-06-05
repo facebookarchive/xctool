@@ -341,8 +341,8 @@
           [self printDivider];
         }
         [self.reportWriter printNewline];
-        [self.reportWriter decreaseIndent];
       }
+      [self.reportWriter decreaseIndent];
     }
   }
 
