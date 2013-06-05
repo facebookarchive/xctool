@@ -16,12 +16,16 @@
 
 #import "Action.h"
 
-@interface RunTestsAction : Action
+@interface RunTestsAction : Action {
+  int _parallelizeChunkSize;
+}
 
 @property (nonatomic, assign) BOOL freshSimulator;
 @property (nonatomic, assign) BOOL freshInstall;
 @property (nonatomic, assign) BOOL parallelize;
 @property (nonatomic, retain) NSString *testSDK;
 @property (nonatomic, retain) NSMutableArray *onlyList;
+
+- (void)setParallelizeChunkSize:(NSString *)str;
 
 @end

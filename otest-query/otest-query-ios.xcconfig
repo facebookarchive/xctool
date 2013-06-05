@@ -12,27 +12,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+//
 
-#import "Reporter.h"
+#include "../Configurations/iOS-Simulator-Dylib.xcconfig"
 
-/*!
- Buffers calls to the underlying reporter until this reporter is flushed.
- */
-@interface BufferedReporter : NSObject {
-  Reporter *_underlyingReporter;
-  NSMutableArray *_bufferedEvents;
-}
+OTHER_LDFLAGS = $(_IOS_SIMULATOR_LDFLAGS) -weak_framework SenTestingKit
 
-+ (instancetype)bufferedReporterWithReporter:(Reporter *)reporter;
-
-/*!
- Convenience function that wraps an array of Reporters with BufferedReporters.
- */
-+ (NSArray *)wrapReporters:(NSArray *)reporters;
-
-/*!
- Atomically flush all events into the underlying reporter
- */
-- (void)flush;
-
-@end

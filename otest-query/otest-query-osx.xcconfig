@@ -12,27 +12,16 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+//
 
-#import "Reporter.h"
+MACOSX_DEPLOYMENT_TARGET = 10.7
 
-/*!
- Buffers calls to the underlying reporter until this reporter is flushed.
- */
-@interface BufferedReporter : NSObject {
-  Reporter *_underlyingReporter;
-  NSMutableArray *_bufferedEvents;
-}
+// Needed so we can #import from SenTestingKit.
+OTHER_CFLAGS = -F$(DEVELOPER_FRAMEWORKS_DIR)
+OTHER_LDFLAGS = -F$(DEVELOPER_FRAMEWORKS_DIR) -weak_framework SenTestingKit
 
-+ (instancetype)bufferedReporterWithReporter:(Reporter *)reporter;
-
-/*!
- Convenience function that wraps an array of Reporters with BufferedReporters.
- */
-+ (NSArray *)wrapReporters:(NSArray *)reporters;
-
-/*!
- Atomically flush all events into the underlying reporter
- */
-- (void)flush;
-
-@end
+// OSX tests or test hosts may use GC, so we have to be GC friendly.
+// By setting the main value to 'unsupported' and then setting the arch-specific setting to
+// 'supported', we're able to suppress Xcode's "Target Integrity" warning about GC being deprecated.
+GCC_ENABLE_OBJC_GC = unsupported
+GCC_ENABLE_OBJC_GC[arch=x86_64] = supported

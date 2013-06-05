@@ -68,6 +68,12 @@
   return NO;
 }
 
+- (NSArray *)runTestClassListQuery
+{
+  // Subclasses will override this method.
+  return nil;
+}
+
 - (NSArray *)collectCrashReportPaths
 {
   NSFileManager *fm = [NSFileManager defaultManager];
@@ -186,6 +192,38 @@
 
   return succeeded;
 }
+
+- (NSArray *)testClassNames
+{
+  NSArray *rawList = [self runTestClassListQuery];
+  if (!rawList) {
+    return nil;
+  }
+
+  if (![_senTestList isEqual:@"All"]) {
+    NSArray *names = [_senTestList componentsSeparatedByString:@","];
+    if (_senTestInvertScope) {
+      // set difference
+      NSMutableArray *result = [[rawList mutableCopy] autorelease];
+      [result removeObjectsInArray:names];
+      return result;
+    } else {
+      // set intersect
+      NSMutableArray *result = [NSMutableArray array];
+      for (NSString *candidate in rawList) {
+        if ([names containsObject:candidate]) {
+          [result addObject:candidate];
+        }
+      }
+      return result;
+    }
+  } else {
+    NSAssert(!_senTestInvertScope,
+             @"senTestInvertScope should not be set when all tests are selected");
+    return rawList;
+  }
+}
+
 
 - (NSArray *)otestArguments
 {

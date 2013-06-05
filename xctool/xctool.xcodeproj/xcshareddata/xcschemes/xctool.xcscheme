@@ -104,6 +104,34 @@
                ReferencedContainer = "container:xctool.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CD9048FD1756C5B1006CF16D"
+               BuildableName = "otest-query-ios"
+               BlueprintName = "otest-query-ios"
+               ReferencedContainer = "container:../otest-query/otest-query.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CD66612B175D1A890057DF4D"
+               BuildableName = "otest-query-osx"
+               BlueprintName = "otest-query-osx"
+               ReferencedContainer = "container:../otest-query/otest-query.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction

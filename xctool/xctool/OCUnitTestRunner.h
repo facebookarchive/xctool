@@ -45,6 +45,15 @@
 
 - (BOOL)runTestsWithError:(NSString **)error;
 
+/*!
+ Executes otest-query and returns an array of test class names in the test bundle.
+ 
+ Respects senTestList and senTestInvertScope.
+ 
+ @return Returns NSArray of NSString class names. nil on error or if not implemented.
+ */
+- (NSArray *)testClassNames;
+
 - (NSArray *)otestArguments;
 - (NSDictionary *)otestEnvironmentWithOverrides:(NSDictionary *)overrides;
 

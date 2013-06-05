@@ -8,6 +8,9 @@
       location = "group:mobile-installation-helper/mobile-installation-helper.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:otest-query/otest-query.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:xcodebuild-shim/xcodebuild-shim.xcodeproj">
    </FileRef>
    <FileRef
