@@ -31,7 +31,10 @@
 
 - (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
-  if (!RunXcodebuildAndFeedEventsToReporters([[options xcodeBuildArgumentsForSubject] arrayByAddingObject:@"clean"],
+  NSArray *arguments = [[[options xcodeBuildArgumentsForSubject]
+                         arrayByAddingObjectsFromArray:[options commonXcodeBuildArguments]]
+                        arrayByAddingObject:@"clean"];
+  if (!RunXcodebuildAndFeedEventsToReporters(arguments,
                                              @"clean",
                                              [options scheme],
                                              [options reporters])) {
