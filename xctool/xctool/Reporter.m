@@ -266,6 +266,7 @@ void ReportStatusMessageEnd(NSArray *reporters, ReporterMessageLevel level, NSSt
 - (void)testOutput:(NSDictionary *)event {}
 - (void)beginStatus:(NSDictionary *)event {}
 - (void)endStatus:(NSDictionary *)event {}
+- (void)analyzerResult:(NSDictionary *)event {}
 
 - (void)close
 {

@@ -36,9 +36,13 @@
 @property (nonatomic, retain) NSString *objRoot;
 @property (nonatomic, retain) NSString *symRoot;
 @property (nonatomic, retain) NSString *sharedPrecompsDir;
+@property (nonatomic, retain) NSString *effectivePlatformName;
 @property (nonatomic, retain) NSArray *testables;
 // Everything in the scheme marked as Build for Test
 @property (nonatomic, retain) NSArray *buildablesForTest;
+
+// buildables for Running or Testing
+@property (nonatomic, retain) NSArray *buildables;
 
 @property (nonatomic, retain) NSArray *reporters;
 
