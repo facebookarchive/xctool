@@ -16,6 +16,15 @@
 		28FFB02916FFC494000CCE2A /* libTestsThatCrash.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FFB01016FFC494000CCE2A /* libTestsThatCrash.a */; };
 		28FFB02F16FFC494000CCE2A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 28FFB02D16FFC494000CCE2A /* InfoPlist.strings */; };
 		28FFB03216FFC494000CCE2A /* TestsThatCrashTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28FFB03116FFC494000CCE2A /* TestsThatCrashTests.m */; };
+		CD5D80A11762743100EF6428 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FFB01316FFC494000CCE2A /* Foundation.framework */; };
+		CD5D80A61762743100EF6428 /* CrashOnStaticInitExit.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = CD5D80A51762743100EF6428 /* CrashOnStaticInitExit.h */; };
+		CD5D80A81762743100EF6428 /* CrashOnStaticInitExit.m in Sources */ = {isa = PBXBuildFile; fileRef = CD5D80A71762743100EF6428 /* CrashOnStaticInitExit.m */; };
+		CD5D80AF1762743100EF6428 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FFB02216FFC494000CCE2A /* SenTestingKit.framework */; };
+		CD5D80B01762743100EF6428 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FFB02416FFC494000CCE2A /* UIKit.framework */; };
+		CD5D80B11762743100EF6428 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FFB01316FFC494000CCE2A /* Foundation.framework */; };
+		CD5D80B41762743100EF6428 /* libCrashOnStaticInitExit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CD5D80A01762743100EF6428 /* libCrashOnStaticInitExit.a */; };
+		CD5D80BA1762743100EF6428 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = CD5D80B81762743100EF6428 /* InfoPlist.strings */; };
+		CD5D80BD1762743100EF6428 /* CrashOnStaticInitExitTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = CD5D80BC1762743100EF6428 /* CrashOnStaticInitExitTests.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -25,6 +34,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 28FFB00F16FFC494000CCE2A;
 			remoteInfo = TestsThatCrash;
+		};
+		CD5D80B21762743100EF6428 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 28FFB00816FFC494000CCE2A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CD5D809F1762743100EF6428;
+			remoteInfo = CrashOnStaticInitExit;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -36,6 +52,16 @@
 			dstSubfolderSpec = 16;
 			files = (
 				28FFB01916FFC494000CCE2A /* TestsThatCrash.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CD5D809E1762743100EF6428 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/${PRODUCT_NAME}";
+			dstSubfolderSpec = 16;
+			files = (
+				CD5D80A61762743100EF6428 /* CrashOnStaticInitExit.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,6 +79,15 @@
 		28FFB02C16FFC494000CCE2A /* TestsThatCrashTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TestsThatCrashTests-Info.plist"; sourceTree = "<group>"; };
 		28FFB02E16FFC494000CCE2A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		28FFB03116FFC494000CCE2A /* TestsThatCrashTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestsThatCrashTests.m; sourceTree = "<group>"; };
+		CD5D80A01762743100EF6428 /* libCrashOnStaticInitExit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCrashOnStaticInitExit.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD5D80A41762743100EF6428 /* CrashOnStaticInitExit-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CrashOnStaticInitExit-Prefix.pch"; sourceTree = "<group>"; };
+		CD5D80A51762743100EF6428 /* CrashOnStaticInitExit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CrashOnStaticInitExit.h; sourceTree = "<group>"; };
+		CD5D80A71762743100EF6428 /* CrashOnStaticInitExit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CrashOnStaticInitExit.m; sourceTree = "<group>"; };
+		CD5D80AE1762743100EF6428 /* CrashOnStaticInitExitTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CrashOnStaticInitExitTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD5D80B71762743100EF6428 /* CrashOnStaticInitExitTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CrashOnStaticInitExitTests-Info.plist"; sourceTree = "<group>"; };
+		CD5D80B91762743100EF6428 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		CD5D80BB1762743100EF6428 /* CrashOnStaticInitExitTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CrashOnStaticInitExitTests.h; sourceTree = "<group>"; };
+		CD5D80BC1762743100EF6428 /* CrashOnStaticInitExitTests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CrashOnStaticInitExitTests.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +110,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CD5D809D1762743100EF6428 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD5D80A11762743100EF6428 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CD5D80AA1762743100EF6428 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD5D80AF1762743100EF6428 /* SenTestingKit.framework in Frameworks */,
+				CD5D80B01762743100EF6428 /* UIKit.framework in Frameworks */,
+				CD5D80B11762743100EF6428 /* Foundation.framework in Frameworks */,
+				CD5D80B41762743100EF6428 /* libCrashOnStaticInitExit.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -83,6 +137,8 @@
 			children = (
 				28FFB01516FFC494000CCE2A /* TestsThatCrash */,
 				28FFB02A16FFC494000CCE2A /* TestsThatCrashTests */,
+				CD5D80A21762743100EF6428 /* CrashOnStaticInitExit */,
+				CD5D80B51762743100EF6428 /* CrashOnStaticInitExitTests */,
 				28FFB01216FFC494000CCE2A /* Frameworks */,
 				28FFB01116FFC494000CCE2A /* Products */,
 			);
@@ -93,6 +149,8 @@
 			children = (
 				28FFB01016FFC494000CCE2A /* libTestsThatCrash.a */,
 				28FFB02116FFC494000CCE2A /* TestsThatCrashTests.octest */,
+				CD5D80A01762743100EF6428 /* libCrashOnStaticInitExit.a */,
+				CD5D80AE1762743100EF6428 /* CrashOnStaticInitExitTests.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -143,6 +201,43 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		CD5D80A21762743100EF6428 /* CrashOnStaticInitExit */ = {
+			isa = PBXGroup;
+			children = (
+				CD5D80A51762743100EF6428 /* CrashOnStaticInitExit.h */,
+				CD5D80A71762743100EF6428 /* CrashOnStaticInitExit.m */,
+				CD5D80A31762743100EF6428 /* Supporting Files */,
+			);
+			path = CrashOnStaticInitExit;
+			sourceTree = "<group>";
+		};
+		CD5D80A31762743100EF6428 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				CD5D80A41762743100EF6428 /* CrashOnStaticInitExit-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		CD5D80B51762743100EF6428 /* CrashOnStaticInitExitTests */ = {
+			isa = PBXGroup;
+			children = (
+				CD5D80BB1762743100EF6428 /* CrashOnStaticInitExitTests.h */,
+				CD5D80BC1762743100EF6428 /* CrashOnStaticInitExitTests.mm */,
+				CD5D80B61762743100EF6428 /* Supporting Files */,
+			);
+			path = CrashOnStaticInitExitTests;
+			sourceTree = "<group>";
+		};
+		CD5D80B61762743100EF6428 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				CD5D80B71762743100EF6428 /* CrashOnStaticInitExitTests-Info.plist */,
+				CD5D80B81762743100EF6428 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -182,6 +277,42 @@
 			productReference = 28FFB02116FFC494000CCE2A /* TestsThatCrashTests.octest */;
 			productType = "com.apple.product-type.bundle";
 		};
+		CD5D809F1762743100EF6428 /* CrashOnStaticInitExit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CD5D80C21762743100EF6428 /* Build configuration list for PBXNativeTarget "CrashOnStaticInitExit" */;
+			buildPhases = (
+				CD5D809C1762743100EF6428 /* Sources */,
+				CD5D809D1762743100EF6428 /* Frameworks */,
+				CD5D809E1762743100EF6428 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CrashOnStaticInitExit;
+			productName = CrashOnStaticInitExit;
+			productReference = CD5D80A01762743100EF6428 /* libCrashOnStaticInitExit.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		CD5D80AD1762743100EF6428 /* CrashOnStaticInitExitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CD5D80C31762743100EF6428 /* Build configuration list for PBXNativeTarget "CrashOnStaticInitExitTests" */;
+			buildPhases = (
+				CD5D80A91762743100EF6428 /* Sources */,
+				CD5D80AA1762743100EF6428 /* Frameworks */,
+				CD5D80AB1762743100EF6428 /* Resources */,
+				CD5D80AC1762743100EF6428 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CD5D80B31762743100EF6428 /* PBXTargetDependency */,
+			);
+			name = CrashOnStaticInitExitTests;
+			productName = CrashOnStaticInitExitTests;
+			productReference = CD5D80AE1762743100EF6428 /* CrashOnStaticInitExitTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -205,6 +336,8 @@
 			targets = (
 				28FFB00F16FFC494000CCE2A /* TestsThatCrash */,
 				28FFB02016FFC494000CCE2A /* TestsThatCrashTests */,
+				CD5D809F1762743100EF6428 /* CrashOnStaticInitExit */,
+				CD5D80AD1762743100EF6428 /* CrashOnStaticInitExitTests */,
 			);
 		};
 /* End PBXProject section */
@@ -218,10 +351,31 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CD5D80AB1762743100EF6428 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD5D80BA1762743100EF6428 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
 		28FFB01F16FFC494000CCE2A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+		CD5D80AC1762743100EF6428 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -253,6 +407,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CD5D809C1762743100EF6428 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD5D80A81762743100EF6428 /* CrashOnStaticInitExit.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CD5D80A91762743100EF6428 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD5D80BD1762743100EF6428 /* CrashOnStaticInitExitTests.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -261,6 +431,11 @@
 			target = 28FFB00F16FFC494000CCE2A /* TestsThatCrash */;
 			targetProxy = 28FFB02716FFC494000CCE2A /* PBXContainerItemProxy */;
 		};
+		CD5D80B31762743100EF6428 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CD5D809F1762743100EF6428 /* CrashOnStaticInitExit */;
+			targetProxy = CD5D80B21762743100EF6428 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -268,6 +443,14 @@
 			isa = PBXVariantGroup;
 			children = (
 				28FFB02E16FFC494000CCE2A /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		CD5D80B81762743100EF6428 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CD5D80B91762743100EF6428 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -379,6 +562,64 @@
 			};
 			name = Release;
 		};
+		CD5D80BE1762743100EF6428 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				DSTROOT = /tmp/CrashOnStaticInitExit.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CrashOnStaticInitExit/CrashOnStaticInitExit-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		CD5D80BF1762743100EF6428 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				DSTROOT = /tmp/CrashOnStaticInitExit.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CrashOnStaticInitExit/CrashOnStaticInitExit-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		CD5D80C01762743100EF6428 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CrashOnStaticInitExit/CrashOnStaticInitExit-Prefix.pch";
+				INFOPLIST_FILE = "CrashOnStaticInitExitTests/CrashOnStaticInitExitTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		CD5D80C11762743100EF6428 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CrashOnStaticInitExit/CrashOnStaticInitExit-Prefix.pch";
+				INFOPLIST_FILE = "CrashOnStaticInitExitTests/CrashOnStaticInitExitTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -398,12 +639,30 @@
 				28FFB03716FFC494000CCE2A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		28FFB03816FFC494000CCE2A /* Build configuration list for PBXNativeTarget "TestsThatCrashTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				28FFB03916FFC494000CCE2A /* Debug */,
 				28FFB03A16FFC494000CCE2A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CD5D80C21762743100EF6428 /* Build configuration list for PBXNativeTarget "CrashOnStaticInitExit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CD5D80BE1762743100EF6428 /* Debug */,
+				CD5D80BF1762743100EF6428 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		CD5D80C31762743100EF6428 /* Build configuration list for PBXNativeTarget "CrashOnStaticInitExitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CD5D80C01762743100EF6428 /* Debug */,
+				CD5D80C11762743100EF6428 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};

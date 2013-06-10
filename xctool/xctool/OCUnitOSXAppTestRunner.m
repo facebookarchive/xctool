@@ -23,7 +23,9 @@
 
 @implementation OCUnitOSXAppTestRunner
 
-- (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock error:(NSString **)error
+- (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
+              gotUncaughtSignal:(BOOL *)gotUncaughtSignal
+                          error:(NSString **)error
 {
   NSString *sdkName = _buildSettings[@"SDK_NAME"];
   NSAssert([sdkName hasPrefix:@"macosx"], @"Unexpected SDK: %@", sdkName);
@@ -50,6 +52,7 @@
 
   LaunchTaskAndFeedOuputLinesToBlock(task, outputLineBlock);
 
+  *gotUncaughtSignal = task.terminationReason == NSTaskTerminationReasonUncaughtSignal;
   return [task terminationStatus] == 0;
 }
 

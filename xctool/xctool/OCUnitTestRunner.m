@@ -62,7 +62,9 @@
   [super dealloc];
 }
 
-- (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock error:(NSString **)error
+- (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
+              gotUncaughtSignal:(BOOL *)gotUncaughtSignal
+                          error:(NSString **)error
 {
   // Subclasses will override this method.
   return NO;
@@ -144,7 +146,10 @@
   NSSet *crashReportsAtStart = [NSSet setWithArray:[self collectCrashReportPaths]];
 
   NSString *runTestsError = nil;
-  BOOL succeeded = [self runTestsAndFeedOutputTo:feedOutputToBlock error:&runTestsError];
+  BOOL didTerminateWithUncaughtSignal = NO;
+  BOOL succeeded = [self runTestsAndFeedOutputTo:feedOutputToBlock
+                               gotUncaughtSignal:&didTerminateWithUncaughtSignal
+                                           error:&runTestsError];
 
   if (runTestsError) {
     *error = runTestsError;
@@ -170,7 +175,7 @@
     succeeded = YES;
   }
 
-  if ([crashFilter testRunWasUnfinished]) {
+  if ([crashFilter testRunWasUnfinished] || didTerminateWithUncaughtSignal) {
     // The test runner must have crashed.
 
     // Wait for a moment to see if a crash report shows up.

@@ -209,8 +209,12 @@ static void KillSimulatorJobs()
   return [exitMode[@"via"] isEqualToString:@"exit"] && ([exitMode[@"status"] intValue] == 0);
 }
 
-- (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock error:(NSString **)error
+- (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
+              gotUncaughtSignal:(BOOL *)gotUncaughtSignal
+                          error:(NSString **)error
 {
+  *gotUncaughtSignal = NO; // no equivalent for simulator
+
   NSString *sdkName = _buildSettings[@"SDK_NAME"];
   NSAssert([sdkName hasPrefix:@"iphonesimulator"], @"Unexpected SDK: %@", sdkName);
 
