@@ -53,8 +53,16 @@
 
 @property (nonatomic, retain) NSMutableArray *actions;
 
-- (NSArray *)commonXcodeBuildArgumentsIncludingSDK:(BOOL)includingSDK;
-- (NSArray *)commonXcodeBuildArguments;
+/**
+ Returns the command-line arguments that were passed to xctool, and which should
+ carry through to the xcodebuild commands that xctool spawns.
+ 
+ 'spawnAction' should be one of LaunchAction, TestAction, ArchiveAction,
+ AnalyzeAction, or ProfileAction.
+ */
+- (NSArray *)commonXcodeBuildArgumentsForSchemeAction:(NSString *)schemeAction
+                                     xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo;
+
 - (NSArray *)xcodeBuildArgumentsForSubject;
 - (BOOL)validateReporterOptions:(NSString **)errorMessage;
 

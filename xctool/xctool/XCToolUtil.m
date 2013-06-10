@@ -19,8 +19,10 @@
 #import <mach-o/dyld.h>
 
 #import "NSFileHandle+Print.h"
+#import "Options.h"
 #import "Reporter.h"
 #import "TaskUtil.h"
+#import "XcodeSubjectInfo.h"
 
 NSDictionary *BuildSettingsFromOutput(NSString *output)
 {
@@ -322,4 +324,29 @@ BOOL RunXcodebuildAndFeedEventsToReporters(NSArray *arguments,
                              withObject:endEvent];
 
   return succeeded;
+}
+
+NSArray *ArgumentListByOverriding(NSArray *arguments,
+                                  NSString *option,
+                                  NSString *optionValue)
+{
+  NSMutableArray *result = [NSMutableArray array];
+
+  BOOL foundAndReplaced = NO;
+
+  for (int i = 0; i < [arguments count]; i++) {
+    if ([arguments[i] isEqualToString:option]) {
+      [result addObjectsFromArray:@[option, optionValue]];
+      i++;
+      foundAndReplaced = YES;
+    } else {
+      [result addObject:arguments[i]];
+    }
+  }
+
+  if (!foundAndReplaced) {
+    [result addObjectsFromArray:@[option, optionValue]];
+  }
+
+  return result;
 }

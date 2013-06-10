@@ -18,6 +18,10 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
+#import "FakeTask.h"
+#import "FakeTaskManager.h"
+#import "LaunchHandlers.h"
+#import "Options+Testing.h"
 #import "XCToolUtil.h"
 #import "XcodeSubjectInfo.h"
 #import "XcodeTargetMatch.h"
@@ -247,6 +251,36 @@
                      @"target" : @"TestsWithArgAndEnvSettingsTests",
                      @"targetID" : @"288DD482173B7C9800F1093C",
                      }]));
+}
+
+- (void)testCanGetBuildConfigurationForRunAction
+{
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+     // Make sure -showBuildSettings returns some data
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj"
+                                                     scheme:@"TestProject-Library"
+                                               settingsPath:TEST_DATA @"TestProject-Library-WithDifferentConfigurations-showBuildSettings.txt"],
+     ]];
+
+    Options *options = [Options optionsFrom:@[
+                        @"-project", TEST_DATA @"TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj",
+                        @"-scheme", @"TestProject-Library",
+                        ]];
+
+    XcodeSubjectInfo *subjectInfo = [[[XcodeSubjectInfo alloc] init] autorelease];
+    [subjectInfo setSubjectProject:[options project]];
+    [subjectInfo setSubjectScheme:[options scheme]];
+    [subjectInfo setSubjectXcodeBuildArguments:[options xcodeBuildArgumentsForSubject]];
+    [subjectInfo setReporters:@[]];
+
+    // The project has a different configuration set for each scheme action.
+    assertThat([subjectInfo configurationNameForAction:@"TestAction"], equalTo(@"TestConfig"));
+    assertThat([subjectInfo configurationNameForAction:@"LaunchAction"], equalTo(@"LaunchConfig"));
+    assertThat([subjectInfo configurationNameForAction:@"AnalyzeAction"], equalTo(@"AnalyzeConfig"));
+    assertThat([subjectInfo configurationNameForAction:@"ProfileAction"], equalTo(@"ProfileConfig"));
+    assertThat([subjectInfo configurationNameForAction:@"ArchiveAction"], equalTo(@"ArchiveConfig"));
+  }];
 }
 
 @end

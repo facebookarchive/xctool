@@ -355,7 +355,13 @@
   xcodeSubjectInfo.subjectWorkspace = self.workspace;
   xcodeSubjectInfo.subjectProject = self.project;
   xcodeSubjectInfo.subjectScheme = self.scheme;
-  xcodeSubjectInfo.subjectXcodeBuildArguments = [self xcodeBuildArgumentsForSubject];
+
+  // We can pass nil for the scheme action since we don't care to use the
+  // scheme's specific configuration.
+  NSArray *commonXcodeBuildArguments = [options commonXcodeBuildArgumentsForSchemeAction:nil
+                                                                        xcodeSubjectInfo:nil];
+  xcodeSubjectInfo.subjectXcodeBuildArguments =
+    [[self xcodeBuildArgumentsForSubject] arrayByAddingObjectsFromArray:commonXcodeBuildArguments];
   xcodeSubjectInfo.reporters = _reporters;
 
   if (self.sdk == nil) {
@@ -387,10 +393,6 @@
     }
   }
 
-  if (self.configuration == nil) {
-    self.configuration = xcodeSubjectInfo.configuration;
-  }
-
   for (Action *action in self.actions) {
     BOOL valid = [action validateOptions:errorMessage xcodeSubjectInfo:xcodeSubjectInfo options:self];
     if (!valid) {
@@ -406,15 +408,20 @@
   return YES;
 }
 
-- (NSArray *)commonXcodeBuildArgumentsIncludingSDK:(BOOL)includingSDK
+- (NSArray *)commonXcodeBuildArgumentsForSchemeAction:(NSString *)schemeAction
+                                     xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo;
 {
   NSMutableArray *arguments = [NSMutableArray array];
 
-  if (self.configuration != nil) {
-    [arguments addObjectsFromArray:@[@"-configuration", self.configuration]];
+  if (_configuration != nil) {
+    // The -configuration option from the command-line takes precedence.
+    [arguments addObjectsFromArray:@[@"-configuration", _configuration]];
+  } else if (schemeAction && xcodeSubjectInfo) {
+    [arguments addObjectsFromArray:@[@"-configuration",
+                                     [xcodeSubjectInfo configurationNameForAction:schemeAction]]];
   }
 
-  if (self.sdk != nil && includingSDK) {
+  if (self.sdk != nil) {
     [arguments addObjectsFromArray:@[@"-sdk", self.sdk]];
   }
 
@@ -439,26 +446,16 @@
   return arguments;
 }
 
-- (NSArray *)commonXcodeBuildArguments
-{
-  return [self commonXcodeBuildArgumentsIncludingSDK:YES];
-}
-
 - (NSArray *)xcodeBuildArgumentsForSubject
 {
-  // The subject being the thing we're building or testing, which is a workspace/scheme combo
-  // or a project/scheme combo.
-  NSMutableArray *arguments = [NSMutableArray array];
-
   if (self.workspace != nil && self.scheme != nil) {
-    [arguments addObjectsFromArray:@[@"-workspace", self.workspace, @"-scheme", self.scheme]];
+    return @[@"-workspace", self.workspace, @"-scheme", self.scheme];
   } else if (self.project != nil && self.scheme != nil) {
-    [arguments addObjectsFromArray:@[@"-project", self.project, @"-scheme", self.scheme]];
+    return @[@"-project", self.project, @"-scheme", self.scheme];
+  } else {
+    NSLog(@"Should have either a workspace or a project.");
+    abort();
   }
-
-  [arguments addObjectsFromArray:[self commonXcodeBuildArguments]];
-
-  return arguments;
 }
 
 - (void)setFindTargetExcludePathsFromString:(NSString *)string

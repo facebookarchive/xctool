@@ -226,7 +226,7 @@
                          @"SOMEKEY2=SOMEVAL2"
                          ];
   Options *action = [Options optionsFrom:arguments];
-  assertThat([action commonXcodeBuildArguments], equalTo(arguments));
+  assertThat([action commonXcodeBuildArgumentsForSchemeAction:nil xcodeSubjectInfo:nil], equalTo(arguments));
 }
 
 - (void)testXcodeBuildArgumentsForWorkspaceAndSchemeSubject
@@ -256,11 +256,11 @@
                       ]] assertOptionsValidateWithBuildSettingsFromFile:
                       TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
                       ];
-  assertThat([options xcodeBuildArgumentsForSubject],
+  assertThat([[options xcodeBuildArgumentsForSubject]
+              arrayByAddingObjectsFromArray:[options commonXcodeBuildArgumentsForSchemeAction:nil xcodeSubjectInfo:nil]],
              equalTo(@[
                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                      @"-scheme", @"TestProject-Library",
-                     @"-configuration", @"Release",
                      @"-sdk", @"iphonesimulator6.1",
                      ]));
 }

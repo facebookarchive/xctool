@@ -44,3 +44,13 @@ BOOL RunXcodebuildAndFeedEventsToReporters(NSArray *arguments,
                                            NSString *command,
                                            NSString *title,
                                            NSArray *reporters);
+
+/**
+ Finds an occurrence of '-someoption', 'somevalue' in an argument list and
+ replaces 'somevalue' with a new value.
+ 
+ If the option was never present in the argument list, it gets added to the end.
+ */
+NSArray *ArgumentListByOverriding(NSArray *arguments,
+                                  NSString *option,
+                                  NSString *optionValue);

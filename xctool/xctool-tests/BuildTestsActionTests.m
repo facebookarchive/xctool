@@ -323,4 +323,49 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
   }];
 }
 
+- (void)testConfigurationIsTakenFromScheme
+{
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+     // Make sure -showBuildSettings returns some data
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj"
+                                                     scheme:@"TestProject-Library"
+                                               settingsPath:TEST_DATA @"TestProject-Library-WithDifferentConfigurations-showBuildSettings.txt"],
+     ]];
+
+    XCTool *tool = [[[XCTool alloc] init] autorelease];
+
+    tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"build-tests",
+                       ];
+
+    [TestUtil runWithFakeStreams:tool];
+
+    NSArray *xcodebuildArguments = [[[FakeTaskManager sharedManager] launchedTasks][0] arguments];
+
+    // -workspace would normally point to a random path, so we fake this out
+    // for testing.
+    xcodebuildArguments = ArgumentListByOverriding(xcodebuildArguments,
+                                                   @"-workspace",
+                                                   @"/fake/path/to/Tests.xcworkspace");
+
+    assertThat(xcodebuildArguments,
+               equalTo(@[
+                       @"-configuration",
+                       @"TestConfig",
+                       @"-sdk",
+                       @"iphoneos6.1",
+                       @"-workspace",
+                       @"/fake/path/to/Tests.xcworkspace",
+                       @"-scheme",
+                       @"Tests",
+                       @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-dcmgtqlclwxdzqevoakcspwlrpfm/Build/Intermediates",
+                       @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-dcmgtqlclwxdzqevoakcspwlrpfm/Build/Products",
+                       @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-dcmgtqlclwxdzqevoakcspwlrpfm/Build/Intermediates/PrecompiledHeaders",
+                       @"build"
+                       ]));
+  }];
+}
+
 @end

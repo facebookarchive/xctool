@@ -35,7 +35,7 @@
                equalTo(@[
                        @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
-                       @"-configuration", @"Debug",
+                       @"-configuration", @"Release",
                        @"-sdk", @"iphonesimulator6.0",
                        @"archive",
                        ]));
@@ -110,6 +110,36 @@
 
     assertThatInt([tool exitStatus], equalToInt(0));
     assertThat(output[@"stdout"], containsString(@"** ARCHIVE SUCCEEDED **"));
+  }];
+}
+
+- (void)testConfigurationIsTakenFromScheme
+{
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+     // Make sure -showBuildSettings returns some data
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj"
+                                                     scheme:@"TestProject-Library"
+                                               settingsPath:TEST_DATA @"TestProject-Library-WithDifferentConfigurations-showBuildSettings.txt"],
+     ]];
+
+    XCTool *tool = [[[XCTool alloc] init] autorelease];
+
+    tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"archive",
+                       ];
+
+    [TestUtil runWithFakeStreams:tool];
+
+    assertThat([[[FakeTaskManager sharedManager] launchedTasks][0] arguments],
+               equalTo(@[
+                       @"-project", TEST_DATA @"TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-configuration", @"ArchiveConfig",                       
+                       @"-sdk", @"iphoneos6.1",
+                       @"archive",
+                       ]));
   }];
 }
 
