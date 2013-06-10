@@ -84,19 +84,6 @@
   assertThatBool(action.skipDependencies, equalToBool(YES));
 }
 
-- (void)testSDKFallback
-{
-  Options *options = [[Options optionsFrom:@[
-                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                       @"-scheme", @"TestProject-Library",
-                       @"test",
-                       ]] assertOptionsValidateWithBuildSettingsFromFile:
-                      TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-                      ];
-  assertThat(options.sdk, equalTo(@"iphonesimulator"));
-  assertThat(options.arch, equalTo(@"i386"));
-}
-
 - (void)testOnlyParsing
 {
   Options *options = [[Options optionsFrom:@[

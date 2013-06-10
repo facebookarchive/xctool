@@ -68,6 +68,8 @@
 		28ACFC8416FBA888004BAF33 /* TaskUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 28ACFC8216FBA888004BAF33 /* TaskUtil.m */; };
 		28ADB43816E4107F006301ED /* CleanActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28ADB43716E4107F006301ED /* CleanActionTests.m */; };
 		28ADB43B16E410F9006301ED /* BuildActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28ADB43A16E410F9006301ED /* BuildActionTests.m */; };
+		28B714551760767D00BB016A /* OCUnitIOSDeviceTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 28B714541760767D00BB016A /* OCUnitIOSDeviceTestRunner.m */; };
+		28B714561760769E00BB016A /* OCUnitIOSDeviceTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 28B714541760767D00BB016A /* OCUnitIOSDeviceTestRunner.m */; };
 		28C267DF17552E6B00AFC459 /* TextReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28C267DE17552E6B00AFC459 /* TextReporterTests.m */; };
 		28C81A63175562050072DDB8 /* ReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28C81A62175562050072DDB8 /* ReporterTests.m */; };
 		28C81A66175563690072DDB8 /* RecordingReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28C81A65175563690072DDB8 /* RecordingReporter.m */; };
@@ -213,6 +215,8 @@
 		28ACFC8216FBA888004BAF33 /* TaskUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskUtil.m; sourceTree = "<group>"; };
 		28ADB43716E4107F006301ED /* CleanActionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CleanActionTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		28ADB43A16E410F9006301ED /* BuildActionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BuildActionTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		28B714531760767D00BB016A /* OCUnitIOSDeviceTestRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUnitIOSDeviceTestRunner.h; sourceTree = "<group>"; };
+		28B714541760767D00BB016A /* OCUnitIOSDeviceTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitIOSDeviceTestRunner.m; sourceTree = "<group>"; };
 		28C267DE17552E6B00AFC459 /* TextReporterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextReporterTests.m; sourceTree = "<group>"; };
 		28C81A62175562050072DDB8 /* ReporterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReporterTests.m; sourceTree = "<group>"; };
 		28C81A64175563690072DDB8 /* RecordingReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordingReporter.h; sourceTree = "<group>"; };
@@ -365,6 +369,8 @@
 				288B9FBB171A5509008F0BDF /* OCUnitOSXAppTestRunner.m */,
 				288B9FB6171A50C1008F0BDF /* OCUnitOSXLogicTestRunner.h */,
 				288B9FB7171A50C1008F0BDF /* OCUnitOSXLogicTestRunner.m */,
+				28B714531760767D00BB016A /* OCUnitIOSDeviceTestRunner.h */,
+				28B714541760767D00BB016A /* OCUnitIOSDeviceTestRunner.m */,
 				28E9B9D516C3275200A52E4D /* OCUnitTestRunner.h */,
 				28E9B9D616C3275200A52E4D /* OCUnitTestRunner.m */,
 				28E9B9E816C341DA00A52E4D /* Reporters */,
@@ -632,6 +638,7 @@
 				CD522EC217471D6300048AF9 /* SchemeGenerator.m in Sources */,
 				CDD81F51174EAFDC00F42111 /* BufferedReporter.m in Sources */,
 				29D99BF81753A3D700ABBD04 /* JSONCompilationDatabaseReporter.m in Sources */,
+				28B714551760767D00BB016A /* OCUnitIOSDeviceTestRunner.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -639,6 +646,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				28B714561760769E00BB016A /* OCUnitIOSDeviceTestRunner.m in Sources */,
 				283479A216E1A164003C3B77 /* CleanAction.m in Sources */,
 				2834799916E199E5003C3B77 /* BuildAction.m in Sources */,
 				2834799A16E199E5003C3B77 /* Options.m in Sources */,

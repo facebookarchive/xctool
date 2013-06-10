@@ -95,7 +95,6 @@ void _CFAutoreleasePoolPrintPools();
                        @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
                        @"-configuration", @"Debug",
-                       @"-sdk", @"iphonesimulator6.0",
                        @"build",
                        ]));
   }];
@@ -125,7 +124,6 @@ void _CFAutoreleasePoolPrintPools();
                        @"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
                        @"-scheme", @"TestProject-Library",
                        @"-configuration", @"Debug",
-                       @"-sdk", @"iphonesimulator6.0",
                        @"build",
                        ]));
   }];
@@ -156,7 +154,6 @@ void _CFAutoreleasePoolPrintPools();
                        @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
                        @"-configuration", @"SOME_CONFIGURATION",
-                       @"-sdk", @"iphonesimulator6.0",
                        @"build",
                        ]));
   }];
@@ -224,7 +221,35 @@ void _CFAutoreleasePoolPrintPools();
                        @"-project", TEST_DATA @"TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
                        @"-configuration", @"LaunchConfig",
-                       @"-sdk", @"iphoneos6.1",
+                       @"build",
+                       ]));
+  }];
+}
+
+- (void)testCanBuildProjectWithTargetsThatUseDifferentSDKs
+{
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+     // Make sure -showBuildSettings returns some data
+     [LaunchHandlers handlerForShowBuildSettingsWithWorkspace:TEST_DATA @"ProjectsWithDifferentSDKs/ProjectsWithDifferentSDKs.xcworkspace"
+                                                       scheme:@"ProjectsWithDifferentSDKs"
+                                                 settingsPath:TEST_DATA @"ProjectsWithDifferentSDKs-ProjectsWithDifferentSDKs-showBuildSettings.txt"],
+     ]];
+
+    XCTool *tool = [[[XCTool alloc] init] autorelease];
+
+    tool.arguments = @[@"-workspace", TEST_DATA @"ProjectsWithDifferentSDKs/ProjectsWithDifferentSDKs.xcworkspace",
+                       @"-scheme", @"ProjectsWithDifferentSDKs",
+                       @"build",
+                       ];
+
+    [TestUtil runWithFakeStreams:tool];
+
+    assertThat([[[FakeTaskManager sharedManager] launchedTasks][0] arguments],
+               equalTo(@[
+                       @"-workspace", TEST_DATA @"ProjectsWithDifferentSDKs/ProjectsWithDifferentSDKs.xcworkspace",
+                       @"-scheme", @"ProjectsWithDifferentSDKs",
+                       @"-configuration", @"Debug",
                        @"build",
                        ]));
   }];

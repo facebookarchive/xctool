@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:iOSLibrary/iOSLibrary.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:OSXLibrary/OSXLibrary.xcodeproj">
+   </FileRef>
+</Workspace>

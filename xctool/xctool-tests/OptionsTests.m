@@ -277,18 +277,6 @@
                  equalToBool(YES));
 }
 
-- (void)testSDKDefaultsToSubjectsSDK
-{
-  // The subject being the workspace/scheme or project/target we're testing.
-  Options *options = [[Options optionsFrom:@[
-                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                       @"-scheme", @"TestProject-Library",
-                       ]] assertOptionsValidateWithBuildSettingsFromFile:
-                      TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-                      ];
-  assertThat(options.sdk, equalTo(@"iphoneos6.1"));
-}
-
 - (void)testHelpOptionSetsPrintUsage
 {
   assertThatBool([Options optionsFrom:@[@"-help"]].showHelp, equalToBool(YES));
@@ -327,7 +315,6 @@
                        ]] assertOptionsValidateWithBuildSettingsFromFile:
                       TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
                       ];
-  assertThat(options.sdk, equalTo(@"iphoneos6.1"));
 
   assertThatInteger(options.actions.count, equalToInteger(1));
   Action *action = options.actions[0];

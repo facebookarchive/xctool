@@ -364,35 +364,6 @@
     [[self xcodeBuildArgumentsForSubject] arrayByAddingObjectsFromArray:commonXcodeBuildArguments];
   xcodeSubjectInfo.reporters = _reporters;
 
-  if (self.sdk == nil) {
-    BOOL valid = YES;
-    for (Action *action in self.actions) {
-      if (![action validateSDK:xcodeSubjectInfo.sdkName]) {
-        valid = NO;
-        break;
-      }
-    }
-
-    if (valid) {
-      self.sdk = xcodeSubjectInfo.sdkName;
-    } else {
-      if ([xcodeSubjectInfo.sdkName hasPrefix:@"iphone"]) {
-        // Tests can't (currently) be run on iphoneos, so fall back
-        // from device to i386 simulator.
-        //
-        // TODO: If a device is connected, it'd be nice to allow
-        // running tests on it.
-        self.sdk = @"iphonesimulator";
-        self.arch = @"i386";
-      } else {
-        *errorMessage =
-          [NSString stringWithFormat:@"Cannot perform action[s] with SDK %@ specified by target.",
-                    xcodeSubjectInfo.sdkName];
-        return NO;
-      }
-    }
-  }
-
   for (Action *action in self.actions) {
     BOOL valid = [action validateOptions:errorMessage xcodeSubjectInfo:xcodeSubjectInfo options:self];
     if (!valid) {
