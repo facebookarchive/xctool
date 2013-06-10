@@ -74,13 +74,11 @@
                        @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
                        @"-configuration", @"Debug",
-                       @"-sdk", @"iphonesimulator6.0",
                        @"clean",
                        ]));
     assertThat([launchedTasks[1] arguments],
                equalTo(@[
                        @"-configuration", @"Debug",
-                       @"-sdk", @"iphonesimulator6.0",
                        @"-workspace", mockWorkspacePath,
                        @"-scheme", @"Tests",
                        @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates",
@@ -117,7 +115,6 @@
                        @"-project", TEST_DATA @"TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
                        @"-configuration", @"LaunchConfig",
-                       @"-sdk", @"iphoneos6.1",
                        @"clean",
                        ]));
     assertThat(ArgumentListByOverriding([tasks[1] arguments],
@@ -126,8 +123,6 @@
                equalTo(@[
                        @"-configuration",
                        @"TestConfig",
-                       @"-sdk",
-                       @"iphoneos6.1",
                        @"-workspace",
                        @"/path/to/Tests.xcworkspace",
                        @"-scheme",

@@ -58,6 +58,4 @@
 
 - (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo;
 
-- (BOOL)validateSDK:(NSString *)sdk;
-
 @end

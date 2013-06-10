@@ -36,7 +36,6 @@
                        @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
                        @"-configuration", @"Release",
-                       @"-sdk", @"iphonesimulator6.0",
                        @"archive",
                        ]));
   }];
@@ -136,8 +135,7 @@
                equalTo(@[
                        @"-project", TEST_DATA @"TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
-                       @"-configuration", @"ArchiveConfig",                       
-                       @"-sdk", @"iphoneos6.1",
+                       @"-configuration", @"ArchiveConfig",
                        @"archive",
                        ]));
   }];

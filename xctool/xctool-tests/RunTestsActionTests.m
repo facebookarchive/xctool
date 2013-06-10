@@ -98,28 +98,36 @@
   assertThat(action.testSDK, equalTo(@"iphonesimulator6.1"));
 }
 
-- (void)testOnlyAllowSimulatorSDKsForTesting
+- (void)testRunTestsFailsWhenSDKIsIPHONEOS
 {
-  [[Options optionsFrom:@[
-    @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-    @"-scheme", @"TestProject-Library",
-    @"-sdk", @"iphonesimulator6.1",
-    @"run-tests",
-    ]] assertOptionsValidateWithBuildSettingsFromFile:
-   TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-   ];
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+     // Make sure -showBuildSettings returns some data
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
+                                                     scheme:@"TestProject-Library"
+                                               settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
+     // We're going to call -showBuildSettings on the test target.
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
+                                                     target:@"TestProject-LibraryTests"
+                                               settingsPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings-iphoneos.txt"
+                                                       hide:NO],
+     ]];
 
-  [[Options optionsFrom:@[
-    @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-    @"-scheme", @"TestProject-Library",
-    @"-sdk", @"iphoneos6.1",
-    @"run-tests"
-    ]]
-   assertOptionsFailToValidateWithError:
-   @"run-tests: 'iphoneos6.1' is not a supported SDK for testing."
-   withBuildSettingsFromFile:
-   TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-   ];
+    XCTool *tool = [[[XCTool alloc] init] autorelease];
+
+    tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-configuration", @"Debug",
+                       @"run-tests"
+                       ];
+
+    NSDictionary *output = [TestUtil runWithFakeStreams:tool];
+
+    assertThatInt(tool.exitStatus, equalToInt(1));
+    assertThat(output[@"stdout"],
+               containsString(@"Testing with the 'iphoneos' SDK is not yet supported.  "
+                              @"Instead, test with the simulator SDK by setting '-sdk iphonesimulator'.\n"));
+  }];
 }
 
 - (void)testRunTestsAction

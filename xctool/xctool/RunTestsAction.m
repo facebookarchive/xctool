@@ -18,6 +18,7 @@
 
 #import "BufferedReporter.h"
 #import "OCUnitIOSAppTestRunner.h"
+#import "OCUnitIOSDeviceTestRunner.h"
 #import "OCUnitIOSLogicTestRunner.h"
 #import "OCUnitOSXAppTestRunner.h"
 #import "OCUnitOSXLogicTestRunner.h"
@@ -142,14 +143,9 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
           xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
          options:(Options *)options
 {
-  if (self.testSDK == nil) {
-    // If specified test SDKs aren't provided, just inherit the main SDK.
-    self.testSDK = options.sdk;
-  }
-
-  if (![self validateSDK:self.testSDK]) {
-    *errorMessage = [NSString stringWithFormat:@"run-tests: '%@' is not a supported SDK for testing.", self.testSDK];
-    return NO;
+  if ([self testSDK] == nil && [options sdk] != nil) {
+    // If specified test SDKs aren't provided, use whatever we got via -sdk.
+    [self setTestSDK:[options sdk]];
   }
 
   for (NSDictionary *only in [self onlyListAsTargetsAndSenTestList]) {
@@ -275,7 +271,12 @@ static NSString* const kTestableMustRunInMainThread = @"mustRunInMainThread";
   NSTask *settingsTask = [[[NSTask alloc] init] autorelease];
   [settingsTask setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
 
-  xcodeArguments = ArgumentListByOverriding(xcodeArguments, @"-sdk", _testSDK);
+  if (_testSDK) {
+    // If we were given a test sdk, then force that.  Otherwise, xcodebuild will
+    // default to the SDK set in the project/target.
+    xcodeArguments = ArgumentListByOverriding(xcodeArguments, @"-sdk", _testSDK);
+  }
+
   [settingsTask setArguments:[xcodeArguments arrayByAddingObjectsFromArray:@[
                               @"-project", testableProjectPath,
                               @"-target", testableTarget,
@@ -291,9 +292,15 @@ static NSString* const kTestableMustRunInMainThread = @"mustRunInMainThread";
    }];
 
   NSDictionary *result = LaunchTaskAndCaptureOutput(settingsTask);
+
   NSDictionary *allSettings = BuildSettingsFromOutput(result[@"stdout"]);
-  assert(allSettings.count == 1);
+  NSAssert([allSettings count] == 1,
+           @"Should only have build settings for a single target.");
+
   NSDictionary *testableBuildSettings = allSettings[testableTarget];
+  NSAssert(testableBuildSettings != nil,
+           @"Should have found build settings for target '%@'",
+           testableTarget);
 
   NSArray *arguments = testable[@"arguments"];
   NSDictionary *environment = testable[@"environment"];
@@ -339,6 +346,8 @@ static NSString* const kTestableMustRunInMainThread = @"mustRunInMainThread";
     } else {
       [testConfigurations addObject:@[testClass, @NO]];
     }
+  } else if ([sdkName hasPrefix:@"iphoneos"]) {
+    [testConfigurations addObject:@[[OCUnitIOSDeviceTestRunner class], @NO]];
   } else {
     NSAssert(NO, @"Unexpected SDK: %@", sdkName);
   }
@@ -521,19 +530,6 @@ static NSString* const kTestableMustRunInMainThread = @"mustRunInMainThread";
   }
 
   return succeeded;
-}
-
-- (BOOL)validateSDK:(NSString *)sdk
-{
-  NSMutableArray *supportedTestSDKs = [NSMutableArray array];
-  for (NSString *sdk in [GetAvailableSDKsAndAliases() allKeys]) {
-    if ([sdk hasPrefix:@"iphonesimulator"] || [sdk hasPrefix:@"macosx"]) {
-      [supportedTestSDKs addObject:sdk];
-    }
-  }
-
-  // We'll only test the iphonesimulator SDKs right now.
-  return [supportedTestSDKs containsObject:sdk];
 }
 
 @end
