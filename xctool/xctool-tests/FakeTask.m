@@ -24,10 +24,12 @@
 @implementation FakeTask
 
 + (NSTask *)fakeTaskWithExitStatus:(int)exitStatus
+                 terminationReason:(NSTaskTerminationReason)pretendTerminationReason
                 standardOutputPath:(NSString *)standardOutputPath
                  standardErrorPath:(NSString *)standardErrorPath
 {
   FakeTask *task = [[[FakeTask alloc] init] autorelease];
+  [task pretendTerminationReason:pretendTerminationReason];
   [task pretendExitStatusOf:exitStatus];
   [task pretendTaskReturnsStandardOutput:
    [NSString stringWithContentsOfFile:standardOutputPath
@@ -43,6 +45,7 @@
 + (NSTask *)fakeTaskWithExitStatus:(int)exitStatus
 {
   return [self fakeTaskWithExitStatus:exitStatus
+                    terminationReason:NSTaskTerminationReasonExit
                    standardOutputPath:nil
                     standardErrorPath:nil];
 }
@@ -66,6 +69,16 @@
 - (void)pretendExitStatusOf:(int)exitStatus
 {
   _pretendExitStatus = exitStatus;
+}
+
+- (void)pretendTerminationReason:(NSTaskTerminationReason)reason
+{
+  _pretendTerminationReason = reason;
+}
+
+- (NSTaskTerminationReason)terminationReason
+{
+  return _pretendTerminationReason;
 }
 
 - (id)init

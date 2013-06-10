@@ -21,6 +21,7 @@
   NSString *_pretendStandardOutput;
   NSString *_pretendStandardError;
   int _pretendExitStatus;
+  NSTaskTerminationReason _pretendTerminationReason;
 }
 
 @property (nonatomic, retain) NSString *launchPath;
@@ -29,6 +30,7 @@
 @property (nonatomic, retain) id standardOutput;
 @property (nonatomic, retain) id standardError;
 @property (nonatomic, assign) int terminationStatus;
+@property (nonatomic, assign) NSTaskTerminationReason terminationReason;
 @property (nonatomic, assign) BOOL isRunning;
 
 /**
@@ -53,7 +55,10 @@
  */
 - (void)pretendExitStatusOf:(int)exitStatus;
 
+- (void)pretendTerminationReason:(NSTaskTerminationReason)reason;
+
 + (NSTask *)fakeTaskWithExitStatus:(int)exitStatus
+                 terminationReason:(NSTaskTerminationReason)reason
                 standardOutputPath:(NSString *)standardOutputPath
                  standardErrorPath:(NSString *)standardErrorPath;
 

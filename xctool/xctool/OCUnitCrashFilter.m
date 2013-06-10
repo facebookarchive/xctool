@@ -22,6 +22,34 @@
 
 @implementation OCUnitCrashFilter
 
++ (void)emitDummyTestEventsTo:(NSArray *)reporters
+                     testName:(NSString *)testName
+                    className:(NSString *)className
+                   methodName:(NSString *)methodName
+                       output:(NSString *)output
+{
+  [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
+   @"event" : kReporter_Events_BeginTest,
+   kReporter_BeginTest_TestKey : testName,
+   kReporter_BeginTest_ClassNameKey : className,
+   kReporter_BeginTest_MethodNameKey : methodName,
+   }];
+  [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
+   @"event" : kReporter_Events_TestOuput,
+   kReporter_TestOutput_OutputKey : output,
+   }];
+  [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
+   @"event" : kReporter_Events_EndTest,
+   kReporter_EndTest_TestKey : testName,
+   kReporter_EndTest_ClassNameKey : className,
+   kReporter_EndTest_MethodNameKey : methodName,
+   kReporter_EndTest_SucceededKey : @NO,
+   kReporter_EndTest_TotalDurationKey : @(0),
+   kReporter_EndTest_OutputKey : output,
+   }];
+}
+
+
 - (id)init
 {
   if (self = [super init])
@@ -130,9 +158,6 @@
     // NSAutoreleasePool.  It could be anything, though (e.g. some background thread).
 
     // To surface this to the Reporter, we create a fictional test.
-    NSString *testName = [NSString stringWithFormat:@"%@_CRASHED", fullProductName];
-    NSString *className = fullProductName;
-    NSString *methodName = @"CRASHED";
 
     NSString *output =
       [NSString stringWithFormat:
@@ -147,25 +172,12 @@
        @"%@",
        self.lastTestEvent[kReporter_EndTest_TestKey],
        concatenatedCrashReports];
-    [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
-     @"event" : kReporter_Events_BeginTest,
-     kReporter_BeginTest_TestKey : testName,
-     kReporter_BeginTest_ClassNameKey : className,
-     kReporter_BeginTest_MethodNameKey : methodName,
-     }];
-    [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
-     @"event" : kReporter_Events_TestOuput,
-     kReporter_TestOutput_OutputKey : output,
-     }];
-    [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
-     @"event" : kReporter_Events_EndTest,
-     kReporter_EndTest_TestKey : testName,
-     kReporter_EndTest_ClassNameKey : className,
-     kReporter_EndTest_MethodNameKey : methodName,
-     kReporter_EndTest_SucceededKey : @NO,
-     kReporter_EndTest_TotalDurationKey : @(0),
-     kReporter_EndTest_OutputKey : output,
-     }];
+
+    [OCUnitCrashFilter emitDummyTestEventsTo:reporters
+                                    testName:[NSString stringWithFormat:@"%@_CRASHED", fullProductName]
+                                   className:fullProductName
+                                  methodName:@"CRASHED"
+                                      output:output];
 
     for (NSMutableDictionary *testSuiteEvent in [self.currentTestSuiteEventTestCountStack reverseObjectEnumerator]) {
       testSuiteEvent[kReporter_EndTestSuite_TestCaseCountKey] =
@@ -173,6 +185,30 @@
       testSuiteEvent[kReporter_EndTestSuite_TotalFailureCountKey] =
         @([testSuiteEvent[kReporter_EndTestSuite_TotalFailureCountKey] intValue] + 1);
     }
+  } else {
+    NSString *testName = [NSString stringWithFormat:@"%@_CRASHED", fullProductName];
+
+    NSString *output =
+      [NSString stringWithFormat:
+       @"The test binary crashed outside of a running test or test-suite."
+       @"\n"
+       @"%@",
+       concatenatedCrashReports];
+
+    // create a dummy suite and test
+    [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
+     @"event" : kReporter_Events_BeginTestSuite,
+     kReporter_BeginTestSuite_SuiteKey : testName,
+     }];
+    [OCUnitCrashFilter emitDummyTestEventsTo:reporters
+                                    testName:testName
+                                   className:fullProductName
+                                  methodName:@"CRASHED"
+                                      output:output];
+    [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
+     @"event" : kReporter_Events_EndTestSuite,
+     kReporter_BeginTestSuite_SuiteKey : testName,
+     }];
   }
 
   // For off any 'end-test-suite' events to keep the reporter sane (it expects every
