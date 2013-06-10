@@ -354,8 +354,6 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                equalTo(@[
                        @"-configuration",
                        @"TestConfig",
-                       @"-sdk",
-                       @"iphoneos6.1",
                        @"-workspace",
                        @"/fake/path/to/Tests.xcworkspace",
                        @"-scheme",

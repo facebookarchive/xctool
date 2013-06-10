@@ -228,10 +228,5 @@
   return YES;
 }
 
-- (BOOL)validateSDK:(NSString *)sdk
-{
-  return YES;
-}
-
 @end
 

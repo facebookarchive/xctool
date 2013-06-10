@@ -459,7 +459,6 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 
 - (void)dealloc
 {
-  self.sdkName = nil;
   self.objRoot = nil;
   self.symRoot = nil;
   self.testables = nil;
@@ -779,7 +778,6 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   self.objRoot = firstBuildable[@"OBJROOT"];
   self.symRoot = firstBuildable[@"SYMROOT"];
   self.sharedPrecompsDir = firstBuildable[@"SHARED_PRECOMPS_DIR"];
-  self.sdkName = firstBuildable[@"SDK_NAME"];
 
   NSString *matchingSchemePath = nil;
 
@@ -841,12 +839,6 @@ containsFilesModifiedSince:(NSDate *)sinceDate
     }
   }
   return nil;
-}
-
-- (NSString *)sdkName
-{
-  [self populate];
-  return _sdkName;
 }
 
 - (NSString *)objRoot

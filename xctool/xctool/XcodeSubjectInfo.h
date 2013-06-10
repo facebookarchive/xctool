@@ -33,7 +33,6 @@
 @property (nonatomic, retain) NSString *subjectScheme;
 @property (nonatomic, retain) NSArray *subjectXcodeBuildArguments;
 
-@property (nonatomic, retain) NSString *sdkName;
 @property (nonatomic, retain) NSString *objRoot;
 @property (nonatomic, retain) NSString *symRoot;
 @property (nonatomic, retain) NSString *sharedPrecompsDir;
