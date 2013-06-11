@@ -16,8 +16,8 @@
 
 #include "../Configurations/Project.xcconfig"
 
-DEVELOPER_PRIVATE_FRAMEWORK_DIR = "$(DEVELOPER_DIR)/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks"
-OTHER_LDFLAGS = -framework AppKit "-F$(DEVELOPER_PRIVATE_FRAMEWORK_DIR)" -framework iPhoneSimulatorRemoteClient "-Wl,-rpath" "-Wl,$(DEVELOPER_PRIVATE_FRAMEWORK_DIR)" "-Wl,-rpath" "-Wl,$(DEVELOPER_DIR)/../OtherFrameworks"
+DEVELOPER_PRIVATE_FRAMEWORK_DIR = "$(DEVELOPER_DIR)"/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks
+OTHER_LDFLAGS = -framework AppKit -F$(DEVELOPER_PRIVATE_FRAMEWORK_DIR) -framework iPhoneSimulatorRemoteClient -Wl,-rpath -Wl,$(DEVELOPER_PRIVATE_FRAMEWORK_DIR) -Wl,-rpath -Wl,"$(DEVELOPER_DIR)"/../OtherFrameworks
 FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks" "$(SRCROOT)/../Vendor"
 
 MACOSX_DEPLOYMENT_TARGET = 10.7
