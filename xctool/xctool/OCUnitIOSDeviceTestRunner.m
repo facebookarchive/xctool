@@ -19,7 +19,9 @@
 
 @implementation OCUnitIOSDeviceTestRunner
 
-- (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock error:(NSString **)error
+- (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
+              gotUncaughtSignal:(BOOL *)gotUncaughtSignal
+                          error:(NSString **)error
 {
   // Just a place holder.  The plumbing for 'run-tests' expects each SDK to have
   // an associated test runner.
