@@ -20,6 +20,7 @@
 
 #import "Action.h"
 #import "FakeTask.h"
+#import "FakeTaskManager.h"
 #import "Options.h"
 #import "Options+Testing.h"
 #import "TaskUtil.h"
@@ -181,6 +182,15 @@
 
 - (void)testSDKMustBeValid
 {
+  __block NSString *expectedSDKList = nil;
+
+  // When we GetAvailableSDKsAndAliases() calls xcodebuild, we want it to get
+  // the faked output which always has a stable list of SDKs regardless of what
+  // SDKs are actually installed.
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    expectedSDKList = [[GetAvailableSDKsAndAliases() allKeys] componentsJoinedByString:@", "];
+  }];
+
   [[Options optionsFrom:@[
     @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
     @"-scheme", @"TestProject-Library",
@@ -197,7 +207,7 @@
    assertOptionsFailToValidateWithError:
    [NSString stringWithFormat:
     @"SDK 'BOGUSSDK' doesn't exist.  Possible SDKs include: %@",
-    [[GetAvailableSDKsAndAliases() allKeys] componentsJoinedByString:@", "]]
+    expectedSDKList]
    withBuildSettingsFromFile:
    TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"];
 }
