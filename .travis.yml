@@ -1,2 +1,8 @@
-language: objective-c
-script: ./build.sh TEST_AFTER_BUILD=YES
+before_script:
+  - echo "Building xctool using xcodebuild..."
+script: ./build.sh
+after_success:
+  - echo "With xctool built, now build and test xctool using xctool..."
+  - ./xctool.sh -workspace xctool.xcworkspace -scheme xctool build
+  - ./xctool.sh -workspace xctool.xcworkspace -scheme xctool build-tests
+  - ./xctool.sh -workspace xctool.xcworkspace -scheme xctool run-tests
