@@ -1,5 +1,4 @@
-before_script:
-  - echo "Building xctool using xcodebuild..."
+language: objective-c
 script: ./build.sh
 after_success:
   - echo "With xctool built, now build and test xctool using xctool..."
