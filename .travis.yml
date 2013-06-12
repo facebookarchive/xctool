@@ -1,1 +1,2 @@
 language: objective-c
+script: ./build.sh TEST_AFTER_BUILD=YES
