@@ -24,6 +24,7 @@
   NSTaskTerminationReason _pretendTerminationReason;
 }
 
+@property (nonatomic, retain) NSString *currentDirectoryPath;
 @property (nonatomic, retain) NSString *launchPath;
 @property (nonatomic, retain) NSArray *arguments;
 @property (nonatomic, retain) NSDictionary *environment;

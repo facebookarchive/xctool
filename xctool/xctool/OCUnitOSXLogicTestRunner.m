@@ -60,6 +60,8 @@
 
   if (bundleExists) {
     NSTask *task = [self otestTaskWithTestBundle:testBundlePath];
+    // For OSX test bundles only, Xcode will chdir to the project's directory.
+    [task setCurrentDirectoryPath:_buildSettings[@"PROJECT_DIR"]];
 
     LaunchTaskAndFeedOuputLinesToBlock(task, outputLineBlock);
 

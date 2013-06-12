@@ -49,6 +49,8 @@
                         @"XCInjectBundle" : [_buildSettings[@"BUILT_PRODUCTS_DIR"] stringByAppendingPathComponent:_buildSettings[@"FULL_PRODUCT_NAME"]],
                         @"XCInjectBundleInto" : testHostPath,
                         }]];
+  // For OSX test bundles only, Xcode will chdir to the project's directory.
+  [task setCurrentDirectoryPath:_buildSettings[@"PROJECT_DIR"]];
 
   LaunchTaskAndFeedOuputLinesToBlock(task, outputLineBlock);
 
