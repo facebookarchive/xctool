@@ -43,6 +43,9 @@
 {
   FakeFileHandle *fh = [[[FakeFileHandle alloc] init] autorelease];
   PrettyTextReporter *reporter = [[[PrettyTextReporter alloc] init] autorelease];
+  // Force _isPretty to YES to avoid the isatty() detection.
+  reporter->_isPretty = YES;
+
   [reporter setOutputPath:@"-"];
   [reporter openWithStandardOutput:(NSFileHandle *)fh error:nil];
 
@@ -62,6 +65,9 @@
 {
   FakeFileHandle *fh = [[[FakeFileHandle alloc] init] autorelease];
   PrettyTextReporter *reporter = [[[PrettyTextReporter alloc] init] autorelease];
+  // Force _isPretty to YES to avoid the isatty() detection.
+  reporter->_isPretty = YES;
+
   [reporter setOutputPath:@"-"];
   [reporter openWithStandardOutput:(NSFileHandle *)fh error:nil];
 

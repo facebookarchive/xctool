@@ -22,6 +22,7 @@
 
 @interface TextReporter : Reporter
 {
+@public
   BOOL _isPretty;
 
   NSUInteger _testsTotal;
