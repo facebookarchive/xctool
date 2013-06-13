@@ -1,7 +1,7 @@
 language: objective-c
 script: ./build.sh
 after_success:
-  - echo "With xctool built, now build and test xctool using xctool..."
+  - # With xctool built, now build and test xctool using xctool...
   - ./xctool.sh -workspace xctool.xcworkspace -scheme xctool build
   - ./xctool.sh -workspace xctool.xcworkspace -scheme xctool build-tests
   - ./xctool.sh -workspace xctool.xcworkspace -scheme xctool run-tests
