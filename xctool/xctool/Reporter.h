@@ -114,10 +114,6 @@
 @class Action;
 @class Options;
 
-@protocol ExportedReporter
-@optional
-+ (NSString *) reporterName;
-@end
 typedef enum {
   REPORTER_MESSAGE_DEBUG,
   REPORTER_MESSAGE_VERBOSE,
@@ -150,8 +146,15 @@ void ReportStatusMessage(NSArray *reporters, ReporterMessageLevel level, NSStrin
 {
   NSFileHandle *_outputHandle;
 }
-+ (NSArray *) availableReporters;
+
++ (NSArray *)allReporterClasses;
 + (Reporter *)reporterWithName:(NSString *)name outputPath:(NSString *)outputPath options:(Options *)options;
+
+/**
+ A short name for the reporter, to be used with the -reporter argument.  Return
+ nil to exclude the reporter from the reporter list.
+ */
++ (NSString *)reporterName;
 
 // The reporter will stream output to here.  Usually this will be "-" to route
 // to standard out, but it might point to a file if the -reporter param

@@ -52,8 +52,6 @@ static void ReportStatusMessageBeginWithTimestamp(NSArray *reporters, double tim
                              withObject:event];
 }
 
-static NSDictionary *systemReporters = nil;
-
 static void ReportStatusMessageEndWithTimestamp(NSArray *reporters, double timestamp, ReporterMessageLevel level, NSString *message) {
   NSDictionary *event = @{@"event": kReporter_Events_EndStatus,
                           kReporter_EndStatus_MessageKey: message,
@@ -86,7 +84,6 @@ void ReportStatusMessageBegin(NSArray *reporters, ReporterMessageLevel level, NS
   ReportStatusMessageBeginWithTimestamp(reporters, [[NSDate date] timeIntervalSince1970], level, message);
 }
 
-
 void ReportStatusMessageEnd(NSArray *reporters, ReporterMessageLevel level, NSString *format, ...) {
   va_list args;
   va_start(args, format);
@@ -99,47 +96,69 @@ void ReportStatusMessageEnd(NSArray *reporters, ReporterMessageLevel level, NSSt
 
 @implementation Reporter
 
-+ (void)initialize {
-  [super initialize];
-  int classCount = objc_getClassList(NULL, 0);
-  if ( classCount > 0 ) {
-    NSMutableDictionary *m_systemReporters = [NSMutableDictionary dictionaryWithCapacity:classCount];
-    Class *classes = (Class*)malloc(sizeof(Class)*classCount);;
-    
-    objc_getClassList(classes, classCount);
-    for (int i=0; i<classCount; i++) {
-      Class cls = classes[i];
-      
-      if ( !class_conformsToProtocol(cls, @protocol(ExportedReporter)) ) {
-        continue;
-      }
-      NSString *reporterName = nil;
-      if ( [cls respondsToSelector:@selector(reporterName)]) {
-        reporterName = [[cls performSelector:@selector(reporterName)] lowercaseString];
-      } else {
-        reporterName =  [[NSStringFromClass(cls) lowercaseString] stringByReplacingOccurrencesOfString:@"reporter" withString:@""];
-      }
-      
-      [m_systemReporters setObject:cls forKey:reporterName];
-    }
-    free(classes);
-    
-    systemReporters = [m_systemReporters copy];
-  }
-}
++ (NSArray *)allReporterClasses
+{
+  BOOL (^classInheritsFromClass)(Class, Class) = ^(Class cls, Class inheritsFrom) {
+    cls = class_getSuperclass(cls);
 
-+ (NSArray *) availableReporters {
-  return [systemReporters allKeys];
+    while (cls != Nil) {
+      if (strcmp(class_getName(cls), class_getName(inheritsFrom)) == 0) {
+        return YES;
+      } else {
+        cls = class_getSuperclass(cls);
+      }
+    }
+
+    return NO;
+  };
+
+  int classCount = objc_getClassList(NULL, 0);
+  NSMutableArray *reporterClasses = [NSMutableArray array];
+
+  if (classCount > 0) {
+    Class *classes = (Class *)malloc(sizeof(Class) * classCount);;
+
+    objc_getClassList(classes, classCount);
+    for (int i = 0; i < classCount; i++) {
+      Class cls = classes[i];
+
+      if (classInheritsFromClass(cls, [Reporter class]) &&
+          [cls reporterName] != nil) {
+        [reporterClasses addObject:cls];
+      }
+    }
+
+    free(classes);
+  }
+
+  [reporterClasses sortUsingComparator:^(Class cls1, Class cls2){
+    NSString *name1 = [cls1 reporterName];
+    NSString *name2 = [cls2 reporterName];
+    return [name1 compare:name2];
+  }];
+
+  return reporterClasses;
 }
 
 + (Reporter *)reporterWithName:(NSString *)name outputPath:(NSString *)outputPath options:(Options *)options
 {
-  Class reporterClass = systemReporters[name];
+  Class reporterClass = {0};
+  for (Class cls in [Reporter allReporterClasses]) {
+    if ([name isEqualToString:[cls reporterName]]) {
+      reporterClass = cls;
+      break;
+    }
+  }
 
   Reporter *reporter = [[[reporterClass alloc] init] autorelease];
   reporter.outputPath = outputPath;
   reporter.options = options;
   return reporter;
+}
+
++ (NSString *)reporterName
+{
+  return nil;
 }
 
 - (id)init

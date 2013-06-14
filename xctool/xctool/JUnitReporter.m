@@ -24,6 +24,11 @@
 #pragma mark Implementation
 @implementation JUnitReporter
 
++ (NSString *)reporterName
+{
+  return @"junit";
+}
+
 #pragma mark Memory Management
 - (id)init
 {

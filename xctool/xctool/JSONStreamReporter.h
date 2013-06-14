@@ -18,5 +18,5 @@
 
 #import "Reporter.h"
 
-@interface JSONStreamReporter : Reporter<ExportedReporter>
+@interface JSONStreamReporter : Reporter
 @end

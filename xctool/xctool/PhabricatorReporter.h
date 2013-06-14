@@ -20,7 +20,7 @@
  PhabricatorReporter produces a JSON array which you can plug directly into the
  'arc:unit' diff property in Phabricator.
  */
-@interface PhabricatorReporter : Reporter<ExportedReporter>
+@interface PhabricatorReporter : Reporter
 {
   NSMutableArray *_results;
   NSMutableArray *_currentTargetFailures;

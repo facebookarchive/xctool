@@ -43,8 +43,8 @@
 + (NSArray *)options
 {
   NSMutableString *reporters = [NSMutableString string];
-  for (NSString *reporterName in [Reporter availableReporters]) {
-    [reporters appendFormat:@"%@,", reporterName];
+  for (Class cls in [Reporter allReporterClasses]) {
+    [reporters appendFormat:@"%@,", [cls performSelector:@selector(reporterName)]];
   }
   if ( [reporters length] > 0 ) {
     [reporters deleteCharactersInRange:NSMakeRange([reporters length]-1, 1)];

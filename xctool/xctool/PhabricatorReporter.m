@@ -20,6 +20,11 @@
 
 @implementation PhabricatorReporter
 
++ (NSString *)reporterName
+{
+  return @"phabricator";
+}
+
 - (id)init
 {
   if (self = [super init]) {
