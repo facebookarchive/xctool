@@ -207,9 +207,9 @@ void ReportStatusMessageEnd(NSArray *reporters, ReporterMessageLevel level, NSSt
   struct stat fdstat = {0};
   NSAssert(fstat([_outputHandle fileDescriptor], &fdstat) == 0, @"fstat() failed: %s", strerror(errno));
 
-  // Don't call synchronizeFile for pipes - it's not supported.  All of the automated
+  // Don't call synchronizeFile for pipes or sockets - it's not supported.  All of the automated
   // tests pass around pipes, so it's important to have this check.
-  if (!S_ISFIFO(fdstat.st_mode)) {
+  if (!S_ISFIFO(fdstat.st_mode) && !S_ISSOCK(fdstat.st_mode)) {
     [_outputHandle synchronizeFile];
   }
 }
