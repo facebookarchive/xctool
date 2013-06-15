@@ -224,8 +224,7 @@ It integrates well with Github and is easy to configure. Once you have set up yo
 need to configure a `.travis.yml` file. To make it a bit easier to get started with Travis, you may want to base your
 script off of the following example:
 
-```
-yml
+```yml
 language: objective-c
 before_install:
     - brew update
