@@ -27,6 +27,9 @@
 
 #import <objc/runtime.h>
 
+NSString *const kReporterInfoNameKey = @"name";
+NSString *const kReporterInfoDescriptionKey = @"description";
+
 NSString *ReporterMessageLevelToString(ReporterMessageLevel level) {
   switch (level) {
     case REPORTER_MESSAGE_DEBUG:
@@ -122,9 +125,24 @@ void ReportStatusMessageEnd(NSArray *reporters, ReporterMessageLevel level, NSSt
     for (int i = 0; i < classCount; i++) {
       Class cls = classes[i];
 
-      if (classInheritsFromClass(cls, [Reporter class]) &&
-          [cls reporterName] != nil) {
-        [reporterClasses addObject:cls];
+
+      if (classInheritsFromClass(cls, [Reporter class])) {
+        NSDictionary *reporterInfo = [cls reporterInfo];
+
+        if (reporterInfo != nil) {
+          NSAssert(reporterInfo[kReporterInfoNameKey] != nil,
+                   @"Reporter implementation '%s' didn't include a value for "
+                   @"'%@' in 'reporterInfo'",
+                   class_getName(cls),
+                   kReporterInfoNameKey);
+          NSAssert(reporterInfo[kReporterInfoDescriptionKey] != nil,
+                   @"Reporter implementation '%s' didn't include a value for "
+                   @"'%@' in 'reporterInfo'",
+                   class_getName(cls),
+                   kReporterInfoDescriptionKey);
+
+          [reporterClasses addObject:cls];
+        }
       }
     }
 
@@ -132,9 +150,9 @@ void ReportStatusMessageEnd(NSArray *reporters, ReporterMessageLevel level, NSSt
   }
 
   [reporterClasses sortUsingComparator:^(Class cls1, Class cls2){
-    NSString *name1 = [cls1 reporterName];
-    NSString *name2 = [cls2 reporterName];
-    return [name1 compare:name2];
+    NSDictionary *info1 = [cls1 reporterInfo];
+    NSDictionary *info2 = [cls2 reporterInfo];
+    return [info1[kReporterInfoNameKey] compare:info2[kReporterInfoNameKey]];
   }];
 
   return reporterClasses;
@@ -144,7 +162,7 @@ void ReportStatusMessageEnd(NSArray *reporters, ReporterMessageLevel level, NSSt
 {
   Class reporterClass = {0};
   for (Class cls in [Reporter allReporterClasses]) {
-    if ([name isEqualToString:[cls reporterName]]) {
+    if ([name isEqualToString:[cls reporterInfo][kReporterInfoNameKey]]) {
       reporterClass = cls;
       break;
     }
@@ -156,7 +174,7 @@ void ReportStatusMessageEnd(NSArray *reporters, ReporterMessageLevel level, NSSt
   return reporter;
 }
 
-+ (NSString *)reporterName
++ (NSDictionary *)reporterInfo
 {
   return nil;
 }

@@ -36,6 +36,12 @@
 
 @implementation JSONCompilationDatabaseReporter
 
++ (NSDictionary *)reporterInfo {
+  return @{kReporterInfoNameKey : @"json-compilation-database",
+           kReporterInfoDescriptionKey : @"JSON array of sources, with their compile options.",
+           };
+}
+
 - (id)init
 {
   self = [super init];

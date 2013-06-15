@@ -18,8 +18,10 @@
 
 @implementation JSONStreamReporter
 
-+ (NSString *)reporterName {
-  return @"json-stream";
++ (NSDictionary *)reporterInfo {
+  return @{kReporterInfoNameKey : @"json-stream",
+           kReporterInfoDescriptionKey : @"Raw event stream, one JSON object per line.",
+           };
 }
 
 - (void)passThrough:(NSDictionary *)event

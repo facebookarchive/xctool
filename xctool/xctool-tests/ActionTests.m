@@ -62,9 +62,9 @@
 - (void)testActionUsage
 {
   assertThat([FakeAction actionUsage],
-             equalTo(@"    -help                    show help\n"
-                     @"    -name NAME               set name\n"
-                     @"    NUMBER                   a number\n"));
+             equalTo(@"    -help                      show help\n"
+                     @"    -name NAME                 set name\n"
+                     @"    NUMBER                     a number\n"));
 }
 
 - (void)testFlagOptionSetsFlag

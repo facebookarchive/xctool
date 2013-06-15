@@ -20,9 +20,10 @@
 
 @implementation PhabricatorReporter
 
-+ (NSString *)reporterName
-{
-  return @"phabricator";
++ (NSDictionary *)reporterInfo {
+  return @{kReporterInfoNameKey : @"phabricator",
+           kReporterInfoDescriptionKey : @"Phabricator friendly output, for the arc:unit diff property.",
+           };
 }
 
 - (id)init

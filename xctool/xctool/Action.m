@@ -127,7 +127,7 @@
       [optionExample appendString:option[kActionOptionParamName]];
     }
 
-    [buffer appendString:[optionExample stringByPaddingToLength:25 withString:@" " startingAtIndex:0]];
+    [buffer appendString:[optionExample stringByPaddingToLength:27 withString:@" " startingAtIndex:0]];
     [buffer appendString:option[kActionOptionDescription]];
     [buffer appendString:@"\n"];
   }

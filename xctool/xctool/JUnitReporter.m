@@ -24,9 +24,10 @@
 #pragma mark Implementation
 @implementation JUnitReporter
 
-+ (NSString *)reporterName
-{
-  return @"junit";
++ (NSDictionary *)reporterInfo {
+  return @{kReporterInfoNameKey : @"junit",
+           kReporterInfoDescriptionKey : @"Test results in JUnit/xUnit XML format.",
+           };
 }
 
 #pragma mark Memory Management

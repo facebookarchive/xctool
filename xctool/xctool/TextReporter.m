@@ -676,10 +676,11 @@
   return self;
 }
 
-+ (NSString *) reporterName {
-  return @"pretty";
++ (NSDictionary *)reporterInfo {
+  return @{kReporterInfoNameKey : @"pretty",
+           kReporterInfoDescriptionKey : @"ANSI-colored build and test results (default).",
+           };
 }
-
 
 @end
 
@@ -693,8 +694,10 @@
   return self;
 }
 
-+ (NSString *) reporterName {
-  return @"plain";
++ (NSDictionary *)reporterInfo {
+  return @{kReporterInfoNameKey : @"plain",
+           kReporterInfoDescriptionKey : @"Plain text build and test results.",
+           };
 }
 
 

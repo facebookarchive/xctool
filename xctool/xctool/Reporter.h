@@ -111,6 +111,16 @@
 #define kReporter_EndStatus_TimestampKey @"timestamp"
 #define kReporter_EndStatus_LevelKey @"level"
 
+/**
+ A short name for the reporter, to be used with the -reporter argument.
+ */
+NSString *const kReporterInfoNameKey;
+
+/**
+ A short description for the reporter, to be shown in xctool's usage.
+ */
+NSString *const kReporterInfoDescriptionKey;
+
 @class Action;
 @class Options;
 
@@ -151,10 +161,13 @@ void ReportStatusMessage(NSArray *reporters, ReporterMessageLevel level, NSStrin
 + (Reporter *)reporterWithName:(NSString *)name outputPath:(NSString *)outputPath options:(Options *)options;
 
 /**
- A short name for the reporter, to be used with the -reporter argument.  Return
- nil to exclude the reporter from the reporter list.
+ A dictionary of info that describes the Reporter, including it's short name and
+ description.
+ 
+ If it returns nil, this reporter will not be available via -reporter and it
+ won't be shown in the xctool usage.
  */
-+ (NSString *)reporterName;
++ (NSDictionary *)reporterInfo;
 
 // The reporter will stream output to here.  Usually this will be "-" to route
 // to standard out, but it might point to a file if the -reporter param

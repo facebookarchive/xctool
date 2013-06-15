@@ -66,6 +66,29 @@
   [_standardError printString:@"Base Options:\n"];
   [_standardError printString:@"%@", [Options actionUsage]];
 
+  [_standardError printString:@"\n"];
+  [_standardError printString:@"Available Reporters:\n"];
+
+  NSUInteger maxReporterNameLength = 0;
+
+  for (Class reporterCls in [Reporter allReporterClasses]) {
+    NSString *name = [reporterCls reporterInfo][kReporterInfoNameKey];
+    maxReporterNameLength = MAX(maxReporterNameLength, [name length]);
+  }
+
+  for (Class reporterCls in [Reporter allReporterClasses]) {
+    NSDictionary *info = [reporterCls reporterInfo];
+    NSString *name = info[kReporterInfoNameKey];
+    NSString *description = info[kReporterInfoDescriptionKey];
+
+
+    [_standardError printString:@"    %@ %@\n",
+     [[name stringByAppendingString:@":"] stringByPaddingToLength:maxReporterNameLength + 1
+                                                       withString:@" "
+                                                  startingAtIndex:0],
+     description];
+  }
+
   for (Class actionClass in [Options actionClasses]) {
     NSString *actionName = [actionClass name];
     NSString *actionUsage = [actionClass actionUsage];
