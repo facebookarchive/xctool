@@ -34,10 +34,8 @@
 @interface Xcode3TargetProduct : Xcode3TargetBuildable
 @end
 
-static NSArray *IDEBuildSchemeAction_buildablesForAllSchemeCommandsIncludingDependencies(id self, SEL cmd, BOOL arg)
+static NSArray *FilterBuildables(NSArray *buildables)
 {
-  NSArray *buildables = objc_msgSend(self, sel_getUid("__IDEBuildSchemeAction_buildablesForAllSchemeCommandsIncludingDependencies:"), NO);
-
   NSString *showOnlyBuildsettingsForTarget = [[NSProcessInfo processInfo] environment][@"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET"];
   NSString *showOnlyBuildsettingsForFirstBuildable = [[NSProcessInfo processInfo] environment][@"SHOW_ONLY_BUILD_SETTINGS_FOR_FIRST_BUILDABLE"];
 
@@ -55,11 +53,40 @@ static NSArray *IDEBuildSchemeAction_buildablesForAllSchemeCommandsIncludingDepe
   }
 }
 
+static NSArray *IDEBuildSchemeAction_buildablesForAllSchemeCommandsIncludingDependencies(id self, SEL cmd, BOOL arg)
+{
+  NSArray *buildables = objc_msgSend(self,
+                                     sel_getUid("__IDEBuildSchemeAction_buildablesForAllSchemeCommandsIncludingDependencies:"),
+                                     NO);
+  return FilterBuildables(buildables);
+}
+
+static id IDEBuildSchemeAction__uniquedBuildablesForBuildables_includingDependencies(id self, SEL sel, id buildables, BOOL includingDependencies)
+{
+  id result = objc_msgSend(self,
+                      @selector(__IDEBuildSchemeAction__uniquedBuildablesForBuildables:includingDependencies:),
+                      buildables,
+                      includingDependencies);
+  return FilterBuildables(result);
+}
+
 __attribute__((constructor)) static void EntryPoint()
 {
+  NSCAssert(NSClassFromString(@"IDEBuildSchemeAction") != NULL,
+            @"Should have IDEBuildSchemeAction");
+
+  // Xcode 4 will call this method to get a list of all buildables, and we can
+  // easily filter the list there.  This method still exists in the Xcode 5
+  // frameworks, but is never called by -showBuildSettings.
   XTSwizzleSelectorForFunction(NSClassFromString(@"IDEBuildSchemeAction"),
                              @selector(buildablesForAllSchemeCommandsIncludingDependencies:),
                              (IMP)IDEBuildSchemeAction_buildablesForAllSchemeCommandsIncludingDependencies);
+
+  // Xcode 5 will call this method several times as its collecting all the
+  // buildables.  We can filter the list each time.
+  XTSwizzleClassSelectorForFunction(NSClassFromString(@"IDEBuildSchemeAction"),
+                               @selector(_uniquedBuildablesForBuildables:includingDependencies:),
+                               (IMP)IDEBuildSchemeAction__uniquedBuildablesForBuildables_includingDependencies);
 
   // Unset so we don't cascade into other process that get spawned from xcodebuild.
   unsetenv("DYLD_INSERT_LIBRARIES");

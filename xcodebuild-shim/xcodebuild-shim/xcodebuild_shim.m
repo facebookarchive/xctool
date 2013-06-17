@@ -190,11 +190,8 @@ static void AnnounceEndSection(IDEActivityLogSection *section)
   }
 }
 
-static void Xcode3CommandLineBuildLogRecorder__emitSection(id self, SEL cmd, IDEActivityLogSection *section)
+static void HandleBeginSection(IDEActivityLogSection *section)
 {
-  // Call through to the original implementation.
-  objc_msgSend(self, sel_getUid("__Xcode3CommandLineBuildLogRecorder__emitSection:"), section);
-
   [__begunLogSections addObject:section];
 
   if ([__endedLogSections containsObject:section]) {
@@ -206,16 +203,51 @@ static void Xcode3CommandLineBuildLogRecorder__emitSection(id self, SEL cmd, IDE
   }
 }
 
-static void Xcode3CommandLineBuildLogRecorder__finishEmittingClosedSection(id self, SEL sel, IDEActivityLogSection *section)
+static void HandleEndSection(IDEActivityLogSection *section)
 {
-  // Call through to the original implementation.
-  objc_msgSend(self, sel_getUid("__Xcode3CommandLineBuildLogRecorder__finishEmittingClosedSection:"), section);
-
   [__endedLogSections addObject:section];
 
   if ([__begunLogSections containsObject:section]) {
     AnnounceEndSection(section);
   }
+}
+
+static void Xcode3CommandLineBuildLogRecorder__emitSection(id self, SEL cmd, IDEActivityLogSection *section)
+{
+  // Call through to the original implementation.
+  objc_msgSend(self, sel_getUid("__Xcode3CommandLineBuildLogRecorder__emitSection:"), section);
+
+  HandleBeginSection(section);
+}
+
+static void Xcode3CommandLineBuildLogRecorder__finishEmittingClosedSection(id self, SEL sel, IDEActivityLogSection *section)
+{
+  // Call through to the original implementation.
+  objc_msgSend(self, sel_getUid("__Xcode3CommandLineBuildLogRecorder__finishEmittingClosedSection:"), section);
+
+  HandleEndSection(section);
+}
+
+static void IDECommandLineBuildLogRecorder__emitSection_inSupersection(id self,
+                                                                       SEL sel,
+                                                                       IDEActivityLogSection *section,
+                                                                       id supersection)
+{
+  // Call through to the original implementation.
+  objc_msgSend(self, sel_getUid("__IDECommandLineBuildLogRecorder__emitSection:inSupersection:"), section, supersection);
+
+  HandleBeginSection(section);
+}
+
+static void IDECommandLineBuildLogRecorder__cleanupClosedSection_inSupersection(id self,
+                                                                                SEL sel,
+                                                                                IDEActivityLogSection *section,
+                                                                                id supersection)
+{
+  // Call through to the original implementation.
+  objc_msgSend(self, sel_getUid("__IDECommandLineBuildLogRecorder__cleanupClosedSection:inSupersection:"), section, supersection);
+
+  HandleEndSection(section);
 }
 
 /**
@@ -251,19 +283,38 @@ __attribute__((constructor)) static void EntryPoint()
   __begunLogSections = [[NSMutableSet alloc] initWithCapacity:0];
   __endedLogSections = [[NSMutableSet alloc] initWithCapacity:0];
 
-  // Override -[Xcode3CommandLineBuildLogRecorder _emitSection:(IDEActivityLogSection *)section]
-  // This method is called once for every line item in the log, and is meant to announce the action
-  // that will be done. e.g., this would get called to print out the clang command that's about to
-  // be executed.
-  XTSwizzleSelectorForFunction(NSClassFromString(@"Xcode3CommandLineBuildLogRecorder"),
-                             @selector(_emitSection:),
-                             (IMP)Xcode3CommandLineBuildLogRecorder__emitSection);
-  // Override -[Xcode3CommandLineBuildLogRecorder _finishEmittingClosedSection:(IDEActivityLogSection *)section]
-  // This method is called once for every line item in the log, and is meant to announce the result
-  // of something.  e.g., this would print out the error text (if any) from a clang command that just ran.
-  XTSwizzleSelectorForFunction(NSClassFromString(@"Xcode3CommandLineBuildLogRecorder"),
-                             @selector(_finishEmittingClosedSection:),
-                             (IMP)Xcode3CommandLineBuildLogRecorder__finishEmittingClosedSection);
+  BOOL isXcode5 = (NSClassFromString(@"IDECommandLineBuildLogRecorder") != NULL);
+  BOOL isXcode4 = (NSClassFromString(@"Xcode3CommandLineBuildLogRecorder") != NULL);
+
+  // For each log item, Xcode will call a begin and end method.  (The naming of
+  // these methods is slightly different betwen Xcode 4 and 5.)
+  //
+  // This begin method is meant to announce the action that will be done. e.g.,
+  // this would get called to print out the clang command that's about to be
+  // executed.
+  //
+  // The end method is called once for every line item in the log, and is meant
+  // to announce the result of something.  e.g., this would print out the error
+  // text (if any) from a clang command that just ran.
+  if (isXcode5) {
+    XTSwizzleSelectorForFunction(NSClassFromString(@"IDECommandLineBuildLogRecorder"),
+                                 @selector(_emitSection:inSupersection:),
+                                 (IMP)IDECommandLineBuildLogRecorder__emitSection_inSupersection);
+    XTSwizzleSelectorForFunction(NSClassFromString(@"IDECommandLineBuildLogRecorder"),
+                                 @selector(_cleanupClosedSection:inSupersection:),
+                                 (IMP)IDECommandLineBuildLogRecorder__cleanupClosedSection_inSupersection);
+  } else if (isXcode4) {
+    XTSwizzleSelectorForFunction(NSClassFromString(@"Xcode3CommandLineBuildLogRecorder"),
+                                 @selector(_emitSection:),
+                                 (IMP)Xcode3CommandLineBuildLogRecorder__emitSection);
+    XTSwizzleSelectorForFunction(NSClassFromString(@"Xcode3CommandLineBuildLogRecorder"),
+                                 @selector(_finishEmittingClosedSection:),
+                                 (IMP)Xcode3CommandLineBuildLogRecorder__finishEmittingClosedSection);
+  } else {
+    NSCAssert(NO,
+              @"Hrm. We're running in a version of xcodebuild which seems "
+              @"to be from neither Xcode4 or Xcode5.");
+  }
 
   // When xcodebuild is going to fail, it prints out the error via this method.
   // Let's capture it and write the output in a structured form.

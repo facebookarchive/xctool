@@ -45,7 +45,7 @@
 
 @property (nonatomic, assign) BOOL showBuildSettings;
 
-@property (nonatomic, retain) NSMutableArray *buildSettings;
+@property (nonatomic, retain) NSMutableDictionary *buildSettings;
 @property (nonatomic, retain) NSMutableArray *reporters;
 
 @property (nonatomic, assign) BOOL showHelp;

@@ -66,6 +66,7 @@ void _CFAutoreleasePoolPrintPools();
                        @"-scheme", @"TestProject-Library",
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
+                       @"PLATFORM_NAME=iphonesimulator",
                        @"build",
                        ]));
   }];

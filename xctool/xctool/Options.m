@@ -136,7 +136,7 @@
   {
     self.reporters = [NSMutableArray array];
     _reporterOptions = [[NSMutableArray alloc] init];
-    self.buildSettings = [NSMutableArray array];
+    self.buildSettings = [NSMutableDictionary dictionary];
     self.actions = [NSMutableArray array];
   }
   return self;
@@ -159,7 +159,13 @@
 
 - (void)addBuildSetting:(NSString *)argument
 {
-  [self.buildSettings addObject:argument];
+  NSRange eqRange = [argument rangeOfString:@"="];
+
+  if (eqRange.location != NSNotFound && eqRange.location > 0) {
+    NSString *key = [argument substringToIndex:eqRange.location];
+    NSString *val = [argument substringFromIndex:eqRange.location + 1];
+    _buildSettings[key] = val;
+  }
 }
 
 - (NSUInteger)consumeArguments:(NSMutableArray *)arguments errorMessage:(NSString **)errorMessage
@@ -350,6 +356,18 @@
     // Map SDK param to actual SDK name.  This allows for aliases like 'iphoneos' to map
     // to 'iphoneos6.1'.
     self.sdk = sdksAndAliases[self.sdk];
+
+    // Xcode 5's xcodebuild has a bug where it won't build targets for the
+    // iphonesimulator SDK.  It fails with...
+    //
+    // warning: no rule to process file '... somefile.m' of type
+    // sourcecode.c.objc for architecture i386
+    //
+    // Explicitly setting PLATFORM_NAME=iphonesimulator seems to fix it.
+    if (_buildSettings[@"PLATFORM_NAME"] == nil &&
+        [_sdk hasPrefix:@"iphonesimulator"]) {
+      _buildSettings[@"PLATFORM_NAME"] = @"iphonesimulator";
+    }
   }
 
   xcodeSubjectInfo.subjectWorkspace = self.workspace;
@@ -412,7 +430,9 @@
     [arguments addObjectsFromArray:@[@"-jobs", self.jobs]];
   }
 
-  [arguments addObjectsFromArray:self.buildSettings];
+  [_buildSettings enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
+    [arguments addObject:[NSString stringWithFormat:@"%@=%@", key, obj]];
+  }];
 
   return arguments;
 }

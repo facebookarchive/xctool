@@ -174,6 +174,7 @@
                equalTo(@[
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
+                       @"PLATFORM_NAME=iphonesimulator",
                        @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                        @"-target", @"TestProject-LibraryTests",
                        @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates",
@@ -237,6 +238,7 @@
                equalTo(@[
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator5.0",
+                       @"PLATFORM_NAME=iphonesimulator",
                        @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                        @"-target", @"TestProject-LibraryTests",
                        @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates",
@@ -465,6 +467,7 @@
                        @"iphonesimulator6.1",
                        @"-arch",
                        @"i386",
+                       @"PLATFORM_NAME=iphonesimulator",
                        @"-project",
                        @"xctool-tests/TestData/TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj",
                        @"-target",
