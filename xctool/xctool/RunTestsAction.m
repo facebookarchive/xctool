@@ -28,6 +28,62 @@
 #import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
 
+@interface TestableExecution : NSObject
+@property (nonatomic, retain) NSArray *blocks;
+@property (nonatomic, copy) BOOL(^completionBlock)();
+@property (nonatomic, assign) BOOL mustRunInMainThread;
+@end
+
+@implementation TestableExecution
+
+- (instancetype)initWithBlocks:(NSArray *)blocks
+               completionBlock:(BOOL(^)())completionBlock
+           mustRunInMainThread:(BOOL)mustRunInMainThread
+{
+  if (self = [super init]) {
+    self.blocks = blocks;
+    self.completionBlock = completionBlock;
+    self.mustRunInMainThread = mustRunInMainThread;
+  }
+  return self;
+}
+
+- (void)runAsyncInQueue:(dispatch_queue_t)queue
+                limiter:(dispatch_semaphore_t)limiter
+             onComplete:(void(^)(BOOL))callback
+{
+  NSAssert(!self.mustRunInMainThread, @"must be async runnable");
+
+  dispatch_group_t g = dispatch_group_create();
+  dispatch_group_enter(g);
+
+  for (void(^block)() in self.blocks) {
+    dispatch_group_async(g, queue, ^{
+      dispatch_semaphore_wait(limiter, DISPATCH_TIME_FOREVER);
+      block();
+      dispatch_semaphore_signal(limiter);
+    });
+  }
+  dispatch_group_notify(g, queue, ^{
+    BOOL succeeded = self.completionBlock();
+    callback(succeeded);
+  });
+
+  dispatch_group_leave(g);
+  dispatch_release(g);
+}
+
+- (BOOL)runSync
+{
+  for (BOOL(^block)() in self.blocks) {
+    block();
+  }
+  return self.completionBlock();
+}
+
+@end
+
+
 /// Break up an array into chunks of specified size
 static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
   NSMutableArray *chunks = [NSMutableArray array];
@@ -112,7 +168,6 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
 {
   _parallelizeChunkSize = [str intValue];
 }
-
 
 - (NSArray *)onlyListAsTargetsAndSenTestList
 {
@@ -246,23 +301,22 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
   return result;
 }
 
-static NSString* const kTestableBlock = @"block";
-static NSString* const kTestableMustRunInMainThread = @"mustRunInMainThread";
-
 /*!
- Retrieves build params of the test and prepares a block that will run the test.
+ Retrieves build params and create execution objects for each configuration.
 
- @return  an NSDicitonary of the block that runs the test, and whether the test
-          must be run on the main thread
+ @return TestableExecutions
+         - kTestableBlocks: array of blocks returning BOOL for test-success
+         - kTestableMustRunInMainThread: BOOL for tests that cannot be async
+         - kTestableCompletionBlock: block to run after the test blocks have ran
  */
-- (NSDictionary *) blockForTestable:(NSDictionary *)testable
-                          reporters:(NSArray *)reporters
-                            objRoot:(NSString *)objRoot
-                            symRoot:(NSString *)symRoot
-                  sharedPrecompsDir:(NSString *)sharedPrecompsDir
-                     xcodeArguments:(NSArray *)xcodeArguments
-                        senTestList:(NSString *)senTestList
-                 senTestInvertScope:(BOOL)senTestInvertScope
+- (NSArray *)executionsForTestable:(NSDictionary *)testable
+                         reporters:(NSArray *)rawReporters
+                           objRoot:(NSString *)objRoot
+                           symRoot:(NSString *)symRoot
+                 sharedPrecompsDir:(NSString *)sharedPrecompsDir
+                    xcodeArguments:(NSArray *)xcodeArguments
+                       senTestList:(NSString *)senTestList
+                senTestInvertScope:(BOOL)senTestInvertScope
 {
   NSString *testableProjectPath = testable[@"projectPath"];
   NSString *testableTarget = testable[@"target"];
@@ -278,18 +332,18 @@ static NSString* const kTestableMustRunInMainThread = @"mustRunInMainThread";
   }
 
   [settingsTask setArguments:[xcodeArguments arrayByAddingObjectsFromArray:@[
-                              @"-project", testableProjectPath,
-                              @"-target", testableTarget,
-                              [NSString stringWithFormat:@"OBJROOT=%@", objRoot],
-                              [NSString stringWithFormat:@"SYMROOT=%@", symRoot],
-                              [NSString stringWithFormat:@"SHARED_PRECOMPS_DIR=%@", sharedPrecompsDir],
-                              @"-showBuildSettings",
-                              ]]];
+                                                                             @"-project", testableProjectPath,
+                                                                             @"-target", testableTarget,
+                                                                             [NSString stringWithFormat:@"OBJROOT=%@", objRoot],
+                                                                             [NSString stringWithFormat:@"SYMROOT=%@", symRoot],
+                                                                             [NSString stringWithFormat:@"SHARED_PRECOMPS_DIR=%@", sharedPrecompsDir],
+                                                                             @"-showBuildSettings",
+                                                                             ]]];
 
   [settingsTask setEnvironment:@{
-   @"DYLD_INSERT_LIBRARIES" : [PathToXCToolBinaries() stringByAppendingPathComponent:@"xcodebuild-fastsettings-shim.dylib"],
-   @"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET" : testableTarget,
-   }];
+                                 @"DYLD_INSERT_LIBRARIES" : [PathToXCToolBinaries() stringByAppendingPathComponent:@"xcodebuild-fastsettings-shim.dylib"],
+                                 @"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET" : testableTarget,
+                                 }];
 
   NSDictionary *result = LaunchTaskAndCaptureOutput(settingsTask);
 
@@ -352,182 +406,222 @@ static NSString* const kTestableMustRunInMainThread = @"mustRunInMainThread";
     NSAssert(NO, @"Unexpected SDK: %@", sdkName);
   }
 
-  BOOL (^action)() = ^() {
+  // Set up blocks.
+  NSMutableArray *executions = [[[NSMutableArray alloc] init] autorelease];
+  
+  for (NSArray *testConfiguration in testConfigurations) {
+    NSArray *reportersForConfiguration = (self.parallelize
+                                          ? [BufferedReporter wrapReporters:rawReporters]
+                                          : rawReporters);
+    Class testRunnerClass = testConfiguration[0];
+    BOOL garbageCollectionEnabled = [testConfiguration[1] boolValue];
+
+    OCUnitTestRunner *testRunner = [[[testRunnerClass alloc]
+                                     initWithBuildSettings:testableBuildSettings
+                                     senTestList:senTestList
+                                     senTestInvertScope:senTestInvertScope
+                                     arguments:arguments
+                                     environment:environment
+                                     garbageCollection:garbageCollectionEnabled
+                                     freshSimulator:self.freshSimulator
+                                     freshInstall:self.freshInstall
+                                     standardOutput:nil
+                                     standardError:nil
+                                     reporters:reportersForConfiguration] autorelease];
+
+    NSDictionary *commonEventInfo = @{kReporter_BeginOCUnit_BundleNameKey: testableBuildSettings[@"FULL_PRODUCT_NAME"],
+                                      kReporter_BeginOCUnit_SDKNameKey: testableBuildSettings[@"SDK_NAME"],
+                                      kReporter_BeginOCUnit_TestTypeKey: isApplicationTest ? @"application-test" : @"logic-test",
+                                      kReporter_BeginOCUnit_GCEnabledKey: @(garbageCollectionEnabled),
+                                      };
+
+    NSMutableDictionary *beginEvent =
+    [NSMutableDictionary dictionaryWithDictionary:@{@"event": kReporter_Events_BeginOCUnit}];
+    [beginEvent addEntriesFromDictionary:commonEventInfo];
+    [reportersForConfiguration makeObjectsPerformSelector:@selector(handleEvent:)
+                                               withObject:beginEvent];
+
+    // Query list of test classes if parallelizing test classes in each target
+    NSArray *testClassNames = nil;
+    if (_parallelizeChunkSize > 0 && !isApplicationTest) {
+      testClassNames = [testRunner testClassNames];
+      if (!testClassNames) {
+        ReportStatusMessage(reportersForConfiguration, REPORTER_MESSAGE_WARNING,
+                            @"Failed to get test class names, not parallelizing tests in %@",
+                            testableTarget);
+      }
+    }
+
     NSObject *lock = [[[NSObject alloc] init] autorelease];
     __block BOOL succeeded = YES;
+    __block NSString *error = nil;
+    NSMutableArray *blocks = [NSMutableArray array];
 
-    for (NSArray *testConfiguration in testConfigurations) {
-      Class testRunnerClass = testConfiguration[0];
-      BOOL garbageCollectionEnabled = [testConfiguration[1] boolValue];
+    if (testClassNames) {
+      // Chop up test classes into small work units to be run in parallel.
+      NSArray *workUnits = chunkifyArray(testClassNames, _parallelizeChunkSize);
 
-      OCUnitTestRunner *testRunner = [[[testRunnerClass alloc]
-                                       initWithBuildSettings:testableBuildSettings
-                                       senTestList:senTestList
-                                       senTestInvertScope:senTestInvertScope
-                                       arguments:arguments
-                                       environment:environment
-                                       garbageCollection:garbageCollectionEnabled
-                                       freshSimulator:self.freshSimulator
-                                       freshInstall:self.freshInstall
-                                       standardOutput:nil
-                                       standardError:nil
-                                       reporters:reporters] autorelease];
+      // Run the classes.
+      for (NSArray *workUnit in workUnits) {
+        void(^block)() = ^{
+          // Since work units within a configuration are also run in parallel,
+          // the reporters must be buffered again.
+          NSArray *bufferedReporters = [BufferedReporter wrapReporters:reportersForConfiguration];
 
-      NSDictionary *commonEventInfo = @{kReporter_BeginOCUnit_BundleNameKey: testableBuildSettings[@"FULL_PRODUCT_NAME"],
-                                        kReporter_BeginOCUnit_SDKNameKey: testableBuildSettings[@"SDK_NAME"],
-                                        kReporter_BeginOCUnit_TestTypeKey: isApplicationTest ? @"application-test" : @"logic-test",
-                                        kReporter_BeginOCUnit_GCEnabledKey: @(garbageCollectionEnabled),
-                                        };
+          OCUnitTestRunner *localTestRunner =
+          [[[testRunnerClass alloc]
+            initWithBuildSettings:testableBuildSettings
+            senTestList:[workUnit componentsJoinedByString:@","]
+            senTestInvertScope:NO
+            arguments:arguments
+            environment:environment
+            garbageCollection:garbageCollectionEnabled
+            freshSimulator:self.freshSimulator
+            freshInstall:self.freshInstall
+            standardOutput:nil
+            standardError:nil
+            reporters:bufferedReporters] autorelease];
 
-      NSMutableDictionary *beginEvent = [NSMutableDictionary dictionaryWithDictionary:@{
-                                         @"event": kReporter_Events_BeginOCUnit,
-                                         }];
-      [beginEvent addEntriesFromDictionary:commonEventInfo];
-      [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:beginEvent];
+          NSString *localError = nil;
+          BOOL localSucceeded = [localTestRunner runTestsWithError:&localError];
 
-      // Test Execution
-      __block NSString *error = nil;
-
-      // Query list of test classes if parallelizing test classes in each target
-      NSArray *testClassNames = nil;
-      if (_parallelizeChunkSize > 0 && !isApplicationTest) {
-        testClassNames = [testRunner testClassNames];
-        if (!testClassNames) {
-          ReportStatusMessage(reporters, REPORTER_MESSAGE_WARNING,
-                              @"Failed to get test class names, not parallelizing tests in %@",
-                              testableTarget);
-        }
-      }
-
-      if (testClassNames) {
-        // Chop up test classes into small work units to be run in parallel.
-        NSArray *workUnits = chunkifyArray(testClassNames, _parallelizeChunkSize);
-
-        // Run the classes.
-        NSOperationQueue *queue = [[[NSOperationQueue alloc] init] autorelease];
-        for (NSArray *workUnit in workUnits) {
-          [queue addOperationWithBlock:^() {
-            NSArray *bufferedReporters = [BufferedReporter wrapReporters:reporters];
-
-            OCUnitTestRunner *localTestRunner =
-            [[[testRunnerClass alloc]
-              initWithBuildSettings:testableBuildSettings
-              senTestList:[workUnit componentsJoinedByString:@","]
-              senTestInvertScope:NO
-              arguments:arguments
-              environment:environment
-              garbageCollection:garbageCollectionEnabled
-              freshSimulator:self.freshSimulator
-              freshInstall:self.freshInstall
-              standardOutput:nil
-              standardError:nil
-              reporters:bufferedReporters] autorelease];
-
-            NSString *localError = nil;
-            BOOL configurationSucceeded = [localTestRunner runTestsWithError:&localError];
-
-            @synchronized(lock) {
-              if (!configurationSucceeded) {
-                succeeded = NO;
-              }
-              error = localError;
+          @synchronized(lock) {
+            if (!localSucceeded) {
+              succeeded = NO;
             }
-            [bufferedReporters makeObjectsPerformSelector:@selector(flush)];
-          }];
-        }
-        [queue waitUntilAllOperationsAreFinished];
-      } else {
+            error = localError;
+          }
+          [bufferedReporters makeObjectsPerformSelector:@selector(flush)];
+        };
+        [blocks addObject:[[block copy] autorelease]];
+      }
+    } else {
+      void(^block)() = ^{
         BOOL configurationSucceeded = [testRunner runTestsWithError:&error];
         if (!configurationSucceeded) {
-          succeeded = NO;
+          @synchronized(lock) {
+            succeeded = NO;
+          }
+        }
+      };
+      [blocks addObject:[[block copy] autorelease]];
+    }
+
+    BOOL (^completionBlock)() = ^{
+      NSMutableDictionary *endEvent = [NSMutableDictionary dictionaryWithDictionary:
+                                       @{@"event": kReporter_Events_EndOCUnit,
+                                         kReporter_EndOCUnit_SucceededKey: @(succeeded),
+                                         kReporter_EndOCUnit_FailureReasonKey: (error ? error : [NSNull null]),
+                                         }];
+      [endEvent addEntriesFromDictionary:commonEventInfo];
+      [reportersForConfiguration makeObjectsPerformSelector:@selector(handleEvent:)
+                                                 withObject:endEvent];
+      for (id reporter in reportersForConfiguration) {
+        if ([reporter respondsToSelector:@selector(flush)]) {
+          [reporter flush];
         }
       }
+      return succeeded;
+    };
 
-      NSMutableDictionary *endEvent = [NSMutableDictionary dictionaryWithDictionary:@{
-                                       @"event": kReporter_Events_EndOCUnit,
-                                                   kReporter_EndOCUnit_SucceededKey: @(succeeded),
-                                               kReporter_EndOCUnit_FailureReasonKey: (error ? error : [NSNull null]),
-                                       }];
-      [endEvent addEntriesFromDictionary:commonEventInfo];
-      [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:endEvent];
-    }
+    [executions addObject:[[TestableExecution alloc]
+                           initWithBlocks:blocks
+                           completionBlock:completionBlock
+                           mustRunInMainThread:isApplicationTest]];
+  }
 
-    for (id reporter in reporters) {
-      if ([reporter respondsToSelector:@selector(flush)]) {
-        [reporter flush];
-      }
-    }
-
-    return succeeded;
-  };
-
-  return @{kTestableBlock: [[action copy] autorelease],
-           kTestableMustRunInMainThread: @(isApplicationTest)};
+  return executions;
 }
 
 - (BOOL)runTestables:(NSArray *)testables
              options:(Options *)options
     xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
+  dispatch_queue_t q = dispatch_queue_create("xctool.runtests",
+                                             self.parallelize ? DISPATCH_QUEUE_CONCURRENT
+                                                              : DISPATCH_QUEUE_SERIAL);
+
+  // Limits the number of outstanding operations.
+  // Note that the operation must not acquire this resources in one block and
+  // release in another block submitted to the same queue, as it may lead to
+  // starvation since the queue may not run the release block.
+  dispatch_semaphore_t jobLimiter = dispatch_semaphore_create([[NSProcessInfo processInfo] processorCount]);
+
+  // The top-level jobs which discover and kicks off tests (or queue them to run
+  // in main thread).
+  dispatch_group_t testDiscoveryJobs = dispatch_group_create();
+  
+  // Completion blocks populated by testDiscoveryJobs. Should be waited on
+  // *after* discovery jobs. The draining of this group signals completion of
+  // all async executed jobs.
+  dispatch_group_t testCompletionJobs = dispatch_group_create();
+
   NSObject *succeededLock = [[[NSObject alloc] init] autorelease];
   __block BOOL succeeded = YES;
+
+  // List of tests that must run in main thread. These are queued up to be run
+  // after all async tests complete.
+  NSMutableArray *executionsToRunInMainThread = [NSMutableArray array];
 
   NSArray *xcodebuildArguments = [options commonXcodeBuildArgumentsForSchemeAction:@"TestAction"
                                                                   xcodeSubjectInfo:xcodeSubjectInfo];
 
-  @autoreleasepool {
-    NSMutableArray *blocksToRunInMainThread = [NSMutableArray array];
-    NSOperationQueue *operationQueue = [[[NSOperationQueue alloc] init] autorelease];
-    if (!self.parallelize) {
-      operationQueue.maxConcurrentOperationCount = 1;
-    }
+  for (NSDictionary *testable in testables) {
+    dispatch_group_async(testDiscoveryJobs, q, ^{
+      dispatch_semaphore_wait(jobLimiter, DISPATCH_TIME_FOREVER);
 
-    for (NSDictionary *testable in testables) {
-      NSOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
-        BOOL senTestInvertScope = [testable[@"senTestInvertScope"] boolValue];
-        NSString *senTestList = testable[@"senTestList"];
+      BOOL senTestInvertScope = [testable[@"senTestInvertScope"] boolValue];
+      NSString *senTestList = testable[@"senTestList"];
 
-        NSArray *reporters = options.reporters;
-        if (self.parallelize) {
-          // parallel execution will cause reporters to be buffered and flushed
-          // atomically at end of test to prevent interleaved output.
-          reporters = [BufferedReporter wrapReporters:reporters];
-        }
+      NSArray *executions =
+      [self executionsForTestable:testable
+                        reporters:options.reporters
+                          objRoot:xcodeSubjectInfo.objRoot
+                          symRoot:xcodeSubjectInfo.symRoot
+                sharedPrecompsDir:xcodeSubjectInfo.sharedPrecompsDir
+                   xcodeArguments:xcodebuildArguments
+                      senTestList:senTestList
+               senTestInvertScope:senTestInvertScope];
 
-        NSDictionary *action = [self blockForTestable:testable
-                                            reporters:reporters
-                                              objRoot:xcodeSubjectInfo.objRoot
-                                              symRoot:xcodeSubjectInfo.symRoot
-                                    sharedPrecompsDir:xcodeSubjectInfo.sharedPrecompsDir
-                                       xcodeArguments:xcodebuildArguments
-                                          senTestList:senTestList
-                                   senTestInvertScope:senTestInvertScope];
-
-        BOOL (^block)() = action[kTestableBlock];
-        if ([action[kTestableMustRunInMainThread] boolValue]) {
-          @synchronized(blocksToRunInMainThread) {
-            [blocksToRunInMainThread addObject:block];
-          }
-        } else {
-          if (!block()) {
+      for (TestableExecution *execution in executions) {
+        if (execution.mustRunInMainThread) {
+          [executionsToRunInMainThread addObject:execution];
+        } else if (self.parallelize) {
+          dispatch_group_enter(testCompletionJobs);
+          [execution runAsyncInQueue:q limiter:jobLimiter onComplete:^(BOOL localSucceeded) {
             @synchronized(succeededLock) {
-              succeeded = NO;
+              succeeded &= localSucceeded;
             }
+            dispatch_group_leave(testCompletionJobs);
+          }];
+        } else {
+          // If not parallelizing, don't enqueue as reporters are not buffered.
+          // Otherwise, the completion event is queued at end of queue, and
+          // reporter messages would not come out in the right order.
+          BOOL localSucceeded = [execution runSync];
+          @synchronized(succeededLock) {  // Not technically necessary.
+            succeeded &= localSucceeded;
           }
         }
-      }];
-
-      [operationQueue addOperation:operation];
-    }
-
-    [operationQueue waitUntilAllOperationsAreFinished];
-
-    for (BOOL (^block)() in blocksToRunInMainThread) {
-      if (!block()) {
-        succeeded = NO;
       }
-    }
+
+      dispatch_semaphore_signal(jobLimiter);
+    });
   }
+
+  dispatch_group_wait(testDiscoveryJobs, DISPATCH_TIME_FOREVER);
+  dispatch_group_wait(testCompletionJobs, DISPATCH_TIME_FOREVER);
+
+  // At this point all async tests have completed.
+
+  for (TestableExecution *execution in executionsToRunInMainThread) {
+    succeeded &= [execution runSync];
+  }
+
+  dispatch_release(testCompletionJobs);
+  dispatch_release(testDiscoveryJobs);
+  dispatch_release(jobLimiter);
+  dispatch_release(q);
 
   return succeeded;
 }
