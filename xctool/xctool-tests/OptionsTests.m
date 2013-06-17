@@ -73,9 +73,11 @@
                       @"DEF=456"
                       ]];
 
-  NSArray *buildSettings = [options buildSettings];
+  NSDictionary *buildSettings = [options buildSettings];
   assertThatInteger(buildSettings.count, equalToInteger(2));
-  assertThat(buildSettings, equalTo(@[@"ABC=123", @"DEF=456"]));
+  assertThat(buildSettings,
+             equalTo(@{@"ABC" : @"123",
+                       @"DEF" : @"456"}));
 }
 
 - (void)testWorkspaceOrProjectAreRequired
