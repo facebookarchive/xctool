@@ -129,6 +129,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                equalTo(@[
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
+                       @"PLATFORM_NAME=iphonesimulator",
                        @"-workspace", mockWorkspacePath,
                        @"-scheme", @"Tests",
                        @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates",
@@ -183,6 +184,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                equalTo(@[
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
+                       @"PLATFORM_NAME=iphonesimulator",
                        @"-workspace", mockWorkspacePath,
                        @"-scheme", @"Tests",
                        @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
@@ -246,6 +248,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                equalTo(@[
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
+                       @"PLATFORM_NAME=iphonesimulator",
                        @"-workspace", mockWorkspacePath,
                        @"-scheme", @"Tests",
                        @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",
@@ -306,6 +309,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                equalTo(@[
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
+                       @"PLATFORM_NAME=iphonesimulator",
                        @"-workspace", mockWorkspacePath,
                        @"-scheme", @"Tests",
                        @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-gjpyghvhqizojqckzrwwumrsqgoo/Build/Intermediates",

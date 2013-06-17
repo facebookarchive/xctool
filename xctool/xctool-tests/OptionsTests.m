@@ -274,6 +274,7 @@
                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                      @"-scheme", @"TestProject-Library",
                      @"-sdk", @"iphonesimulator6.1",
+                     @"PLATFORM_NAME=iphonesimulator",
                      ]));
 }
 

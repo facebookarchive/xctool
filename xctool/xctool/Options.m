@@ -356,6 +356,18 @@
     // Map SDK param to actual SDK name.  This allows for aliases like 'iphoneos' to map
     // to 'iphoneos6.1'.
     self.sdk = sdksAndAliases[self.sdk];
+
+    // Xcode 5's xcodebuild has a bug where it won't build targets for the
+    // iphonesimulator SDK.  It fails with...
+    //
+    // warning: no rule to process file '... somefile.m' of type
+    // sourcecode.c.objc for architecture i386
+    //
+    // Explicitly setting PLATFORM_NAME=iphonesimulator seems to fix it.
+    if (_buildSettings[@"PLATFORM_NAME"] == nil &&
+        [_sdk hasPrefix:@"iphonesimulator"]) {
+      _buildSettings[@"PLATFORM_NAME"] = @"iphonesimulator";
+    }
   }
 
   xcodeSubjectInfo.subjectWorkspace = self.workspace;
