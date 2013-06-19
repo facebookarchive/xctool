@@ -216,14 +216,16 @@
 
 - (void)testReporterMustBeValid
 {
-  [[Options optionsFrom:@[
-    @"-reporter", @"pretty"
-    ]] assertReporterOptionsValidate];
+  Options *options = [Options optionsFrom:@[
+                      @"-reporter", @"pretty",
+                      @"-reporter", @"blah"
+                      ]];
 
-  [[Options optionsFrom:@[
-    @"-reporter", @"blah"
-    ]] assertReporterOptionsFailToValidateWithError:
-   @"No reporter with name 'blah' found."];
+  [options assertReporterOptionsValidate];
+
+  NSArray *reporters = [options reporters];
+  assertThatInteger([reporters count], equalToInteger(1));
+  assertThatBool(([reporters[0] isKindOfClass:[PrettyTextReporter class]]), equalToBool(YES));
 }
 
 - (void)testArgumentsFlowThroughToCommonXcodebuildArguments
