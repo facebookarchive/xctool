@@ -107,6 +107,11 @@
                      description:@"path to an xcconfig"
                        paramName:@"PATH"
                            mapTo:@selector(setXcconfig:)],
+    [Action actionOptionWithName:@"simulator"
+                         aliases:nil
+                     description:@"set simulator type (either iphone or ipad)"
+                       paramName:@"SIMULATOR"
+                           mapTo:@selector(setSimulatorType:)],
     [Action actionOptionWithName:@"reporter"
                          aliases:nil
                      description:@"add reporter"
@@ -447,6 +452,12 @@
     NSLog(@"Should have either a workspace or a project.");
     abort();
   }
+}
+
+- (void)setSimulatorType:(NSString *)simulatorType
+{
+  _simulatorType = simulatorType;
+  _buildSettings[@"SIMULATOR"] = simulatorType;
 }
 
 - (void)setFindTargetExcludePathsFromString:(NSString *)string
