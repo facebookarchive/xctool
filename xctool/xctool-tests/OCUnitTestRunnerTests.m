@@ -54,6 +54,7 @@
                                            garbageCollection:NO
                                               freshSimulator:NO
                                                 freshInstall:NO
+                                               simulatorType:nil
                                               standardOutput:[NSFileHandle fileHandleWithNullDevice]
                                                standardError:[NSFileHandle fileHandleWithNullDevice]
                                                    reporters:@[]] autorelease];
@@ -105,6 +106,7 @@
                                             garbageCollection:NO
                                                freshSimulator:NO
                                                  freshInstall:NO
+                                                simulatorType:nil
                                                standardOutput:[NSFileHandle fileHandleWithNullDevice]
                                                 standardError:[NSFileHandle fileHandleWithNullDevice]
                                                     reporters:@[]] autorelease];
@@ -157,6 +159,7 @@
                                            garbageCollection:NO
                                               freshSimulator:NO
                                                 freshInstall:NO
+                                               simulatorType:nil
                                               standardOutput:[NSFileHandle fileHandleWithNullDevice]
                                                standardError:[NSFileHandle fileHandleWithNullDevice]
                                                    reporters:@[]] autorelease];
@@ -209,6 +212,7 @@
                                          garbageCollection:NO
                                             freshSimulator:NO
                                               freshInstall:NO
+                                             simulatorType:nil
                                             standardOutput:[NSFileHandle fileHandleWithNullDevice]
                                              standardError:[NSFileHandle fileHandleWithNullDevice]
                                                  reporters:@[]] autorelease];
@@ -257,6 +261,7 @@
              garbageCollection:NO
              freshSimulator:NO
              freshInstall:NO
+             simulatorType:nil
              standardOutput:[NSFileHandle fileHandleWithNullDevice]
              standardError:[NSFileHandle fileHandleWithNullDevice]
              reporters:@[]] autorelease];

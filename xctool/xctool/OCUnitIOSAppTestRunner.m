@@ -100,6 +100,10 @@ static void KillSimulatorJobs()
 
 @implementation OCUnitIOSAppTestRunner
 
+- (NSNumber *)simulatedDeviceFamily {
+  return [[_simulatorType lowercaseString] isEqualToString:@"ipad"] ? @2 : @1;
+}
+
 - (DTiPhoneSimulatorSessionConfig *)sessionConfigForRunningTestsWithEnvironment:(NSDictionary *)environment
                                                                      outputPath:(NSString *)outputPath
 {
@@ -119,8 +123,7 @@ static void KillSimulatorJobs()
   DTiPhoneSimulatorSessionConfig *sessionConfig = [[[DTiPhoneSimulatorSessionConfig alloc] init] autorelease];
   [sessionConfig setApplicationToSimulateOnStart:appSpec];
   [sessionConfig setSimulatedSystemRoot:systemRoot];
-  // Always run as iPhone (family = 1)
-  [sessionConfig setSimulatedDeviceFamily:@1];
+  [sessionConfig setSimulatedDeviceFamily:[self simulatedDeviceFamily]];
   [sessionConfig setSimulatedApplicationShouldWaitForDebugger:NO];
 
   [sessionConfig setSimulatedApplicationLaunchArgs:[self otestArguments]];
@@ -162,8 +165,7 @@ static void KillSimulatorJobs()
   DTiPhoneSimulatorSessionConfig *sessionConfig = [[[DTiPhoneSimulatorSessionConfig alloc] init] autorelease];
   [sessionConfig setApplicationToSimulateOnStart:appSpec];
   [sessionConfig setSimulatedSystemRoot:systemRoot];
-  // Always run as iPhone (family = 1)
-  [sessionConfig setSimulatedDeviceFamily:@1];
+  [sessionConfig setSimulatedDeviceFamily:[self simulatedDeviceFamily]];
   [sessionConfig setSimulatedApplicationShouldWaitForDebugger:NO];
   [sessionConfig setLocalizedClientName:@"xctool"];
   [sessionConfig setSimulatedApplicationLaunchArgs:arguments];
