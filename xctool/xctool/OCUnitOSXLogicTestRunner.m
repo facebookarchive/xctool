@@ -39,7 +39,7 @@
   // When invoking otest directly, the last arg needs to be the the test bundle.
   [task setArguments:[[self otestArguments] arrayByAddingObject:testBundlePath]];
   NSMutableDictionary *env = [[self.environmentOverrides mutableCopy] autorelease];
-  env[@"DYLD_INSERT_LIBRARIES"] = [PathToXCToolBinaries() stringByAppendingPathComponent:@"otest-shim-osx.dylib"];
+  env[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-osx.dylib"];
   [task setEnvironment:[self otestEnvironmentWithOverrides:env]];
   return task;
 }
@@ -79,7 +79,7 @@
 - (NSArray *)runTestClassListQuery
 {
   NSTask *task = [[NSTask alloc] init];
-  [task setLaunchPath:[PathToXCToolBinaries() stringByAppendingPathComponent:@"otest-query-osx"]];
+  [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-osx"]];
   [task setArguments:@[self.testBundlePath]];
   [task setEnvironment:[self otestEnvironmentWithOverrides:self.environmentOverrides]];
   NSDictionary *output = LaunchTaskAndCaptureOutput(task);

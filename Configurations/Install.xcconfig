@@ -1,0 +1,17 @@
+// Command-line builds can override this to change the install path.  By
+// default, we install to the same place Xcode would normally store build
+// products.
+XT_INSTALL_ROOT = $(BUILT_PRODUCTS_DIR)
+
+// The default DSTROOT is something like /tmp/blah.dst.
+DSTROOT = /
+
+// Final install path will be...
+// $(DSTROOT)$(XT_INSTALL_ROOT)/$(XT_INSTALL_DIR)
+INSTALL_PATH = $(XT_INSTALL_ROOT)/$(XT_INSTALL_DIR)
+
+// Setting to YES will cause every build to install.
+DEPLOYMENT_LOCATION = YES
+
+// We don't care to strip debug symbols in installed builds.
+COPY_PHASE_STRIP = NO

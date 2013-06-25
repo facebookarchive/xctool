@@ -51,4 +51,4 @@ if [ "$TRAVIS" = "true" ]; then
   stty columns 60
 fi
 
-"$XCTOOL_DIR"/build/$REVISION/Products/Release/xctool "$@"
+"$XCTOOL_DIR"/build/$REVISION/Products/Release/bin/xctool "$@"

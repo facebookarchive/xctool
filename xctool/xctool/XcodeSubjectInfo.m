@@ -756,7 +756,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
    [self.subjectXcodeBuildArguments arrayByAddingObject:@"-showBuildSettings"]];
   [task setEnvironment:@{
    @"DYLD_INSERT_LIBRARIES" :
-     [PathToXCToolBinaries() stringByAppendingPathComponent:
+     [XCToolLibPath() stringByAppendingPathComponent:
       @"xcodebuild-fastsettings-shim.dylib"],
    @"SHOW_ONLY_BUILD_SETTINGS_FOR_FIRST_BUILDABLE" : @"YES"
    }];

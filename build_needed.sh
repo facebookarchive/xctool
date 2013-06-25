@@ -20,7 +20,7 @@ else
 fi
 
 BUILD_OUTPUT_DIR="$XCTOOL_DIR"/build/$REVISION
-XCTOOL_PATH="$BUILD_OUTPUT_DIR"/Products/Release/xctool
+XCTOOL_PATH="$BUILD_OUTPUT_DIR"/Products/Release/bin/xctool
 
 if [[ -e "$XCTOOL_PATH" && $REVISION != "." && $HAS_GIT_CHANGES == "NO" && \
       "$1" != "TEST_AFTER_BUILD=YES" ]];

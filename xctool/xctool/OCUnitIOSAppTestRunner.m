@@ -132,7 +132,7 @@ static void KillSimulatorJobs()
    @"DYLD_FRAMEWORK_PATH" : _buildSettings[@"TARGET_BUILD_DIR"],
    @"DYLD_LIBRARY_PATH" : _buildSettings[@"TARGET_BUILD_DIR"],
    @"DYLD_INSERT_LIBRARIES" : [@[
-                                 [PathToXCToolBinaries() stringByAppendingPathComponent:@"otest-shim-ios.dylib"],
+                                 [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"],
                                ideBundleInjectionLibPath,
                                ] componentsJoinedByString:@":"],
    @"DYLD_ROOT_PATH" : _buildSettings[@"SDKROOT"],
@@ -158,7 +158,7 @@ static void KillSimulatorJobs()
                                                                                 withString:@""];
   DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKVersion:sdkVersion];
   DTiPhoneSimulatorApplicationSpecifier *appSpec = [DTiPhoneSimulatorApplicationSpecifier specifierWithApplicationPath:
-                                                    [PathToXCToolBinaries() stringByAppendingPathComponent:@"mobile-installation-helper.app"]];
+                                                    [XCToolLibExecPath() stringByAppendingPathComponent:@"mobile-installation-helper.app"]];
   DTiPhoneSimulatorSessionConfig *sessionConfig = [[[DTiPhoneSimulatorSessionConfig alloc] init] autorelease];
   [sessionConfig setApplicationToSimulateOnStart:appSpec];
   [sessionConfig setSimulatedSystemRoot:systemRoot];

@@ -88,28 +88,22 @@ NSDictionary *BuildSettingsFromOutput(NSString *output)
   return settings;
 }
 
-NSString *AbsoluteExecutablePath(void)
+const char *_CFProcessPath(void);
+
+NSString *XCToolBasePath(void)
 {
-  char execRelativePath[1024] = {0};
-  uint32_t execRelativePathSize = sizeof(execRelativePath);
-
-  _NSGetExecutablePath(execRelativePath, &execRelativePathSize);
-
-  char execAbsolutePath[1024] = {0};
-  assert(realpath((const char *)execRelativePath, execAbsolutePath) != NULL);
-
-  return [NSString stringWithUTF8String:execAbsolutePath];
+  return [[[NSString stringWithUTF8String:_CFProcessPath()]
+           stringByDeletingLastPathComponent] stringByDeletingLastPathComponent];
 }
 
-NSString *PathToXCToolBinaries(void)
+NSString *XCToolLibPath(void)
 {
-  if (IsRunningUnderTest()) {
-    // We're running in the test harness.  Turns out DYLD_LIBRARY_PATH contains the path our
-    // build products.
-    return [NSProcessInfo processInfo].environment[@"DYLD_LIBRARY_PATH"];
-  } else {
-    return [AbsoluteExecutablePath() stringByDeletingLastPathComponent];
-  }
+  return [XCToolBasePath() stringByAppendingPathComponent:@"lib"];
+}
+
+NSString *XCToolLibExecPath(void)
+{
+  return [XCToolBasePath() stringByAppendingPathComponent:@"libexec"];
 }
 
 NSString *XcodeDeveloperDirPath(void)
@@ -279,7 +273,7 @@ BOOL RunXcodebuildAndFeedEventsToReporters(NSArray *arguments,
     [NSMutableDictionary dictionaryWithDictionary:
      [[NSProcessInfo processInfo] environment]];
   [environment addEntriesFromDictionary:@{
-   @"DYLD_INSERT_LIBRARIES" : [PathToXCToolBinaries()
+   @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath()
                                stringByAppendingPathComponent:@"xcodebuild-shim.dylib"],
    @"PATH": @"/usr/bin:/bin:/usr/sbin:/sbin",
    }];
