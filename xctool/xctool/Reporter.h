@@ -33,6 +33,7 @@
 #define kReporter_Events_EndBuildTarget @"end-build-target"
 #define kReporter_Events_BeginStatus @"begin-status"
 #define kReporter_Events_EndStatus @"end-status"
+#define kReporter_Events_AnalyzerResult @"analyzer-result"
 
 #define kReporter_BeginAction_NameKey @"name"
 
@@ -110,6 +111,14 @@
 #define kReporter_EndStatus_MessageKey @"message"
 #define kReporter_EndStatus_TimestampKey @"timestamp"
 #define kReporter_EndStatus_LevelKey @"level"
+
+#define kReporter_AnalyzerResult_ProjectKey @"project"
+#define kReporter_AnalyzerResult_TargetKey @"target"
+#define kReporter_AnalyzerResult_FileKey @"file"
+#define kReporter_AnalyzerResult_LineKey @"line"
+#define kReporter_AnalyzerResult_ColumnKey @"col"
+#define kReporter_AnalyzerResult_DescriptionKey @"description"
+#define kReporter_AnalyzerResult_ContextKey @"context"
 
 /**
  A short name for the reporter, to be used with the -reporter argument.
@@ -198,6 +207,7 @@ void ReportStatusMessage(NSArray *reporters, ReporterMessageLevel level, NSStrin
 - (void)testOutput:(NSDictionary *)event;
 - (void)beginStatus:(NSDictionary *)event;
 - (void)endStatus:(NSDictionary *)event;
+- (void)analyzerResult:(NSDictionary *)event;
 
 /**
  To be called before any action is run.

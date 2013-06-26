@@ -693,7 +693,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   return testables;
 }
 
-+ (NSArray *)buildablesForTestInSchemePath:(NSString *)schemePath basePath:(NSString *)basePath
++ (NSArray *)buildablesInSchemePath:(NSString *)schemePath basePath:(NSString *)basePath
 {
   NSError *error = nil;
   NSXMLDocument *doc = [[[NSXMLDocument alloc] initWithContentsOfURL:[NSURL fileURLWithPath:schemePath]
@@ -704,7 +704,9 @@ containsFilesModifiedSince:(NSDate *)sinceDate
     abort();
   }
 
-  NSArray *buildActionEntryNodes = [doc nodesForXPath:@"//BuildActionEntry[@buildForTesting='YES']" error:nil];
+  NSArray *buildActionEntryNodes =
+  [doc nodesForXPath:@"//BuildActionEntry[@buildForTesting='YES' or @buildForRunning='YES' or @buildForAnalyzing='YES']"
+               error:nil];
 
   NSMutableArray *buildables = [NSMutableArray array];
   for (NSXMLElement *node in buildActionEntryNodes) {
@@ -726,11 +728,18 @@ containsFilesModifiedSince:(NSDate *)sinceDate
     NSString *targetID = [[buildableReference attributeForName:@"BlueprintIdentifier"] stringValue];
     NSString *executable = [[buildableReference attributeForName:@"BuildableName"] stringValue];
 
+    BOOL forRunning = [[[node attributeForName:@"buildForRunning"] stringValue] isEqual:@"YES"];
+    BOOL forTesting = [[[node attributeForName:@"buildForTesting"] stringValue] isEqual:@"YES"];
+    BOOL forAnalyzing = [[[node attributeForName:@"buildForAnalyzing"] stringValue] isEqual:@"YES"];
+
     [buildables addObject:@{
      @"projectPath" : projectPath,
      @"target": target,
      @"targetID": targetID,
      @"executable":executable,
+     @"forRunning": @(forRunning),
+     @"forTesting": @(forTesting),
+     @"forAnalyzing": @(forAnalyzing),
      }];
   }
 
@@ -778,6 +787,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   self.objRoot = firstBuildable[@"OBJROOT"];
   self.symRoot = firstBuildable[@"SYMROOT"];
   self.sharedPrecompsDir = firstBuildable[@"SHARED_PRECOMPS_DIR"];
+  self.effectivePlatformName = firstBuildable[@"EFFECTIVE_PLATFORM_NAME"];
 
   NSString *matchingSchemePath = nil;
 
@@ -789,27 +799,37 @@ containsFilesModifiedSince:(NSDate *)sinceDate
       }
     }
 
-    NSSet *projectPathsInWorkspace = [NSSet setWithArray:[XcodeSubjectInfo projectPathsInWorkspace:self.subjectWorkspace]];
-
-    NSArray *(^itemsMatchingProjectPath)(NSArray *) = ^(NSArray *items) {
-      NSMutableArray *newItems = [NSMutableArray array];
-      for (NSDictionary *item in items) {
-        if ([projectPathsInWorkspace containsObject:item[@"projectPath"]]) {
-          [newItems addObject:item];
-        }
-      }
-      return newItems;
-    };
-
     NSArray *testables = [[self class] testablesInSchemePath:matchingSchemePath
                                                     basePath:BasePathFromSchemePath(matchingSchemePath)];
-    NSArray *buildablesForTest = [[self class] buildablesForTestInSchemePath:matchingSchemePath
-                                                                    basePath:BasePathFromSchemePath(matchingSchemePath)];
+    NSArray *buildables = [[self class] buildablesInSchemePath:matchingSchemePath
+                                                      basePath:BasePathFromSchemePath(matchingSchemePath)];
+    
 
     // It's possible that the scheme references projects that aren't part of the workspace.  When
     // Xcode encounters these, it just skips them so we'll do the same.
-    self.testables = itemsMatchingProjectPath(testables);
-    self.buildablesForTest = itemsMatchingProjectPath(buildablesForTest);
+    NSSet *projectPathsInWorkspace = [NSSet setWithArray:[XcodeSubjectInfo projectPathsInWorkspace:self.subjectWorkspace]];
+    BOOL (^workspaceContainsProject)(id) = ^(id item) {
+      return [projectPathsInWorkspace containsObject:[item objectForKey:@"projectPath"]];
+    };
+
+    self.testables = [testables objectsAtIndexes:
+                      [testables indexesOfObjectsPassingTest:
+                       ^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+                         return workspaceContainsProject(obj);
+                       }]];
+
+    self.buildables = [buildables objectsAtIndexes:
+                       [buildables indexesOfObjectsPassingTest:
+                        ^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+                          return workspaceContainsProject(obj);
+                        }]];
+
+    self.buildablesForTest = [buildables objectsAtIndexes:
+                              [buildables indexesOfObjectsPassingTest:
+                               ^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+                                 return (workspaceContainsProject(obj) &&
+                                         [[obj objectForKey:@"forTesting"] boolValue]);
+                               }]];
   } else {
     NSArray *schemePaths = [XcodeSubjectInfo schemePathsInContainer:self.subjectProject];
     for (NSString *schemePath in schemePaths) {
@@ -820,8 +840,14 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 
     self.testables = [[self class] testablesInSchemePath:matchingSchemePath
                                                 basePath:BasePathFromSchemePath(matchingSchemePath)];
-    self.buildablesForTest = [[self class] buildablesForTestInSchemePath:matchingSchemePath
-                                                                basePath:BasePathFromSchemePath(matchingSchemePath)];
+
+    NSArray *buildables = [[self class] buildablesInSchemePath:matchingSchemePath
+                                                         basePath:BasePathFromSchemePath(matchingSchemePath)];
+    self.buildablesForTest = [buildables objectsAtIndexes:
+                              [buildables indexesOfObjectsPassingTest:
+                               ^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+                                 return [[obj objectForKey:@"forTesting"] boolValue];
+                               }]];
   }
 
   _configurationNameByAction =
@@ -853,6 +879,12 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   return _symRoot;
 }
 
+- (NSString *)effectivePlatformName
+{
+  [self populate];
+  return _effectivePlatformName;
+}
+
 - (NSArray *)testables
 {
   [self populate];
@@ -863,6 +895,12 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 {
   [self populate];
   return _buildablesForTest;
+}
+
+- (NSArray *)buildables
+{
+  [self populate];
+  return _buildables;
 }
 
 - (NSArray *)testablesAndBuildablesForTest

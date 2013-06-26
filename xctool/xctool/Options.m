@@ -16,6 +16,7 @@
 
 #import "Options.h"
 
+#import "AnalyzeAction.h"
 #import "ArchiveAction.h"
 #import "BuildAction.h"
 #import "BuildTestsAction.h"
@@ -37,6 +38,7 @@
            [RunTestsAction class],
            [TestAction class],
            [ArchiveAction class],
+           [AnalyzeAction class],
            ];
 }
 
@@ -402,12 +404,10 @@
 {
   NSMutableArray *arguments = [NSMutableArray array];
 
-  if (_configuration != nil) {
-    // The -configuration option from the command-line takes precedence.
-    [arguments addObjectsFromArray:@[@"-configuration", _configuration]];
-  } else if (schemeAction && xcodeSubjectInfo) {
-    [arguments addObjectsFromArray:@[@"-configuration",
-                                     [xcodeSubjectInfo configurationNameForAction:schemeAction]]];
+  NSString *effectiveConfigurationName =
+  [self effectiveConfigurationForSchemeAction:schemeAction xcodeSubjectInfo:xcodeSubjectInfo];
+  if (effectiveConfigurationName != nil) {
+    [arguments addObjectsFromArray:@[@"-configuration", effectiveConfigurationName]];
   }
 
   if (self.sdk != nil) {
@@ -435,6 +435,19 @@
   }];
 
   return arguments;
+}
+
+- (NSString *)effectiveConfigurationForSchemeAction:(NSString *)schemeAction
+                                   xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
+{
+  if (_configuration != nil) {
+    // The -configuration option from the command-line takes precedence.
+    return _configuration;
+  } else if (schemeAction && xcodeSubjectInfo) {
+    return [xcodeSubjectInfo configurationNameForAction:schemeAction];
+  } else {
+    return nil;
+  }
 }
 
 - (NSArray *)xcodeBuildArgumentsForSubject

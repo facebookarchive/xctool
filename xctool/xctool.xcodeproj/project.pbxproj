@@ -108,10 +108,15 @@
 		37520905173401D100AC05F9 /* JUnitReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 37520904173401D100AC05F9 /* JUnitReporterTests.m */; };
 		C9D5B9891733CC2100011C1F /* ArchiveAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D5B9881733CC2100011C1F /* ArchiveAction.m */; };
 		C9D5B98A1733CC2500011C1F /* ArchiveAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D5B9881733CC2100011C1F /* ArchiveAction.m */; };
+		CD098A2A175EBD20002E0CAC /* AnalyzeAction.m in Sources */ = {isa = PBXBuildFile; fileRef = CD098A29175EBD20002E0CAC /* AnalyzeAction.m */; };
+		CD098A2B175EBD20002E0CAC /* AnalyzeAction.m in Sources */ = {isa = PBXBuildFile; fileRef = CD098A29175EBD20002E0CAC /* AnalyzeAction.m */; };
 		CD522EC217471D6300048AF9 /* SchemeGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = CD522EC117471D6300048AF9 /* SchemeGenerator.m */; };
+		CD56770F1766782C003B727C /* BuildStateParser.mm in Sources */ = {isa = PBXBuildFile; fileRef = CD56770E1766782C003B727C /* BuildStateParser.mm */; };
+		CD5677101766782C003B727C /* BuildStateParser.mm in Sources */ = {isa = PBXBuildFile; fileRef = CD56770E1766782C003B727C /* BuildStateParser.mm */; };
 		CDD81F2F174ABA2700F42111 /* SchemeGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = CD522EC117471D6300048AF9 /* SchemeGenerator.m */; };
 		CDD81F51174EAFDC00F42111 /* BufferedReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = CDD81F50174EAFDC00F42111 /* BufferedReporter.m */; };
 		CDD81F52174EAFDC00F42111 /* BufferedReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = CDD81F50174EAFDC00F42111 /* BufferedReporter.m */; };
+		CDEE9EA1176950DC0026D278 /* BuildStateParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CDEE9EA0176950DC0026D278 /* BuildStateParserTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -256,10 +261,15 @@
 		37520904173401D100AC05F9 /* JUnitReporterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JUnitReporterTests.m; sourceTree = "<group>"; };
 		C9D5B9871733CC2100011C1F /* ArchiveAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArchiveAction.h; sourceTree = "<group>"; };
 		C9D5B9881733CC2100011C1F /* ArchiveAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArchiveAction.m; sourceTree = "<group>"; };
+		CD098A28175EBD20002E0CAC /* AnalyzeAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnalyzeAction.h; sourceTree = "<group>"; };
+		CD098A29175EBD20002E0CAC /* AnalyzeAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnalyzeAction.m; sourceTree = "<group>"; };
 		CD522EC017471D6300048AF9 /* SchemeGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SchemeGenerator.h; sourceTree = "<group>"; };
 		CD522EC117471D6300048AF9 /* SchemeGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SchemeGenerator.m; sourceTree = "<group>"; };
+		CD56770D1766782C003B727C /* BuildStateParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BuildStateParser.h; sourceTree = "<group>"; };
+		CD56770E1766782C003B727C /* BuildStateParser.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BuildStateParser.mm; sourceTree = "<group>"; };
 		CDD81F4F174EAFDC00F42111 /* BufferedReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BufferedReporter.h; sourceTree = "<group>"; };
 		CDD81F50174EAFDC00F42111 /* BufferedReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BufferedReporter.m; sourceTree = "<group>"; };
+		CDEE9EA0176950DC0026D278 /* BuildStateParserTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuildStateParserTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -292,6 +302,8 @@
 			children = (
 				28046D2A16D7603B000AA15C /* Action.h */,
 				28046D2B16D7603B000AA15C /* Action.m */,
+				CD098A28175EBD20002E0CAC /* AnalyzeAction.h */,
+				CD098A29175EBD20002E0CAC /* AnalyzeAction.m */,
 				C9D5B9871733CC2100011C1F /* ArchiveAction.h */,
 				C9D5B9881733CC2100011C1F /* ArchiveAction.m */,
 				2834799216E199A2003C3B77 /* BuildAction.h */,
@@ -354,6 +366,8 @@
 			isa = PBXGroup;
 			children = (
 				2834799516E199A9003C3B77 /* Actions */,
+				CD56770D1766782C003B727C /* BuildStateParser.h */,
+				CD56770E1766782C003B727C /* BuildStateParser.mm */,
 				287A37DC16C711AE00319E81 /* LineReader.h */,
 				287A37DD16C711AE00319E81 /* LineReader.m */,
 				283CCA4816C2EA3800F2E343 /* main.m */,
@@ -454,6 +468,7 @@
 				28C81A65175563690072DDB8 /* RecordingReporter.m */,
 				28302E1D175A8B6900C997B2 /* ArchiveActionTests.m */,
 				29D99C001756352300ABBD04 /* JSONCompilationDatabaseReporterTests.m */,
+				CDEE9EA0176950DC0026D278 /* BuildStateParserTests.m */,
 			);
 			path = "xctool-tests";
 			sourceTree = "<group>";
@@ -639,6 +654,8 @@
 				CDD81F51174EAFDC00F42111 /* BufferedReporter.m in Sources */,
 				29D99BF81753A3D700ABBD04 /* JSONCompilationDatabaseReporter.m in Sources */,
 				28B714551760767D00BB016A /* OCUnitIOSDeviceTestRunner.m in Sources */,
+				CD098A2A175EBD20002E0CAC /* AnalyzeAction.m in Sources */,
+				CD56770F1766782C003B727C /* BuildStateParser.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -707,6 +724,9 @@
 				28302E1E175A8B6900C997B2 /* ArchiveActionTests.m in Sources */,
 				29D99BFA1753A41B00ABBD04 /* JSONCompilationDatabaseReporter.m in Sources */,
 				29D99C011756352300ABBD04 /* JSONCompilationDatabaseReporterTests.m in Sources */,
+				CD098A2B175EBD20002E0CAC /* AnalyzeAction.m in Sources */,
+				CD5677101766782C003B727C /* BuildStateParser.mm in Sources */,
+				CDEE9EA1176950DC0026D278 /* BuildStateParserTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
