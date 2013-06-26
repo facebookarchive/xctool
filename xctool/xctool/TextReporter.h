@@ -37,6 +37,7 @@
 @property (nonatomic, retain) ReportWriter *reportWriter;
 @property (nonatomic, retain) NSMutableArray *failedTests;
 @property (nonatomic, retain) NSString *currentBundle;
+@property (nonatomic, retain) NSMutableArray *analyzerWarnings;
 
 @end
 

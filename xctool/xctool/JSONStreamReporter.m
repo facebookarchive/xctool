@@ -55,5 +55,6 @@
 - (void)testOutput:(NSDictionary *)event { [self passThrough:event]; }
 - (void)beginStatus:(NSDictionary *)event { [self passThrough:event]; }
 - (void)endStatus:(NSDictionary *)event { [self passThrough:event]; }
+- (void)analyzerResult:(NSDictionary *)event { [self passThrough:event]; }
 
 @end

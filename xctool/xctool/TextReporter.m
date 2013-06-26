@@ -25,6 +25,21 @@
 #import "NSFileHandle+Print.h"
 #import "RunTestsAction.h"
 
+/**
+ Remove leading component of string if it matches cwd.
+ */
+static NSString *abbreviatePath(NSString *string) {
+  NSString *cwd = [[NSFileManager defaultManager] currentDirectoryPath];
+  if (![cwd hasSuffix:@"/"]) {
+    cwd = [cwd stringByAppendingString:@"/"];
+  }
+  if ([string hasPrefix:cwd]) {
+    return [string substringFromIndex:cwd.length];
+  }
+  return string;
+}
+
+
 @interface ReportWriter : NSObject
 {
 }
@@ -163,6 +178,7 @@
 - (id)init
 {
   if (self = [super init]) {
+    _analyzerWarnings = [[NSMutableArray alloc] init];
   }
   return self;
 }
@@ -174,6 +190,7 @@
   [_currentStatusEvent release];
   [_failedTests release];
   [_currentBundle release];
+  [_analyzerWarnings release];
   [super dealloc];
 }
 
@@ -249,6 +266,38 @@
 - (void)printDivider
 {
   [self printDividerWithDownLine:NO];
+}
+
+- (void)printAnalyzerSummary
+{
+  if (self.analyzerWarnings.count > 0) {
+    [self.reportWriter printLine:@"<bold>Analyzer Warnings:<reset>"];
+    [self.reportWriter printNewline];
+    [self.reportWriter increaseIndent];
+
+    [self.analyzerWarnings enumerateObjectsUsingBlock:
+     ^(NSDictionary *event, NSUInteger idx, BOOL *stop) {
+       [self.reportWriter printLine:@"%lu) %@:%@:%@: %@",
+        (unsigned long)idx,
+        abbreviatePath(event[kReporter_AnalyzerResult_FileKey]),
+        event[kReporter_AnalyzerResult_LineKey],
+        event[kReporter_AnalyzerResult_ColumnKey],
+        event[kReporter_AnalyzerResult_DescriptionKey]];
+
+       [self printDivider];
+       [self.reportWriter disableIndent];
+       for (NSDictionary *piece in event[kReporter_AnalyzerResult_ContextKey]) {
+         [self.reportWriter printLine:@"%@:%@:%@: %@",
+          abbreviatePath(piece[@"file"]), piece[@"line"], piece[@"col"], piece[@"message"]];
+       }
+       [self.reportWriter enableIndent];
+       [self printDivider];
+
+       [self.reportWriter printNewline];
+     }];
+
+    [self.reportWriter decreaseIndent];
+  }
 }
 
 - (NSString *)condensedBuildCommandTitle:(NSString *)title
@@ -344,6 +393,8 @@
       }
       [self.reportWriter decreaseIndent];
     }
+  } else if ([name isEqual:@"analyze"]) {
+    [self printAnalyzerSummary];
   }
 
   [self.reportWriter printLine:@"<bold>** %@ %@%@ **<reset> <faint>(%03d ms)<reset>",
@@ -661,6 +712,12 @@
   if (succeeded) {
     _testsPassed++;
   }
+}
+
+
+- (void)analyzerResult:(NSDictionary *)event
+{
+  [self.analyzerWarnings addObject:event];
 }
 
 @end

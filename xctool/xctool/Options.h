@@ -63,6 +63,17 @@
 - (NSArray *)commonXcodeBuildArgumentsForSchemeAction:(NSString *)schemeAction
                                      xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo;
 
+/** 
+ Returns the configuration name taking into account of passed in -configuration
+ param.
+ 
+ @return Configuration name like 'Debug' or 'Release'. May return nil if 
+         '-configuration' is not specified on the command line and 
+         `schemeAction` or `xcodeSubjectInfo` is nil.
+ */
+- (NSString *)effectiveConfigurationForSchemeAction:(NSString *)schemeAction
+                                   xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo;
+
 - (NSArray *)xcodeBuildArgumentsForSubject;
 - (BOOL)validateReporterOptions:(NSString **)errorMessage;
 

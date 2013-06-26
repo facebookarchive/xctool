@@ -1,0 +1,965 @@
+Txctool
+v5
+r1
+cCheck dependencies
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/main.o /Users/yiding/xctool/xctool/xctool/main.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XCTool.o /Users/yiding/xctool/xctool/xctool/XCTool.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/NSFileHandle+Print.o /Users/yiding/xctool/xctool/xctool/NSFileHandle+Print.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XCToolUtil.o /Users/yiding/xctool/xctool/xctool/XCToolUtil.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitIOSAppTestRunner.o /Users/yiding/xctool/xctool/xctool/OCUnitIOSAppTestRunner.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitIOSLogicTestRunner.o /Users/yiding/xctool/xctool/xctool/OCUnitIOSLogicTestRunner.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitTestRunner.o /Users/yiding/xctool/xctool/xctool/OCUnitTestRunner.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Reporter.o /Users/yiding/xctool/xctool/xctool/Reporter.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/JSONStreamReporter.o /Users/yiding/xctool/xctool/xctool/JSONStreamReporter.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/TextReporter.o /Users/yiding/xctool/xctool/xctool/TextReporter.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/LineReader.o /Users/yiding/xctool/xctool/xctool/LineReader.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/SimulatorLauncher.o /Users/yiding/xctool/xctool/xctool/SimulatorLauncher.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Action.o /Users/yiding/xctool/xctool/xctool/Action.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BuildAction.o /Users/yiding/xctool/xctool/xctool/BuildAction.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Options.o /Users/yiding/xctool/xctool/xctool/Options.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/CleanAction.o /Users/yiding/xctool/xctool/xctool/CleanAction.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BuildTestsAction.o /Users/yiding/xctool/xctool/xctool/BuildTestsAction.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/RunTestsAction.o /Users/yiding/xctool/xctool/xctool/RunTestsAction.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XcodeSubjectInfo.o /Users/yiding/xctool/xctool/xctool/XcodeSubjectInfo.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/TaskUtil.o /Users/yiding/xctool/xctool/xctool/TaskUtil.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitCrashFilter.o /Users/yiding/xctool/xctool/xctool/OCUnitCrashFilter.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/PhabricatorReporter.o /Users/yiding/xctool/xctool/xctool/PhabricatorReporter.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitOSXLogicTestRunner.o /Users/yiding/xctool/xctool/xctool/OCUnitOSXLogicTestRunner.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitOSXAppTestRunner.o /Users/yiding/xctool/xctool/xctool/OCUnitOSXAppTestRunner.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XcodeTargetMatch.o /Users/yiding/xctool/xctool/xctool/XcodeTargetMatch.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/TestAction.o /Users/yiding/xctool/xctool/xctool/TestAction.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Version.o /Users/yiding/xctool/xctool/xctool/Version.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/ArchiveAction.o /Users/yiding/xctool/xctool/xctool/ArchiveAction.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/JUnitReporter.o /Users/yiding/xctool/xctool/xctool/JUnitReporter.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/SchemeGenerator.o /Users/yiding/xctool/xctool/xctool/SchemeGenerator.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BufferedReporter.o /Users/yiding/xctool/xctool/xctool/BufferedReporter.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/JSONCompilationDatabaseReporter.o /Users/yiding/xctool/xctool/xctool/JSONCompilationDatabaseReporter.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitIOSDeviceTestRunner.o /Users/yiding/xctool/xctool/xctool/OCUnitIOSDeviceTestRunner.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/AnalyzeAction.o /Users/yiding/xctool/xctool/xctool/AnalyzeAction.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+cCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BuildStateParser.o /Users/yiding/xctool/xctool/xctool/BuildStateParser.mm normal x86_64 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+cLd /Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/xctool normal x86_64
+
+N/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk
+c000000005170440500000000000000AA
+t1366311941
+s170
+
+N/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/Foundation.framework/Foundation
+c0000000051548C0200000000000C4BAC
+t1364495362
+s805804
+
+N/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h
+c0000000050AC324000000000000015F7
+t1353462336
+s5623
+
+N/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/QuartzCore.framework/QuartzCore
+c0000000051548C02000000000004DE20
+t1364495362
+s319008
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Action.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/AnalyzeAction.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/ArchiveAction.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BufferedReporter.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BuildAction.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BuildStateParser.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BuildTestsAction.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/CleanAction.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/JSONCompilationDatabaseReporter.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/JSONStreamReporter.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/JUnitReporter.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/LineReader.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/NSFileHandle+Print.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitCrashFilter.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitIOSAppTestRunner.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitIOSDeviceTestRunner.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitIOSLogicTestRunner.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitOSXAppTestRunner.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitOSXLogicTestRunner.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitTestRunner.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Options.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/PhabricatorReporter.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Reporter.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/RunTestsAction.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/SchemeGenerator.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/SimulatorLauncher.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/TaskUtil.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/TestAction.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/TextReporter.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Version.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XCTool.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XCToolUtil.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XcodeSubjectInfo.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XcodeTargetMatch.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/main.o
+t2
+s0
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/xctool.LinkFileList
+c0000000051B9193900000000000011FE
+t1371085113
+s4606
+
+N/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/xctool
+t2
+s0
+
+N/Users/yiding/xctool/xctool/xctool/Action.m
+c0000000051B7695D0000000000001A43
+t1370974557
+s6723
+
+N/Users/yiding/xctool/xctool/xctool/AnalyzeAction.m
+c0000000051B917B6000000000000204A
+t1371084726
+s8266
+
+N/Users/yiding/xctool/xctool/xctool/ArchiveAction.m
+c0000000051B7695D0000000000000388
+t1370974557
+s904
+
+N/Users/yiding/xctool/xctool/xctool/BufferedReporter.m
+c0000000051B7695D00000000000006ED
+t1370974557
+s1773
+
+N/Users/yiding/xctool/xctool/xctool/BuildAction.m
+c0000000051B7695D00000000000005E1
+t1370974557
+s1505
+
+N/Users/yiding/xctool/xctool/xctool/BuildStateParser.mm
+c0000000051B918E30000000000000804
+t1371085027
+s2052
+
+N/Users/yiding/xctool/xctool/xctool/BuildTestsAction.m
+c0000000051B7695D0000000000001617
+t1370974557
+s5655
+
+N/Users/yiding/xctool/xctool/xctool/CleanAction.m
+c0000000051B7695D0000000000000871
+t1370974557
+s2161
+
+N/Users/yiding/xctool/xctool/xctool/JSONCompilationDatabaseReporter.m
+c0000000051AFCC25000000000000194D
+t1370475557
+s6477
+
+N/Users/yiding/xctool/xctool/xctool/JSONStreamReporter.m
+c0000000051B917B600000000000009DC
+t1371084726
+s2524
+
+N/Users/yiding/xctool/xctool/xctool/JUnitReporter.m
+c0000000051AD477F000000000000135A
+t1370310527
+s4954
+
+N/Users/yiding/xctool/xctool/xctool/LineReader.m
+c000000005181731A0000000000000A93
+t1367438106
+s2707
+
+N/Users/yiding/xctool/xctool/xctool/NSFileHandle+Print.m
+c000000005181731A000000000000039E
+t1367438106
+s926
+
+N/Users/yiding/xctool/xctool/xctool/OCUnitCrashFilter.m
+c0000000051B7695D000000000000298C
+t1370974557
+s10636
+
+N/Users/yiding/xctool/xctool/xctool/OCUnitIOSAppTestRunner.m
+c0000000051B7695D0000000000003361
+t1370974557
+s13153
+
+N/Users/yiding/xctool/xctool/xctool/OCUnitIOSDeviceTestRunner.m
+c0000000051B7A9A8000000000000047A
+t1370991016
+s1146
+
+N/Users/yiding/xctool/xctool/xctool/OCUnitIOSLogicTestRunner.m
+c0000000051B7695D0000000000000F2A
+t1370974557
+s3882
+
+N/Users/yiding/xctool/xctool/xctool/OCUnitOSXAppTestRunner.m
+c0000000051B917B60000000000000ABE
+t1371084726
+s2750
+
+N/Users/yiding/xctool/xctool/xctool/OCUnitOSXLogicTestRunner.m
+c0000000051B917B60000000000000DC2
+t1371084726
+s3522
+
+N/Users/yiding/xctool/xctool/xctool/OCUnitTestRunner.m
+c0000000051B7695D0000000000002AFE
+t1370974557
+s11006
+
+N/Users/yiding/xctool/xctool/xctool/Options.m
+c0000000051B917B60000000000003E55
+t1371084726
+s15957
+
+N/Users/yiding/xctool/xctool/xctool/PhabricatorReporter.m
+c000000005181731A000000000000121A
+t1367438106
+s4634
+
+N/Users/yiding/xctool/xctool/xctool/Reporter.m
+c0000000051B917B60000000000001E24
+t1371084726
+s7716
+
+N/Users/yiding/xctool/xctool/xctool/RunTestsAction.m
+c0000000051B7695D0000000000004EBE
+t1370974557
+s20158
+
+N/Users/yiding/xctool/xctool/xctool/SchemeGenerator.m
+c0000000051A6417E0000000000001A2A
+t1369850238
+s6698
+
+N/Users/yiding/xctool/xctool/xctool/SimulatorLauncher.m
+c00000000519EB1310000000000000706
+t1369354545
+s1798
+
+N/Users/yiding/xctool/xctool/xctool/TaskUtil.m
+c000000005196DCC3000000000000189C
+t1368841411
+s6300
+
+N/Users/yiding/xctool/xctool/xctool/TestAction.m
+c0000000051B7695D0000000000001370
+t1370974557
+s4976
+
+N/Users/yiding/xctool/xctool/xctool/TextReporter.m
+c0000000051B917B60000000000005042
+t1371084726
+s20546
+
+N/Users/yiding/xctool/xctool/xctool/Version.m
+c0000000051A6417E0000000000000047
+t1369850238
+s71
+
+N/Users/yiding/xctool/xctool/xctool/XCTool.m
+c0000000051B7695D0000000000001A80
+t1370974557
+s6784
+
+N/Users/yiding/xctool/xctool/xctool/XCToolUtil.m
+c0000000051B7695D0000000000002ED7
+t1370974557
+s11991
+
+N/Users/yiding/xctool/xctool/xctool/XcodeSubjectInfo.m
+c0000000051B917B60000000000008D12
+t1371084726
+s36114
+
+N/Users/yiding/xctool/xctool/xctool/XcodeTargetMatch.m
+c000000005181731A000000000000044D
+t1367438106
+s1101
+
+N/Users/yiding/xctool/xctool/xctool/main.m
+c0000000051A53F100000000000000465
+t1369784080
+s1125
+
+N/Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch
+c000000005181731A0000000000000097
+t1367438106
+s151
+i<Foundation/Foundation.h>
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/Action.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/AnalyzeAction.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/ArchiveAction.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/BufferedReporter.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/BuildAction.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/BuildStateParser.mm
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/BuildTestsAction.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/CleanAction.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/JSONCompilationDatabaseReporter.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/JSONStreamReporter.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/JUnitReporter.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/LineReader.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/NSFileHandle+Print.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/OCUnitCrashFilter.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/OCUnitIOSAppTestRunner.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/OCUnitIOSDeviceTestRunner.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/OCUnitIOSLogicTestRunner.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/OCUnitOSXAppTestRunner.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/OCUnitOSXLogicTestRunner.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/OCUnitTestRunner.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/Options.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/PhabricatorReporter.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/Reporter.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/RunTestsAction.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/SchemeGenerator.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/SimulatorLauncher.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/TaskUtil.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/TestAction.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/TextReporter.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/Version.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/XCTool.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/XCToolUtil.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/XcodeSubjectInfo.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/XcodeTargetMatch.m
+r0
+
+CBuild AST from /Users/yiding/xctool/xctool/xctool/main.m
+r0
+
+CCheck dependencies
+r0
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Check dependencies342b27b95069b741^117127b95069b741^---0#1#0#--18"Check dependencies36"7D55A4D3-DB76-4339-903E-570E5C2C7177-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Action.o /Users/yiding/xctool/xctool/xctool/Action.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777913.730279
+e392777914.293122
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Action.o
+x/Users/yiding/xctool/xctool/xctool/Action.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection51"Compile /Users/yiding/xctool/xctool/xctool/Action.maf77bbb95069b741^791f4bba5069b741^---0#0#0#-19%DVTDocumentLocation2@59"file://localhost/Users/yiding/xctool/xctool/xctool/Action.m0000000000000000^3105"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Action.o xctool/Action.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Action.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Action.dia -c /Users/yiding/xctool/xctool/xctool/Action.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Action.o36"0919175E-1AA2-497A-97CD-54E7E706C2E1-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/AnalyzeAction.o /Users/yiding/xctool/xctool/xctool/AnalyzeAction.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777915.396143
+e392777915.781074
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/AnalyzeAction.o
+x/Users/yiding/xctool/xctool/xctool/AnalyzeAction.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection58"Compile /Users/yiding/xctool/xctool/xctool/AnalyzeAction.m278965bb5069b741^34f4c7bb5069b741^---0#0#0#-19%DVTDocumentLocation2@66"file://localhost/Users/yiding/xctool/xctool/xctool/AnalyzeAction.m0000000000000000^3147"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/AnalyzeAction.o xctool/AnalyzeAction.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/AnalyzeAction.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/AnalyzeAction.dia -c /Users/yiding/xctool/xctool/xctool/AnalyzeAction.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/AnalyzeAction.o36"6672579B-01AA-4A31-B56B-21F7BF5E0C68-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/ArchiveAction.o /Users/yiding/xctool/xctool/xctool/ArchiveAction.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777914.888041
+e392777915.440997
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/ArchiveAction.o
+x/Users/yiding/xctool/xctool/xctool/ArchiveAction.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection58"Compile /Users/yiding/xctool/xctool/xctool/ArchiveAction.mbb7ce3ba5069b741^cb1271bb5069b741^---0#0#0#-19%DVTDocumentLocation2@66"file://localhost/Users/yiding/xctool/xctool/xctool/ArchiveAction.m0000000000000000^3147"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/ArchiveAction.o xctool/ArchiveAction.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/ArchiveAction.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/ArchiveAction.dia -c /Users/yiding/xctool/xctool/xctool/ArchiveAction.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/ArchiveAction.o36"6E4B302E-CA8C-4D31-8D67-C54CEC6AED04-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BufferedReporter.o /Users/yiding/xctool/xctool/xctool/BufferedReporter.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777914.990052
+e392777915.524010
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BufferedReporter.o
+x/Users/yiding/xctool/xctool/xctool/BufferedReporter.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection61"Compile /Users/yiding/xctool/xctool/xctool/BufferedReporter.m6799fdba5069b741^00ac86bb5069b741^---0#0#0#-19%DVTDocumentLocation2@69"file://localhost/Users/yiding/xctool/xctool/xctool/BufferedReporter.m0000000000000000^3165"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BufferedReporter.o xctool/BufferedReporter.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BufferedReporter.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BufferedReporter.dia -c /Users/yiding/xctool/xctool/xctool/BufferedReporter.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BufferedReporter.o36"09CCC567-86D0-4B0C-B33E-2942A9C26B19-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BuildAction.o /Users/yiding/xctool/xctool/xctool/BuildAction.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777913.756892
+e392777914.291310
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BuildAction.o
+x/Users/yiding/xctool/xctool/xctool/BuildAction.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection56"Compile /Users/yiding/xctool/xctool/xctool/BuildAction.m04e6c1b95069b741^79944aba5069b741^---0#0#0#-19%DVTDocumentLocation2@64"file://localhost/Users/yiding/xctool/xctool/xctool/BuildAction.m0000000000000000^3135"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BuildAction.o xctool/BuildAction.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BuildAction.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BuildAction.dia -c /Users/yiding/xctool/xctool/xctool/BuildAction.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BuildAction.o36"E1CE307B-38B1-45A1-9527-FB990E17AB85-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BuildStateParser.o /Users/yiding/xctool/xctool/xctool/BuildStateParser.mm normal x86_64 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler
+s392777915.398907
+e392777916.304732
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BuildStateParser.o
+x/Users/yiding/xctool/xctool/xctool/BuildStateParser.mm
+xnormal
+xx86_64
+xobjective-c++
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection62"Compile /Users/yiding/xctool/xctool/xctool/BuildStateParser.mm3c4d66bb5069b741^eb024ebc5069b741^---0#0#0#-19%DVTDocumentLocation2@70"file://localhost/Users/yiding/xctool/xctool/xctool/BuildStateParser.mm0000000000000000^3315"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BuildStateParser.o xctool/BuildStateParser.mm normal x86_64 objective-c++ com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c++ -arch x86_64 -fmessage-length=0 -std=gnu++11 -stdlib=libc++ -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wno-non-virtual-dtor -Wno-overloaded-virtual -Wno-exit-time-destructors -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -Wno-c++11-extensions -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -Winvalid-offsetof -mmacosx-version-min=10.7 -g -fvisibility-inlines-hidden -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BuildStateParser.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BuildStateParser.dia -c /Users/yiding/xctool/xctool/xctool/BuildStateParser.mm -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BuildStateParser.o36"DBDBE689-3FDB-44B8-9D71-F4B4EC829CD9-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BuildTestsAction.o /Users/yiding/xctool/xctool/xctool/BuildTestsAction.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777914.165237
+e392777914.761645
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BuildTestsAction.o
+x/Users/yiding/xctool/xctool/xctool/BuildTestsAction.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection61"Compile /Users/yiding/xctool/xctool/xctool/BuildTestsAction.m50732aba5069b741^f8fac2ba5069b741^---0#0#0#-19%DVTDocumentLocation2@69"file://localhost/Users/yiding/xctool/xctool/xctool/BuildTestsAction.m0000000000000000^3165"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BuildTestsAction.o xctool/BuildTestsAction.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BuildTestsAction.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BuildTestsAction.dia -c /Users/yiding/xctool/xctool/xctool/BuildTestsAction.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/BuildTestsAction.o36"EF5C2A28-66AE-4D89-972C-BAFE84FDAA4E-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/CleanAction.o /Users/yiding/xctool/xctool/xctool/CleanAction.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777913.859938
+e392777914.384378
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/CleanAction.o
+x/Users/yiding/xctool/xctool/xctool/CleanAction.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection56"Compile /Users/yiding/xctool/xctool/xctool/CleanAction.m9949dcb95069b741^d57762ba5069b741^---0#0#0#-19%DVTDocumentLocation2@64"file://localhost/Users/yiding/xctool/xctool/xctool/CleanAction.m0000000000000000^3135"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/CleanAction.o xctool/CleanAction.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/CleanAction.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/CleanAction.dia -c /Users/yiding/xctool/xctool/xctool/CleanAction.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/CleanAction.o36"FE85F599-57B7-4810-8F42-4DBCF5676104-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/JSONCompilationDatabaseReporter.o /Users/yiding/xctool/xctool/xctool/JSONCompilationDatabaseReporter.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777915.192302
+e392777915.649878
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/JSONCompilationDatabaseReporter.o
+x/Users/yiding/xctool/xctool/xctool/JSONCompilationDatabaseReporter.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection76"Compile /Users/yiding/xctool/xctool/xctool/JSONCompilationDatabaseReporter.m8e9431bb5069b741^3a5da6bb5069b741^---0#0#0#-19%DVTDocumentLocation2@84"file://localhost/Users/yiding/xctool/xctool/xctool/JSONCompilationDatabaseReporter.m0000000000000000^3255"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/JSONCompilationDatabaseReporter.o xctool/JSONCompilationDatabaseReporter.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/JSONCompilationDatabaseReporter.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/JSONCompilationDatabaseReporter.dia -c /Users/yiding/xctool/xctool/xctool/JSONCompilationDatabaseReporter.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/JSONCompilationDatabaseReporter.o36"21E2D5BE-5324-46FC-A569-662E83423854-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/JSONStreamReporter.o /Users/yiding/xctool/xctool/xctool/JSONStreamReporter.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777913.652622
+e392777914.164012
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/JSONStreamReporter.o
+x/Users/yiding/xctool/xctool/xctool/JSONStreamReporter.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection63"Compile /Users/yiding/xctool/xctool/xctool/JSONStreamReporter.m263aa7b95069b741^1b832aba5069b741^---0#0#0#-19%DVTDocumentLocation2@71"file://localhost/Users/yiding/xctool/xctool/xctool/JSONStreamReporter.m0000000000000000^3177"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/JSONStreamReporter.o xctool/JSONStreamReporter.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/JSONStreamReporter.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/JSONStreamReporter.dia -c /Users/yiding/xctool/xctool/xctool/JSONStreamReporter.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/JSONStreamReporter.o36"1BCEE159-5592-49CF-A6F1-A339E9BF029E-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/JUnitReporter.o /Users/yiding/xctool/xctool/xctool/JUnitReporter.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777914.935140
+e392777915.484410
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/JUnitReporter.o
+x/Users/yiding/xctool/xctool/xctool/JUnitReporter.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection58"Compile /Users/yiding/xctool/xctool/xctool/JUnitReporter.m228cefba5069b741^9cc07cbb5069b741^---0#0#0#-19%DVTDocumentLocation2@66"file://localhost/Users/yiding/xctool/xctool/xctool/JUnitReporter.m0000000000000000^3147"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/JUnitReporter.o xctool/JUnitReporter.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/JUnitReporter.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/JUnitReporter.dia -c /Users/yiding/xctool/xctool/xctool/JUnitReporter.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/JUnitReporter.o36"E6458BF5-C121-4E58-B8B3-1181ACF6C1AC-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/LineReader.o /Users/yiding/xctool/xctool/xctool/LineReader.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777913.668196
+e392777914.168694
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/LineReader.o
+x/Users/yiding/xctool/xctool/xctool/LineReader.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection55"Compile /Users/yiding/xctool/xctool/xctool/LineReader.m5932abb95069b741^cf492bba5069b741^---0#0#0#-19%DVTDocumentLocation2@63"file://localhost/Users/yiding/xctool/xctool/xctool/LineReader.m0000000000000000^3129"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/LineReader.o xctool/LineReader.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/LineReader.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/LineReader.dia -c /Users/yiding/xctool/xctool/xctool/LineReader.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/LineReader.o36"16D0C9CD-3961-4A7B-80B4-C9F6FA84428A-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/NSFileHandle+Print.o /Users/yiding/xctool/xctool/xctool/NSFileHandle+Print.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777913.158599
+e392777913.663234
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/NSFileHandle+Print.o
+x/Users/yiding/xctool/xctool/xctool/NSFileHandle+Print.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection63"Compile /Users/yiding/xctool/xctool/xctool/NSFileHandle+Print.m8ac828b95069b741^04cba9b95069b741^---0#0#0#-19%DVTDocumentLocation2@71"file://localhost/Users/yiding/xctool/xctool/xctool/NSFileHandle+Print.m0000000000000000^3177"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/NSFileHandle+Print.o xctool/NSFileHandle+Print.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/NSFileHandle+Print.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/NSFileHandle+Print.dia -c /Users/yiding/xctool/xctool/xctool/NSFileHandle+Print.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/NSFileHandle+Print.o36"83EF9086-2D2D-4656-BCE7-C9E19C593C5D-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitCrashFilter.o /Users/yiding/xctool/xctool/xctool/OCUnitCrashFilter.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777914.338936
+e392777914.963073
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitCrashFilter.o
+x/Users/yiding/xctool/xctool/xctool/OCUnitCrashFilter.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection62"Compile /Users/yiding/xctool/xctool/xctool/OCUnitCrashFilter.m81eb56ba5069b741^e49ef6ba5069b741^---0#0#0#-19%DVTDocumentLocation2@70"file://localhost/Users/yiding/xctool/xctool/xctool/OCUnitCrashFilter.m0000000000000000^3171"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitCrashFilter.o xctool/OCUnitCrashFilter.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitCrashFilter.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitCrashFilter.dia -c /Users/yiding/xctool/xctool/xctool/OCUnitCrashFilter.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitCrashFilter.o36"F3D8634C-7E56-41FA-ABEE-C45913EAFB0D-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitIOSAppTestRunner.o /Users/yiding/xctool/xctool/xctool/OCUnitIOSAppTestRunner.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777913.158633
+e392777913.858625
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitIOSAppTestRunner.o
+x/Users/yiding/xctool/xctool/xctool/OCUnitIOSAppTestRunner.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection67"Compile /Users/yiding/xctool/xctool/xctool/OCUnitIOSAppTestRunner.m79cc28b95069b741^10cedbb95069b741^---0#0#0#-19%DVTDocumentLocation2@75"file://localhost/Users/yiding/xctool/xctool/xctool/OCUnitIOSAppTestRunner.m0000000000000000^3201"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitIOSAppTestRunner.o xctool/OCUnitIOSAppTestRunner.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitIOSAppTestRunner.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitIOSAppTestRunner.dia -c /Users/yiding/xctool/xctool/xctool/OCUnitIOSAppTestRunner.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitIOSAppTestRunner.o36"CCFC75E3-384D-4DA8-97BD-BC900B2E1ABE-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitIOSDeviceTestRunner.o /Users/yiding/xctool/xctool/xctool/OCUnitIOSDeviceTestRunner.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777915.328867
+e392777915.730379
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitIOSDeviceTestRunner.o
+x/Users/yiding/xctool/xctool/xctool/OCUnitIOSDeviceTestRunner.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection70"Compile /Users/yiding/xctool/xctool/xctool/OCUnitIOSDeviceTestRunner.mbd5454bb5069b741^dbf9babb5069b741^---0#0#0#-19%DVTDocumentLocation2@78"file://localhost/Users/yiding/xctool/xctool/xctool/OCUnitIOSDeviceTestRunner.m0000000000000000^3219"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitIOSDeviceTestRunner.o xctool/OCUnitIOSDeviceTestRunner.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitIOSDeviceTestRunner.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitIOSDeviceTestRunner.dia -c /Users/yiding/xctool/xctool/xctool/OCUnitIOSDeviceTestRunner.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitIOSDeviceTestRunner.o36"EFAA37C0-0A0E-4D9C-AED9-F9799A195584-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitIOSLogicTestRunner.o /Users/yiding/xctool/xctool/xctool/OCUnitIOSLogicTestRunner.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777913.158932
+e392777913.666969
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitIOSLogicTestRunner.o
+x/Users/yiding/xctool/xctool/xctool/OCUnitIOSLogicTestRunner.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection69"Compile /Users/yiding/xctool/xctool/xctool/OCUnitIOSLogicTestRunner.ma5dd28b95069b741^cfbeaab95069b741^---0#0#0#-19%DVTDocumentLocation2@77"file://localhost/Users/yiding/xctool/xctool/xctool/OCUnitIOSLogicTestRunner.m0000000000000000^3213"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitIOSLogicTestRunner.o xctool/OCUnitIOSLogicTestRunner.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitIOSLogicTestRunner.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitIOSLogicTestRunner.dia -c /Users/yiding/xctool/xctool/xctool/OCUnitIOSLogicTestRunner.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitIOSLogicTestRunner.o36"59688D9E-953E-4D96-B9ED-5972E6E8AA74-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitOSXAppTestRunner.o /Users/yiding/xctool/xctool/xctool/OCUnitOSXAppTestRunner.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777914.447090
+e392777915.190973
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitOSXAppTestRunner.o
+x/Users/yiding/xctool/xctool/xctool/OCUnitOSXAppTestRunner.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection67"Compile /Users/yiding/xctool/xctool/xctool/OCUnitOSXAppTestRunner.m16a372ba5069b741^63ed33bb5069b741^---0#0#0#-19%DVTDocumentLocation2@75"file://localhost/Users/yiding/xctool/xctool/xctool/OCUnitOSXAppTestRunner.m0000000000000000^3201"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitOSXAppTestRunner.o xctool/OCUnitOSXAppTestRunner.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitOSXAppTestRunner.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitOSXAppTestRunner.dia -c /Users/yiding/xctool/xctool/xctool/OCUnitOSXAppTestRunner.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitOSXAppTestRunner.o36"9D145AAF-C18E-49B3-AE37-2FBCC5CF183A-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitOSXLogicTestRunner.o /Users/yiding/xctool/xctool/xctool/OCUnitOSXLogicTestRunner.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777914.385710
+e392777914.933764
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitOSXLogicTestRunner.o
+x/Users/yiding/xctool/xctool/xctool/OCUnitOSXLogicTestRunner.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection69"Compile /Users/yiding/xctool/xctool/xctool/OCUnitOSXLogicTestRunner.mfce262ba5069b741^d312efba5069b741^---0#0#0#-19%DVTDocumentLocation2@77"file://localhost/Users/yiding/xctool/xctool/xctool/OCUnitOSXLogicTestRunner.m0000000000000000^3213"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitOSXLogicTestRunner.o xctool/OCUnitOSXLogicTestRunner.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitOSXLogicTestRunner.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitOSXLogicTestRunner.dia -c /Users/yiding/xctool/xctool/xctool/OCUnitOSXLogicTestRunner.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitOSXLogicTestRunner.o36"0033AE57-F9A3-4698-AFBB-A1A291B18ED7-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitTestRunner.o /Users/yiding/xctool/xctool/xctool/OCUnitTestRunner.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777913.158960
+e392777913.755493
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitTestRunner.o
+x/Users/yiding/xctool/xctool/xctool/OCUnitTestRunner.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection61"Compile /Users/yiding/xctool/xctool/xctool/OCUnitTestRunner.m6ccf28b95069b741^4567c1b95069b741^---0#0#0#-19%DVTDocumentLocation2@69"file://localhost/Users/yiding/xctool/xctool/xctool/OCUnitTestRunner.m0000000000000000^3165"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitTestRunner.o xctool/OCUnitTestRunner.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitTestRunner.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitTestRunner.dia -c /Users/yiding/xctool/xctool/xctool/OCUnitTestRunner.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/OCUnitTestRunner.o36"4C2D7CDF-FB95-4766-A704-57EFC9839E1E-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Options.o /Users/yiding/xctool/xctool/xctool/Options.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777913.772303
+e392777914.343243
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Options.o
+x/Users/yiding/xctool/xctool/xctool/Options.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection52"Compile /Users/yiding/xctool/xctool/xctool/Options.m49dac5b95069b741^501c58ba5069b741^---0#0#0#-19%DVTDocumentLocation2@60"file://localhost/Users/yiding/xctool/xctool/xctool/Options.m0000000000000000^3111"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Options.o xctool/Options.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Options.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Options.dia -c /Users/yiding/xctool/xctool/xctool/Options.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Options.o36"B2A3B0E7-C1EA-4283-AD96-B9606D3D8F30-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/PhabricatorReporter.o /Users/yiding/xctool/xctool/xctool/PhabricatorReporter.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777914.344420
+e392777914.886695
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/PhabricatorReporter.o
+x/Users/yiding/xctool/xctool/xctool/PhabricatorReporter.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection64"Compile /Users/yiding/xctool/xctool/xctool/PhabricatorReporter.mc26a58ba5069b741^f303e3ba5069b741^---0#0#0#-19%DVTDocumentLocation2@72"file://localhost/Users/yiding/xctool/xctool/xctool/PhabricatorReporter.m0000000000000000^3183"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/PhabricatorReporter.o xctool/PhabricatorReporter.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/PhabricatorReporter.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/PhabricatorReporter.dia -c /Users/yiding/xctool/xctool/xctool/PhabricatorReporter.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/PhabricatorReporter.o36"C78C7615-1777-4FD9-8AE4-C5DBD9970E2C-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Reporter.o /Users/yiding/xctool/xctool/xctool/Reporter.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777913.159127
+e392777913.716787
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Reporter.o
+x/Users/yiding/xctool/xctool/xctool/Reporter.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection53"Compile /Users/yiding/xctool/xctool/xctool/Reporter.m51d928b95069b741^a6d6b7b95069b741^---0#0#0#-19%DVTDocumentLocation2@61"file://localhost/Users/yiding/xctool/xctool/xctool/Reporter.m0000000000000000^3117"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Reporter.o xctool/Reporter.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Reporter.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Reporter.dia -c /Users/yiding/xctool/xctool/xctool/Reporter.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Reporter.o36"E595417B-240F-4E54-8748-90AFF38A38C9-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/RunTestsAction.o /Users/yiding/xctool/xctool/xctool/RunTestsAction.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777914.170234
+e392777914.819941
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/RunTestsAction.o
+x/Users/yiding/xctool/xctool/xctool/RunTestsAction.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection59"Compile /Users/yiding/xctool/xctool/xctool/RunTestsAction.maeb92bba5069b741^cbf2d1ba5069b741^---0#0#0#-19%DVTDocumentLocation2@67"file://localhost/Users/yiding/xctool/xctool/xctool/RunTestsAction.m0000000000000000^3153"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/RunTestsAction.o xctool/RunTestsAction.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/RunTestsAction.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/RunTestsAction.dia -c /Users/yiding/xctool/xctool/xctool/RunTestsAction.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/RunTestsAction.o36"5D41AB4A-03AB-4C4F-9287-AF3EA45B8CA4-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/SchemeGenerator.o /Users/yiding/xctool/xctool/xctool/SchemeGenerator.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777914.964435
+e392777915.504884
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/SchemeGenerator.o
+x/Users/yiding/xctool/xctool/xctool/SchemeGenerator.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection60"Compile /Users/yiding/xctool/xctool/xctool/SchemeGenerator.m5f0af7ba5069b741^ffeb84bb5069b741^---0#0#0#-19%DVTDocumentLocation2@68"file://localhost/Users/yiding/xctool/xctool/xctool/SchemeGenerator.m0000000000000000^3159"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/SchemeGenerator.o xctool/SchemeGenerator.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/SchemeGenerator.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/SchemeGenerator.dia -c /Users/yiding/xctool/xctool/xctool/SchemeGenerator.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/SchemeGenerator.o36"7B1BB940-4D6C-497C-B8F4-F4C66FF20310-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/SimulatorLauncher.o /Users/yiding/xctool/xctool/xctool/SimulatorLauncher.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777913.705318
+e392777914.445791
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/SimulatorLauncher.o
+x/Users/yiding/xctool/xctool/xctool/SimulatorLauncher.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection62"Compile /Users/yiding/xctool/xctool/xctool/SimulatorLauncher.m13b5b4b95069b741^412972ba5069b741^---0#0#0#-19%DVTDocumentLocation2@70"file://localhost/Users/yiding/xctool/xctool/xctool/SimulatorLauncher.m0000000000000000^3171"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/SimulatorLauncher.o xctool/SimulatorLauncher.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/SimulatorLauncher.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/SimulatorLauncher.dia -c /Users/yiding/xctool/xctool/xctool/SimulatorLauncher.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/SimulatorLauncher.o36"61412518-0FE8-4852-AAF2-DE1A063D6BF3-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/TaskUtil.o /Users/yiding/xctool/xctool/xctool/TaskUtil.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777914.294350
+e392777914.862389
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/TaskUtil.o
+x/Users/yiding/xctool/xctool/xctool/TaskUtil.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection53"Compile /Users/yiding/xctool/xctool/xctool/TaskUtil.m467c4bba5069b741^35d4dcba5069b741^---0#0#0#-19%DVTDocumentLocation2@61"file://localhost/Users/yiding/xctool/xctool/xctool/TaskUtil.m0000000000000000^3117"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/TaskUtil.o xctool/TaskUtil.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/TaskUtil.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/TaskUtil.dia -c /Users/yiding/xctool/xctool/xctool/TaskUtil.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/TaskUtil.o36"F107531D-7C4A-4C20-8C83-5632B4C146BD-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/TestAction.o /Users/yiding/xctool/xctool/xctool/TestAction.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777914.821261
+e392777915.397622
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/TestAction.o
+x/Users/yiding/xctool/xctool/xctool/TestAction.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection55"Compile /Users/yiding/xctool/xctool/xctool/TestAction.m5890d2ba5069b741^7c0d71bb5069b741^---0#0#0#-19%DVTDocumentLocation2@63"file://localhost/Users/yiding/xctool/xctool/xctool/TestAction.m0000000000000000^3129"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/TestAction.o xctool/TestAction.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/TestAction.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/TestAction.dia -c /Users/yiding/xctool/xctool/xctool/TestAction.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/TestAction.o36"549D5E81-CADD-430C-86AD-5583BA64733E-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/TextReporter.o /Users/yiding/xctool/xctool/xctool/TextReporter.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777913.664708
+e392777914.337566
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/TextReporter.o
+x/Users/yiding/xctool/xctool/xctool/TextReporter.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection57"Compile /Users/yiding/xctool/xctool/xctool/TextReporter.mad4eaab95069b741^c66b56ba5069b741^---0#0#0#-19%DVTDocumentLocation2@65"file://localhost/Users/yiding/xctool/xctool/xctool/TextReporter.m0000000000000000^3141"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/TextReporter.o xctool/TextReporter.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/TextReporter.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/TextReporter.dia -c /Users/yiding/xctool/xctool/xctool/TextReporter.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/TextReporter.o36"BA67C2C8-1C17-4D3E-A35A-1FD4300242C8-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Version.o /Users/yiding/xctool/xctool/xctool/Version.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777914.863770
+e392777915.394789
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Version.o
+x/Users/yiding/xctool/xctool/xctool/Version.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection52"Compile /Users/yiding/xctool/xctool/xctool/Version.me949ddba5069b741^240a71bb5069b741^---0#0#0#-19%DVTDocumentLocation2@60"file://localhost/Users/yiding/xctool/xctool/xctool/Version.m0000000000000000^3111"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Version.o xctool/Version.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Version.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Version.dia -c /Users/yiding/xctool/xctool/xctool/Version.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/Version.o36"7491319F-B497-4BF9-A5D6-6530A5B1868C-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XCTool.o /Users/yiding/xctool/xctool/xctool/XCTool.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777913.158591
+e392777913.770482
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XCTool.o
+x/Users/yiding/xctool/xctool/xctool/XCTool.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection51"Compile /Users/yiding/xctool/xctool/xctool/XCTool.m81ce28b95069b741^ea3dc5b95069b741^---0#0#0#-19%DVTDocumentLocation2@59"file://localhost/Users/yiding/xctool/xctool/xctool/XCTool.m0000000000000000^3105"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XCTool.o xctool/XCTool.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XCTool.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XCTool.dia -c /Users/yiding/xctool/xctool/xctool/XCTool.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XCTool.o36"88AA3E12-D41F-4C42-9EF4-C29F98B4AB2D-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XCToolUtil.o /Users/yiding/xctool/xctool/xctool/XCToolUtil.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777913.158620
+e392777913.703934
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XCToolUtil.o
+x/Users/yiding/xctool/xctool/xctool/XCToolUtil.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection55"Compile /Users/yiding/xctool/xctool/xctool/XCToolUtil.m23bd28b95069b741^8f34b4b95069b741^---0#0#0#-19%DVTDocumentLocation2@63"file://localhost/Users/yiding/xctool/xctool/xctool/XCToolUtil.m0000000000000000^3129"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XCToolUtil.o xctool/XCToolUtil.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XCToolUtil.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XCToolUtil.dia -c /Users/yiding/xctool/xctool/xctool/XCToolUtil.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XCToolUtil.o36"8015CD42-16DC-482F-97C1-E45F93F85D6B-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XcodeSubjectInfo.o /Users/yiding/xctool/xctool/xctool/XcodeSubjectInfo.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777914.292653
+e392777914.988653
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XcodeSubjectInfo.o
+x/Users/yiding/xctool/xctool/xctool/XcodeSubjectInfo.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection61"Compile /Users/yiding/xctool/xctool/xctool/XcodeSubjectInfo.m59134bba5069b741^8522fdba5069b741^---0#0#0#-19%DVTDocumentLocation2@69"file://localhost/Users/yiding/xctool/xctool/xctool/XcodeSubjectInfo.m0000000000000000^3165"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XcodeSubjectInfo.o xctool/XcodeSubjectInfo.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XcodeSubjectInfo.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XcodeSubjectInfo.dia -c /Users/yiding/xctool/xctool/xctool/XcodeSubjectInfo.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XcodeSubjectInfo.o36"D0D95D8C-2F1B-43E2-9368-97F379C4FD90-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XcodeTargetMatch.o /Users/yiding/xctool/xctool/xctool/XcodeTargetMatch.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777914.762981
+e392777915.327523
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XcodeTargetMatch.o
+x/Users/yiding/xctool/xctool/xctool/XcodeTargetMatch.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection61"Compile /Users/yiding/xctool/xctool/xctool/XcodeTargetMatch.m9f77c3ba5069b741^518860bb5069b741^---0#0#0#-19%DVTDocumentLocation2@69"file://localhost/Users/yiding/xctool/xctool/xctool/XcodeTargetMatch.m0000000000000000^3165"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XcodeTargetMatch.o xctool/XcodeTargetMatch.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XcodeTargetMatch.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XcodeTargetMatch.dia -c /Users/yiding/xctool/xctool/xctool/XcodeTargetMatch.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/XcodeTargetMatch.o36"729DC953-12E6-43A5-A667-E1DEEE860AB6-
+
+CCompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/main.o /Users/yiding/xctool/xctool/xctool/main.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+s392777913.158582
+e392777913.651275
+r1
+xCompileC
+x/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/main.o
+x/Users/yiding/xctool/xctool/xctool/main.m
+xnormal
+xx86_64
+xobjective-c
+xcom.apple.compilers.llvm.clang.1_0.compiler
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection49"Compile /Users/yiding/xctool/xctool/xctool/main.m49bc28b95069b741^6fb9a6b95069b741^---0#0#0#-19%DVTDocumentLocation2@57"file://localhost/Users/yiding/xctool/xctool/xctool/main.m0000000000000000^3093"CompileC /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/main.o xctool/main.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/yiding/xctool/xctool    setenv LANG en_US.US-ASCII    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Werror -Wno-missing-field-initializers -Wno-missing-prototypes -Wreturn-type -Wno-implicit-atomic-properties -Wno-receiver-is-weak -Wduplicate-method-match -Wformat -Wno-missing-braces -Wparentheses -Wswitch -Wno-unused-function -Wno-unused-label -Wno-unused-parameter -Wunused-variable -Wunused-value -Wempty-body -Wuninitialized -Wno-unknown-pragmas -Wno-shadow -Wno-four-char-constants -Wno-conversion -Wconstant-conversion -Wint-conversion -Wenum-conversion -Wshorten-64-to-32 -Wpointer-sign -Wno-newline-eof -Wno-selector -Wno-strict-selector-match -Wno-undeclared-selector -Wno-deprecated-implementations -DDEBUG=1 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -fasm-blocks -fstrict-aliasing -Wprotocol -Wdeprecated-declarations -mmacosx-version-min=10.7 -g -Wno-sign-conversion -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-generated-files.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-own-target-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-all-target-headers.hmap -iquote /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/xctool-project-headers.hmap -I/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources/x86_64 -I/Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/DerivedSources -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -include /Users/yiding/xctool/xctool/xctool/xctool-Prefix.pch -MMD -MT dependencies -MF /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/main.d --serialize-diagnostics /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/main.dia -c /Users/yiding/xctool/xctool/xctool/main.m -o /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/main.o36"EE8F0FC4-21BC-4F9B-90EE-E7DF956FB840-
+
+CLd /Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/xctool normal x86_64
+s392777916.311638
+e392777916.372091
+r1
+xLd
+x/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/xctool
+xnormal
+xx86_64
+lSLF05#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection72"Link /Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/xctoole4d74fbc5069b741^5b415fbc5069b741^---0#0#0#--1311"Ld /Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/xctool normal x86_64    cd /Users/yiding/xctool/xctool    setenv MACOSX_DEPLOYMENT_TARGET 10.7    /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk -L/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug -F/Applications/Xcode.app/Contents/Developer/Library/Frameworks -F/Users/yiding/xctool/xctool/../Vendor -filelist /Users/yiding/xctool/DerivedData/xctool/Build/Intermediates/xctool.build/Debug/xctool.build/Objects-normal/x86_64/xctool.LinkFileList -mmacosx-version-min=10.7 -framework AppKit -F/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks -framework iPhoneSimulatorRemoteClient -Wl,-rpath -Wl,/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks -Wl,-rpath -Wl,/Applications/Xcode.app/Contents/Developer/../OtherFrameworks -fobjc-link-runtime -stdlib=libc++ -framework QuartzCore -framework Foundation -o /Users/yiding/xctool/DerivedData/xctool/Build/Products/Debug/xctool36"3DB06780-452C-4AE7-94FF-C87780ADDA32-
+
