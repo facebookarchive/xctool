@@ -65,12 +65,13 @@
   }
 
   if (bundleExists) {
-    NSTask *task = [self otestTaskWithTestBundle:testBundlePath];
+    @autoreleasepool {
+      NSTask *task = [self otestTaskWithTestBundle:testBundlePath];
+      LaunchTaskAndFeedOuputLinesToBlock(task, outputLineBlock);
+      *gotUncaughtSignal = task.terminationReason == NSTaskTerminationReasonUncaughtSignal;
 
-    LaunchTaskAndFeedOuputLinesToBlock(task, outputLineBlock);
-
-    *gotUncaughtSignal = task.terminationReason == NSTaskTerminationReasonUncaughtSignal;
-    return [task terminationStatus] == 0 ? YES : NO;
+      return [task terminationStatus] == 0 ? YES : NO;
+    }
   } else {
     *error = [NSString stringWithFormat:@"Test bundle not found at: %@", testBundlePath];
     *gotUncaughtSignal = NO;
@@ -80,12 +81,13 @@
 
 - (NSArray *)runTestClassListQuery
 {
-  NSTask *task = [[[NSTask alloc] init] autorelease];
+  NSTask *task = [[NSTask alloc] init];
   [task setLaunchPath:[PathToXCToolBinaries() stringByAppendingPathComponent:@"otest-query-ios"]];
   [task setArguments:@[self.testBundlePath]];
   [task setEnvironment:[self otestEnvironmentWithOverrides:self.environmentOverrides]];
   NSDictionary *output = LaunchTaskAndCaptureOutput(task);
   NSData *outputData = [output[@"stdout"] dataUsingEncoding:NSUTF8StringEncoding];
+  [task release];
   return [NSJSONSerialization JSONObjectWithData:outputData options:0 error:nil];
 }
 

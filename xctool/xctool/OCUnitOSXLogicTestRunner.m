@@ -59,14 +59,16 @@
   }
 
   if (bundleExists) {
-    NSTask *task = [self otestTaskWithTestBundle:testBundlePath];
-    // For OSX test bundles only, Xcode will chdir to the project's directory.
-    [task setCurrentDirectoryPath:_buildSettings[@"PROJECT_DIR"]];
+    @autoreleasepool {
+      NSTask *task = [self otestTaskWithTestBundle:testBundlePath];
+      // For OSX test bundles only, Xcode will chdir to the project's directory.
+      [task setCurrentDirectoryPath:_buildSettings[@"PROJECT_DIR"]];
 
-    LaunchTaskAndFeedOuputLinesToBlock(task, outputLineBlock);
+      LaunchTaskAndFeedOuputLinesToBlock(task, outputLineBlock);
 
-    *gotUncaughtSignal = task.terminationReason == NSTaskTerminationReasonUncaughtSignal;
-    return [task terminationStatus] == 0 ? YES : NO;
+      *gotUncaughtSignal = task.terminationReason == NSTaskTerminationReasonUncaughtSignal;
+      return [task terminationStatus] == 0 ? YES : NO;
+    }
   } else {
     *error = [NSString stringWithFormat:@"Test bundle not found at: %@", testBundlePath];
     *gotUncaughtSignal = NO;
@@ -76,11 +78,12 @@
 
 - (NSArray *)runTestClassListQuery
 {
-  NSTask *task = [[[NSTask alloc] init] autorelease];
+  NSTask *task = [[NSTask alloc] init];
   [task setLaunchPath:[PathToXCToolBinaries() stringByAppendingPathComponent:@"otest-query-osx"]];
   [task setArguments:@[self.testBundlePath]];
   [task setEnvironment:[self otestEnvironmentWithOverrides:self.environmentOverrides]];
   NSDictionary *output = LaunchTaskAndCaptureOutput(task);
+  [task release];
   NSData *outputData = [output[@"stdout"] dataUsingEncoding:NSUTF8StringEncoding];
   return [NSJSONSerialization JSONObjectWithData:outputData options:0 error:nil];
 }
