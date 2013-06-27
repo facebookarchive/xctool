@@ -160,7 +160,7 @@
   }
 
   if (options.showBuildSettings) {
-    NSTask *task = [[[NSTask alloc] init] autorelease];
+    NSTask *task = [[NSTask alloc] init];
     [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
     [task setArguments:[[[options xcodeBuildArgumentsForSubject]
                          arrayByAddingObjectsFromArray:[options commonXcodeBuildArgumentsForSchemeAction:nil xcodeSubjectInfo:nil]]
@@ -170,6 +170,7 @@
     [task launch];
     [task waitUntilExit];
     _exitStatus = [task terminationStatus];
+    [task release];
     return;
   }
 

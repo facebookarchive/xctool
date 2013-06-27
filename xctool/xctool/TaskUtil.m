@@ -50,13 +50,16 @@ NSDictionary *LaunchTaskAndCaptureOutput(NSTask *task)
                                                                         object:stderrHandle
                                                                          queue:nil
                                                                     usingBlock:completionBlock];
-  [stdoutHandle readToEndOfFileInBackgroundAndNotify];
-  [stderrHandle readToEndOfFileInBackgroundAndNotify];
-  [task setStandardOutput:stdoutPipe];
-  [task setStandardError:stderrPipe];
 
-  [task launch];
-  [task waitUntilExit];
+  CFRunLoopPerformBlock(CFRunLoopGetCurrent(), kCFRunLoopDefaultMode, ^{
+    [stdoutHandle readToEndOfFileInBackgroundAndNotify];
+    [stderrHandle readToEndOfFileInBackgroundAndNotify];
+    [task setStandardOutput:stdoutPipe];
+    [task setStandardError:stderrPipe];
+
+    [task launch];
+    [task waitUntilExit];
+  });
 
   while (standardOutput == nil || standardError == nil) {
     CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.1, YES);

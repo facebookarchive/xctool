@@ -113,7 +113,7 @@ NSString *PathToXCToolBinaries(void)
 NSString *XcodeDeveloperDirPath(void)
 {
   NSString *(^getPath)() = ^{
-    NSTask *task = [[[NSTask alloc] init] autorelease];
+    NSTask *task = [[NSTask alloc] init];
     [task setLaunchPath:@"/usr/bin/xcode-select"];
     [task setArguments:@[@"--print-path"]];
     [task setEnvironment:@{}];
@@ -122,6 +122,7 @@ NSString *XcodeDeveloperDirPath(void)
     path = [path stringByTrimmingCharactersInSet:
             [NSCharacterSet newlineCharacterSet]];
 
+    [task release];
     return path;
   };
 
@@ -163,7 +164,7 @@ NSDictionary *GetAvailableSDKsAndAliases()
     //   "iphonesimulator 5.0"
     //
     // xcodebuild is nice enough to return them to us in ascending order.
-    NSTask *task = [[[NSTask alloc] init] autorelease];
+    NSTask *task = [[NSTask alloc] init];
     [task setLaunchPath:@"/bin/bash"];
     [task setArguments:@[
      @"-c",
@@ -188,6 +189,7 @@ NSDictionary *GetAvailableSDKsAndAliases()
       result[sdkName] = sdk;
     }
 
+    [task release];
     return result;
   };
 
@@ -270,7 +272,7 @@ BOOL RunXcodebuildAndFeedEventsToReporters(NSArray *arguments,
                                            NSString *title,
                                            NSArray *reporters)
 {
-  NSTask *task = [[[NSTask alloc] init] autorelease];
+  NSTask *task = [[NSTask alloc] init];
   [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
   [task setArguments:arguments];
   NSMutableDictionary *environment =
@@ -323,6 +325,7 @@ BOOL RunXcodebuildAndFeedEventsToReporters(NSArray *arguments,
   [reporters makeObjectsPerformSelector:@selector(handleEvent:)
                              withObject:endEvent];
 
+  [task release];
   return succeeded;
 }
 
