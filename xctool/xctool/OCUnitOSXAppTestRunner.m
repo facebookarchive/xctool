@@ -36,7 +36,7 @@
                          [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection"],
                          ];
 
-  NSTask *task = [[[NSTask alloc] init] autorelease];
+  NSTask *task = [[NSTask alloc] init];
   [task setLaunchPath:testHostPath];
   [task setArguments:[self otestArguments]];
   [task setEnvironment:[self otestEnvironmentWithOverrides:@{
@@ -55,7 +55,9 @@
   LaunchTaskAndFeedOuputLinesToBlock(task, outputLineBlock);
 
   *gotUncaughtSignal = task.terminationReason == NSTaskTerminationReasonUncaughtSignal;
-  return [task terminationStatus] == 0;
+  int terminationStatus = task.terminationStatus;
+  [task release];
+  return terminationStatus == 0;
 }
 
 @end

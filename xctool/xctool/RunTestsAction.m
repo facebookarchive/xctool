@@ -322,7 +322,7 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
   NSString *testableTarget = testable[@"target"];
 
   // Collect build settings for this test target.
-  NSTask *settingsTask = [[[NSTask alloc] init] autorelease];
+  NSTask *settingsTask = [[NSTask alloc] init];
   [settingsTask setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
 
   if (_testSDK) {
@@ -346,6 +346,8 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
                                  }];
 
   NSDictionary *result = LaunchTaskAndCaptureOutput(settingsTask);
+  [settingsTask release];
+  settingsTask = nil;
 
   NSDictionary *allSettings = BuildSettingsFromOutput(result[@"stdout"]);
   NSAssert([allSettings count] == 1,
