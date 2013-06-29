@@ -161,13 +161,13 @@
     NSString *workingDirectory = [commands[1] strip];
     
     NSTextCheckingResult *precompileTitleMatch =
-      [precompileTitle firstMatch:@[@"^ProcessPCH \"(.+)(\\.pch\\.pth|\\.pch\\.pch)\" \"(.+)\\.pch\"",
-                                    @"^ProcessPCH (.+)(\\.pch\\.pth|\\.pch\\.pch) (.+)\\.pch"]];
+      [precompileTitle firstMatch:@[@"^ProcessPCH(\\+\\+)? \"(.+)(\\.pch\\.pth|\\.pch\\.pch)\" \"(.+)\\.pch\"",
+                                    @"^ProcessPCH(\\+\\+)? (.+)(\\.pch\\.pth|\\.pch\\.pch) (.+)\\.pch"]];
     NSTextCheckingResult *workingDirectoryMatch = [workingDirectory firstMatch:@[@"^cd \"(.+)\"", @"^cd (.+)"]];
     
     if (precompileTitleMatch && workingDirectoryMatch) {
-      NSRange firstHalfRange = [precompileTitleMatch rangeAtIndex:1];
-      NSRange secondHalfRange = [precompileTitleMatch rangeAtIndex:3];
+      NSRange firstHalfRange = [precompileTitleMatch rangeAtIndex:2];
+      NSRange secondHalfRange = [precompileTitleMatch rangeAtIndex:4];
       NSString *cachedPath = [NSString stringWithFormat:@"%@.pch", [precompileTitle substringWithRange:firstHalfRange]];
       NSString *localPath = [NSString stringWithFormat:@"%@/%@.pch",
                              [workingDirectory substringWithRange:[workingDirectoryMatch rangeAtIndex:1]],
