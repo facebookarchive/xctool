@@ -116,7 +116,9 @@ NSString *XcodeDeveloperDirPath(void)
     NSTask *task = [[NSTask alloc] init];
     [task setLaunchPath:@"/usr/bin/xcode-select"];
     [task setArguments:@[@"--print-path"]];
-    [task setEnvironment:@{}];
+    // Pass through the environment so DEVELOPER_DIR works
+    // (see man page for xcode-select)
+    [task setEnvironment:[[NSProcessInfo processInfo] environment]];
 
     NSString *path = LaunchTaskAndCaptureOutput(task)[@"stdout"];
     path = [path stringByTrimmingCharactersInSet:
