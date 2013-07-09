@@ -763,7 +763,12 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 
   NSDictionary *result = LaunchTaskAndCaptureOutput(task);
   [task release];
-  return BuildSettingsFromOutput(result[@"stdout"]);
+
+  NSDictionary *settings = BuildSettingsFromOutput(result[@"stdout"]);
+  NSAssert(settings.count == 1,
+           @"Expected to receive build settings for 1 target, but instead got: %@",
+           settings);
+  return settings;
 }
 
 - (void)populate
@@ -781,7 +786,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   ReportStatusMessageBegin(_reporters, REPORTER_MESSAGE_INFO, @"Collecting build settings ...");
   NSDictionary *settings = [self buildSettingsForFirstBuildable];
   ReportStatusMessageEnd(_reporters, REPORTER_MESSAGE_INFO, @"Collecting build settings ...");
-  assert(settings.count == 1);
+
   NSDictionary *firstBuildable = [settings allValues][0];
   // The following control where our build output goes - we need to make sure we build the tests
   // in the same places as we built the original products - this is what Xcode does.
