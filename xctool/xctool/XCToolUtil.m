@@ -361,8 +361,18 @@ NSArray *ArgumentListByOverriding(NSArray *arguments,
 NSString *TemporaryDirectoryForAction()
 {
   if (__tempDirectoryForAction == nil) {
+    NSString *nameTemplate = nil;
+
+    // Let our names be consistent while under test - we don't want our tests
+    // to have to match against random values.
+    if (IsRunningUnderTest()) {
+      nameTemplate = @"xctool_temp_UNDERTEST";
+    } else {
+      nameTemplate = @"xctool_temp_XXXXXX";
+    }
+
     NSMutableData *template =
-    [[[[NSTemporaryDirectory() stringByAppendingPathComponent:@"xctool_temp_XXXXXX"]
+    [[[[NSTemporaryDirectory() stringByAppendingPathComponent:nameTemplate]
        dataUsingEncoding:NSUTF8StringEncoding] mutableCopy] autorelease];
     [template appendBytes:"\0" length:1];
 

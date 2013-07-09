@@ -54,14 +54,31 @@
         xcodeArguments:(NSArray *)xcodeArguments
           xcodeCommand:(NSString *)xcodeCommand
 {
-  NSArray *taskArguments = [xcodeArguments arrayByAddingObjectsFromArray:@[
-                            @"-workspace", path,
-                            @"-scheme", scheme,
-                            [NSString stringWithFormat:@"OBJROOT=%@", objRoot],
-                            [NSString stringWithFormat:@"SYMROOT=%@", symRoot],
-                            [NSString stringWithFormat:@"SHARED_PRECOMPS_DIR=%@", sharedPrecompsDir],
-                            xcodeCommand,
-                            ]];
+  NSArray *taskArguments =
+  [xcodeArguments arrayByAddingObjectsFromArray:@[
+   @"-workspace", path,
+   @"-scheme", scheme,
+   // By setting these values to match the subject workspace/scheme
+   // or project/scheme we're testing, we can reuse the already built
+   // products.  Without this, xcodebuild would default to using the
+   // generated workspace's DerivedData (which is empty, so everything
+   // would get rebuilt).
+   [NSString stringWithFormat:@"OBJROOT=%@", objRoot],
+   [NSString stringWithFormat:@"SYMROOT=%@", symRoot],
+   [NSString stringWithFormat:@"SHARED_PRECOMPS_DIR=%@", sharedPrecompsDir],
+   // Override the DerivedData location to be within our temporary directory so
+   // we don't accumulate junk in the user's real DerivedData folder.
+   //
+   // We're generating a new workspace and scheme every time we build
+   // or run tests, and so xcodebuild wants to create a directory like
+   // 'Tests-dgtnwkoyuhjfcibwyjiprineykfj' in DerivedData for every run.  Since
+   // we're overriding OBJROOT/SYMROOM/SHARED_PRECOMPS_DIR, no build output ends
+   // up here so the directory serves no purpose.  It's empty except for one
+   // 'info.plist' file.
+   [@"-IDECustomDerivedDataLocation=" stringByAppendingString:
+    [TemporaryDirectoryForAction() stringByAppendingPathComponent:@"DerivedData"]],
+   xcodeCommand,
+   ]];
 
   return RunXcodebuildAndFeedEventsToReporters(taskArguments,
                                                @"build",
