@@ -16,11 +16,11 @@
 
 #import "SchemeGenerator.h"
 
+#import "XCToolUtil.h"
+
 @implementation SchemeGenerator {
   NSMutableArray *_buildables;
   NSMutableSet *_projectPaths;
-
-  NSMutableArray *_tempDirs;
 }
 
 + (SchemeGenerator *)schemeGenerator
@@ -34,7 +34,6 @@
   if (self) {
     _buildables = [[NSMutableArray array] retain];
     _projectPaths = [[NSMutableSet set] retain];
-    _tempDirs = [[NSMutableArray array] retain];
   }
   return self;
 }
@@ -43,17 +42,7 @@
 {
   [_buildables release];
   [_projectPaths release];
-  [_tempDirs release];
-
   [super dealloc];
-}
-
-- (void)cleanupTemporaryDirectories
-{
-  for (NSString *path in _tempDirs) {
-    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
-  }
-  [_tempDirs removeAllObjects];
 }
 
 - (void)addBuildableWithID:(NSString *)identifier
@@ -66,20 +55,9 @@
 
 - (NSString *)writeWorkspaceNamed:(NSString *)name
 {
-  NSMutableData *template =
-  [[[[NSTemporaryDirectory() stringByAppendingPathComponent:@"workspace_XXXXXX"]
-    dataUsingEncoding:NSUTF8StringEncoding] mutableCopy] autorelease];
-  [template appendBytes:"\0" length:1];
-
-  if (!mkdtemp(template.mutableBytes)) {
-    NSLog(@"failed to create temporary directory");
-    return nil;
-  }
-
-  NSString *tempdir = [NSString stringWithUTF8String:template.bytes];
-  [_tempDirs addObject:tempdir];
-  if ([self writeWorkspaceNamed:name to:tempdir]) {
-    return [tempdir stringByAppendingPathComponent:[name stringByAppendingPathExtension:@"xcworkspace"]];
+  NSString *tempDir = TemporaryDirectoryForAction();
+  if ([self writeWorkspaceNamed:name to:tempDir]) {
+    return [tempDir stringByAppendingPathComponent:[name stringByAppendingPathExtension:@"xcworkspace"]];
   }
 
   return nil;

@@ -34,6 +34,4 @@
 /// Returns the path to the xcworkspace directory.
 - (NSString *)writeWorkspaceNamed:(NSString *)name;
 
-- (void)cleanupTemporaryDirectories;
-
 @end

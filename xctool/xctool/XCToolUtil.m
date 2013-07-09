@@ -24,6 +24,8 @@
 #import "TaskUtil.h"
 #import "XcodeSubjectInfo.h"
 
+static NSString *__tempDirectoryForAction = nil;
+
 NSDictionary *BuildSettingsFromOutput(NSString *output)
 {
   NSScanner *scanner = [NSScanner scannerWithString:output];
@@ -140,7 +142,7 @@ NSString *XcodeDeveloperDirPath(void)
 
 NSString *MakeTempFileWithPrefix(NSString *prefix)
 {
-  const char *template = [[NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.XXXXXXX", prefix]] UTF8String];
+  const char *template = [[TemporaryDirectoryForAction() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.XXXXXXX", prefix]] UTF8String];
 
   char tempPath[PATH_MAX] = {0};
   strcpy(tempPath, template);
@@ -350,4 +352,50 @@ NSArray *ArgumentListByOverriding(NSArray *arguments,
   }
 
   return result;
+}
+
+NSString *TemporaryDirectoryForAction()
+{
+  if (__tempDirectoryForAction == nil) {
+    NSString *nameTemplate = nil;
+
+    // Let our names be consistent while under test - we don't want our tests
+    // to have to match against random values.
+    if (IsRunningUnderTest()) {
+      nameTemplate = @"xctool_temp_UNDERTEST";
+    } else {
+      nameTemplate = @"xctool_temp_XXXXXX";
+    }
+
+    NSMutableData *template =
+    [[[[NSTemporaryDirectory() stringByAppendingPathComponent:nameTemplate]
+       dataUsingEncoding:NSUTF8StringEncoding] mutableCopy] autorelease];
+    [template appendBytes:"\0" length:1];
+
+    if (!mkdtemp(template.mutableBytes)) {
+      NSLog(@"Failed to create temporary directory: %s", strerror(errno));
+      abort();
+    }
+
+    __tempDirectoryForAction = [[NSString alloc] initWithUTF8String:template.bytes];
+  }
+
+  return __tempDirectoryForAction;
+}
+
+void CleanupTemporaryDirectoryForAction()
+{
+  if (__tempDirectoryForAction != nil) {
+    NSError *error = nil;
+    if (![[NSFileManager defaultManager] removeItemAtPath:__tempDirectoryForAction
+                                                    error:&error]) {
+      NSLog(@"Failed to remove temporary directory '%@': %@",
+            __tempDirectoryForAction,
+            [error localizedFailureReason]);
+      abort();
+    }
+
+    [__tempDirectoryForAction release];
+    __tempDirectoryForAction = nil;
+  }
 }
