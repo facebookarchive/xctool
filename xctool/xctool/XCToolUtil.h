@@ -54,3 +54,17 @@ BOOL RunXcodebuildAndFeedEventsToReporters(NSArray *arguments,
 NSArray *ArgumentListByOverriding(NSArray *arguments,
                                   NSString *option,
                                   NSString *optionValue);
+
+/**
+ Returns a temporary directory to be used during the current running action
+ (i.e. build, or test).  As soon as the action completes, the temporary
+ dir is cleaned up.
+ */
+NSString *TemporaryDirectoryForAction();
+
+/**
+ Cleans up any temporary directory that was created earlier with
+ `TemporaryDirectoryForRun()`.
+ */
+void CleanupTemporaryDirectoryForAction();
+

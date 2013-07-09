@@ -218,6 +218,8 @@
        kReporter_EndAction_DurationKey: @(stopTime - startTime),
        }];
 
+      CleanupTemporaryDirectoryForAction();
+
       if (!succeeded) {
         _exitStatus = 1;
         break;

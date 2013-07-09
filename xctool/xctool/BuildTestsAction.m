@@ -89,7 +89,6 @@
                                   sharedPrecompsDir:xcodeSubjectInfo.sharedPrecompsDir
                                      xcodeArguments:xcodebuildArguments
                                        xcodeCommand:command];
-  [schemeGenerator cleanupTemporaryDirectories];
 
   if (!succeeded) {
     return NO;
