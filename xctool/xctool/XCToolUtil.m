@@ -116,9 +116,6 @@ NSString *XcodeDeveloperDirPath(void)
     NSTask *task = [[NSTask alloc] init];
     [task setLaunchPath:@"/usr/bin/xcode-select"];
     [task setArguments:@[@"--print-path"]];
-    // Pass through the environment so DEVELOPER_DIR works
-    // (see man page for xcode-select)
-    [task setEnvironment:[[NSProcessInfo processInfo] environment]];
 
     NSString *path = LaunchTaskAndCaptureOutput(task)[@"stdout"];
     path = [path stringByTrimmingCharactersInSet:
@@ -172,7 +169,6 @@ NSDictionary *GetAvailableSDKsAndAliases()
      @"-c",
      @"/usr/bin/xcodebuild -showsdks | perl -ne '/-sdk (.*?)([\\d\\.]+)$/ && print \"$1 $2\n\"'",
      ]];
-    [task setEnvironment:@{}];
 
     NSArray *lines = [LaunchTaskAndCaptureOutput(task)[@"stdout"] componentsSeparatedByString:@"\n"];
     lines = [lines subarrayWithRange:NSMakeRange(0, lines.count - 1)];
