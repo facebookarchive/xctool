@@ -144,6 +144,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
 
     [verify(mockSchemeGenerator) setParallelizeBuildables:YES];
     [verify(mockSchemeGenerator) setBuildImplicitDependencies:YES];
+    [verify(mockSchemeGenerator) addProjectPathToWorkspace:projectPath];
     [verify(mockSchemeGenerator) addBuildableWithID:kTestProjectTestProjectLibraryTargetID
                                           inProject:projectPath];
     [verify(mockSchemeGenerator) addBuildableWithID:kTestProjectTestProjectLibraryTestTargetID
@@ -202,6 +203,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
     NSString *projectPath = TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj";
     [verify(mockSchemeGenerator) setParallelizeBuildables:NO];
     [verify(mockSchemeGenerator) setBuildImplicitDependencies:YES];
+    [verify(mockSchemeGenerator) addProjectPathToWorkspace:projectPath];
     [verify(mockSchemeGenerator) addBuildableWithID:kTestWorkspaceTestProjectLibraryTargetID
                                           inProject:projectPath];
     [verify(mockSchemeGenerator) addBuildableWithID:kTestWorkspaceTestProjectOtherLibTargetID
@@ -269,6 +271,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
     NSString *projectPath = TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj";
     [verify(mockSchemeGenerator) setParallelizeBuildables:NO];
     [verify(mockSchemeGenerator) setBuildImplicitDependencies:YES];
+    [verify(mockSchemeGenerator) addProjectPathToWorkspace:projectPath];
     [verify(mockSchemeGenerator) addBuildableWithID:kTestWorkspaceTestProjectLibraryTargetID
                                           inProject:projectPath];
     [verify(mockSchemeGenerator) addBuildableWithID:kTestWorkspaceTestProjectOtherLibTargetID
@@ -333,6 +336,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
     NSString *projectPath = TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj";
     [verify(mockSchemeGenerator) setParallelizeBuildables:NO];
     [verify(mockSchemeGenerator) setBuildImplicitDependencies:YES];
+    [verify(mockSchemeGenerator) addProjectPathToWorkspace:projectPath];
     [verify(mockSchemeGenerator) addBuildableWithID:kTestWorkspaceTestProjectLibraryTestsTargetID
                                           inProject:projectPath];
     [verifyCount(mockSchemeGenerator, times(1)) addBuildableWithID:(id)anything() inProject:(id)anything()];

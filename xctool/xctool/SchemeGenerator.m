@@ -50,6 +50,11 @@
 {
   NSString *absPath = [[[NSURL fileURLWithPath:projectPath] URLByStandardizingPath] path];
   [_buildables addObject:@{@"id":identifier, @"project":absPath}];
+}
+
+- (void)addProjectPathToWorkspace:(NSString *)projectPath
+{
+  NSString *absPath = [[[NSURL fileURLWithPath:projectPath] URLByStandardizingPath] path];
   [_projectPaths addObject:absPath];
 }
 

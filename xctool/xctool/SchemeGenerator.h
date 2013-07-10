@@ -29,6 +29,8 @@
 - (void)addBuildableWithID:(NSString *)identifier
                  inProject:(NSString *)projectPath;
 
+- (void)addProjectPathToWorkspace:(NSString *)projectPath;
+
 /// Write the workspace into this directory.
 - (BOOL)writeWorkspaceNamed:(NSString *)name
                          to:(NSString *)destination;

@@ -95,6 +95,19 @@
   schemeGenerator.parallelizeBuildables = xcodeSubjectInfo.parallelizeBuildables;
   schemeGenerator.buildImplicitDependencies = xcodeSubjectInfo.buildImplicitDependencies;
 
+  // For Xcode's Find Implicit Dependencies to work, we must add every project
+  // in the subject's workspace to the generated workspace.
+  if (options.workspace) {
+    NSArray *projectPaths = [XcodeSubjectInfo projectPathsInWorkspace:options.workspace];
+    for (NSString *projectPath in projectPaths) {
+      [schemeGenerator addProjectPathToWorkspace:projectPath];
+    }
+  } else if (options.project) {
+    [schemeGenerator addProjectPathToWorkspace:options.project];
+  } else {
+    NSAssert(NO, @"Should have a workspace or a project.");
+  }
+
   for (NSDictionary *buildable in testables) {
     [schemeGenerator addBuildableWithID:buildable[@"targetID"] inProject:buildable[@"projectPath"]];
   }
