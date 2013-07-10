@@ -221,17 +221,9 @@ static void KillSimulatorJobs()
   // Sometimes the TEST_HOST will be wrapped in double quotes.
   NSString *testHostPath = [_buildSettings[@"TEST_HOST"] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
   NSString *testHostAppPath = [testHostPath stringByDeletingLastPathComponent];
-
-  if (![[NSFileManager defaultManager] fileExistsAtPath:testHostAppPath isDirectory:NULL]) {
-    *error = [NSString stringWithFormat:@"TEST_HOST doesn't exist at '%@'", testHostAppPath];
-    return NO;
-  }
-
   NSString *testHostPlistPath = [[testHostPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Info.plist"];
   NSDictionary *plist = [NSDictionary dictionaryWithContentsOfFile:testHostPlistPath];
-  NSAssert(plist != nil, @"Unable to read TEST_HOST's Info.plist at '%@'", testHostPlistPath);
   NSString *testHostBundleID = plist[@"CFBundleIdentifier"];
-  NSAssert(testHostBundleID != nil, @"CFBundleIdentifier not found in '%@'", testHostPlistPath);
 
   if (_freshSimulator) {
     ReportStatusMessageBegin(_reporters,
