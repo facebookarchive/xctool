@@ -179,8 +179,10 @@ NSArray *attributeListFromDict(NSDictionary *dict) {
    children:@[[NSXMLNode elementWithName:@"PreActions"],
               [NSXMLNode elementWithName:@"PostActions"],
               buildActionEntries]
-   attributes:@[[NSXMLNode attributeWithName:@"parallelizeBuildables" stringValue:@"NO"],
-                [NSXMLNode attributeWithName:@"buildImplicitDependencies" stringValue:@"NO"]]];
+   attributes:@[[NSXMLNode attributeWithName:@"parallelizeBuildables"
+                                 stringValue:_parallelizeBuildables ? @"YES" : @"NO"],
+                [NSXMLNode attributeWithName:@"buildImplicitDependencies"
+                                 stringValue:_buildImplicitDependencies ? @"YES" : @"NO"]]];
 
   NSXMLElement *root =
   [NSXMLNode

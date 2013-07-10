@@ -92,6 +92,9 @@
       xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   SchemeGenerator *schemeGenerator = [SchemeGenerator schemeGenerator];
+  schemeGenerator.parallelizeBuildables = xcodeSubjectInfo.parallelizeBuildables;
+  schemeGenerator.buildImplicitDependencies = xcodeSubjectInfo.buildImplicitDependencies;
+
   for (NSDictionary *buildable in testables) {
     [schemeGenerator addBuildableWithID:buildable[@"targetID"] inProject:buildable[@"projectPath"]];
   }

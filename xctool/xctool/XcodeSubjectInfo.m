@@ -848,6 +848,28 @@ containsFilesModifiedSince:(NSDate *)sinceDate
                              }]];
 }
 
+- (void)populateBuildActionPropertiesWithSchemePath:(NSString *)schemePath
+{
+  NSError *error = nil;
+  NSXMLDocument *doc = [[[NSXMLDocument alloc] initWithContentsOfURL:[NSURL fileURLWithPath:schemePath]
+                                                             options:0
+                                                               error:&error] autorelease];
+  if (error != nil) {
+    NSLog(@"Error in parsing: %@: %@", schemePath, error);
+    abort();
+  }
+
+  NSArray *buildActionNodes = [doc nodesForXPath:@"//BuildAction" error:&error];
+  NSAssert(error == nil, @"Failed to get BuildAction node: %@", [error localizedFailureReason]);
+  NSAssert([buildActionNodes count] == 1, @"Should have only one BuildAction node");
+  NSXMLElement *buildActionNode = buildActionNodes[0];
+
+  self.parallelizeBuildables =
+    [[[buildActionNode attributeForName:@"parallelizeBuildables"] stringValue] isEqualToString:@"YES"];
+  self.buildImplicitDependencies =
+    [[[buildActionNode attributeForName:@"buildImplicitDependencies"] stringValue] isEqualToString:@"YES"];
+}
+
 - (void)populate
 {
   if (_didPopulate) {
@@ -885,6 +907,8 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   } else {
     [self populateBuildablesAndTestablesForProjectWithSchemePath:matchingSchemePath];
   }
+
+  [self populateBuildActionPropertiesWithSchemePath:matchingSchemePath];
 
   _configurationNameByAction =
     [BuildConfigurationsByActionForSchemePath(matchingSchemePath) retain];
@@ -937,6 +961,18 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 {
   [self populate];
   return _buildables;
+}
+
+- (BOOL)parallelizeBuildables
+{
+  [self populate];
+  return _parallelizeBuildables;
+}
+
+- (BOOL)buildImplicitDependencies
+{
+  [self populate];
+  return _buildImplicitDependencies;
 }
 
 - (NSArray *)testablesAndBuildablesForTest
