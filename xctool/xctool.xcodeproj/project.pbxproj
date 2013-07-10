@@ -51,6 +51,7 @@
 		287BF04D16F1A6EB00590E06 /* XcodeSubjectInfoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 287BF04C16F1A6EB00590E06 /* XcodeSubjectInfoTests.m */; };
 		287BF08416F1A97900590E06 /* XcodeSubjectInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 287BF08316F1A97900590E06 /* XcodeSubjectInfo.m */; };
 		287BF08516F1A97900590E06 /* XcodeSubjectInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 287BF08316F1A97900590E06 /* XcodeSubjectInfo.m */; };
+		28869AFC178CEA7600DED56A /* SenTestListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 28869AFB178CEA7600DED56A /* SenTestListener.m */; };
 		28897FB9173CB512004BA024 /* Options+Testing.m in Sources */ = {isa = PBXBuildFile; fileRef = 28897FB8173CB512004BA024 /* Options+Testing.m */; };
 		28897FBD173E4C74004BA024 /* FakeTaskManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28897FBA173E4C73004BA024 /* FakeTaskManagerTests.m */; };
 		28897FD0173E6215004BA024 /* Swizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 28897FCF173E6215004BA024 /* Swizzle.m */; };
@@ -197,6 +198,7 @@
 		287BF04C16F1A6EB00590E06 /* XcodeSubjectInfoTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodeSubjectInfoTests.m; sourceTree = "<group>"; };
 		287BF08216F1A97900590E06 /* XcodeSubjectInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XcodeSubjectInfo.h; sourceTree = "<group>"; };
 		287BF08316F1A97900590E06 /* XcodeSubjectInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodeSubjectInfo.m; sourceTree = "<group>"; };
+		28869AFB178CEA7600DED56A /* SenTestListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SenTestListener.m; sourceTree = "<group>"; };
 		28897FB7173CB512004BA024 /* Options+Testing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Options+Testing.h"; sourceTree = "<group>"; };
 		28897FB8173CB512004BA024 /* Options+Testing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Options+Testing.m"; sourceTree = "<group>"; };
 		28897FBA173E4C73004BA024 /* FakeTaskManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeTaskManagerTests.m; sourceTree = "<group>"; };
@@ -469,6 +471,7 @@
 				28302E1D175A8B6900C997B2 /* ArchiveActionTests.m */,
 				29D99C001756352300ABBD04 /* JSONCompilationDatabaseReporterTests.m */,
 				CDEE9EA0176950DC0026D278 /* BuildStateParserTests.m */,
+				28869AFB178CEA7600DED56A /* SenTestListener.m */,
 			);
 			path = "xctool-tests";
 			sourceTree = "<group>";
@@ -727,6 +730,7 @@
 				CD098A2B175EBD20002E0CAC /* AnalyzeAction.m in Sources */,
 				CD5677101766782C003B727C /* BuildStateParser.mm in Sources */,
 				CDEE9EA1176950DC0026D278 /* BuildStateParserTests.m in Sources */,
+				28869AFC178CEA7600DED56A /* SenTestListener.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
