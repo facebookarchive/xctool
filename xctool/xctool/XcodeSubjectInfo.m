@@ -771,6 +771,34 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   return settings;
 }
 
+- (NSString *)matchingSchemePathForWorkspace
+{
+  NSString *matchingSchemePath = nil;
+
+  NSArray *schemePaths = [XcodeSubjectInfo schemePathsInWorkspace:self.subjectWorkspace];
+  for (NSString *schemePath in schemePaths) {
+    if ([schemePath hasSuffix:[NSString stringWithFormat:@"/%@.xcscheme", self.subjectScheme]]) {
+      matchingSchemePath = schemePath;
+    }
+  }
+
+  return matchingSchemePath;
+}
+
+- (NSString *)matchingSchemePathForProject
+{
+  NSString *matchingSchemePath = nil;
+
+  NSArray *schemePaths = [XcodeSubjectInfo schemePathsInContainer:self.subjectProject];
+  for (NSString *schemePath in schemePaths) {
+    if ([schemePath hasSuffix:[NSString stringWithFormat:@"/%@.xcscheme", self.subjectScheme]]) {
+      matchingSchemePath = schemePath;
+    }
+  }
+
+  return matchingSchemePath;
+}
+
 - (void)populate
 {
   if (_didPopulate) {
@@ -798,13 +826,12 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   NSString *matchingSchemePath = nil;
 
   if (self.subjectWorkspace) {
-    NSArray *schemePaths = [XcodeSubjectInfo schemePathsInWorkspace:self.subjectWorkspace];
-    for (NSString *schemePath in schemePaths) {
-      if ([schemePath hasSuffix:[NSString stringWithFormat:@"/%@.xcscheme", self.subjectScheme]]) {
-        matchingSchemePath = schemePath;
-      }
-    }
+    matchingSchemePath = [self matchingSchemePathForWorkspace];
+  } else {
+    matchingSchemePath = [self matchingSchemePathForProject];
+  }
 
+  if (self.subjectWorkspace) {
     NSArray *testables = [[self class] testablesInSchemePath:matchingSchemePath
                                                     basePath:BasePathFromSchemePath(matchingSchemePath)];
     NSArray *buildables = [[self class] buildablesInSchemePath:matchingSchemePath
@@ -837,13 +864,6 @@ containsFilesModifiedSince:(NSDate *)sinceDate
                                          [[obj objectForKey:@"forTesting"] boolValue]);
                                }]];
   } else {
-    NSArray *schemePaths = [XcodeSubjectInfo schemePathsInContainer:self.subjectProject];
-    for (NSString *schemePath in schemePaths) {
-      if ([schemePath hasSuffix:[NSString stringWithFormat:@"/%@.xcscheme", self.subjectScheme]]) {
-        matchingSchemePath = schemePath;
-      }
-    }
-
     self.testables = [[self class] testablesInSchemePath:matchingSchemePath
                                                 basePath:BasePathFromSchemePath(matchingSchemePath)];
 
