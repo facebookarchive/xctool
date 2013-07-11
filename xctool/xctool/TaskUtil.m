@@ -18,6 +18,73 @@
 
 #import <poll.h>
 
+static void readOutputs(NSString **outputs, int *fildes, int sz) {
+  struct pollfd fds[sz];
+  dispatch_data_t data[sz];
+
+  for (int i = 0; i < sz; i++) {
+    fds[i].fd = fildes[i];
+    fds[i].events = POLLIN;
+    fds[i].revents = 0;
+    data[i] = dispatch_data_empty;
+  }
+
+  int remaining = sz;
+
+  while (remaining > 0) {
+    int pollResult = poll(fds, sz, -1);
+
+    if (pollResult == -1) {
+      switch (errno) {
+        case EAGAIN:
+        case EINTR:
+          // poll can be restarted
+          continue;
+        default:
+          NSLog(@"error during poll: %@",
+                [NSError errorWithDomain:NSPOSIXErrorDomain code:errno userInfo:@{}]);
+          abort();
+      }
+    } else if (pollResult == 0) {
+      NSCAssert(false, @"impossible, polling without timeout");
+    } else {
+      for (int i = 0; i < sz; i++) {
+        if (fds[i].revents & (POLLIN | POLLHUP)) {
+          void *buf = malloc(4096);
+          ssize_t readResult = read(fds[i].fd, buf, 4096);
+
+          if (readResult > 0) {  // some bytes read
+            dispatch_data_t part = dispatch_data_create(buf, readResult, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), DISPATCH_DATA_DESTRUCTOR_FREE);
+            dispatch_data_t combined = dispatch_data_create_concat(data[i], part);
+            dispatch_release(part);
+            dispatch_release(data[i]);
+            data[i] = combined;
+          } else if (readResult == 0) {  // eof
+            remaining--;
+            fds[i].fd = -1;
+            fds[i].events = 0;
+          } else if (errno != EINTR) {
+            NSLog(@"error during read: %@", [NSError errorWithDomain:NSPOSIXErrorDomain code:errno userInfo:@{}]);
+            abort();
+          }
+        }
+      }
+    }
+  }
+
+  for (int i = 0; i < sz; i++) {
+    const void *dataPtr;
+    size_t dataSz;
+    dispatch_data_t contig = dispatch_data_create_map(data[i], &dataPtr, &dataSz);
+
+    NSString *str = [[NSString alloc] initWithBytes:dataPtr length:dataSz encoding:NSUTF8StringEncoding];
+    outputs[i] = str;
+
+    dispatch_release(data[i]);
+    dispatch_release(contig);
+  }
+}
+
 NSDictionary *LaunchTaskAndCaptureOutput(NSTask *task)
 {
   NSPipe *stdoutPipe = [NSPipe pipe];
@@ -26,53 +93,25 @@ NSDictionary *LaunchTaskAndCaptureOutput(NSTask *task)
   NSPipe *stderrPipe = [NSPipe pipe];
   NSFileHandle *stderrHandle = [stderrPipe fileHandleForReading];
 
-  __block NSString *standardOutput = nil;
-  __block NSString *standardError = nil;
+  [task setStandardOutput:stdoutPipe];
+  [task setStandardError:stderrPipe];
+  [task launch];
 
-  void (^completionBlock)(NSNotification *) = ^(NSNotification *notification){
-    NSData *data = notification.userInfo[NSFileHandleNotificationDataItem];
-    NSString *str = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+  NSString *outputs[2] = {nil, nil};
+  int fides[2] = {stdoutHandle.fileDescriptor, stderrHandle.fileDescriptor};
 
-    if (notification.object == stdoutHandle) {
-      standardOutput = [str retain];
-    } else if (notification.object == stderrHandle) {
-      standardError = [str retain];
-    }
+  readOutputs(outputs, fides, 2);
 
-    CFRunLoopStop(CFRunLoopGetCurrent());
-  };
+  [task waitUntilExit];
 
-  id stdoutObserver = [[NSNotificationCenter defaultCenter] addObserverForName:NSFileHandleReadToEndOfFileCompletionNotification
-                                                                        object:stdoutHandle
-                                                                         queue:nil
-                                                                    usingBlock:completionBlock];
-  id stderrObserver = [[NSNotificationCenter defaultCenter] addObserverForName:NSFileHandleReadToEndOfFileCompletionNotification
-                                                                        object:stderrHandle
-                                                                         queue:nil
-                                                                    usingBlock:completionBlock];
+  NSCAssert(outputs[0] != nil && outputs[1] != nil,
+            @"output should have been populated");
 
-  CFRunLoopPerformBlock(CFRunLoopGetCurrent(), kCFRunLoopDefaultMode, ^{
-    [stdoutHandle readToEndOfFileInBackgroundAndNotify];
-    [stderrHandle readToEndOfFileInBackgroundAndNotify];
-    [task setStandardOutput:stdoutPipe];
-    [task setStandardError:stderrPipe];
+  NSDictionary *output = @{@"stdout" : outputs[0], @"stderr" : outputs[1]};
 
-    [task launch];
-    [task waitUntilExit];
-  });
-
-  while (standardOutput == nil || standardError == nil) {
-    CFRunLoopRunInMode(kCFRunLoopDefaultMode, 0.1, YES);
-  }
-
-  [[NSNotificationCenter defaultCenter] removeObserver:stdoutObserver];
-  [[NSNotificationCenter defaultCenter] removeObserver:stderrObserver];
-
-  NSDictionary *output = @{@"stdout" : standardOutput, @"stderr" : standardError};
-
-  [standardOutput release];
-  [standardError release];
-
+  [outputs[0] release];
+  [outputs[1] release];
+  
   return output;
 }
 

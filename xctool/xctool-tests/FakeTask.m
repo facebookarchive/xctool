@@ -21,6 +21,15 @@
 
 #import "FakeTaskManager.h"
 
+static void writeAll(int fildes, const void *buf, size_t nbyte) {
+  while (nbyte > 0) {
+    ssize_t written = write(fildes, buf, nbyte);
+    NSCAssert(written > 0, @"write should succeed in writing");
+    nbyte -= written;
+    buf += written;
+  }
+}
+
 @implementation FakeTask
 
 + (NSTask *)fakeTaskWithExitStatus:(int)exitStatus
@@ -157,14 +166,10 @@
 
   if (forkedPid == 0) {
     if (standardOutputWriteFd != -1) {
-      write(standardOutputWriteFd,
-            pretendStandardOutputBytes,
-            pretendStandardOutputLength);
+      writeAll(standardOutputWriteFd, pretendStandardOutputBytes, pretendStandardOutputLength);
     }
     if (standardErrorWriteFd != -1) {
-      write(standardErrorWriteFd,
-            pretendStandardErrorBytes,
-            pretendStandardErrorLength);
+      writeAll(standardErrorWriteFd, pretendStandardErrorBytes, pretendStandardErrorLength);
     }
 
     // When the process exits, the last open handles to the write side of the
