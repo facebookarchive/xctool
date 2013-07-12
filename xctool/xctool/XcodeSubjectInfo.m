@@ -771,6 +771,105 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   return settings;
 }
 
+- (NSString *)matchingSchemePathForWorkspace
+{
+  NSString *matchingSchemePath = nil;
+
+  NSArray *schemePaths = [XcodeSubjectInfo schemePathsInWorkspace:self.subjectWorkspace];
+  for (NSString *schemePath in schemePaths) {
+    if ([schemePath hasSuffix:[NSString stringWithFormat:@"/%@.xcscheme", self.subjectScheme]]) {
+      matchingSchemePath = schemePath;
+    }
+  }
+
+  return matchingSchemePath;
+}
+
+- (NSString *)matchingSchemePathForProject
+{
+  NSString *matchingSchemePath = nil;
+
+  NSArray *schemePaths = [XcodeSubjectInfo schemePathsInContainer:self.subjectProject];
+  for (NSString *schemePath in schemePaths) {
+    if ([schemePath hasSuffix:[NSString stringWithFormat:@"/%@.xcscheme", self.subjectScheme]]) {
+      matchingSchemePath = schemePath;
+    }
+  }
+
+  return matchingSchemePath;
+}
+
+- (void)populateBuildablesAndTestablesForWorkspaceWithSchemePath:(NSString *)schemePath
+{
+  NSArray *testables = [[self class] testablesInSchemePath:schemePath
+                                                  basePath:BasePathFromSchemePath(schemePath)];
+  NSArray *buildables = [[self class] buildablesInSchemePath:schemePath
+                                                    basePath:BasePathFromSchemePath(schemePath)];
+
+
+  // It's possible that the scheme references projects that aren't part of the workspace.  When
+  // Xcode encounters these, it just skips them so we'll do the same.
+  NSSet *projectPathsInWorkspace = [NSSet setWithArray:[XcodeSubjectInfo projectPathsInWorkspace:self.subjectWorkspace]];
+  BOOL (^workspaceContainsProject)(id) = ^(id item) {
+    return [projectPathsInWorkspace containsObject:[item objectForKey:@"projectPath"]];
+  };
+
+  self.testables = [testables objectsAtIndexes:
+                    [testables indexesOfObjectsPassingTest:
+                     ^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+                       return workspaceContainsProject(obj);
+                     }]];
+
+  self.buildables = [buildables objectsAtIndexes:
+                     [buildables indexesOfObjectsPassingTest:
+                      ^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+                        return workspaceContainsProject(obj);
+                      }]];
+
+  self.buildablesForTest = [buildables objectsAtIndexes:
+                            [buildables indexesOfObjectsPassingTest:
+                             ^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+                               return (workspaceContainsProject(obj) &&
+                                       [[obj objectForKey:@"forTesting"] boolValue]);
+                             }]];
+}
+
+- (void)populateBuildablesAndTestablesForProjectWithSchemePath:(NSString *)schemePath
+{
+  self.testables = [[self class] testablesInSchemePath:schemePath
+                                              basePath:BasePathFromSchemePath(schemePath)];
+
+  NSArray *buildables = [[self class] buildablesInSchemePath:schemePath
+                                                    basePath:BasePathFromSchemePath(schemePath)];
+  self.buildablesForTest = [buildables objectsAtIndexes:
+                            [buildables indexesOfObjectsPassingTest:
+                             ^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+                               return [[obj objectForKey:@"forTesting"] boolValue];
+                             }]];
+}
+
+- (void)populateBuildActionPropertiesWithSchemePath:(NSString *)schemePath
+{
+  NSError *error = nil;
+  NSXMLDocument *doc = [[[NSXMLDocument alloc] initWithContentsOfURL:[NSURL fileURLWithPath:schemePath]
+                                                             options:0
+                                                               error:&error] autorelease];
+  if (error != nil) {
+    NSLog(@"Error in parsing: %@: %@", schemePath, error);
+    abort();
+  }
+
+  NSArray *buildActionNodes = [doc nodesForXPath:@"//BuildAction" error:&error];
+  NSAssert(error == nil, @"Failed to get BuildAction node: %@", [error localizedFailureReason]);
+  NSAssert([buildActionNodes count] == 1, @"Should have only one BuildAction node");
+  NSXMLElement *buildActionNode = buildActionNodes[0];
+
+  self.parallelizeBuildables =
+    [[[buildActionNode attributeForName:@"parallelizeBuildables"] stringValue] isEqualToString:@"YES"];
+  self.buildImplicitDependencies =
+    [[[buildActionNode attributeForName:@"buildImplicitDependencies"] stringValue] isEqualToString:@"YES"];
+}
+
 - (void)populate
 {
   if (_didPopulate) {
@@ -798,63 +897,18 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   NSString *matchingSchemePath = nil;
 
   if (self.subjectWorkspace) {
-    NSArray *schemePaths = [XcodeSubjectInfo schemePathsInWorkspace:self.subjectWorkspace];
-    for (NSString *schemePath in schemePaths) {
-      if ([schemePath hasSuffix:[NSString stringWithFormat:@"/%@.xcscheme", self.subjectScheme]]) {
-        matchingSchemePath = schemePath;
-      }
-    }
-
-    NSArray *testables = [[self class] testablesInSchemePath:matchingSchemePath
-                                                    basePath:BasePathFromSchemePath(matchingSchemePath)];
-    NSArray *buildables = [[self class] buildablesInSchemePath:matchingSchemePath
-                                                      basePath:BasePathFromSchemePath(matchingSchemePath)];
-    
-
-    // It's possible that the scheme references projects that aren't part of the workspace.  When
-    // Xcode encounters these, it just skips them so we'll do the same.
-    NSSet *projectPathsInWorkspace = [NSSet setWithArray:[XcodeSubjectInfo projectPathsInWorkspace:self.subjectWorkspace]];
-    BOOL (^workspaceContainsProject)(id) = ^(id item) {
-      return [projectPathsInWorkspace containsObject:[item objectForKey:@"projectPath"]];
-    };
-
-    self.testables = [testables objectsAtIndexes:
-                      [testables indexesOfObjectsPassingTest:
-                       ^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-                         return workspaceContainsProject(obj);
-                       }]];
-
-    self.buildables = [buildables objectsAtIndexes:
-                       [buildables indexesOfObjectsPassingTest:
-                        ^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-                          return workspaceContainsProject(obj);
-                        }]];
-
-    self.buildablesForTest = [buildables objectsAtIndexes:
-                              [buildables indexesOfObjectsPassingTest:
-                               ^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-                                 return (workspaceContainsProject(obj) &&
-                                         [[obj objectForKey:@"forTesting"] boolValue]);
-                               }]];
+    matchingSchemePath = [self matchingSchemePathForWorkspace];
   } else {
-    NSArray *schemePaths = [XcodeSubjectInfo schemePathsInContainer:self.subjectProject];
-    for (NSString *schemePath in schemePaths) {
-      if ([schemePath hasSuffix:[NSString stringWithFormat:@"/%@.xcscheme", self.subjectScheme]]) {
-        matchingSchemePath = schemePath;
-      }
-    }
-
-    self.testables = [[self class] testablesInSchemePath:matchingSchemePath
-                                                basePath:BasePathFromSchemePath(matchingSchemePath)];
-
-    NSArray *buildables = [[self class] buildablesInSchemePath:matchingSchemePath
-                                                         basePath:BasePathFromSchemePath(matchingSchemePath)];
-    self.buildablesForTest = [buildables objectsAtIndexes:
-                              [buildables indexesOfObjectsPassingTest:
-                               ^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-                                 return [[obj objectForKey:@"forTesting"] boolValue];
-                               }]];
+    matchingSchemePath = [self matchingSchemePathForProject];
   }
+
+  if (self.subjectWorkspace) {
+    [self populateBuildablesAndTestablesForWorkspaceWithSchemePath:matchingSchemePath];
+  } else {
+    [self populateBuildablesAndTestablesForProjectWithSchemePath:matchingSchemePath];
+  }
+
+  [self populateBuildActionPropertiesWithSchemePath:matchingSchemePath];
 
   _configurationNameByAction =
     [BuildConfigurationsByActionForSchemePath(matchingSchemePath) retain];
@@ -907,6 +961,18 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 {
   [self populate];
   return _buildables;
+}
+
+- (BOOL)parallelizeBuildables
+{
+  [self populate];
+  return _parallelizeBuildables;
+}
+
+- (BOOL)buildImplicitDependencies
+{
+  [self populate];
+  return _buildImplicitDependencies;
 }
 
 - (NSArray *)testablesAndBuildablesForTest

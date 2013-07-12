@@ -253,8 +253,10 @@
                      }]));
 }
 
-- (void)testCanGetBuildConfigurationForRunAction
+- (XcodeSubjectInfo *)xcodeSubjectInfoPopulatedWithProject:(NSString *)project scheme:(NSString *)scheme
 {
+  __block XcodeSubjectInfo *subjectInfo = nil;
+  
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
      // Make sure -showBuildSettings returns some data
@@ -268,19 +270,40 @@
                         @"-scheme", @"TestProject-Library",
                         ]];
 
-    XcodeSubjectInfo *subjectInfo = [[[XcodeSubjectInfo alloc] init] autorelease];
+    subjectInfo = [[XcodeSubjectInfo alloc] init];
     [subjectInfo setSubjectProject:[options project]];
     [subjectInfo setSubjectScheme:[options scheme]];
     [subjectInfo setSubjectXcodeBuildArguments:[options xcodeBuildArgumentsForSubject]];
     [subjectInfo setReporters:@[]];
 
-    // The project has a different configuration set for each scheme action.
-    assertThat([subjectInfo configurationNameForAction:@"TestAction"], equalTo(@"TestConfig"));
-    assertThat([subjectInfo configurationNameForAction:@"LaunchAction"], equalTo(@"LaunchConfig"));
-    assertThat([subjectInfo configurationNameForAction:@"AnalyzeAction"], equalTo(@"AnalyzeConfig"));
-    assertThat([subjectInfo configurationNameForAction:@"ProfileAction"], equalTo(@"ProfileConfig"));
-    assertThat([subjectInfo configurationNameForAction:@"ArchiveAction"], equalTo(@"ArchiveConfig"));
+    [subjectInfo performSelector:@selector(populate)];
   }];
+
+  return [subjectInfo autorelease];
+}
+
+- (void)testCanGetBuildConfigurationForRunAction
+{
+  XcodeSubjectInfo *subjectInfo =
+    [self xcodeSubjectInfoPopulatedWithProject:TEST_DATA @"TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj"
+                                        scheme:@"TestProject-Library"];
+
+  // The project has a different configuration set for each scheme action.
+  assertThat([subjectInfo configurationNameForAction:@"TestAction"], equalTo(@"TestConfig"));
+  assertThat([subjectInfo configurationNameForAction:@"LaunchAction"], equalTo(@"LaunchConfig"));
+  assertThat([subjectInfo configurationNameForAction:@"AnalyzeAction"], equalTo(@"AnalyzeConfig"));
+  assertThat([subjectInfo configurationNameForAction:@"ProfileAction"], equalTo(@"ProfileConfig"));
+  assertThat([subjectInfo configurationNameForAction:@"ArchiveAction"], equalTo(@"ArchiveConfig"));
+}
+
+- (void)testBuildActionPropertiesShouldPopulateFromScheme
+{
+  XcodeSubjectInfo *subjectInfo =
+  [self xcodeSubjectInfoPopulatedWithProject:TEST_DATA @"TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj"
+                                      scheme:@"TestProject-Library"];
+
+  assertThatBool(subjectInfo.parallelizeBuildables, equalToBool(YES));
+  assertThatBool(subjectInfo.buildImplicitDependencies, equalToBool(YES));
 }
 
 @end
