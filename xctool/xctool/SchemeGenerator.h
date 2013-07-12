@@ -21,10 +21,15 @@
  */
 @interface SchemeGenerator : NSObject
 
+@property (nonatomic, assign) BOOL parallelizeBuildables;
+@property (nonatomic, assign) BOOL buildImplicitDependencies;
+
 + (SchemeGenerator *)schemeGenerator;
 
 - (void)addBuildableWithID:(NSString *)identifier
                  inProject:(NSString *)projectPath;
+
+- (void)addProjectPathToWorkspace:(NSString *)projectPath;
 
 /// Write the workspace into this directory.
 - (BOOL)writeWorkspaceNamed:(NSString *)name

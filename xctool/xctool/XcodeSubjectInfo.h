@@ -40,6 +40,8 @@
 @property (nonatomic, retain) NSArray *testables;
 // Everything in the scheme marked as Build for Test
 @property (nonatomic, retain) NSArray *buildablesForTest;
+@property (nonatomic, assign) BOOL parallelizeBuildables;
+@property (nonatomic, assign) BOOL buildImplicitDependencies;
 
 // buildables for Running or Testing
 @property (nonatomic, retain) NSArray *buildables;
