@@ -81,7 +81,7 @@
   return [NSString pathWithComponents:@[
           objroot,
           [projectName stringByAppendingPathExtension:@"build"],
-          [NSString stringWithFormat:@"%@%@", configuration, platform],
+          [NSString stringWithFormat:@"%@%@", configuration, platform ?: @""],
           [targetName stringByAppendingPathExtension:@"build"],
           ]];
 }
