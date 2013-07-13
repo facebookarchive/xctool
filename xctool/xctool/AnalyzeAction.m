@@ -44,6 +44,7 @@
 @interface AnalyzeAction ()
 @property (nonatomic, retain) NSMutableSet *onlySet;
 @property (nonatomic, assign) BOOL skipDependencies;
+@property (nonatomic, assign) BOOL failOnWarnings;
 @end
 
 @implementation AnalyzeAction
@@ -67,6 +68,10 @@
                                 aliases:nil
                             description:@"Skip initial build of the scheme"
                                 setFlag:@selector(setSkipDependencies:)],
+           [Action actionOptionWithName:@"failOnWarnings"
+                                aliases:nil
+                            description:@"Fail builds if analyzer warnings are found"
+                                setFlag:@selector(setFailOnWarnings:)],
            ];
 }
 
@@ -115,6 +120,7 @@
                                options:(Options *)options
                       xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
                            toReporters:(NSArray *)reporters
+                         foundWarnings:(BOOL *)foundWarnings
 {
   static NSRegularExpression *analyzerPlistPathRegex = nil;
   if (!analyzerPlistPathRegex) {
@@ -133,6 +139,8 @@
                     objroot:xcodeSubjectInfo.objRoot];
   NSString *buildStatePath = [path stringByAppendingPathComponent:@"build-state.dat"];
 
+  BOOL haveFoundWarnings = NO;
+
   BuildStateParser *buildState = [[[BuildStateParser alloc] initWithPath:buildStatePath] autorelease];
   for (NSString *path in buildState.nodes) {
     NSTextCheckingResult *result = [analyzerPlistPathRegex
@@ -145,6 +153,7 @@
 
     NSDictionary *diags = [NSDictionary dictionaryWithContentsOfFile:path];
     for (NSDictionary *diag in diags[@"diagnostics"]) {
+      haveFoundWarnings = YES;
       NSString *file = diags[@"files"][[diag[@"location"][@"file"] intValue]];
       file = file.stringByStandardizingPath;
       NSNumber *line = diag[@"location"][@"line"];
@@ -164,6 +173,10 @@
         kReporter_AnalyzerResult_ContextKey: context,
        }];
     }
+  }
+
+  if (foundWarnings) {
+    *foundWarnings = haveFoundWarnings;
   }
 }
 
@@ -231,6 +244,8 @@
     return NO;
   }
 
+
+  BOOL haveFoundWarnings = NO;
   for (NSDictionary *buildable in buildTargetsCollector.seenTargets) {
     if (_onlySet.count && ![_onlySet containsObject:buildable[@"targetName"]]) {
       continue;
@@ -240,10 +255,15 @@
                                         target:buildable[@"targetName"]
                                        options:options
                               xcodeSubjectInfo:xcodeSubjectInfo
-                                   toReporters:options.reporters];
+                                   toReporters:options.reporters
+                                 foundWarnings:&haveFoundWarnings];
   }
 
-  return YES;
+  if (self.failOnWarnings) {
+    return !haveFoundWarnings;
+  } else {
+    return YES;
+  }
 }
 
 @end
