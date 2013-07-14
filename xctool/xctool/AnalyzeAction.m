@@ -244,19 +244,21 @@
     return NO;
   }
 
-
   BOOL haveFoundWarnings = NO;
+
   for (NSDictionary *buildable in buildTargetsCollector.seenTargets) {
     if (_onlySet.count && ![_onlySet containsObject:buildable[@"targetName"]]) {
       continue;
     }
 
+    BOOL foundWarningsInBuildable = NO;
     [self.class emitAnalyzerWarningsForProject:buildable[@"projectName"]
                                         target:buildable[@"targetName"]
                                        options:options
                               xcodeSubjectInfo:xcodeSubjectInfo
                                    toReporters:options.reporters
-                                 foundWarnings:&haveFoundWarnings];
+                                 foundWarnings:&foundWarningsInBuildable];
+    haveFoundWarnings |= foundWarningsInBuildable;
   }
 
   if (self.failOnWarnings) {
