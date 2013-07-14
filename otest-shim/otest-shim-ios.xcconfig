@@ -14,4 +14,8 @@
 // limitations under the License.
 //
 
+#include "../Configurations/Project.xcconfig"
 #include "../Configurations/iOS-Simulator-Dylib.xcconfig"
+
+#include "../Configurations/Install.xcconfig"
+XT_INSTALL_DIR = lib

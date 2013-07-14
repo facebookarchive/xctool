@@ -341,7 +341,7 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
                                                                              ]]];
 
   [settingsTask setEnvironment:@{
-                                 @"DYLD_INSERT_LIBRARIES" : [PathToXCToolBinaries() stringByAppendingPathComponent:@"xcodebuild-fastsettings-shim.dylib"],
+                                 @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"xcodebuild-fastsettings-shim.dylib"],
                                  @"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET" : testableTarget,
                                  }];
 

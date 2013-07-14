@@ -44,7 +44,7 @@
   [task setLaunchPath:[NSString stringWithFormat:@"%@/Developer/usr/bin/otest", _buildSettings[@"SDKROOT"]]];
   [task setArguments:[[self otestArguments] arrayByAddingObject:testBundlePath]];
   NSMutableDictionary *env = [[self.environmentOverrides mutableCopy] autorelease];
-  env[@"DYLD_INSERT_LIBRARIES"] = [PathToXCToolBinaries() stringByAppendingPathComponent:@"otest-shim-ios.dylib"];
+  env[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"];
   [task setEnvironment:[self otestEnvironmentWithOverrides:env]];
   return task;
 }
@@ -82,7 +82,7 @@
 - (NSArray *)runTestClassListQuery
 {
   NSTask *task = [[NSTask alloc] init];
-  [task setLaunchPath:[PathToXCToolBinaries() stringByAppendingPathComponent:@"otest-query-ios"]];
+  [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-ios"]];
   [task setArguments:@[self.testBundlePath]];
   [task setEnvironment:[self otestEnvironmentWithOverrides:self.environmentOverrides]];
   NSDictionary *output = LaunchTaskAndCaptureOutput(task);

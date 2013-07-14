@@ -14,6 +14,11 @@
 // limitations under the License.
 //
 
+#include "../Configurations/Project.xcconfig"
+
+#include "../Configurations/Install.xcconfig"
+XT_INSTALL_DIR = libexec
+
 MACOSX_DEPLOYMENT_TARGET = 10.7
 
 // Needed so we can #import from SenTestingKit.

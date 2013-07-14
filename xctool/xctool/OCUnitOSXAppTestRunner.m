@@ -32,7 +32,7 @@
 
   NSString *testHostPath = _buildSettings[@"TEST_HOST"];
 
-  NSArray *libraries = @[[PathToXCToolBinaries() stringByAppendingPathComponent:@"otest-shim-osx.dylib"],
+  NSArray *libraries = @[[XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-osx.dylib"],
                          [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection"],
                          ];
 
