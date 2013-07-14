@@ -88,12 +88,22 @@ NSDictionary *BuildSettingsFromOutput(NSString *output)
   return settings;
 }
 
-const char *_CFProcessPath(void);
+static NSString *AbsoluteExecutablePath(void) {
+  char execRelativePath[1024] = {0};
+  uint32_t execRelativePathSize = sizeof(execRelativePath);
+
+  _NSGetExecutablePath(execRelativePath, &execRelativePathSize);
+
+  char execAbsolutePath[1024] = {0};
+  assert(realpath((const char *)execRelativePath, execAbsolutePath) != NULL);
+
+  return [NSString stringWithUTF8String:execAbsolutePath];
+}
 
 NSString *XCToolBasePath(void)
 {
-  return [[[NSString stringWithUTF8String:_CFProcessPath()]
-           stringByDeletingLastPathComponent] stringByDeletingLastPathComponent];
+  return [[AbsoluteExecutablePath() stringByDeletingLastPathComponent]
+          stringByDeletingLastPathComponent];
 }
 
 NSString *XCToolLibPath(void)
