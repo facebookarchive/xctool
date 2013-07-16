@@ -114,6 +114,17 @@
    @"TestWorkspace-Library/TestWorkspace-Library-Bogus.xcworkspace"];
 }
 
+- (void)testWorkspaceMustBeADirectoryThatEndsInXcworkspace
+{
+  [[Options optionsFrom:@[
+                          @"-workspace", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                          @"-scheme", @"TestProject-Library",
+                          ]]
+   assertOptionsFailToValidateWithError:
+   @"Workspace must end in .xcworkspace: " TEST_DATA
+   @"TestProject-Library/TestProject-Library.xcodeproj"];
+}
+
 - (void)testProjectMustBeADirectory
 {
   [[Options optionsFrom:@[
@@ -123,6 +134,17 @@
    assertOptionsFailToValidateWithError:
    @"Specified project doesn't exist: " TEST_DATA
    @"TestProject-Library/TestProject-Library-Bogus.xcodeproj"];
+}
+
+- (void)testProjectMustBeADirectoryThatEndsInXcodeProj
+{
+  [[Options optionsFrom:@[
+    @"-project", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
+    @"-scheme", @"TestProject-Library",
+    ]]
+   assertOptionsFailToValidateWithError:
+   @"Project must end in .xcodeproj: " TEST_DATA
+   @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace"];
 }
 
 - (void)testSchemeMustBeValid

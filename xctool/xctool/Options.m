@@ -317,8 +317,18 @@
     return NO;
   }
 
+  if (self.workspace != nil && ![[self.workspace pathExtension] isEqualToString:@"xcworkspace"]) {
+    *errorMessage = [NSString stringWithFormat:@"Workspace must end in .xcworkspace: %@", self.workspace];
+    return NO;
+  }
+
   if (self.project != nil && !isDirectory(self.project)) {
     *errorMessage = [NSString stringWithFormat:@"Specified project doesn't exist: %@", self.project];
+    return NO;
+  }
+
+  if (self.project != nil && ![[self.project pathExtension] isEqualToString:@"xcodeproj"]) {
+    *errorMessage = [NSString stringWithFormat:@"Project must end in .xcodeproj: %@", self.project];
     return NO;
   }
 
