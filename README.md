@@ -229,7 +229,7 @@ script off of the following example:
 language: objective-c
 before_install:
     - brew update
-    - brew install xctool --HEAD
+    - brew install xctool
 script: xctool -workspace MyApp.xcworkspace -scheme 'MyApp' test
 ```
 
