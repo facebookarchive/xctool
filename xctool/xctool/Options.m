@@ -386,9 +386,10 @@
                                                                      xcodeSubjectInfo:nil];
   xcodeSubjectInfo.subjectXcodeBuildArguments =
     [[self xcodeBuildArgumentsForSubject] arrayByAddingObjectsFromArray:commonXcodeBuildArguments];
-  xcodeSubjectInfo.reporters = _reporters;
 
+  ReportStatusMessageBegin(_reporters, REPORTER_MESSAGE_INFO, @"Loading settings for scheme '%@' ...", _scheme);
   [xcodeSubjectInfo loadSubjectInfo];
+  ReportStatusMessageEnd(_reporters, REPORTER_MESSAGE_INFO, @"Loading settings for scheme '%@' ...", _scheme);
 
   for (Action *action in self.actions) {
     BOOL valid = [action validateWithOptions:self
