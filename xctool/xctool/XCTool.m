@@ -189,7 +189,7 @@
     }
   }
 
-  // We want to make sure we always unregister the reporters, even if validation fails,
+  // We want to make sure we always close the reporters, even if validation fails,
   // so we use a try-finally block.
   @try {
     if (![options validateOptions:&errorMessage xcodeSubjectInfo:xcodeSubjectInfo options:options]) {
