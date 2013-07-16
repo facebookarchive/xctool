@@ -192,7 +192,9 @@
   // We want to make sure we always close the reporters, even if validation fails,
   // so we use a try-finally block.
   @try {
-    if (![options validateOptions:&errorMessage xcodeSubjectInfo:xcodeSubjectInfo options:options]) {
+    if (![options validateWithOptions:options
+                     xcodeSubjectInfo:xcodeSubjectInfo
+                         errorMessage:&errorMessage]) {
       [_standardError printString:@"ERROR: %@\n\n", errorMessage];
       _exitStatus = 1;
       return;

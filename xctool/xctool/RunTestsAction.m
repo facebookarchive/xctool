@@ -200,9 +200,9 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
   return results;
 }
 
-- (BOOL)validateOptions:(NSString **)errorMessage
-          xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
-         options:(Options *)options
+- (BOOL)validateWithOptions:(Options *)options
+           xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
+               errorMessage:(NSString **)errorMessage
 {
   if ([self testSDK] == nil && [options sdk] != nil) {
     // If specified test SDKs aren't provided, use whatever we got via -sdk.

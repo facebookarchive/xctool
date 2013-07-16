@@ -58,9 +58,9 @@
 - (void)assertOptionsFailToValidateWithError:(NSString *)message
 {
   NSString *errorMessage = nil;
-  BOOL valid = [self validateOptions:&errorMessage
-                    xcodeSubjectInfo:nil
-                             options:self];
+  BOOL valid = [self validateWithOptions:self
+                        xcodeSubjectInfo:nil
+                            errorMessage:&errorMessage];
 
   if (valid) {
     [NSException raise:NSGenericException
@@ -100,10 +100,9 @@
     } copy] autorelease],
      ]];
 
-    valid = [self validateOptions:&error
-                 xcodeSubjectInfo:subjectInfo
-                          options:self];
-    
+    valid = [self validateWithOptions:self
+                     xcodeSubjectInfo:subjectInfo
+                         errorMessage:&error];
   }];
 
   *validOut = valid;

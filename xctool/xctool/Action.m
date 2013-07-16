@@ -215,9 +215,9 @@
   return count;
 }
 
-- (BOOL)validateOptions:(NSString **)errorMessage
-          xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
-         options:(Options *)options
+- (BOOL)validateWithOptions:(Options *)options
+           xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
+               errorMessage:(NSString **)errorMessage
 {
   // Override in subclass
   return YES;

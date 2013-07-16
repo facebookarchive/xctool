@@ -229,9 +229,9 @@
   return YES;
 }
 
-- (BOOL)validateOptions:(NSString **)errorMessage
-          xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
-         options:(Options *)options
+- (BOOL)validateWithOptions:(Options *)options
+           xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
+               errorMessage:(NSString **)errorMessage
 {
   BOOL (^isDirectory)(NSString *) = ^(NSString *path){
     BOOL isDirectory = NO;
@@ -385,7 +385,7 @@
   xcodeSubjectInfo.reporters = _reporters;
 
   for (Action *action in self.actions) {
-    BOOL valid = [action validateOptions:errorMessage xcodeSubjectInfo:xcodeSubjectInfo options:self];
+    BOOL valid = [action validateWithOptions:options xcodeSubjectInfo:xcodeSubjectInfo errorMessage:errorMessage];
     if (!valid) {
       return NO;
     }
