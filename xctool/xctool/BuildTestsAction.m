@@ -147,9 +147,9 @@
   [self.onlyList addObject:argument];
 }
 
-- (BOOL)validateOptions:(NSString **)errorMessage
-          xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
-         options:(Options *)options
+- (BOOL)validateWithOptions:(Options *)options
+           xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
+               errorMessage:(NSString **)errorMessage
 {
   for (NSString *target in self.onlyList) {
     if ([xcodeSubjectInfo testableWithTarget:target] == nil) {

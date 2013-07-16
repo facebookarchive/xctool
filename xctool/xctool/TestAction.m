@@ -137,19 +137,19 @@
   return _buildTestsAction.skipDependencies;
 }
 
-- (BOOL)validateOptions:(NSString **)errorMessage
-       xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
-                options:(Options *)options
+- (BOOL)validateWithOptions:(Options *)options
+           xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
+               errorMessage:(NSString **)errorMessage
 {
-  if (![_buildTestsAction validateOptions:errorMessage
-                         xcodeSubjectInfo:xcodeSubjectInfo
-                                  options:options]) {
+  if (![_buildTestsAction validateWithOptions:options
+                             xcodeSubjectInfo:xcodeSubjectInfo
+                                 errorMessage:errorMessage]) {
     return NO;
   }
 
-  if (![_runTestsAction validateOptions:errorMessage
-                       xcodeSubjectInfo:xcodeSubjectInfo
-                                options:options]) {
+  if (![_runTestsAction validateWithOptions:options
+                           xcodeSubjectInfo:xcodeSubjectInfo
+                               errorMessage:errorMessage]) {
     return NO;
   }
 
