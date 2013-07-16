@@ -24,7 +24,6 @@
  */
 @interface XcodeSubjectInfo : NSObject
 {
-  BOOL _didPopulate;
   NSDictionary *_configurationNameByAction;
 }
 
@@ -47,6 +46,11 @@
 @property (nonatomic, retain) NSArray *buildables;
 
 @property (nonatomic, retain) NSArray *reporters;
+
+/**
+ Load subject info for workspace/scheme or project/scheme.
+ */
+- (void)loadSubjectInfo;
 
 /**
  * Returns the contents of 'testables' and 'buildablesForTest' with any

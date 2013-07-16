@@ -388,6 +388,8 @@
     [[self xcodeBuildArgumentsForSubject] arrayByAddingObjectsFromArray:commonXcodeBuildArguments];
   xcodeSubjectInfo.reporters = _reporters;
 
+  [xcodeSubjectInfo loadSubjectInfo];
+
   for (Action *action in self.actions) {
     BOOL valid = [action validateWithOptions:self
                             xcodeSubjectInfo:xcodeSubjectInfo

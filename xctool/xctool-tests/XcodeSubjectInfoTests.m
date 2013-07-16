@@ -276,7 +276,7 @@
     [subjectInfo setSubjectXcodeBuildArguments:[options xcodeBuildArgumentsForSubject]];
     [subjectInfo setReporters:@[]];
 
-    [subjectInfo performSelector:@selector(populate)];
+    [subjectInfo loadSubjectInfo];
   }];
 
   return [subjectInfo autorelease];

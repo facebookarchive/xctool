@@ -870,12 +870,8 @@ containsFilesModifiedSince:(NSDate *)sinceDate
     [[[buildActionNode attributeForName:@"buildImplicitDependencies"] stringValue] isEqualToString:@"YES"];
 }
 
-- (void)populate
+- (void)loadSubjectInfo
 {
-  if (_didPopulate) {
-    return;
-  }
-
   assert(self.subjectXcodeBuildArguments != nil);
   assert(self.subjectScheme != nil);
   assert(self.subjectWorkspace != nil || self.subjectProject != nil);
@@ -912,8 +908,6 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 
   _configurationNameByAction =
     [BuildConfigurationsByActionForSchemePath(matchingSchemePath) retain];
-
-  _didPopulate = YES;
 }
 
 - (NSDictionary *)testableWithTarget:(NSString *)target
@@ -927,58 +921,8 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   return nil;
 }
 
-- (NSString *)objRoot
-{
-  [self populate];
-  return _objRoot;
-}
-
-- (NSString *)symRoot
-{
-  [self populate];
-  return _symRoot;
-}
-
-- (NSString *)effectivePlatformName
-{
-  [self populate];
-  return _effectivePlatformName;
-}
-
-- (NSArray *)testables
-{
-  [self populate];
-  return _testables;
-}
-
-- (NSArray *)buildablesForTest
-{
-  [self populate];
-  return _buildablesForTest;
-}
-
-- (NSArray *)buildables
-{
-  [self populate];
-  return _buildables;
-}
-
-- (BOOL)parallelizeBuildables
-{
-  [self populate];
-  return _parallelizeBuildables;
-}
-
-- (BOOL)buildImplicitDependencies
-{
-  [self populate];
-  return _buildImplicitDependencies;
-}
-
 - (NSArray *)testablesAndBuildablesForTest
 {
-  [self populate];
-
   NSMutableSet *targetsAdded = [NSMutableSet set];
   NSMutableArray *result = [NSMutableArray array];
 
@@ -1003,7 +947,6 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 
 - (NSString *)configurationNameForAction:(NSString *)action
 {
-  [self populate];
   return _configurationNameByAction[action];
 }
 
