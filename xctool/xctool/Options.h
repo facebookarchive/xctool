@@ -75,6 +75,22 @@
                                    xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo;
 
 - (NSArray *)xcodeBuildArgumentsForSubject;
+
+/**
+ Validates and creates the list of internal Reporter objects.
+ */
 - (BOOL)validateReporterOptions:(NSString **)errorMessage;
+
+/**
+ Validates all of the provided top-level options and runs validate for each of
+ the specified actions.
+
+ @param XcodeSubjectInfo Out parameter used to return the created XcodeSubjectInfo 
+   instance.
+ @param string Out parameter that will contain an error message if validation fails.
+ @return YES if validation succeeded.
+ */
+- (BOOL)validateAndReturnXcodeSubjectInfo:(XcodeSubjectInfo **)xcodeSubjectInfo
+                             errorMessage:(NSString **)errorMessage;
 
 @end

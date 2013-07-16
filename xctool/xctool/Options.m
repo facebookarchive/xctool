@@ -229,9 +229,8 @@
   return YES;
 }
 
-- (BOOL)validateWithOptions:(Options *)options
-           xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
-               errorMessage:(NSString **)errorMessage
+- (BOOL)validateAndReturnXcodeSubjectInfo:(XcodeSubjectInfo **)xcodeSubjectInfoOut
+                             errorMessage:(NSString **)errorMessage
 {
   BOOL (^isDirectory)(NSString *) = ^(NSString *path){
     BOOL isDirectory = NO;
@@ -372,20 +371,27 @@
     }
   }
 
+  XcodeSubjectInfo *xcodeSubjectInfo = [[[XcodeSubjectInfo alloc] init] autorelease];
   xcodeSubjectInfo.subjectWorkspace = self.workspace;
   xcodeSubjectInfo.subjectProject = self.project;
   xcodeSubjectInfo.subjectScheme = self.scheme;
 
+  if (xcodeSubjectInfoOut) {
+    *xcodeSubjectInfoOut = xcodeSubjectInfo;
+  }
+
   // We can pass nil for the scheme action since we don't care to use the
   // scheme's specific configuration.
-  NSArray *commonXcodeBuildArguments = [options commonXcodeBuildArgumentsForSchemeAction:nil
-                                                                        xcodeSubjectInfo:nil];
+  NSArray *commonXcodeBuildArguments = [self commonXcodeBuildArgumentsForSchemeAction:nil
+                                                                     xcodeSubjectInfo:nil];
   xcodeSubjectInfo.subjectXcodeBuildArguments =
     [[self xcodeBuildArgumentsForSubject] arrayByAddingObjectsFromArray:commonXcodeBuildArguments];
   xcodeSubjectInfo.reporters = _reporters;
 
   for (Action *action in self.actions) {
-    BOOL valid = [action validateWithOptions:options xcodeSubjectInfo:xcodeSubjectInfo errorMessage:errorMessage];
+    BOOL valid = [action validateWithOptions:self
+                            xcodeSubjectInfo:xcodeSubjectInfo
+                                errorMessage:errorMessage];
     if (!valid) {
       return NO;
     }

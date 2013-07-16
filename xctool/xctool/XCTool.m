@@ -106,8 +106,6 @@
 - (void)run
 {
   Options *options = [[[Options alloc] init] autorelease];
-  XcodeSubjectInfo *xcodeSubjectInfo = [[[XcodeSubjectInfo alloc] init] autorelease];
-
   NSString *errorMessage = nil;
 
   NSFileManager *fm = [NSFileManager defaultManager];
@@ -192,9 +190,10 @@
   // We want to make sure we always close the reporters, even if validation fails,
   // so we use a try-finally block.
   @try {
-    if (![options validateWithOptions:options
-                     xcodeSubjectInfo:xcodeSubjectInfo
-                         errorMessage:&errorMessage]) {
+    XcodeSubjectInfo *xcodeSubjectInfo = nil;
+
+    if (![options validateAndReturnXcodeSubjectInfo:&xcodeSubjectInfo
+                                       errorMessage:&errorMessage]) {
       [_standardError printString:@"ERROR: %@\n\n", errorMessage];
       _exitStatus = 1;
       return;

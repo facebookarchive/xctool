@@ -58,9 +58,8 @@
 - (void)assertOptionsFailToValidateWithError:(NSString *)message
 {
   NSString *errorMessage = nil;
-  BOOL valid = [self validateWithOptions:self
-                        xcodeSubjectInfo:nil
-                            errorMessage:&errorMessage];
+  BOOL valid = [self validateAndReturnXcodeSubjectInfo:nil
+                                          errorMessage:&errorMessage];
 
   if (valid) {
     [NSException raise:NSGenericException
@@ -85,8 +84,7 @@
                 format:@"Failed to read file from: %@", path];
   }
 
-  XcodeSubjectInfo *subjectInfo = [[[XcodeSubjectInfo alloc] init] autorelease];
-
+  __block XcodeSubjectInfo *subjectInfo = nil;
   __block NSString *error = nil;
   __block BOOL valid = NO;
 
@@ -100,9 +98,8 @@
     } copy] autorelease],
      ]];
 
-    valid = [self validateWithOptions:self
-                     xcodeSubjectInfo:subjectInfo
-                         errorMessage:&error];
+    valid = [self validateAndReturnXcodeSubjectInfo:&subjectInfo
+                                       errorMessage:&error];
   }];
 
   *validOut = valid;
