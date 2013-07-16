@@ -101,8 +101,7 @@ static void KillSimulatorJobs()
 @implementation OCUnitIOSAppTestRunner
 
 - (NSNumber*)simulatedDeviceFamily {
-  NSString* selectedSimulator = _buildSettings[@"SIMULATOR"];
-  return [[selectedSimulator lowercaseString] isEqualToString:@"ipad"] ? @2 : @1;
+  return [[_simulatorType lowercaseString] isEqualToString:@"ipad"] ? @2 : @1;
 }
 
 - (DTiPhoneSimulatorSessionConfig *)sessionConfigForRunningTestsWithEnvironment:(NSDictionary *)environment

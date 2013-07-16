@@ -141,6 +141,11 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
                      description:@"Parallelize test class execution within each target if > 0"
                        paramName:@"CHUNK_SIZE"
                            mapTo:@selector(setParallelizeChunkSize:)],
+    [Action actionOptionWithName:@"simulator"
+                         aliases:nil
+                     description:@"Set simulator type (either iphone or ipad)"
+                       paramName:@"SIMULATOR"
+                           mapTo:@selector(setSimulatorType:)],
     ];
 }
 
@@ -425,6 +430,7 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
                                      garbageCollection:garbageCollectionEnabled
                                      freshSimulator:self.freshSimulator
                                      freshInstall:self.freshInstall
+                                     simulatorType:self.simulatorType
                                      standardOutput:nil
                                      standardError:nil
                                      reporters:reportersForConfiguration] autorelease];
@@ -478,6 +484,7 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
             garbageCollection:garbageCollectionEnabled
             freshSimulator:self.freshSimulator
             freshInstall:self.freshInstall
+            simulatorType:self.simulatorType
             standardOutput:nil
             standardError:nil
             reporters:bufferedReporters] autorelease];
