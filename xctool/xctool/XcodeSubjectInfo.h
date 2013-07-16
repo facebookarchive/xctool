@@ -45,8 +45,6 @@
 // buildables for Running or Testing
 @property (nonatomic, retain) NSArray *buildables;
 
-@property (nonatomic, retain) NSArray *reporters;
-
 /**
  Load subject info for workspace/scheme or project/scheme.
  */

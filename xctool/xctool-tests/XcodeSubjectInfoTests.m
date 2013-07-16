@@ -274,7 +274,6 @@
     [subjectInfo setSubjectProject:[options project]];
     [subjectInfo setSubjectScheme:[options scheme]];
     [subjectInfo setSubjectXcodeBuildArguments:[options xcodeBuildArgumentsForSubject]];
-    [subjectInfo setReporters:@[]];
 
     [subjectInfo loadSubjectInfo];
   }];
