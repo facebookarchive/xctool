@@ -342,16 +342,19 @@ It's a nice way to keep things together.
    under "Your recently pushed branches", click __Pull Request__ for
    _myusername/my-feature_.
 
-## Known Issues
+## Known Issues & Tips
 
-* **_Find Implicit Dependencies_ is not supported.**  If you get unexplained
-linker or compile errors in xctool but not in Xcode, it might be this.
-Xcode.app has a mode where it will try to infer dependencies between
-your projects and make sure dependent projects are built first.
-Unfortunately it looks like this logic only exists in Xcode.app.  The
-workaround is to setup correct _Target Dependencies_ or to add the
-necessary targets to your scheme ahead of the targets that require them.
-More info in [issue #16](https://github.com/facebook/xctool/issues/16#issuecomment-17444311).
+* __Use shared schemes and disable the Autocreate Schemes feature.__
+
+  Xcode has two kinds of schemes: shared, and user.  User schemes are
+  the default, and they're stored under a folder called `USERNAME.xcuserdatad`,
+  which most people correctly add to their _.gitignore_.
+
+  Use shared schemes instead, and commit them to your repo.  This way
+  everyone on your team (and your build server) are working from the
+  same information, and are building in the same way.
+  
+  ![example](https://fpotter_public.s3.amazonaws.com/xctool-shared-schemes.png)
 
 ## License
 
