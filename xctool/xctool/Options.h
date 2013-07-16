@@ -38,7 +38,6 @@
 @property (nonatomic, retain) NSString *arch;
 @property (nonatomic, retain) NSString *toolchain;
 @property (nonatomic, retain) NSString *xcconfig;
-@property (nonatomic, retain) NSString *simulatorType;
 @property (nonatomic, retain) NSString *jobs;
 @property (nonatomic, retain) NSString *findTarget;
 @property (nonatomic, retain) NSString *findTargetPath;
