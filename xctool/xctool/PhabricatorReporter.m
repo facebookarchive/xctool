@@ -16,8 +16,6 @@
 
 #import "PhabricatorReporter.h"
 
-#import "Options.h"
-
 @implementation PhabricatorReporter
 
 + (NSDictionary *)reporterInfo {
@@ -37,34 +35,19 @@
 - (void)dealloc
 {
   [_results release];
-  [_projectOrWorkspaceName release];
+  [_scheme release];
   [super dealloc];
 }
 
-- (NSString *)projectOrWorkspaceName
-{
-  if (_projectOrWorkspaceName == nil) {
-    NSString *path = nil;
-
-    if (self.options.workspace) {
-      path = self.options.workspace;
-    } else {
-      path = self.options.project;
-    }
-
-    _projectOrWorkspaceName = [[[path lastPathComponent] stringByDeletingPathExtension] retain];
-  }
-
-  return _projectOrWorkspaceName;
-};
-
-
 - (void)beginAction:(NSDictionary *)event
 {
+  _scheme = [event[kReporter_BeginAction_SchemeKey] retain];
 }
 
 - (void)endAction:(NSDictionary *)event
 {
+  [_scheme release];
+  _scheme = nil;
 }
 
 - (void)beginBuildTarget:(NSDictionary *)event
@@ -76,7 +59,7 @@
 {
   [_results addObject:@{
    @"name" : [NSString stringWithFormat:@"%@: Build %@:%@",
-              [self projectOrWorkspaceName],
+              _scheme,
               event[kReporter_EndBuildTarget_ProjectKey],
               event[kReporter_EndBuildTarget_TargetKey]],
    @"link" : [NSNull null],
@@ -153,7 +136,7 @@
 
   [_results addObject:@{
    @"name" : [NSString stringWithFormat:@"%@: %@",
-              [self projectOrWorkspaceName],
+              _scheme,
               event[kReporter_EndTest_TestKey]],
    @"link" : [NSNull null],
    @"result" : [event[kReporter_EndTest_SucceededKey] boolValue] ? @"pass" : @"fail",

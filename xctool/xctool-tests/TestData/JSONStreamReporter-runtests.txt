@@ -1,4 +1,4 @@
-{"event":"begin-action","name":"run-tests"}
+{"event":"begin-action","name":"run-tests","workspace":null,"project":"TestProject-Library","scheme":"TestProject-Library"}
 {"gcEnabled":false,"sdkName":"iphonesimulator6.1","event":"begin-ocunit","testType":"logic-test","bundleName":"TestProject-LibraryTests.octest"}
 {"suite":"Multiple Selected Tests","event":"begin-test-suite"}
 {"suite":"\/Users\/fpotter\/Library\/Developer\/Xcode\/DerivedData\/TestProject-Library-gqcuxcsyguaqwugnnwmftlazxbyg\/Build\/Products\/Debug-iphonesimulator\/TestProject-LibraryTests.octest(Tests)","event":"begin-test-suite"}
@@ -52,4 +52,4 @@
 {"suite":"\/Users\/fpotter\/Library\/Developer\/Xcode\/DerivedData\/TestProject-Library-gqcuxcsyguaqwugnnwmftlazxbyg\/Build\/Products\/Debug-iphonesimulator\/TestProject-LibraryTests.octest(Tests)","testCaseCount":7,"event":"end-test-suite","totalFailureCount":1,"totalDuration":0.7603319883346558,"unexpectedExceptionCount":0,"testDuration":0.7591749429702759}
 {"suite":"Multiple Selected Tests","testCaseCount":7,"event":"end-test-suite","totalFailureCount":1,"totalDuration":0.7604629993438721,"unexpectedExceptionCount":0,"testDuration":0.7591749429702759}
 {"bundleName":"TestProject-LibraryTests.octest","gcEnabled":false,"succeeded":false,"failureReason":null,"event":"end-ocunit","testType":"logic-test","sdkName":"iphonesimulator6.1"}
-{"succeeded":false,"event":"end-action","name":"run-tests","duration":1.400507638696581}
+{"succeeded":false,"event":"end-action","name":"run-tests","duration":1.400507638696581,"workspace":null,"project":"TestProject-Library","scheme":"TestProject-Library"}

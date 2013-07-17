@@ -36,8 +36,14 @@
 #define kReporter_Events_AnalyzerResult @"analyzer-result"
 
 #define kReporter_BeginAction_NameKey @"name"
+#define kReporter_BeginAction_WorkspaceKey @"workspace"
+#define kReporter_BeginAction_ProjectKey @"project"
+#define kReporter_BeginAction_SchemeKey @"scheme"
 
 #define kReporter_EndAction_NameKey @"name"
+#define kReporter_EndAction_WorkspaceKey @"workspace"
+#define kReporter_EndAction_ProjectKey @"project"
+#define kReporter_EndAction_SchemeKey @"scheme"
 #define kReporter_EndAction_SucceededKey @"succeeded"
 #define kReporter_EndAction_DurationKey @"duration"
 

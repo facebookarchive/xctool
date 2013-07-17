@@ -25,7 +25,7 @@
   NSMutableArray *_results;
   NSMutableArray *_currentTargetFailures;
   NSDictionary *_currentBuildCommand;
-  NSString *_projectOrWorkspaceName;
+  NSString *_scheme;
 }
 
 - (NSString *)arcUnitJSON;

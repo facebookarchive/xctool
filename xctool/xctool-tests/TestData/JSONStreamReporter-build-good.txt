@@ -1,3 +1,4 @@
+{"event":"begin-action","name":"build","workspace":null,"project":"TestProject-Library","scheme":"TestProject-Library"}
 {"event":"begin-xcodebuild","command":"build","title":"TestProject-Library"}
 {"configuration":"Debug","project":"TestProject-Library","event":"begin-build-target","target":"TestProject-Library"}
 {"event":"begin-build-command","title":"Check dependencies","command":"Check dependencies"}
@@ -30,3 +31,4 @@
 {"succeeded":true,"failureReason":null,"title":"Touch \/Users\/fpotter\/Library\/Developer\/Xcode\/DerivedData\/TestProject-Library-gpcgrfaidrhstlbqbvqcqcehbnqc\/Build\/Products\/Debug-iphonesimulator\/TestProject-LibraryTests.octest","event":"end-build-command","duration":0.004795968532562256}
 {"configuration":"Debug","project":"TestProject-Library","event":"end-build-target","target":"TestProject-LibraryTests"}
 {"event":"end-xcodebuild","command":"build","title":"TestProject-LibraryTests"}
+{"event":"end-action","name":"build","workspace":null,"project":"TestProject-Library","scheme":"TestProject-Library","succeeded":true,"duration":1.0}

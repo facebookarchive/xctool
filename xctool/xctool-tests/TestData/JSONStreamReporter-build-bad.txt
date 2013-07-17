@@ -1,3 +1,4 @@
+{"event":"begin-action","name":"build","workspace":null,"project":"TestProject-Library","scheme":"TestProject-Library"}
 {"event":"begin-xcodebuild","command":"build","title":"TestProject-Library"}
 {"configuration":"Debug","project":"TestProject-Library","event":"begin-build-target","target":"TestProject-Library"}
 {"event":"begin-build-command","title":"Check dependencies","command":"Check dependencies"}
@@ -20,3 +21,4 @@
 {"succeeded":false,"emittedOutputText":"\/Users\/fpotter\/fb\/git\/fbobjc\/Tools\/xctool\/xctool\/xctool-tests\/TestData\/TestProject-Library\/TestProject-LibraryTests\/SomeTests.m:17:1: error: use of undeclared identifier 'WTF'\nWTF\n^\n\/Users\/fpotter\/fb\/git\/fbobjc\/Tools\/xctool\/xctool\/xctool-tests\/TestData\/TestProject-Library\/TestProject-LibraryTests\/SomeTests.m:63:20: warning: implicit declaration of function 'backtrace' is invalid in C99 [-Wimplicit-function-declaration]\n  int numSymbols = backtrace(exceptionSymbols, 256);\n                   ^\n\/Users\/fpotter\/fb\/git\/fbobjc\/Tools\/xctool\/xctool\/xctool-tests\/TestData\/TestProject-Library\/TestProject-LibraryTests\/SomeTests.m:64:3: warning: implicit declaration of function 'backtrace_symbols_fd' is invalid in C99 [-Wimplicit-function-declaration]\n  backtrace_symbols_fd(exceptionSymbols, numSymbols, STDERR_FILENO);\n  ^\n2 warnings and 1 error generated.\n","title":"Compile \/Users\/fpotter\/fb\/git\/fbobjc\/Tools\/xctool\/xctool\/xctool-tests\/TestData\/TestProject-Library\/TestProject-LibraryTests\/SomeTests.m","event":"end-build-command","duration":0.1587499976158142}
 {"configuration":"Debug","project":"TestProject-Library","event":"end-build-target","target":"TestProject-LibraryTests"}
 {"event":"end-xcodebuild","command":"build","title":"TestProject-LibraryTests"}
+{"event":"end-action","name":"build","workspace":null,"project":"TestProject-Library","scheme":"TestProject-Library","succeeded":false,"duration":1.0}
