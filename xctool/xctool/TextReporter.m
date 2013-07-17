@@ -396,8 +396,10 @@ static NSString *abbreviatePath(NSString *string) {
   } else if ([name isEqual:@"analyze"]) {
     [self printAnalyzerSummary];
   }
-
-  [self.reportWriter printLine:@"<bold>** %@ %@%@ **<reset> <faint>(%03d ms)<reset>",
+  
+  NSString *color = succeeded ? @"<green>" : @"<red>";
+  [self.reportWriter printLine:@"<bold>%@** %@ %@%@ **<reset> <faint>(%03d ms)<reset>",
+   color,
    [name uppercaseString],
    status,
    message != nil ? [@": " stringByAppendingString:message] : @"",
