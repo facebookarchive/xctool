@@ -409,3 +409,9 @@ void CleanupTemporaryDirectoryForAction()
     __tempDirectoryForAction = nil;
   }
 }
+
+void PublishEventToReporters(NSArray *reporters, NSDictionary *event)
+{
+  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
+                             withObject:event];
+}

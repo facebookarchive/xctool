@@ -2,6 +2,7 @@
 #import "Reporter+Testing.h"
 
 #import "FakeFileHandle.h"
+#import "XCToolUtil.h"
 
 @implementation Reporter (Testing)
 

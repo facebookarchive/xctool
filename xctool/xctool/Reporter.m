@@ -24,12 +24,6 @@
 NSString *const kReporterInfoNameKey = @"name";
 NSString *const kReporterInfoDescriptionKey = @"description";
 
-void PublishEventToReporters(NSArray *reporters, NSDictionary *event)
-{
-  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                             withObject:event];
-}
-
 @implementation Reporter
 
 + (NSArray *)allReporterClasses

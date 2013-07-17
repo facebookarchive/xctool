@@ -29,14 +29,6 @@ NSString *const kReporterInfoDescriptionKey;
 @class Action;
 @class Options;
 
-/**
- Publish event to a list of reporters.
- 
- @param array Array of reporters.
- @param dict Event dictionary.
- */
-void PublishEventToReporters(NSArray *reporters, NSDictionary *event);
-
 @interface Reporter : NSObject
 {
   NSFileHandle *_outputHandle;

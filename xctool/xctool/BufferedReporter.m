@@ -16,6 +16,8 @@
 
 #import "BufferedReporter.h"
 
+#import "XCToolUtil.h"
+
 @implementation BufferedReporter
 
 + (NSArray *)wrapReporters:(NSArray *)reporters

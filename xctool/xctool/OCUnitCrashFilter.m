@@ -20,6 +20,7 @@
 
 #import "Reporter.h"
 #import "ReporterEvents.h"
+#import "XCToolUtil.h"
 
 @implementation OCUnitCrashFilter
 
