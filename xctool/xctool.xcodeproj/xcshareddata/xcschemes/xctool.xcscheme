@@ -132,6 +132,104 @@
                ReferencedContainer = "container:../otest-query/otest-query.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2893A94B17960CD400EFBD28"
+               BuildableName = "reporters-tests.octest"
+               BlueprintName = "reporters-tests"
+               ReferencedContainer = "container:../reporters/reporters.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "28F489E11797362400068E00"
+               BuildableName = "plain"
+               BlueprintName = "plain"
+               ReferencedContainer = "container:../reporters/reporters.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2893A96817960D2000EFBD28"
+               BuildableName = "pretty"
+               BlueprintName = "pretty"
+               ReferencedContainer = "container:../reporters/reporters.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "28F48A08179743AE00068E00"
+               BuildableName = "phabricator"
+               BlueprintName = "phabricator"
+               ReferencedContainer = "container:../reporters/reporters.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "28F48A2117974D4100068E00"
+               BuildableName = "junit"
+               BlueprintName = "junit"
+               ReferencedContainer = "container:../reporters/reporters.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "28F48A3A17974EF600068E00"
+               BuildableName = "json-compilation-database"
+               BlueprintName = "json-compilation-database"
+               ReferencedContainer = "container:../reporters/reporters.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "28F48A52179750A500068E00"
+               BuildableName = "json-stream"
+               BlueprintName = "json-stream"
+               ReferencedContainer = "container:../reporters/reporters.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -150,7 +248,26 @@
                ReferencedContainer = "container:xctool.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2893A94B17960CD400EFBD28"
+               BuildableName = "reporters-tests.octest"
+               BlueprintName = "reporters-tests"
+               ReferencedContainer = "container:../reporters/reporters.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "283CCA4116C2EA3700F2E343"
+            BuildableName = "xctool"
+            BlueprintName = "xctool"
+            ReferencedContainer = "container:xctool.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </TestAction>
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"

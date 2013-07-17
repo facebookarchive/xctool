@@ -1,0 +1,15 @@
+//
+// Prefix header for all source files of the 'reporters-tests' target in the 'reporters-tests' project
+//
+
+#ifdef __OBJC__
+  #import <Cocoa/Cocoa.h>
+
+  #define HC_SHORTHAND
+  #import <OCHamcrest/OCHamcrest.h>
+
+  #define MOCKITO_SHORTHAND
+  #import <OCMockito/OCMockito.h>
+
+  #define TEST_DATA @"../xctool/xctool-tests/TestData/"
+#endif
