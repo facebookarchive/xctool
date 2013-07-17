@@ -85,7 +85,7 @@ NSString *const kReporterInfoDescriptionKey = @"description";
   return reporterClasses;
 }
 
-+ (Reporter *)reporterWithName:(NSString *)name outputPath:(NSString *)outputPath options:(Options *)options
++ (Reporter *)reporterWithName:(NSString *)name outputPath:(NSString *)outputPath
 {
   Class reporterClass = {0};
   for (Class cls in [Reporter allReporterClasses]) {

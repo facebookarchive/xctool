@@ -35,7 +35,7 @@ NSString *const kReporterInfoDescriptionKey;
 }
 
 + (NSArray *)allReporterClasses;
-+ (Reporter *)reporterWithName:(NSString *)name outputPath:(NSString *)outputPath options:(Options *)options;
++ (Reporter *)reporterWithName:(NSString *)name outputPath:(NSString *)outputPath;
 
 /**
  A dictionary of info that describes the Reporter, including it's short name and
