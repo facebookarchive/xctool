@@ -16,16 +16,10 @@
 
 #import "Reporter.h"
 
+#import <objc/runtime.h>
 #import <sys/stat.h>
 
 #import "Options.h"
-#import "JSONStreamReporter.h"
-#import "JSONCompilationDatabaseReporter.h"
-#import "JUnitReporter.h"
-#import "PhabricatorReporter.h"
-#import "TextReporter.h"
-
-#import <objc/runtime.h>
 
 NSString *const kReporterInfoNameKey = @"name";
 NSString *const kReporterInfoDescriptionKey = @"description";
