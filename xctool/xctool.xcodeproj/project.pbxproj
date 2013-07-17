@@ -10,7 +10,6 @@
 		28046D2C16D7603B000AA15C /* Action.m in Sources */ = {isa = PBXBuildFile; fileRef = 28046D2B16D7603B000AA15C /* Action.m */; };
 		28046D2D16D7603B000AA15C /* Action.m in Sources */ = {isa = PBXBuildFile; fileRef = 28046D2B16D7603B000AA15C /* Action.m */; };
 		28046D3016D76665000AA15C /* ActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28046D2F16D76665000AA15C /* ActionTests.m */; };
-		28302DA01755E12600C997B2 /* FakeFileHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = 28302D9F1755E12600C997B2 /* FakeFileHandle.m */; };
 		28302E1E175A8B6900C997B2 /* ArchiveActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28302E1D175A8B6900C997B2 /* ArchiveActionTests.m */; };
 		2834799416E199A2003C3B77 /* BuildAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 2834799316E199A2003C3B77 /* BuildAction.m */; };
 		2834799816E199D6003C3B77 /* Options.m in Sources */ = {isa = PBXBuildFile; fileRef = 2834799716E199D6003C3B77 /* Options.m */; };
@@ -32,8 +31,6 @@
 		283CCACA16C2EE9900F2E343 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 283CCAC816C2EE9900F2E343 /* InfoPlist.strings */; };
 		283CCACD16C2EE9900F2E343 /* XCToolTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCACC16C2EE9900F2E343 /* XCToolTests.m */; };
 		283CCAD616C2F10A00F2E343 /* XCTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCAD516C2F10A00F2E343 /* XCTool.m */; };
-		283CCAD916C2F13A00F2E343 /* NSFileHandle+Print.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCAD816C2F13A00F2E343 /* NSFileHandle+Print.m */; };
-		283CCADA16C2F13A00F2E343 /* NSFileHandle+Print.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCAD816C2F13A00F2E343 /* NSFileHandle+Print.m */; };
 		283CCADB16C2F14C00F2E343 /* XCTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCAD516C2F10A00F2E343 /* XCTool.m */; };
 		283EAF12170288FE00CE0A0C /* OCUnitCrashFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 283EAF11170288FE00CE0A0C /* OCUnitCrashFilter.m */; };
 		283EAF13170288FE00CE0A0C /* OCUnitCrashFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 283EAF11170288FE00CE0A0C /* OCUnitCrashFilter.m */; };
@@ -99,6 +96,9 @@
 		28E9B9E716C341C000A52E4D /* JSONStreamReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9E516C341C000A52E4D /* JSONStreamReporter.m */; };
 		28E9B9EB16C34F2B00A52E4D /* TextReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9EA16C34F2B00A52E4D /* TextReporter.m */; };
 		28E9B9EC16C34F2B00A52E4D /* TextReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B9EA16C34F2B00A52E4D /* TextReporter.m */; };
+		28F489F317973B6100068E00 /* FakeFileHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F489F217973B6100068E00 /* FakeFileHandle.m */; };
+		28F489FC17973BF900068E00 /* NSFileHandle+Print.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F489FB17973BF900068E00 /* NSFileHandle+Print.m */; };
+		28F489FD17973BF900068E00 /* NSFileHandle+Print.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F489FB17973BF900068E00 /* NSFileHandle+Print.m */; };
 		28FFB00516FF5A21000CCE2A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FFB00416FF5A21000CCE2A /* QuartzCore.framework */; };
 		28FFB00616FF5A2B000CCE2A /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28FFB00416FF5A21000CCE2A /* QuartzCore.framework */; };
 		29D99BF81753A3D700ABBD04 /* JSONCompilationDatabaseReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 29D99BF71753A3D700ABBD04 /* JSONCompilationDatabaseReporter.m */; };
@@ -152,8 +152,6 @@
 		28046D2A16D7603B000AA15C /* Action.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Action.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		28046D2B16D7603B000AA15C /* Action.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = Action.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		28046D2F16D76665000AA15C /* ActionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionTests.m; sourceTree = "<group>"; };
-		28302D9E1755E12600C997B2 /* FakeFileHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeFileHandle.h; sourceTree = "<group>"; };
-		28302D9F1755E12600C997B2 /* FakeFileHandle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeFileHandle.m; sourceTree = "<group>"; };
 		28302E1D175A8B6900C997B2 /* ArchiveActionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArchiveActionTests.m; sourceTree = "<group>"; };
 		2834799216E199A2003C3B77 /* BuildAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BuildAction.h; sourceTree = "<group>"; };
 		2834799316E199A2003C3B77 /* BuildAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BuildAction.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
@@ -185,8 +183,6 @@
 		283CCACE16C2EE9900F2E343 /* xctool-tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "xctool-tests-Prefix.pch"; sourceTree = "<group>"; };
 		283CCAD416C2F10A00F2E343 /* XCTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCTool.h; sourceTree = "<group>"; };
 		283CCAD516C2F10A00F2E343 /* XCTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = XCTool.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		283CCAD716C2F13A00F2E343 /* NSFileHandle+Print.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileHandle+Print.h"; sourceTree = "<group>"; };
-		283CCAD816C2F13A00F2E343 /* NSFileHandle+Print.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileHandle+Print.m"; sourceTree = "<group>"; };
 		283EAF10170288FE00CE0A0C /* OCUnitCrashFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUnitCrashFilter.h; sourceTree = "<group>"; };
 		283EAF11170288FE00CE0A0C /* OCUnitCrashFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitCrashFilter.m; sourceTree = "<group>"; };
 		283EAF151702BB0600CE0A0C /* OCUnitCrashFilterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitCrashFilterTests.m; sourceTree = "<group>"; };
@@ -259,6 +255,10 @@
 		28E9B9E516C341C000A52E4D /* JSONStreamReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONStreamReporter.m; sourceTree = "<group>"; };
 		28E9B9E916C34F2B00A52E4D /* TextReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextReporter.h; sourceTree = "<group>"; };
 		28E9B9EA16C34F2B00A52E4D /* TextReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextReporter.m; sourceTree = "<group>"; };
+		28F489F117973B6100068E00 /* FakeFileHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeFileHandle.h; sourceTree = "<group>"; };
+		28F489F217973B6100068E00 /* FakeFileHandle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeFileHandle.m; sourceTree = "<group>"; };
+		28F489FA17973BF900068E00 /* NSFileHandle+Print.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileHandle+Print.h"; sourceTree = "<group>"; };
+		28F489FB17973BF900068E00 /* NSFileHandle+Print.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileHandle+Print.m"; sourceTree = "<group>"; };
 		28FFB00416FF5A21000CCE2A /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		29D99BF61753A3D700ABBD04 /* JSONCompilationDatabaseReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONCompilationDatabaseReporter.h; sourceTree = "<group>"; };
 		29D99BF71753A3D700ABBD04 /* JSONCompilationDatabaseReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONCompilationDatabaseReporter.m; sourceTree = "<group>"; };
@@ -384,8 +384,6 @@
 				287A37DC16C711AE00319E81 /* LineReader.h */,
 				287A37DD16C711AE00319E81 /* LineReader.m */,
 				283CCA4816C2EA3800F2E343 /* main.m */,
-				283CCAD716C2F13A00F2E343 /* NSFileHandle+Print.h */,
-				283CCAD816C2F13A00F2E343 /* NSFileHandle+Print.m */,
 				283EAF10170288FE00CE0A0C /* OCUnitCrashFilter.h */,
 				283EAF11170288FE00CE0A0C /* OCUnitCrashFilter.m */,
 				28E9B9D116C3275200A52E4D /* OCUnitIOSAppTestRunner.h */,
@@ -478,8 +476,6 @@
 				28A5A8EF1746D2B9001733A9 /* SwizzlerTests.m */,
 				2868B1C21746ED9C0062F4BA /* OCUnitTestRunnerTests.m */,
 				28C267DE17552E6B00AFC459 /* TextReporterTests.m */,
-				28302D9E1755E12600C997B2 /* FakeFileHandle.h */,
-				28302D9F1755E12600C997B2 /* FakeFileHandle.m */,
 				28C81A62175562050072DDB8 /* ReporterTests.m */,
 				28C81A64175563690072DDB8 /* RecordingReporter.h */,
 				28C81A65175563690072DDB8 /* RecordingReporter.m */,
@@ -505,6 +501,10 @@
 		28897FCD173E6215004BA024 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				28F489FA17973BF900068E00 /* NSFileHandle+Print.h */,
+				28F489FB17973BF900068E00 /* NSFileHandle+Print.m */,
+				28F489F117973B6100068E00 /* FakeFileHandle.h */,
+				28F489F217973B6100068E00 /* FakeFileHandle.m */,
 				28E28FB217968EAC0072376C /* ReporterEvents.h */,
 				28897FCE173E6215004BA024 /* Swizzle.h */,
 				28897FCF173E6215004BA024 /* Swizzle.m */,
@@ -643,7 +643,6 @@
 			files = (
 				283CCA4916C2EA3800F2E343 /* main.m in Sources */,
 				283CCAD616C2F10A00F2E343 /* XCTool.m in Sources */,
-				283CCAD916C2F13A00F2E343 /* NSFileHandle+Print.m in Sources */,
 				28E9B97F16C2F1C600A52E4D /* XCToolUtil.m in Sources */,
 				28E9B9D716C3275200A52E4D /* OCUnitIOSAppTestRunner.m in Sources */,
 				28E9B9D916C3275200A52E4D /* OCUnitIOSLogicTestRunner.m in Sources */,
@@ -678,6 +677,7 @@
 				CD56770F1766782C003B727C /* BuildStateParser.mm in Sources */,
 				28E28FB81796926A0072376C /* ReportStatus.m in Sources */,
 				28E28FBC1797099E0072376C /* ReporterTask.m in Sources */,
+				28F489FC17973BF900068E00 /* NSFileHandle+Print.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -693,7 +693,6 @@
 				287A37E716C749D500319E81 /* LineReader.m in Sources */,
 				283CCADB16C2F14C00F2E343 /* XCTool.m in Sources */,
 				283CCACD16C2EE9900F2E343 /* XCToolTests.m in Sources */,
-				283CCADA16C2F13A00F2E343 /* NSFileHandle+Print.m in Sources */,
 				28E9B98016C2F1C600A52E4D /* XCToolUtil.m in Sources */,
 				28E9B99216C3037E00A52E4D /* FakeTask.m in Sources */,
 				28E9B9D816C3275200A52E4D /* OCUnitIOSAppTestRunner.m in Sources */,
@@ -741,7 +740,6 @@
 				CDD81F2F174ABA2700F42111 /* SchemeGenerator.m in Sources */,
 				CDD81F52174EAFDC00F42111 /* BufferedReporter.m in Sources */,
 				28C267DF17552E6B00AFC459 /* TextReporterTests.m in Sources */,
-				28302DA01755E12600C997B2 /* FakeFileHandle.m in Sources */,
 				28C81A63175562050072DDB8 /* ReporterTests.m in Sources */,
 				28C81A66175563690072DDB8 /* RecordingReporter.m in Sources */,
 				28302E1E175A8B6900C997B2 /* ArchiveActionTests.m in Sources */,
@@ -753,6 +751,8 @@
 				28869AFC178CEA7600DED56A /* SenTestListener.m in Sources */,
 				28E28FBD1797099E0072376C /* ReporterTask.m in Sources */,
 				28E28FC01797193F0072376C /* ReporterTaskTests.m in Sources */,
+				28F489F317973B6100068E00 /* FakeFileHandle.m in Sources */,
+				28F489FD17973BF900068E00 /* NSFileHandle+Print.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
