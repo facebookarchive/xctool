@@ -20,6 +20,7 @@
 
 #import "LineReader.h"
 #import "Reporter.h"
+#import "ReportStatus.h"
 #import "SimulatorLauncher.h"
 #import "TaskUtil.h"
 #import "XCToolUtil.h"

@@ -5,6 +5,7 @@
 #import "Options.h"
 #import "Options+Testing.h"
 #import "Reporter+Testing.h"
+#import "ReportStatus.h"
 #import "Swizzler.h"
 #import "TextReporter.h"
 

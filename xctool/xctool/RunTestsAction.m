@@ -25,6 +25,7 @@
 #import "Options.h"
 #import "Reporter.h"
 #import "ReporterEvents.h"
+#import "ReportStatus.h"
 #import "TaskUtil.h"
 #import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"

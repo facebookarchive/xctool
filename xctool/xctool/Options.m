@@ -22,6 +22,7 @@
 #import "BuildTestsAction.h"
 #import "CleanAction.h"
 #import "Reporter.h"
+#import "ReportStatus.h"
 #import "RunTestsAction.h"
 #import "TestAction.h"
 #import "XCToolUtil.h"

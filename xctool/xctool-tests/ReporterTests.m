@@ -3,6 +3,7 @@
 
 #import "RecordingReporter.h"
 #import "Reporter.h"
+#import "ReportStatus.h"
 #import "Swizzler.h"
 
 @interface ReporterTests : SenTestCase

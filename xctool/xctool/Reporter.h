@@ -29,34 +29,6 @@ NSString *const kReporterInfoDescriptionKey;
 @class Action;
 @class Options;
 
-typedef enum {
-  REPORTER_MESSAGE_DEBUG,
-  REPORTER_MESSAGE_VERBOSE,
-  REPORTER_MESSAGE_INFO,
-  REPORTER_MESSAGE_WARNING,
-  REPORTER_MESSAGE_ERROR,
-} ReporterMessageLevel;
-
-NSString *ReporterMessageLevelToString(ReporterMessageLevel level);
-
-/**
- Reports a status message to the reporters, meant to express the beginning of
- an operation.  The caller must call ReportStatusMessageEnd() when the operation
- has finished.
- */
-void ReportStatusMessageBegin(NSArray *reporters, ReporterMessageLevel level, NSString *format, ...) NS_FORMAT_FUNCTION(3, 4);
-
-/**
- Reports a status message to the reporters, meant to express the end of an
- operation.  StatusMessageBegin() must be called first.
- */
-void ReportStatusMessageEnd(NSArray *reporters, ReporterMessageLevel level, NSString *format, ...) NS_FORMAT_FUNCTION(3, 4);
-
-/**
- Reports a one-shot status message to the reporters that has no begin/end.
- */
-void ReportStatusMessage(NSArray *reporters, ReporterMessageLevel level, NSString *format, ...) NS_FORMAT_FUNCTION(3, 4);
-
 /**
  Publish event to a list of reporters.
  
