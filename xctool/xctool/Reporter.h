@@ -189,7 +189,6 @@ void ReportStatusMessage(NSArray *reporters, ReporterMessageLevel level, NSStrin
 // specified an output path.
 @property (nonatomic, retain) NSString *outputPath;
 @property (nonatomic, readonly) NSFileHandle *outputHandle;
-@property (nonatomic, retain) Options *options;
 
 - (void)handleEvent:(NSDictionary *)event;
 

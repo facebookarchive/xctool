@@ -10,7 +10,6 @@
 {
   Reporter *reporter = [[self alloc] init];
   [reporter setOutputPath:@"-"];
-  [reporter setOptions:options];
 
   FakeFileHandle *fakeFileHandle = [[FakeFileHandle alloc] init];
 

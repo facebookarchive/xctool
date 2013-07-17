@@ -19,8 +19,6 @@
 #import <objc/runtime.h>
 #import <sys/stat.h>
 
-#import "Options.h"
-
 NSString *const kReporterInfoNameKey = @"name";
 NSString *const kReporterInfoDescriptionKey = @"description";
 
@@ -164,7 +162,6 @@ void ReportStatusMessageEnd(NSArray *reporters, ReporterMessageLevel level, NSSt
 
   Reporter *reporter = [[[reporterClass alloc] init] autorelease];
   reporter.outputPath = outputPath;
-  reporter.options = options;
   return reporter;
 }
 
@@ -184,7 +181,6 @@ void ReportStatusMessageEnd(NSArray *reporters, ReporterMessageLevel level, NSSt
 {
   [_outputHandle release];
   [_outputPath release];
-  [_options release];
   [super dealloc];
 }
 
