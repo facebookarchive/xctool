@@ -12,8 +12,7 @@
 - (void)testBuild
 {
   NSData *outputData = [JSONCompilationDatabaseReporter
-                        outputDataWithEventsFromFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-build.txt"
-                                             options:nil];
+                        outputDataWithEventsFromFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-build.txt"];
   NSString *jsonStr = [[[NSString alloc] initWithData:outputData
                                             encoding:NSUTF8StringEncoding] autorelease];
   STAssertEqualObjects(@"\
@@ -34,8 +33,7 @@
 - (void)testBuildObjectCpp
 {
   NSData *outputData = [JSONCompilationDatabaseReporter
-                      outputDataWithEventsFromFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-build-objc++.txt"
-                      options:nil];
+                      outputDataWithEventsFromFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-build-objc++.txt"];
   NSString *jsonStr = [[[NSString alloc] initWithData:outputData
                                            encoding:NSUTF8StringEncoding] autorelease];
   
@@ -57,8 +55,7 @@
 - (void)testXcode5DPBuild
 {
   NSData *outputData = [JSONCompilationDatabaseReporter
-                        outputDataWithEventsFromFile:TEST_DATA @"TestProject-Library-TestProject-Xcode-5A11314m.txt"
-                                             options:nil];
+                        outputDataWithEventsFromFile:TEST_DATA @"TestProject-Library-TestProject-Xcode-5A11314m.txt"];
   NSString *jsonStr = [[[NSString alloc] initWithData:outputData
                                             encoding:NSUTF8StringEncoding] autorelease];
   STAssertEqualObjects(@"\
@@ -79,8 +76,7 @@
 - (void)testTestResults
 {
   NSData *outputData = [JSONCompilationDatabaseReporter
-                        outputDataWithEventsFromFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results.txt"
-                                             options:nil];
+                        outputDataWithEventsFromFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results.txt"];
   NSString *jsonStr = [[[NSString alloc] initWithData:outputData
                                             encoding:NSUTF8StringEncoding] autorelease];
   STAssertEqualObjects(@"\

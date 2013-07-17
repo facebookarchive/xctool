@@ -7,7 +7,6 @@
 @implementation Reporter (Testing)
 
 + (NSData *)outputDataWithEventsFromFile:(NSString *)path
-                                 options:(Options *)options
 {
   Reporter *reporter = [[self alloc] init];
   [reporter setOutputPath:@"-"];

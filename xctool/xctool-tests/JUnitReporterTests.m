@@ -12,8 +12,7 @@
 
 - (void)testTestResults {
   NSData *outputData =
-    [JUnitReporter outputDataWithEventsFromFile:TEST_DATA @"JSONStreamReporter-runtests.txt"
-                                        options:nil];
+    [JUnitReporter outputDataWithEventsFromFile:TEST_DATA @"JSONStreamReporter-runtests.txt"];
   NSMutableString *xmlStr = [[[NSMutableString alloc] initWithData:outputData
                                                           encoding:NSUTF8StringEncoding] autorelease];
 

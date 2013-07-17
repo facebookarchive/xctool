@@ -28,7 +28,7 @@
     options.scheme = @"TestProject-Library";
 
     // Pump the events to make sure all the plumbing works and we don't crash.
-    [cls outputDataWithEventsFromFile:path options:options];
+    [cls outputDataWithEventsFromFile:path];
   };
 
   pumpReporter([PlainTextReporter class], TEST_DATA @"JSONStreamReporter-build-good.txt");
