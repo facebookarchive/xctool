@@ -22,6 +22,7 @@
 #import "Options.h"
 #import "Reporter.h"
 #import "ReporterEvents.h"
+#import "ReporterTask.h"
 #import "TaskUtil.h"
 #import "XcodeSubjectInfo.h"
 
@@ -412,6 +413,19 @@ void CleanupTemporaryDirectoryForAction()
 
 void PublishEventToReporters(NSArray *reporters, NSDictionary *event)
 {
-  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                             withObject:event];
+  NSError *error = nil;
+  NSData *jsonData = [NSJSONSerialization dataWithJSONObject:event options:0 error:&error];
+  NSCAssert(jsonData != nil, @"Error while encoding event into JSON: %@", [error localizedFailureReason]);
+
+  NSMutableData *data = [NSMutableData dataWithCapacity:[jsonData length] + 1];
+  [data appendData:jsonData];
+  [data appendData:[@"\n" dataUsingEncoding:NSUTF8StringEncoding]];
+
+  for (id reporter in reporters) {
+    if ([reporter isKindOfClass:[ReporterTask class]]) {
+      [[reporter fileHandleForWriting] writeData:data];
+    } else {
+      [reporter performSelector:@selector(handleEvent:) withObject:event];
+    }
+  }
 }

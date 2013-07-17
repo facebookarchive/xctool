@@ -22,6 +22,7 @@
 #import "BuildTestsAction.h"
 #import "CleanAction.h"
 #import "Reporter.h"
+#import "ReporterTask.h"
 #import "ReportStatus.h"
 #import "RunTestsAction.h"
 #import "TestAction.h"
@@ -243,14 +244,22 @@
     NSString *name = optionParts[0];
     NSString *outputFile = (optionParts.count > 1) ? optionParts[1] : @"-";
 
-    Reporter *reporter = [Reporter reporterWithName:name outputPath:outputFile];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:name]) {
+      // We'll assume it's the new style of reporter where the reporter
+      // is an executable.
+      ReporterTask *reporterTask = [[[ReporterTask alloc] initWithReporterPath:name
+                                                                    outputPath:outputFile] autorelease];
+      [self.reporters addObject:reporterTask];
+    } else {
+      Reporter *reporter = [Reporter reporterWithName:name outputPath:outputFile];
 
-    if (reporter == nil) {
-      *errorMessage = [NSString stringWithFormat:@"No reporter with name '%@' found.", name];
-      return NO;
+      if (reporter == nil) {
+        *errorMessage = [NSString stringWithFormat:@"No reporter with name '%@' found.", name];
+        return NO;
+      }
+
+      [self.reporters addObject:reporter];
     }
-
-    [self.reporters addObject:reporter];
   }
 
   if (self.reporters.count == 0) {
