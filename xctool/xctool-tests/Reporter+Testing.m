@@ -25,10 +25,10 @@
       break;
     }
 
-    [reporter handleEvent:
-     [NSJSONSerialization JSONObjectWithData:[line dataUsingEncoding:NSUTF8StringEncoding]
-                                     options:0
-                                       error:nil]];
+    PublishEventToReporters(@[reporter],
+                            [NSJSONSerialization JSONObjectWithData:[line dataUsingEncoding:NSUTF8StringEncoding]
+                                                            options:0
+                                                              error:nil]);
   }
 
   [reporter close];

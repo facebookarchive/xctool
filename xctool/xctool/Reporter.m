@@ -43,8 +43,7 @@ static void ReportStatusMessageBeginWithTimestamp(NSArray *reporters, double tim
                           kReporter_BeginStatus_TimestampKey: @(timestamp),
                           kReporter_BeginStatus_LevelKey: ReporterMessageLevelToString(level),
                           };
-  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                             withObject:event];
+  PublishEventToReporters(reporters, event);
 }
 
 static void ReportStatusMessageEndWithTimestamp(NSArray *reporters, double timestamp, ReporterMessageLevel level, NSString *message) {
@@ -53,8 +52,7 @@ static void ReportStatusMessageEndWithTimestamp(NSArray *reporters, double times
                           kReporter_EndStatus_TimestampKey: @(timestamp),
                           kReporter_EndStatus_LevelKey: ReporterMessageLevelToString(level),
                           };
-  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                             withObject:event];
+  PublishEventToReporters(reporters, event);
 }
 
 void ReportStatusMessage(NSArray *reporters, ReporterMessageLevel level, NSString *format, ...) {
@@ -88,6 +86,11 @@ void ReportStatusMessageEnd(NSArray *reporters, ReporterMessageLevel level, NSSt
   ReportStatusMessageEndWithTimestamp(reporters, [[NSDate date] timeIntervalSince1970], level, message);
 }
 
+void PublishEventToReporters(NSArray *reporters, NSDictionary *event)
+{
+  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
+                             withObject:event];
+}
 
 @implementation Reporter
 

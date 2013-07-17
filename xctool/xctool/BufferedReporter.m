@@ -51,7 +51,7 @@
 {
   @synchronized(_underlyingReporter) {
     for (NSDictionary *event in _bufferedEvents) {
-      [_underlyingReporter handleEvent:event];
+      PublishEventToReporters(@[_underlyingReporter], event);
     }
   }
   [_bufferedEvents removeAllObjects];

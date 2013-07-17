@@ -254,8 +254,7 @@ BOOL LaunchXcodebuildTaskAndFeedEventsToReporters(NSTask *task,
       errorMessage = [event[@"message"] retain];
       errorCode = [event[@"code"] longLongValue];
     } else {
-      [reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                                 withObject:event];
+      PublishEventToReporters(reporters, event);
     }
 
     if ([eventName isEqualToString:kReporter_Events_EndBuildCommand]) {
@@ -301,8 +300,7 @@ BOOL RunXcodebuildAndFeedEventsToReporters(NSArray *arguments,
                                kReporter_BeginXcodebuild_CommandKey: command,
                                kReporter_BeginXcodebuild_TitleKey: title,
                                };
-  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                             withObject:beginEvent];
+  PublishEventToReporters(reporters, beginEvent);
 
   NSString *xcodebuildErrorMessage = nil;
   long long xcodebuildErrorCode = 0;
@@ -334,8 +332,7 @@ BOOL RunXcodebuildAndFeedEventsToReporters(NSArray *arguments,
    kReporter_EndXcodebuild_ErrorCodeKey: errorCode,
    }];
 
-  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                             withObject:endEvent];
+  PublishEventToReporters(reporters, endEvent);
 
   [task release];
   return succeeded;

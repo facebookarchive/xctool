@@ -19,6 +19,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "OCUnitCrashFilter.h"
+#import "Reporter.h"
 
 @implementation OCUnitTestRunner
 
@@ -141,7 +142,7 @@
        [parseError localizedFailureReason]];
     }
 
-    [_reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:event];
+    PublishEventToReporters(_reporters, event);
     [crashFilter handleEvent:event];
     didReceiveTestEvents = YES;
   };

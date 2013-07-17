@@ -447,8 +447,7 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
     NSMutableDictionary *beginEvent =
     [NSMutableDictionary dictionaryWithDictionary:@{@"event": kReporter_Events_BeginOCUnit}];
     [beginEvent addEntriesFromDictionary:commonEventInfo];
-    [reportersForConfiguration makeObjectsPerformSelector:@selector(handleEvent:)
-                                               withObject:beginEvent];
+    PublishEventToReporters(reportersForConfiguration, beginEvent);
 
     // Query list of test classes if parallelizing test classes in each target
     NSArray *testClassNames = nil;
@@ -524,8 +523,7 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
                                          kReporter_EndOCUnit_FailureReasonKey: (error ? error : [NSNull null]),
                                          }];
       [endEvent addEntriesFromDictionary:commonEventInfo];
-      [reportersForConfiguration makeObjectsPerformSelector:@selector(handleEvent:)
-                                                 withObject:endEvent];
+      PublishEventToReporters(reportersForConfiguration, endEvent);
       for (id reporter in reportersForConfiguration) {
         if ([reporter respondsToSelector:@selector(flush)]) {
           [reporter flush];

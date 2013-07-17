@@ -167,6 +167,14 @@ void ReportStatusMessageEnd(NSArray *reporters, ReporterMessageLevel level, NSSt
  */
 void ReportStatusMessage(NSArray *reporters, ReporterMessageLevel level, NSString *format, ...) NS_FORMAT_FUNCTION(3, 4);
 
+/**
+ Publish event to a list of reporters.
+ 
+ @param array Array of reporters.
+ @param dict Event dictionary.
+ */
+void PublishEventToReporters(NSArray *reporters, NSDictionary *event);
+
 @interface Reporter : NSObject
 {
   NSFileHandle *_outputHandle;
@@ -189,8 +197,6 @@ void ReportStatusMessage(NSArray *reporters, ReporterMessageLevel level, NSStrin
 // specified an output path.
 @property (nonatomic, retain) NSString *outputPath;
 @property (nonatomic, readonly) NSFileHandle *outputHandle;
-
-- (void)handleEvent:(NSDictionary *)event;
 
 // Handler methods for different event types.
 // Messages are routed to these methods via handleEvent, and should not be

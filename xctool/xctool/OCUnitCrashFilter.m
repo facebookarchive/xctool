@@ -28,17 +28,17 @@
                    methodName:(NSString *)methodName
                        output:(NSString *)output
 {
-  [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
+  PublishEventToReporters(reporters, @{
    @"event" : kReporter_Events_BeginTest,
    kReporter_BeginTest_TestKey : testName,
    kReporter_BeginTest_ClassNameKey : className,
    kReporter_BeginTest_MethodNameKey : methodName,
-   }];
-  [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
+   });
+  PublishEventToReporters(reporters, @{
    @"event" : kReporter_Events_TestOuput,
    kReporter_TestOutput_OutputKey : output,
-   }];
-  [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
+   });
+  PublishEventToReporters(reporters, @{
    @"event" : kReporter_Events_EndTest,
    kReporter_EndTest_TestKey : testName,
    kReporter_EndTest_ClassNameKey : className,
@@ -46,7 +46,7 @@
    kReporter_EndTest_SucceededKey : @NO,
    kReporter_EndTest_TotalDurationKey : @(0),
    kReporter_EndTest_OutputKey : output,
-   }];
+   });
 }
 
 
@@ -137,13 +137,13 @@
 
     // Fire another 'test-output' event - we'll include the crash report as if it
     // was written to stdout in the test.
-    [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
+    PublishEventToReporters(reporters, @{
      @"event" : kReporter_Events_TestOuput,
      kReporter_TestOutput_OutputKey : concatenatedCrashReports,
-     }];
+     });
 
     // Fire a fake 'end-test' event.
-    [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
+    PublishEventToReporters(reporters, @{
      @"event" : kReporter_Events_EndTest,
      kReporter_EndTest_TestKey : self.currentTestEvent[kReporter_EndTest_TestKey],
      kReporter_EndTest_ClassNameKey : self.currentTestEvent[kReporter_EndTest_ClassNameKey],
@@ -151,7 +151,7 @@
      kReporter_EndTest_SucceededKey : @NO,
      kReporter_EndTest_TotalDurationKey : @(CACurrentMediaTime() - self.currentTestEventTimestamp),
      kReporter_EndTest_OutputKey : [self.currentTestOutput stringByAppendingString:concatenatedCrashReports],
-     }];
+     });
   } else if (self.currentTestSuiteEventStack.count > 0) {
     // We've crashed outside of a running test.  Usually this means the previously run test
     // over-released something and OCUnit got an EXC_BAD_ACCESS while trying to drain the
@@ -196,19 +196,19 @@
        concatenatedCrashReports];
 
     // create a dummy suite and test
-    [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
+    PublishEventToReporters(reporters, @{
      @"event" : kReporter_Events_BeginTestSuite,
      kReporter_BeginTestSuite_SuiteKey : testName,
-     }];
+     });
     [OCUnitCrashFilter emitDummyTestEventsTo:reporters
                                     testName:testName
                                    className:fullProductName
                                   methodName:@"CRASHED"
                                       output:output];
-    [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
+    PublishEventToReporters(reporters, @{
      @"event" : kReporter_Events_EndTestSuite,
      kReporter_BeginTestSuite_SuiteKey : testName,
-     }];
+     });
   }
 
   // For off any 'end-test-suite' events to keep the reporter sane (it expects every
@@ -218,13 +218,13 @@
     CFTimeInterval testSuiteTimestamp = [self.currentTestSuiteEventTimestampStack[i] doubleValue];
     NSDictionary *testSuiteCounts = self.currentTestSuiteEventTestCountStack[i];
 
-    [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
+    PublishEventToReporters(reporters, @{
      @"event" : kReporter_Events_EndTestSuite,
      kReporter_EndTestSuite_SuiteKey : testSuite[kReporter_EndTestSuite_SuiteKey],
      kReporter_EndTestSuite_TotalDurationKey : @(CACurrentMediaTime() - testSuiteTimestamp),
      kReporter_EndTestSuite_TestCaseCountKey : testSuiteCounts[kReporter_EndTestSuite_TestCaseCountKey],
      kReporter_EndTestSuite_TotalFailureCountKey : testSuiteCounts[kReporter_EndTestSuite_TotalFailureCountKey],
-     }];
+     });
   }
 }
 
