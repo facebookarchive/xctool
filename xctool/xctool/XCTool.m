@@ -22,6 +22,7 @@
 #import "JSONStreamReporter.h"
 #import "NSFileHandle+Print.h"
 #import "Options.h"
+#import "ReporterEvents.h"
 #import "TaskUtil.h"
 #import "TextReporter.h"
 #import "Version.h"

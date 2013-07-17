@@ -1,5 +1,7 @@
 #import "JSONCompilationDatabaseReporter.h"
 
+#import "ReporterEvents.h"
+
 @interface NSString (Strip)
 
 - (NSString *)strip;

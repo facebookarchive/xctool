@@ -16,6 +16,8 @@
 
 #import "PhabricatorReporter.h"
 
+#import "ReporterEvents.h"
+
 @implementation PhabricatorReporter
 
 + (NSDictionary *)reporterInfo {

@@ -23,7 +23,7 @@
 #import <Foundation/Foundation.h>
 #import <SenTestingKit/SenTestingKit.h>
 
-#import "../../xctool/xctool/Reporter.h"
+#import "ReporterEvents.h"
 #import "Swizzle.h"
 
 #import "dyld-interposing.h"

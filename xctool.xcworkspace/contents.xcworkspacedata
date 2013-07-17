@@ -25,6 +25,9 @@
       <FileRef
          location = "group:Swizzle.m">
       </FileRef>
+      <FileRef
+         location = "group:ReporterEvents.h">
+      </FileRef>
    </Group>
    <Group
       location = "group:xcodebuild-lib/../Configurations"

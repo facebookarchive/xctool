@@ -21,6 +21,7 @@
 #import "XcodeSubjectInfo.h"
 #import "BuildStateParser.h"
 #import "Reporter.h"
+#import "ReporterEvents.h"
 
 @interface BuildTargetsCollector : Reporter
 /// Array of @{@"projectName": projectName, @"targetName": targetName}

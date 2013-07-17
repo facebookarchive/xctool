@@ -23,6 +23,7 @@
 
 #import "Action.h"
 #import "NSFileHandle+Print.h"
+#import "ReporterEvents.h"
 #import "RunTestsAction.h"
 
 /**

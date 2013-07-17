@@ -228,6 +228,7 @@
 		28C81A62175562050072DDB8 /* ReporterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReporterTests.m; sourceTree = "<group>"; };
 		28C81A64175563690072DDB8 /* RecordingReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordingReporter.h; sourceTree = "<group>"; };
 		28C81A65175563690072DDB8 /* RecordingReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordingReporter.m; sourceTree = "<group>"; };
+		28E28FB217968EAC0072376C /* ReporterEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReporterEvents.h; sourceTree = "<group>"; };
 		28E9B97D16C2F1C600A52E4D /* XCToolUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCToolUtil.h; sourceTree = "<group>"; };
 		28E9B97E16C2F1C600A52E4D /* XCToolUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCToolUtil.m; sourceTree = "<group>"; };
 		28E9B98316C2F2D900A52E4D /* xctool.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = xctool.xcconfig; sourceTree = "<group>"; };
@@ -489,6 +490,7 @@
 		28897FCD173E6215004BA024 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				28E28FB217968EAC0072376C /* ReporterEvents.h */,
 				28897FCE173E6215004BA024 /* Swizzle.h */,
 				28897FCF173E6215004BA024 /* Swizzle.m */,
 			);

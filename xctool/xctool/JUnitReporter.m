@@ -1,5 +1,7 @@
 #import "JUnitReporter.h"
 
+#import "ReporterEvents.h"
+
 #pragma mark Constants
 #define kJUnitReporter_Suite_Event @"event"
 #define kJUnitReporter_Suite_Results @"results"

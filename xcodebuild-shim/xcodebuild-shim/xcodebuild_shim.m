@@ -19,7 +19,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "../../xctool/xctool/Reporter.h"
+#import "ReporterEvents.h"
 
 static int __stdoutHandle;
 static FILE *__stdout;

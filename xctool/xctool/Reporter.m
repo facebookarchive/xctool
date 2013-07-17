@@ -19,6 +19,8 @@
 #import <objc/runtime.h>
 #import <sys/stat.h>
 
+#import "ReporterEvents.h"
+
 NSString *const kReporterInfoNameKey = @"name";
 NSString *const kReporterInfoDescriptionKey = @"description";
 
