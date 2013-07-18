@@ -23,6 +23,7 @@
 @property (nonatomic, assign) BOOL freshSimulator;
 @property (nonatomic, assign) BOOL freshInstall;
 @property (nonatomic, assign) BOOL parallelize;
+@property (nonatomic, copy) NSString* simulatorType;
 @property (nonatomic, retain) NSString *testSDK;
 @property (nonatomic, retain) NSMutableArray *onlyList;
 
