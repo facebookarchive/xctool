@@ -215,8 +215,7 @@
     Reporter *reporter = [Reporter reporterWithName:name outputPath:outputFile options:self];
 
     if (reporter == nil) {
-      *errorMessage = [NSString stringWithFormat:@"No reporter with name '%@' found.", name];
-      return NO;
+      continue;
     }
 
     [self.reporters addObject:reporter];
