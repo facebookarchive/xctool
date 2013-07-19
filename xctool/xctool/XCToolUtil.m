@@ -21,7 +21,6 @@
 #import "EventSink.h"
 #import "NSFileHandle+Print.h"
 #import "Options.h"
-#import "Reporter.h"
 #import "ReporterEvents.h"
 #import "ReporterTask.h"
 #import "TaskUtil.h"

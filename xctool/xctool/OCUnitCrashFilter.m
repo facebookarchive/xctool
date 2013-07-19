@@ -18,7 +18,6 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-#import "Reporter.h"
 #import "ReporterEvents.h"
 #import "XCToolUtil.h"
 

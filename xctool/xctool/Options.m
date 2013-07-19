@@ -21,7 +21,6 @@
 #import "BuildAction.h"
 #import "BuildTestsAction.h"
 #import "CleanAction.h"
-#import "Reporter.h"
 #import "ReporterTask.h"
 #import "ReportStatus.h"
 #import "RunTestsAction.h"

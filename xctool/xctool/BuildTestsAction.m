@@ -17,7 +17,6 @@
 #import "BuildTestsAction.h"
 
 #import "Options.h"
-#import "Reporter.h"
 #import "SchemeGenerator.h"
 #import "TaskUtil.h"
 #import "XcodeSubjectInfo.h"

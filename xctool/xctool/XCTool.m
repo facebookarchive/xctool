@@ -21,8 +21,8 @@
 #import "Action.h"
 #import "NSFileHandle+Print.h"
 #import "Options.h"
-#import "Reporter.h"
 #import "ReporterEvents.h"
+#import "ReporterTask.h"
 #import "TaskUtil.h"
 #import "Version.h"
 #import "XcodeSubjectInfo.h"
@@ -162,7 +162,7 @@
     return;
   }
 
-  for (Reporter *reporter in options.reporters) {
+  for (ReporterTask *reporter in options.reporters) {
     NSString *error = nil;
     if (![reporter openWithStandardOutput:_standardOutput error:&error]) {
       [_standardError printString:@"ERROR: %@\n\n", error];

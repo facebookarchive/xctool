@@ -23,7 +23,6 @@
 #import "FakeTaskManager.h"
 #import "Options.h"
 #import "Options+Testing.h"
-#import "Reporter.h"
 #import "ReporterTask.h"
 #import "TaskUtil.h"
 #import "XcodeSubjectInfo.h"

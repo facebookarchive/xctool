@@ -16,7 +16,6 @@
 
 #import "XcodeSubjectInfo.h"
 
-#import "Reporter.h"
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
 #import "XcodeTargetMatch.h"

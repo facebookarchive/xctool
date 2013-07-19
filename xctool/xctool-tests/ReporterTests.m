@@ -2,7 +2,6 @@
 #import <SenTestingKit/SenTestingKit.h>
 
 #import "EventBuffer.h"
-#import "Reporter.h"
 #import "ReportStatus.h"
 #import "Swizzler.h"
 

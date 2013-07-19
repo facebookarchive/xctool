@@ -17,7 +17,6 @@
 #import "BuildAction.h"
 
 #import "Options.h"
-#import "Reporter.h"
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
 

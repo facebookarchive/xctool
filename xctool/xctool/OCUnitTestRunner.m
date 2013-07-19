@@ -19,7 +19,6 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "OCUnitCrashFilter.h"
-#import "Reporter.h"
 #import "XCToolUtil.h"
 
 @implementation OCUnitTestRunner

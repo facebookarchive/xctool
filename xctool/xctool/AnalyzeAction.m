@@ -16,11 +16,11 @@
 
 #import "AnalyzeAction.h"
 
+#import "EventSink.h"
 #import "Options.h"
 #import "XCToolUtil.h"
 #import "XcodeSubjectInfo.h"
 #import "BuildStateParser.h"
-#import "Reporter.h"
 #import "ReporterEvents.h"
 
 @interface BuildTargetsCollector : NSObject <EventSink>
