@@ -16,34 +16,10 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
+#import "EventBuffer.h"
 #import "OCUnitCrashFilter.h"
 #import "OCUnitTestRunner.h"
 #import "XCToolUtil.h"
-
-@interface FakeReporter : NSObject
-
-@property (nonatomic, retain) NSMutableArray *events;
-
-@end
-
-@implementation FakeReporter
-
-+ (FakeReporter *)fakeReporterThatSavesTo:(NSMutableArray *)saveToArr
-{
-  FakeReporter *fake = [[[FakeReporter alloc] init] autorelease];
-  fake.events = saveToArr;
-  return fake;
-}
-
-- (void)publishDataForEvent:(NSData *)data
-{
-  NSError *error = nil;
-  NSDictionary *event = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-  NSAssert(error == nil, @"Error encoding JSON: %@", [error localizedFailureReason]);
-  [self.events addObject:event];
-}
-
-@end
 
 @interface OCUnitCrashFilterTests : SenTestCase
 @end
@@ -89,11 +65,13 @@
   assertThatBool([filter testRunWasUnfinished], equalToBool(YES));
   assertThat(filter.currentTestEvent, notNilValue());
 
-  NSMutableArray *generatedEvents = [NSMutableArray array];
-  [filter fireEventsToSimulateTestRunFinishing:@[[FakeReporter fakeReporterThatSavesTo:generatedEvents]]
+  EventBuffer *buffer = [[[EventBuffer alloc] init] autorelease];
+
+  [filter fireEventsToSimulateTestRunFinishing:@[buffer]
                                fullProductName:@"TestProject-LibraryTests.octest"
                       concatenatedCrashReports:@"CONCATENATED_CRASH_REPORTS_GO_HERE"];
 
+  NSArray *generatedEvents = [buffer events];
   assertThatInteger((generatedEvents.count), equalToInteger(5));
 
   // We should see another 'test-output' event with the crash report text.
@@ -131,11 +109,13 @@
      ]];
   assertThatBool([filter testRunWasUnfinished], equalToBool(YES));
 
-  NSMutableArray *generatedEvents = [NSMutableArray array];
-  [filter fireEventsToSimulateTestRunFinishing:@[[FakeReporter fakeReporterThatSavesTo:generatedEvents]]
+  EventBuffer *buffer = [[[EventBuffer alloc] init] autorelease];
+
+  [filter fireEventsToSimulateTestRunFinishing:@[buffer]
                                fullProductName:@"TestProject-LibraryTests.octest"
                       concatenatedCrashReports:@"CONCATENATED_CRASH_REPORTS_GO_HERE"];
 
+  NSArray *generatedEvents = [buffer events];
   assertThatInteger((generatedEvents.count), equalToInteger(6));
 
   // The test should get marked as a failure
