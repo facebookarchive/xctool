@@ -33,8 +33,15 @@
 {
   EventBuffer *obj = [[[EventBuffer alloc] init] autorelease];
   obj->_underlyingSink = [reporter retain];
-  obj->_bufferedEventData = [[NSMutableArray array] retain];
   return obj;
+}
+
+- (instancetype)init
+{
+  if (self = [super init]) {
+    _bufferedEventData = [[NSMutableArray array] retain];
+  }
+  return self;
 }
 
 - (void)dealloc
@@ -57,6 +64,22 @@
     }
   }
   [_bufferedEventData removeAllObjects];
+}
+
+- (NSArray *)events
+{
+  NSMutableArray *result = [NSMutableArray array];
+
+  for (NSData *data in _bufferedEventData) {
+    NSError *error = nil;
+    NSDictionary *event = [NSJSONSerialization JSONObjectWithData:data
+                                                          options:0
+                                                            error:&error];
+    NSAssert(event != nil, @"Error encoding JSON: %@", [error localizedFailureReason]);
+    [result addObject:event];
+  }
+
+  return result;
 }
 
 @end

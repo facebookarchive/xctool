@@ -36,4 +36,9 @@
  */
 - (void)flush;
 
+/*!
+ All objects (as dictionaries) that have been published to the buffer.
+ */
+- (NSArray *)events;
+
 @end
