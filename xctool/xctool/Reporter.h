@@ -16,6 +16,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "EventSink.h"
+
 /**
  A short name for the reporter, to be used with the -reporter argument.
  */
@@ -29,7 +31,7 @@ NSString *const kReporterInfoDescriptionKey;
 @class Action;
 @class Options;
 
-@interface Reporter : NSObject
+@interface Reporter : NSObject <EventSink>
 {
   NSFileHandle *_outputHandle;
 }

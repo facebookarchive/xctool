@@ -18,6 +18,7 @@
 
 #import "OCUnitCrashFilter.h"
 #import "OCUnitTestRunner.h"
+#import "XCToolUtil.h"
 
 @interface FakeReporter : NSObject
 
@@ -34,8 +35,11 @@
   return fake;
 }
 
-- (void)handleEvent:(NSDictionary *)event
+- (void)publishDataForEvent:(NSData *)data
 {
+  NSError *error = nil;
+  NSDictionary *event = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+  NSAssert(error == nil, @"Error encoding JSON: %@", [error localizedFailureReason]);
   [self.events addObject:event];
 }
 
@@ -51,7 +55,7 @@
   OCUnitCrashFilter *filter = [[[OCUnitCrashFilter alloc] init] autorelease];
 
   for (NSDictionary *event in events) {
-    [filter handleEvent:event];
+    PublishEventToReporters(@[filter], event);
   }
 
   return filter;

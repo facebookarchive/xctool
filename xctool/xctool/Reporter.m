@@ -151,7 +151,7 @@ NSString *const kReporterInfoDescriptionKey = @"description";
   }
 }
 
-- (void)handleEvent:(NSDictionary *)eventDict
+- (void)_handleEvent:(NSDictionary *)eventDict
 {
   NSAssert(([eventDict count] > 0), @"Event was empty.");
 
@@ -172,6 +172,14 @@ NSString *const kReporterInfoDescriptionKey = @"description";
 
   SEL sel = sel_registerName([selectorName UTF8String]);
   [self performSelector:sel withObject:eventDict];
+}
+
+- (void)publishDataForEvent:(NSData *)data
+{
+  NSError *error = nil;
+  NSDictionary *event = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+  NSAssert(error == nil, @"Error encoding JSON: %@", [error localizedFailureReason]);
+  [self _handleEvent:event];
 }
 
 - (void)beginAction:(NSDictionary *)event {}

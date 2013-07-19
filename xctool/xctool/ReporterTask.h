@@ -16,7 +16,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface ReporterTask : NSObject
+#import "EventSink.h"
+
+@interface ReporterTask : NSObject <EventSink>
 {
   NSString *_reporterPath;
   NSString *_outputPath;
@@ -44,8 +46,5 @@
  To be called just before xctool exits.
  */
 - (void)close;
-
-- (NSFileHandle *)fileHandleForWriting;
-
 
 @end

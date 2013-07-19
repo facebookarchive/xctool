@@ -119,9 +119,10 @@
   }
 }
 
-- (NSFileHandle *)fileHandleForWriting
+- (void)publishDataForEvent:(NSData *)data
 {
-  return [_pipe fileHandleForWriting];
+  [[_pipe fileHandleForWriting] writeData:data];
+  [[_pipe fileHandleForWriting] writeData:[@"\n" dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
 @end

@@ -18,6 +18,7 @@
 
 #import <mach-o/dyld.h>
 
+#import "EventSink.h"
 #import "NSFileHandle+Print.h"
 #import "Options.h"
 #import "Reporter.h"
@@ -417,15 +418,7 @@ void PublishEventToReporters(NSArray *reporters, NSDictionary *event)
   NSData *jsonData = [NSJSONSerialization dataWithJSONObject:event options:0 error:&error];
   NSCAssert(jsonData != nil, @"Error while encoding event into JSON: %@", [error localizedFailureReason]);
 
-  NSMutableData *data = [NSMutableData dataWithCapacity:[jsonData length] + 1];
-  [data appendData:jsonData];
-  [data appendData:[@"\n" dataUsingEncoding:NSUTF8StringEncoding]];
-
-  for (id reporter in reporters) {
-    if ([reporter isKindOfClass:[ReporterTask class]]) {
-      [[reporter fileHandleForWriting] writeData:data];
-    } else {
-      [reporter performSelector:@selector(handleEvent:) withObject:event];
-    }
+  for (id<EventSink> reporter in reporters) {
+    [reporter publishDataForEvent:jsonData];
   }
 }

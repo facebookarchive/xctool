@@ -23,13 +23,13 @@
 + (NSArray *)wrapReporters:(NSArray *)reporters
 {
   NSMutableArray *bufferedReporters = [NSMutableArray arrayWithCapacity:reporters.count];
-  for (Reporter *reporter in reporters) {
+  for (id<EventSink> reporter in reporters) {
     [bufferedReporters addObject:[BufferedReporter bufferedReporterWithReporter:reporter]];
   }
   return bufferedReporters;
 }
 
-+ (instancetype)bufferedReporterWithReporter:(Reporter *)reporter
++ (instancetype)bufferedReporterWithReporter:(id<EventSink>)reporter
 {
   BufferedReporter *obj = [[[BufferedReporter alloc] init] autorelease];
   obj->_underlyingReporter = [reporter retain];
@@ -44,25 +44,19 @@
   [super dealloc];
 }
 
-- (void)handleEvent:(NSDictionary *)event
+- (void)publishDataForEvent:(NSData *)data
 {
-  [_bufferedEvents addObject:event];
+  [_bufferedEvents addObject:data];
 }
 
 - (void)flush
 {
   @synchronized(_underlyingReporter) {
-    for (NSDictionary *event in _bufferedEvents) {
-      PublishEventToReporters(@[_underlyingReporter], event);
+    for (NSData *data in _bufferedEvents) {
+      [_underlyingReporter publishDataForEvent:data];
     }
   }
   [_bufferedEvents removeAllObjects];
-}
-
-- (void)close
-{
-  [self flush];
-  [_underlyingReporter close];
 }
 
 - (id)forwardingTargetForSelector:(SEL)aSelector

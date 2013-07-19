@@ -74,8 +74,20 @@
   [super dealloc];
 }
 
-- (void)handleEvent:(NSDictionary *)event
+- (void)publishDataForEvent:(NSData *)data
 {
+  NSString *jsonString = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+  NSError *parseError = nil;
+  NSDictionary *event = [NSJSONSerialization JSONObjectWithData:data
+                                                        options:0
+                                                          error:&parseError];
+  if (parseError) {
+    [NSException raise:NSGenericException
+                format:@"Failed to parse test output '%@' with error '%@'.",
+     jsonString,
+     [parseError localizedFailureReason]];
+  }
+
   NSString *eventName = event[@"event"];
 
   if ([eventName isEqualToString:kReporter_Events_BeginTest]) {
