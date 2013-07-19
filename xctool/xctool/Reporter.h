@@ -36,18 +36,6 @@ NSString *const kReporterInfoDescriptionKey;
   NSFileHandle *_outputHandle;
 }
 
-+ (NSArray *)allReporterClasses;
-+ (Reporter *)reporterWithName:(NSString *)name outputPath:(NSString *)outputPath;
-
-/**
- A dictionary of info that describes the Reporter, including it's short name and
- description.
- 
- If it returns nil, this reporter will not be available via -reporter and it
- won't be shown in the xctool usage.
- */
-+ (NSDictionary *)reporterInfo;
-
 // The reporter will stream output to here.  Usually this will be "-" to route
 // to standard out, but it might point to a file if the -reporter param
 // specified an output path.

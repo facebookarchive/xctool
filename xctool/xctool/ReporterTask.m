@@ -16,6 +16,11 @@
 
 #import "ReporterTask.h"
 
+#import <objc/message.h>
+
+#import "XCToolUtil.h"
+
+
 @implementation ReporterTask
 
 - (instancetype)initWithReporterPath:(NSString *)reporterPath
@@ -87,7 +92,17 @@
 
   _pipe = [[NSPipe pipe] retain];
 
-  _task = [[NSTask alloc] init];
+
+  if (IsRunningUnderTest()) {
+    // In tests, we swizzle +[NSTask alloc] to always return FakeTask's.  We can
+    // still access the original 'allocWithZone:' selector, though.
+    _task = objc_msgSend([NSTask class],
+                         @selector(__NSTask_allocWithZone:),
+                         NSDefaultMallocZone());
+  } else {
+    _task = [[NSTask alloc] init];
+  }
+
   [_task setLaunchPath:_reporterPath];
   [_task setArguments:@[]];
   [_task setStandardInput:_pipe];

@@ -241,29 +241,36 @@
 {
   for (NSString *reporterOption in _reporterOptions) {
     NSArray *optionParts = [reporterOption componentsSeparatedByString:@":"];
-    NSString *name = optionParts[0];
+    NSString *nameOrPath = optionParts[0];
     NSString *outputFile = (optionParts.count > 1) ? optionParts[1] : @"-";
 
-    if ([[NSFileManager defaultManager] fileExistsAtPath:name]) {
-      // We'll assume it's the new style of reporter where the reporter
-      // is an executable.
-      ReporterTask *reporterTask = [[[ReporterTask alloc] initWithReporterPath:name
-                                                                    outputPath:outputFile] autorelease];
-      [self.reporters addObject:reporterTask];
+    NSString *reporterPath = nil;
+
+    if ([[NSFileManager defaultManager] isExecutableFileAtPath:nameOrPath]) {
+      // The argument might be the path to a reporter.
+      reporterPath = nameOrPath;
+    } else if ([[NSFileManager defaultManager] isExecutableFileAtPath:
+                [XCToolReportersPath() stringByAppendingPathComponent:nameOrPath]]) {
+      // Or, it could be the name of one of the built-in reporters.
+      reporterPath = [XCToolReportersPath() stringByAppendingPathComponent:nameOrPath];
     } else {
-      Reporter *reporter = [Reporter reporterWithName:name outputPath:outputFile];
-
-      if (reporter == nil) {
-        *errorMessage = [NSString stringWithFormat:@"No reporter with name '%@' found.", name];
-        return NO;
-      }
-
-      [self.reporters addObject:reporter];
+      *errorMessage = [NSString stringWithFormat:
+                       @"Reporter with name or path '%@' could not be found.",
+                       nameOrPath];
+      return NO;
     }
+
+    ReporterTask *reporterTask =
+    [[[ReporterTask alloc] initWithReporterPath:reporterPath
+                                     outputPath:outputFile] autorelease];
+    [self.reporters addObject:reporterTask];
   }
 
   if (self.reporters.count == 0) {
-    [self.reporters addObject:[Reporter reporterWithName:@"pretty" outputPath:@"-"]];
+    ReporterTask *reporterTask =
+    [[[ReporterTask alloc] initWithReporterPath:[XCToolReportersPath() stringByAppendingPathComponent:@"pretty"]
+                                     outputPath:@"-"] autorelease];
+    [self.reporters addObject:reporterTask];
   }
 
   return YES;

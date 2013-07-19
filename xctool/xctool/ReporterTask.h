@@ -29,6 +29,8 @@
   NSPipe *_pipe;
 }
 
+@property (nonatomic, readonly) NSString *reporterPath;
+
 /**
  @param string Path to reporter executable.
  @param string Path to save output of reporter.  Can be "-" for stdout.

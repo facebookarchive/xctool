@@ -19,6 +19,7 @@
 NSDictionary *BuildSettingsFromOutput(NSString *output);
 NSString *XCToolLibPath(void);
 NSString *XCToolLibExecPath(void);
+NSString *XCToolReportersPath(void);
 NSString *XcodeDeveloperDirPath(void);
 NSString *MakeTempFileWithPrefix(NSString *prefix);
 NSDictionary *GetAvailableSDKsAndAliases();
@@ -75,3 +76,9 @@ void CleanupTemporaryDirectoryForAction();
  @param dict Event dictionary.
  */
 void PublishEventToReporters(NSArray *reporters, NSDictionary *event);
+
+/**
+ @return array A list of available reporter executables in the reporters 
+  directory.
+ */
+NSArray *AvailableReporters();

@@ -19,12 +19,11 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "Action.h"
-#import "JSONStreamReporter.h"
 #import "NSFileHandle+Print.h"
 #import "Options.h"
+#import "Reporter.h"
 #import "ReporterEvents.h"
 #import "TaskUtil.h"
-#import "TextReporter.h"
 #import "Version.h"
 #import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
@@ -70,24 +69,8 @@
   [_standardError printString:@"\n"];
   [_standardError printString:@"Available Reporters:\n"];
 
-  NSUInteger maxReporterNameLength = 0;
-
-  for (Class reporterCls in [Reporter allReporterClasses]) {
-    NSString *name = [reporterCls reporterInfo][kReporterInfoNameKey];
-    maxReporterNameLength = MAX(maxReporterNameLength, [name length]);
-  }
-
-  for (Class reporterCls in [Reporter allReporterClasses]) {
-    NSDictionary *info = [reporterCls reporterInfo];
-    NSString *name = info[kReporterInfoNameKey];
-    NSString *description = info[kReporterInfoDescriptionKey];
-
-
-    [_standardError printString:@"    %@ %@\n",
-     [[name stringByAppendingString:@":"] stringByPaddingToLength:maxReporterNameLength + 1
-                                                       withString:@" "
-                                                  startingAtIndex:0],
-     description];
+  for (NSString *name in AvailableReporters()) {
+    [_standardError printString:@"    %@\n", name];
   }
 
   for (Class actionClass in [Options actionClasses]) {
