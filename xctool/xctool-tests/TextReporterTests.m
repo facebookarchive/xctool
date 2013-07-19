@@ -99,4 +99,30 @@
                      @"\n"));
 }
 
+- (void) testContextString
+{
+  NSString *testDataPath = TEST_DATA @"ContextTest.m";
+  NSString *context = [TextReporter getContext:testDataPath errorLine:13 colNumber:38];
+  NSString *refString = @"10 @implementation ContextTest\n11 \n12 static int test() {\n13   NSObject *blah = [[NSObject alloc] init];\n     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~\n14 }\n15 ";
+  assertThat(context, equalTo(refString));
+}
+
+- (void) testContextStringUnderlineWithTrailingWhitespace
+{
+  NSString *testDataPath = TEST_DATA @"ContextTest.m";
+  NSString *context = [TextReporter getContext:testDataPath errorLine:17 colNumber:38];
+  NSRange range = [context rangeOfCharacterFromSet:([NSCharacterSet characterSetWithCharactersInString:@"~^"])];
+  range.length = [context rangeOfCharacterFromSet:[NSCharacterSet characterSetWithCharactersInString:@"~^"] options:NSBackwardsSearch].location - range.location + 1;
+  NSString *substr = [context substringWithRange:range];
+  NSString *refSubstr = @"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~";
+  assertThat(substr, equalTo(refSubstr));
+}
+
+- (void) testContextStringErrorLoadingFileReturnsNil
+{
+  NSString *testDataPath = nil;
+  NSString *context = [TextReporter getContext:testDataPath errorLine:14 colNumber:39];
+  assertThat(context, equalTo(nil));
+}
+
 @end
