@@ -64,7 +64,7 @@
 		28ADB43B16E410F9006301ED /* BuildActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28ADB43A16E410F9006301ED /* BuildActionTests.m */; };
 		28B714551760767D00BB016A /* OCUnitIOSDeviceTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 28B714541760767D00BB016A /* OCUnitIOSDeviceTestRunner.m */; };
 		28B714561760769E00BB016A /* OCUnitIOSDeviceTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 28B714541760767D00BB016A /* OCUnitIOSDeviceTestRunner.m */; };
-		28C81A63175562050072DDB8 /* ReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28C81A62175562050072DDB8 /* ReporterTests.m */; };
+		28C81A63175562050072DDB8 /* ReportStatusTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28C81A62175562050072DDB8 /* ReportStatusTests.m */; };
 		28E28FB81796926A0072376C /* ReportStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E28FB71796926A0072376C /* ReportStatus.m */; };
 		28E28FB91796934B0072376C /* ReportStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E28FB71796926A0072376C /* ReportStatus.m */; };
 		28E28FBC1797099E0072376C /* ReporterTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E28FBB1797099E0072376C /* ReporterTask.m */; };
@@ -202,7 +202,7 @@
 		28ADB43A16E410F9006301ED /* BuildActionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BuildActionTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		28B714531760767D00BB016A /* OCUnitIOSDeviceTestRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUnitIOSDeviceTestRunner.h; sourceTree = "<group>"; };
 		28B714541760767D00BB016A /* OCUnitIOSDeviceTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitIOSDeviceTestRunner.m; sourceTree = "<group>"; };
-		28C81A62175562050072DDB8 /* ReporterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReporterTests.m; sourceTree = "<group>"; };
+		28C81A62175562050072DDB8 /* ReportStatusTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReportStatusTests.m; sourceTree = "<group>"; };
 		28E28FB217968EAC0072376C /* ReporterEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReporterEvents.h; sourceTree = "<group>"; };
 		28E28FB61796926A0072376C /* ReportStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReportStatus.h; sourceTree = "<group>"; };
 		28E28FB71796926A0072376C /* ReportStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReportStatus.m; sourceTree = "<group>"; };
@@ -436,7 +436,7 @@
 				28A5A8EC1746D2AA001733A9 /* Swizzler.m */,
 				28A5A8EF1746D2B9001733A9 /* SwizzlerTests.m */,
 				2868B1C21746ED9C0062F4BA /* OCUnitTestRunnerTests.m */,
-				28C81A62175562050072DDB8 /* ReporterTests.m */,
+				28C81A62175562050072DDB8 /* ReportStatusTests.m */,
 				28302E1D175A8B6900C997B2 /* ArchiveActionTests.m */,
 				CDEE9EA0176950DC0026D278 /* BuildStateParserTests.m */,
 				28869AFB178CEA7600DED56A /* SenTestListener.m */,
@@ -661,7 +661,7 @@
 				2868B1C31746ED9C0062F4BA /* OCUnitTestRunnerTests.m in Sources */,
 				CDD81F2F174ABA2700F42111 /* SchemeGenerator.m in Sources */,
 				CDD81F52174EAFDC00F42111 /* EventBuffer.m in Sources */,
-				28C81A63175562050072DDB8 /* ReporterTests.m in Sources */,
+				28C81A63175562050072DDB8 /* ReportStatusTests.m in Sources */,
 				28302E1E175A8B6900C997B2 /* ArchiveActionTests.m in Sources */,
 				CD098A2B175EBD20002E0CAC /* AnalyzeAction.m in Sources */,
 				CD5677101766782C003B727C /* BuildStateParser.mm in Sources */,

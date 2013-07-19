@@ -5,10 +5,10 @@
 #import "ReportStatus.h"
 #import "Swizzler.h"
 
-@interface ReporterTests : SenTestCase
+@interface ReportStatusTests : SenTestCase
 @end
 
-@implementation ReporterTests
+@implementation ReportStatusTests
 
 - (void)testReportStatusMessageGeneratesTwoEventsWithTheSameTimestamp
 {
