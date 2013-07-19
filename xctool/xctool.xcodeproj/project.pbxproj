@@ -120,8 +120,8 @@
 		CD56770F1766782C003B727C /* BuildStateParser.mm in Sources */ = {isa = PBXBuildFile; fileRef = CD56770E1766782C003B727C /* BuildStateParser.mm */; };
 		CD5677101766782C003B727C /* BuildStateParser.mm in Sources */ = {isa = PBXBuildFile; fileRef = CD56770E1766782C003B727C /* BuildStateParser.mm */; };
 		CDD81F2F174ABA2700F42111 /* SchemeGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = CD522EC117471D6300048AF9 /* SchemeGenerator.m */; };
-		CDD81F51174EAFDC00F42111 /* BufferedReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = CDD81F50174EAFDC00F42111 /* BufferedReporter.m */; };
-		CDD81F52174EAFDC00F42111 /* BufferedReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = CDD81F50174EAFDC00F42111 /* BufferedReporter.m */; };
+		CDD81F51174EAFDC00F42111 /* EventBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = CDD81F50174EAFDC00F42111 /* EventBuffer.m */; };
+		CDD81F52174EAFDC00F42111 /* EventBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = CDD81F50174EAFDC00F42111 /* EventBuffer.m */; };
 		CDEE9EA1176950DC0026D278 /* BuildStateParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CDEE9EA0176950DC0026D278 /* BuildStateParserTests.m */; };
 /* End PBXBuildFile section */
 
@@ -281,8 +281,8 @@
 		CD522EC117471D6300048AF9 /* SchemeGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SchemeGenerator.m; sourceTree = "<group>"; };
 		CD56770D1766782C003B727C /* BuildStateParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BuildStateParser.h; sourceTree = "<group>"; };
 		CD56770E1766782C003B727C /* BuildStateParser.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BuildStateParser.mm; sourceTree = "<group>"; };
-		CDD81F4F174EAFDC00F42111 /* BufferedReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BufferedReporter.h; sourceTree = "<group>"; };
-		CDD81F50174EAFDC00F42111 /* BufferedReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BufferedReporter.m; sourceTree = "<group>"; };
+		CDD81F4F174EAFDC00F42111 /* EventBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventBuffer.h; sourceTree = "<group>"; };
+		CDD81F50174EAFDC00F42111 /* EventBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventBuffer.m; sourceTree = "<group>"; };
 		CDEE9EA0176950DC0026D278 /* BuildStateParserTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuildStateParserTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -536,8 +536,8 @@
 				283EAF581704C22000CE0A0C /* PhabricatorReporter.m */,
 				375208FF173311B500AC05F9 /* JUnitReporter.h */,
 				37520900173311B500AC05F9 /* JUnitReporter.m */,
-				CDD81F4F174EAFDC00F42111 /* BufferedReporter.h */,
-				CDD81F50174EAFDC00F42111 /* BufferedReporter.m */,
+				CDD81F4F174EAFDC00F42111 /* EventBuffer.h */,
+				CDD81F50174EAFDC00F42111 /* EventBuffer.m */,
 				29D99BF61753A3D700ABBD04 /* JSONCompilationDatabaseReporter.h */,
 				29D99BF71753A3D700ABBD04 /* JSONCompilationDatabaseReporter.m */,
 			);
@@ -672,7 +672,7 @@
 				C9D5B9891733CC2100011C1F /* ArchiveAction.m in Sources */,
 				37520901173311B500AC05F9 /* JUnitReporter.m in Sources */,
 				CD522EC217471D6300048AF9 /* SchemeGenerator.m in Sources */,
-				CDD81F51174EAFDC00F42111 /* BufferedReporter.m in Sources */,
+				CDD81F51174EAFDC00F42111 /* EventBuffer.m in Sources */,
 				29D99BF81753A3D700ABBD04 /* JSONCompilationDatabaseReporter.m in Sources */,
 				28B714551760767D00BB016A /* OCUnitIOSDeviceTestRunner.m in Sources */,
 				CD098A2A175EBD20002E0CAC /* AnalyzeAction.m in Sources */,
@@ -740,7 +740,7 @@
 				28A5A8F01746D2B9001733A9 /* SwizzlerTests.m in Sources */,
 				2868B1C31746ED9C0062F4BA /* OCUnitTestRunnerTests.m in Sources */,
 				CDD81F2F174ABA2700F42111 /* SchemeGenerator.m in Sources */,
-				CDD81F52174EAFDC00F42111 /* BufferedReporter.m in Sources */,
+				CDD81F52174EAFDC00F42111 /* EventBuffer.m in Sources */,
 				28C267DF17552E6B00AFC459 /* TextReporterTests.m in Sources */,
 				28C81A63175562050072DDB8 /* ReporterTests.m in Sources */,
 				28C81A66175563690072DDB8 /* RecordingReporter.m in Sources */,

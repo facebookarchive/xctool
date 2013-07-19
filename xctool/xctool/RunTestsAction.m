@@ -16,7 +16,7 @@
 
 #import "RunTestsAction.h"
 
-#import "BufferedReporter.h"
+#import "EventBuffer.h"
 #import "OCUnitIOSAppTestRunner.h"
 #import "OCUnitIOSDeviceTestRunner.h"
 #import "OCUnitIOSLogicTestRunner.h"
@@ -421,7 +421,7 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
   
   for (NSArray *testConfiguration in testConfigurations) {
     NSArray *reportersForConfiguration = (self.parallelize
-                                          ? [BufferedReporter wrapReporters:rawReporters]
+                                          ? [EventBuffer wrapSinks:rawReporters]
                                           : rawReporters);
     Class testRunnerClass = testConfiguration[0];
     BOOL garbageCollectionEnabled = [testConfiguration[1] boolValue];
@@ -476,7 +476,7 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
         void(^block)() = ^{
           // Since work units within a configuration are also run in parallel,
           // the reporters must be buffered again.
-          NSArray *bufferedReporters = [BufferedReporter wrapReporters:reportersForConfiguration];
+          NSArray *eventBuffers = [EventBuffer wrapSinks:reportersForConfiguration];
 
           OCUnitTestRunner *localTestRunner =
           [[[testRunnerClass alloc]
@@ -491,7 +491,7 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
             simulatorType:self.simulatorType
             standardOutput:nil
             standardError:nil
-            reporters:bufferedReporters] autorelease];
+            reporters:eventBuffers] autorelease];
 
           NSString *localError = nil;
           BOOL localSucceeded = [localTestRunner runTestsWithError:&localError];
@@ -502,7 +502,7 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
             }
             error = localError;
           }
-          [bufferedReporters makeObjectsPerformSelector:@selector(flush)];
+          [eventBuffers makeObjectsPerformSelector:@selector(flush)];
         };
         [blocks addObject:[[block copy] autorelease]];
       }

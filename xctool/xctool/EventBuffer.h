@@ -17,19 +17,19 @@
 #import "EventSink.h"
 
 /*!
- Buffers calls to the underlying reporter until this reporter is flushed.
+ Buffers calls to the underlying sink until this buffer is flushed.
  */
-@interface BufferedReporter : NSObject <EventSink> {
-  id<EventSink> _underlyingReporter;
-  NSMutableArray *_bufferedEvents;
+@interface EventBuffer : NSObject <EventSink> {
+  id<EventSink> _underlyingSink;
+  NSMutableArray *_bufferedEventData;
 }
 
-+ (instancetype)bufferedReporterWithReporter:(id<EventSink>)reporter;
++ (instancetype)eventBufferForSink:(id<EventSink>)sink;
 
 /*!
  Convenience function that wraps an array of Reporters with BufferedReporters.
  */
-+ (NSArray *)wrapReporters:(NSArray *)reporters;
++ (NSArray *)wrapSinks:(NSArray *)sinks;
 
 /*!
  Atomically flush all events into the underlying reporter
