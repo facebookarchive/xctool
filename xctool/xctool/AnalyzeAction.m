@@ -23,23 +23,37 @@
 #import "Reporter.h"
 #import "ReporterEvents.h"
 
-@interface BuildTargetsCollector : Reporter
+@interface BuildTargetsCollector : NSObject <EventSink>
 /// Array of @{@"projectName": projectName, @"targetName": targetName}
 @property (nonatomic, retain) NSMutableSet *seenTargets;
 @end
 
 @implementation BuildTargetsCollector
-- (void)beginBuildTarget:(NSDictionary *)event
+
+- (instancetype)init
 {
-  if (!self.seenTargets) {
+  if (self = [super init]) {
     self.seenTargets = [NSMutableSet set];
   }
-
-  [self.seenTargets addObject:@{
-   @"projectName": event[kReporter_BeginBuildTarget_ProjectKey],
-   @"targetName": event[kReporter_BeginBuildTarget_TargetKey],
-   }];
+  return self;
 }
+
+- (void)publishDataForEvent:(NSData *)data
+{
+  NSError *error = nil;
+  NSDictionary *event = [NSJSONSerialization JSONObjectWithData:data
+                                                        options:0
+                                                          error:&error];
+  NSAssert(event != nil, @"Error decoding JSON: %@", [error localizedFailureReason]);
+
+  if ([event[@"event"] isEqualTo:kReporter_Events_BeginBuildTarget]) {
+    [self.seenTargets addObject:@{
+     @"projectName": event[kReporter_BeginBuildTarget_ProjectKey],
+     @"targetName": event[kReporter_BeginBuildTarget_TargetKey],
+     }];
+  }
+}
+
 @end
 
 @interface AnalyzeAction ()
