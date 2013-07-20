@@ -192,8 +192,14 @@
         SEL sel = sel_registerName([matchingNamedOption[kActionOptionMapToSelector] UTF8String]);
         NSString *nextArgument = arguments.count > 1 ? arguments[1] : nil;
         objc_msgSend(self, sel, nextArgument);
-        count += 2;
-        [arguments removeObjectsInRange:NSMakeRange(0, 2)];
+        if(nextArgument) {
+          count += 2;
+          [arguments removeObjectsInRange:NSMakeRange(0, 2)];
+        } else {
+          *errorMessage = [NSString stringWithFormat:@"The -%@ option requires a parameter.", matchingNamedOption[kActionOptionName]];
+          [arguments removeAllObjects];
+          return 0;
+        }
         continue;
       }
     }
