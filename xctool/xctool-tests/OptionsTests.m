@@ -257,7 +257,9 @@
                          @"-xcconfig", @"some.xcconfig",
                          @"-jobs", @"20",
                          @"SOMEKEY=SOMEVAL",
-                         @"SOMEKEY2=SOMEVAL2"
+                         @"SOMEKEY2=SOMEVAL2",
+                         @"-SomeUserDefault=SomeVal",
+                         @"-SomeUserDefault2=SomeVal2",
                          ];
   Options *action = [Options optionsFrom:arguments];
   assertThat([action commonXcodeBuildArgumentsForSchemeAction:nil xcodeSubjectInfo:nil], equalTo(arguments));

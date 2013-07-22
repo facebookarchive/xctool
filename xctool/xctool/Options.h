@@ -46,6 +46,7 @@
 @property (nonatomic, assign) BOOL showBuildSettings;
 
 @property (nonatomic, retain) NSMutableDictionary *buildSettings;
+@property (nonatomic, retain) NSMutableDictionary *userDefaults;
 @property (nonatomic, retain) NSMutableArray *reporters;
 
 @property (nonatomic, assign) BOOL showHelp;

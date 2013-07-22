@@ -33,12 +33,20 @@ NSDictionary *BuildSettingsFromOutput(NSString *output)
 
   NSMutableDictionary *settings = [NSMutableDictionary dictionary];
 
-  if ([scanner scanString:@"Build settings from command line:\n" intoString:NULL]) {
+  void (^scanUntilEmptyLine)() = ^{
     // Advance until we hit an empty line.
     while (![scanner scanString:@"\n" intoString:NULL]) {
       [scanner scanUpToString:@"\n" intoString:NULL];
       [scanner scanString:@"\n" intoString:NULL];
     }
+  };
+
+  if ([scanner scanString:@"User defaults from command line:\n" intoString:NULL]) {
+    scanUntilEmptyLine();
+  }
+
+  if ([scanner scanString:@"Build settings from command line:\n" intoString:NULL]) {
+    scanUntilEmptyLine();
   }
 
   for (;;) {

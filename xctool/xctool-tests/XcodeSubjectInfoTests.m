@@ -133,6 +133,15 @@
   assertThat([settings allKeys][0], equalTo(@"Target Name With Spaces"));
 }
 
+- (void)testCanParseBuildSettingsWithUserDefaults
+{
+  NSString *output = [NSString stringWithContentsOfFile:TEST_DATA @"BuildSettingsWithUserDefaults.txt"
+                                               encoding:NSUTF8StringEncoding
+                                                  error:nil];
+  NSDictionary *settings = BuildSettingsFromOutput(output);
+  assertThatBool([[settings allKeys] count] > 0, equalToBool(YES));
+}
+
 - (void)testCanParseTestablesFromScheme
 {
   NSArray *testables = [XcodeSubjectInfo testablesInSchemePath:
