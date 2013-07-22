@@ -123,12 +123,26 @@
                      description:@"print version and exit"
                          setFlag:@selector(setShowVersion:)],
     [Action actionOptionWithMatcher:^(NSString *argument){
-      // Anything that looks like KEY=VALUE - xcodebuild will accept options like this.
-      return (BOOL)([argument rangeOfString:@"="].length > 0 ? YES : NO);
+      // Anything that looks like KEY=VALUE should get passed to xcodebuild
+      // as a command-line build setting.
+      return
+        (BOOL)(([argument rangeOfString:@"="].length > 0) &&
+               ![argument hasPrefix:@"-"]);
     }
                         description:@"Set the build 'setting' to 'value'"
                           paramName:@"SETTING=VALUE"
                               mapTo:@selector(addBuildSetting:)],
+    [Action actionOptionWithMatcher:^(NSString *argument){
+      // Anything that looks like -DEFAULT=VALUE should get passed to xcodebuild
+      // as a command-line user default setting.  These let you override values
+      // in NSUserDefaults.
+      return
+        (BOOL)(([argument rangeOfString:@"="].length > 0) &&
+               [argument hasPrefix:@"-"]);
+    }
+                        description:@"Set the user default 'default' to 'value'"
+                          paramName:@"-DEFAULT=VALUE"
+                              mapTo:@selector(addUserDefault:)],
     ];
 }
 
@@ -139,6 +153,7 @@
     self.reporters = [NSMutableArray array];
     _reporterOptions = [[NSMutableArray alloc] init];
     self.buildSettings = [NSMutableDictionary dictionary];
+    self.userDefaults = [NSMutableDictionary dictionary];
     self.actions = [NSMutableArray array];
   }
   return self;
@@ -149,6 +164,7 @@
   [_reporterOptions release];
   self.reporters = nil;
   self.buildSettings = nil;
+  self.userDefaults = nil;
   self.actions = nil;
   self.findTargetExcludePaths = nil;
   [super dealloc];
@@ -167,6 +183,20 @@
     NSString *key = [argument substringToIndex:eqRange.location];
     NSString *val = [argument substringFromIndex:eqRange.location + 1];
     _buildSettings[key] = val;
+  }
+}
+
+- (void)addUserDefault:(NSString *)argument
+{
+  // Skip the hyphen in the front.
+  argument = [argument substringFromIndex:1];
+
+  NSRange eqRange = [argument rangeOfString:@"="];
+
+  if (eqRange.location != NSNotFound && eqRange.location > 0) {
+    NSString *key = [argument substringToIndex:eqRange.location];
+    NSString *val = [argument substringFromIndex:eqRange.location + 1];
+    _userDefaults[key] = val;
   }
 }
 
@@ -451,6 +481,10 @@
 
   [_buildSettings enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
     [arguments addObject:[NSString stringWithFormat:@"%@=%@", key, obj]];
+  }];
+
+  [_userDefaults enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
+    [arguments addObject:[NSString stringWithFormat:@"-%@=%@", key, obj]];
   }];
 
   return arguments;
