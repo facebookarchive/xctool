@@ -20,12 +20,9 @@
 #import <sys/stat.h>
 #import <objc/runtime.h>
 
-static void ReadFileDescriptorAndOutputLinesToBlock(int stdoutReadFD, void (^block)(NSString *))
+static void ReadFileDescriptorAndOutputLinesToBlock(int inputFD,
+                                                    void (^block)(NSString *line))
 {
-  int flags = fcntl(stdoutReadFD, F_GETFL, 0);
-  NSCAssert(fcntl(stdoutReadFD, F_SETFL, flags | O_NONBLOCK) != -1,
-            @"Failed to set O_NONBLOCK: %s", strerror(errno));
-
   NSMutableString *buffer = [[NSMutableString alloc] initWithCapacity:0];
 
   // Split whatever content we have in 'buffer' into lines.
@@ -48,64 +45,29 @@ static void ReadFileDescriptorAndOutputLinesToBlock(int stdoutReadFD, void (^blo
     [buffer replaceCharactersInRange:NSMakeRange(0, offset) withString:@""];
   };
 
-  // Uses poll() to block until data (or EOF) is available.
-  BOOL (^pollForData)(int fd) = ^(int fd) {
-    for (;;) {
-      struct pollfd fds[1] = {0};
-      fds[0].fd = fd;
-      fds[0].events = (POLLIN | POLLHUP);
+  const int readBufferSize = 32768;
+  uint8_t *readBuffer = malloc(readBufferSize);
+  NSCAssert(readBuffer, @"Failed to alloc readBuffer");
 
-      int result = poll(fds,
-                        sizeof(fds) / sizeof(fds[0]),
-                        // wait as long as 1 second.
-                        1000);
+  for (;;) {
+    ssize_t bytesRead = read(inputFD, readBuffer, readBufferSize);
+    NSCAssert(bytesRead != -1, @"read() failed with error: %s", strerror(errno));
 
-      if (result > 0) {
-        // Data ready or EOF!
-        return YES;
-      } else if (result == 0) {
-        // No data available.
-        return NO;
-      } else if (result == -1 && errno == EAGAIN) {
-        // It could work next time.
-        continue;
-      } else {
-        fprintf(stderr, "poll() failed with: %s\n", strerror(errno));
-        abort();
+    if (bytesRead > 0) {
+      @autoreleasepool {
+        NSString *str = [[NSString alloc] initWithBytes:readBuffer length:bytesRead encoding:NSUTF8StringEncoding];
+        [buffer appendString:str];
+        [str release];
+
+        processBuffer();
       }
-    }
-  };
-
-  uint8_t readBuffer[32768] = {0};
-  BOOL keepPolling = YES;
-
-  while (keepPolling) {
-    pollForData(stdoutReadFD);
-
-    // Read whatever we can get.
-    for (;;) {
-      ssize_t bytesRead = read(stdoutReadFD, readBuffer, sizeof(readBuffer));
-      if (bytesRead > 0) {
-        @autoreleasepool {
-          NSString *str = [[NSString alloc] initWithBytes:readBuffer length:bytesRead encoding:NSUTF8StringEncoding];
-          [buffer appendString:str];
-          [str release];
-
-          processBuffer();
-        }
-      } else if (bytesRead == 0) {
-        keepPolling = NO;
-        break;
-      } else if (bytesRead == -1 && errno == EAGAIN) {
-        // Nothing left to read - poll() until more comes.
-        break;
-      } else if (bytesRead == -1) {
-        fprintf(stderr, "read() failed with: %s\n", strerror(errno));
-        abort();
-      }
+    } else {
+      // EOF
+      break;
     }
   }
-  
+
+  free(readBuffer);
   [buffer release];
 }
 
