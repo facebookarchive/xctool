@@ -1,12 +1,24 @@
+//
+// Copyright 2013 Facebook
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
 
 #import <SenTestingKit/SenTestingKit.h>
 
 #import "FakeFileHandle.h"
-#import "Options.h"
-#import "Options+Testing.h"
+#import "ReporterEvents.h"
 #import "Reporter+Testing.h"
-#import "ReportStatus.h"
-#import "Swizzler.h"
 #import "TextReporter.h"
 
 @interface TextReporterTests : SenTestCase
@@ -23,9 +35,6 @@
 {
   void (^pumpReporter)(Class, NSString *) = ^(Class cls, NSString *path) {
     NSLog(@"pumpReporter(%@, %@) ...", cls, path);
-    Options *options = [[[Options alloc] init] autorelease];
-    options.workspace = TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj";
-    options.scheme = @"TestProject-Library";
 
     // Pump the events to make sure all the plumbing works and we don't crash.
     [cls outputDataWithEventsFromFile:path];
@@ -42,18 +51,20 @@
 
 - (void)testStatusMessageShowsOneLineWithNoDuration
 {
-  FakeFileHandle *fh = [[[FakeFileHandle alloc] init] autorelease];
-  PrettyTextReporter *reporter = [[[PrettyTextReporter alloc] init] autorelease];
-  // Force _isPretty to YES to avoid the isatty() detection.
-  reporter->_isPretty = YES;
+  NSArray *events = @[
+                      @{@"event": kReporter_Events_BeginStatus,
+                        kReporter_BeginStatus_MessageKey: @"Some message...",
+                        kReporter_BeginStatus_TimestampKey: @(1),
+                        kReporter_BeginStatus_LevelKey: @"Info",
+                        },
+                      @{@"event": kReporter_Events_EndStatus,
+                        kReporter_EndStatus_MessageKey: @"Some message...",
+                        kReporter_EndStatus_TimestampKey: @(1),
+                        kReporter_EndStatus_LevelKey: @"Info",
+                        },
+                      ];
 
-  [reporter setOutputPath:@"-"];
-  [reporter openWithStandardOutput:(NSFileHandle *)fh error:nil];
-
-  ReportStatusMessage(@[reporter], REPORTER_MESSAGE_INFO, @"Some message...");
-
-  [reporter close];
-  assertThat([fh stringWritten],
+  assertThat([PrettyTextReporter outputStringWithEvents:events],
              equalTo(// the first line, from beginStatusMessage:
                      @"\r[Info] Some message..."
                      // the second line, from endStatusMessage:
@@ -64,34 +75,22 @@
 
 - (void)testStatusMessageWithBeginAndEndIncludesDuration
 {
-  FakeFileHandle *fh = [[[FakeFileHandle alloc] init] autorelease];
-  PrettyTextReporter *reporter = [[[PrettyTextReporter alloc] init] autorelease];
-  // Force _isPretty to YES to avoid the isatty() detection.
-  reporter->_isPretty = YES;
+  NSArray *events = @[
+                      // begin at T+0 seconds.
+                      @{@"event": kReporter_Events_BeginStatus,
+                        kReporter_BeginStatus_MessageKey: @"Some message...",
+                        kReporter_BeginStatus_TimestampKey: @(1),
+                        kReporter_BeginStatus_LevelKey: @"Info",
+                        },
+                      // begin at T+1 seconds.
+                      @{@"event": kReporter_Events_EndStatus,
+                        kReporter_EndStatus_MessageKey: @"Some message.",
+                        kReporter_EndStatus_TimestampKey: @(2),
+                        kReporter_EndStatus_LevelKey: @"Info",
+                        },
+                      ];
 
-  [reporter setOutputPath:@"-"];
-  [reporter openWithStandardOutput:(NSFileHandle *)fh error:nil];
-
-  // call begin at T+0 seconds.
-  [Swizzler whileSwizzlingSelector:@selector(date)
-                          forClass:[NSDate class]
-                         withBlock:^{ [NSDate dateWithTimeIntervalSince1970:0]; }
-                          runBlock:
-   ^{
-     ReportStatusMessageBegin(@[reporter], REPORTER_MESSAGE_INFO, @"Some message...");
-   }];
-
-  // call end at T+1 seconds.
-  [Swizzler whileSwizzlingSelector:@selector(date)
-                          forClass:[NSDate class]
-                         withBlock:^{ [NSDate dateWithTimeIntervalSince1970:1.0]; }
-                          runBlock:
-   ^{
-     ReportStatusMessageEnd(@[reporter], REPORTER_MESSAGE_INFO, @"Some message.");
-   }];
-
-  [reporter close];
-  assertThat([fh stringWritten],
+  assertThat([PrettyTextReporter outputStringWithEvents:events],
              equalTo(// the first line, from beginStatusMessage:
                      @"\r[Info] Some message..."
                      // the second line, from endStatusMessage:

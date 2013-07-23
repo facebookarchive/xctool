@@ -16,13 +16,15 @@
 
 #import <Foundation/Foundation.h>
 
+#import "EventSink.h"
+
 /**
  * In the event that an OCUnit test crashes, we never get the usual stream of events
  * from the test runner - it just dies!  OCUnitCrashFilter helps in this case by generating
  * the final stream of events to signal that the crashing test failed (shielding the Reporters
  * from having to deal with this complexity).
  */
-@interface OCUnitCrashFilter : NSObject
+@interface OCUnitCrashFilter : NSObject <EventSink>
 {
 }
 
@@ -35,7 +37,6 @@
 @property (nonatomic, retain) NSMutableString *currentTestOutput;
 @property (nonatomic, retain) NSDictionary *lastTestEvent;
 
-- (void)handleEvent:(NSDictionary *)event;
 - (void)fireEventsToSimulateTestRunFinishing:(NSArray *)reporters
                              fullProductName:(NSString *)fullProductName
                     concatenatedCrashReports:(NSString *)concatenatedCrashReports;

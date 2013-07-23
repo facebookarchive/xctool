@@ -1,18 +1,18 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
-#import "RecordingReporter.h"
-#import "Reporter.h"
+#import "EventBuffer.h"
+#import "ReportStatus.h"
 #import "Swizzler.h"
 
-@interface ReporterTests : SenTestCase
+@interface ReportStatusTests : SenTestCase
 @end
 
-@implementation ReporterTests
+@implementation ReportStatusTests
 
 - (void)testReportStatusMessageGeneratesTwoEventsWithTheSameTimestamp
 {
-  RecordingReporter *reporter = [[[RecordingReporter alloc] init] autorelease];
+  EventBuffer *buffer = [[[EventBuffer alloc] init] autorelease];
 
   NSDate *staticDate = [NSDate dateWithTimeIntervalSince1970:0];
 
@@ -21,10 +21,10 @@
                          withBlock:^{ return staticDate; }
                           runBlock:
    ^{
-     ReportStatusMessage(@[reporter], REPORTER_MESSAGE_INFO, @"An info message.");
+     ReportStatusMessage(@[buffer], REPORTER_MESSAGE_INFO, @"An info message.");
    }];
 
-  assertThat([reporter events],
+  assertThat([buffer events],
              equalTo(@[
                      @{
                      @"event" : @"begin-status",
@@ -43,7 +43,7 @@
 
 - (void)testReportStatusMessageBeginGeneratesAnEvent
 {
-  RecordingReporter *reporter = [[[RecordingReporter alloc] init] autorelease];
+  EventBuffer *buffer = [[[EventBuffer alloc] init] autorelease];
 
   NSDate *staticDate = [NSDate dateWithTimeIntervalSince1970:10];
 
@@ -52,10 +52,10 @@
                          withBlock:^{ return staticDate; }
                           runBlock:
    ^{
-     ReportStatusMessageBegin(@[reporter], REPORTER_MESSAGE_INFO, @"An info message.");
+     ReportStatusMessageBegin(@[buffer], REPORTER_MESSAGE_INFO, @"An info message.");
    }];
 
-  assertThat([reporter events],
+  assertThat([buffer events],
              equalTo(@[
                      @{
                      @"event" : @"begin-status",
@@ -68,7 +68,7 @@
 
 - (void)testReportStatusMessageEndGeneratesAnEvent
 {
-  RecordingReporter *reporter = [[[RecordingReporter alloc] init] autorelease];
+  EventBuffer *buffer = [[[EventBuffer alloc] init] autorelease];
 
   NSDate *staticDate = [NSDate dateWithTimeIntervalSince1970:20];
 
@@ -77,10 +77,10 @@
                          withBlock:^{ return staticDate; }
                           runBlock:
    ^{
-     ReportStatusMessageEnd(@[reporter], REPORTER_MESSAGE_INFO, @"An info message.");
+     ReportStatusMessageEnd(@[buffer], REPORTER_MESSAGE_INFO, @"An info message.");
    }];
 
-  assertThat([reporter events],
+  assertThat([buffer events],
              equalTo(@[
                      @{
                      @"event" : @"end-status",

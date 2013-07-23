@@ -16,6 +16,8 @@
 		28897FCB173E50F9004BA024 /* Swizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 28897FC8173E50F9004BA024 /* Swizzle.m */; };
 		28897FCC173E50F9004BA024 /* Swizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 28897FC8173E50F9004BA024 /* Swizzle.m */; };
 		28A094B41731DA3500838CDD /* dyld_priv.h in Headers */ = {isa = PBXBuildFile; fileRef = 28A094B31731DA3500838CDD /* dyld_priv.h */; };
+		28E28FB417968EC50072376C /* ReporterEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 28E28FB317968EC50072376C /* ReporterEvents.h */; };
+		28E28FB517968EC50072376C /* ReporterEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 28E28FB317968EC50072376C /* ReporterEvents.h */; };
 		28E9B9DF16C32E9A00A52E4D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283CCA9416C2EE4C00F2E343 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
@@ -35,6 +37,7 @@
 		28897FC7173E50F9004BA024 /* Swizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Swizzle.h; sourceTree = "<group>"; };
 		28897FC8173E50F9004BA024 /* Swizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Swizzle.m; sourceTree = "<group>"; };
 		28A094B31731DA3500838CDD /* dyld_priv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dyld_priv.h; sourceTree = "<group>"; };
+		28E28FB317968EC50072376C /* ReporterEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReporterEvents.h; sourceTree = "<group>"; };
 		28E9B98216C2F2D400A52E4D /* otest-shim-ios.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "otest-shim-ios.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -122,6 +125,7 @@
 		28897FC6173E50F9004BA024 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				28E28FB317968EC50072376C /* ReporterEvents.h */,
 				28897FC7173E50F9004BA024 /* Swizzle.h */,
 				28897FC8173E50F9004BA024 /* Swizzle.m */,
 			);
@@ -137,6 +141,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				28897FCA173E50F9004BA024 /* Swizzle.h in Headers */,
+				28E28FB517968EC50072376C /* ReporterEvents.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -147,6 +152,7 @@
 				287A37E916C7776E00319E81 /* dyld-interposing.h in Headers */,
 				28A094B41731DA3500838CDD /* dyld_priv.h in Headers */,
 				28897FC9173E50F9004BA024 /* Swizzle.h in Headers */,
+				28E28FB417968EC50072376C /* ReporterEvents.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

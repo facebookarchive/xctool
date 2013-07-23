@@ -21,10 +21,8 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-#import "Action.h"
 #import "NSFileHandle+Print.h"
 #import "ReporterEvents.h"
-#import "RunTestsAction.h"
 
 /**
  Remove leading component of string if it matches cwd.
@@ -195,24 +193,16 @@ static NSString *abbreviatePath(NSString *string) {
   [super dealloc];
 }
 
-- (BOOL)openWithStandardOutput:(NSFileHandle *)standardOutput error:(NSString **)error
+- (void)willBeginReporting
 {
-  if ([super openWithStandardOutput:standardOutput error:error]) {
-    // self.outputHandle will either be a file handle for stdout or a file handle for
-    // some file on disk.
-    self.reportWriter = [[[ReportWriter alloc] initWithOutputHandle:self.outputHandle] autorelease];
-    self.reportWriter.useColorOutput = _isPretty;
-    return YES;
-  } else {
-    return NO;
-  }
+  self.reportWriter = [[[ReportWriter alloc] initWithOutputHandle:_outputHandle] autorelease];
+  self.reportWriter.useColorOutput = _isPretty;
 }
 
-- (void)close
+- (void)didFinishReporting
 {
   // Always leave one blank line at the end - it looks a little nicer.
   [_reportWriter printNewline];
-  [super close];
 }
 
 - (NSString *)passIndicatorString
@@ -405,7 +395,7 @@ static NSString *abbreviatePath(NSString *string) {
   } else if ([name isEqual:@"analyze"]) {
     [self printAnalyzerSummary];
   }
-  
+
   NSString *color = succeeded ? @"<green>" : @"<red>";
   [self.reportWriter printLine:@"<bold>%@** %@ %@%@ **<reset> <faint>(%03d ms)<reset>",
    color,
@@ -798,16 +788,9 @@ static NSString *abbreviatePath(NSString *string) {
 - (id)init
 {
   if (self = [super init]) {
-    // Be pretty so long as stdout looks like a nice TTY.
-    _isPretty = isatty(STDOUT_FILENO);
+    _isPretty = YES;
   }
   return self;
-}
-
-+ (NSDictionary *)reporterInfo {
-  return @{kReporterInfoNameKey : @"pretty",
-           kReporterInfoDescriptionKey : @"ANSI-colored build and test results (default).",
-           };
 }
 
 @end
@@ -821,12 +804,5 @@ static NSString *abbreviatePath(NSString *string) {
   }
   return self;
 }
-
-+ (NSDictionary *)reporterInfo {
-  return @{kReporterInfoNameKey : @"plain",
-           kReporterInfoDescriptionKey : @"Plain text build and test results.",
-           };
-}
-
 
 @end

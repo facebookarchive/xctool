@@ -23,8 +23,8 @@
 #import "FakeTaskManager.h"
 #import "Options.h"
 #import "Options+Testing.h"
+#import "ReporterTask.h"
 #import "TaskUtil.h"
-#import "TextReporter.h"
 #import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
 
@@ -61,8 +61,8 @@
 
   NSArray *reporters = [options reporters];
   assertThatInteger([reporters count], equalToInteger(2));
-  assertThatBool(([reporters[0] isKindOfClass:[PrettyTextReporter class]]), equalToBool(YES));
-  assertThatBool(([reporters[1] isKindOfClass:[PlainTextReporter class]]), equalToBool(YES));
+  assertThat(([[reporters[0] reporterPath] lastPathComponent]), equalTo(@"pretty"));
+  assertThat(([[reporters[1] reporterPath] lastPathComponent]), equalTo(@"plain"));
 }
 
 - (void)testBuildSettingsAreCollected
@@ -245,7 +245,7 @@
   [[Options optionsFrom:@[
     @"-reporter", @"blah"
     ]] assertReporterOptionsFailToValidateWithError:
-   @"No reporter with name 'blah' found."];
+   @"Reporter with name or path 'blah' could not be found."];
 }
 
 - (void)testArgumentsFlowThroughToCommonXcodebuildArguments
@@ -310,8 +310,7 @@
                        ]] assertOptionsValidateWithBuildSettingsFromFile:
                       TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
                       ];
-  assertThatBool(([options.reporters[0] isKindOfClass:[TextReporter class]]),
-                 equalToBool(YES));
+  assertThat(([[options.reporters[0] reporterPath] lastPathComponent]), equalTo(@"pretty"));
 }
 
 - (void)testHelpOptionSetsPrintUsage

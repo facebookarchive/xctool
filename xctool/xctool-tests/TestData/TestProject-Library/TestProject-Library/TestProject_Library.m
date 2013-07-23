@@ -10,4 +10,8 @@
 
 @implementation TestProject_Library
 
+- (void)testWillPass
+{
+  NSObject *blah = [[NSObject alloc] init];
+}
 @end

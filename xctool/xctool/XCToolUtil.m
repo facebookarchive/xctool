@@ -18,9 +18,11 @@
 
 #import <mach-o/dyld.h>
 
+#import "EventSink.h"
 #import "NSFileHandle+Print.h"
 #import "Options.h"
-#import "Reporter.h"
+#import "ReporterEvents.h"
+#import "ReporterTask.h"
 #import "TaskUtil.h"
 #import "XcodeSubjectInfo.h"
 
@@ -110,8 +112,13 @@ static NSString *AbsoluteExecutablePath(void) {
 
 NSString *XCToolBasePath(void)
 {
-  return [[AbsoluteExecutablePath() stringByDeletingLastPathComponent]
-          stringByDeletingLastPathComponent];
+  if (IsRunningUnderTest()) {
+    // DYLD_LIBRARY_PATH happens to point at BUILT_PRODUCTS_DIR
+    return [[NSProcessInfo processInfo] environment][@"DYLD_LIBRARY_PATH"];
+  } else {
+    return [[AbsoluteExecutablePath() stringByDeletingLastPathComponent]
+            stringByDeletingLastPathComponent];
+  }
 }
 
 NSString *XCToolLibPath(void)
@@ -122,6 +129,11 @@ NSString *XCToolLibPath(void)
 NSString *XCToolLibExecPath(void)
 {
   return [XCToolBasePath() stringByAppendingPathComponent:@"libexec"];
+}
+
+NSString *XCToolReportersPath(void)
+{
+  return [XCToolBasePath() stringByAppendingPathComponent:@"reporters"];
 }
 
 NSString *XcodeDeveloperDirPath(void)
@@ -254,8 +266,7 @@ BOOL LaunchXcodebuildTaskAndFeedEventsToReporters(NSTask *task,
       errorMessage = [event[@"message"] retain];
       errorCode = [event[@"code"] longLongValue];
     } else {
-      [reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                                 withObject:event];
+      PublishEventToReporters(reporters, event);
     }
 
     if ([eventName isEqualToString:kReporter_Events_EndBuildCommand]) {
@@ -301,8 +312,7 @@ BOOL RunXcodebuildAndFeedEventsToReporters(NSArray *arguments,
                                kReporter_BeginXcodebuild_CommandKey: command,
                                kReporter_BeginXcodebuild_TitleKey: title,
                                };
-  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                             withObject:beginEvent];
+  PublishEventToReporters(reporters, beginEvent);
 
   NSString *xcodebuildErrorMessage = nil;
   long long xcodebuildErrorCode = 0;
@@ -334,8 +344,7 @@ BOOL RunXcodebuildAndFeedEventsToReporters(NSArray *arguments,
    kReporter_EndXcodebuild_ErrorCodeKey: errorCode,
    }];
 
-  [reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                             withObject:endEvent];
+  PublishEventToReporters(reporters, endEvent);
 
   [task release];
   return succeeded;
@@ -410,4 +419,25 @@ void CleanupTemporaryDirectoryForAction()
     [__tempDirectoryForAction release];
     __tempDirectoryForAction = nil;
   }
+}
+
+void PublishEventToReporters(NSArray *reporters, NSDictionary *event)
+{
+  NSError *error = nil;
+  NSData *jsonData = [NSJSONSerialization dataWithJSONObject:event options:0 error:&error];
+  NSCAssert(jsonData != nil, @"Error while encoding event into JSON: %@", [error localizedFailureReason]);
+
+  for (id<EventSink> reporter in reporters) {
+    [reporter publishDataForEvent:jsonData];
+  }
+}
+
+NSArray *AvailableReporters()
+{
+  NSError *error = nil;
+  NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:XCToolReportersPath()
+                                                                          error:&error];
+  NSCAssert(contents != nil,
+            @"Failed to read from reporters directory: %@", [error localizedFailureReason]);
+  return contents;
 }

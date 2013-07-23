@@ -1,0 +1,81 @@
+//
+// Copyright 2013 Facebook
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+#import "Reporter+Testing.h"
+
+#import "FakeFileHandle.h"
+
+@implementation Reporter (Testing)
+
++ (NSData *)outputDataWithEventsFromFile:(NSString *)path
+{
+  Reporter *reporter = [[self alloc] init];
+
+  FakeFileHandle *fakeFileHandle = [[FakeFileHandle alloc] init];
+  reporter->_outputHandle = (NSFileHandle *)fakeFileHandle;
+
+  [reporter willBeginReporting];
+
+  NSString *pathContents = [NSString stringWithContentsOfFile:path
+                                                     encoding:NSUTF8StringEncoding
+                                                        error:nil];
+  NSArray *lines = [pathContents componentsSeparatedByCharactersInSet:
+                    [NSCharacterSet newlineCharacterSet]];
+  for (NSString *line in lines) {
+    if ([line length] == 0) {
+      break;
+    }
+
+    NSError *error = nil;
+    NSDictionary *event = [NSJSONSerialization JSONObjectWithData:[line dataUsingEncoding:NSUTF8StringEncoding]
+                                                          options:0
+                                                            error:&error];
+    NSAssert(event != nil, @"Error decoding JSON '%@' with error: %@",
+             line,
+             [error localizedFailureReason]);
+    [reporter handleEvent:event];
+  }
+
+  [reporter didFinishReporting];
+
+  NSData *outputData = [[fakeFileHandle dataWritten] retain];
+
+  [reporter release];
+  [fakeFileHandle release];
+
+  return [outputData autorelease];
+}
+
++ (NSString *)outputStringWithEvents:(NSArray *)events
+{
+  Reporter *reporter = [[[self alloc] init] autorelease];
+
+  FakeFileHandle *fakeFileHandle = [[[FakeFileHandle alloc] init] autorelease];
+  reporter->_outputHandle = (NSFileHandle *)fakeFileHandle;
+
+  [reporter willBeginReporting];
+
+  for (NSDictionary *event in events) {
+    [reporter handleEvent:event];
+  }
+
+  [reporter didFinishReporting];
+
+  return [fakeFileHandle stringWritten];
+}
+
+@end
+

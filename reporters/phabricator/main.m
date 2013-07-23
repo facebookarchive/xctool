@@ -16,7 +16,13 @@
 
 #import <Foundation/Foundation.h>
 
-#import "Reporter.h"
+#import "PhabricatorReporter.h"
 
-@interface JSONStreamReporter : Reporter
-@end
+int main(int argc, const char * argv[])
+{
+  @autoreleasepool {
+    [PhabricatorReporter readFromInput:[NSFileHandle fileHandleWithStandardInput]
+                           andOutputTo:[NSFileHandle fileHandleWithStandardOutput]];
+  }
+  return 0;
+}

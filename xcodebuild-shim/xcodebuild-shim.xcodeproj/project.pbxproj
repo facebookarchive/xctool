@@ -16,6 +16,8 @@
 		28897FC3173E50C5004BA024 /* Swizzle.h in Headers */ = {isa = PBXBuildFile; fileRef = 28897FC0173E50C5004BA024 /* Swizzle.h */; };
 		28897FC4173E50C5004BA024 /* Swizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 28897FC1173E50C5004BA024 /* Swizzle.m */; };
 		28897FC5173E50C5004BA024 /* Swizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 28897FC1173E50C5004BA024 /* Swizzle.m */; };
+		28E28FB017968E9C0072376C /* ReporterEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 28E28FAF17968E9C0072376C /* ReporterEvents.h */; };
+		28E28FB117968E9C0072376C /* ReporterEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 28E28FAF17968E9C0072376C /* ReporterEvents.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +34,7 @@
 		287A381416C876A800319E81 /* xcodebuild_fastsettings_shim.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = xcodebuild_fastsettings_shim.m; sourceTree = "<group>"; };
 		28897FC0173E50C5004BA024 /* Swizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Swizzle.h; sourceTree = "<group>"; };
 		28897FC1173E50C5004BA024 /* Swizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Swizzle.m; sourceTree = "<group>"; };
+		28E28FAF17968E9C0072376C /* ReporterEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReporterEvents.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,6 +134,7 @@
 		28897FBF173E50C5004BA024 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				28E28FAF17968E9C0072376C /* ReporterEvents.h */,
 				28897FC0173E50C5004BA024 /* Swizzle.h */,
 				28897FC1173E50C5004BA024 /* Swizzle.m */,
 			);
@@ -146,6 +150,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				28897FC2173E50C5004BA024 /* Swizzle.h in Headers */,
+				28E28FB017968E9C0072376C /* ReporterEvents.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -155,6 +160,7 @@
 			files = (
 				285F6F74171FD297001295EC /* xcodebuild-fastsettings-shim-Prefix.pch in Headers */,
 				28897FC3173E50C5004BA024 /* Swizzle.h in Headers */,
+				28E28FB117968E9C0072376C /* ReporterEvents.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

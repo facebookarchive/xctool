@@ -19,6 +19,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "OCUnitCrashFilter.h"
+#import "XCToolUtil.h"
 
 @implementation OCUnitTestRunner
 
@@ -130,19 +131,11 @@
   __block BOOL didReceiveTestEvents = NO;
 
   void (^feedOutputToBlock)(NSString *) = ^(NSString *line) {
-    NSError *parseError = nil;
-    NSDictionary *event = [NSJSONSerialization JSONObjectWithData:[line dataUsingEncoding:NSUTF8StringEncoding]
-                                                          options:0
-                                                            error:&parseError];
-    if (parseError) {
-      [NSException raise:NSGenericException
-                  format:@"Failed to parse test output '%@' with error '%@'.",
-       line,
-       [parseError localizedFailureReason]];
-    }
+    NSData *lineData = [line dataUsingEncoding:NSUTF8StringEncoding];
 
-    [_reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:event];
-    [crashFilter handleEvent:event];
+    [crashFilter publishDataForEvent:lineData];
+    [_reporters makeObjectsPerformSelector:@selector(publishDataForEvent:) withObject:lineData];
+
     didReceiveTestEvents = YES;
   };
 

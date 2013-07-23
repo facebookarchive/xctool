@@ -16,7 +16,6 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
-#import "Options.h"
 #import "PhabricatorReporter.h"
 #import "Reporter+Testing.h"
 
@@ -27,13 +26,8 @@
 
 - (void)testGoodBuild
 {
-  Options *options = [[[Options alloc] init] autorelease];
-  options.workspace = TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj";
-  options.scheme = @"TestProject-Library";
-
   NSData *outputData =
-    [PhabricatorReporter outputDataWithEventsFromFile:TEST_DATA @"JSONStreamReporter-build-good.txt"
-                                              options:options];
+    [PhabricatorReporter outputDataWithEventsFromFile:TEST_DATA @"JSONStreamReporter-build-good.txt"];
   NSArray *results = [NSJSONSerialization JSONObjectWithData:outputData
                                                      options:0
                                                        error:nil];
@@ -61,13 +55,8 @@
 
 - (void)testBadBuild
 {
-  Options *options = [[[Options alloc] init] autorelease];
-  options.workspace = TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj";
-  options.scheme = @"TestProject-Library";
-
   NSData *outputData =
-    [PhabricatorReporter outputDataWithEventsFromFile:TEST_DATA @"JSONStreamReporter-build-bad.txt"
-                                              options:options];
+    [PhabricatorReporter outputDataWithEventsFromFile:TEST_DATA @"JSONStreamReporter-build-bad.txt"];
   NSArray *results = [NSJSONSerialization JSONObjectWithData:outputData
                                                      options:0
                                                        error:nil];
@@ -95,13 +84,8 @@
 
 - (void)testTestResults
 {
-  Options *options = [[[Options alloc] init] autorelease];
-  options.workspace = TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj";
-  options.scheme = @"TestProject-Library";
-
   NSData *outputData =
-    [PhabricatorReporter outputDataWithEventsFromFile:TEST_DATA @"JSONStreamReporter-runtests.txt"
-                                              options:options];
+    [PhabricatorReporter outputDataWithEventsFromFile:TEST_DATA @"JSONStreamReporter-runtests.txt"];
   NSArray *results = [NSJSONSerialization JSONObjectWithData:outputData
                                                      options:0
                                                        error:nil];

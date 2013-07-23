@@ -1,5 +1,7 @@
 #import "JSONCompilationDatabaseReporter.h"
 
+#import "ReporterEvents.h"
+
 @interface NSString (Strip)
 
 - (NSString *)strip;
@@ -35,12 +37,6 @@
 
 
 @implementation JSONCompilationDatabaseReporter
-
-+ (NSDictionary *)reporterInfo {
-  return @{kReporterInfoNameKey : @"json-compilation-database",
-           kReporterInfoDescriptionKey : @"JSON array of sources, with their compile options.",
-           };
-}
 
 - (id)init
 {
@@ -87,7 +83,7 @@
   _currentBuildCommand = nil;
 }
 
-- (void)close
+- (void)didFinishReporting
 {
   NSDictionary *precompilesLocalMapping = [self precompilesLocalMapping:_precompiles];
   NSMutableArray *compilationDatabase = [[NSMutableArray alloc] init];
@@ -104,13 +100,11 @@
                                                     error:&error];
   NSAssert(error == nil, @"Failed while trying to encode as JSON: %@", error);
   
-  [self.outputHandle writeData:data];
-  [self.outputHandle writeData:[@"\n" dataUsingEncoding:NSUTF8StringEncoding]];
+  [_outputHandle writeData:data];
+  [_outputHandle writeData:[@"\n" dataUsingEncoding:NSUTF8StringEncoding]];
   
   [compilationDatabase release];
   compilationDatabase = nil;
-  
-  [super close];
 }
 
 - (NSDictionary *)convertCompileDictionary:(NSDictionary *)event withPrecompilesLocalMapping:(NSDictionary *)precompilesMapping
@@ -159,12 +153,12 @@
     NSArray *commands = [command componentsSeparatedByString:@"\n"];
     NSString *precompileTitle = [commands[0] strip];
     NSString *workingDirectory = [commands[1] strip];
-    
+
     NSTextCheckingResult *precompileTitleMatch =
-      [precompileTitle firstMatch:@[@"^ProcessPCH(\\+\\+)? \"(.+)(\\.pch\\.pth|\\.pch\\.pch)\" \"(.+)\\.pch\"",
-                                    @"^ProcessPCH(\\+\\+)? (.+)(\\.pch\\.pth|\\.pch\\.pch) (.+)\\.pch"]];
+    [precompileTitle firstMatch:@[@"^ProcessPCH(\\+\\+)? \"(.+)(\\.pch\\.pth|\\.pch\\.pch)\" \"(.+)\\.pch\"",
+     @"^ProcessPCH(\\+\\+)? (.+)(\\.pch\\.pth|\\.pch\\.pch) (.+)\\.pch"]];
     NSTextCheckingResult *workingDirectoryMatch = [workingDirectory firstMatch:@[@"^cd \"(.+)\"", @"^cd (.+)"]];
-    
+
     if (precompileTitleMatch && workingDirectoryMatch) {
       NSRange firstHalfRange = [precompileTitleMatch rangeAtIndex:2];
       NSRange secondHalfRange = [precompileTitleMatch rangeAtIndex:4];
@@ -174,7 +168,7 @@
                              [precompileTitle substringWithRange:secondHalfRange]];
       localMapping[cachedPath] = localPath;
     }
-    
+
   }
   return [localMapping autorelease];
 }

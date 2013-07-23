@@ -1,5 +1,7 @@
 #import "JUnitReporter.h"
 
+#import "ReporterEvents.h"
+
 #pragma mark Constants
 #define kJUnitReporter_Suite_Event @"event"
 #define kJUnitReporter_Suite_Results @"results"
@@ -23,12 +25,6 @@
 
 #pragma mark Implementation
 @implementation JUnitReporter
-
-+ (NSDictionary *)reporterInfo {
-  return @{kReporterInfoNameKey : @"junit",
-           kReporterInfoDescriptionKey : @"Test results in JUnit/xUnit XML format.",
-           };
-}
 
 #pragma mark Memory Management
 - (id)init
@@ -79,7 +75,7 @@
   }
 }
 
-- (void)close
+- (void)didFinishReporting
 {
   [self write:@"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"];
   [self writeWithFormat:
@@ -124,13 +120,12 @@
   }
   [self write:@"</testsuites>\n"];
   self.testSuites = nil;
-  [super close];
 }
 
 #pragma mark Private Methods
 - (void)write:(NSString *)string
 {
-  [self.outputHandle writeData:[string dataUsingEncoding:NSUTF8StringEncoding]];
+  [_outputHandle writeData:[string dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
 - (void)writeWithFormat:(NSString *)format, ...

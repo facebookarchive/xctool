@@ -14,20 +14,15 @@
 // limitations under the License.
 //
 
-#import "Reporter.h"
+#import <Foundation/Foundation.h>
 
-/**
- PhabricatorReporter produces a JSON array which you can plug directly into the
- 'arc:unit' diff property in Phabricator.
- */
-@interface PhabricatorReporter : Reporter
+#import "JUnitReporter.h"
+
+int main(int argc, const char * argv[])
 {
-  NSMutableArray *_results;
-  NSMutableArray *_currentTargetFailures;
-  NSDictionary *_currentBuildCommand;
-  NSString *_projectOrWorkspaceName;
+  @autoreleasepool {
+    [JUnitReporter readFromInput:[NSFileHandle fileHandleWithStandardInput]
+                     andOutputTo:[NSFileHandle fileHandleWithStandardOutput]];
+  }
+  return 0;
 }
-
-- (NSString *)arcUnitJSON;
-
-@end

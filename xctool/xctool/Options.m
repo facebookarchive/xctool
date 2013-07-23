@@ -21,7 +21,8 @@
 #import "BuildAction.h"
 #import "BuildTestsAction.h"
 #import "CleanAction.h"
-#import "Reporter.h"
+#import "ReporterTask.h"
+#import "ReportStatus.h"
 #import "RunTestsAction.h"
 #import "TestAction.h"
 #import "XCToolUtil.h"
@@ -239,21 +240,36 @@
 {
   for (NSString *reporterOption in _reporterOptions) {
     NSArray *optionParts = [reporterOption componentsSeparatedByString:@":"];
-    NSString *name = optionParts[0];
+    NSString *nameOrPath = optionParts[0];
     NSString *outputFile = (optionParts.count > 1) ? optionParts[1] : @"-";
 
-    Reporter *reporter = [Reporter reporterWithName:name outputPath:outputFile options:self];
+    NSString *reporterPath = nil;
 
-    if (reporter == nil) {
-      *errorMessage = [NSString stringWithFormat:@"No reporter with name '%@' found.", name];
+    if ([[NSFileManager defaultManager] isExecutableFileAtPath:nameOrPath]) {
+      // The argument might be the path to a reporter.
+      reporterPath = nameOrPath;
+    } else if ([[NSFileManager defaultManager] isExecutableFileAtPath:
+                [XCToolReportersPath() stringByAppendingPathComponent:nameOrPath]]) {
+      // Or, it could be the name of one of the built-in reporters.
+      reporterPath = [XCToolReportersPath() stringByAppendingPathComponent:nameOrPath];
+    } else {
+      *errorMessage = [NSString stringWithFormat:
+                       @"Reporter with name or path '%@' could not be found.",
+                       nameOrPath];
       return NO;
     }
 
-    [self.reporters addObject:reporter];
+    ReporterTask *reporterTask =
+    [[[ReporterTask alloc] initWithReporterPath:reporterPath
+                                     outputPath:outputFile] autorelease];
+    [self.reporters addObject:reporterTask];
   }
 
   if (self.reporters.count == 0) {
-    [self.reporters addObject:[Reporter reporterWithName:@"pretty" outputPath:@"-" options:self]];
+    ReporterTask *reporterTask =
+    [[[ReporterTask alloc] initWithReporterPath:[XCToolReportersPath() stringByAppendingPathComponent:@"pretty"]
+                                     outputPath:@"-"] autorelease];
+    [self.reporters addObject:reporterTask];
   }
 
   return YES;

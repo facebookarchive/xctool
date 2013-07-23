@@ -16,29 +16,44 @@
 
 #import "AnalyzeAction.h"
 
+#import "EventSink.h"
 #import "Options.h"
 #import "XCToolUtil.h"
 #import "XcodeSubjectInfo.h"
 #import "BuildStateParser.h"
-#import "Reporter.h"
+#import "ReporterEvents.h"
 
-@interface BuildTargetsCollector : Reporter
+@interface BuildTargetsCollector : NSObject <EventSink>
 /// Array of @{@"projectName": projectName, @"targetName": targetName}
 @property (nonatomic, retain) NSMutableSet *seenTargets;
 @end
 
 @implementation BuildTargetsCollector
-- (void)beginBuildTarget:(NSDictionary *)event
+
+- (instancetype)init
 {
-  if (!self.seenTargets) {
+  if (self = [super init]) {
     self.seenTargets = [NSMutableSet set];
   }
-
-  [self.seenTargets addObject:@{
-   @"projectName": event[kReporter_BeginBuildTarget_ProjectKey],
-   @"targetName": event[kReporter_BeginBuildTarget_TargetKey],
-   }];
+  return self;
 }
+
+- (void)publishDataForEvent:(NSData *)data
+{
+  NSError *error = nil;
+  NSDictionary *event = [NSJSONSerialization JSONObjectWithData:data
+                                                        options:0
+                                                          error:&error];
+  NSAssert(event != nil, @"Error decoding JSON: %@", [error localizedFailureReason]);
+
+  if ([event[@"event"] isEqualTo:kReporter_Events_BeginBuildTarget]) {
+    [self.seenTargets addObject:@{
+     @"projectName": event[kReporter_BeginBuildTarget_ProjectKey],
+     @"targetName": event[kReporter_BeginBuildTarget_TargetKey],
+     }];
+  }
+}
+
 @end
 
 @interface AnalyzeAction ()
@@ -162,7 +177,7 @@
       NSArray *context = [self.class contextFromDiagPath:diag[@"path"]
                                                  fileMap:diags[@"files"]];
 
-      [reporters makeObjectsPerformSelector:@selector(handleEvent:) withObject:@{
+      PublishEventToReporters(reporters, @{
        @"event": kReporter_Events_AnalyzerResult,
         kReporter_AnalyzerResult_ProjectKey: projectName,
          kReporter_AnalyzerResult_TargetKey: targetName,
@@ -171,7 +186,7 @@
          kReporter_AnalyzerResult_ColumnKey: col,
     kReporter_AnalyzerResult_DescriptionKey: desc,
         kReporter_AnalyzerResult_ContextKey: context,
-       }];
+       });
     }
   }
 

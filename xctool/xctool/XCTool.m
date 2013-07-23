@@ -19,11 +19,11 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "Action.h"
-#import "JSONStreamReporter.h"
 #import "NSFileHandle+Print.h"
 #import "Options.h"
+#import "ReporterEvents.h"
+#import "ReporterTask.h"
 #import "TaskUtil.h"
-#import "TextReporter.h"
 #import "Version.h"
 #import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
@@ -69,24 +69,8 @@
   [_standardError printString:@"\n"];
   [_standardError printString:@"Available Reporters:\n"];
 
-  NSUInteger maxReporterNameLength = 0;
-
-  for (Class reporterCls in [Reporter allReporterClasses]) {
-    NSString *name = [reporterCls reporterInfo][kReporterInfoNameKey];
-    maxReporterNameLength = MAX(maxReporterNameLength, [name length]);
-  }
-
-  for (Class reporterCls in [Reporter allReporterClasses]) {
-    NSDictionary *info = [reporterCls reporterInfo];
-    NSString *name = info[kReporterInfoNameKey];
-    NSString *description = info[kReporterInfoDescriptionKey];
-
-
-    [_standardError printString:@"    %@ %@\n",
-     [[name stringByAppendingString:@":"] stringByPaddingToLength:maxReporterNameLength + 1
-                                                       withString:@" "
-                                                  startingAtIndex:0],
-     description];
+  for (NSString *name in AvailableReporters()) {
+    [_standardError printString:@"    %@\n", name];
   }
 
   for (Class actionClass in [Options actionClasses]) {
@@ -178,7 +162,7 @@
     return;
   }
 
-  for (Reporter *reporter in options.reporters) {
+  for (ReporterTask *reporter in options.reporters) {
     NSString *error = nil;
     if (![reporter openWithStandardOutput:_standardOutput error:&error]) {
       [_standardError printString:@"ERROR: %@\n\n", error];
@@ -201,23 +185,27 @@
 
     for (Action *action in options.actions) {
       CFTimeInterval startTime = CACurrentMediaTime();
-      [options.reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                                         withObject:@{
+      PublishEventToReporters(options.reporters, @{
        @"event": kReporter_Events_BeginAction,
        kReporter_BeginAction_NameKey: [[action class] name],
-       }];
+       kReporter_BeginAction_WorkspaceKey: options.workspace ?: [NSNull null],
+       kReporter_BeginAction_ProjectKey: options.project ?: [NSNull null],
+       kReporter_BeginAction_SchemeKey: options.scheme,
+       });
 
       BOOL succeeded = [action performActionWithOptions:options xcodeSubjectInfo:xcodeSubjectInfo];
 
       CFTimeInterval stopTime = CACurrentMediaTime();
 
-      [options.reporters makeObjectsPerformSelector:@selector(handleEvent:)
-                                         withObject:@{
+      PublishEventToReporters(options.reporters, @{
        @"event": kReporter_Events_EndAction,
        kReporter_EndAction_NameKey: [[action class] name],
+       kReporter_EndAction_WorkspaceKey: options.workspace ?: [NSNull null],
+       kReporter_EndAction_ProjectKey: options.project ?: [NSNull null],
+       kReporter_EndAction_SchemeKey: options.scheme,
        kReporter_EndAction_SucceededKey: @(succeeded),
        kReporter_EndAction_DurationKey: @(stopTime - startTime),
-       }];
+       });
 
       CleanupTemporaryDirectoryForAction();
 

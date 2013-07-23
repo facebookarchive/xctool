@@ -5,6 +5,9 @@
       location = "group:xctool/xctool.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:reporters/reporters.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:mobile-installation-helper/mobile-installation-helper.xcodeproj">
    </FileRef>
    <FileRef
@@ -24,6 +27,9 @@
       </FileRef>
       <FileRef
          location = "group:Swizzle.m">
+      </FileRef>
+      <FileRef
+         location = "group:ReporterEvents.h">
       </FileRef>
    </Group>
    <Group

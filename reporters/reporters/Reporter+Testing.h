@@ -12,27 +12,18 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+//
 
 #import "Reporter.h"
 
-/*!
- Buffers calls to the underlying reporter until this reporter is flushed.
- */
-@interface BufferedReporter : NSObject {
-  Reporter *_underlyingReporter;
-  NSMutableArray *_bufferedEvents;
-}
+@interface Reporter (Testing)
 
-+ (instancetype)bufferedReporterWithReporter:(Reporter *)reporter;
-
-/*!
- Convenience function that wraps an array of Reporters with BufferedReporters.
+/**
+ * Consumes json-stream events from a file and returns to you what the
+ * reporter would have written to its file handle.
  */
-+ (NSArray *)wrapReporters:(NSArray *)reporters;
++ (NSData *)outputDataWithEventsFromFile:(NSString *)path;
 
-/*!
- Atomically flush all events into the underlying reporter
- */
-- (void)flush;
++ (NSString *)outputStringWithEvents:(NSArray *)events;
 
 @end

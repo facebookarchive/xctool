@@ -16,14 +16,15 @@
 
 #import "RunTestsAction.h"
 
-#import "BufferedReporter.h"
+#import "EventBuffer.h"
 #import "OCUnitIOSAppTestRunner.h"
 #import "OCUnitIOSDeviceTestRunner.h"
 #import "OCUnitIOSLogicTestRunner.h"
 #import "OCUnitOSXAppTestRunner.h"
 #import "OCUnitOSXLogicTestRunner.h"
 #import "Options.h"
-#import "Reporter.h"
+#import "ReporterEvents.h"
+#import "ReportStatus.h"
 #import "TaskUtil.h"
 #import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
@@ -419,7 +420,7 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
   
   for (NSArray *testConfiguration in testConfigurations) {
     NSArray *reportersForConfiguration = (self.parallelize
-                                          ? [BufferedReporter wrapReporters:rawReporters]
+                                          ? [EventBuffer wrapSinks:rawReporters]
                                           : rawReporters);
     Class testRunnerClass = testConfiguration[0];
     BOOL garbageCollectionEnabled = [testConfiguration[1] boolValue];
@@ -447,8 +448,7 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
     NSMutableDictionary *beginEvent =
     [NSMutableDictionary dictionaryWithDictionary:@{@"event": kReporter_Events_BeginOCUnit}];
     [beginEvent addEntriesFromDictionary:commonEventInfo];
-    [reportersForConfiguration makeObjectsPerformSelector:@selector(handleEvent:)
-                                               withObject:beginEvent];
+    PublishEventToReporters(reportersForConfiguration, beginEvent);
 
     // Query list of test classes if parallelizing test classes in each target
     NSArray *testClassNames = nil;
@@ -475,7 +475,7 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
         void(^block)() = ^{
           // Since work units within a configuration are also run in parallel,
           // the reporters must be buffered again.
-          NSArray *bufferedReporters = [BufferedReporter wrapReporters:reportersForConfiguration];
+          NSArray *eventBuffers = [EventBuffer wrapSinks:reportersForConfiguration];
 
           OCUnitTestRunner *localTestRunner =
           [[[testRunnerClass alloc]
@@ -490,7 +490,7 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
             simulatorType:self.simulatorType
             standardOutput:nil
             standardError:nil
-            reporters:bufferedReporters] autorelease];
+            reporters:eventBuffers] autorelease];
 
           NSString *localError = nil;
           BOOL localSucceeded = [localTestRunner runTestsWithError:&localError];
@@ -501,7 +501,7 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
             }
             error = localError;
           }
-          [bufferedReporters makeObjectsPerformSelector:@selector(flush)];
+          [eventBuffers makeObjectsPerformSelector:@selector(flush)];
         };
         [blocks addObject:[[block copy] autorelease]];
       }
@@ -524,8 +524,7 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
                                          kReporter_EndOCUnit_FailureReasonKey: (error ? error : [NSNull null]),
                                          }];
       [endEvent addEntriesFromDictionary:commonEventInfo];
-      [reportersForConfiguration makeObjectsPerformSelector:@selector(handleEvent:)
-                                                 withObject:endEvent];
+      PublishEventToReporters(reportersForConfiguration, endEvent);
       for (id reporter in reportersForConfiguration) {
         if ([reporter respondsToSelector:@selector(flush)]) {
           [reporter flush];
