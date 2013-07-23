@@ -39,6 +39,16 @@
 @property (nonatomic, retain) NSString *currentBundle;
 @property (nonatomic, retain) NSMutableArray *analyzerWarnings;
 
+/**
+ Returns an NSString that contains lines of context around errorLine with a mark at colNumber.
+ */
++ (NSString *)getContext:(NSString *)filePath errorLine:(int)errorLine colNumber:(int)colNumber;
+
+/**
+ Returns an NSString that contains lines of context around errorLine.
+ */
++ (NSString *)getContext:(NSString *)filePath errorLine:(int)errorLine;
+
 @end
 
 @interface PrettyTextReporter : TextReporter

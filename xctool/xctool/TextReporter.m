@@ -277,7 +277,7 @@ static NSString *abbreviatePath(NSString *string) {
 
     [self.analyzerWarnings enumerateObjectsUsingBlock:
      ^(NSDictionary *event, NSUInteger idx, BOOL *stop) {
-       [self.reportWriter printLine:@"%lu) %@:%@:%@: %@",
+       [self.reportWriter printLine:@"%lu) %@:%@:%@: %@:",
         (unsigned long)idx,
         abbreviatePath(event[kReporter_AnalyzerResult_FileKey]),
         event[kReporter_AnalyzerResult_LineKey],
@@ -286,6 +286,10 @@ static NSString *abbreviatePath(NSString *string) {
 
        [self printDivider];
        [self.reportWriter disableIndent];
+       [self.reportWriter printLine:@"%@", [TextReporter getContext:event[kReporter_AnalyzerResult_FileKey]
+                                                          errorLine:[event[kReporter_AnalyzerResult_LineKey] intValue]
+                                                          colNumber:[event[kReporter_AnalyzerResult_ColumnKey] intValue]]];
+       [self.reportWriter printNewline];
        for (NSDictionary *piece in event[kReporter_AnalyzerResult_ContextKey]) {
          [self.reportWriter printLine:@"%@:%@:%@: %@",
           abbreviatePath(piece[@"file"]), piece[@"line"], piece[@"col"], piece[@"message"]];
@@ -383,6 +387,8 @@ static NSString *abbreviatePath(NSString *string) {
            [exception[kReporter_EndTest_Exception_LineNumberKey] intValue],
            exception[kReporter_EndTest_Exception_NameKey],
            exception[kReporter_EndTest_Exception_ReasonKey]];
+          [self.reportWriter printLine:@"%@", [TextReporter getContext:exception[kReporter_EndTest_Exception_FilePathInProjectKey]
+                                                             errorLine:[exception[kReporter_EndTest_Exception_LineNumberKey] intValue]]];
           [self.reportWriter enableIndent];
         }
 
@@ -682,11 +688,13 @@ static NSString *abbreviatePath(NSString *string) {
     // Show exception, if any.
     NSDictionary *exception = event[kReporter_EndTest_ExceptionKey];
     if (exception) {
-      [self.reportWriter printLine:@"<faint>%@:%d: %@: %@<reset>",
+      [self.reportWriter printLine:@"<faint>%@:%d: %@: %@:<reset>",
        exception[kReporter_EndTest_Exception_FilePathInProjectKey],
        [exception[kReporter_EndTest_Exception_LineNumberKey] intValue],
        exception[kReporter_EndTest_Exception_NameKey],
        exception[kReporter_EndTest_Exception_ReasonKey]];
+      [self.reportWriter printLine:@"%@", [TextReporter getContext:exception[kReporter_EndTest_Exception_FilePathInProjectKey]
+                                                         errorLine:[exception[kReporter_EndTest_Exception_LineNumberKey] intValue]]];
     }
 
     [self.reportWriter enableIndent];
@@ -716,10 +724,67 @@ static NSString *abbreviatePath(NSString *string) {
   }
 }
 
-
 - (void)analyzerResult:(NSDictionary *)event
 {
   [self.analyzerWarnings addObject:event];
+}
+
++ (NSString *)getContext:(NSString *)filePath errorLine:(int)errorLine colNumber:(int)colNumber
+{
+  BOOL isDirectory = NO;
+  BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:filePath isDirectory:&isDirectory];
+  if (fileExists && !isDirectory) {
+    NSError *error = nil;
+    NSString *fileContents = [NSString stringWithContentsOfFile:filePath
+                                                       encoding:NSUTF8StringEncoding
+                                                          error:&error];
+    if (error) {
+      NSLog(@"Error loading file %@: %@", filePath, [error localizedFailureReason]);
+      return nil;
+    } else {
+      NSMutableString *context = [NSMutableString string];
+      NSArray *lines = [fileContents componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+      int start = MAX(0, errorLine - 4);
+      int end = MIN((int)[lines count], errorLine + 2);
+      // Give all line numbers the same width even if they roll over to a new power of 10.
+      int lineNoLength = floor(log10(end)) + 1;
+      NSString *formatString = [NSString stringWithFormat:@"%@%d%@", @"%", lineNoLength, @"d %@"];
+      for (int lineNo = start; lineNo < end; lineNo++) {
+        NSString *lineStr = [[lines objectAtIndex:lineNo] description];
+        // Careful: Line numbers start at 1 but array indices start at 0.
+        [context appendFormat:formatString, lineNo + 1, lineStr];
+        if (lineNo + 1 == errorLine) {
+          // Leading whitespace for underline so it's under the text only.
+          int nonWhitespaceLoc = (int)[lineStr rangeOfCharacterFromSet:[[NSCharacterSet whitespaceCharacterSet] invertedSet]].location;
+          NSString *trimmedLineStr = [lineStr stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+          int whitespaceLength = lineNoLength + 1 + nonWhitespaceLoc;
+          NSMutableString *ulineStr = [NSMutableString stringWithString:[[[NSString string]
+                                                                          stringByPaddingToLength:whitespaceLength
+                                                                          withString:@" "
+                                                                          startingAtIndex:0]
+                                                                         stringByPaddingToLength:[trimmedLineStr length] +whitespaceLength
+                                                                         withString:@"~"
+                                                                         startingAtIndex:0]];
+          if (colNumber > 0 && colNumber <= [lineStr length]) {
+            [ulineStr replaceCharactersInRange:NSMakeRange(lineNoLength + colNumber, 1) withString:@"^"];
+          }
+          [context appendFormat:@"\n%@", ulineStr];
+        }
+        if (lineNo + 1 < end) {
+          [context appendString:@"\n"];
+        }
+      }
+      return context;
+    }
+  } else {
+    NSLog(@"ERROR: couldn't load file: %@\n", filePath);
+    return nil;
+  }
+}
+
++ (NSString *)getContext:(NSString *)filePath errorLine:(int)errorLine
+{
+  return [TextReporter getContext:filePath errorLine:errorLine colNumber:0];
 }
 
 @end
