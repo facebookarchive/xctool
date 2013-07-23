@@ -764,9 +764,19 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   [task release];
 
   NSDictionary *settings = BuildSettingsFromOutput(result[@"stdout"]);
-  NSAssert(settings.count == 1,
-           @"Expected to receive build settings for 1 target, but instead got: %@",
-           settings);
+  if (settings.count != 1) {
+    NSLog(@"ERROR: Expected to receive build settings for 1 target, but instead got:\n"
+          @"%@\n"
+          @"Standard Output from xcodebuild:\n"
+          @"%@\n"
+          @"Standard Error from xcodebuild:\n"
+          @"%@\n",
+          settings,
+          result[@"stdout"],
+          result[@"stderr"]);
+    abort();
+  }
+
   return settings;
 }
 
