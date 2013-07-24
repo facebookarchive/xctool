@@ -29,8 +29,8 @@
 {
   NSString *fakeStandardOutputPath = MakeTempFileWithPrefix(@"fake-stdout");
 
-  ReporterTask *rt = [[ReporterTask alloc] initWithReporterPath:@"/bin/cat"
-                                                     outputPath:@"-"];
+  ReporterTask *rt = [[[ReporterTask alloc] initWithReporterPath:@"/bin/cat"
+                                                      outputPath:@"-"] autorelease];
   NSString *error = nil;
   BOOL opened = [rt openWithStandardOutput:[NSFileHandle fileHandleForWritingAtPath:fakeStandardOutputPath]
                                      error:&error];
@@ -51,8 +51,8 @@
   NSString *fakeStandardOutputPath = MakeTempFileWithPrefix(@"fake-stdout");
   NSString *someOutputPath = MakeTempFileWithPrefix(@"some-output");
 
-  ReporterTask *rt = [[ReporterTask alloc] initWithReporterPath:@"/bin/cat"
-                                                     outputPath:someOutputPath];
+  ReporterTask *rt = [[[ReporterTask alloc] initWithReporterPath:@"/bin/cat"
+                                                      outputPath:someOutputPath] autorelease];
   NSString *error = nil;
   BOOL opened = [rt openWithStandardOutput:[NSFileHandle fileHandleForWritingAtPath:fakeStandardOutputPath]
                                      error:&error];
