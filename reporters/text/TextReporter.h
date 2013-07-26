@@ -17,6 +17,7 @@
 #import <Foundation/Foundation.h>
 
 #import "Reporter.h"
+#import "TestResultCounter.h"
 
 @class ReportWriter;
 
@@ -25,8 +26,7 @@
 @public
   BOOL _isPretty;
 
-  NSUInteger _testsTotal;
-  NSUInteger _testsPassed;
+  TestResultCounter *_resultCounter;
 
   NSDictionary *_currentStatusEvent;
 }

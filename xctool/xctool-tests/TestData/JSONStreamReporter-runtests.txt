@@ -1,16 +1,18 @@
-{"event":"begin-action","name":"run-tests","workspace":null,"project":"TestProject-Library","scheme":"TestProject-Library"}
+{"message":"Loading settings for scheme 'TestProject-Library' ...","timestamp":1376939523.770017,"level":"Info","event":"begin-status"}
+{"message":"Loading settings for scheme 'TestProject-Library' ...","timestamp":1376939524.431777,"level":"Info","event":"end-status"}
+{"workspace":null,"project":"TestProject-Library.xcodeproj\/","event":"begin-action","name":"run-tests","scheme":"TestProject-Library"}
 {"gcEnabled":false,"sdkName":"iphonesimulator6.1","event":"begin-ocunit","testType":"logic-test","bundleName":"TestProject-LibraryTests.octest"}
 {"suite":"Multiple Selected Tests","event":"begin-test-suite"}
-{"suite":"\/Users\/fpotter\/Library\/Developer\/Xcode\/DerivedData\/TestProject-Library-gqcuxcsyguaqwugnnwmftlazxbyg\/Build\/Products\/Debug-iphonesimulator\/TestProject-LibraryTests.octest(Tests)","event":"begin-test-suite"}
+{"suite":"\/Users\/fpotter\/Library\/Developer\/Xcode\/DerivedData\/TestProject-Library-fyvnxoldewntrkghocepdzfrcsdm\/Build\/Products\/Debug-iphonesimulator\/TestProject-LibraryTests.octest(Tests)","event":"begin-test-suite"}
 {"suite":"OtherTests","event":"begin-test-suite"}
-{"test":"-[OtherTests testSomething]","className":"OtherTests","methodName":"testSomething","event":"begin-test"}
-{"output":"","methodName":"testSomething","test":"-[OtherTests testSomething]","event":"end-test","className":"OtherTests","succeeded":true,"totalDuration":0.003650963306427002}
-{"suite":"OtherTests","testCaseCount":1,"event":"end-test-suite","totalFailureCount":0,"totalDuration":0.00380396842956543,"unexpectedExceptionCount":0,"testDuration":0.003650963306427002}
+{"className":"OtherTests","methodName":"testSomething","event":"begin-test","test":"-[OtherTests testSomething]"}
+{"exceptions":[],"methodName":"testSomething","output":"","result":"success","totalDuration":0.00368797779083252,"test":"-[OtherTests testSomething]","event":"end-test","className":"OtherTests","succeeded":true}
+{"totalFailureCount":0,"testCaseCount":1,"totalDuration":0.003866016864776611,"testDuration":0.00368797779083252,"event":"end-test-suite","suite":"OtherTests","unexpectedExceptionCount":0}
 {"suite":"SomeTests","event":"begin-test-suite"}
-{"test":"-[SomeTests testBacktraceOutputIsCaptured]","className":"SomeTests","methodName":"testBacktraceOutputIsCaptured","event":"begin-test"}
-{"event":"test-output","output":"0   TestProject-LibraryTests            0x016c9827 -[SomeTests testBacktraceOutputIsCaptured] + 103\n"}
-{"event":"test-output","output":"1   CoreFoundation                      0x00a011bd __invoking___ + 29\n"}
-{"event":"test-output","output":"2   CoreFoundation                      0x00a010d6 -[NSInvocation invoke] + 342\n"}
+{"className":"SomeTests","methodName":"testBacktraceOutputIsCaptured","event":"begin-test","test":"-[SomeTests testBacktraceOutputIsCaptured]"}
+{"event":"test-output","output":"0   TestProject-LibraryTests            0x016cb817 -[SomeTests testBacktraceOutputIsCaptured] + 103\n"}
+{"event":"test-output","output":"1   CoreFoundation                      0x00a031bd __invoking___ + 29\n"}
+{"event":"test-output","output":"2   CoreFoundation                      0x00a030d6 -[NSInvocation invoke] + 342\n"}
 {"event":"test-output","output":"3   SenTestingKit                       0x20103ed1 -[SenTestCase invokeTest] + 219\n"}
 {"event":"test-output","output":"4   SenTestingKit                       0x2010405b -[SenTestCase performTest:] + 183\n"}
 {"event":"test-output","output":"5   SenTestingKit                       0x201037bf -[SenTest run] + 82\n"}
@@ -21,35 +23,35 @@
 {"event":"test-output","output":"10  SenTestingKit                       0x2010792b -[SenTestSuite performTest:] + 139\n"}
 {"event":"test-output","output":"11  SenTestingKit                       0x201037bf -[SenTest run] + 82\n"}
 {"event":"test-output","output":"12  SenTestingKit                       0x201063ec +[SenTestProbe runTests:] + 174\n"}
-{"event":"test-output","output":"13  libobjc.A.dylib                     0x007385c8 +[NSObject performSelector:withObject:] + 70\n"}
+{"event":"test-output","output":"13  libobjc.A.dylib                     0x0073a5c8 +[NSObject performSelector:withObject:] + 70\n"}
 {"event":"test-output","output":"14  otest                               0x00002342 otest + 4930\n"}
 {"event":"test-output","output":"15  otest                               0x000025ef otest + 5615\n"}
 {"event":"test-output","output":"16  otest                               0x0000268c otest + 5772\n"}
 {"event":"test-output","output":"17  otest                               0x00002001 otest + 4097\n"}
 {"event":"test-output","output":"18  otest                               0x00001f71 otest + 3953\n"}
-{"output":"0   TestProject-LibraryTests            0x016c9827 -[SomeTests testBacktraceOutputIsCaptured] + 103\n1   CoreFoundation                      0x00a011bd __invoking___ + 29\n2   CoreFoundation                      0x00a010d6 -[NSInvocation invoke] + 342\n3   SenTestingKit                       0x20103ed1 -[SenTestCase invokeTest] + 219\n4   SenTestingKit                       0x2010405b -[SenTestCase performTest:] + 183\n5   SenTestingKit                       0x201037bf -[SenTest run] + 82\n6   SenTestingKit                       0x2010792b -[SenTestSuite performTest:] + 139\n7   SenTestingKit                       0x201037bf -[SenTest run] + 82\n8   SenTestingKit                       0x2010792b -[SenTestSuite performTest:] + 139\n9   SenTestingKit                       0x201037bf -[SenTest run] + 82\n10  SenTestingKit                       0x2010792b -[SenTestSuite performTest:] + 139\n11  SenTestingKit                       0x201037bf -[SenTest run] + 82\n12  SenTestingKit                       0x201063ec +[SenTestProbe runTests:] + 174\n13  libobjc.A.dylib                     0x007385c8 +[NSObject performSelector:withObject:] + 70\n14  otest                               0x00002342 otest + 4930\n15  otest                               0x000025ef otest + 5615\n16  otest                               0x0000268c otest + 5772\n17  otest                               0x00002001 otest + 4097\n18  otest                               0x00001f71 otest + 3953\n","methodName":"testBacktraceOutputIsCaptured","test":"-[SomeTests testBacktraceOutputIsCaptured]","event":"end-test","className":"SomeTests","succeeded":true,"totalDuration":0.0004190206527709961}
-{"test":"-[SomeTests testOutputMerging]","className":"SomeTests","methodName":"testOutputMerging","event":"begin-test"}
+{"exceptions":[],"methodName":"testBacktraceOutputIsCaptured","output":"0   TestProject-LibraryTests            0x016cb817 -[SomeTests testBacktraceOutputIsCaptured] + 103\n1   CoreFoundation                      0x00a031bd __invoking___ + 29\n2   CoreFoundation                      0x00a030d6 -[NSInvocation invoke] + 342\n3   SenTestingKit                       0x20103ed1 -[SenTestCase invokeTest] + 219\n4   SenTestingKit                       0x2010405b -[SenTestCase performTest:] + 183\n5   SenTestingKit                       0x201037bf -[SenTest run] + 82\n6   SenTestingKit                       0x2010792b -[SenTestSuite performTest:] + 139\n7   SenTestingKit                       0x201037bf -[SenTest run] + 82\n8   SenTestingKit                       0x2010792b -[SenTestSuite performTest:] + 139\n9   SenTestingKit                       0x201037bf -[SenTest run] + 82\n10  SenTestingKit                       0x2010792b -[SenTestSuite performTest:] + 139\n11  SenTestingKit                       0x201037bf -[SenTest run] + 82\n12  SenTestingKit                       0x201063ec +[SenTestProbe runTests:] + 174\n13  libobjc.A.dylib                     0x0073a5c8 +[NSObject performSelector:withObject:] + 70\n14  otest                               0x00002342 otest + 4930\n15  otest                               0x000025ef otest + 5615\n16  otest                               0x0000268c otest + 5772\n17  otest                               0x00002001 otest + 4097\n18  otest                               0x00001f71 otest + 3953\n","result":"success","totalDuration":0.0006650090217590332,"test":"-[SomeTests testBacktraceOutputIsCaptured]","event":"end-test","className":"SomeTests","succeeded":true}
+{"className":"SomeTests","methodName":"testOutputMerging","event":"begin-test","test":"-[SomeTests testOutputMerging]"}
 {"event":"test-output","output":"stdout-line1\n"}
 {"event":"test-output","output":"stderr-line1\n"}
 {"event":"test-output","output":"stdout-line2\n"}
 {"event":"test-output","output":"stdout-line3\n"}
 {"event":"test-output","output":"stderr-line2\n"}
 {"event":"test-output","output":"stderr-line3\n"}
-{"output":"stdout-line1\nstderr-line1\nstdout-line2\nstdout-line3\nstderr-line2\nstderr-line3\n","methodName":"testOutputMerging","test":"-[SomeTests testOutputMerging]","event":"end-test","className":"SomeTests","succeeded":true,"totalDuration":0.00008797645568847656}
-{"test":"-[SomeTests testPrintSDK]","className":"SomeTests","methodName":"testPrintSDK","event":"begin-test"}
-{"event":"test-output","output":"2013-05-08 20:51:11.809 otest[88423:707] SDK: 6.1\n"}
-{"output":"2013-05-08 20:51:11.809 otest[88423:707] SDK: 6.1\n","methodName":"testPrintSDK","test":"-[SomeTests testPrintSDK]","event":"end-test","className":"SomeTests","succeeded":true,"totalDuration":0.0005069971084594727}
-{"test":"-[SomeTests testStream]","className":"SomeTests","methodName":"testStream","event":"begin-test"}
-{"event":"test-output","output":"2013-05-08 20:51:11.809 otest[88423:707] >>>> i = 0\n"}
-{"event":"test-output","output":"2013-05-08 20:51:12.060 otest[88423:707] >>>> i = 1\n"}
-{"event":"test-output","output":"2013-05-08 20:51:12.312 otest[88423:707] >>>> i = 2\n"}
-{"output":"2013-05-08 20:51:11.809 otest[88423:707] >>>> i = 0\n2013-05-08 20:51:12.060 otest[88423:707] >>>> i = 1\n2013-05-08 20:51:12.312 otest[88423:707] >>>> i = 2\n","methodName":"testStream","test":"-[SomeTests testStream]","event":"end-test","className":"SomeTests","succeeded":true,"totalDuration":0.754211962223053}
-{"test":"-[SomeTests testWillFail]","className":"SomeTests","methodName":"testWillFail","event":"begin-test"}
-{"output":"","methodName":"testWillFail","test":"-[SomeTests testWillFail]","event":"end-test","className":"SomeTests","succeeded":false,"totalDuration":0.0001929998397827148,"exception":{"filePathInProject":"\/Users\/fpotter\/xctool\/xctool\/xctool-tests\/TestData\/TestProject-Library\/TestProject-LibraryTests\/SomeTests.m","lineNumber":40,"reason":"'a' should be equal to 'b' Strings aren't equal","name":"SenTestFailureException"}}
-{"test":"-[SomeTests testWillPass]","className":"SomeTests","methodName":"testWillPass","event":"begin-test"}
-{"output":"","methodName":"testWillPass","test":"-[SomeTests testWillPass]","event":"end-test","className":"SomeTests","succeeded":true,"totalDuration":0.0001050233840942383}
-{"suite":"SomeTests","testCaseCount":6,"event":"end-test-suite","totalFailureCount":1,"totalDuration":0.7564079761505127,"unexpectedExceptionCount":0,"testDuration":0.7555239796638489}
-{"suite":"\/Users\/fpotter\/Library\/Developer\/Xcode\/DerivedData\/TestProject-Library-gqcuxcsyguaqwugnnwmftlazxbyg\/Build\/Products\/Debug-iphonesimulator\/TestProject-LibraryTests.octest(Tests)","testCaseCount":7,"event":"end-test-suite","totalFailureCount":1,"totalDuration":0.7603319883346558,"unexpectedExceptionCount":0,"testDuration":0.7591749429702759}
-{"suite":"Multiple Selected Tests","testCaseCount":7,"event":"end-test-suite","totalFailureCount":1,"totalDuration":0.7604629993438721,"unexpectedExceptionCount":0,"testDuration":0.7591749429702759}
+{"exceptions":[],"methodName":"testOutputMerging","output":"stdout-line1\nstderr-line1\nstdout-line2\nstdout-line3\nstderr-line2\nstderr-line3\n","result":"success","totalDuration":0.0001450181007385254,"test":"-[SomeTests testOutputMerging]","event":"end-test","className":"SomeTests","succeeded":true}
+{"className":"SomeTests","methodName":"testPrintSDK","event":"begin-test","test":"-[SomeTests testPrintSDK]"}
+{"event":"test-output","output":"2013-08-19 12:12:06.403 otest[57696:707] SDK: 6.1\n"}
+{"exceptions":[],"methodName":"testPrintSDK","output":"2013-08-19 12:12:06.403 otest[57696:707] SDK: 6.1\n","result":"success","totalDuration":0.0004540085792541504,"test":"-[SomeTests testPrintSDK]","event":"end-test","className":"SomeTests","succeeded":true}
+{"className":"SomeTests","methodName":"testStream","event":"begin-test","test":"-[SomeTests testStream]"}
+{"event":"test-output","output":"2013-08-19 12:12:06.404 otest[57696:707] >>>> i = 0\n"}
+{"event":"test-output","output":"2013-08-19 12:12:06.655 otest[57696:707] >>>> i = 1\n"}
+{"event":"test-output","output":"2013-08-19 12:12:06.907 otest[57696:707] >>>> i = 2\n"}
+{"exceptions":[],"methodName":"testStream","output":"2013-08-19 12:12:06.404 otest[57696:707] >>>> i = 0\n2013-08-19 12:12:06.655 otest[57696:707] >>>> i = 1\n2013-08-19 12:12:06.907 otest[57696:707] >>>> i = 2\n","result":"success","totalDuration":0.7548210024833679,"test":"-[SomeTests testStream]","event":"end-test","className":"SomeTests","succeeded":true}
+{"className":"SomeTests","methodName":"testWillFail","event":"begin-test","test":"-[SomeTests testWillFail]"}
+{"exceptions":[{"name":"SenTestFailureException","reason":"'a' should be equal to 'b' Strings aren't equal","lineNumber":40,"filePathInProject":"\/Users\/fpotter\/xctool\/xctool\/xctool-tests\/TestData\/TestProject-Library\/TestProject-LibraryTests\/SomeTests.m"}],"methodName":"testWillFail","output":"","result":"failure","totalDuration":0.0001389980316162109,"test":"-[SomeTests testWillFail]","event":"end-test","className":"SomeTests","succeeded":false}
+{"className":"SomeTests","methodName":"testWillPass","event":"begin-test","test":"-[SomeTests testWillPass]"}
+{"exceptions":[],"methodName":"testWillPass","output":"","result":"success","totalDuration":8.499622344970703e-05,"test":"-[SomeTests testWillPass]","event":"end-test","className":"SomeTests","succeeded":true}
+{"totalFailureCount":1,"testCaseCount":6,"totalDuration":0.75724196434021,"testDuration":0.7563090324401855,"event":"end-test-suite","suite":"SomeTests","unexpectedExceptionCount":0}
+{"totalFailureCount":1,"testCaseCount":7,"totalDuration":0.7612379789352417,"testDuration":0.7599970102310181,"event":"end-test-suite","suite":"\/Users\/fpotter\/Library\/Developer\/Xcode\/DerivedData\/TestProject-Library-fyvnxoldewntrkghocepdzfrcsdm\/Build\/Products\/Debug-iphonesimulator\/TestProject-LibraryTests.octest(Tests)","unexpectedExceptionCount":0}
+{"totalFailureCount":1,"testCaseCount":7,"totalDuration":0.7613800168037415,"testDuration":0.7599970102310181,"event":"end-test-suite","suite":"Multiple Selected Tests","unexpectedExceptionCount":0}
 {"bundleName":"TestProject-LibraryTests.octest","gcEnabled":false,"succeeded":false,"failureReason":null,"event":"end-ocunit","testType":"logic-test","sdkName":"iphonesimulator6.1"}
-{"succeeded":false,"event":"end-action","name":"run-tests","duration":1.400507638696581,"workspace":null,"project":"TestProject-Library","scheme":"TestProject-Library"}
+{"scheme":"TestProject-Library","event":"end-action","succeeded":false,"workspace":null,"project":"TestProject-Library.xcodeproj\/","duration":2.794481541030109,"name":"run-tests"}

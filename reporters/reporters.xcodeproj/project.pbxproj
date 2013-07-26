@@ -52,6 +52,9 @@
 		28F48A4D17974FEB00068E00 /* JSONCompilationDatabaseReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F48A4C17974FEB00068E00 /* JSONCompilationDatabaseReporterTests.m */; };
 		28F48A54179750A600068E00 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2893A96A17960D2000EFBD28 /* Foundation.framework */; };
 		28F48A57179750A600068E00 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F48A56179750A600068E00 /* main.m */; };
+		EE9E73E317A7323B008A5ED2 /* TestResultCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE9E73E217A7323B008A5ED2 /* TestResultCounter.m */; };
+		EE9E73E417A732F0008A5ED2 /* TestResultCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE9E73E217A7323B008A5ED2 /* TestResultCounter.m */; };
+		EE9E73E517A73308008A5ED2 /* TestResultCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE9E73E217A7323B008A5ED2 /* TestResultCounter.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -168,6 +171,8 @@
 		28F48A4E1797500300068E00 /* JSONCompilationDatabaseReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONCompilationDatabaseReporter.h; sourceTree = "<group>"; };
 		28F48A53179750A600068E00 /* json-stream */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "json-stream"; sourceTree = BUILT_PRODUCTS_DIR; };
 		28F48A56179750A600068E00 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		EE9E73E117A7323B008A5ED2 /* TestResultCounter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestResultCounter.h; sourceTree = "<group>"; };
+		EE9E73E217A7323B008A5ED2 /* TestResultCounter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestResultCounter.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -317,6 +322,8 @@
 				28F489F617973B7100068E00 /* FakeFileHandle.h */,
 				28F489F717973B7100068E00 /* FakeFileHandle.m */,
 				28F489CE179725BB00068E00 /* ReporterEvents.h */,
+				EE9E73E117A7323B008A5ED2 /* TestResultCounter.h */,
+				EE9E73E217A7323B008A5ED2 /* TestResultCounter.m */,
 			);
 			name = Common;
 			sourceTree = "<group>";
@@ -580,6 +587,7 @@
 				28F48A3517974EA000068E00 /* JUnitReporterTests.m in Sources */,
 				28F48A4A17974F3F00068E00 /* JSONCompilationDatabaseReporter.m in Sources */,
 				28F48A4D17974FEB00068E00 /* JSONCompilationDatabaseReporterTests.m in Sources */,
+				EE9E73E317A7323B008A5ED2 /* TestResultCounter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -587,6 +595,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE9E73E417A732F0008A5ED2 /* TestResultCounter.m in Sources */,
 				28F489D6179735B700068E00 /* main.m in Sources */,
 				28F489D8179735B700068E00 /* TextReporter.m in Sources */,
 				28F489DE1797360600068E00 /* Reporter.m in Sources */,
@@ -597,6 +606,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE9E73E517A73308008A5ED2 /* TestResultCounter.m in Sources */,
 				28F489E31797362400068E00 /* main.m in Sources */,
 				28F489E41797362400068E00 /* TextReporter.m in Sources */,
 				28F489E51797362400068E00 /* Reporter.m in Sources */,
