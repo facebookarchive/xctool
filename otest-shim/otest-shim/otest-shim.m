@@ -35,7 +35,7 @@ static int __stderrHandle;
 static FILE *__stderr;
 
 static BOOL __testIsRunning = NO;
-static NSException *__testException = nil;
+static NSMutableArray *__testExceptions = nil;
 static NSMutableString *__testOutput = nil;
 
 static dispatch_queue_t EventQueue()
@@ -152,8 +152,8 @@ static void SenTestLog_testCaseDidStart(id self, SEL sel, NSNotification *notifi
 
     [classAndMethodNames release];
     classAndMethodNames = nil;
-    [__testException release];
-    __testException = nil;
+    [__testExceptions release];
+    __testExceptions = [[NSMutableArray alloc] init];
     __testIsRunning = YES;
     __testOutput = [[NSMutableString string] retain];
   });
@@ -175,15 +175,18 @@ static void SenTestLog_testCaseDidStop(id self, SEL sel, NSNotification *notific
                                  kReporter_EndTest_OutputKey : __testOutput,
                                  }];
 
-    if (__testException != nil) {
-      [json setObject:@{
-       kReporter_EndTest_Exception_FilePathInProjectKey : [__testException filePathInProject],
-       kReporter_EndTest_Exception_LineNumberKey : [__testException lineNumber],
-       kReporter_EndTest_Exception_ReasonKey : [__testException reason],
-       kReporter_EndTest_Exception_NameKey : [__testException name],
-       }
-               forKey:kReporter_EndTest_ExceptionKey];
-    }
+    NSMutableArray *retExceptions = [NSMutableArray array];
+    [__testExceptions enumerateObjectsUsingBlock:
+     ^(NSException *entry, NSUInteger idx, BOOL *stop) {
+         [retExceptions addObject:@{
+             kReporter_EndTest_Exception_FilePathInProjectKey : [entry filePathInProject],
+             kReporter_EndTest_Exception_LineNumberKey : [entry lineNumber],
+             kReporter_EndTest_Exception_ReasonKey : [entry reason],
+             kReporter_EndTest_Exception_NameKey : [entry name],
+         }];
+     }];
+    [json setObject:retExceptions
+             forKey:kReporter_EndTest_ExceptionsKey];
 
     PrintJSON(json);
 
@@ -198,11 +201,7 @@ static void SenTestLog_testCaseDidStop(id self, SEL sel, NSNotification *notific
 static void SenTestLog_testCaseDidFail(id self, SEL sel, NSNotification *notification)
 {
   dispatch_sync(EventQueue(), ^{
-    NSException *exception = [notification exception];
-    if (__testException != exception) {
-      [__testException release];
-      __testException = [exception retain];
-    }
+    [__testExceptions addObject: [notification exception]];
   });
 }
 

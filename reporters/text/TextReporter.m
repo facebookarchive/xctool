@@ -359,9 +359,9 @@ static NSString *abbreviatePath(NSString *string) {
          test[@"bundle"]
          ];
 
-        NSDictionary *exception = testEvent[kReporter_EndTest_ExceptionKey];
+        NSArray *exceptions = testEvent[kReporter_EndTest_ExceptionsKey];
 
-        BOOL showInfo = ([testEvent[kReporter_EndTest_OutputKey] length] > 0) || (exception != nil);
+        BOOL showInfo = ([testEvent[kReporter_EndTest_OutputKey] length] > 0) || ([exceptions count] > 0);
 
         if (showInfo) {
           [self printDivider];
@@ -371,8 +371,9 @@ static NSString *abbreviatePath(NSString *string) {
         [self.reportWriter printString:@"<faint>%@<reset>", testEvent[kReporter_EndTest_OutputKey]];
         [self.reportWriter enableIndent];
 
-        // Show exception, if any.
-        if (exception) {
+        // Show first exception, if any.
+        if ([exceptions count] > 0) {
+          NSDictionary *exception = exceptions[0];
           [self.reportWriter disableIndent];
           [self.reportWriter printLine:@"<faint>%@:%d: %@: %@:<reset>",
            exception[kReporter_EndTest_Exception_FilePathInProjectKey],
@@ -678,9 +679,10 @@ static NSString *abbreviatePath(NSString *string) {
 
     [self.reportWriter disableIndent];
 
-    // Show exception, if any.
-    NSDictionary *exception = event[kReporter_EndTest_ExceptionKey];
-    if (exception) {
+    // Show first exception, if any.
+    NSArray *exceptions = event[kReporter_EndTest_ExceptionsKey];
+    if ([exceptions count] > 0) {
+      NSDictionary *exception = exceptions[0];
       [self.reportWriter printLine:@"<faint>%@:%d: %@: %@:<reset>",
        exception[kReporter_EndTest_Exception_FilePathInProjectKey],
        [exception[kReporter_EndTest_Exception_LineNumberKey] intValue],
