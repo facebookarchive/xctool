@@ -165,12 +165,25 @@ static void SenTestLog_testCaseDidStop(id self, SEL sel, NSNotification *notific
     SenTestRun *run = [notification run];
     NSString *fullTestName = [[run test] description];
     NSArray *classAndMethodNames = CreateParseTestName(fullTestName);
+    BOOL errored = [run unexpectedExceptionCount] > 0;
+    BOOL failed = [run failureCount] > 0;
+    BOOL succeeded = NO;
+    NSString *result;
+    if (errored) {
+      result = @"error";
+    } else if (failed) {
+      result = @"failure";
+    } else {
+      result = @"success";
+      succeeded = YES;
+    }
     NSMutableDictionary *json = [NSMutableDictionary dictionaryWithDictionary:@{
                                  @"event" : kReporter_Events_EndTest,
                                  kReporter_EndTest_TestKey : [[run test] description],
                                  kReporter_EndTest_ClassNameKey : [classAndMethodNames objectAtIndex:0],
                                  kReporter_EndTest_MethodNameKey : [classAndMethodNames objectAtIndex:1],
-                                 kReporter_EndTest_SucceededKey : [run hasSucceeded] ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO],
+                                 kReporter_EndTest_SucceededKey: [NSNumber numberWithBool: succeeded],
+                                 kReporter_EndTest_ResultKey : result,
                                  kReporter_EndTest_TotalDurationKey : @([run totalDuration]),
                                  kReporter_EndTest_OutputKey : __testOutput,
                                  }];

@@ -120,6 +120,13 @@
 {
   NSMutableString *userdata = [NSMutableString stringWithString:event[kReporter_EndTest_OutputKey]];
 
+  NSDictionary *resultMapping = @{
+    @"success": @"pass",
+    @"failure": @"fail",
+      @"error": @"broken",
+  };
+  NSString *result = resultMapping[event[kReporter_EndTest_ResultKey]] ?: @"unsound";
+
   // Include first exception, if any.
   NSArray *exceptions = event[kReporter_EndTest_ExceptionsKey];
   if ([exceptions count] > 0) {
@@ -136,7 +143,7 @@
               _scheme,
               event[kReporter_EndTest_TestKey]],
    @"link" : [NSNull null],
-   @"result" : [event[kReporter_EndTest_SucceededKey] boolValue] ? @"pass" : @"fail",
+   @"result" : result,
    @"userdata" : userdata,
    @"coverage" : [NSNull null],
    @"extra" : [NSNull null],
