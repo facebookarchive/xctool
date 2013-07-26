@@ -120,9 +120,10 @@
 {
   NSMutableString *userdata = [NSMutableString stringWithString:event[kReporter_EndTest_OutputKey]];
 
-  // Include exception, if any.
-  NSDictionary *exception = event[kReporter_EndTest_ExceptionKey];
-  if (exception) {
+  // Include first exception, if any.
+  NSArray *exceptions = event[kReporter_EndTest_ExceptionsKey];
+  if ([exceptions count] > 0) {
+    NSDictionary *exception = exceptions[0];
     [userdata appendFormat:@"%@:%d: %@: %@",
      exception[kReporter_EndTest_Exception_FilePathInProjectKey],
      [exception[kReporter_EndTest_Exception_LineNumberKey] intValue],
