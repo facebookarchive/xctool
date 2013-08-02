@@ -129,6 +129,7 @@
 - (BOOL)runTestsWithError:(NSString **)error {
   OCUnitCrashFilter *crashFilter = [[[OCUnitCrashFilter alloc] init] autorelease];
   __block BOOL didReceiveTestEvents = NO;
+  NSInteger runAttempts = 0;
 
   void (^feedOutputToBlock)(NSString *) = ^(NSString *line) {
     NSData *lineData = [line dataUsingEncoding:NSUTF8StringEncoding];
@@ -143,10 +144,16 @@
 
   NSString *runTestsError = nil;
   BOOL didTerminateWithUncaughtSignal = NO;
-  BOOL succeeded = [self runTestsAndFeedOutputTo:feedOutputToBlock
-                               gotUncaughtSignal:&didTerminateWithUncaughtSignal
-                                           error:&runTestsError];
-
+  BOOL succeeded = NO;
+  
+  while (runAttempts++ < MAX_TEST_RETRIES){
+    succeeded = [self runTestsAndFeedOutputTo:feedOutputToBlock
+                                 gotUncaughtSignal:&didTerminateWithUncaughtSignal
+                                             error:&runTestsError];
+    if (succeeded == YES){
+      break;
+    }
+  }
   if (runTestsError) {
     *error = runTestsError;
   }

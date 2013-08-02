@@ -16,6 +16,8 @@
 
 #import <Foundation/Foundation.h>
 
+static const NSInteger MAX_TEST_RETRIES = 3;
+
 @interface OCUnitTestRunner : NSObject {
 @public
   NSDictionary *_buildSettings;
