@@ -37,6 +37,8 @@
 {
   [_reporterPath release];
   [_outputPath release];
+  [_standardOutput release];
+  [_standardError release];
   [_task release];
   [_pipe release];
   [super dealloc];
@@ -74,8 +76,12 @@
 }
 
 - (BOOL)openWithStandardOutput:(NSFileHandle *)standardOutput
+                 standardError:(NSFileHandle *)standardError
                          error:(NSString **)error
 {
+  _standardOutput = [standardOutput retain];
+  _standardError = [standardError retain];
+
   NSFileHandle *outputHandle = nil;
 
   if ([_outputPath isEqualToString:@"-"]) {

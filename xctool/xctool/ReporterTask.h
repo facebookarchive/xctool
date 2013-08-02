@@ -23,6 +23,9 @@
   NSString *_reporterPath;
   NSString *_outputPath;
 
+  NSFileHandle *_standardOutput;
+  NSFileHandle *_standardError;
+
   BOOL _outputPathIsFile;
 
   NSTask *_task;
@@ -42,6 +45,7 @@
  To be called before any action is run.
  */
 - (BOOL)openWithStandardOutput:(NSFileHandle *)standardOutput
+                 standardError:(NSFileHandle *)standardError
                          error:(NSString **)error;
 
 /**
