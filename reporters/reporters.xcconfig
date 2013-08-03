@@ -18,3 +18,5 @@
 
 #include "../Configurations/Install.xcconfig"
 XT_INSTALL_DIR = reporters
+
+MACOSX_DEPLOYMENT_TARGET = 10.7

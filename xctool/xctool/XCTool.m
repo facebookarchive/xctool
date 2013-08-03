@@ -164,7 +164,9 @@
 
   for (ReporterTask *reporter in options.reporters) {
     NSString *error = nil;
-    if (![reporter openWithStandardOutput:_standardOutput error:&error]) {
+    if (![reporter openWithStandardOutput:_standardOutput
+                            standardError:_standardError
+                                    error:&error]) {
       [_standardError printString:@"ERROR: %@\n\n", error];
       _exitStatus = 1;
       return;

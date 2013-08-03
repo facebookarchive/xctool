@@ -33,6 +33,7 @@
                                                       outputPath:@"-"] autorelease];
   NSString *error = nil;
   BOOL opened = [rt openWithStandardOutput:[NSFileHandle fileHandleForWritingAtPath:fakeStandardOutputPath]
+                             standardError:[NSFileHandle fileHandleWithStandardError]
                                      error:&error];
   assertThatBool(opened, equalToBool(YES));
 
@@ -55,6 +56,7 @@
                                                       outputPath:someOutputPath] autorelease];
   NSString *error = nil;
   BOOL opened = [rt openWithStandardOutput:[NSFileHandle fileHandleForWritingAtPath:fakeStandardOutputPath]
+                             standardError:[NSFileHandle fileHandleWithStandardError]
                                      error:&error];
   assertThatBool(opened, equalToBool(YES));
 

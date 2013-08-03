@@ -16,8 +16,10 @@
 
 #import "ReporterTask.h"
 
+#import <fcntl.h>
 #import <objc/message.h>
 
+#import "NSFileHandle+Print.h"
 #import "XCToolUtil.h"
 
 
@@ -37,6 +39,8 @@
 {
   [_reporterPath release];
   [_outputPath release];
+  [_standardOutput release];
+  [_standardError release];
   [_task release];
   [_pipe release];
   [super dealloc];
@@ -74,8 +78,12 @@
 }
 
 - (BOOL)openWithStandardOutput:(NSFileHandle *)standardOutput
+                 standardError:(NSFileHandle *)standardError
                          error:(NSString **)error
 {
+  _standardOutput = [standardOutput retain];
+  _standardError = [standardError retain];
+
   NSFileHandle *outputHandle = nil;
 
   if ([_outputPath isEqualToString:@"-"]) {
@@ -92,6 +100,10 @@
 
   _pipe = [[NSPipe pipe] retain];
 
+  // Don't generate a SIGPIPE if the we try to write() to this pipe and the
+  // process has already died.
+  NSAssert(fcntl([[_pipe fileHandleForWriting] fileDescriptor], F_SETNOSIGPIPE, 1) != -1,
+           @"fcntl() failed: %s", strerror(errno));
 
   if (IsRunningUnderTest()) {
     // In tests, we swizzle +[NSTask alloc] to always return FakeTask's.  We can
@@ -117,11 +129,18 @@
     return NO;
   }
 
+  _wasOpened = YES;
   return YES;
 }
 
 - (void)close
 {
+  NSAssert(_wasOpened, @"Can't close without opening first.");
+
+  if (_wasClosed) {
+    return;
+  }
+
   // Close pipe so the reporter gets an EOF, and can terminate.
   [[_pipe fileHandleForWriting] closeFile];
 
@@ -132,12 +151,50 @@
   if (_outputPathIsFile) {
     [[_task standardOutput] closeFile];
   }
+
+  _wasClosed = YES;
 }
 
 - (void)publishDataForEvent:(NSData *)data
 {
-  [[_pipe fileHandleForWriting] writeData:data];
-  [[_pipe fileHandleForWriting] writeData:[@"\n" dataUsingEncoding:NSUTF8StringEncoding]];
+  NSAssert(_wasOpened, @"Can't publish without opening first.");
+
+  if (_wasClosed) {
+    return;
+  }
+
+  NSMutableData *buffer = [[NSMutableData alloc] initWithCapacity:[data length] + 1];
+  [buffer appendData:data];
+  [buffer appendData:[@"\n" dataUsingEncoding:NSUTF8StringEncoding]];
+
+  int fd = [[_pipe fileHandleForWriting] fileDescriptor];
+
+  NSUInteger bytesWritten = 0;
+  NSUInteger bufferLength = [buffer length];
+  const uint8_t *bufferPtr = [buffer bytes];
+
+  while (bytesWritten < bufferLength) {
+    size_t result = write(fd, bufferPtr + bytesWritten, (bufferLength - bytesWritten));
+
+    if (result == -1) {
+      if (errno == ESRCH || errno == EPIPE) {
+        [self close];
+        [_standardError printString:
+         @"ERROR: Reporter '%@' exited prematurely with status (%d).\n",
+         [_reporterPath lastPathComponent],
+         [_task terminationStatus]];
+        break;
+      } else {
+        NSAssert(NO,
+                 @"Failed while write()'ing to the reporter's pipe: %s (%d)",
+                 strerror(errno), errno);
+      }
+    } else {
+      bytesWritten += result;
+    }
+  }
+
+  [buffer release];
 }
 
 @end

@@ -4,6 +4,7 @@
 #import "FakeTask.h"
 #import "FakeTaskManager.h"
 #import "LaunchHandlers.h"
+#import "ReporterTask.h"
 #import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
 
@@ -84,6 +85,12 @@
                 format:@"Failed to read file from: %@", path];
   }
 
+  for (ReporterTask *task in self.reporters) {
+    [task openWithStandardOutput:[NSFileHandle fileHandleWithStandardOutput]
+                   standardError:[NSFileHandle fileHandleWithStandardError]
+                           error:nil];
+  }
+
   __block XcodeSubjectInfo *subjectInfo = nil;
   __block NSString *error = nil;
   __block BOOL valid = NO;
@@ -101,6 +108,10 @@
     valid = [self validateAndReturnXcodeSubjectInfo:&subjectInfo
                                        errorMessage:&error];
   }];
+
+  for (ReporterTask *task in self.reporters) {
+    [task close];
+  }
 
   *validOut = valid;
   *errorOut = error;
