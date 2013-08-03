@@ -32,6 +32,7 @@
   NSPipe *_pipe;
 
   BOOL _wasOpened;
+  BOOL _wasClosed;
 }
 
 @property (nonatomic, readonly) NSString *reporterPath;
