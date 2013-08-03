@@ -123,11 +123,14 @@
     return NO;
   }
 
+  _wasOpened = YES;
   return YES;
 }
 
 - (void)close
 {
+  NSAssert(_wasOpened, @"Can't close without opening first.");
+
   // Close pipe so the reporter gets an EOF, and can terminate.
   [[_pipe fileHandleForWriting] closeFile];
 
@@ -142,6 +145,8 @@
 
 - (void)publishDataForEvent:(NSData *)data
 {
+  NSAssert(_wasOpened, @"Can't publish without opening first.");
+
   [[_pipe fileHandleForWriting] writeData:data];
   [[_pipe fileHandleForWriting] writeData:[@"\n" dataUsingEncoding:NSUTF8StringEncoding]];
 }

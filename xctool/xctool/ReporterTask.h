@@ -30,6 +30,8 @@
 
   NSTask *_task;
   NSPipe *_pipe;
+
+  BOOL _wasOpened;
 }
 
 @property (nonatomic, readonly) NSString *reporterPath;
