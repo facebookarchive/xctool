@@ -86,9 +86,11 @@
   }
 
   for (ReporterTask *task in self.reporters) {
+    NSString *openError = nil;
     [task openWithStandardOutput:[NSFileHandle fileHandleWithStandardOutput]
                    standardError:[NSFileHandle fileHandleWithStandardError]
-                           error:nil];
+                           error:&openError];
+    NSAssert(openError == nil, @"Got error while opening reporter task: %@", openError);
   }
 
   __block XcodeSubjectInfo *subjectInfo = nil;
