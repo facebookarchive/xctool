@@ -18,6 +18,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 
+#import "ReportStatus.h"
 #import "OCUnitCrashFilter.h"
 #import "XCToolUtil.h"
 
@@ -152,6 +153,12 @@
                                              error:&runTestsError];
     if (succeeded == YES){
       break;
+    } else {
+      if (runAttempts < MAX_TEST_RETRIES){
+        ReportStatusMessage(_reporters,
+                                 REPORTER_MESSAGE_INFO,
+                                 @"Retrying build/test sequence.");
+      }
     }
   }
   if (runTestsError) {
