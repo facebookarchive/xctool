@@ -87,8 +87,8 @@
 
   for (ReporterTask *task in self.reporters) {
     NSString *openError = nil;
-    [task openWithStandardOutput:[NSFileHandle fileHandleWithStandardOutput]
-                   standardError:[NSFileHandle fileHandleWithStandardError]
+    [task openWithStandardOutput:[NSFileHandle fileHandleWithNullDevice]
+                   standardError:[NSFileHandle fileHandleWithNullDevice]
                            error:&openError];
     NSAssert(openError == nil, @"Got error while opening reporter task: %@", openError);
   }
