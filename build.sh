@@ -51,6 +51,7 @@ xcodebuild \
   -workspace "$XCTOOL_DIR"/xctool.xcworkspace \
   -scheme xctool \
   -configuration Release \
+  -IDEBuildLocationStyle=Custom \
   -IDECustomBuildLocationType=Absolute \
   -IDECustomBuildProductsPath="$BUILD_OUTPUT_DIR/Products" \
   -IDECustomBuildIntermediatesPath="$BUILD_OUTPUT_DIR/Intermediates" \
