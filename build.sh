@@ -51,9 +51,9 @@ xcodebuild \
   -workspace "$XCTOOL_DIR"/xctool.xcworkspace \
   -scheme xctool \
   -configuration Release \
-  OBJROOT="$BUILD_OUTPUT_DIR"/Intermediates \
-  SYMROOT="$BUILD_OUTPUT_DIR"/Products \
-  SHARED_PRECOMPS_DIR="$BUILD_OUTPUT_DIR"/Intermediates/PrecompiledHeaders \
+  -IDECustomBuildLocationType=Absolute \
+  -IDECustomBuildProductsPath="$BUILD_OUTPUT_DIR/Products" \
+  -IDECustomBuildIntermediatesPath="$BUILD_OUTPUT_DIR/Intermediates" \
   XT_IOS_SDK_VERSION="$XT_IOS_SDK_VERSION" \
   XT_IOS_SDK_VERSION_EXPANDED="$XT_IOS_SDK_VERSION_EXPANDED" \
   $@
