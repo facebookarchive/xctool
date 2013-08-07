@@ -17,6 +17,7 @@
 #import "OCUnitOSXAppTestRunner.h"
 
 #import "LineReader.h"
+#import "ReportStatus.h"
 #import "SimulatorLauncher.h"
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
@@ -31,6 +32,18 @@
   NSAssert([sdkName hasPrefix:@"macosx"], @"Unexpected SDK: %@", sdkName);
 
   NSString *testHostPath = _buildSettings[@"TEST_HOST"];
+  if (! [[NSFileManager defaultManager] isExecutableFileAtPath:testHostPath]) {
+    // It's conceivable that isExecutableFileAtPath is wrong; for example, maybe we're on
+    // a wonky FS, or running as root, or running with differing real/effective UIDs.
+    // Unfortunately, there's no way to be sure without actually running TEST_HOST, and
+    // NSTask throws an exception if the execve fails, and that's a nasty failure mode for
+    // us. It's better to fail usefully for obviously wrong TEST_HOSTs than support
+    // incredibly odd configs.
+    ReportStatusMessage(_reporters, REPORTER_MESSAGE_ERROR,
+                        @"Your TEST_HOST '%@' does not appear to be an executable.", testHostPath);
+    *error = @"TEST_HOST not executable.";
+    return NO;
+  }
 
   NSArray *libraries = @[[XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-osx.dylib"],
                          [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection"],
