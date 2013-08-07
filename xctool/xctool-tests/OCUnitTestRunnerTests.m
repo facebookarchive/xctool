@@ -19,22 +19,21 @@
 
 @implementation OCUnitTestRunnerTests
 
-- (void)testArgsAndEnvArePassedToIOSApplicationTest
-{
-  NSDictionary *allSettings =
-    BuildSettingsFromOutput([NSString stringWithContentsOfFile:TEST_DATA @"iOS-Application-Test-showBuildSettings.txt"
-                                                      encoding:NSUTF8StringEncoding
-                                                         error:nil]);
-  NSDictionary *testSettings = allSettings[@"TestProject-LibraryTests2"];
+#pragma mark iOS Tests
 
-  __block DTiPhoneSimulatorSessionConfig *config = nil;
+- (void)simulateIOSApplicationTestWithSettings:(NSDictionary*)testSettings
+                                     putConfig:(DTiPhoneSimulatorSessionConfig**)configPtr
+                                      putError:(NSString**)errPtr
+{
+  *configPtr = nil;
+  *errPtr = nil;
 
   [Swizzler whileSwizzlingSelector:@selector(launchAndWaitForExit)
                forInstancesOfClass:[SimulatorLauncher class]
                          withBlock:
    ^(SimulatorLauncher *self, SEL sel) {
      // Pretend it launched and succeeded, but save the config so we can check it.
-     config = [[self->_session sessionConfig] retain];
+     *configPtr = [[self->_session sessionConfig] retain];
      return YES;
    }
                           runBlock:
@@ -58,12 +57,27 @@
                                               standardOutput:[NSFileHandle fileHandleWithNullDevice]
                                                standardError:[NSFileHandle fileHandleWithNullDevice]
                                                    reporters:@[]] autorelease];
-     NSString *error = nil;
-     [runner runTestsWithError:&error];
+     [runner runTestsWithError:errPtr];
    }];
+}
 
-  NSArray *arguments = [config simulatedApplicationLaunchArgs];
-  assertThat(arguments,
+- (void)testArgsAndEnvArePassedToIOSApplicationTest
+{
+  NSDictionary *allSettings =
+  BuildSettingsFromOutput([NSString stringWithContentsOfFile:TEST_DATA @"iOS-Application-Test-showBuildSettings.txt"
+                                                    encoding:NSUTF8StringEncoding
+                                                       error:nil]);
+
+  NSMutableDictionary *testSettings = [allSettings[@"TestProject-LibraryTests2"] mutableCopy];
+  testSettings[@"TEST_HOST"] = TEST_DATA @"FakeApp.app/FakeAppExe";
+
+  DTiPhoneSimulatorSessionConfig *config;
+  NSString *err;
+
+  [self simulateIOSApplicationTestWithSettings:testSettings putConfig:&config putError:&err];
+
+  assertThat(config, notNilValue());
+  assertThat([config simulatedApplicationLaunchArgs],
              equalTo(@[
                      @"-NSTreatUnknownArgumentsAsOpen",
                      @"NO",
@@ -79,6 +93,27 @@
   assertThat([config simulatedApplicationLaunchEnvironment][@"SomeEnvKey"],
              equalTo(@"SomeEnvValue"));
   
+  [config release];
+}
+
+- (void)testIOSApplicationTestWithBadTesthostFails
+{
+  NSDictionary *allSettings =
+  BuildSettingsFromOutput([NSString stringWithContentsOfFile:TEST_DATA @"iOS-Application-Test-showBuildSettings.txt"
+                                                    encoding:NSUTF8StringEncoding
+                                                       error:nil]);
+
+  NSMutableDictionary *testSettings = [allSettings[@"TestProject-LibraryTests2"] mutableCopy];
+  testSettings[@"TEST_HOST"] = @"/var/empty/whee";
+
+  DTiPhoneSimulatorSessionConfig *config;
+  NSString *err;
+
+  [self simulateIOSApplicationTestWithSettings:testSettings putConfig:&config putError:&err];
+
+  assertThat(config, nilValue());
+  assertThat(err, containsString(@"TEST_HOST"));
+
   [config release];
 }
 
@@ -135,6 +170,95 @@
   }];
 }
 
+#pragma mark OSX Tests
+
+- (void)simulateOSXApplicationTestWithSettings:(NSDictionary*)testSettings
+                                      putTasks:(NSArray**)tasksptr
+                                      putError:(NSString**)errPtr
+{
+  *tasksptr = nil;
+  *errPtr = nil;
+
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    OCUnitOSXAppTestRunner *runner =
+    [[[OCUnitOSXAppTestRunner alloc] initWithBuildSettings:testSettings
+                                               senTestList:@"All"
+                                        senTestInvertScope:NO
+                                                 arguments:
+     @[
+     @"-SomeArg", @"SomeVal",
+     ]
+                                               environment:
+     @{
+     @"SomeEnvKey" : @"SomeEnvValue",
+     }
+                                         garbageCollection:NO
+                                            freshSimulator:NO
+                                              freshInstall:NO
+                                             simulatorType:nil
+                                            standardOutput:[NSFileHandle fileHandleWithNullDevice]
+                                             standardError:[NSFileHandle fileHandleWithNullDevice]
+                                                 reporters:@[]] autorelease];
+
+    [runner runTestsWithError:errPtr];
+
+    *tasksptr = [[[FakeTaskManager sharedManager] launchedTasks] retain];
+  }];
+}
+
+- (void)testArgsAndEnvArePassedToOSXApplicationTest
+{
+  NSDictionary *allSettings =
+  BuildSettingsFromOutput([NSString stringWithContentsOfFile:TEST_DATA @"OSX-Application-Test-showBuildSettings.txt"
+                                                    encoding:NSUTF8StringEncoding
+                                                       error:nil]);
+
+  NSMutableDictionary *testSettings = [allSettings[@"TestProject-App-OSXTests"] mutableCopy];
+  testSettings[@"TEST_HOST"] = TEST_DATA @"FakeApp.app/FakeAppExe";
+
+  NSArray *launchedTasks;
+  NSString *err;
+
+  [self simulateOSXApplicationTestWithSettings:testSettings putTasks:&launchedTasks putError:&err];
+
+  assertThatInteger([launchedTasks count], equalToInteger(1));
+  assertThat([launchedTasks[0] arguments],
+             equalTo(@[
+                     @"-NSTreatUnknownArgumentsAsOpen",
+                     @"NO",
+                     @"-ApplePersistenceIgnoreState",
+                     @"YES",
+                     @"-SenTest",
+                     @"All",
+                     @"-SenTestInvertScope",
+                     @"NO",
+                     @"-SomeArg",
+                     @"SomeVal",
+                     ]));
+  assertThat([launchedTasks[0] environment][@"SomeEnvKey"],
+             equalTo(@"SomeEnvValue"));
+}
+
+- (void)testOSXApplicationTestWithBadTesthostFails
+{
+  NSDictionary *allSettings =
+  BuildSettingsFromOutput([NSString stringWithContentsOfFile:TEST_DATA @"OSX-Application-Test-showBuildSettings.txt"
+                                                    encoding:NSUTF8StringEncoding
+                                                       error:nil]);
+
+  NSMutableDictionary *testSettings = [allSettings[@"TestProject-App-OSXTests"] mutableCopy];
+  testSettings[@"TEST_HOST"] = @"/var/empty/whee";
+
+  NSArray *launchedTasks;
+  NSString *err;
+
+  [self simulateOSXApplicationTestWithSettings:testSettings putTasks:&launchedTasks putError:&err];
+
+  assertThatInteger([launchedTasks count], equalToInteger(0));
+  assertThat(err, containsString(@"TEST_HOST"));
+}
+
+
 - (void)testArgsAndEnvArePassedToOSXLogicTest
 {
   NSDictionary *allSettings =
@@ -149,13 +273,13 @@
                                                  senTestList:@"All"
                                           senTestInvertScope:NO
                                                    arguments:
-     @[
-     @"-SomeArg", @"SomeVal",
-     ]
+      @[
+      @"-SomeArg", @"SomeVal",
+      ]
                                                  environment:
-     @{
-     @"SomeEnvKey" : @"SomeEnvValue",
-     }
+      @{
+      @"SomeEnvKey" : @"SomeEnvValue",
+      }
                                            garbageCollection:NO
                                               freshSimulator:NO
                                                 freshInstall:NO
@@ -188,57 +312,7 @@
   }];
 }
 
-- (void)testArgsAndEnvArePassedToOSXApplicationTest
-{
-  NSDictionary *allSettings =
-  BuildSettingsFromOutput([NSString stringWithContentsOfFile:TEST_DATA @"OSX-Application-Test-showBuildSettings.txt"
-                                                    encoding:NSUTF8StringEncoding
-                                                       error:nil]);
-  NSDictionary *testSettings = allSettings[@"TestProject-App-OSXTests"];
-
-  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
-    OCUnitOSXAppTestRunner *runner =
-    [[[OCUnitOSXAppTestRunner alloc] initWithBuildSettings:testSettings
-                                               senTestList:@"All"
-                                        senTestInvertScope:NO
-                                                 arguments:
-     @[
-     @"-SomeArg", @"SomeVal",
-     ]
-                                               environment:
-     @{
-     @"SomeEnvKey" : @"SomeEnvValue",
-     }
-                                         garbageCollection:NO
-                                            freshSimulator:NO
-                                              freshInstall:NO
-                                             simulatorType:nil
-                                            standardOutput:[NSFileHandle fileHandleWithNullDevice]
-                                             standardError:[NSFileHandle fileHandleWithNullDevice]
-                                                 reporters:@[]] autorelease];
-    NSString *error = nil;
-    [runner runTestsWithError:&error];
-
-    NSArray *launchedTasks = [[FakeTaskManager sharedManager] launchedTasks];
-    assertThatInteger([launchedTasks count], equalToInteger(1));
-
-    assertThat([launchedTasks[0] arguments],
-               equalTo(@[
-                       @"-NSTreatUnknownArgumentsAsOpen",
-                       @"NO",
-                       @"-ApplePersistenceIgnoreState",
-                       @"YES",
-                       @"-SenTest",
-                       @"All",
-                       @"-SenTestInvertScope",
-                       @"NO",
-                       @"-SomeArg",
-                       @"SomeVal",
-                       ]));
-    assertThat([launchedTasks[0] environment][@"SomeEnvKey"],
-               equalTo(@"SomeEnvValue"));
-  }];
-}
+#pragma mark misc.
 
 /// otest-query returns a list of all classes. This tests the post-filtering of
 /// that list to only contain specified tests.
