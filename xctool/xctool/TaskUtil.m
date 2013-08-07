@@ -182,7 +182,9 @@ void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, void (^block)(NSString *))
 
   // NSTask will automatically close the write-side of the pipe in our process, so only the new
   // process will have an open handle.  That means when that process exits, we'll automatically
-  // see an EOF on the read-side since the last remaining ref to the write-side closed.
+  // see an EOF on the read-side since the last remaining ref to the write-side closed. (Corner
+  // case: the process forks, the parent exits, but the kid keeps running with the FD open. We
+  // handle that with the `[task isRunning]` check below.)
   [task setStandardOutput:stdoutPipe];
 
   [task launch];
