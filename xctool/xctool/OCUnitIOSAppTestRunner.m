@@ -260,8 +260,8 @@ static void KillSimulatorJobs()
                 @"before running tests.",
                 testHostBundleID];
       ReportStatusMessageEnd(_reporters,
-                             REPORTER_MESSAGE_INFO,
-                             @"Tried to uninstall the test host app '%@' but failed.",
+                             REPORTER_MESSAGE_WARNING,
+                             @"<yellow>Tried to uninstall the test host app '%@' but failed.<reset>",
                              testHostBundleID);
       return NO;
     }
@@ -292,8 +292,8 @@ static void KillSimulatorJobs()
                            testHostAppPath);
   } else {
     ReportStatusMessageEnd(_reporters,
-                           REPORTER_MESSAGE_INFO,
-                           @"Tried to install the test host app '%@' but failed.",
+                           REPORTER_MESSAGE_WARNING,
+                           @"<yellow>Tried to install the test host app '%@' but failed.<reset>",
                            testHostAppPath);
     *error = [NSString stringWithFormat:
               @"Failed to install the test host app '%@'.",

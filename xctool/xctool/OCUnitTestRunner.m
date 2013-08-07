@@ -157,7 +157,9 @@
       if (runAttempts < MAX_TEST_RETRIES){
         ReportStatusMessage(_reporters,
                                  REPORTER_MESSAGE_INFO,
-                                 @"Retrying build/test sequence.");
+                                 @"Retrying %ld more time%s.",
+                                 MAX_TEST_RETRIES - runAttempts,
+                                 (MAX_TEST_RETRIES - runAttempts) > 1 ? "s":"");
       }
     }
   }
