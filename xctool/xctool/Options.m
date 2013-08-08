@@ -390,6 +390,13 @@
     [schemeNames addObject:[[schemePath lastPathComponent] stringByDeletingPathExtension]];
   }
 
+  if ([schemeNames count] == 0) {
+    *errorMessage = [NSString stringWithFormat:
+                     @"Cannot find schemes. Please consider creating shared schemes in Xcode.\n"
+                     @"See https://github.com/facebook/xctool#known-issues--tips for more information."];
+    return NO;
+  }
+
   if (![schemeNames containsObject:self.scheme]) {
     *errorMessage = [NSString stringWithFormat:
                      @"Can't find scheme '%@'. Possible schemes include: %@",
