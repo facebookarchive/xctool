@@ -220,12 +220,26 @@ static void KillSimulatorJobs()
   NSString *sdkName = _buildSettings[@"SDK_NAME"];
   NSAssert([sdkName hasPrefix:@"iphonesimulator"], @"Unexpected SDK: %@", sdkName);
 
-  // Sometimes the TEST_HOST will be wrapped in double quotes.
   NSString *testHostPath = [_buildSettings[@"TEST_HOST"] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
   NSString *testHostAppPath = [testHostPath stringByDeletingLastPathComponent];
   NSString *testHostPlistPath = [[testHostPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Info.plist"];
-  NSDictionary *plist = [NSDictionary dictionaryWithContentsOfFile:testHostPlistPath];
-  NSString *testHostBundleID = plist[@"CFBundleIdentifier"];
+
+  if (![[NSFileManager defaultManager] isExecutableFileAtPath:testHostPath]) {
+    ReportStatusMessage(_reporters, REPORTER_MESSAGE_ERROR,
+                        @"Your TEST_HOST '%@' does not appear to be an executable.", testHostPath);
+    *error = @"TEST_HOST not executable.";
+    return NO;
+  }
+
+  NSDictionary *testHostInfoPlist = [NSDictionary dictionaryWithContentsOfFile:testHostPlistPath];
+  if (!testHostInfoPlist) {
+    ReportStatusMessage(_reporters, REPORTER_MESSAGE_ERROR,
+                        @"Info.plist for TEST_HOST missing or malformatted.");
+    *error = @"Bad Info.plist for TEST_HOST";
+    return NO;
+  }
+
+  NSString *testHostBundleID = testHostInfoPlist[@"CFBundleIdentifier"];
 
   if (_freshSimulator) {
     ReportStatusMessageBegin(_reporters,
