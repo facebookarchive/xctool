@@ -263,12 +263,12 @@ static void KillSimulatorJobs()
                                @"<yellow>Tried to uninstall the test host app '%@' but failed.<reset>",
                                testHostBundleID);
 
-        if (attempts < MAX_UNINSTALL_RETRIES){
+        if (attempts < MAX_UNINSTALL_ATTEMPTS){
           ReportStatusMessage(_reporters,
                               REPORTER_MESSAGE_INFO,
                               @"Retrying uninstallation %ld more time%s.",
-                              MAX_UNINSTALL_RETRIES - attempts,
-                              (MAX_UNINSTALL_RETRIES - attempts) > 1 ? "s":"");
+                              MAX_UNINSTALL_ATTEMPTS - attempts,
+                              (MAX_UNINSTALL_ATTEMPTS - attempts) > 1 ? "s":"");
           continue;
         }
       }
@@ -277,7 +277,7 @@ static void KillSimulatorJobs()
                 @"before running tests.",
                 testHostBundleID];
       return NO;
-    } while (attempts++ <= MAX_UNINSTALL_RETRIES);
+    } while (attempts++ <= MAX_UNINSTALL_ATTEMPTS);
   }
 
   // Always install the app before running it.  We've observed that
@@ -311,12 +311,12 @@ static void KillSimulatorJobs()
                              REPORTER_MESSAGE_WARNING,
                              @"<yellow>Tried to install the test host app '%@' but failed.<reset>",
                              testHostBundleID);
-      if (attempts <= MAX_INSTALL_RETRIES) {
+      if (attempts <= MAX_INSTALL_ATTEMPTS) {
         ReportStatusMessage(_reporters,
                             REPORTER_MESSAGE_INFO,
                             @"Retrying installation %ld more time%s.",
-                            MAX_INSTALL_RETRIES - attempts,
-                            (MAX_INSTALL_RETRIES - attempts) > 1 ? "s":"");
+                            MAX_INSTALL_ATTEMPTS - attempts,
+                            (MAX_INSTALL_ATTEMPTS - attempts) > 1 ? "s":"");
         continue;
       }
     }
@@ -324,7 +324,7 @@ static void KillSimulatorJobs()
               @"Failed to install the test host app '%@'.",
               testHostBundleID];
     return NO;
-  } while (attempts++ && attempts <= MAX_INSTALL_RETRIES);
+  } while (attempts++ && attempts <= MAX_INSTALL_ATTEMPTS);
 
   ReportStatusMessage(_reporters,
                       REPORTER_MESSAGE_INFO,
