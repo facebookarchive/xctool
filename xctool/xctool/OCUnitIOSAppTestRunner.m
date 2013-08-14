@@ -215,12 +215,97 @@ static void KillSimulatorJobs()
   return [exitMode[@"via"] isEqualToString:@"exit"] && ([exitMode[@"status"] intValue] == 0);
 }
 
+- (BOOL)uninstallTestHostBundleID:(NSString *)testHostBundleID withError:(NSString **)error
+{
+  NSInteger attempts = 1;
+  do {
+    ReportStatusMessageBegin(_reporters,
+                             REPORTER_MESSAGE_INFO,
+                             @"Uninstalling '%@' to get a fresh install ...",
+                             testHostBundleID);
+    BOOL uninstalled = [self runMobileInstallationHelperWithArguments:@[
+                        @"uninstall",
+                        testHostBundleID,
+                        ]];
+    if (uninstalled) {
+      ReportStatusMessageEnd(_reporters,
+                             REPORTER_MESSAGE_INFO,
+                             @"Uninstalling '%@' to get a fresh install ...",
+                             testHostBundleID);
+      break;
+    } else {
+      ReportStatusMessageEnd(_reporters,
+                             REPORTER_MESSAGE_WARNING,
+                             @"Tried to uninstall the test host app '%@' but failed.",
+                             testHostBundleID);
+      
+      if (attempts < kMaxUninstallAttempts) {
+        ReportStatusMessage(_reporters,
+                            REPORTER_MESSAGE_INFO,
+                            @"Retrying uninstallation %ld more time%s.",
+                            kMaxUninstallAttempts - attempts,
+                            (kMaxUninstallAttempts - attempts) == 1 ? "" : "s");
+        continue;
+      }
+    }
+    *error = [NSString stringWithFormat:
+              @"Failed to uninstall the test host app '%@' "
+              @"before running tests.",
+              testHostBundleID];
+    return NO;
+  } while (attempts++ <= kMaxUninstallAttempts);
+  
+  return YES;
+}
+
+- (BOOL)installTestHostBundleID:(NSString *)testHostBundleID
+                 fromBundlePath:(NSString *)testHostBundlePath
+                          error:(NSString **)error
+{
+  NSInteger attempts = 1;
+  do {
+    ReportStatusMessageBegin(_reporters,
+                             REPORTER_MESSAGE_INFO,
+                             @"Installing '%@' ...",
+                             testHostBundleID);
+    BOOL installed = [self runMobileInstallationHelperWithArguments:@[
+                      @"install",
+                      testHostBundlePath,
+                      ]];
+    if (installed) {
+      ReportStatusMessageEnd(_reporters,
+                             REPORTER_MESSAGE_INFO,
+                             @"Installing '%@' ...",
+                             testHostBundleID);
+      break;
+    } else {
+      ReportStatusMessageEnd(_reporters,
+                             REPORTER_MESSAGE_WARNING,
+                             @"Tried to install the test host app '%@' but failed.",
+                             testHostBundleID);
+      if (attempts <= kMaxInstallAttempts) {
+        ReportStatusMessage(_reporters,
+                            REPORTER_MESSAGE_INFO,
+                            @"Retrying installation %ld more time%s.",
+                            kMaxInstallAttempts - attempts,
+                            (kMaxInstallAttempts - attempts) == 1 ? "" : "s");
+        continue;
+      }
+    }
+    *error = [NSString stringWithFormat:
+              @"Failed to install the test host app '%@'.",
+              testHostBundleID];
+    return NO;
+  } while (attempts++ && attempts <= kMaxInstallAttempts);
+
+  return YES;
+}
+
 - (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
               gotUncaughtSignal:(BOOL *)gotUncaughtSignal
                           error:(NSString **)error
 {
   *gotUncaughtSignal = NO; // no equivalent for simulator
-  NSInteger attempts = 1;
 
   NSString *sdkName = _buildSettings[@"SDK_NAME"];
   NSAssert([sdkName hasPrefix:@"iphonesimulator"], @"Unexpected SDK: %@", sdkName);
@@ -258,46 +343,12 @@ static void KillSimulatorJobs()
                              REPORTER_MESSAGE_INFO,
                             @"Stopping any existing iOS simulator jobs to get a "
                             @"fresh simulator ...");
-
   }
 
   if (_freshInstall) {
-    do {
-      ReportStatusMessageBegin(_reporters,
-                               REPORTER_MESSAGE_INFO,
-                               @"Uninstalling '%@' to get a fresh install ...",
-                               testHostBundleID);
-      BOOL uninstalled = [self runMobileInstallationHelperWithArguments:@[
-                          @"uninstall",
-                          testHostBundleID,
-                          ]];
-      if (uninstalled) {
-        ReportStatusMessageEnd(_reporters,
-                               REPORTER_MESSAGE_INFO,
-                               @"Uninstalling '%@' to get a fresh install ...",
-                               testHostBundleID);
-        break;
-      } else {
-        ReportStatusMessageEnd(_reporters,
-                               REPORTER_MESSAGE_WARNING,
-                               @"Tried to uninstall the test host app '%@' but failed.",
-                               testHostBundleID);
-
-        if (attempts < kMaxUninstallAttempts) {
-          ReportStatusMessage(_reporters,
-                              REPORTER_MESSAGE_INFO,
-                              @"Retrying uninstallation %ld more time%s.",
-                              kMaxUninstallAttempts - attempts,
-                              (kMaxUninstallAttempts - attempts) == 1 ? "" : "s");
-          continue;
-        }
-      }
-      *error = [NSString stringWithFormat:
-                @"Failed to uninstall the test host app '%@' "
-                @"before running tests.",
-                testHostBundleID];
+    if (![self uninstallTestHostBundleID:testHostBundleID withError:error]) {
       return NO;
-    } while (attempts++ <= kMaxUninstallAttempts);
+    }
   }
 
   // Always install the app before running it.  We've observed that
@@ -310,41 +361,11 @@ static void KillSimulatorJobs()
   //
   // By making sure the app is already installed, we guarantee the environment
   // is always set correctly.
-  attempts = 1;
-  do {
-    ReportStatusMessageBegin(_reporters,
-                             REPORTER_MESSAGE_INFO,
-                             @"Installing '%@' ...",
-                             testHostBundleID);
-    BOOL installed = [self runMobileInstallationHelperWithArguments:@[
-                      @"install",
-                      testHostAppPath,
-                      ]];
-    if (installed) {
-      ReportStatusMessageEnd(_reporters,
-                             REPORTER_MESSAGE_INFO,
-                             @"Installing '%@' ...",
-                             testHostBundleID);
-      break;
-    } else {
-      ReportStatusMessageEnd(_reporters,
-                             REPORTER_MESSAGE_WARNING,
-                             @"Tried to install the test host app '%@' but failed.",
-                             testHostBundleID);
-      if (attempts <= kMaxInstallAttempts) {
-        ReportStatusMessage(_reporters,
-                            REPORTER_MESSAGE_INFO,
-                            @"Retrying installation %ld more time%s.",
-                            kMaxInstallAttempts - attempts,
-                            (kMaxInstallAttempts - attempts) == 1 ? "" : "s");
-        continue;
-      }
-    }
-    *error = [NSString stringWithFormat:
-              @"Failed to install the test host app '%@'.",
-              testHostBundleID];
+  if (![self installTestHostBundleID:testHostBundleID
+                      fromBundlePath:testHostAppPath
+                               error:error]) {
     return NO;
-  } while (attempts++ && attempts <= kMaxInstallAttempts);
+  }
 
   ReportStatusMessage(_reporters,
                       REPORTER_MESSAGE_INFO,
