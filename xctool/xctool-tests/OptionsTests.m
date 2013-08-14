@@ -189,12 +189,7 @@
    assertOptionsFailToValidateWithError:
    @"Can't find scheme 'TestProject-Library-Bogus'.\n\n"
    @"Possible schemes include:\n"
-   @"  TestProject-Library\n\n"
-   @"TIP: This might happen if you're relying on Xcode to autocreate your schemes\n"
-   @"and your scheme files don't yet exist.  xctool, like xcodebuild, isn't able to\n"
-   @"automatically create schemes.  We recommend disabling \"Autocreate schemes\"\n"
-   @"in your workspace/project, making sure your existing schemes are marked as\n"
-   @"\"Shared\", and making sure they're checked into source control."
+   @"  TestProject-Library"
    withBuildSettingsFromFile:
    TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt"];
 }
