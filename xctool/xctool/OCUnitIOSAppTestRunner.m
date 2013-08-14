@@ -242,6 +242,7 @@ static void KillSimulatorJobs()
   }
 
   NSString *testHostBundleID = testHostInfoPlist[@"CFBundleIdentifier"];
+  NSAssert(testHostBundleID != nil, @"Missing 'CFBundleIdentifier' in Info.plist");
 
   if (_freshSimulator) {
     ReportStatusMessageBegin(_reporters,

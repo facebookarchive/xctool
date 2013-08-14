@@ -4,5 +4,7 @@
   <dict>
     <key>Sample</key>
     <string>This is a sample plist to be referenced from test cases</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.fakeapp.FakeApp</string>
   </dict>
 </plist>
