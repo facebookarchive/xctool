@@ -393,8 +393,8 @@
   BOOL automaticSchemeCreationDisabled = NO;
   
   {
-    NSString *basePath = self.project != nil ? self.project : self.workspace;
-    NSString *settingsPath = [basePath stringByAppendingPathComponent:@"/project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings"];
+    NSString *basePath = self.project != nil ? [self.project stringByAppendingPathComponent:@"project.xcworkspace"] : self.workspace;
+    NSString *settingsPath = [basePath stringByAppendingPathComponent:@"xcshareddata/WorkspaceSettings.xcsettings"];
     NSDictionary *settings = [NSDictionary dictionaryWithContentsOfFile:settingsPath];
     NSNumber *automaticSchemeCreationSetting = [settings objectForKey:@"IDEWorkspaceSharedSettings_AutocreateContextsIfNeeded"];
     
