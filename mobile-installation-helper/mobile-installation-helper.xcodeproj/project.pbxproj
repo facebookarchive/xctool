@@ -199,7 +199,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 283EA67A16C6F9E6009CE8D3 /* mobile-installation-helper.xcconfig */;
 			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				INFOPLIST_FILE = "mobile-installation-helper/mobile-installation-helper-Info.plist";
 				PRODUCT_NAME = "mobile-installation-helper";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -211,7 +210,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 283EA67A16C6F9E6009CE8D3 /* mobile-installation-helper.xcconfig */;
 			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				INFOPLIST_FILE = "mobile-installation-helper/mobile-installation-helper-Info.plist";
 				PRODUCT_NAME = "mobile-installation-helper";
 				TARGETED_DEVICE_FAMILY = 1;

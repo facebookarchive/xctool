@@ -15,3 +15,10 @@
 //
 
 GCC_TREAT_WARNINGS_AS_ERRORS = YES
+
+// Disabling precompiled headers - they're behaving differently in Xcode5 and
+// we're not sure why yet.  We keep seeing --
+//
+// fatal error: file '.../foo.pch' has been modified since the
+// precompiled header '../foo.pch' was built
+GCC_PRECOMPILE_PREFIX_HEADER = NO

@@ -770,7 +770,6 @@
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
 					"\"$(SRCROOT)/../Vendor\"",
 				);
-				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "xctool-tests/xctool-tests-Prefix.pch";
 				INFOPLIST_FILE = "xctool-tests/xctool-tests-Info.plist";
 				PRODUCT_NAME = "xctool-tests";
@@ -787,7 +786,6 @@
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
 					"\"$(SRCROOT)/../Vendor\"",
 				);
-				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "xctool-tests/xctool-tests-Prefix.pch";
 				INFOPLIST_FILE = "xctool-tests/xctool-tests-Info.plist";
 				PRODUCT_NAME = "xctool-tests";
