@@ -18,6 +18,9 @@
 
 #import "OCUnitTestRunner.h"
 
+static const NSInteger MAX_INSTALL_ATTEMPTS = 3;
+static const NSInteger MAX_UNINSTALL_ATTEMPTS = 3;
+
 @interface OCUnitIOSAppTestRunner : OCUnitTestRunner {
 }
 

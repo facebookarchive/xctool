@@ -18,6 +18,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 
+#import "ReportStatus.h"
 #import "OCUnitCrashFilter.h"
 #import "XCToolUtil.h"
 
@@ -143,10 +144,10 @@
 
   NSString *runTestsError = nil;
   BOOL didTerminateWithUncaughtSignal = NO;
+  
   BOOL succeeded = [self runTestsAndFeedOutputTo:feedOutputToBlock
-                               gotUncaughtSignal:&didTerminateWithUncaughtSignal
-                                           error:&runTestsError];
-
+                                 gotUncaughtSignal:&didTerminateWithUncaughtSignal
+                                             error:&runTestsError];
   if (runTestsError) {
     *error = runTestsError;
   }
