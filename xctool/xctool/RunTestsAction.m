@@ -356,6 +356,52 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
   return testableBuildSettings;
 }
 
+/**
+ * @return Array on arrays in the form of: [test runner class, GC-enabled boolean]
+ */
+- (NSArray *)testConfigurationsForBuildSettings:(NSDictionary *)testableBuildSettings
+{
+  NSString *sdkName = testableBuildSettings[@"SDK_NAME"];
+  BOOL isApplicationTest = testableBuildSettings[@"TEST_HOST"] != nil;
+  
+  // array of [class, (bool) GC Enabled]
+  NSMutableArray *testConfigurations = [NSMutableArray array];
+  
+  if ([sdkName hasPrefix:@"iphonesimulator"]) {
+    if (isApplicationTest) {
+      [testConfigurations addObject:@[[OCUnitIOSAppTestRunner class], @NO]];
+    } else {
+      [testConfigurations addObject:@[[OCUnitIOSLogicTestRunner class], @NO]];
+    }
+  } else if ([sdkName hasPrefix:@"macosx"]) {
+    Class testClass = {0};
+    if (isApplicationTest) {
+      testClass = [OCUnitOSXAppTestRunner class];
+    } else {
+      testClass = [OCUnitOSXLogicTestRunner class];
+    }
+    
+    NSString *enableGC = testableBuildSettings[@"GCC_ENABLE_OBJC_GC"];
+    
+    if ([enableGC isEqualToString:@"required"]) {
+      [testConfigurations addObject:@[testClass, @YES]];
+    } else if ([enableGC isEqualToString:@"supported"]) {
+      // If GC is marked as 'supported', Apple's normal unit-testing harness will run tests twice,
+      // once with GC off and once with GC on.
+      [testConfigurations addObject:@[testClass, @YES]];
+      [testConfigurations addObject:@[testClass, @NO]];
+    } else {
+      [testConfigurations addObject:@[testClass, @NO]];
+    }
+  } else if ([sdkName hasPrefix:@"iphoneos"]) {
+    [testConfigurations addObject:@[[OCUnitIOSDeviceTestRunner class], @NO]];
+  } else {
+    NSAssert(NO, @"Unexpected SDK: %@", sdkName);
+  }
+
+  return testConfigurations;
+}
+
 /*!
  Retrieves build params and create execution objects for each configuration.
 
@@ -394,44 +440,10 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
     environment = [self enviornmentWithMacrosExpanded:environment
                                     fromBuildSettings:testableBuildSettings];
   }
-
-  NSString *sdkName = testableBuildSettings[@"SDK_NAME"];
-  BOOL isApplicationTest = testableBuildSettings[@"TEST_HOST"] != nil;
-
+  
   // array of [class, (bool) GC Enabled]
-  NSMutableArray *testConfigurations = [NSMutableArray array];
-
-  if ([sdkName hasPrefix:@"iphonesimulator"]) {
-    if (isApplicationTest) {
-      [testConfigurations addObject:@[[OCUnitIOSAppTestRunner class], @NO]];
-    } else {
-      [testConfigurations addObject:@[[OCUnitIOSLogicTestRunner class], @NO]];
-    }
-  } else if ([sdkName hasPrefix:@"macosx"]) {
-    Class testClass = {0};
-    if (isApplicationTest) {
-      testClass = [OCUnitOSXAppTestRunner class];
-    } else {
-      testClass = [OCUnitOSXLogicTestRunner class];
-    }
-
-    NSString *enableGC = testableBuildSettings[@"GCC_ENABLE_OBJC_GC"];
-
-    if ([enableGC isEqualToString:@"required"]) {
-      [testConfigurations addObject:@[testClass, @YES]];
-    } else if ([enableGC isEqualToString:@"supported"]) {
-      // If GC is marked as 'supported', Apple's normal unit-testing harness will run tests twice,
-      // once with GC off and once with GC on.
-      [testConfigurations addObject:@[testClass, @YES]];
-      [testConfigurations addObject:@[testClass, @NO]];
-    } else {
-      [testConfigurations addObject:@[testClass, @NO]];
-    }
-  } else if ([sdkName hasPrefix:@"iphoneos"]) {
-    [testConfigurations addObject:@[[OCUnitIOSDeviceTestRunner class], @NO]];
-  } else {
-    NSAssert(NO, @"Unexpected SDK: %@", sdkName);
-  }
+  NSArray *testConfigurations = [self testConfigurationsForBuildSettings:testableBuildSettings];
+  BOOL isApplicationTest = testableBuildSettings[@"TEST_HOST"] != nil;
 
   // Set up blocks.
   NSMutableArray *executions = [[[NSMutableArray alloc] init] autorelease];
