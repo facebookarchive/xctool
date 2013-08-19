@@ -308,6 +308,54 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
   return result;
 }
 
++ (NSDictionary *)testableBuildSettingsForProject:(NSString *)projectPath
+                                           target:(NSString *)target
+                                          objRoot:(NSString *)objRoot
+                                          symRoot:(NSString *)symRoot
+                                sharedPrecompsDir:(NSString *)sharedPrecompsDir
+                                   xcodeArguments:(NSArray *)xcodeArguments
+                                          testSDK:(NSString *)testSDK
+{
+  // Collect build settings for this test target.
+  NSTask *settingsTask = [[NSTask alloc] init];
+  [settingsTask setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
+  
+  if (testSDK) {
+    // If we were given a test sdk, then force that.  Otherwise, xcodebuild will
+    // default to the SDK set in the project/target.
+    xcodeArguments = ArgumentListByOverriding(xcodeArguments, @"-sdk", testSDK);
+  }
+  
+  [settingsTask setArguments:[xcodeArguments arrayByAddingObjectsFromArray:@[
+                              @"-project", projectPath,
+                              @"-target", target,
+                              [NSString stringWithFormat:@"OBJROOT=%@", objRoot],
+                              [NSString stringWithFormat:@"SYMROOT=%@", symRoot],
+                              [NSString stringWithFormat:@"SHARED_PRECOMPS_DIR=%@", sharedPrecompsDir],
+                              @"-showBuildSettings",
+                              ]]];
+  
+  [settingsTask setEnvironment:@{
+   @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"xcodebuild-fastsettings-shim.dylib"],
+   @"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET" : target,
+   }];
+  
+  NSDictionary *result = LaunchTaskAndCaptureOutput(settingsTask);
+  [settingsTask release];
+  settingsTask = nil;
+  
+  NSDictionary *allSettings = BuildSettingsFromOutput(result[@"stdout"]);
+  NSAssert([allSettings count] == 1,
+           @"Should only have build settings for a single target.");
+  
+  NSDictionary *testableBuildSettings = allSettings[target];
+  NSAssert(testableBuildSettings != nil,
+           @"Should have found build settings for target '%@'",
+           target);
+
+  return testableBuildSettings;
+}
+
 /*!
  Retrieves build params and create execution objects for each configuration.
 
@@ -327,43 +375,13 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
 {
   NSString *testableProjectPath = testable[@"projectPath"];
   NSString *testableTarget = testable[@"target"];
-
-  // Collect build settings for this test target.
-  NSTask *settingsTask = [[NSTask alloc] init];
-  [settingsTask setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
-
-  if (_testSDK) {
-    // If we were given a test sdk, then force that.  Otherwise, xcodebuild will
-    // default to the SDK set in the project/target.
-    xcodeArguments = ArgumentListByOverriding(xcodeArguments, @"-sdk", _testSDK);
-  }
-
-  [settingsTask setArguments:[xcodeArguments arrayByAddingObjectsFromArray:@[
-                                                                             @"-project", testableProjectPath,
-                                                                             @"-target", testableTarget,
-                                                                             [NSString stringWithFormat:@"OBJROOT=%@", objRoot],
-                                                                             [NSString stringWithFormat:@"SYMROOT=%@", symRoot],
-                                                                             [NSString stringWithFormat:@"SHARED_PRECOMPS_DIR=%@", sharedPrecompsDir],
-                                                                             @"-showBuildSettings",
-                                                                             ]]];
-
-  [settingsTask setEnvironment:@{
-                                 @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"xcodebuild-fastsettings-shim.dylib"],
-                                 @"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET" : testableTarget,
-                                 }];
-
-  NSDictionary *result = LaunchTaskAndCaptureOutput(settingsTask);
-  [settingsTask release];
-  settingsTask = nil;
-
-  NSDictionary *allSettings = BuildSettingsFromOutput(result[@"stdout"]);
-  NSAssert([allSettings count] == 1,
-           @"Should only have build settings for a single target.");
-
-  NSDictionary *testableBuildSettings = allSettings[testableTarget];
-  NSAssert(testableBuildSettings != nil,
-           @"Should have found build settings for target '%@'",
-           testableTarget);
+  NSDictionary *testableBuildSettings = [[self class] testableBuildSettingsForProject:testableProjectPath
+                                                                               target:testableTarget
+                                                                              objRoot:objRoot
+                                                                              symRoot:symRoot
+                                                                    sharedPrecompsDir:sharedPrecompsDir
+                                                                       xcodeArguments:xcodeArguments
+                                                                              testSDK:_testSDK];
 
   NSArray *arguments = testable[@"arguments"];
   NSDictionary *environment = testable[@"environment"];
