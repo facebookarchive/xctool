@@ -99,15 +99,11 @@ NSDictionary *BuildSettingsFromOutput(NSString *output)
 }
 
 static NSString *AbsoluteExecutablePath(void) {
-  char execRelativePath[1024] = {0};
+  char execRelativePath[PATH_MAX] = {0};
   uint32_t execRelativePathSize = sizeof(execRelativePath);
-
   _NSGetExecutablePath(execRelativePath, &execRelativePathSize);
-
-  char execAbsolutePath[1024] = {0};
-  assert(realpath((const char *)execRelativePath, execAbsolutePath) != NULL);
-
-  return [NSString stringWithUTF8String:execAbsolutePath];
+  
+  return AbsolutePathFromRelative([NSString stringWithUTF8String:execRelativePath]);
 }
 
 NSString *XCToolBasePath(void)
@@ -440,4 +436,12 @@ NSArray *AvailableReporters()
   NSCAssert(contents != nil,
             @"Failed to read from reporters directory: %@", [error localizedFailureReason]);
   return contents;
+}
+
+NSString *AbsolutePathFromRelative(NSString *path)
+{
+  char absolutePath[PATH_MAX] = {0};
+  assert(realpath((const char *)[path UTF8String], absolutePath) != NULL);
+  
+  return [NSString stringWithUTF8String:absolutePath];
 }

@@ -82,3 +82,8 @@ void PublishEventToReporters(NSArray *reporters, NSDictionary *event);
   directory.
  */
 NSArray *AvailableReporters();
+
+/**
+ Uses realpath() to resolve an relative path.
+ */
+NSString *AbsolutePathFromRelative(NSString *path);
