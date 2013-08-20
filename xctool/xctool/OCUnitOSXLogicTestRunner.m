@@ -22,23 +22,13 @@
 
 @implementation OCUnitOSXLogicTestRunner
 
-- (NSDictionary *)environmentOverrides
-{
-  return @{@"DYLD_FRAMEWORK_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
-           @"DYLD_LIBRARY_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
-           @"DYLD_FALLBACK_FRAMEWORK_PATH" : [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"],
-           @"NSUnbufferedIO" : @"YES",
-           @"OBJC_DISABLE_GC" : !_garbageCollection ? @"YES" : @"NO",
-           };
-}
-
 - (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath
 {
   NSTask *task = [[[NSTask alloc] init] autorelease];
   [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Tools/otest"]];
   // When invoking otest directly, the last arg needs to be the the test bundle.
   [task setArguments:[[self otestArguments] arrayByAddingObject:testBundlePath]];
-  NSMutableDictionary *env = [[self.environmentOverrides mutableCopy] autorelease];
+  NSMutableDictionary *env = [[[self environmentOverrides] mutableCopy] autorelease];
   env[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-osx.dylib"];
   [task setEnvironment:[self otestEnvironmentWithOverrides:env]];
   return task;
@@ -74,18 +64,6 @@
     *gotUncaughtSignal = NO;
     return NO;
   }
-}
-
-- (NSArray *)runTestClassListQuery
-{
-  NSTask *task = [[NSTask alloc] init];
-  [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-osx"]];
-  [task setArguments:@[self.testBundlePath]];
-  [task setEnvironment:[self otestEnvironmentWithOverrides:self.environmentOverrides]];
-  NSDictionary *output = LaunchTaskAndCaptureOutput(task);
-  [task release];
-  NSData *outputData = [output[@"stdout"] dataUsingEncoding:NSUTF8StringEncoding];
-  return [NSJSONSerialization JSONObjectWithData:outputData options:0 error:nil];
 }
 
 @end

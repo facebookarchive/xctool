@@ -308,6 +308,100 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
   return result;
 }
 
++ (NSDictionary *)testableBuildSettingsForProject:(NSString *)projectPath
+                                           target:(NSString *)target
+                                          objRoot:(NSString *)objRoot
+                                          symRoot:(NSString *)symRoot
+                                sharedPrecompsDir:(NSString *)sharedPrecompsDir
+                                   xcodeArguments:(NSArray *)xcodeArguments
+                                          testSDK:(NSString *)testSDK
+{
+  // Collect build settings for this test target.
+  NSTask *settingsTask = [[NSTask alloc] init];
+  [settingsTask setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
+  
+  if (testSDK) {
+    // If we were given a test sdk, then force that.  Otherwise, xcodebuild will
+    // default to the SDK set in the project/target.
+    xcodeArguments = ArgumentListByOverriding(xcodeArguments, @"-sdk", testSDK);
+  }
+  
+  [settingsTask setArguments:[xcodeArguments arrayByAddingObjectsFromArray:@[
+                              @"-project", projectPath,
+                              @"-target", target,
+                              [NSString stringWithFormat:@"OBJROOT=%@", objRoot],
+                              [NSString stringWithFormat:@"SYMROOT=%@", symRoot],
+                              [NSString stringWithFormat:@"SHARED_PRECOMPS_DIR=%@", sharedPrecompsDir],
+                              @"-showBuildSettings",
+                              ]]];
+  
+  [settingsTask setEnvironment:@{
+   @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"xcodebuild-fastsettings-shim.dylib"],
+   @"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET" : target,
+   }];
+  
+  NSDictionary *result = LaunchTaskAndCaptureOutput(settingsTask);
+  [settingsTask release];
+  settingsTask = nil;
+  
+  NSDictionary *allSettings = BuildSettingsFromOutput(result[@"stdout"]);
+  NSAssert([allSettings count] == 1,
+           @"Should only have build settings for a single target.");
+  
+  NSDictionary *testableBuildSettings = allSettings[target];
+  NSAssert(testableBuildSettings != nil,
+           @"Should have found build settings for target '%@'",
+           target);
+
+  return testableBuildSettings;
+}
+
+/**
+ * @return Array on arrays in the form of: [test runner class, GC-enabled boolean]
+ */
+- (NSArray *)testConfigurationsForBuildSettings:(NSDictionary *)testableBuildSettings
+{
+  NSString *sdkName = testableBuildSettings[@"SDK_NAME"];
+  BOOL isApplicationTest = testableBuildSettings[@"TEST_HOST"] != nil;
+  
+  // array of [class, (bool) GC Enabled]
+  NSMutableArray *testConfigurations = [NSMutableArray array];
+  
+  if ([sdkName hasPrefix:@"iphonesimulator"]) {
+    if (isApplicationTest) {
+      [testConfigurations addObject:@[[OCUnitIOSAppTestRunner class], @NO]];
+    } else {
+      [testConfigurations addObject:@[[OCUnitIOSLogicTestRunner class], @NO]];
+    }
+  } else if ([sdkName hasPrefix:@"macosx"]) {
+    Class testClass = {0};
+    if (isApplicationTest) {
+      testClass = [OCUnitOSXAppTestRunner class];
+    } else {
+      testClass = [OCUnitOSXLogicTestRunner class];
+    }
+    
+    NSString *enableGC = testableBuildSettings[@"GCC_ENABLE_OBJC_GC"];
+    
+    if ([enableGC isEqualToString:@"required"]) {
+      [testConfigurations addObject:@[testClass, @YES]];
+    } else if ([enableGC isEqualToString:@"supported"]) {
+      // If GC is marked as 'supported', Apple's normal unit-testing harness will run tests twice,
+      // once with GC off and once with GC on.
+      [testConfigurations addObject:@[testClass, @YES]];
+      [testConfigurations addObject:@[testClass, @NO]];
+    } else {
+      [testConfigurations addObject:@[testClass, @NO]];
+    }
+  } else if ([sdkName hasPrefix:@"iphoneos"]) {
+    [testConfigurations addObject:@[[OCUnitIOSDeviceTestRunner class], @NO]];
+  } else {
+    NSAssert(NO, @"Unexpected SDK: %@", sdkName);
+  }
+
+  return testConfigurations;
+}
+
 /*!
  Retrieves build params and create execution objects for each configuration.
 
@@ -327,43 +421,13 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
 {
   NSString *testableProjectPath = testable[@"projectPath"];
   NSString *testableTarget = testable[@"target"];
-
-  // Collect build settings for this test target.
-  NSTask *settingsTask = [[NSTask alloc] init];
-  [settingsTask setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
-
-  if (_testSDK) {
-    // If we were given a test sdk, then force that.  Otherwise, xcodebuild will
-    // default to the SDK set in the project/target.
-    xcodeArguments = ArgumentListByOverriding(xcodeArguments, @"-sdk", _testSDK);
-  }
-
-  [settingsTask setArguments:[xcodeArguments arrayByAddingObjectsFromArray:@[
-                                                                             @"-project", testableProjectPath,
-                                                                             @"-target", testableTarget,
-                                                                             [NSString stringWithFormat:@"OBJROOT=%@", objRoot],
-                                                                             [NSString stringWithFormat:@"SYMROOT=%@", symRoot],
-                                                                             [NSString stringWithFormat:@"SHARED_PRECOMPS_DIR=%@", sharedPrecompsDir],
-                                                                             @"-showBuildSettings",
-                                                                             ]]];
-
-  [settingsTask setEnvironment:@{
-                                 @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"xcodebuild-fastsettings-shim.dylib"],
-                                 @"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET" : testableTarget,
-                                 }];
-
-  NSDictionary *result = LaunchTaskAndCaptureOutput(settingsTask);
-  [settingsTask release];
-  settingsTask = nil;
-
-  NSDictionary *allSettings = BuildSettingsFromOutput(result[@"stdout"]);
-  NSAssert([allSettings count] == 1,
-           @"Should only have build settings for a single target.");
-
-  NSDictionary *testableBuildSettings = allSettings[testableTarget];
-  NSAssert(testableBuildSettings != nil,
-           @"Should have found build settings for target '%@'",
-           testableTarget);
+  NSDictionary *testableBuildSettings = [[self class] testableBuildSettingsForProject:testableProjectPath
+                                                                               target:testableTarget
+                                                                              objRoot:objRoot
+                                                                              symRoot:symRoot
+                                                                    sharedPrecompsDir:sharedPrecompsDir
+                                                                       xcodeArguments:xcodeArguments
+                                                                              testSDK:_testSDK];
 
   NSArray *arguments = testable[@"arguments"];
   NSDictionary *environment = testable[@"environment"];
@@ -376,44 +440,10 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
     environment = [self enviornmentWithMacrosExpanded:environment
                                     fromBuildSettings:testableBuildSettings];
   }
-
-  NSString *sdkName = testableBuildSettings[@"SDK_NAME"];
-  BOOL isApplicationTest = testableBuildSettings[@"TEST_HOST"] != nil;
-
+  
   // array of [class, (bool) GC Enabled]
-  NSMutableArray *testConfigurations = [NSMutableArray array];
-
-  if ([sdkName hasPrefix:@"iphonesimulator"]) {
-    if (isApplicationTest) {
-      [testConfigurations addObject:@[[OCUnitIOSAppTestRunner class], @NO]];
-    } else {
-      [testConfigurations addObject:@[[OCUnitIOSLogicTestRunner class], @NO]];
-    }
-  } else if ([sdkName hasPrefix:@"macosx"]) {
-    Class testClass = {0};
-    if (isApplicationTest) {
-      testClass = [OCUnitOSXAppTestRunner class];
-    } else {
-      testClass = [OCUnitOSXLogicTestRunner class];
-    }
-
-    NSString *enableGC = testableBuildSettings[@"GCC_ENABLE_OBJC_GC"];
-
-    if ([enableGC isEqualToString:@"required"]) {
-      [testConfigurations addObject:@[testClass, @YES]];
-    } else if ([enableGC isEqualToString:@"supported"]) {
-      // If GC is marked as 'supported', Apple's normal unit-testing harness will run tests twice,
-      // once with GC off and once with GC on.
-      [testConfigurations addObject:@[testClass, @YES]];
-      [testConfigurations addObject:@[testClass, @NO]];
-    } else {
-      [testConfigurations addObject:@[testClass, @NO]];
-    }
-  } else if ([sdkName hasPrefix:@"iphoneos"]) {
-    [testConfigurations addObject:@[[OCUnitIOSDeviceTestRunner class], @NO]];
-  } else {
-    NSAssert(NO, @"Unexpected SDK: %@", sdkName);
-  }
+  NSArray *testConfigurations = [self testConfigurationsForBuildSettings:testableBuildSettings];
+  BOOL isApplicationTest = testableBuildSettings[@"TEST_HOST"] != nil;
 
   // Set up blocks.
   NSMutableArray *executions = [[[NSMutableArray alloc] init] autorelease];
@@ -452,7 +482,7 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
 
     // Query list of test classes if parallelizing test classes in each target
     NSArray *testClassNames = nil;
-    if (_parallelizeChunkSize > 0 && !isApplicationTest) {
+    if (_parallelizeChunkSize > 0) {
       testClassNames = [testRunner testClassNames];
       if (!testClassNames) {
         ReportStatusMessage(reportersForConfiguration, REPORTER_MESSAGE_WARNING,

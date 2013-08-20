@@ -21,29 +21,13 @@
 
 @implementation OCUnitIOSLogicTestRunner
 
-- (NSDictionary *)environmentOverrides
-{
-  NSString *version = [_buildSettings[@"SDK_NAME"] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
-  NSString *simulatorHome = [NSString stringWithFormat:@"%@/Library/Application Support/iPhone Simulator/%@", NSHomeDirectory(), version];
-
-  return @{@"CFFIXED_USER_HOME" : simulatorHome,
-           @"HOME" : simulatorHome,
-           @"IPHONE_SHARED_RESOURCES_DIRECTORY" : simulatorHome,
-           @"DYLD_FALLBACK_FRAMEWORK_PATH" : @"/Developer/Library/Frameworks",
-           @"DYLD_FRAMEWORK_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
-           @"DYLD_LIBRARY_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
-           @"DYLD_ROOT_PATH" : _buildSettings[@"SDKROOT"],
-           @"IPHONE_SIMULATOR_ROOT" : _buildSettings[@"SDKROOT"],
-           @"IPHONE_SIMULATOR_VERSIONS" : @"iPhone Simulator (external launch) , iPhone OS 6.0 (unknown/10A403)",
-           @"NSUnbufferedIO" : @"YES"};
-}
 
 - (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath
 {
   NSTask *task = [[[NSTask alloc] init] autorelease];
   [task setLaunchPath:[NSString stringWithFormat:@"%@/Developer/usr/bin/otest", _buildSettings[@"SDKROOT"]]];
   [task setArguments:[[self otestArguments] arrayByAddingObject:testBundlePath]];
-  NSMutableDictionary *env = [[self.environmentOverrides mutableCopy] autorelease];
+  NSMutableDictionary *env = [[[self environmentOverrides] mutableCopy] autorelease];
   env[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"];
   [task setEnvironment:[self otestEnvironmentWithOverrides:env]];
   return task;
@@ -77,18 +61,6 @@
     *gotUncaughtSignal = NO;
     return NO;
   }
-}
-
-- (NSArray *)runTestClassListQuery
-{
-  NSTask *task = [[NSTask alloc] init];
-  [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-ios"]];
-  [task setArguments:@[self.testBundlePath]];
-  [task setEnvironment:[self otestEnvironmentWithOverrides:self.environmentOverrides]];
-  NSDictionary *output = LaunchTaskAndCaptureOutput(task);
-  NSData *outputData = [output[@"stdout"] dataUsingEncoding:NSUTF8StringEncoding];
-  [task release];
-  return [NSJSONSerialization JSONObjectWithData:outputData options:0 error:nil];
 }
 
 @end
