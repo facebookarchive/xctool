@@ -87,3 +87,8 @@ NSArray *AvailableReporters();
  Uses realpath() to resolve an relative path.
  */
 NSString *AbsolutePathFromRelative(NSString *path);
+
+/**
+ * Returns the contents of `/etc/paths` in the form of `path1:path2:path3`.
+ */
+NSString *SystemPaths();
