@@ -436,6 +436,138 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
   }
 }
 
+- (TestableExecution *)executionForTestable:(NSDictionary *)testable
+                        reporters:(NSArray *)reporters
+                          objRoot:(NSString *)objRoot
+                          symRoot:(NSString *)symRoot
+                sharedPrecompsDir:(NSString *)sharedPrecompsDir
+                   xcodeArguments:(NSArray *)xcodeArguments
+                      senTestList:(NSString *)senTestList
+               senTestInvertScope:(BOOL)senTestInvertScope
+            testableBuildSettings:(NSDictionary *)testableBuildSettings
+                   testableTarget:(NSString *)testableTarget
+                isApplicationTest:(BOOL)isApplicationTest
+                        arguments:(NSArray *)arguments
+                      environment:(NSDictionary *)environment
+                  testRunnerClass:(Class)testRunnerClass
+                        gcEnabled:(BOOL)garbageCollectionEnabled
+{
+  OCUnitTestRunner *testRunner = [[[testRunnerClass alloc]
+                                   initWithBuildSettings:testableBuildSettings
+                                   senTestList:senTestList
+                                   senTestInvertScope:senTestInvertScope
+                                   arguments:arguments
+                                   environment:environment
+                                   garbageCollection:garbageCollectionEnabled
+                                   freshSimulator:self.freshSimulator
+                                   freshInstall:self.freshInstall
+                                   simulatorType:self.simulatorType
+                                   standardOutput:nil
+                                   standardError:nil
+                                   reporters:reporters] autorelease];
+  
+  NSDictionary *commonEventInfo = @{kReporter_BeginOCUnit_BundleNameKey: testableBuildSettings[@"FULL_PRODUCT_NAME"],
+                                    kReporter_BeginOCUnit_SDKNameKey: testableBuildSettings[@"SDK_NAME"],
+                                    kReporter_BeginOCUnit_TestTypeKey: isApplicationTest ? @"application-test" : @"logic-test",
+                                    kReporter_BeginOCUnit_GCEnabledKey: @(garbageCollectionEnabled),
+                                    };
+  
+  NSMutableDictionary *beginEvent =
+  [NSMutableDictionary dictionaryWithDictionary:@{@"event": kReporter_Events_BeginOCUnit}];
+  [beginEvent addEntriesFromDictionary:commonEventInfo];
+  PublishEventToReporters(reporters, beginEvent);
+  
+  // Query list of test classes if parallelizing test classes in each target
+  NSArray *testClassNames = nil;
+  if (_parallelizeChunkSize > 0 && !isApplicationTest) {
+    NSArray *allTestClassNames = [self queryTestClassNamesFromBuildSettings:testableBuildSettings];
+    testClassNames = [OCUnitTestRunner testClasses:allTestClassNames
+                           filteredWithSenTestList:senTestList
+                                senTestInvertScope:senTestInvertScope];
+    if (!testClassNames) {
+      ReportStatusMessage(reporters, REPORTER_MESSAGE_WARNING,
+                          @"Failed to get test class names, not parallelizing tests in %@",
+                          testableTarget);
+    }
+  }
+  
+  NSObject *lock = [[[NSObject alloc] init] autorelease];
+  __block BOOL succeeded = YES;
+  __block NSString *error = nil;
+  NSMutableArray *blocks = [NSMutableArray array];
+  
+  if (testClassNames) {
+    // Chop up test classes into small work units to be run in parallel.
+    NSArray *workUnits = chunkifyArray(testClassNames, _parallelizeChunkSize);
+    
+    // Run the classes.
+    for (NSArray *workUnit in workUnits) {
+      void(^block)() = ^{
+        // Since work units within a configuration are also run in parallel,
+        // the reporters must be buffered again.
+        NSArray *eventBuffers = [EventBuffer wrapSinks:reporters];
+        
+        OCUnitTestRunner *localTestRunner =
+        [[[testRunnerClass alloc]
+          initWithBuildSettings:testableBuildSettings
+          senTestList:[workUnit componentsJoinedByString:@","]
+          senTestInvertScope:NO
+          arguments:arguments
+          environment:environment
+          garbageCollection:garbageCollectionEnabled
+          freshSimulator:self.freshSimulator
+          freshInstall:self.freshInstall
+          simulatorType:self.simulatorType
+          standardOutput:nil
+          standardError:nil
+          reporters:eventBuffers] autorelease];
+        
+        NSString *localError = nil;
+        BOOL localSucceeded = [localTestRunner runTestsWithError:&localError];
+        
+        @synchronized(lock) {
+          if (!localSucceeded) {
+            succeeded = NO;
+          }
+          error = localError;
+        }
+        [eventBuffers makeObjectsPerformSelector:@selector(flush)];
+      };
+      [blocks addObject:[[block copy] autorelease]];
+    }
+  } else {
+    void(^block)() = ^{
+      BOOL configurationSucceeded = [testRunner runTestsWithError:&error];
+      if (!configurationSucceeded) {
+        @synchronized(lock) {
+          succeeded = NO;
+        }
+      }
+    };
+    [blocks addObject:[[block copy] autorelease]];
+  }
+  
+  BOOL (^completionBlock)() = ^{
+    NSMutableDictionary *endEvent = [NSMutableDictionary dictionaryWithDictionary:
+                                     @{@"event": kReporter_Events_EndOCUnit,
+                                                 kReporter_EndOCUnit_SucceededKey: @(succeeded),
+                                             kReporter_EndOCUnit_FailureReasonKey: (error ? error : [NSNull null]),
+                                     }];
+    [endEvent addEntriesFromDictionary:commonEventInfo];
+    PublishEventToReporters(reporters, endEvent);
+    for (id reporter in reporters) {
+      if ([reporter respondsToSelector:@selector(flush)]) {
+        [reporter flush];
+      }
+    }
+    return succeeded;
+  };
+  
+  return [[[TestableExecution alloc] initWithBlocks:blocks
+                                    completionBlock:completionBlock
+                                mustRunInMainThread:isApplicationTest] autorelease];
+}
+
 /*!
  Retrieves build params and create execution objects for each configuration.
 
@@ -488,122 +620,23 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
                                           : rawReporters);
     Class testRunnerClass = testConfiguration[0];
     BOOL garbageCollectionEnabled = [testConfiguration[1] boolValue];
-
-    OCUnitTestRunner *testRunner = [[[testRunnerClass alloc]
-                                     initWithBuildSettings:testableBuildSettings
-                                     senTestList:senTestList
-                                     senTestInvertScope:senTestInvertScope
-                                     arguments:arguments
-                                     environment:environment
-                                     garbageCollection:garbageCollectionEnabled
-                                     freshSimulator:self.freshSimulator
-                                     freshInstall:self.freshInstall
-                                     simulatorType:self.simulatorType
-                                     standardOutput:nil
-                                     standardError:nil
-                                     reporters:reportersForConfiguration] autorelease];
-
-    NSDictionary *commonEventInfo = @{kReporter_BeginOCUnit_BundleNameKey: testableBuildSettings[@"FULL_PRODUCT_NAME"],
-                                      kReporter_BeginOCUnit_SDKNameKey: testableBuildSettings[@"SDK_NAME"],
-                                      kReporter_BeginOCUnit_TestTypeKey: isApplicationTest ? @"application-test" : @"logic-test",
-                                      kReporter_BeginOCUnit_GCEnabledKey: @(garbageCollectionEnabled),
-                                      };
-
-    NSMutableDictionary *beginEvent =
-    [NSMutableDictionary dictionaryWithDictionary:@{@"event": kReporter_Events_BeginOCUnit}];
-    [beginEvent addEntriesFromDictionary:commonEventInfo];
-    PublishEventToReporters(reportersForConfiguration, beginEvent);
-
-    // Query list of test classes if parallelizing test classes in each target
-    NSArray *testClassNames = nil;
-    if (_parallelizeChunkSize > 0 && !isApplicationTest) {
-      NSArray *allTestClassNames = [self queryTestClassNamesFromBuildSettings:testableBuildSettings];
-      testClassNames = [OCUnitTestRunner testClasses:allTestClassNames
-                             filteredWithSenTestList:senTestList
-                                  senTestInvertScope:senTestInvertScope];
-      if (!testClassNames) {
-        ReportStatusMessage(reportersForConfiguration, REPORTER_MESSAGE_WARNING,
-                            @"Failed to get test class names, not parallelizing tests in %@",
-                            testableTarget);
-      }
-    }
-
-    NSObject *lock = [[[NSObject alloc] init] autorelease];
-    __block BOOL succeeded = YES;
-    __block NSString *error = nil;
-    NSMutableArray *blocks = [NSMutableArray array];
-
-    if (testClassNames) {
-      // Chop up test classes into small work units to be run in parallel.
-      NSArray *workUnits = chunkifyArray(testClassNames, _parallelizeChunkSize);
-
-      // Run the classes.
-      for (NSArray *workUnit in workUnits) {
-        void(^block)() = ^{
-          // Since work units within a configuration are also run in parallel,
-          // the reporters must be buffered again.
-          NSArray *eventBuffers = [EventBuffer wrapSinks:reportersForConfiguration];
-
-          OCUnitTestRunner *localTestRunner =
-          [[[testRunnerClass alloc]
-            initWithBuildSettings:testableBuildSettings
-            senTestList:[workUnit componentsJoinedByString:@","]
-            senTestInvertScope:NO
-            arguments:arguments
-            environment:environment
-            garbageCollection:garbageCollectionEnabled
-            freshSimulator:self.freshSimulator
-            freshInstall:self.freshInstall
-            simulatorType:self.simulatorType
-            standardOutput:nil
-            standardError:nil
-            reporters:eventBuffers] autorelease];
-
-          NSString *localError = nil;
-          BOOL localSucceeded = [localTestRunner runTestsWithError:&localError];
-
-          @synchronized(lock) {
-            if (!localSucceeded) {
-              succeeded = NO;
-            }
-            error = localError;
-          }
-          [eventBuffers makeObjectsPerformSelector:@selector(flush)];
-        };
-        [blocks addObject:[[block copy] autorelease]];
-      }
-    } else {
-      void(^block)() = ^{
-        BOOL configurationSucceeded = [testRunner runTestsWithError:&error];
-        if (!configurationSucceeded) {
-          @synchronized(lock) {
-            succeeded = NO;
-          }
-        }
-      };
-      [blocks addObject:[[block copy] autorelease]];
-    }
-
-    BOOL (^completionBlock)() = ^{
-      NSMutableDictionary *endEvent = [NSMutableDictionary dictionaryWithDictionary:
-                                       @{@"event": kReporter_Events_EndOCUnit,
-                                         kReporter_EndOCUnit_SucceededKey: @(succeeded),
-                                         kReporter_EndOCUnit_FailureReasonKey: (error ? error : [NSNull null]),
-                                         }];
-      [endEvent addEntriesFromDictionary:commonEventInfo];
-      PublishEventToReporters(reportersForConfiguration, endEvent);
-      for (id reporter in reportersForConfiguration) {
-        if ([reporter respondsToSelector:@selector(flush)]) {
-          [reporter flush];
-        }
-      }
-      return succeeded;
-    };
-
-    [executions addObject:[[TestableExecution alloc]
-                           initWithBlocks:blocks
-                           completionBlock:completionBlock
-                           mustRunInMainThread:isApplicationTest]];
+    
+    TestableExecution *execution = [self executionForTestable:testable
+                                                    reporters:reportersForConfiguration
+                                                      objRoot:objRoot
+                                                      symRoot:symRoot
+                                            sharedPrecompsDir:sharedPrecompsDir
+                                               xcodeArguments:xcodeArguments
+                                                  senTestList:senTestList
+                                           senTestInvertScope:senTestInvertScope
+                                        testableBuildSettings:testableBuildSettings
+                                               testableTarget:testableTarget
+                                            isApplicationTest:isApplicationTest
+                                                    arguments:arguments
+                                                  environment:environment
+                                              testRunnerClass:testRunnerClass
+                                                    gcEnabled:garbageCollectionEnabled];
+    [executions addObject:execution];
   }
 
   return executions;
