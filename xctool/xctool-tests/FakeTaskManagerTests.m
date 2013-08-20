@@ -174,9 +174,10 @@
                        @"macosx10.8" : @"macosx10.8",
                        }));
 
-    // Both of the above should be in the allLaunchedTasks list.
+    // Both of the above should be in the allLaunchedTasks list.  Since XcodeDeveloperDirPath()
+    // is called by GetAvailableSDKsAndAliases(), it will show up twice.
     assertThatInteger([[[FakeTaskManager sharedManager] allLaunchedTasks] count],
-                      equalToInteger(2));
+                      equalToInteger(3));
 
     // But, not in the 'launchedTasks' list.  The launch handler should have
     // hidden them.

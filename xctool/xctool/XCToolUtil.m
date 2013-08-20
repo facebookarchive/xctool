@@ -189,8 +189,10 @@ NSDictionary *GetAvailableSDKsAndAliases()
     [task setLaunchPath:@"/bin/bash"];
     [task setArguments:@[
      @"-c",
-     @"/usr/bin/xcodebuild -showsdks | perl -ne '/-sdk (.*?)([\\d\\.]+)$/ && print \"$1 $2\n\"'",
+     [[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"] stringByAppendingString:
+      @" -showsdks | perl -ne '/-sdk (.*?)([\\d\\.]+)$/ && print \"$1 $2\n\"'"],
      ]];
+    [task setEnvironment:@{@"PATH": SystemPaths()}];
 
     NSArray *lines = [LaunchTaskAndCaptureOutput(task)[@"stdout"] componentsSeparatedByString:@"\n"];
     lines = [lines subarrayWithRange:NSMakeRange(0, lines.count - 1)];
@@ -444,4 +446,15 @@ NSString *AbsolutePathFromRelative(NSString *path)
   assert(realpath((const char *)[path UTF8String], absolutePath) != NULL);
   
   return [NSString stringWithUTF8String:absolutePath];
+}
+
+NSString *SystemPaths()
+{
+  NSError *error = nil;
+  NSString *pathLines = [NSString stringWithContentsOfFile:@"/etc/paths"
+                                                  encoding:NSUTF8StringEncoding
+                                                     error:&error];
+  NSCAssert(error == nil, @"Failed to read from /etc/paths: %@", [error localizedFailureReason]);
+  
+  return [[pathLines componentsSeparatedByString:@"\n"] componentsJoinedByString:@":"];
 }
