@@ -317,46 +317,20 @@
 /// otest-query returns a list of all classes. This tests the post-filtering of
 /// that list to only contain specified tests.
 - (void)testClassNameDiscoveryFiltering
-{
-  NSDictionary *allSettings =
-  BuildSettingsFromOutput([NSString stringWithContentsOfFile:TEST_DATA @"OSX-Application-Test-showBuildSettings.txt"
-                                                    encoding:NSUTF8StringEncoding
-                                                       error:nil]);
-  NSDictionary *testSettings = allSettings[@"TestProject-App-OSXTests"];
+{  
+  NSArray *testClasses = @[@"A", @"B", @"C"];
+  
+  assertThat([OCUnitTestRunner testClasses:testClasses filteredWithSenTestList:@"All" senTestInvertScope:NO],
+             equalTo(@[@"A", @"B", @"C"]));
+  assertThat([OCUnitTestRunner testClasses:testClasses filteredWithSenTestList:@"A" senTestInvertScope:NO],
+             equalTo(@[@"A"]));
+  assertThat([OCUnitTestRunner testClasses:testClasses filteredWithSenTestList:@"A" senTestInvertScope:YES],
+             equalTo(@[@"B", @"C"]));
+  assertThat([OCUnitTestRunner testClasses:testClasses filteredWithSenTestList:@"A,B" senTestInvertScope:NO],
+             equalTo(@[@"A", @"B"]));
+  assertThat([OCUnitTestRunner testClasses:testClasses filteredWithSenTestList:@"A,B" senTestInvertScope:YES],
+             equalTo(@[@"C"]));
 
-  OCUnitIOSLogicTestRunner *(^makeTestRunner)(NSString *, BOOL) =
-  ^(NSString *senTestList, BOOL senTestInvertScope) {
-    return [[[OCUnitIOSLogicTestRunner alloc]
-             initWithBuildSettings:testSettings
-             senTestList:senTestList
-             senTestInvertScope:senTestInvertScope
-             arguments:@[]
-             environment:@{}
-             garbageCollection:NO
-             freshSimulator:NO
-             freshInstall:NO
-             simulatorType:nil
-             standardOutput:[NSFileHandle fileHandleWithNullDevice]
-             standardError:[NSFileHandle fileHandleWithNullDevice]
-             reporters:@[]] autorelease];
-  };
-
-  [Swizzler whileSwizzlingSelector:@selector(runTestClassListQuery)
-               forInstancesOfClass:[OCUnitIOSLogicTestRunner class]
-                         withBlock:^() { return @[@"A", @"B", @"C"]; }
-                          runBlock:
-   ^() {
-     assertThat([makeTestRunner(@"All", NO) testClassNames],
-                equalTo(@[@"A", @"B", @"C"]));
-     assertThat([makeTestRunner(@"A", NO) testClassNames],
-                equalTo(@[@"A"]));
-     assertThat([makeTestRunner(@"A", YES) testClassNames],
-                equalTo(@[@"B", @"C"]));
-     assertThat([makeTestRunner(@"A,B", NO) testClassNames],
-                equalTo(@[@"A", @"B"]));
-     assertThat([makeTestRunner(@"A,B", YES) testClassNames],
-                equalTo(@[@"C"]));
-   }];
 }
 
 @end
