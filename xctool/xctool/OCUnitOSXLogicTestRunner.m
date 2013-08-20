@@ -77,11 +77,4 @@
   }
 }
 
-- (NSArray *)runTestClassListQuery
-{
-  return OTestQueryTestClassesInOSXBundle(self.testBundlePath,
-                                          _buildSettings[@"BUILT_PRODUCTS_DIR"],
-                                          !_garbageCollection);
-}
-
 @end

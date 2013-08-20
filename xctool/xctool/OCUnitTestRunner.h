@@ -32,6 +32,18 @@
   NSArray *_reporters;
 }
 
+/**
+ * Filters a list of test class names to only those that match the
+ * senTestList and senTestInvertScope constraints.
+ *
+ * @param testClasses An array of test class names
+ * @param senTestList SenTestList string.  e.g. "All", "None", "ClsA,ClsB"
+ * @param senTestInvertScope YES if scope should be inverted.
+ */
++ (NSArray *)testClasses:(NSArray *)testClasses
+ filteredWithSenTestList:(NSString *)senTestList
+      senTestInvertScope:(BOOL)senTestInvertScope;
+
 - (id)initWithBuildSettings:(NSDictionary *)buildSettings
                 senTestList:(NSString *)senTestList
          senTestInvertScope:(BOOL)senTestInvertScope
@@ -46,15 +58,6 @@
                   reporters:(NSArray *)reporters;
 
 - (BOOL)runTestsWithError:(NSString **)error;
-
-/*!
- Executes otest-query and returns an array of test class names in the test bundle.
- 
- Respects senTestList and senTestInvertScope.
- 
- @return Returns NSArray of NSString class names. nil on error or if not implemented.
- */
-- (NSArray *)testClassNames;
 
 - (NSArray *)otestArguments;
 - (NSDictionary *)otestEnvironmentWithOverrides:(NSDictionary *)overrides;

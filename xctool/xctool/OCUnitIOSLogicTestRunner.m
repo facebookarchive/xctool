@@ -80,9 +80,4 @@
   }
 }
 
-- (NSArray *)runTestClassListQuery
-{
-  return OTestQueryTestClassesInIOSBundle(self.testBundlePath, _buildSettings[@"SDK_NAME"]);
-}
-
 @end

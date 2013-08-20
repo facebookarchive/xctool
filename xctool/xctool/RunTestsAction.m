@@ -22,6 +22,7 @@
 #import "OCUnitIOSLogicTestRunner.h"
 #import "OCUnitOSXAppTestRunner.h"
 #import "OCUnitOSXLogicTestRunner.h"
+#import "OTestQuery.h"
 #import "Options.h"
 #import "ReporterEvents.h"
 #import "ReportStatus.h"
@@ -402,6 +403,39 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
   return testConfigurations;
 }
 
+/**
+ * Use otest-query-[ios|osx] to get a list of all SenTestCase classes in the
+ * test bundle.
+ */
+- (NSArray *)queryTestClassNamesFromBuildSettings:(NSDictionary *)testableBuildSettings
+{
+  NSString *sdkName = testableBuildSettings[@"SDK_NAME"];
+  NSString *testBundlePath = [NSString stringWithFormat:@"%@/%@",
+                              testableBuildSettings[@"BUILT_PRODUCTS_DIR"],
+                              testableBuildSettings[@"FULL_PRODUCT_NAME"]];
+
+  if ([sdkName hasPrefix:@"iphonesimulator"]) {
+    return OTestQueryTestClassesInIOSBundle(testBundlePath, sdkName);
+  } else if ([sdkName hasPrefix:@"macosx"]) {
+    BOOL disableGC;
+    
+    NSString *gccEnableObjcGC = testableBuildSettings[@"GCC_ENABLE_OBJC_GC"];
+    if ([gccEnableObjcGC isEqualToString:@"required"] ||
+        [gccEnableObjcGC isEqualToString:@"supported"]) {
+      disableGC = NO;
+    } else {
+      disableGC = YES;
+    }
+    
+    return OTestQueryTestClassesInOSXBundle(testBundlePath,
+                                            testableBuildSettings[@"BUILT_PRODUCTS_DIR"],
+                                            disableGC);
+  } else {
+    NSAssert(NO, @"Unexpected SDK: %@", sdkName);
+    abort();
+  }
+}
+
 /*!
  Retrieves build params and create execution objects for each configuration.
 
@@ -483,7 +517,10 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
     // Query list of test classes if parallelizing test classes in each target
     NSArray *testClassNames = nil;
     if (_parallelizeChunkSize > 0 && !isApplicationTest) {
-      testClassNames = [testRunner testClassNames];
+      NSArray *allTestClassNames = [self queryTestClassNamesFromBuildSettings:testableBuildSettings];
+      testClassNames = [OCUnitTestRunner testClasses:allTestClassNames
+                             filteredWithSenTestList:senTestList
+                                  senTestInvertScope:senTestInvertScope];
       if (!testClassNames) {
         ReportStatusMessage(reportersForConfiguration, REPORTER_MESSAGE_WARNING,
                             @"Failed to get test class names, not parallelizing tests in %@",
