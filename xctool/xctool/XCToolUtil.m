@@ -190,11 +190,18 @@ NSDictionary *GetAvailableSDKsAndAliases()
     [task setArguments:@[
      @"-c",
      [[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"] stringByAppendingString:
-      @" -showsdks | perl -ne '/-sdk (.*?)([\\d\\.]+)$/ && print \"$1 $2\n\"'"],
+      @" -showsdks | perl -ne '/-sdk (.*?)([\\d\\.]+)$/ && print \"$1 $2\n\"'; "
+      // Exit with xcodebuild's return value.  This is getting ugly.
+      @"exit ${PIPESTATUS[0]};"
+      ],
      ]];
     [task setEnvironment:@{@"PATH": SystemPaths()}];
+    
+    NSDictionary *output = LaunchTaskAndCaptureOutput(task);
+    NSCAssert([task terminationStatus] == 0,
+              @"xcodebuild failed to run with error: %@", output[@"stderr"]);
 
-    NSArray *lines = [LaunchTaskAndCaptureOutput(task)[@"stdout"] componentsSeparatedByString:@"\n"];
+    NSArray *lines = [output[@"stdout"] componentsSeparatedByString:@"\n"];
     lines = [lines subarrayWithRange:NSMakeRange(0, lines.count - 1)];
 
     for (NSString *line in lines) {
