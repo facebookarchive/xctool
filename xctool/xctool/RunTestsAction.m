@@ -482,7 +482,7 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
 
     // Query list of test classes if parallelizing test classes in each target
     NSArray *testClassNames = nil;
-    if (_parallelizeChunkSize > 0 && !isApplicationTest) {
+    if (_parallelizeChunkSize > 0) {
       testClassNames = [testRunner testClassNames];
       if (!testClassNames) {
         ReportStatusMessage(reportersForConfiguration, REPORTER_MESSAGE_WARNING,

@@ -14,11 +14,10 @@
 // limitations under the License.
 //
 
-#import <Foundation/Foundation.h>
+#import "OCUnitTestRunner.h"
 
-#import "OCUnitOSXTestRunner.h"
+@interface OCUnitOSXTestRunner : OCUnitTestRunner
 
-@interface OCUnitOSXLogicTestRunner : OCUnitOSXTestRunner {
-}
+- (NSDictionary *)environmentOverrides;
 
 @end
