@@ -17,6 +17,7 @@
 
 #import "OCUnitOSXLogicTestRunner.h"
 
+#import "OTestQuery.h"
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
 
@@ -78,14 +79,9 @@
 
 - (NSArray *)runTestClassListQuery
 {
-  NSTask *task = [[NSTask alloc] init];
-  [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-osx"]];
-  [task setArguments:@[self.testBundlePath]];
-  [task setEnvironment:[self otestEnvironmentWithOverrides:self.environmentOverrides]];
-  NSDictionary *output = LaunchTaskAndCaptureOutput(task);
-  [task release];
-  NSData *outputData = [output[@"stdout"] dataUsingEncoding:NSUTF8StringEncoding];
-  return [NSJSONSerialization JSONObjectWithData:outputData options:0 error:nil];
+  return OTestQueryTestClassesInOSXBundle(self.testBundlePath,
+                                          _buildSettings[@"BUILT_PRODUCTS_DIR"],
+                                          !_garbageCollection);
 }
 
 @end
