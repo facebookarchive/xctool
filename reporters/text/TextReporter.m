@@ -23,6 +23,7 @@
 
 #import "NSFileHandle+Print.h"
 #import "ReporterEvents.h"
+#import "TestResultCounter.h"
 
 /**
  Remove leading component of string if it matches cwd.
@@ -217,7 +218,12 @@ static NSString *abbreviatePath(NSString *string) {
 
 - (NSString *)failIndicatorString
 {
-  return _isPretty ? @"<red>\u2717<reset>" : @"X";
+  return _isPretty ? @"<red>\u2717<reset>" : @"x";
+}
+
+- (NSString *)errorIndicatorString
+{
+  return _isPretty ? @"<red>\u2602<reset>" : @"X";
 }
 
 - (NSString *)emptyIndicatorString
@@ -317,9 +323,7 @@ static NSString *abbreviatePath(NSString *string) {
 {
   NSString *name = event[kReporter_BeginAction_NameKey];
   self.failedTests = [[[NSMutableArray alloc] init] autorelease];
-
-  _testsTotal = 0;
-  _testsPassed = 0;
+  _resultCounter = [[TestResultCounter alloc] init];
 
   // Ensure there's one blank line between earlier output and this action.
   [_reportWriter printNewline];
@@ -341,7 +345,11 @@ static NSString *abbreviatePath(NSString *string) {
   NSString *status = succeeded ? @"SUCCEEDED" : @"FAILED";
 
   if ([name isEqualToString:@"run-tests"] || [name isEqualToString:@"test"]) {
-    message = [NSString stringWithFormat:@"%lu of %lu tests passed", _testsPassed, _testsTotal];
+    message = [NSString stringWithFormat:@"%lu passed, %lu failed, %lu errored, %lu total",
+               [_resultCounter actionPassed],
+               [_resultCounter actionFailed],
+               [_resultCounter actionErrored],
+               [_resultCounter actionTotal]];
 
     if ([self.failedTests count] > 0) {
       [self.reportWriter printLine:@"<bold>Failures:<reset>"];
@@ -359,9 +367,9 @@ static NSString *abbreviatePath(NSString *string) {
          test[@"bundle"]
          ];
 
-        NSDictionary *exception = testEvent[kReporter_EndTest_ExceptionKey];
+        NSArray *exceptions = testEvent[kReporter_EndTest_ExceptionsKey];
 
-        BOOL showInfo = ([testEvent[kReporter_EndTest_OutputKey] length] > 0) || (exception != nil);
+        BOOL showInfo = ([testEvent[kReporter_EndTest_OutputKey] length] > 0) || ([exceptions count] > 0);
 
         if (showInfo) {
           [self printDivider];
@@ -371,8 +379,9 @@ static NSString *abbreviatePath(NSString *string) {
         [self.reportWriter printString:@"<faint>%@<reset>", testEvent[kReporter_EndTest_OutputKey]];
         [self.reportWriter enableIndent];
 
-        // Show exception, if any.
-        if (exception) {
+        // Show first exception, if any.
+        if ([exceptions count] > 0) {
+          NSDictionary *exception = exceptions[0];
           [self.reportWriter disableIndent];
           [self.reportWriter printLine:@"<faint>%@:%d: %@: %@:<reset>",
            exception[kReporter_EndTest_Exception_FilePathInProjectKey],
@@ -403,6 +412,8 @@ static NSString *abbreviatePath(NSString *string) {
    status,
    message != nil ? [@": " stringByAppendingString:message] : @"",
    (int)(duration * 1000)];
+
+  [_resultCounter release];
 }
 
 - (void)beginXcodebuild:(NSDictionary *)event
@@ -545,6 +556,7 @@ static NSString *abbreviatePath(NSString *string) {
 - (void)beginTestSuite:(NSDictionary *)event
 {
   NSString *suite = event[kReporter_BeginTestSuite_SuiteKey];
+  [_resultCounter suiteBegin];
 
   if (![suite isEqualToString:@"All tests"] && ![suite hasSuffix:@".octest(Tests)"]) {
     if ([suite hasPrefix:@"/"]) {
@@ -559,21 +571,24 @@ static NSString *abbreviatePath(NSString *string) {
 - (void)endTestSuite:(NSDictionary *)event
 {
   NSString *suite = event[kReporter_EndTestSuite_SuiteKey];
-  int testCaseCount = [event[kReporter_EndTestSuite_TestCaseCountKey] intValue];
-  int totalFailureCount = [event[kReporter_EndTestSuite_TotalFailureCountKey] intValue];
+  [_resultCounter suiteEnd];
 
   if (![suite isEqualToString:@"All tests"] && ![suite hasSuffix:@".octest(Tests)"]) {
-    [self.reportWriter printLine:@"<bold>%d of %d tests passed %@<reset>",
-     (testCaseCount - totalFailureCount),
-     testCaseCount,
+    [self.reportWriter printLine:@"<bold>%lu passed, %lu failed, %lu errored, %lu total %@<reset>",
+      [_resultCounter suitePassed],
+      [_resultCounter suiteFailed],
+      [_resultCounter suiteErrored],
+      [_resultCounter suiteTotal],
      [self formattedTestDuration:[event[kReporter_EndTestSuite_TotalDurationKey] floatValue] withColor:NO]
      ];
     [self.reportWriter decreaseIndent];
     [self.reportWriter printNewline];
-  } else if ([suite isEqualToString:@"All tests"] && totalFailureCount > 0) {
-    [self.reportWriter printLine:@"<bold>%d of %d tests passed %@<reset>",
-     (testCaseCount - totalFailureCount),
-     testCaseCount,
+  } else if ([suite isEqualToString:@"All tests"] && [_resultCounter suiteTotal] > 0) {
+    [self.reportWriter printLine:@"<bold>%lu passed, %lu failed, %lu errored, %lu total %@<reset>",
+      [_resultCounter suitePassed],
+      [_resultCounter suiteFailed],
+      [_resultCounter suiteErrored],
+      [_resultCounter suiteTotal],
      [self formattedTestDuration:[event[kReporter_EndTestSuite_TotalDurationKey] floatValue] withColor:NO]
      ];
     [self.reportWriter printNewline];
@@ -663,11 +678,17 @@ static NSString *abbreviatePath(NSString *string) {
   BOOL succeeded = [event[kReporter_EndTest_SucceededKey] boolValue];
   BOOL showInfo = !succeeded || ([event[kReporter_EndTest_OutputKey] length] > 0);
   NSString *indicator = nil;
+  NSString *result = event[kReporter_EndTest_ResultKey];
 
-  if (succeeded) {
+  if ([result isEqualToString: @"success"]) {
     indicator = [self passIndicatorString];
-  } else {
+    [_resultCounter testPassed];
+  } else if ([result isEqualToString: @"failure"]) {
     indicator = [self failIndicatorString];
+    [_resultCounter testFailed];
+  } else {
+    indicator = [self errorIndicatorString];
+    [_resultCounter testErrored];
   }
 
   if (showInfo) {
@@ -678,9 +699,10 @@ static NSString *abbreviatePath(NSString *string) {
 
     [self.reportWriter disableIndent];
 
-    // Show exception, if any.
-    NSDictionary *exception = event[kReporter_EndTest_ExceptionKey];
-    if (exception) {
+    // Show first exception, if any.
+    NSArray *exceptions = event[kReporter_EndTest_ExceptionsKey];
+    if ([exceptions count] > 0) {
+      NSDictionary *exception = exceptions[0];
       [self.reportWriter printLine:@"<faint>%@:%d: %@: %@:<reset>",
        exception[kReporter_EndTest_Exception_FilePathInProjectKey],
        [exception[kReporter_EndTest_Exception_LineNumberKey] intValue],
@@ -711,11 +733,6 @@ static NSString *abbreviatePath(NSString *string) {
 
   [self.reportWriter updateLine:@"%@", resultLine];
   [self.reportWriter printNewline];
-
-  _testsTotal++;
-  if (succeeded) {
-    _testsPassed++;
-  }
 }
 
 - (void)analyzerResult:(NSDictionary *)event

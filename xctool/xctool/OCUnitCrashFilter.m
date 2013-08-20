@@ -44,7 +44,8 @@
    kReporter_EndTest_TestKey : testName,
    kReporter_EndTest_ClassNameKey : className,
    kReporter_EndTest_MethodNameKey : methodName,
-   kReporter_EndTest_SucceededKey : @NO,
+   kReporter_EndTest_SucceededKey: @NO,
+   kReporter_EndTest_ResultKey : @"error",
    kReporter_EndTest_TotalDurationKey : @(0),
    kReporter_EndTest_OutputKey : output,
    });
@@ -161,7 +162,8 @@
      kReporter_EndTest_TestKey : self.currentTestEvent[kReporter_EndTest_TestKey],
      kReporter_EndTest_ClassNameKey : self.currentTestEvent[kReporter_EndTest_ClassNameKey],
      kReporter_EndTest_MethodNameKey : self.currentTestEvent[kReporter_EndTest_MethodNameKey],
-     kReporter_EndTest_SucceededKey : @NO,
+     kReporter_EndTest_SucceededKey: @NO,
+     kReporter_EndTest_ResultKey : @"error",
      kReporter_EndTest_TotalDurationKey : @(CACurrentMediaTime() - self.currentTestEventTimestamp),
      kReporter_EndTest_OutputKey : [self.currentTestOutput stringByAppendingString:concatenatedCrashReports],
      });

@@ -102,12 +102,15 @@
        [testResult[kReporter_EndTest_TotalDurationKey] floatValue]];
 
       if (![testResult[kReporter_EndTest_SucceededKey] boolValue]) {
-        NSDictionary *exception = testResult[kReporter_EndTest_ExceptionKey];
-        [self writeWithFormat:
-         @"\t\t\t<failure message=\"%@\" type=\"Failure\">%@:%d</failure>\n",
-         [self xmlEscape:exception[kReporter_EndTest_Exception_ReasonKey]],
-         [self xmlEscape:exception[kReporter_EndTest_Exception_FilePathInProjectKey]],
-         [exception[kReporter_EndTest_Exception_LineNumberKey] intValue]];
+        NSArray *exceptions = testResult[kReporter_EndTest_ExceptionsKey];
+        if ([exceptions count] > 0) {
+          NSDictionary *exception = exceptions[0];
+          [self writeWithFormat:
+           @"\t\t\t<failure message=\"%@\" type=\"Failure\">%@:%d</failure>\n",
+           [self xmlEscape:exception[kReporter_EndTest_Exception_ReasonKey]],
+           [self xmlEscape:exception[kReporter_EndTest_Exception_FilePathInProjectKey]],
+           [exception[kReporter_EndTest_Exception_LineNumberKey] intValue]];
+        }
       }
 
       NSString *output = testResult[kReporter_EndTest_OutputKey];
