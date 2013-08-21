@@ -31,10 +31,11 @@ NSArray *OTestQueryTestClassesInIOSBundle(NSString *bundlePath, NSString *sdk)
    [NSString stringWithFormat:@"--sdk=%@", [sdk stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""]],
    @"--environment=discard",
    [XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-ios"],
-   AbsolutePathFromRelative(bundlePath),
+   bundlePath,
    ]];
-  [task setEnvironment:@{@"PATH": @"/usr/bin:/bin:/usr/sbin:/sbin"}];
+  [task setEnvironment:@{@"PATH": SystemPaths()}];
   NSDictionary *output = LaunchTaskAndCaptureOutput(task);
+  NSCAssert([task terminationStatus] == 0, @"otest-query-ios failed with stderr: %@", output[@"stderr"]);
   NSData *outputData = [output[@"stdout"] dataUsingEncoding:NSUTF8StringEncoding];
   [task release];
   return [NSJSONSerialization JSONObjectWithData:outputData options:0 error:nil];
@@ -44,7 +45,7 @@ NSArray *OTestQueryTestClassesInOSXBundle(NSString *bundlePath, NSString *builtP
 {
   NSTask *task = [[NSTask alloc] init];
   [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-osx"]];
-  [task setArguments:@[AbsolutePathFromRelative(bundlePath)]];
+  [task setArguments:@[bundlePath]];
   [task setEnvironment:@{
    @"DYLD_FRAMEWORK_PATH" : builtProductsDir,
    @"DYLD_LIBRARY_PATH" : builtProductsDir,
@@ -53,6 +54,7 @@ NSArray *OTestQueryTestClassesInOSXBundle(NSString *bundlePath, NSString *builtP
    @"OBJC_DISABLE_GC" : disableGC ? @"YES" : @"NO"
    }];
   NSDictionary *output = LaunchTaskAndCaptureOutput(task);
+  NSCAssert([task terminationStatus] == 0, @"otest-query-ios failed with stderr: %@", output[@"stderr"]);
   [task release];
   NSData *outputData = [output[@"stdout"] dataUsingEncoding:NSUTF8StringEncoding];
   return [NSJSONSerialization JSONObjectWithData:outputData options:0 error:nil];

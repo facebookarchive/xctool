@@ -35,4 +35,6 @@
                                   settingsPath:(NSString *)settingsPath
                                           hide:(BOOL)hide;
 
++ (id)handlerForOtestQueryReturningTestList:(NSArray *)testList;
+
 @end
