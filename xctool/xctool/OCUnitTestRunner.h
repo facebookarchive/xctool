@@ -36,13 +36,13 @@
  * Filters a list of test class names to only those that match the
  * senTestList and senTestInvertScope constraints.
  *
- * @param testClasses An array of test class names
+ * @param testCases An array of test cases ('ClassA/test1', 'ClassB/test2')
  * @param senTestList SenTestList string.  e.g. "All", "None", "ClsA,ClsB"
  * @param senTestInvertScope YES if scope should be inverted.
  */
-+ (NSArray *)testClasses:(NSArray *)testClasses
- filteredWithSenTestList:(NSString *)senTestList
-      senTestInvertScope:(BOOL)senTestInvertScope;
++ (NSArray *)filterTestCases:(NSArray *)testCases
+             withSenTestList:(NSString *)senTestList
+          senTestInvertScope:(BOOL)senTestInvertScope;
 
 - (id)initWithBuildSettings:(NSDictionary *)buildSettings
                 senTestList:(NSString *)senTestList

@@ -80,13 +80,13 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
                          setFlag:@selector(setFreshInstall:)],
     [Action actionOptionWithName:@"parallelize"
                          aliases:nil
-                     description:@"Parallelize execution of logic tests"
+                     description:@"Parallelize execution of tests"
                          setFlag:@selector(setParallelize:)],
-    [Action actionOptionWithName:@"parallelizeSuites"
+    [Action actionOptionWithName:@"bucketSize"
                          aliases:nil
-                     description:@"Parallelize test class execution within each target if > 0"
-                       paramName:@"CHUNK_SIZE"
-                           mapTo:@selector(setParallelizeChunkSize:)],
+                     description:@"Break test bundles in buckets of N test cases."
+                       paramName:@"N"
+                           mapTo:@selector(setBucketSize:)],
     [Action actionOptionWithName:@"simulator"
                          aliases:nil
                      description:@"Set simulator type (either iphone or ipad)"
@@ -99,7 +99,7 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
 {
   if (self = [super init]) {
     self.onlyList = [NSMutableArray array];
-    self->_parallelizeChunkSize = 0;
+    self->_bucketSize = 0;
   }
   return self;
 }
@@ -116,9 +116,9 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
   [self.onlyList addObject:argument];
 }
 
-- (void)setParallelizeChunkSize:(NSString *)str
+- (void)setBucketSize:(NSString *)str
 {
-  _parallelizeChunkSize = [str intValue];
+  _bucketSize = [str intValue];
 }
 
 - (NSArray *)onlyListAsTargetsAndSenTestList
@@ -351,7 +351,7 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
  * Use otest-query-[ios|osx] to get a list of all SenTestCase classes in the
  * test bundle.
  */
-+ (NSArray *)queryTestClassNamesFromBuildSettings:(NSDictionary *)testableBuildSettings
++ (NSArray *)queryTestCasesWithBuildSettings:(NSDictionary *)testableBuildSettings
 {
   NSString *sdkName = testableBuildSettings[@"SDK_NAME"];
   NSString *testBundlePath = [NSString stringWithFormat:@"%@/%@",
@@ -359,7 +359,7 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
                               testableBuildSettings[@"FULL_PRODUCT_NAME"]];
 
   if ([sdkName hasPrefix:@"iphonesimulator"]) {
-    return OTestQueryTestClassesInIOSBundle(testBundlePath, sdkName);
+    return OTestQueryTestCasesInIOSBundle(testBundlePath, sdkName);
   } else if ([sdkName hasPrefix:@"macosx"]) {
     BOOL disableGC;
     
@@ -371,7 +371,7 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
       disableGC = YES;
     }
     
-    return OTestQueryTestClassesInOSXBundle(testBundlePath,
+    return OTestQueryTestCasesInOSXBundle(testBundlePath,
                                             testableBuildSettings[@"BUILT_PRODUCTS_DIR"],
                                             disableGC);
   } else if ([sdkName hasPrefix:@"iphoneos"]) {
@@ -488,8 +488,8 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                                                                    xcodeArguments:xcodebuildArguments
                                                                           testSDK:_testSDK];
       
-      NSArray *testClasses = [[self class] queryTestClassNamesFromBuildSettings:buildSettings];
-      NSAssert(testClasses != nil, @"Can't query test class names.");
+      NSArray *testClasses = [[self class] queryTestCasesWithBuildSettings:buildSettings];
+      NSAssert(testClasses != nil, @"Can't query test case names.");
       
       NSArray *arguments = testable[@"arguments"];
       NSDictionary *environment = testable[@"environment"];
@@ -523,14 +523,11 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
     NSArray *testConfigurations = [self testConfigurationsForBuildSettings:testableBuildSettings[testable]];
     BOOL isApplicationTest = testableBuildSettings[testable][@"TEST_HOST"] != nil;
     
-    BOOL senTestInvertScope = [testable[@"senTestInvertScope"] boolValue];
-    NSString *senTestList = testable[@"senTestList"];
-    
-    NSArray *testClassNames = [OCUnitTestRunner testClasses:testableTestClasses[testable]
-                                    filteredWithSenTestList:senTestList
-                                         senTestInvertScope:senTestInvertScope];
-    NSArray *testChunks = chunkifyArray(testClassNames,
-                                        _parallelizeChunkSize > 0 ? _parallelizeChunkSize : INT_MAX);
+    NSArray *testCases = [OCUnitTestRunner filterTestCases:testableTestClasses[testable]
+                                           withSenTestList:testable[@"senTestList"]
+                                        senTestInvertScope:[testable[@"senTestInvertScope"] boolValue]];
+    NSArray *testChunks = chunkifyArray(testCases,
+                                        _bucketSize > 0 ? _bucketSize : INT_MAX);
     
     for (NSArray *testConfiguration in testConfigurations) {
       Class testRunnerClass = testConfiguration[0];

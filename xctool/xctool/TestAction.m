@@ -64,13 +64,13 @@
                          setFlag:@selector(setFreshInstall:)],
     [Action actionOptionWithName:@"parallelize"
                          aliases:nil
-                     description:@"Parallelize execution of logic tests"
+                     description:@"Parallelize execution of tests"
                          setFlag:@selector(setParallelize:)],
-    [Action actionOptionWithName:@"parallelizeSuites"
+    [Action actionOptionWithName:@"bucketSize"
                          aliases:nil
-                     description:@"Parallelize test class execution within each target if > 0"
-                       paramName:@"CHUNK_SIZE"
-                           mapTo:@selector(setParallelizeChunkSize:)],
+                     description:@"Break test bundles in buckets of N test cases."
+                       paramName:@"N"
+                           mapTo:@selector(setBucketSize:)],
     [Action actionOptionWithName:@"simulator"
                          aliases:nil
                      description:@"Set simulator type (either iphone or ipad)"
@@ -114,9 +114,9 @@
   [_runTestsAction setParallelize:parallelize];
 }
 
-- (void)setParallelizeChunkSize:(NSString *)chunkSize
+- (void)setBucketSize:(NSString *)bucketSize
 {
-  [_runTestsAction setParallelizeChunkSize:chunkSize];
+  [_runTestsAction setBucketSize:bucketSize];
 }
 
 - (void)setSimulatorType:(NSString *)simulatorType

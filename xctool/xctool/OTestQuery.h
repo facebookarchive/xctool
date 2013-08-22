@@ -23,7 +23,7 @@
  * @param bundlePath Path to OCUnit test bundle (ending in .octest)
  * @param sdk SDK to use (e.g. iphonesimulator6.1)
  */
-NSArray *OTestQueryTestClassesInIOSBundle(NSString *bundlePath, NSString *sdk);
+NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk);
 
 /**
  * Returns a list of all classes inheriting from SenTestCase in the bundle.
@@ -33,4 +33,4 @@ NSArray *OTestQueryTestClassesInIOSBundle(NSString *bundlePath, NSString *sdk);
  *   path would normally be something like '.../Build/Products/Debug".
  * @param disableGC If YES, OBJC_DISABLE_GC will be set to YES.
  */
-NSArray *OTestQueryTestClassesInOSXBundle(NSString *bundlePath, NSString *builtProductsDir, BOOL disableGC);
+NSArray *OTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtProductsDir, BOOL disableGC);

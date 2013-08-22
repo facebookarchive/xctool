@@ -19,7 +19,7 @@
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
 
-NSArray *OTestQueryTestClassesInIOSBundle(NSString *bundlePath, NSString *sdk)
+NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk)
 {
   NSCAssert([sdk hasPrefix:@"iphonesimulator"], @"Only iphonesimulator SDKs are supported.");
   
@@ -41,7 +41,7 @@ NSArray *OTestQueryTestClassesInIOSBundle(NSString *bundlePath, NSString *sdk)
   return [NSJSONSerialization JSONObjectWithData:outputData options:0 error:nil];
 }
 
-NSArray *OTestQueryTestClassesInOSXBundle(NSString *bundlePath, NSString *builtProductsDir, BOOL disableGC)
+NSArray *OTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtProductsDir, BOOL disableGC)
 {
   NSTask *task = [[NSTask alloc] init];
   [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-osx"]];
