@@ -318,19 +318,41 @@
 /// that list to only contain specified tests.
 - (void)testClassNameDiscoveryFiltering
 {  
-  NSArray *testClasses = @[@"A", @"B", @"C"];
-  
-  assertThat([OCUnitTestRunner testClasses:testClasses filteredWithSenTestList:@"All" senTestInvertScope:NO],
-             equalTo(@[@"A", @"B", @"C"]));
-  assertThat([OCUnitTestRunner testClasses:testClasses filteredWithSenTestList:@"A" senTestInvertScope:NO],
-             equalTo(@[@"A"]));
-  assertThat([OCUnitTestRunner testClasses:testClasses filteredWithSenTestList:@"A" senTestInvertScope:YES],
-             equalTo(@[@"B", @"C"]));
-  assertThat([OCUnitTestRunner testClasses:testClasses filteredWithSenTestList:@"A,B" senTestInvertScope:NO],
-             equalTo(@[@"A", @"B"]));
-  assertThat([OCUnitTestRunner testClasses:testClasses filteredWithSenTestList:@"A,B" senTestInvertScope:YES],
-             equalTo(@[@"C"]));
+  NSArray *testCases = @[
+                         @"Cls1/test1",
+                         @"Cls1/test2",
+                         @"Cls1/test3",
+                         @"Cls2/test1",
+                         @"Cls2/test2",
+                         @"Cls3/test1",
+                         ];
 
+  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"All" senTestInvertScope:NO],
+             equalTo(testCases));
+  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Cls1" senTestInvertScope:NO],
+             equalTo(@[
+                     @"Cls1/test1",
+                     @"Cls1/test2",
+                     @"Cls1/test3",
+                     ]));
+  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Cls1" senTestInvertScope:YES],
+             equalTo(@[
+                     @"Cls2/test1",
+                     @"Cls2/test2",
+                     @"Cls3/test1",
+                     ]));
+  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Cls1,Cls2/test1,Cls3" senTestInvertScope:NO],
+             equalTo(@[
+                     @"Cls1/test1",
+                     @"Cls1/test2",
+                     @"Cls1/test3",
+                     @"Cls2/test1",
+                     @"Cls3/test1"
+                     ]));
+  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Cls1,Cls2/test1,Cls3" senTestInvertScope:YES],
+             equalTo(@[
+                     @"Cls2/test2",
+                     ]));
 }
 
 @end

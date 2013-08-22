@@ -17,6 +17,7 @@
 
 #import "OtestQuery.h"
 #import <objc/objc-runtime.h>
+#import <objc/runtime.h>
 #import <stdio.h>
 
 @implementation OtestQuery
@@ -29,11 +30,23 @@
 
   [[NSBundle allFrameworks] makeObjectsPerformSelector:@selector(principalClass)];
   NSArray *testClasses = objc_msgSend(NSClassFromString(@"SenTestCase"), @selector(senAllSubclasses));
-  NSMutableArray *testClassNames = [NSMutableArray array];
+  
+  NSMutableArray *testNames = [NSMutableArray array];
   for (Class testClass in testClasses) {
-    [testClassNames addObject:[NSString stringWithUTF8String:class_getName(testClass)]];
+    unsigned int methodCount = 0;
+    Method *methods = class_copyMethodList(testClass, &methodCount);
+    
+    for (int i = 0; i < methodCount; i++) {
+      NSString *methodName = [NSString stringWithUTF8String:sel_getName(method_getName(methods[i]))];
+      if ([methodName hasPrefix:@"test"]) {
+        [testNames addObject:[NSString stringWithFormat:@"%@/%@", testClass, methodName]];
+      }
+    }
   }
-  NSData *json = [NSJSONSerialization dataWithJSONObject:testClassNames options:0 error:nil];
+  
+  [testNames sortUsingSelector:@selector(compare:)];
+  
+  NSData *json = [NSJSONSerialization dataWithJSONObject:testNames options:0 error:nil];
   [(NSFileHandle *)[NSFileHandle fileHandleWithStandardOutput] writeData:json];
 }
 

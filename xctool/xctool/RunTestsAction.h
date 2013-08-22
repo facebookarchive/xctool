@@ -17,7 +17,7 @@
 #import "Action.h"
 
 @interface RunTestsAction : Action {
-  int _parallelizeChunkSize;
+  int _bucketSize;
 }
 
 @property (nonatomic, assign) BOOL freshSimulator;
@@ -27,6 +27,6 @@
 @property (nonatomic, retain) NSString *testSDK;
 @property (nonatomic, retain) NSMutableArray *onlyList;
 
-- (void)setParallelizeChunkSize:(NSString *)str;
+- (void)setBucketSize:(NSString *)str;
 
 @end

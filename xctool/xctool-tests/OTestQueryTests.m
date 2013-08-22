@@ -26,27 +26,31 @@
 
 - (void)testCanQueryClassesFromOSXBundle
 {
-  NSArray *classes = OTestQueryTestClassesInOSXBundle(TEST_DATA @"otest-query-tests-osx-test-bundle/TestProject-Library-OSXTests.octest",
+  NSArray *classes = OTestQueryTestCasesInOSXBundle(TEST_DATA @"otest-query-tests-osx-test-bundle/TestProject-Library-OSXTests.octest",
                                                       AbsolutePathFromRelative(TEST_DATA @"otest-query-tests-osx-test-bundle"),
                                                       YES);
   assertThat(classes,
              equalTo(@[
-                     @"SenInterfaceTestCase",
-                     @"TestProject_Library_OSXTests"
+                     @"TestProject_Library_OSXTests/testOutput",
+                     @"TestProject_Library_OSXTests/testWillFail",
+                     @"TestProject_Library_OSXTests/testWillPass",
                      ]));
 }
 
 - (void)testCanQueryClassesFromIOSBundle
 {
   NSString *latestSDK = GetAvailableSDKsAndAliases()[@"iphonesimulator"];
-  NSArray *classes = OTestQueryTestClassesInIOSBundle(TEST_DATA @"otest-query-tests-ios-test-bundle/TestProject-LibraryTests.octest",
+  NSArray *classes = OTestQueryTestCasesInIOSBundle(TEST_DATA @"otest-query-tests-ios-test-bundle/TestProject-LibraryTests.octest",
                                                       latestSDK);
   assertThat(classes,
              equalTo(@[
-                     @"DisabledTests",
-                     @"OtherTests",
-                     @"SenInterfaceTestCase",
-                     @"SomeTests",
+                     @"OtherTests/testSomething",
+                     @"SomeTests/testBacktraceOutputIsCaptured",
+                     @"SomeTests/testOutputMerging",
+                     @"SomeTests/testPrintSDK",
+                     @"SomeTests/testStream",
+                     @"SomeTests/testWillFail",
+                     @"SomeTests/testWillPass",
                      ]));  
 }
 
