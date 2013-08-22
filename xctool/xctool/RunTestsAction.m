@@ -530,8 +530,12 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
       BOOL garbageCollectionEnabled = [testConfiguration[1] boolValue];
 
       for (NSArray *senTestListChunk in testChunks) {
+        
+        NSString *senTestListString = [OCUnitTestRunner reduceSenTestListToBroadestForm:senTestListChunk
+                                                                           allTestCases:testCases];
+        
         TestableBlock block = [self blockForTestable:testable
-                                         senTestList:[senTestListChunk componentsJoinedByString:@","]
+                                         senTestList:senTestListString
                                testableBuildSettings:testableBuildSettings[testable]
                                       testableTarget:testable[@"target"]
                                    isApplicationTest:isApplicationTest

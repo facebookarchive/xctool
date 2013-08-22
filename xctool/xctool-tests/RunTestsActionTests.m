@@ -187,7 +187,7 @@
                equalTo(@[
                        @"-NSTreatUnknownArgumentsAsOpen", @"NO",
                        @"-ApplePersistenceIgnoreState", @"YES",
-                       @"-SenTest", @"TestA,TestB",
+                       @"-SenTest", @"All",
                        @"-SenTestInvertScope", @"NO",
                        @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
                        ]));
@@ -252,7 +252,7 @@
                equalTo(@[
                        @"-NSTreatUnknownArgumentsAsOpen", @"NO",
                        @"-ApplePersistenceIgnoreState", @"YES",
-                       @"-SenTest", @"TestA,TestB",
+                       @"-SenTest", @"All",
                        @"-SenTestInvertScope", @"NO",
                        @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
                        ]));
