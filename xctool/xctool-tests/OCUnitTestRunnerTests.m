@@ -41,7 +41,6 @@
      OCUnitIOSAppTestRunner *runner =
       [[[OCUnitIOSAppTestRunner alloc] initWithBuildSettings:testSettings
                                                  senTestList:@"All"
-                                          senTestInvertScope:NO
                                                    arguments:
        @[
        @"-SomeArg", @"SomeVal",
@@ -129,7 +128,6 @@
      OCUnitIOSLogicTestRunner *runner =
      [[[OCUnitIOSLogicTestRunner alloc] initWithBuildSettings:testSettings
                                                   senTestList:@"All"
-                                           senTestInvertScope:NO
                                                     arguments:
       @[
       @"-SomeArg", @"SomeVal",
@@ -183,7 +181,6 @@
     OCUnitOSXAppTestRunner *runner =
     [[[OCUnitOSXAppTestRunner alloc] initWithBuildSettings:testSettings
                                                senTestList:@"All"
-                                        senTestInvertScope:NO
                                                  arguments:
      @[
      @"-SomeArg", @"SomeVal",
@@ -271,7 +268,6 @@
     OCUnitOSXLogicTestRunner *runner =
     [[[OCUnitOSXLogicTestRunner alloc] initWithBuildSettings:testSettings
                                                  senTestList:@"All"
-                                          senTestInvertScope:NO
                                                    arguments:
       @[
       @"-SomeArg", @"SomeVal",
