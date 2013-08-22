@@ -66,11 +66,16 @@
                          aliases:nil
                      description:@"Parallelize execution of tests"
                          setFlag:@selector(setParallelize:)],
-    [Action actionOptionWithName:@"bucketSize"
+    [Action actionOptionWithName:@"logicTestBucketSize"
                          aliases:nil
-                     description:@"Break test bundles in buckets of N test cases."
+                     description:@"Break logic test bundles in buckets of N test cases."
                        paramName:@"N"
-                           mapTo:@selector(setBucketSize:)],
+                           mapTo:@selector(setLogicTestBucketSize:)],
+    [Action actionOptionWithName:@"appTestBucketSize"
+                         aliases:nil
+                     description:@"Break app test bundles in buckets of N test cases."
+                       paramName:@"N"
+                           mapTo:@selector(setAppTestBucketSize:)],
     [Action actionOptionWithName:@"simulator"
                          aliases:nil
                      description:@"Set simulator type (either iphone or ipad)"
@@ -114,9 +119,14 @@
   [_runTestsAction setParallelize:parallelize];
 }
 
-- (void)setBucketSize:(NSString *)bucketSize
+- (void)setLogicTestBucketSize:(NSString *)bucketSize
 {
-  [_runTestsAction setBucketSize:bucketSize];
+  [_runTestsAction setLogicTestBucketSize:bucketSize];
+}
+
+- (void)setAppTestBucketSize:(NSString *)bucketSize
+{
+  [_runTestsAction setAppTestBucketSize:bucketSize];
 }
 
 - (void)setSimulatorType:(NSString *)simulatorType

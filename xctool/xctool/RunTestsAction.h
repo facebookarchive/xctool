@@ -17,7 +17,8 @@
 #import "Action.h"
 
 @interface RunTestsAction : Action {
-  int _bucketSize;
+  int _logicTestBucketSize;
+  int _appTestBucketSize;
 }
 
 @property (nonatomic, assign) BOOL freshSimulator;
@@ -27,6 +28,7 @@
 @property (nonatomic, retain) NSString *testSDK;
 @property (nonatomic, retain) NSMutableArray *onlyList;
 
-- (void)setBucketSize:(NSString *)str;
+- (void)setLogicTestBucketSize:(NSString *)str;
+- (void)setAppTestBucketSize:(NSString *)str;
 
 @end
