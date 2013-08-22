@@ -79,8 +79,6 @@
              freshSimulator:(BOOL)freshSimulator
                freshInstall:(BOOL)freshInstall
               simulatorType:(NSString *)simulatorType
-             standardOutput:(NSFileHandle *)standardOutput
-              standardError:(NSFileHandle *)standardError
                   reporters:(NSArray *)reporters
 {
   if (self = [super init]) {
@@ -92,8 +90,6 @@
     _freshSimulator = freshSimulator;
     _freshInstall = freshInstall;
     _simulatorType = [simulatorType retain];
-    _standardOutput = [standardOutput retain];
-    _standardError = [standardError retain];
     _reporters = [reporters retain];
   }
   return self;
@@ -106,8 +102,6 @@
   [_arguments release];
   [_environment release];
   [_simulatorType release];
-  [_standardOutput release];
-  [_standardError release];
   [_reporters release];
   [super dealloc];
 }

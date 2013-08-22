@@ -53,8 +53,6 @@
                                               freshSimulator:NO
                                                 freshInstall:NO
                                                simulatorType:nil
-                                              standardOutput:[NSFileHandle fileHandleWithNullDevice]
-                                               standardError:[NSFileHandle fileHandleWithNullDevice]
                                                    reporters:@[]] autorelease];
      [runner runTestsWithError:errPtr];
    }];
@@ -140,8 +138,6 @@
                                                freshSimulator:NO
                                                  freshInstall:NO
                                                 simulatorType:nil
-                                               standardOutput:[NSFileHandle fileHandleWithNullDevice]
-                                                standardError:[NSFileHandle fileHandleWithNullDevice]
                                                     reporters:@[]] autorelease];
     NSString *error = nil;
     [runner runTestsWithError:&error];
@@ -193,8 +189,6 @@
                                             freshSimulator:NO
                                               freshInstall:NO
                                              simulatorType:nil
-                                            standardOutput:[NSFileHandle fileHandleWithNullDevice]
-                                             standardError:[NSFileHandle fileHandleWithNullDevice]
                                                  reporters:@[]] autorelease];
 
     [runner runTestsWithError:errPtr];
@@ -280,8 +274,6 @@
                                               freshSimulator:NO
                                                 freshInstall:NO
                                                simulatorType:nil
-                                              standardOutput:[NSFileHandle fileHandleWithNullDevice]
-                                               standardError:[NSFileHandle fileHandleWithNullDevice]
                                                    reporters:@[]] autorelease];
     NSString *error = nil;
     [runner runTestsWithError:&error];

@@ -412,8 +412,6 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                                      freshSimulator:self.freshSimulator
                                      freshInstall:self.freshInstall
                                      simulatorType:self.simulatorType
-                                     standardOutput:nil
-                                     standardError:nil
                                      reporters:reporters] autorelease];
     
     NSDictionary *commonEventInfo = @{kReporter_BeginOCUnit_BundleNameKey: testableBuildSettings[@"FULL_PRODUCT_NAME"],
