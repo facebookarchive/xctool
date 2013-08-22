@@ -73,7 +73,6 @@
 
 - (id)initWithBuildSettings:(NSDictionary *)buildSettings
                 senTestList:(NSString *)senTestList
-         senTestInvertScope:(BOOL)senTestInvertScope
                   arguments:(NSArray *)arguments
                 environment:(NSDictionary *)environment
           garbageCollection:(BOOL)garbageCollection
@@ -87,7 +86,6 @@
   if (self = [super init]) {
     _buildSettings = [buildSettings retain];
     _senTestList = [senTestList retain];
-    _senTestInvertScope = senTestInvertScope;
     _arguments = [arguments retain];
     _environment = [environment retain];
     _garbageCollection = garbageCollection;
@@ -251,7 +249,9 @@
            // or TestClassName[/testCaseName][,TestClassName2]
            @"-SenTest", _senTestList,
            // SenTestInvertScope optionally inverts whatever SenTest would normally select.
-           @"-SenTestInvertScope", _senTestInvertScope ? @"YES" : @"NO",
+           // We never invert, since we always pass the exact list of test cases
+           // to be run.
+           @"-SenTestInvertScope", @"NO",
            ]];
 
   // Add any argments that might have been specifed in the scheme.

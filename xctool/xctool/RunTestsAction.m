@@ -394,7 +394,6 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
 
 - (TestableBlock)blockForTestable:(NSDictionary *)testable
                       senTestList:(NSString *)senTestList
-               senTestInvertScope:(BOOL)senTestInvertScope
             testableBuildSettings:(NSDictionary *)testableBuildSettings
                    testableTarget:(NSString *)testableTarget
                 isApplicationTest:(BOOL)isApplicationTest
@@ -407,7 +406,6 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
     OCUnitTestRunner *testRunner = [[[testRunnerClass alloc]
                                      initWithBuildSettings:testableBuildSettings
                                      senTestList:senTestList
-                                     senTestInvertScope:senTestInvertScope
                                      arguments:arguments
                                      environment:environment
                                      garbageCollection:garbageCollectionEnabled
@@ -536,7 +534,6 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
       for (NSArray *senTestListChunk in testChunks) {
         TestableBlock block = [self blockForTestable:testable
                                          senTestList:[senTestListChunk componentsJoinedByString:@","]
-                                  senTestInvertScope:NO
                                testableBuildSettings:testableBuildSettings[testable]
                                       testableTarget:testable[@"target"]
                                    isApplicationTest:isApplicationTest

@@ -20,7 +20,6 @@
 @public
   NSDictionary *_buildSettings;
   NSString *_senTestList;
-  BOOL _senTestInvertScope;
   NSArray *_arguments;
   NSDictionary *_environment;
   BOOL _garbageCollection;
@@ -46,7 +45,6 @@
 
 - (id)initWithBuildSettings:(NSDictionary *)buildSettings
                 senTestList:(NSString *)senTestList
-         senTestInvertScope:(BOOL)senTestInvertScope
                   arguments:(NSArray *)arguments
                 environment:(NSDictionary *)environment
           garbageCollection:(BOOL)garbageCollection
