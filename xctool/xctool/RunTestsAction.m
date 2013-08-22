@@ -82,11 +82,16 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
                          aliases:nil
                      description:@"Parallelize execution of tests"
                          setFlag:@selector(setParallelize:)],
-    [Action actionOptionWithName:@"bucketSize"
+    [Action actionOptionWithName:@"logicTestBucketSize"
                          aliases:nil
-                     description:@"Break test bundles in buckets of N test cases."
+                     description:@"Break logic test bundles in buckets of N test cases."
                        paramName:@"N"
-                           mapTo:@selector(setBucketSize:)],
+                           mapTo:@selector(setLogicTestBucketSize:)],
+    [Action actionOptionWithName:@"appTestBucketSize"
+                         aliases:nil
+                     description:@"Break app test bundles in buckets of N test cases."
+                       paramName:@"N"
+                           mapTo:@selector(setAppTestBucketSize:)],
     [Action actionOptionWithName:@"simulator"
                          aliases:nil
                      description:@"Set simulator type (either iphone or ipad)"
@@ -99,7 +104,8 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
 {
   if (self = [super init]) {
     self.onlyList = [NSMutableArray array];
-    self->_bucketSize = 0;
+    self->_logicTestBucketSize = 0;
+    self->_appTestBucketSize = 0;
   }
   return self;
 }
@@ -116,9 +122,14 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
   [self.onlyList addObject:argument];
 }
 
-- (void)setBucketSize:(NSString *)str
+- (void)setLogicTestBucketSize:(NSString *)str
 {
-  _bucketSize = [str intValue];
+  _logicTestBucketSize = [str intValue];
+}
+
+- (void)setAppTestBucketSize:(NSString *)str
+{
+  _appTestBucketSize = [str intValue];
 }
 
 - (NSArray *)onlyListAsTargetsAndSenTestList
@@ -522,8 +533,10 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
     NSArray *testCases = [OCUnitTestRunner filterTestCases:testableTestClasses[testable]
                                            withSenTestList:testable[@"senTestList"]
                                         senTestInvertScope:[testable[@"senTestInvertScope"] boolValue]];
+    
+    int bucketSize = isApplicationTest ? _appTestBucketSize : _logicTestBucketSize;
     NSArray *testChunks = chunkifyArray(testCases,
-                                        _bucketSize > 0 ? _bucketSize : INT_MAX);
+                                        bucketSize > 0 ? bucketSize : INT_MAX);
     
     for (NSArray *testConfiguration in testConfigurations) {
       Class testRunnerClass = testConfiguration[0];
