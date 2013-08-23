@@ -38,6 +38,8 @@
 		283EAF12170288FE00CE0A0C /* OCUnitCrashFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 283EAF11170288FE00CE0A0C /* OCUnitCrashFilter.m */; };
 		283EAF13170288FE00CE0A0C /* OCUnitCrashFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 283EAF11170288FE00CE0A0C /* OCUnitCrashFilter.m */; };
 		283EAF161702BB0600CE0A0C /* OCUnitCrashFilterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 283EAF151702BB0600CE0A0C /* OCUnitCrashFilterTests.m */; };
+		28404ADF17C7E16F00CB436A /* Testable.m in Sources */ = {isa = PBXBuildFile; fileRef = 28404ADE17C7E16F00CB436A /* Testable.m */; };
+		28404AE017C7E16F00CB436A /* Testable.m in Sources */ = {isa = PBXBuildFile; fileRef = 28404ADE17C7E16F00CB436A /* Testable.m */; };
 		2864A3FA1734E52800BBF3B1 /* Version.m in Sources */ = {isa = PBXBuildFile; fileRef = 2864A3F91734E52800BBF3B1 /* Version.m */; };
 		2864A3FB1734E52800BBF3B1 /* Version.m in Sources */ = {isa = PBXBuildFile; fileRef = 2864A3F91734E52800BBF3B1 /* Version.m */; };
 		2868B1C31746ED9C0062F4BA /* OCUnitTestRunnerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2868B1C21746ED9C0062F4BA /* OCUnitTestRunnerTests.m */; };
@@ -67,6 +69,8 @@
 		28ADB43B16E410F9006301ED /* BuildActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28ADB43A16E410F9006301ED /* BuildActionTests.m */; };
 		28B714551760767D00BB016A /* OCUnitIOSDeviceTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 28B714541760767D00BB016A /* OCUnitIOSDeviceTestRunner.m */; };
 		28B714561760769E00BB016A /* OCUnitIOSDeviceTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 28B714541760767D00BB016A /* OCUnitIOSDeviceTestRunner.m */; };
+		28BB043D17C7FF43004F6C13 /* Buildable.m in Sources */ = {isa = PBXBuildFile; fileRef = 28BB043C17C7FF43004F6C13 /* Buildable.m */; };
+		28BB043E17C7FF43004F6C13 /* Buildable.m in Sources */ = {isa = PBXBuildFile; fileRef = 28BB043C17C7FF43004F6C13 /* Buildable.m */; };
 		28C81A63175562050072DDB8 /* ReportStatusTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28C81A62175562050072DDB8 /* ReportStatusTests.m */; };
 		28E28FB81796926A0072376C /* ReportStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E28FB71796926A0072376C /* ReportStatus.m */; };
 		28E28FB91796934B0072376C /* ReportStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E28FB71796926A0072376C /* ReportStatus.m */; };
@@ -174,6 +178,8 @@
 		283EAF10170288FE00CE0A0C /* OCUnitCrashFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUnitCrashFilter.h; sourceTree = "<group>"; };
 		283EAF11170288FE00CE0A0C /* OCUnitCrashFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitCrashFilter.m; sourceTree = "<group>"; };
 		283EAF151702BB0600CE0A0C /* OCUnitCrashFilterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitCrashFilterTests.m; sourceTree = "<group>"; };
+		28404ADD17C7E16F00CB436A /* Testable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Testable.h; sourceTree = "<group>"; };
+		28404ADE17C7E16F00CB436A /* Testable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Testable.m; sourceTree = "<group>"; };
 		2864A3F81734E52800BBF3B1 /* Version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Version.h; sourceTree = "<group>"; };
 		2864A3F91734E52800BBF3B1 /* Version.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Version.m; sourceTree = "<group>"; };
 		2868B1C21746ED9C0062F4BA /* OCUnitTestRunnerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitTestRunnerTests.m; sourceTree = "<group>"; };
@@ -208,6 +214,8 @@
 		28ADB43A16E410F9006301ED /* BuildActionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BuildActionTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		28B714531760767D00BB016A /* OCUnitIOSDeviceTestRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUnitIOSDeviceTestRunner.h; sourceTree = "<group>"; };
 		28B714541760767D00BB016A /* OCUnitIOSDeviceTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitIOSDeviceTestRunner.m; sourceTree = "<group>"; };
+		28BB043B17C7FF43004F6C13 /* Buildable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Buildable.h; sourceTree = "<group>"; };
+		28BB043C17C7FF43004F6C13 /* Buildable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Buildable.m; sourceTree = "<group>"; };
 		28C81A62175562050072DDB8 /* ReportStatusTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReportStatusTests.m; sourceTree = "<group>"; };
 		28E28FB217968EAC0072376C /* ReporterEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReporterEvents.h; sourceTree = "<group>"; };
 		28E28FB61796926A0072376C /* ReportStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReportStatus.h; sourceTree = "<group>"; };
@@ -393,6 +401,10 @@
 				28E28FBA1797099E0072376C /* ReporterTask.h */,
 				28E28FBB1797099E0072376C /* ReporterTask.m */,
 				28F48A841799D81400068E00 /* EventSink.h */,
+				28404ADD17C7E16F00CB436A /* Testable.h */,
+				28404ADE17C7E16F00CB436A /* Testable.m */,
+				28BB043B17C7FF43004F6C13 /* Buildable.h */,
+				28BB043C17C7FF43004F6C13 /* Buildable.m */,
 			);
 			path = xctool;
 			sourceTree = "<group>";
@@ -600,6 +612,7 @@
 				2834799D16E1A09D003C3B77 /* CleanAction.m in Sources */,
 				283479AD16E2A736003C3B77 /* BuildTestsAction.m in Sources */,
 				283479B516E2B39C003C3B77 /* RunTestsAction.m in Sources */,
+				28BB043D17C7FF43004F6C13 /* Buildable.m in Sources */,
 				287BF08416F1A97900590E06 /* XcodeSubjectInfo.m in Sources */,
 				28ACFC8316FBA888004BAF33 /* TaskUtil.m in Sources */,
 				283EAF12170288FE00CE0A0C /* OCUnitCrashFilter.m in Sources */,
@@ -618,6 +631,7 @@
 				28E28FBC1797099E0072376C /* ReporterTask.m in Sources */,
 				28F489FC17973BF900068E00 /* NSFileHandle+Print.m in Sources */,
 				2804514217C4106C00D16420 /* OTestQuery.m in Sources */,
+				28404ADF17C7E16F00CB436A /* Testable.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -675,6 +689,7 @@
 				28302E1E175A8B6900C997B2 /* ArchiveActionTests.m in Sources */,
 				CD098A2B175EBD20002E0CAC /* AnalyzeAction.m in Sources */,
 				CD5677101766782C003B727C /* BuildStateParser.mm in Sources */,
+				28BB043E17C7FF43004F6C13 /* Buildable.m in Sources */,
 				CDEE9EA1176950DC0026D278 /* BuildStateParserTests.m in Sources */,
 				28869AFC178CEA7600DED56A /* SenTestListener.m in Sources */,
 				28E28FBD1797099E0072376C /* ReporterTask.m in Sources */,
@@ -683,6 +698,7 @@
 				28F489FD17973BF900068E00 /* NSFileHandle+Print.m in Sources */,
 				2804514317C4106C00D16420 /* OTestQuery.m in Sources */,
 				2804514517C410F100D16420 /* OTestQueryTests.m in Sources */,
+				28404AE017C7E16F00CB436A /* Testable.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

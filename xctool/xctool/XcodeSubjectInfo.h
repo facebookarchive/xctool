@@ -17,6 +17,7 @@
 #import <Foundation/Foundation.h>
 
 @class XcodeTargetMatch;
+@class Testable;
 
 /**
  * XcodeSubjectInfo offers up info about the subject (either a workspace/scheme pair, or
@@ -90,7 +91,7 @@
       excludePaths:(NSArray *)excludePaths
    bestTargetMatch:(XcodeTargetMatch **)bestTargetMatchOut;
 
-- (NSDictionary *)testableWithTarget:(NSString *)target;
+- (Testable *)testableWithTarget:(NSString *)target;
 
 - (NSString *)configurationNameForAction:(NSString *)action;
 
