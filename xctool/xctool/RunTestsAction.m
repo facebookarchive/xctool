@@ -27,6 +27,7 @@
 #import "ReporterEvents.h"
 #import "ReportStatus.h"
 #import "TaskUtil.h"
+#import "Testable.h"
 #import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
 
@@ -183,8 +184,8 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
   if (self.onlyList.count == 0) {
     // Use whatever we found in the scheme, except for skipped tests.
     NSMutableArray *unskipped = [NSMutableArray array];
-    for (NSDictionary *testable in xcodeSubjectInfo.testables) {
-      if (![testable[@"skipped"] boolValue]) {
+    for (Testable *testable in xcodeSubjectInfo.testables) {
+      if (!testable.skipped) {
         [unskipped addObject:testable];
       }
     }
@@ -193,14 +194,14 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
     // Munge the list of testables from the scheme to only include those given.
     NSMutableArray *newTestables = [NSMutableArray array];
     for (NSDictionary *only in [self onlyListAsTargetsAndSenTestList]) {
-      NSDictionary *matchingTestable = [xcodeSubjectInfo testableWithTarget:only[@"target"]];
+      Testable *matchingTestable = [xcodeSubjectInfo testableWithTarget:only[@"target"]];
 
       if (matchingTestable) {
-        NSMutableDictionary *newTestable = [NSMutableDictionary dictionaryWithDictionary:matchingTestable];
+        Testable *newTestable = [[matchingTestable copy] autorelease];
 
         if (only[@"senTestList"] != [NSNull null]) {
-          newTestable[@"senTestList"] = only[@"senTestList"];
-          newTestable[@"senTestInvertScope"] = @NO;
+          newTestable.senTestList = only[@"senTestList"];
+          newTestable.senTestInvertScope = NO;
         }
 
         [newTestables addObject:newTestable];
@@ -403,7 +404,7 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
  */
 typedef BOOL (^TestableBlock)(NSArray *reporters);
 
-- (TestableBlock)blockForTestable:(NSDictionary *)testable
+- (TestableBlock)blockForTestable:(Testable *)testable
                       senTestList:(NSString *)senTestList
             testableBuildSettings:(NSDictionary *)testableBuildSettings
                    testableTarget:(NSString *)testableTarget
@@ -480,15 +481,12 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
   ReportStatusMessageBegin(options.reporters, REPORTER_MESSAGE_INFO,
                            @"Collecting info for testables...");
   
-  for (NSDictionary *testable in testables) {
+  for (Testable *testable in testables) {
     dispatch_group_async(group, q, ^{
       dispatch_semaphore_wait(jobLimiter, DISPATCH_TIME_FOREVER);
       
-      NSString *testableProjectPath = testable[@"projectPath"];
-      NSString *testableTarget = testable[@"target"];
-
-      NSDictionary *buildSettings = [[self class] testableBuildSettingsForProject:testableProjectPath
-                                                                           target:testableTarget
+      NSDictionary *buildSettings = [[self class] testableBuildSettingsForProject:testable.projectPath
+                                                                           target:testable.target
                                                                           objRoot:xcodeSubjectInfo.objRoot
                                                                           symRoot:xcodeSubjectInfo.symRoot
                                                                 sharedPrecompsDir:xcodeSubjectInfo.sharedPrecompsDir
@@ -498,12 +496,12 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
       NSArray *testClasses = [[self class] queryTestCasesWithBuildSettings:buildSettings];
       NSAssert(testClasses != nil, @"Can't query test case names.");
       
-      NSArray *arguments = testable[@"arguments"];
-      NSDictionary *environment = testable[@"environment"];
+      NSArray *arguments = testable.arguments;
+      NSDictionary *environment = testable.environment;
 
       // In Xcode, you can optionally include variables in your args or environment
       // variables.  i.e. "$(ARCHS)" gets transformed into "armv7".
-      if ([testable[@"macroExpansionProjectPath"] isNotEqualTo:[NSNull null]]) {
+      if (testable.macroExpansionProjectPath != nil) {
         arguments = [self argumentsWithMacrosExpanded:arguments
                                     fromBuildSettings:buildSettings];
         environment = [self enviornmentWithMacrosExpanded:environment
@@ -525,14 +523,14 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
   ReportStatusMessageEnd(options.reporters, REPORTER_MESSAGE_INFO,
                          @"Collecting info for testables...");
   
-  for (NSDictionary *testable in testables) {
+  for (Testable *testable in testables) {
     // array of [class, (bool) GC Enabled]
     NSArray *testConfigurations = [self testConfigurationsForBuildSettings:testableBuildSettings[testable]];
     BOOL isApplicationTest = testableBuildSettings[testable][@"TEST_HOST"] != nil;
     
     NSArray *testCases = [OCUnitTestRunner filterTestCases:testableTestClasses[testable]
-                                           withSenTestList:testable[@"senTestList"]
-                                        senTestInvertScope:[testable[@"senTestInvertScope"] boolValue]];
+                                           withSenTestList:testable.senTestList
+                                        senTestInvertScope:testable.senTestInvertScope];
     
     int bucketSize = isApplicationTest ? _appTestBucketSize : _logicTestBucketSize;
     NSArray *testChunks = chunkifyArray(testCases,
@@ -550,7 +548,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
         TestableBlock block = [self blockForTestable:testable
                                          senTestList:senTestListString
                                testableBuildSettings:testableBuildSettings[testable]
-                                      testableTarget:testable[@"target"]
+                                      testableTarget:testable.target
                                    isApplicationTest:isApplicationTest
                                            arguments:testableArguments[testable]
                                          environment:testableEnvironment[testable]

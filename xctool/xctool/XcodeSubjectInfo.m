@@ -16,7 +16,9 @@
 
 #import "XcodeSubjectInfo.h"
 
+#import "Buildable.h"
 #import "TaskUtil.h"
+#import "Testable.h"
 #import "XCToolUtil.h"
 #import "XcodeTargetMatch.h"
 
@@ -475,8 +477,8 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   for (NSString *schemePath in schemePaths) {
     NSArray *testables = [self testablesInSchemePath:schemePath
                                             basePath:BasePathFromSchemePath(schemePath)];
-    for (NSDictionary *testableDict in testables) {
-      if ([[testableDict objectForKey:@"target"] isEqualToString:target]) {
+    for (Testable *testable in testables) {
+      if ([testable.target isEqualToString:target]) {
         found = YES;
         XcodeTargetMatch *match = [[[XcodeTargetMatch alloc] init] autorelease];
         match.schemeName = [[schemePath lastPathComponent] stringByDeletingPathExtension];
@@ -637,8 +639,8 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 
   NSMutableArray *testables = [NSMutableArray array];
   for (NSXMLElement *node in testableReferenceNodes) {
-    NSNumber *skipped =
-      [[[node attributeForName:@"skipped"] stringValue] isEqualToString:@"YES"] ? @YES : @NO;
+    BOOL skipped =
+      [[[node attributeForName:@"skipped"] stringValue] isEqualToString:@"YES"] ? YES : NO;
     NSArray *buildableReferences = [node nodesForXPath:@"BuildableReference" error:nil];
 
     assert(buildableReferences.count == 1);
@@ -674,17 +676,20 @@ containsFilesModifiedSince:(NSDate *)sinceDate
       senTestInvertScope = NO;
     }
 
-    NSMutableDictionary *testable =
-      [NSMutableDictionary dictionaryWithDictionary:@{
-       @"projectPath" : projectPath,
-       @"target": target,
-       @"targetID": targetID,
-       @"executable": executable,
-       @"senTestInvertScope": @(senTestInvertScope),
-       @"senTestList": senTestList,
-       @"skipped": skipped}];
-    [testable addEntriesFromDictionary:argumentsAndEnvironment];
-    
+    Testable *testable = [[[Testable alloc] init] autorelease];
+    testable.projectPath = projectPath;
+    testable.target = target;
+    testable.targetID = targetID;
+    testable.executable = executable;
+    testable.senTestInvertScope = senTestInvertScope;
+    testable.senTestList = senTestList;
+    testable.skipped = skipped;
+    testable.arguments = argumentsAndEnvironment[@"arguments"];
+    testable.environment = argumentsAndEnvironment[@"environment"];
+    testable.macroExpansionProjectPath = ([argumentsAndEnvironment[@"macroExpansionProjectPath"] isEqualTo:[NSNull null]]) ?
+                                          nil : argumentsAndEnvironment[@"macroExpansionProjectPath"];
+    testable.macroExpansionTarget = ([argumentsAndEnvironment[@"macroExpansionTarget"] isEqualTo:[NSNull null]]) ?
+                                     nil : argumentsAndEnvironment[@"macroExpansionTarget"];
     [testables addObject:testable];
   }
 
@@ -729,16 +734,17 @@ containsFilesModifiedSince:(NSDate *)sinceDate
     BOOL forRunning = [[[node attributeForName:@"buildForRunning"] stringValue] isEqual:@"YES"];
     BOOL forTesting = [[[node attributeForName:@"buildForTesting"] stringValue] isEqual:@"YES"];
     BOOL forAnalyzing = [[[node attributeForName:@"buildForAnalyzing"] stringValue] isEqual:@"YES"];
-
-    [buildables addObject:@{
-     @"projectPath" : projectPath,
-     @"target": target,
-     @"targetID": targetID,
-     @"executable":executable,
-     @"forRunning": @(forRunning),
-     @"forTesting": @(forTesting),
-     @"forAnalyzing": @(forAnalyzing),
-     }];
+    
+    Buildable *buildable = [[[Buildable alloc] init] autorelease];
+    buildable.projectPath = projectPath;
+    buildable.target = target;
+    buildable.targetID = targetID;
+    buildable.executable = executable;
+    buildable.buildForRunning = forRunning;
+    buildable.buildForTesting = forTesting;
+    buildable.buildForAnalyzing = forAnalyzing;
+    
+    [buildables addObject:buildable];
   }
 
   return buildables;
@@ -818,27 +824,26 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   // It's possible that the scheme references projects that aren't part of the workspace.  When
   // Xcode encounters these, it just skips them so we'll do the same.
   NSSet *projectPathsInWorkspace = [NSSet setWithArray:[XcodeSubjectInfo projectPathsInWorkspace:self.subjectWorkspace]];
-  BOOL (^workspaceContainsProject)(id) = ^(id item) {
-    return [projectPathsInWorkspace containsObject:[item objectForKey:@"projectPath"]];
+  BOOL (^workspaceContainsProject)(Buildable *) = ^(Buildable *item) {
+    return [projectPathsInWorkspace containsObject:item.projectPath];
   };
 
   self.testables = [testables objectsAtIndexes:
                     [testables indexesOfObjectsPassingTest:
-                     ^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+                     ^BOOL(Buildable *obj, NSUInteger idx, BOOL *stop) {
                        return workspaceContainsProject(obj);
                      }]];
 
   self.buildables = [buildables objectsAtIndexes:
                      [buildables indexesOfObjectsPassingTest:
-                      ^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+                      ^BOOL(Buildable *obj, NSUInteger idx, BOOL *stop) {
                         return workspaceContainsProject(obj);
                       }]];
 
   self.buildablesForTest = [buildables objectsAtIndexes:
                             [buildables indexesOfObjectsPassingTest:
-                             ^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-                               return (workspaceContainsProject(obj) &&
-                                       [[obj objectForKey:@"forTesting"] boolValue]);
+                             ^BOOL(Buildable *obj, NSUInteger idx, BOOL *stop) {
+                               return (workspaceContainsProject(obj) && obj.buildForTesting);
                              }]];
 }
 
@@ -851,8 +856,8 @@ containsFilesModifiedSince:(NSDate *)sinceDate
                                                     basePath:BasePathFromSchemePath(schemePath)];
   self.buildablesForTest = [buildables objectsAtIndexes:
                             [buildables indexesOfObjectsPassingTest:
-                             ^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-                               return [[obj objectForKey:@"forTesting"] boolValue];
+                             ^BOOL(Buildable *obj, NSUInteger idx, BOOL *stop) {
+                               return obj.buildForTesting;
                              }]];
 }
 
@@ -914,11 +919,10 @@ containsFilesModifiedSince:(NSDate *)sinceDate
     [BuildConfigurationsByActionForSchemePath(matchingSchemePath) retain];
 }
 
-- (NSDictionary *)testableWithTarget:(NSString *)target
+- (Testable *)testableWithTarget:(NSString *)target
 {
-  for (NSDictionary *testable in self.testables) {
-    NSString *testableTarget = testable[@"target"];
-    if ([testableTarget isEqualToString:target]) {
+  for (Testable *testable in self.testables) {
+    if ([testable.target isEqualToString:target]) {
       return testable;
     }
   }
@@ -930,18 +934,16 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   NSMutableSet *targetsAdded = [NSMutableSet set];
   NSMutableArray *result = [NSMutableArray array];
 
-  [_buildablesForTest enumerateObjectsUsingBlock:^(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-    NSString *target = item[@"target"];
-    if (![targetsAdded containsObject:target]) {
-      [targetsAdded addObject:target];
+  [_buildablesForTest enumerateObjectsUsingBlock:^(Buildable *item, NSUInteger idx, BOOL *stop) {
+    if (![targetsAdded containsObject:item.target]) {
+      [targetsAdded addObject:item.target];
       [result addObject:item];
     }
   }];
 
-  [_testables enumerateObjectsUsingBlock:^(NSDictionary *item, NSUInteger idx, BOOL *stop) {
-    NSString *target = item[@"target"];
-    if (![targetsAdded containsObject:target]) {
-      [targetsAdded addObject:target];
+  [_testables enumerateObjectsUsingBlock:^(Testable *item, NSUInteger idx, BOOL *stop) {
+    if (![targetsAdded containsObject:item.target]) {
+      [targetsAdded addObject:item.target];
       [result addObject:item];
     }
   }];
