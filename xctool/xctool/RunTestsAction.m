@@ -599,18 +599,12 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
     });
   }
   
-  // If we're running in parallel, we can go ahead and start running the
-  // application tests in serial while we're waiting on the parallelized
-  // logic tests to finish.
-  if (!_parallelize) {
-    dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-  }
+  // Wait for logic tests to finish before we start running simulator tests.
+  dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
   
   for (TestableBlock block in blocksToRunOnMainThread) {
     runTestableBlockAndSaveSuccess(block);
   }
-  
-  dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 
   dispatch_release(group);
   dispatch_release(jobLimiter);
