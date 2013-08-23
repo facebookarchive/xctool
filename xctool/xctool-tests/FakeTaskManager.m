@@ -3,6 +3,7 @@
 
 #import "FakeTask.h"
 #import "Swizzle.h"
+#import "XCToolUtil.h"
 
 static FakeTaskManager *__sharedManager = nil;
 
@@ -116,11 +117,13 @@ __attribute__((constructor)) static void initialize()
              }
            },
             // GetAvailableSDKsAndAliases()
-            ^(FakeTask *task){
+            ^(FakeTask *task){ 
               if ([[task launchPath] isEqualToString:@"/bin/bash"] &&
                   [[task arguments] isEqualToArray:@[
                    @"-c",
-                   @"/usr/bin/xcodebuild -showsdks | perl -ne '/-sdk (.*?)([\\d\\.]+)$/ && print \"$1 $2\n\"'",
+                   @"/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild"
+                   @" -showsdks | perl -ne '/-sdk (.*?)([\\d\\.]+)$/ && print \"$1 $2\n\"'; "
+                   @"exit ${PIPESTATUS[0]};",
                    ]]) {
                 [task pretendTaskReturnsStandardOutput:
                  @"macosx 10.7\n"

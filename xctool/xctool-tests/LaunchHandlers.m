@@ -129,4 +129,25 @@ static BOOL ArrayContainsSubArray(NSArray *arr, NSArray *subArr)
   } copy] autorelease];
 }
 
++ (id)handlerForOtestQueryReturningTestList:(NSArray *)testList
+{
+  return [[^(FakeTask *task){
+
+    BOOL isOtestQuery = NO;
+    
+    if ([[task launchPath] hasSuffix:@"otest-query-osx"] ||
+        [[task launchPath] hasSuffix:@"otest-query-ios"]) {
+      isOtestQuery = YES;
+    }
+    
+    if (isOtestQuery) {
+      [task pretendExitStatusOf:0];
+      [task pretendTaskReturnsStandardOutput:
+       [[[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:testList options:0 error:nil]
+                              encoding:NSUTF8StringEncoding] autorelease]];
+      [[FakeTaskManager sharedManager] hideTaskFromLaunchedTasks:task];
+    }
+  } copy] autorelease];
+}
+
 @end

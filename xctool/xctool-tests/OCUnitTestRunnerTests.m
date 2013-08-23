@@ -41,7 +41,6 @@
      OCUnitIOSAppTestRunner *runner =
       [[[OCUnitIOSAppTestRunner alloc] initWithBuildSettings:testSettings
                                                  senTestList:@"All"
-                                          senTestInvertScope:NO
                                                    arguments:
        @[
        @"-SomeArg", @"SomeVal",
@@ -54,8 +53,6 @@
                                               freshSimulator:NO
                                                 freshInstall:NO
                                                simulatorType:nil
-                                              standardOutput:[NSFileHandle fileHandleWithNullDevice]
-                                               standardError:[NSFileHandle fileHandleWithNullDevice]
                                                    reporters:@[]] autorelease];
      [runner runTestsWithError:errPtr];
    }];
@@ -129,7 +126,6 @@
      OCUnitIOSLogicTestRunner *runner =
      [[[OCUnitIOSLogicTestRunner alloc] initWithBuildSettings:testSettings
                                                   senTestList:@"All"
-                                           senTestInvertScope:NO
                                                     arguments:
       @[
       @"-SomeArg", @"SomeVal",
@@ -142,8 +138,6 @@
                                                freshSimulator:NO
                                                  freshInstall:NO
                                                 simulatorType:nil
-                                               standardOutput:[NSFileHandle fileHandleWithNullDevice]
-                                                standardError:[NSFileHandle fileHandleWithNullDevice]
                                                     reporters:@[]] autorelease];
     NSString *error = nil;
     [runner runTestsWithError:&error];
@@ -183,7 +177,6 @@
     OCUnitOSXAppTestRunner *runner =
     [[[OCUnitOSXAppTestRunner alloc] initWithBuildSettings:testSettings
                                                senTestList:@"All"
-                                        senTestInvertScope:NO
                                                  arguments:
      @[
      @"-SomeArg", @"SomeVal",
@@ -196,8 +189,6 @@
                                             freshSimulator:NO
                                               freshInstall:NO
                                              simulatorType:nil
-                                            standardOutput:[NSFileHandle fileHandleWithNullDevice]
-                                             standardError:[NSFileHandle fileHandleWithNullDevice]
                                                  reporters:@[]] autorelease];
 
     [runner runTestsWithError:errPtr];
@@ -271,7 +262,6 @@
     OCUnitOSXLogicTestRunner *runner =
     [[[OCUnitOSXLogicTestRunner alloc] initWithBuildSettings:testSettings
                                                  senTestList:@"All"
-                                          senTestInvertScope:NO
                                                    arguments:
       @[
       @"-SomeArg", @"SomeVal",
@@ -284,8 +274,6 @@
                                               freshSimulator:NO
                                                 freshInstall:NO
                                                simulatorType:nil
-                                              standardOutput:[NSFileHandle fileHandleWithNullDevice]
-                                               standardError:[NSFileHandle fileHandleWithNullDevice]
                                                    reporters:@[]] autorelease];
     NSString *error = nil;
     [runner runTestsWithError:&error];
@@ -317,46 +305,77 @@
 /// otest-query returns a list of all classes. This tests the post-filtering of
 /// that list to only contain specified tests.
 - (void)testClassNameDiscoveryFiltering
+{  
+  NSArray *testCases = @[
+                         @"Cls1/test1",
+                         @"Cls1/test2",
+                         @"Cls1/test3",
+                         @"Cls2/test1",
+                         @"Cls2/test2",
+                         @"Cls3/test1",
+                         ];
+
+  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"All" senTestInvertScope:NO],
+             equalTo(testCases));
+  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Cls1" senTestInvertScope:NO],
+             equalTo(@[
+                     @"Cls1/test1",
+                     @"Cls1/test2",
+                     @"Cls1/test3",
+                     ]));
+  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Cls1" senTestInvertScope:YES],
+             equalTo(@[
+                     @"Cls2/test1",
+                     @"Cls2/test2",
+                     @"Cls3/test1",
+                     ]));
+  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Cls1,Cls2/test1,Cls3" senTestInvertScope:NO],
+             equalTo(@[
+                     @"Cls1/test1",
+                     @"Cls1/test2",
+                     @"Cls1/test3",
+                     @"Cls2/test1",
+                     @"Cls3/test1"
+                     ]));
+  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Cls1,Cls2/test1,Cls3" senTestInvertScope:YES],
+             equalTo(@[
+                     @"Cls2/test2",
+                     ]));
+}
+
+- (void)testCanReduceSenTestListToBroadestForm
 {
-  NSDictionary *allSettings =
-  BuildSettingsFromOutput([NSString stringWithContentsOfFile:TEST_DATA @"OSX-Application-Test-showBuildSettings.txt"
-                                                    encoding:NSUTF8StringEncoding
-                                                       error:nil]);
-  NSDictionary *testSettings = allSettings[@"TestProject-App-OSXTests"];
-
-  OCUnitIOSLogicTestRunner *(^makeTestRunner)(NSString *, BOOL) =
-  ^(NSString *senTestList, BOOL senTestInvertScope) {
-    return [[[OCUnitIOSLogicTestRunner alloc]
-             initWithBuildSettings:testSettings
-             senTestList:senTestList
-             senTestInvertScope:senTestInvertScope
-             arguments:@[]
-             environment:@{}
-             garbageCollection:NO
-             freshSimulator:NO
-             freshInstall:NO
-             simulatorType:nil
-             standardOutput:[NSFileHandle fileHandleWithNullDevice]
-             standardError:[NSFileHandle fileHandleWithNullDevice]
-             reporters:@[]] autorelease];
-  };
-
-  [Swizzler whileSwizzlingSelector:@selector(runTestClassListQuery)
-               forInstancesOfClass:[OCUnitIOSLogicTestRunner class]
-                         withBlock:^() { return @[@"A", @"B", @"C"]; }
-                          runBlock:
-   ^() {
-     assertThat([makeTestRunner(@"All", NO) testClassNames],
-                equalTo(@[@"A", @"B", @"C"]));
-     assertThat([makeTestRunner(@"A", NO) testClassNames],
-                equalTo(@[@"A"]));
-     assertThat([makeTestRunner(@"A", YES) testClassNames],
-                equalTo(@[@"B", @"C"]));
-     assertThat([makeTestRunner(@"A,B", NO) testClassNames],
-                equalTo(@[@"A", @"B"]));
-     assertThat([makeTestRunner(@"A,B", YES) testClassNames],
-                equalTo(@[@"C"]));
-   }];
+  NSArray *allTestCases = @[
+                            @"Cls1/test1",
+                            @"Cls1/test2",
+                            @"Cls1/test3",
+                            @"Cls2/test1",
+                            @"Cls2/test2",
+                            @"Cls3/test1",
+                            ];
+  
+  // All test cases can be expressed as "All"
+  assertThat(([OCUnitTestRunner reduceSenTestListToBroadestForm:allTestCases allTestCases:allTestCases]),
+             equalTo(@"All"));
+  // All test cases of a specific test class (e.g. Cls2) can be expressed as just
+  // the class name.
+  assertThat(([OCUnitTestRunner reduceSenTestListToBroadestForm:@[
+               @"Cls2/test1",
+               @"Cls2/test2"]
+                                                   allTestCases:allTestCases]),
+             equalTo(@"Cls2"));
+  // If only 1 test case in a specific class is selected, it should be expressed
+  // with the full Class/method form.
+  assertThat(([OCUnitTestRunner reduceSenTestListToBroadestForm:@[
+               @"Cls1/test3",
+               @"Cls2/test1",
+               @"Cls2/test2"]
+                                                   allTestCases:allTestCases]),
+             equalTo(@"Cls1/test3,Cls2"));
+  // No tests cases means 'None'
+  assertThat(([OCUnitTestRunner reduceSenTestListToBroadestForm:@[]
+                                                   allTestCases:allTestCases]),
+             equalTo(@"None"));
 }
 
 @end

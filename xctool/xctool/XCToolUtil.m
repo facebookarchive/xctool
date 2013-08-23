@@ -99,15 +99,11 @@ NSDictionary *BuildSettingsFromOutput(NSString *output)
 }
 
 static NSString *AbsoluteExecutablePath(void) {
-  char execRelativePath[1024] = {0};
+  char execRelativePath[PATH_MAX] = {0};
   uint32_t execRelativePathSize = sizeof(execRelativePath);
-
   _NSGetExecutablePath(execRelativePath, &execRelativePathSize);
-
-  char execAbsolutePath[1024] = {0};
-  assert(realpath((const char *)execRelativePath, execAbsolutePath) != NULL);
-
-  return [NSString stringWithUTF8String:execAbsolutePath];
+  
+  return AbsolutePathFromRelative([NSString stringWithUTF8String:execRelativePath]);
 }
 
 NSString *XCToolBasePath(void)
@@ -193,10 +189,19 @@ NSDictionary *GetAvailableSDKsAndAliases()
     [task setLaunchPath:@"/bin/bash"];
     [task setArguments:@[
      @"-c",
-     @"/usr/bin/xcodebuild -showsdks | perl -ne '/-sdk (.*?)([\\d\\.]+)$/ && print \"$1 $2\n\"'",
+     [[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"] stringByAppendingString:
+      @" -showsdks | perl -ne '/-sdk (.*?)([\\d\\.]+)$/ && print \"$1 $2\n\"'; "
+      // Exit with xcodebuild's return value.  This is getting ugly.
+      @"exit ${PIPESTATUS[0]};"
+      ],
      ]];
+    [task setEnvironment:@{@"PATH": SystemPaths()}];
+    
+    NSDictionary *output = LaunchTaskAndCaptureOutput(task);
+    NSCAssert([task terminationStatus] == 0,
+              @"xcodebuild failed to run with error: %@", output[@"stderr"]);
 
-    NSArray *lines = [LaunchTaskAndCaptureOutput(task)[@"stdout"] componentsSeparatedByString:@"\n"];
+    NSArray *lines = [output[@"stdout"] componentsSeparatedByString:@"\n"];
     lines = [lines subarrayWithRange:NSMakeRange(0, lines.count - 1)];
 
     for (NSString *line in lines) {
@@ -440,4 +445,23 @@ NSArray *AvailableReporters()
   NSCAssert(contents != nil,
             @"Failed to read from reporters directory: %@", [error localizedFailureReason]);
   return contents;
+}
+
+NSString *AbsolutePathFromRelative(NSString *path)
+{
+  char absolutePath[PATH_MAX] = {0};
+  assert(realpath((const char *)[path UTF8String], absolutePath) != NULL);
+  
+  return [NSString stringWithUTF8String:absolutePath];
+}
+
+NSString *SystemPaths()
+{
+  NSError *error = nil;
+  NSString *pathLines = [NSString stringWithContentsOfFile:@"/etc/paths"
+                                                  encoding:NSUTF8StringEncoding
+                                                     error:&error];
+  NSCAssert(error == nil, @"Failed to read from /etc/paths: %@", [error localizedFailureReason]);
+  
+  return [[pathLines componentsSeparatedByString:@"\n"] componentsJoinedByString:@":"];
 }

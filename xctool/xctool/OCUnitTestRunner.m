@@ -24,31 +24,130 @@
 
 @implementation OCUnitTestRunner
 
++ (NSArray *)filterTestCases:(NSArray *)testCases
+             withSenTestList:(NSString *)senTestList
+          senTestInvertScope:(BOOL)senTestInvertScope
+{
+  NSSet *originalSet = [NSSet setWithArray:testCases];
+
+  // Come up with a set of test cases that match the senTestList pattern.
+  NSMutableSet *matchingSet = [NSMutableSet set];
+  
+  if ([senTestList isEqualToString:@"All"]) {
+    [matchingSet addObjectsFromArray:testCases];
+  } else if ([senTestList isEqualToString:@"None"]) {
+    // None, we don't add anything to the set.
+  } else {
+    for (NSString *specifier in [senTestList componentsSeparatedByString:@","]) {
+      // If we have a slash, assume it's int he form of "SomeClass/testMethod"
+      BOOL hasClassAndMethod = [specifier rangeOfString:@"/"].length > 0;
+      
+      if (hasClassAndMethod) {
+        if ([originalSet containsObject:specifier]) {
+          [matchingSet addObject:specifier];
+        }
+      } else {
+        NSString *matchingPrefix = [specifier stringByAppendingString:@"/"];
+        for (NSString *testCase in testCases) {
+          if ([testCase hasPrefix:matchingPrefix]) {
+            [matchingSet addObject:testCase];
+          }
+        }
+      }
+    }
+  }
+  
+  NSMutableArray *result = [NSMutableArray array];
+  
+  if (!senTestInvertScope) {
+    [result addObjectsFromArray:[matchingSet allObjects]];
+  } else {
+    NSMutableSet *invertedSet = [[originalSet mutableCopy] autorelease];
+    [invertedSet minusSet:matchingSet];
+    [result addObjectsFromArray:[invertedSet allObjects]];
+  }
+  
+  [result sortUsingSelector:@selector(compare:)];
+  return result;
+}
+
++ (NSString *)reduceSenTestListToBroadestForm:(NSArray *)senTestList
+                                 allTestCases:(NSArray *)allTestCases
+{
+  senTestList = [senTestList sortedArrayUsingSelector:@selector(compare:)];
+  allTestCases = [allTestCases sortedArrayUsingSelector:@selector(compare:)];
+
+  NSDictionary *(^testCasesGroupedByClass)(NSSet *) = ^(NSSet *testCaseSet) {
+    NSMutableDictionary *testCasesByClass = [NSMutableDictionary dictionary];
+    
+    for (NSString *classAndMethod in testCaseSet) {
+      NSString *className = [classAndMethod componentsSeparatedByString:@"/"][0];
+      
+      if (testCasesByClass[className] == nil) {
+        testCasesByClass[className] = [NSMutableSet set];
+      }
+      
+      [testCasesByClass[className] addObject:classAndMethod];
+    }
+    
+    return testCasesByClass;
+  };
+  
+  NSMutableSet *senTestListSet = [NSMutableSet setWithArray:senTestList];
+  NSSet *allTestCasesSet = [NSSet setWithArray:allTestCases];
+  NSAssert([senTestListSet isSubsetOfSet:allTestCasesSet],
+           @"senTestList should be a subset of allTestCases");
+  
+  
+  if ([senTestListSet isEqualToSet:allTestCasesSet]) {
+    return @"All";
+  } else if ([senTestListSet count] == 0) {
+    return @"None";
+  } else {
+    NSDictionary *senTestListCasesGroupedByClass = testCasesGroupedByClass(senTestListSet);
+    NSDictionary *allTestCasesGroupedByClass = testCasesGroupedByClass(allTestCasesSet);
+    
+    NSMutableArray *result = [NSMutableArray array];
+    
+    for (NSString *className in [senTestListCasesGroupedByClass allKeys]) {
+      NSSet *testCasesForThisClass = senTestListCasesGroupedByClass[className];
+      NSSet *allTestCasesForThisClass = allTestCasesGroupedByClass[className];
+      
+      BOOL hasAllTestsInClass = [testCasesForThisClass isEqualToSet:allTestCasesForThisClass];
+      
+      if (hasAllTestsInClass) {
+        // Just emit the class name, and otest will run all tests in that class.
+        [result addObject:className];
+      } else {
+        [result addObjectsFromArray:[testCasesForThisClass allObjects]];
+      }
+    }
+
+    [result sortUsingSelector:@selector(compare:)];
+    
+    return [result componentsJoinedByString:@","];
+  }
+}
+
 - (id)initWithBuildSettings:(NSDictionary *)buildSettings
                 senTestList:(NSString *)senTestList
-         senTestInvertScope:(BOOL)senTestInvertScope
                   arguments:(NSArray *)arguments
                 environment:(NSDictionary *)environment
           garbageCollection:(BOOL)garbageCollection
              freshSimulator:(BOOL)freshSimulator
                freshInstall:(BOOL)freshInstall
               simulatorType:(NSString *)simulatorType
-             standardOutput:(NSFileHandle *)standardOutput
-              standardError:(NSFileHandle *)standardError
                   reporters:(NSArray *)reporters
 {
   if (self = [super init]) {
     _buildSettings = [buildSettings retain];
     _senTestList = [senTestList retain];
-    _senTestInvertScope = senTestInvertScope;
     _arguments = [arguments retain];
     _environment = [environment retain];
     _garbageCollection = garbageCollection;
     _freshSimulator = freshSimulator;
     _freshInstall = freshInstall;
     _simulatorType = [simulatorType retain];
-    _standardOutput = [standardOutput retain];
-    _standardError = [standardError retain];
     _reporters = [reporters retain];
   }
   return self;
@@ -61,8 +160,6 @@
   [_arguments release];
   [_environment release];
   [_simulatorType release];
-  [_standardOutput release];
-  [_standardError release];
   [_reporters release];
   [super dealloc];
 }
@@ -73,12 +170,6 @@
 {
   // Subclasses will override this method.
   return NO;
-}
-
-- (NSArray *)runTestClassListQuery
-{
-  // Subclasses will override this method.
-  return nil;
 }
 
 - (NSArray *)collectCrashReportPaths
@@ -195,38 +286,6 @@
   return succeeded;
 }
 
-- (NSArray *)testClassNames
-{
-  NSArray *rawList = [self runTestClassListQuery];
-  if (!rawList) {
-    return nil;
-  }
-
-  if (![_senTestList isEqual:@"All"]) {
-    NSArray *names = [_senTestList componentsSeparatedByString:@","];
-    if (_senTestInvertScope) {
-      // set difference
-      NSMutableArray *result = [[rawList mutableCopy] autorelease];
-      [result removeObjectsInArray:names];
-      return result;
-    } else {
-      // set intersect
-      NSMutableArray *result = [NSMutableArray array];
-      for (NSString *candidate in rawList) {
-        if ([names containsObject:candidate]) {
-          [result addObject:candidate];
-        }
-      }
-      return result;
-    }
-  } else {
-    NSAssert(!_senTestInvertScope,
-             @"senTestInvertScope should not be set when all tests are selected");
-    return rawList;
-  }
-}
-
-
 - (NSArray *)otestArguments
 {
   // These are the same arguments Xcode would use when invoking otest.  To capture these, we
@@ -242,7 +301,9 @@
            // or TestClassName[/testCaseName][,TestClassName2]
            @"-SenTest", _senTestList,
            // SenTestInvertScope optionally inverts whatever SenTest would normally select.
-           @"-SenTestInvertScope", _senTestInvertScope ? @"YES" : @"NO",
+           // We never invert, since we always pass the exact list of test cases
+           // to be run.
+           @"-SenTestInvertScope", @"NO",
            ]];
 
   // Add any argments that might have been specifed in the scheme.

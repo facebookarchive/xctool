@@ -111,6 +111,7 @@
                                                      target:@"TestProject-LibraryTests"
                                                settingsPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings-iphoneos.txt"
                                                        hide:NO],
+     [LaunchHandlers handlerForOtestQueryReturningTestList:@[]],
      ]];
 
     XCTool *tool = [[[XCTool alloc] init] autorelease];
@@ -143,6 +144,7 @@
                                                      target:@"TestProject-LibraryTests"
                                                settingsPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings.txt"
                                                        hide:NO],
+     [LaunchHandlers handlerForOtestQueryReturningTestList:@[@"TestA", @"TestB"]],
      [[^(FakeTask *task){
       if ([[task launchPath] hasSuffix:@"otest"]) {
         // Pretend the tests fail, which should make xctool return an overall
@@ -153,8 +155,7 @@
                                    encoding:NSUTF8StringEncoding
                                       error:nil]];
       }
-
-    } copy] autorelease]
+    } copy] autorelease],
      ]];
 
     XCTool *tool = [[[XCTool alloc] init] autorelease];
@@ -186,8 +187,8 @@
                equalTo(@[
                        @"-NSTreatUnknownArgumentsAsOpen", @"NO",
                        @"-ApplePersistenceIgnoreState", @"YES",
-                       @"-SenTest", @"DisabledTests",
-                       @"-SenTestInvertScope", @"YES",
+                       @"-SenTest", @"All",
+                       @"-SenTestInvertScope", @"NO",
                        @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
                        ]));
     assertThatInt(tool.exitStatus, equalToInt(1));
@@ -207,6 +208,7 @@
                                                      target:@"TestProject-LibraryTests"
                                                settingsPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings-5.0.txt"
                                                        hide:NO],
+     [LaunchHandlers handlerForOtestQueryReturningTestList:@[@"TestA", @"TestB"]],
      [[^(FakeTask *task){
       if ([[task launchPath] hasSuffix:@"otest"]) {
         // Pretend the tests fail, which should make xctool return an overall
@@ -218,7 +220,7 @@
                                       error:nil]];
       }
 
-    } copy] autorelease]
+    } copy] autorelease],
      ]];
 
     XCTool *tool = [[[XCTool alloc] init] autorelease];
@@ -250,8 +252,8 @@
                equalTo(@[
                        @"-NSTreatUnknownArgumentsAsOpen", @"NO",
                        @"-ApplePersistenceIgnoreState", @"YES",
-                       @"-SenTest", @"DisabledTests",
-                       @"-SenTestInvertScope", @"YES",
+                       @"-SenTest", @"All",
+                       @"-SenTestInvertScope", @"NO",
                        @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
                        ]));
     // Since we're targetting the 5.0, the environment should be different.
@@ -278,6 +280,7 @@
                                                      target:@"TestsWithArgAndEnvSettingsTests"
                                                settingsPath:TEST_DATA @"TestsWithArgAndEnvSettingsInRunAction-TestsWithArgAndEnvSettings-TestsWithArgAndEnvSettingsTests-showBuildSettings.txt"
                                                        hide:NO],
+     [LaunchHandlers handlerForOtestQueryReturningTestList:@[@"TestA", @"TestB"]],
      ]];
 
     XCTool *tool = [[[XCTool alloc] init] autorelease];
@@ -330,6 +333,7 @@
                                                      target:@"TestsWithArgAndEnvSettingsTests"
                                                settingsPath:TEST_DATA @"TestsWithArgAndEnvSettingsInTestAction-TestsWithArgAndEnvSettings-TestsWithArgAndEnvSettingsTests-showBuildSettings.txt"
                                                        hide:NO],
+     [LaunchHandlers handlerForOtestQueryReturningTestList:@[@"TestA", @"TestB"]],
      ]];
 
     XCTool *tool = [[[XCTool alloc] init] autorelease];
@@ -382,6 +386,7 @@
                                                      target:@"TestsWithArgAndEnvSettingsTests"
                                                settingsPath:TEST_DATA @"TestsWithArgAndEnvSettingsWithMacroExpansion-TestsWithArgAndEnvSettings-TestsWithArgAndEnvSettingsTests-showBuildSettings.txt"
                                                        hide:NO],
+     [LaunchHandlers handlerForOtestQueryReturningTestList:@[@"TestA", @"TestB"]],
      ]];
 
     XCTool *tool = [[[XCTool alloc] init] autorelease];
@@ -445,7 +450,7 @@
                                                      target:@"TestProject-LibraryTests"
                                                settingsPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings-5.0.txt"
                                                        hide:NO],
-
+     [LaunchHandlers handlerForOtestQueryReturningTestList:@[@"TestA", @"TestB"]],
      ]];
 
     XCTool *tool = [[[XCTool alloc] init] autorelease];
