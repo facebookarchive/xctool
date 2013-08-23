@@ -16,6 +16,8 @@
 
 #import "OTestQuery.h"
 
+#import "iPhoneSimulatorRemoteClient.h"
+
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
 
@@ -23,17 +25,21 @@ NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk)
 {
   NSCAssert([sdk hasPrefix:@"iphonesimulator"], @"Only iphonesimulator SDKs are supported.");
   
+  NSString *version = [sdk stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
+  DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKVersion:version];
+  NSCAssert(systemRoot != nil, @"Cannot get systemRoot");
+  NSString *simulatorHome = [NSString stringWithFormat:@"%@/Library/Application Support/iPhone Simulator/%@", NSHomeDirectory(), version];
+  
   NSTask *task = [[NSTask alloc] init];
-  // 'sim' is a nice wrapper that takes care of launch simulator binaries in the
-  // correct environment.
-  [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"/Platforms/iPhoneSimulator.platform/usr/bin/sim"]];
-  [task setArguments:@[
-   [NSString stringWithFormat:@"--sdk=%@", [sdk stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""]],
-   @"--environment=discard",
-   [XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-ios"],
-   bundlePath,
-   ]];
-  [task setEnvironment:@{@"PATH": SystemPaths()}];
+  [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-ios"]];
+  [task setEnvironment:@{@"CFFIXED_USER_HOME" : simulatorHome,
+                         @"HOME" : simulatorHome,
+                         @"IPHONE_SHARED_RESOURCES_DIRECTORY" : simulatorHome,
+                         @"DYLD_ROOT_PATH" : [systemRoot sdkRootPath],
+                         @"IPHONE_SIMULATOR_ROOT" : [systemRoot sdkRootPath],
+                         @"IPHONE_SIMULATOR_VERSIONS" : @"iPhone Simulator (external launch) , iPhone OS 6.0 (unknown/10A403)",
+                         @"NSUnbufferedIO" : @"YES"}];
+  [task setArguments:@[bundlePath]];
   NSDictionary *output = LaunchTaskAndCaptureOutput(task);
   NSCAssert([task terminationStatus] == 0, @"otest-query-ios failed with stderr: %@", output[@"stderr"]);
   NSData *outputData = [output[@"stdout"] dataUsingEncoding:NSUTF8StringEncoding];

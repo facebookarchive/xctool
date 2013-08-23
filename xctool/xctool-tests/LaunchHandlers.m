@@ -135,16 +135,9 @@ static BOOL ArrayContainsSubArray(NSArray *arr, NSArray *subArr)
 
     BOOL isOtestQuery = NO;
     
-    // The launch path and args are different for ios and osx...
-    if ([[task launchPath] hasSuffix:@"otest-query-osx"]) {
+    if ([[task launchPath] hasSuffix:@"otest-query-osx"] ||
+        [[task launchPath] hasSuffix:@"otest-query-ios"]) {
       isOtestQuery = YES;
-    } else {
-      for (NSString *argument in [task arguments]) {
-        if ([argument hasSuffix:@"otest-query-ios"]) {
-          isOtestQuery = YES;
-          break;
-        }
-      }
     }
     
     if (isOtestQuery) {
