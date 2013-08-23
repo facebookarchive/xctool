@@ -16,9 +16,11 @@
 
 #import "BuildTestsAction.h"
 
+#import "Buildable.h"
 #import "Options.h"
 #import "SchemeGenerator.h"
 #import "TaskUtil.h"
+#import "Testable.h"
 #import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
 
@@ -107,8 +109,8 @@
     NSAssert(NO, @"Should have a workspace or a project.");
   }
 
-  for (NSDictionary *buildable in testables) {
-    [schemeGenerator addBuildableWithID:buildable[@"targetID"] inProject:buildable[@"projectPath"]];
+  for (Testable *testable in testables) {
+    [schemeGenerator addBuildableWithID:testable.targetID inProject:testable.projectPath];
   }
 
   NSArray *xcodebuildArguments = [options commonXcodeBuildArgumentsForSchemeAction:@"TestAction"
@@ -165,15 +167,15 @@
 {
   NSMutableArray *result = [NSMutableArray array];
 
-  for (NSDictionary *buildable in buildableList) {
+  for (Buildable *buildable in buildableList) {
     BOOL add;
-    if (targets.count > 0 && [[buildable[@"executable"] pathExtension] isEqualToString:@"octest"]) {
+    if (targets.count > 0 && [[buildable.executable pathExtension] isEqualToString:@"octest"]) {
       // If we're filtering by target, only add targets that match.
-      add = [targets containsObject:buildable[@"target"]];
+      add = [targets containsObject:buildable.target];
     } else if (_skipDependencies) {
       add = NO;
     } else {
-      add = ![buildable[@"skipped"] boolValue];
+      add = !([buildable isKindOfClass:[Testable class]] && [(Testable *)buildable skipped]);
     }
     if (add) {
       [result addObject:buildable];
