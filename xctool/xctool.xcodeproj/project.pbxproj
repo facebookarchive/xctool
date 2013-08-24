@@ -43,6 +43,8 @@
 		2864A3FA1734E52800BBF3B1 /* Version.m in Sources */ = {isa = PBXBuildFile; fileRef = 2864A3F91734E52800BBF3B1 /* Version.m */; };
 		2864A3FB1734E52800BBF3B1 /* Version.m in Sources */ = {isa = PBXBuildFile; fileRef = 2864A3F91734E52800BBF3B1 /* Version.m */; };
 		2868B1C31746ED9C0062F4BA /* OCUnitTestRunnerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2868B1C21746ED9C0062F4BA /* OCUnitTestRunnerTests.m */; };
+		2869F3C517C82FB80078F078 /* TestableExecutionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 2869F3C417C82FB80078F078 /* TestableExecutionInfo.m */; };
+		2869F3C617C82FB80078F078 /* TestableExecutionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 2869F3C417C82FB80078F078 /* TestableExecutionInfo.m */; };
 		287A37DE16C711AF00319E81 /* LineReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A37DD16C711AE00319E81 /* LineReader.m */; };
 		287A37E116C711E000319E81 /* SimulatorLauncher.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A37E016C711E000319E81 /* SimulatorLauncher.m */; };
 		287A37E216C711E000319E81 /* SimulatorLauncher.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A37E016C711E000319E81 /* SimulatorLauncher.m */; };
@@ -183,6 +185,8 @@
 		2864A3F81734E52800BBF3B1 /* Version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Version.h; sourceTree = "<group>"; };
 		2864A3F91734E52800BBF3B1 /* Version.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Version.m; sourceTree = "<group>"; };
 		2868B1C21746ED9C0062F4BA /* OCUnitTestRunnerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitTestRunnerTests.m; sourceTree = "<group>"; };
+		2869F3C317C82FB80078F078 /* TestableExecutionInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestableExecutionInfo.h; sourceTree = "<group>"; };
+		2869F3C417C82FB80078F078 /* TestableExecutionInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestableExecutionInfo.m; sourceTree = "<group>"; };
 		287A37DC16C711AE00319E81 /* LineReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LineReader.h; sourceTree = "<group>"; };
 		287A37DD16C711AE00319E81 /* LineReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LineReader.m; sourceTree = "<group>"; };
 		287A37DF16C711E000319E81 /* SimulatorLauncher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimulatorLauncher.h; sourceTree = "<group>"; };
@@ -405,6 +409,8 @@
 				28404ADE17C7E16F00CB436A /* Testable.m */,
 				28BB043B17C7FF43004F6C13 /* Buildable.h */,
 				28BB043C17C7FF43004F6C13 /* Buildable.m */,
+				2869F3C317C82FB80078F078 /* TestableExecutionInfo.h */,
+				2869F3C417C82FB80078F078 /* TestableExecutionInfo.m */,
 			);
 			path = xctool;
 			sourceTree = "<group>";
@@ -632,6 +638,7 @@
 				28F489FC17973BF900068E00 /* NSFileHandle+Print.m in Sources */,
 				2804514217C4106C00D16420 /* OTestQuery.m in Sources */,
 				28404ADF17C7E16F00CB436A /* Testable.m in Sources */,
+				2869F3C517C82FB80078F078 /* TestableExecutionInfo.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -657,6 +664,7 @@
 				28046D3016D76665000AA15C /* ActionTests.m in Sources */,
 				28AC9E3016DB3478009E5B9A /* OptionsTests.m in Sources */,
 				283479A616E1B242003C3B77 /* RunTestsActionTests.m in Sources */,
+				2869F3C617C82FB80078F078 /* TestableExecutionInfo.m in Sources */,
 				283479AE16E2A736003C3B77 /* BuildTestsAction.m in Sources */,
 				283479B616E2B39C003C3B77 /* RunTestsAction.m in Sources */,
 				283479B916E3EBE5003C3B77 /* TestUtil.m in Sources */,

@@ -28,6 +28,7 @@
 #import "ReportStatus.h"
 #import "TaskUtil.h"
 #import "Testable.h"
+#import "TestableExecutionInfo.h"
 #import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
 
@@ -219,100 +220,6 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
   return YES;
 }
 
-+ (NSString *)stringWithMacrosExpanded:(NSString *)str
-                     fromBuildSettings:(NSDictionary *)settings
-{
-  NSMutableString *result = [NSMutableString stringWithString:str];
-
-  [settings enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *val, BOOL *stop){
-    NSString *macroStr = [[NSString alloc] initWithFormat:@"$(%@)", key];
-    [result replaceOccurrencesOfString:macroStr
-                            withString:val
-                               options:0
-                                 range:NSMakeRange(0, [result length])];
-    [macroStr release];
-  }];
-
-  return result;
-}
-
-- (NSArray *)argumentsWithMacrosExpanded:(NSArray *)arr
-                       fromBuildSettings:(NSDictionary *)settings
-{
-  NSMutableArray *result = [NSMutableArray arrayWithCapacity:[arr count]];
-
-  for (NSString *str in arr) {
-    [result addObject:[[self class] stringWithMacrosExpanded:str
-                                           fromBuildSettings:settings]];
-  }
-
-  return result;
-}
-
-- (NSDictionary *)enviornmentWithMacrosExpanded:(NSDictionary *)dict
-                              fromBuildSettings:(NSDictionary *)settings
-{
-  NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:[dict count]];
-
-  for (NSString *key in [dict allKeys]) {
-    NSString *keyExpanded = [[self class] stringWithMacrosExpanded:key
-                                                 fromBuildSettings:settings];
-    NSString *valExpanded = [[self class] stringWithMacrosExpanded:dict[key]
-                                                 fromBuildSettings:settings];
-    result[keyExpanded] = valExpanded;
-  }
-
-  return result;
-}
-
-+ (NSDictionary *)testableBuildSettingsForProject:(NSString *)projectPath
-                                           target:(NSString *)target
-                                          objRoot:(NSString *)objRoot
-                                          symRoot:(NSString *)symRoot
-                                sharedPrecompsDir:(NSString *)sharedPrecompsDir
-                                   xcodeArguments:(NSArray *)xcodeArguments
-                                          testSDK:(NSString *)testSDK
-{
-  // Collect build settings for this test target.
-  NSTask *settingsTask = [[NSTask alloc] init];
-  [settingsTask setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
-  
-  if (testSDK) {
-    // If we were given a test sdk, then force that.  Otherwise, xcodebuild will
-    // default to the SDK set in the project/target.
-    xcodeArguments = ArgumentListByOverriding(xcodeArguments, @"-sdk", testSDK);
-  }
-  
-  [settingsTask setArguments:[xcodeArguments arrayByAddingObjectsFromArray:@[
-                              @"-project", projectPath,
-                              @"-target", target,
-                              [NSString stringWithFormat:@"OBJROOT=%@", objRoot],
-                              [NSString stringWithFormat:@"SYMROOT=%@", symRoot],
-                              [NSString stringWithFormat:@"SHARED_PRECOMPS_DIR=%@", sharedPrecompsDir],
-                              @"-showBuildSettings",
-                              ]]];
-  
-  [settingsTask setEnvironment:@{
-   @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"xcodebuild-fastsettings-shim.dylib"],
-   @"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET" : target,
-   }];
-  
-  NSDictionary *result = LaunchTaskAndCaptureOutput(settingsTask);
-  [settingsTask release];
-  settingsTask = nil;
-  
-  NSDictionary *allSettings = BuildSettingsFromOutput(result[@"stdout"]);
-  NSAssert([allSettings count] == 1,
-           @"Should only have build settings for a single target.");
-  
-  NSDictionary *testableBuildSettings = allSettings[target];
-  NSAssert(testableBuildSettings != nil,
-           @"Should have found build settings for target '%@'",
-           target);
-
-  return testableBuildSettings;
-}
-
 /**
  * @return Array on arrays in the form of: [test runner class, GC-enabled boolean]
  */
@@ -357,43 +264,6 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
   }
 
   return testConfigurations;
-}
-
-/**
- * Use otest-query-[ios|osx] to get a list of all SenTestCase classes in the
- * test bundle.
- */
-+ (NSArray *)queryTestCasesWithBuildSettings:(NSDictionary *)testableBuildSettings
-{
-  NSString *sdkName = testableBuildSettings[@"SDK_NAME"];
-  NSString *testBundlePath = [NSString stringWithFormat:@"%@/%@",
-                              testableBuildSettings[@"BUILT_PRODUCTS_DIR"],
-                              testableBuildSettings[@"FULL_PRODUCT_NAME"]];
-
-  if ([sdkName hasPrefix:@"iphonesimulator"]) {
-    return OTestQueryTestCasesInIOSBundle(testBundlePath, sdkName);
-  } else if ([sdkName hasPrefix:@"macosx"]) {
-    BOOL disableGC;
-    
-    NSString *gccEnableObjcGC = testableBuildSettings[@"GCC_ENABLE_OBJC_GC"];
-    if ([gccEnableObjcGC isEqualToString:@"required"] ||
-        [gccEnableObjcGC isEqualToString:@"supported"]) {
-      disableGC = NO;
-    } else {
-      disableGC = YES;
-    }
-    
-    return OTestQueryTestCasesInOSXBundle(testBundlePath,
-                                            testableBuildSettings[@"BUILT_PRODUCTS_DIR"],
-                                            disableGC);
-  } else if ([sdkName hasPrefix:@"iphoneos"]) {
-    // We can't run tests on device yet, but we must return a test list here or
-    // we'll never get far enough to run OCUnitIOSDeviceTestRunner.
-    return @[@"PlaceHolderForDeviceTests"];
-  } else {
-    NSAssert(NO, @"Unexpected SDK: %@", sdkName);
-    abort();
-  }
 }
 
 /**
@@ -472,11 +342,8 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
 
   NSArray *xcodebuildArguments = [options commonXcodeBuildArgumentsForSchemeAction:@"TestAction"
                                                                   xcodeSubjectInfo:xcodeSubjectInfo];
-  
-  NSMutableDictionary *testableBuildSettings = [NSMutableDictionary dictionary];
-  NSMutableDictionary *testableTestClasses = [NSMutableDictionary dictionary];
-  NSMutableDictionary *testableArguments = [NSMutableDictionary dictionary];
-  NSMutableDictionary *testableEnvironment = [NSMutableDictionary dictionary];
+
+  NSMutableArray *testableExecutionInfos = [NSMutableArray array];
   
   ReportStatusMessageBegin(options.reporters, REPORTER_MESSAGE_INFO,
                            @"Collecting info for testables...");
@@ -485,34 +352,13 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
     dispatch_group_async(group, q, ^{
       dispatch_semaphore_wait(jobLimiter, DISPATCH_TIME_FOREVER);
       
-      NSDictionary *buildSettings = [[self class] testableBuildSettingsForProject:testable.projectPath
-                                                                           target:testable.target
-                                                                          objRoot:xcodeSubjectInfo.objRoot
-                                                                          symRoot:xcodeSubjectInfo.symRoot
-                                                                sharedPrecompsDir:xcodeSubjectInfo.sharedPrecompsDir
-                                                                   xcodeArguments:xcodebuildArguments
-                                                                          testSDK:_testSDK];
+      TestableExecutionInfo *info = [TestableExecutionInfo infoForTestable:testable
+                                                          xcodeSubjectInfo:xcodeSubjectInfo
+                                                       xcodebuildArguments:xcodebuildArguments
+                                                                   testSDK:_testSDK];
       
-      NSArray *testClasses = [[self class] queryTestCasesWithBuildSettings:buildSettings];
-      NSAssert(testClasses != nil, @"Can't query test case names.");
-      
-      NSArray *arguments = testable.arguments;
-      NSDictionary *environment = testable.environment;
-
-      // In Xcode, you can optionally include variables in your args or environment
-      // variables.  i.e. "$(ARCHS)" gets transformed into "armv7".
-      if (testable.macroExpansionProjectPath != nil) {
-        arguments = [self argumentsWithMacrosExpanded:arguments
-                                    fromBuildSettings:buildSettings];
-        environment = [self enviornmentWithMacrosExpanded:environment
-                                        fromBuildSettings:buildSettings];
-      }
-      
-      @synchronized(self) {
-        testableBuildSettings[testable] = buildSettings;
-        testableTestClasses[testable] = testClasses;
-        testableArguments[testable] = arguments;
-        testableEnvironment[testable] = environment;
+      @synchronized (self) {
+        [testableExecutionInfos addObject:info];
       }
       
       dispatch_semaphore_signal(jobLimiter);
@@ -523,19 +369,19 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
   ReportStatusMessageEnd(options.reporters, REPORTER_MESSAGE_INFO,
                          @"Collecting info for testables...");
   
-  for (Testable *testable in testables) {
+  for (TestableExecutionInfo *info in testableExecutionInfos) {
     // array of [class, (bool) GC Enabled]
-    NSArray *testConfigurations = [self testConfigurationsForBuildSettings:testableBuildSettings[testable]];
-    BOOL isApplicationTest = testableBuildSettings[testable][@"TEST_HOST"] != nil;
+    NSArray *testConfigurations = [self testConfigurationsForBuildSettings:info.buildSettings];
+    BOOL isApplicationTest = info.buildSettings[@"TEST_HOST"] != nil;
     
-    NSArray *testCases = [OCUnitTestRunner filterTestCases:testableTestClasses[testable]
-                                           withSenTestList:testable.senTestList
-                                        senTestInvertScope:testable.senTestInvertScope];
+    NSArray *testCases = [OCUnitTestRunner filterTestCases:info.testCases
+                                           withSenTestList:info.testable.senTestList
+                                        senTestInvertScope:info.testable.senTestInvertScope];
     
     int bucketSize = isApplicationTest ? _appTestBucketSize : _logicTestBucketSize;
     NSArray *testChunks = chunkifyArray(testCases,
                                         bucketSize > 0 ? bucketSize : INT_MAX);
-    
+
     for (NSArray *testConfiguration in testConfigurations) {
       Class testRunnerClass = testConfiguration[0];
       BOOL garbageCollectionEnabled = [testConfiguration[1] boolValue];
@@ -545,13 +391,13 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
         NSString *senTestListString = [OCUnitTestRunner reduceSenTestListToBroadestForm:senTestListChunk
                                                                            allTestCases:testCases];
         
-        TestableBlock block = [self blockForTestable:testable
+        TestableBlock block = [self blockForTestable:info.testable
                                          senTestList:senTestListString
-                               testableBuildSettings:testableBuildSettings[testable]
-                                      testableTarget:testable.target
+                               testableBuildSettings:info.buildSettings
+                                      testableTarget:info.testable.target
                                    isApplicationTest:isApplicationTest
-                                           arguments:testableArguments[testable]
-                                         environment:testableEnvironment[testable]
+                                           arguments:info.expandedArguments
+                                         environment:info.expandedEnvironment
                                      testRunnerClass:testRunnerClass
                                            gcEnabled:garbageCollectionEnabled];
         if (isApplicationTest) {
@@ -564,7 +410,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
   }
   
   __block BOOL succeeded = YES;
-  
+
   void (^runTestableBlockAndSaveSuccess)(TestableBlock) = ^(TestableBlock block) {
     NSArray *reporters;
     
@@ -586,7 +432,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
       succeeded &= blockSucceeded;
     }
   };
-  
+
   for (TestableBlock block in blocksToRunOnDispatchQueue) {
     dispatch_group_async(group, q, ^{
       dispatch_semaphore_wait(jobLimiter, DISPATCH_TIME_FOREVER);
