@@ -263,6 +263,68 @@
   }];
 }
 
+- (void)testCanSelectSpecificTestClassOrTestMethodWithOnly
+{
+  void (^runWithOnlyArgumentAndExpectSenTestToBe)(NSString *, NSString *) = ^(NSString *onlyArgument, NSString *expectedSenTest) {
+    [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+      [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+                                                                // Make sure -showBuildSettings returns some data
+                                                                [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
+                                                                                                                scheme:@"TestProject-Library"
+                                                                                                          settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
+                                                                // We're going to call -showBuildSettings on the test target.
+                                                                [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
+                                                                                                                target:@"TestProject-LibraryTests"
+                                                                                                          settingsPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings-5.0.txt"
+                                                                                                                  hide:NO],
+                                                                [LaunchHandlers handlerForOtestQueryReturningTestList:@[
+                                                                                                                        @"OtherTests/testSomething",
+                                                                                                                        @"SomeTests/testWillFail",
+                                                                                                                        @"SomeTests/testWillPass",
+                                                                                                                        ]],
+                                                                [[^(FakeTask *task){
+        if ([[task launchPath] hasSuffix:@"otest"]) {
+          [task pretendTaskReturnsStandardOutput:
+           [NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results.txt"
+                                     encoding:NSUTF8StringEncoding
+                                        error:nil]];
+        }
+
+      } copy] autorelease],
+                                                                ]];
+
+      XCTool *tool = [[[XCTool alloc] init] autorelease];
+
+      tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                         @"-scheme", @"TestProject-Library",
+                         @"-configuration", @"Debug",
+                         @"-sdk", @"iphonesimulator6.0",
+                         @"run-tests", @"-only", onlyArgument,
+                         ];
+
+      [TestUtil runWithFakeStreams:tool];
+
+      NSArray *launchedTasks = [[FakeTaskManager sharedManager] launchedTasks];
+      assertThatInteger([launchedTasks count], equalToInteger(2));
+      assertThat([launchedTasks[1] arguments],
+                 equalTo(@[
+                           @"-NSTreatUnknownArgumentsAsOpen", @"NO",
+                           @"-ApplePersistenceIgnoreState", @"YES",
+                           @"-SenTest", expectedSenTest,
+                           @"-SenTestInvertScope", @"NO",
+                           @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
+                           ]));
+    }];
+  };
+
+  runWithOnlyArgumentAndExpectSenTestToBe(@"TestProject-LibraryTests:SomeTests", @"SomeTests");
+  runWithOnlyArgumentAndExpectSenTestToBe(@"TestProject-LibraryTests:SomeTests/testWillPass", @"SomeTests/testWillPass");
+  runWithOnlyArgumentAndExpectSenTestToBe(@"TestProject-LibraryTests:SomeTests/testWillPass,OtherTests/testSomething",
+                                          // Since OtherTests has only 1 test, it will get reduced to just the test name.
+                                          // And, the ordering will be alphabetized.
+                                          @"OtherTests,SomeTests/testWillPass");
+}
+
 /**
  By default, Xcode will run your tests with whatever extra args or environment
  settings you've configured for your Run action in the scheme editor.

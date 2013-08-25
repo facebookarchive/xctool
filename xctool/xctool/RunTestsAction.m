@@ -389,7 +389,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
       for (NSArray *senTestListChunk in testChunks) {
         
         NSString *senTestListString = [OCUnitTestRunner reduceSenTestListToBroadestForm:senTestListChunk
-                                                                           allTestCases:testCases];
+                                                                           allTestCases:info.testCases];
         
         TestableBlock block = [self blockForTestable:info.testable
                                          senTestList:senTestListString
