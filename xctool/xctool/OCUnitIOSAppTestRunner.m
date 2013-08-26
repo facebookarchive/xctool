@@ -179,7 +179,22 @@ static void KillSimulatorJobs()
   return [launcher launchAndWaitForExit];
 }
 
-- (BOOL)runTestsInSimulator:(NSString *)testHostAppPath feedOutputToBlock:(void (^)(NSString *))feedOutputToBlock
+/**
+ * Use the iPhoneSimulatorRemoteClient framework to start the app in the sim,
+ * inject otest-shim into the app as it starts, and feed line-by-line output to
+ * the `feedOutputToBlock`.
+ *
+ * @param testHostAppPath Path to the .app
+ * @param feedOutputToBlock The block is called once for every line of output
+ * @param testsSucceeded If all tests ran and passed, this will be set to YES.
+ * @param infraSucceeded If we succeeded in launching the app and running the
+ *   the tests, this will be set to YES.  Note that this will be YES even if
+ *   some tests failed.
+ */
+- (void)runTestsInSimulator:(NSString *)testHostAppPath
+          feedOutputToBlock:(void (^)(NSString *))feedOutputToBlock
+             testsSucceeded:(BOOL *)testsSucceeded
+             infraSucceeded:(BOOL *)infraSucceeded
 {
   NSString *exitModePath = MakeTempFileWithPrefix(@"exit-mode");
   NSString *outputPath = MakeTempFileWithPrefix(@"output");
@@ -188,6 +203,13 @@ static void KillSimulatorJobs()
   LineReader *reader = [[[LineReader alloc] initWithFileHandle:outputHandle] autorelease];
   reader.didReadLineBlock = feedOutputToBlock;
 
+  // otest-shim will be inserted into the process and will interpose the exit()
+  // and abort() functions, and write the exit status of the app to whatever
+  // is specified in SAVE_EXIT_MODE_TO.
+  //
+  // We only do this because the simulator API gives us no easy way to get the
+  // exit status of the app we launch, and we use the exit status to tell if
+  // all tests in a given test bundle ran successfully.
   DTiPhoneSimulatorSessionConfig *sessionConfig =
     [self sessionConfigForRunningTestsWithEnvironment:@{
      @"SAVE_EXIT_MODE_TO" : exitModePath,
@@ -201,17 +223,26 @@ static void KillSimulatorJobs()
 
   [reader startReading];
 
-  [launcher launchAndWaitForExit];
+  BOOL simStartedSuccessfully = [launcher launchAndWaitForExit];
 
   [reader stopReading];
   [reader finishReadingToEndOfFile];
 
-  NSDictionary *exitMode = [NSDictionary dictionaryWithContentsOfFile:exitModePath];
+  BOOL exitStatusWasWritten = [[NSFileManager defaultManager] fileExistsAtPath:exitModePath
+                                                                   isDirectory:NULL];
 
-  [[NSFileManager defaultManager] removeItemAtPath:outputPath error:nil];
-  [[NSFileManager defaultManager] removeItemAtPath:exitModePath error:nil];
+  if (simStartedSuccessfully && exitStatusWasWritten) {
+    NSDictionary *exitMode = [NSDictionary dictionaryWithContentsOfFile:exitModePath];
 
-  return [exitMode[@"via"] isEqualToString:@"exit"] && ([exitMode[@"status"] intValue] == 0);
+    [[NSFileManager defaultManager] removeItemAtPath:outputPath error:nil];
+    [[NSFileManager defaultManager] removeItemAtPath:exitModePath error:nil];
+
+    *testsSucceeded = [exitMode[@"via"] isEqualToString:@"exit"] && ([exitMode[@"status"] intValue] == 0);
+    *infraSucceeded = YES;
+  } else {
+    *testsSucceeded = NO;
+    *infraSucceeded = NO;
+  }
 }
 
 - (BOOL)uninstallTestHostBundleID:(NSString *)testHostBundleID withError:(NSString **)error
@@ -355,12 +386,20 @@ static void KillSimulatorJobs()
   ReportStatusMessage(_reporters,
                       REPORTER_MESSAGE_INFO,
                       @"Launching test host and running tests ...");
-  if (![self runTestsInSimulator:testHostAppPath feedOutputToBlock:outputLineBlock]) {
-    *error = [NSString stringWithFormat:@"Failed to run tests"];
-    return NO;
-  }
 
-  return YES;
+  BOOL testsSucceeded = NO;
+  BOOL infraSucceeded = NO;
+  [self runTestsInSimulator:testHostAppPath
+          feedOutputToBlock:outputLineBlock
+             testsSucceeded:&testsSucceeded
+             infraSucceeded:&infraSucceeded];
+
+  if (!infraSucceeded) {
+    *error = @"The simulator failed to start, or the TEST_HOST application failed to run.";
+    return NO;
+  } else {
+    return testsSucceeded;
+  }
 }
 
 @end
