@@ -324,8 +324,48 @@ one per line [(example
 output)](https://gist.github.com/fpotter/82ffcc3d9a49d10ee41b).
 * __json-compilation-database__: outputs a [JSON Compilation Database](http://clang.llvm.org/docs/JSONCompilationDatabase.html) of build events which can be used by [Clang Tooling](http://clang.llvm.org/docs/LibTooling.html) based tools, e.g. [OCLint](http://oclint.org).
 
-You could also __add your own__ Reporter - see
-[Reporter.h](https://github.com/facebook/xctool/blob/master/xctool/xctool/Reporter.h).
+### Implementing Your Own Reporters
+
+You can also implement your own reporters using whatever language you
+like.  Reporters in xctool are separate executables that read JSON
+objects from STDIN and write formatted results to STDOUT.
+
+You can invoke reporters by passing their full path via the `-reporter`
+option:
+
+```
+path/to/xctool.sh \
+  -workspace YourWorkspace.xcworkspace \
+  -scheme YourScheme \
+  -reporter /path/to/your/reporter \
+  test
+```
+
+For example, here's a simple reporter in Python that outputs a _period_
+for every passing test and an _exclamation mark_ for every failing test:
+
+```
+#!/usr/bin/python
+
+import fileinput
+import json
+import sys
+
+for line in fileinput.input():
+    obj = json.loads(line)
+
+    if obj['event'] == 'end-test':
+        if obj['succeeded']:
+            sys.stdout.write('.')
+        else:
+            sys.stdout.write('!')
+
+sys.stdout.write('\n')
+```
+
+If you're writing a reporter in Objective-C, you'll find the
+`Reporter` class helpful - see [Reporter.h](https://github.com/facebook/xctool/blob/master/reporters/reporters/Reporter.h).
+
 
 ## Configuration (.xctool-args)
 
