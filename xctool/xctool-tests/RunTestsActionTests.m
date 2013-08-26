@@ -547,4 +547,68 @@
   }];
 }
 
+- (void)testCanBucketizeTestCasesByTestCase
+{
+  assertThat(BucketizeTestCasesByTestCase(@[
+                                            @"Cls1/test1",
+                                            @"Cls1/test2",
+                                            @"Cls2/test1",
+                                            @"Cls2/test2",
+                                            @"Cls3/test1",
+                                            @"Cls3/test2",
+                                            @"Cls3/test3",
+                                            ], 3),
+             equalTo(@[
+                       @[
+                         @"Cls1/test1",
+                         @"Cls1/test2",
+                         @"Cls2/test1",
+                         ],
+                       @[
+                         @"Cls2/test2",
+                         @"Cls3/test1",
+                         @"Cls3/test2",
+                         ],
+                       @[
+                         @"Cls3/test3"
+                         ],
+                       ]));
+}
+
+- (void)testCanBucketizeTestCasesByTestClass
+{
+  assertThat(BucketizeTestCasesByTestClass(@[
+                                            @"Cls1/test1",
+                                            @"Cls1/test2",
+                                            @"Cls2/test1",
+                                            @"Cls2/test2",
+                                            @"Cls3/test1",
+                                            @"Cls3/test2",
+                                            @"Cls3/test3",
+                                            @"Cls4/test1",
+                                            @"Cls5/test1",
+                                            @"Cls6/test1",
+                                            @"Cls7/test1",
+                                            ], 3),
+             equalTo(@[
+                       @[
+                         @"Cls1/test1",
+                         @"Cls1/test2",
+                         @"Cls2/test1",
+                         @"Cls2/test2",
+                         @"Cls3/test1",
+                         @"Cls3/test2",
+                         @"Cls3/test3"
+                         ],
+                       @[
+                         @"Cls4/test1",
+                         @"Cls5/test1",
+                         @"Cls6/test1",
+                         ],
+                       @[
+                         @"Cls7/test1",
+                         ],
+                       ]));
+}
+
 @end

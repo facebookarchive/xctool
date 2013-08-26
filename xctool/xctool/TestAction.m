@@ -76,6 +76,11 @@
                      description:@"Break app test bundles in buckets of N test cases."
                        paramName:@"N"
                            mapTo:@selector(setAppTestBucketSize:)],
+    [Action actionOptionWithName:@"bucketBy"
+                         aliases:nil
+                     description:@"Either 'case' (default) or 'class'."
+                       paramName:@"BUCKETBY"
+                           mapTo:@selector(setBucketBy:)],
     [Action actionOptionWithName:@"simulator"
                          aliases:nil
                      description:@"Set simulator type (either iphone or ipad)"
@@ -127,6 +132,11 @@
 - (void)setAppTestBucketSize:(NSString *)bucketSize
 {
   [_runTestsAction setAppTestBucketSize:bucketSize];
+}
+
+- (void)setBucketBy:(NSString *)str
+{
+  [_runTestsAction setBucketBy:str];
 }
 
 - (void)setSimulatorType:(NSString *)simulatorType

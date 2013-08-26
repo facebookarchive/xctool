@@ -49,6 +49,42 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
   return chunks;
 }
 
+NSArray *BucketizeTestCasesByTestCase(NSArray *testCases, int bucketSize)
+{
+  return chunkifyArray(testCases, bucketSize);
+}
+
+NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
+{
+  NSMutableArray *testClassNames = [NSMutableArray array];
+  NSMutableDictionary *testCasesByClass = [NSMutableDictionary dictionary];
+
+  for (NSString *classAndMethod in testCases) {
+    NSString *className = [classAndMethod componentsSeparatedByString:@"/"][0];
+
+    if (testCasesByClass[className] == nil) {
+      testCasesByClass[className] = [NSMutableArray array];
+      [testClassNames addObject:className];
+    }
+
+    [testCasesByClass[className] addObject:classAndMethod];
+  }
+
+  NSArray *testClassNamesChunked = chunkifyArray(testClassNames, bucketSize);
+
+  NSMutableArray *result = [NSMutableArray array];
+
+  for (NSArray *testClassNames in testClassNamesChunked) {
+    NSMutableArray *testCasesForClasses = [NSMutableArray array];
+    for (NSString *testClassName in testClassNames) {
+      [testCasesForClasses addObjectsFromArray:testCasesByClass[testClassName]];
+    }
+    [result addObject:testCasesForClasses];
+  }
+
+  return result;
+}
+
 @implementation RunTestsAction
 
 + (NSString *)name
@@ -94,6 +130,11 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
                      description:@"Break app test bundles in buckets of N test cases."
                        paramName:@"N"
                            mapTo:@selector(setAppTestBucketSize:)],
+    [Action actionOptionWithName:@"bucketBy"
+                         aliases:nil
+                     description:@"Either 'case' (default) or 'class'."
+                       paramName:@"BUCKETBY"
+                           mapTo:@selector(setBucketBy:)],
     [Action actionOptionWithName:@"simulator"
                          aliases:nil
                      description:@"Set simulator type (either iphone or ipad)"
@@ -106,8 +147,9 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
 {
   if (self = [super init]) {
     self.onlyList = [NSMutableArray array];
-    self->_logicTestBucketSize = 0;
-    self->_appTestBucketSize = 0;
+    _logicTestBucketSize = 0;
+    _appTestBucketSize = 0;
+    _bucketBy = BucketByTestCase;
   }
   return self;
 }
@@ -132,6 +174,15 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
 - (void)setAppTestBucketSize:(NSString *)str
 {
   _appTestBucketSize = [str intValue];
+}
+
+- (void)setBucketBy:(NSString *)str
+{
+  if ([str isEqualToString:@"class"]) {
+    _bucketBy = BucketByClass;
+  } else {
+    _bucketBy = BucketByTestCase;
+  }
 }
 
 - (NSArray *)onlyListAsTargetsAndSenTestList
@@ -377,10 +428,17 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
     NSArray *testCases = [OCUnitTestRunner filterTestCases:info.testCases
                                            withSenTestList:info.testable.senTestList
                                         senTestInvertScope:info.testable.senTestInvertScope];
-    
+
     int bucketSize = isApplicationTest ? _appTestBucketSize : _logicTestBucketSize;
-    NSArray *testChunks = chunkifyArray(testCases,
-                                        bucketSize > 0 ? bucketSize : INT_MAX);
+    NSArray *testChunks;
+
+    if (_bucketBy == BucketByClass) {
+      testChunks = BucketizeTestCasesByTestClass(testCases, bucketSize > 0 ? bucketSize : INT_MAX);
+    } else if (_bucketBy == BucketByTestCase) {
+      testChunks = BucketizeTestCasesByTestCase(testCases, bucketSize > 0 ? bucketSize : INT_MAX);
+    } else {
+      NSAssert(NO, @"Unexpected value for _bucketBy: %d", _bucketBy);
+    }
 
     for (NSArray *testConfiguration in testConfigurations) {
       Class testRunnerClass = testConfiguration[0];
