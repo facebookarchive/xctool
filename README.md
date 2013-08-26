@@ -59,6 +59,15 @@ problems are.
 
 	![pretty output](https://fpotter_public.s3.amazonaws.com/xctool-uicatalog.gif)
 
+* **Faster, parallelized test runs.**
+
+  _xctool_ can optionally run all of your test bundles in parallel,
+speeding up your test runs significantly.  At Facebook, we've seen 2x
+and 3x speed ups by parallelizing our runs.
+
+  Use the `-parallelize` option with _run-tests_ or _test_ to enable.
+See [Parallelizing Test Runs](#parallelizing-test-runs) for more info.
+
 ## Requirements
 
 You'll need Xcode's Command Line Tools installed.  From Xcode, install
@@ -197,6 +206,42 @@ path/to/xctool.sh \
 Just as with the __test__ action, you can limit which tests are run with
 the `-only`.  And, you can change which SDK they're run against
 with the `-test-sdk`.
+
+#### Parallelizing Test Runs
+
+_xctool_ can optionally run unit tests in parallel, making better use of
+otherwise idle CPU cores.  At Facebook, we've seen 2x and 3x gains by
+parallelizing our test runs.
+
+To allow test bundles to run concurrently, use the `-parallelize`
+option:
+
+```
+path/to/xctool.sh \
+  -workspace YourWorkspace.xcworkspace \
+  -scheme YourScheme \
+  run-tests -parallelize
+```
+
+The above gives you parallelism, but you're bounded by your slowest test
+bundle.  For example, if you had two test bundles ('A' and 'B'), but 'B'
+took 10 times as long to run because it contained 10 times as many
+tests, then the above parallelism won't help much.
+
+You can get further gains by breaking your test execution into buckets
+using the `-logicTestBucketSize` option:
+
+```
+path/to/xctool.sh \
+  -workspace YourWorkspace.xcworkspace \
+  -scheme YourScheme \
+  run-tests -parallelize -logicTestBucketSize 20
+```
+
+The above will break your test execution into buckets of _20_ test
+cases each, and those bundles will be run concurrently.  If some of your
+test bundles are much larger than others, this will help even things out
+and speed up the overall test run.
 
 ## Continuous Integration
 
