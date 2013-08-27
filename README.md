@@ -265,24 +265,46 @@ your tests on the next CI build.
 
 ### Example Travis CI Configuration
 
-[Travis CI](https://travis-ci.org/) is a very popular continuous integration system offered for free to Open Source projects.
-It integrates well with Github and is easy to configure. Once you have set up your shared Scheme for use with xctool, you will
-need to configure a `.travis.yml` file. To make it a bit easier to get started with Travis, you may want to base your
-script off of the following example:
+[Travis CI](https://travis-ci.org/) is a very popular continuous
+integration system offered for free to Open Source projects.  It
+integrates well with Github, and it now uses _xctool_ as the default
+build and test tool for Objective-C projects.  Once you have set up your
+shared Scheme for use with xctool, you will need to configure a
+`.travis.yml` file.
 
-```yml
+If you're using workspaces, your `.travis.yml` might be:
+
+```
+language: objective-c
+xcode_workspace: path/to/YourApp.xcworkspace
+xcode_scheme: YourApp
+```
+
+If you're using projects, your `.travis.yml` might be:
+
+```
+language: objective-c
+xcode_project: path/to/YourApp.xcodeproj
+xcode_scheme: YourApp
+```
+
+For more flexibility, you can also control how Travis installs and
+invokes xctool:
+
+```
 language: objective-c
 before_install:
     - brew update
     - brew install xctool
-script: xctool -workspace MyApp.xcworkspace -scheme 'MyApp' test
+script: xctool -workspace MyApp.xcworkspace -scheme MyApp test
 ```
 
-You will obviously need to replace 'MyApp.xcworkspace' and 'MyApp' with the name of your project and shared Xcode scheme, respectively.
-
-You can learn more about the Travis CI environment for iOS and OS X application by referring to the
-[About OS X Travis CI Environment](http://about.travis-ci.org/docs/user/osx-ci-environment/) document and find in-depth documentation for
-configuring your project by consulting the [Getting Started](http://about.travis-ci.org/docs/user/getting-started/) page.
+You can learn more about the Travis CI environment for iOS and OS X
+application by referring to the [About OS X Travis CI
+Environment](http://about.travis-ci.org/docs/user/osx-ci-environment/)
+document and find in-depth documentation for configuring your project by
+consulting the [Getting
+Started](http://about.travis-ci.org/docs/user/getting-started/) page.
 
 ## Reporters
 
