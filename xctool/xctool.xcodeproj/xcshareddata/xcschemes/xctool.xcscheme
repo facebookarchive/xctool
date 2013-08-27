@@ -14,6 +14,34 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CD9048FD1756C5B1006CF16D"
+               BuildableName = "otest-query-ios"
+               BlueprintName = "otest-query-ios"
+               ReferencedContainer = "container:../otest-query/otest-query.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CD66612B175D1A890057DF4D"
+               BuildableName = "otest-query-osx"
+               BlueprintName = "otest-query-osx"
+               ReferencedContainer = "container:../otest-query/otest-query.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "283CCA8B16C2EE4C00F2E343"
                BuildableName = "otest-shim-ios.dylib"
                BlueprintName = "otest-shim-ios"
@@ -98,62 +126,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "283CCAC116C2EE9900F2E343"
-               BuildableName = "xctool-tests.octest"
-               BlueprintName = "xctool-tests"
-               ReferencedContainer = "container:xctool.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CD9048FD1756C5B1006CF16D"
-               BuildableName = "otest-query-ios"
-               BlueprintName = "otest-query-ios"
-               ReferencedContainer = "container:../otest-query/otest-query.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CD66612B175D1A890057DF4D"
-               BuildableName = "otest-query-osx"
-               BlueprintName = "otest-query-osx"
-               ReferencedContainer = "container:../otest-query/otest-query.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2893A94B17960CD400EFBD28"
-               BuildableName = "reporters-tests.octest"
-               BlueprintName = "reporters-tests"
-               ReferencedContainer = "container:../reporters/reporters.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "28F489E11797362400068E00"
                BuildableName = "plain"
                BlueprintName = "plain"
@@ -228,6 +200,34 @@
                BuildableName = "json-stream"
                BlueprintName = "json-stream"
                ReferencedContainer = "container:../reporters/reporters.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2893A94B17960CD400EFBD28"
+               BuildableName = "reporters-tests.octest"
+               BlueprintName = "reporters-tests"
+               ReferencedContainer = "container:../reporters/reporters.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "283CCAC116C2EE9900F2E343"
+               BuildableName = "xctool-tests.octest"
+               BlueprintName = "xctool-tests"
+               ReferencedContainer = "container:xctool.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
