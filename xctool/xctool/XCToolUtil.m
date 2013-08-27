@@ -109,8 +109,9 @@ static NSString *AbsoluteExecutablePath(void) {
 NSString *XCToolBasePath(void)
 {
   if (IsRunningUnderTest()) {
-    // DYLD_LIBRARY_PATH happens to point at BUILT_PRODUCTS_DIR
-    return [[NSProcessInfo processInfo] environment][@"DYLD_LIBRARY_PATH"];
+    // The Xcode scheme is configured to set XT_INSTALL_ROOT when running
+    // tests.
+    return [[NSProcessInfo processInfo] environment][@"XT_INSTALL_ROOT"];
   } else {
     return [[AbsoluteExecutablePath() stringByDeletingLastPathComponent]
             stringByDeletingLastPathComponent];
