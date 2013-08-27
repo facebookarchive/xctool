@@ -52,6 +52,7 @@
 		287BF04D16F1A6EB00590E06 /* XcodeSubjectInfoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 287BF04C16F1A6EB00590E06 /* XcodeSubjectInfoTests.m */; };
 		287BF08416F1A97900590E06 /* XcodeSubjectInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 287BF08316F1A97900590E06 /* XcodeSubjectInfo.m */; };
 		287BF08516F1A97900590E06 /* XcodeSubjectInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 287BF08316F1A97900590E06 /* XcodeSubjectInfo.m */; };
+		287E0DC517CD60B00088A264 /* xctool-tests.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 287E0DC417CD60B00088A264 /* xctool-tests.xcconfig */; };
 		28869AFC178CEA7600DED56A /* SenTestListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 28869AFB178CEA7600DED56A /* SenTestListener.m */; };
 		28897FB9173CB512004BA024 /* Options+Testing.m in Sources */ = {isa = PBXBuildFile; fileRef = 28897FB8173CB512004BA024 /* Options+Testing.m */; };
 		28897FBD173E4C74004BA024 /* FakeTaskManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28897FBA173E4C73004BA024 /* FakeTaskManagerTests.m */; };
@@ -194,6 +195,7 @@
 		287BF04C16F1A6EB00590E06 /* XcodeSubjectInfoTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodeSubjectInfoTests.m; sourceTree = "<group>"; };
 		287BF08216F1A97900590E06 /* XcodeSubjectInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XcodeSubjectInfo.h; sourceTree = "<group>"; };
 		287BF08316F1A97900590E06 /* XcodeSubjectInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodeSubjectInfo.m; sourceTree = "<group>"; };
+		287E0DC417CD60B00088A264 /* xctool-tests.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "xctool-tests.xcconfig"; sourceTree = "<group>"; };
 		28869AFB178CEA7600DED56A /* SenTestListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SenTestListener.m; sourceTree = "<group>"; };
 		28897FB7173CB512004BA024 /* Options+Testing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Options+Testing.h"; sourceTree = "<group>"; };
 		28897FB8173CB512004BA024 /* Options+Testing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Options+Testing.m"; sourceTree = "<group>"; };
@@ -322,6 +324,7 @@
 			children = (
 				28E9B9DD16C3278D00A52E4D /* iPhoneSimulatorRemoteClient */,
 				28E9B98316C2F2D900A52E4D /* xctool.xcconfig */,
+				287E0DC417CD60B00088A264 /* xctool-tests.xcconfig */,
 				28897FCD173E6215004BA024 /* Common */,
 				283CCA4716C2EA3800F2E343 /* xctool */,
 				283CCAC516C2EE9900F2E343 /* xctool-tests */,
@@ -578,6 +581,7 @@
 			files = (
 				283CCACA16C2EE9900F2E343 /* InfoPlist.strings in Resources */,
 				28E9B98416C2F2D900A52E4D /* xctool.xcconfig in Resources */,
+				287E0DC517CD60B00088A264 /* xctool-tests.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -800,6 +804,7 @@
 		};
 		283CCAD016C2EE9900F2E343 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 287E0DC417CD60B00088A264 /* xctool-tests.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -816,6 +821,7 @@
 		};
 		283CCAD116C2EE9900F2E343 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 287E0DC417CD60B00088A264 /* xctool-tests.xcconfig */;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (

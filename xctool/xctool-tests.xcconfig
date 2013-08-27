@@ -14,17 +14,10 @@
 // limitations under the License.
 //
 
-#include "../Configurations/Project.xcconfig"
-
-#include "../Configurations/Install.xcconfig"
-XT_INSTALL_DIR = bin
-
 DEVELOPER_PRIVATE_FRAMEWORK_DIR = "$(DEVELOPER_DIR)"/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks
 
-// xctool will weak link iPhoneSimulatorRemoteClient, and then configure the necessary
-// DYLD paths on startup to make sure the framework can be loaded.
-OTHER_LDFLAGS = -F$(DEVELOPER_PRIVATE_FRAMEWORK_DIR) -weak_framework iPhoneSimulatorRemoteClient
+// xctool-tests will strongly link iPhoneSimulatorRemoteClient - we don't need
+// the same dynamic loading magic that the main 'xctool' executable needs.
+OTHER_LDFLAGS = -F$(DEVELOPER_PRIVATE_FRAMEWORK_DIR) -framework iPhoneSimulatorRemoteClient -Wl,-rpath -Wl,$(DEVELOPER_PRIVATE_FRAMEWORK_DIR) -Wl,-rpath -Wl,"$(DEVELOPER_DIR)"/../OtherFrameworks
 
 FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks" "$(SRCROOT)/../Vendor"
-
-MACOSX_DEPLOYMENT_TARGET = 10.7
