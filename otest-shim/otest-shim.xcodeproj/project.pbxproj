@@ -251,7 +251,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_DIR)/Library/Frameworks\"",
 				);
 				GCC_PREFIX_HEADER = "otest-shim/otest-shim-Prefix.pch";
 				PRODUCT_NAME = "otest-shim-osx";
@@ -267,7 +267,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_DIR)/Library/Frameworks\"",
 				);
 				GCC_PREFIX_HEADER = "otest-shim/otest-shim-Prefix.pch";
 				PRODUCT_NAME = "otest-shim-osx";
