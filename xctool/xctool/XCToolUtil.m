@@ -439,11 +439,13 @@ void PublishEventToReporters(NSArray *reporters, NSDictionary *event)
 
 NSArray *AvailableReporters()
 {
+  NSString *reportersPath = XCToolReportersPath();
+  
   NSError *error = nil;
-  NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:XCToolReportersPath()
+  NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:reportersPath
                                                                           error:&error];
   NSCAssert(contents != nil,
-            @"Failed to read from reporters directory: %@", [error localizedFailureReason]);
+            @"Failed to read from reporters directory '%@': %@", reportersPath, [error localizedFailureReason]);
   return contents;
 }
 
