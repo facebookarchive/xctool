@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		285C16D317CD1788007FFC0C /* OCHamcrest.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 28F48A01179742CA00068E00 /* OCHamcrest.framework */; };
+		285C16D417CD1788007FFC0C /* OCMockito.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 28F48A02179742CA00068E00 /* OCMockito.framework */; };
 		2893A95017960CD400EFBD28 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2893A94F17960CD400EFBD28 /* SenTestingKit.framework */; };
 		2893A95217960CD400EFBD28 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2893A95117960CD400EFBD28 /* Cocoa.framework */; };
 		2893A95C17960CD400EFBD28 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2893A95A17960CD400EFBD28 /* InfoPlist.strings */; };
@@ -53,6 +55,17 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		285C16D217CD1721007FFC0C /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				285C16D317CD1788007FFC0C /* OCHamcrest.framework in CopyFiles */,
+				285C16D417CD1788007FFC0C /* OCMockito.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2893A96717960D2000EFBD28 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -377,6 +390,7 @@
 				2893A94717960CD400EFBD28 /* Sources */,
 				2893A94817960CD400EFBD28 /* Frameworks */,
 				2893A94917960CD400EFBD28 /* Resources */,
+				285C16D217CD1721007FFC0C /* CopyFiles */,
 				2893A94A17960CD400EFBD28 /* ShellScript */,
 			);
 			buildRules = (
