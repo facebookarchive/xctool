@@ -373,15 +373,22 @@ static NSString *abbreviatePath(NSString *string) {
 
         // Show exception, if any.
         if (exception) {
+          NSString *filePath = exception[kReporter_EndTest_Exception_FilePathInProjectKey];
+          int lineNumber = [exception[kReporter_EndTest_Exception_LineNumberKey] intValue];
+
           [self.reportWriter disableIndent];
+
           [self.reportWriter printLine:@"<faint>%@:%d: %@: %@:<reset>",
-           exception[kReporter_EndTest_Exception_FilePathInProjectKey],
-           [exception[kReporter_EndTest_Exception_LineNumberKey] intValue],
+           filePath,
+           lineNumber,
            exception[kReporter_EndTest_Exception_NameKey],
            exception[kReporter_EndTest_Exception_ReasonKey]];
-          [self.reportWriter printLine:@"<faint>%@<reset>",
-           [TextReporter getContext:exception[kReporter_EndTest_Exception_FilePathInProjectKey]
-                          errorLine:[exception[kReporter_EndTest_Exception_LineNumberKey] intValue]]];
+
+          if ([[NSFileManager defaultManager] fileExistsAtPath:filePath isDirectory:nil]) {
+            NSString *context = [TextReporter getContext:filePath errorLine:lineNumber];
+            [self.reportWriter printLine:@"<faint>%@<reset>", context];
+          }
+
           [self.reportWriter enableIndent];
         }
 
@@ -681,14 +688,19 @@ static NSString *abbreviatePath(NSString *string) {
     // Show exception, if any.
     NSDictionary *exception = event[kReporter_EndTest_ExceptionKey];
     if (exception) {
+      NSString *filePath = exception[kReporter_EndTest_Exception_FilePathInProjectKey];
+      int lineNumber = [exception[kReporter_EndTest_Exception_LineNumberKey] intValue];
+
       [self.reportWriter printLine:@"<faint>%@:%d: %@: %@:<reset>",
-       exception[kReporter_EndTest_Exception_FilePathInProjectKey],
-       [exception[kReporter_EndTest_Exception_LineNumberKey] intValue],
+       filePath,
+       lineNumber,
        exception[kReporter_EndTest_Exception_NameKey],
        exception[kReporter_EndTest_Exception_ReasonKey]];
-      [self.reportWriter printLine:@"<faint>%@<reset>",
-       [TextReporter getContext:exception[kReporter_EndTest_Exception_FilePathInProjectKey]
-                      errorLine:[exception[kReporter_EndTest_Exception_LineNumberKey] intValue]]];
+
+      if ([[NSFileManager defaultManager] fileExistsAtPath:filePath isDirectory:nil]) {
+        NSString *context = [TextReporter getContext:filePath errorLine:lineNumber];
+        [self.reportWriter printLine:@"<faint>%@<reset>", context];
+      }
     }
 
     [self.reportWriter enableIndent];
