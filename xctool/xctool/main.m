@@ -67,7 +67,7 @@ int main(int argc, const char * argv[])
       // Don't do this setup again...
       setenv("XT_DID_SET_DYLD_FALLBACK_FRAMEWORK_PATH", "YES", 1);
 
-      execv(argv[0], (char *const *)argv);
+      execv([AbsoluteExecutablePath() UTF8String], (char *const *)argv);
     }
 
     NSArray *arguments = [[NSProcessInfo processInfo] arguments];

@@ -89,6 +89,11 @@ NSArray *AvailableReporters();
 NSString *AbsolutePathFromRelative(NSString *path);
 
 /**
+ Returns the absolute path to the current executable, with sym links resolved.
+ */
+NSString *AbsoluteExecutablePath();
+
+/**
  * Returns the contents of `/etc/paths` in the form of `path1:path2:path3`.
  */
 NSString *SystemPaths();

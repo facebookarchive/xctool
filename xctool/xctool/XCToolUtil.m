@@ -98,7 +98,7 @@ NSDictionary *BuildSettingsFromOutput(NSString *output)
   return settings;
 }
 
-static NSString *AbsoluteExecutablePath(void) {
+NSString *AbsoluteExecutablePath() {
   char execRelativePath[PATH_MAX] = {0};
   uint32_t execRelativePathSize = sizeof(execRelativePath);
   _NSGetExecutablePath(execRelativePath, &execRelativePathSize);
