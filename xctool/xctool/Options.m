@@ -391,33 +391,33 @@
   }
 
   BOOL automaticSchemeCreationDisabled = NO;
-  
+
   {
     NSString *basePath = self.project != nil ? [self.project stringByAppendingPathComponent:@"project.xcworkspace"] : self.workspace;
     NSString *settingsPath = [basePath stringByAppendingPathComponent:@"xcshareddata/WorkspaceSettings.xcsettings"];
     NSDictionary *settings = [NSDictionary dictionaryWithContentsOfFile:settingsPath];
     NSNumber *automaticSchemeCreationSetting = [settings objectForKey:@"IDEWorkspaceSharedSettings_AutocreateContextsIfNeeded"];
-    
+
     if (automaticSchemeCreationSetting != nil && [automaticSchemeCreationSetting isKindOfClass:[NSNumber class]]) {
       automaticSchemeCreationDisabled = ![automaticSchemeCreationSetting boolValue];
     }
   }
-  
+
   NSString *schemeCreationTip = @""
   @"\n\nTIP: This might happen if you're relying on Xcode to autocreate your schemes\n"
   @"and your scheme files don't yet exist.  xctool, like xcodebuild, isn't able to\n"
   @"automatically create schemes.  We recommend disabling \"Autocreate schemes\"\n"
   @"in your workspace/project, making sure your existing schemes are marked as\n"
   @"\"Shared\", and making sure they're checked into source control.";
-  
+
   if ([schemeNames count] == 0) {
     *errorMessage = [NSString stringWithFormat:
                      @"Cannot find schemes. Please consider creating shared schemes in Xcode."];
-    
+
     if (!automaticSchemeCreationDisabled) {
       *errorMessage = [*errorMessage stringByAppendingString:schemeCreationTip];
     }
-    
+
     return NO;
   }
 
@@ -426,11 +426,11 @@
                      @"Can't find scheme '%@'.\n\nPossible schemes include:\n  %@",
                      self.scheme,
                      [schemeNames componentsJoinedByString:@"\n  "]];
-    
+
     if (!automaticSchemeCreationDisabled) {
       *errorMessage = [*errorMessage stringByAppendingString:schemeCreationTip];
     }
-    
+
     return NO;
   }
 

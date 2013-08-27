@@ -21,7 +21,7 @@
 - (id)copyWithZone:(NSZone *)zone
 {
   Testable *copy = [super copyWithZone:zone];
-  
+
   if (copy) {
     copy.senTestList = self.senTestList;
     copy.senTestInvertScope = self.senTestInvertScope;
@@ -31,7 +31,7 @@
     copy.macroExpansionProjectPath = self.macroExpansionProjectPath;
     copy.macroExpansionTarget = self.macroExpansionTarget;
   }
-  
+
   return copy;
 }
 

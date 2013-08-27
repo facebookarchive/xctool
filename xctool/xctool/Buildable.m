@@ -21,7 +21,7 @@
 - (id)copyWithZone:(NSZone *)zone
 {
   Buildable *copy = [[[self class] allocWithZone:zone] init];
-  
+
   if (copy) {
     copy.projectPath = self.projectPath;
     copy.target = self.target;
@@ -31,7 +31,7 @@
     copy.buildForTesting = self.buildForTesting;
     copy.buildForAnalyzing = self.buildForAnalyzing;
   }
-  
+
   return copy;
 }
 
@@ -44,7 +44,7 @@
       return [a isEqual:b];
     }
   };
-  
+
   return ([other isKindOfClass:[Buildable class]] &&
           bothNilOrEqual(self.projectPath, other.projectPath) &&
           bothNilOrEqual(self.target, other.target) &&

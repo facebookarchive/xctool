@@ -57,19 +57,19 @@
 /**
  Returns the command-line arguments that were passed to xctool, and which should
  carry through to the xcodebuild commands that xctool spawns.
- 
+
  'spawnAction' should be one of LaunchAction, TestAction, ArchiveAction,
  AnalyzeAction, or ProfileAction.
  */
 - (NSArray *)commonXcodeBuildArgumentsForSchemeAction:(NSString *)schemeAction
                                      xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo;
 
-/** 
+/**
  Returns the configuration name taking into account of passed in -configuration
  param.
- 
- @return Configuration name like 'Debug' or 'Release'. May return nil if 
-         '-configuration' is not specified on the command line and 
+
+ @return Configuration name like 'Debug' or 'Release'. May return nil if
+         '-configuration' is not specified on the command line and
          `schemeAction` or `xcodeSubjectInfo` is nil.
  */
 - (NSString *)effectiveConfigurationForSchemeAction:(NSString *)schemeAction
@@ -86,7 +86,7 @@
  Validates all of the provided top-level options and runs validate for each of
  the specified actions.
 
- @param XcodeSubjectInfo Out parameter used to return the created XcodeSubjectInfo 
+ @param XcodeSubjectInfo Out parameter used to return the created XcodeSubjectInfo
    instance.
  @param string Out parameter that will contain an error message if validation fails.
  @return YES if validation succeeded.

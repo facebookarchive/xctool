@@ -117,7 +117,7 @@ __attribute__((constructor)) static void initialize()
              }
            },
             // GetAvailableSDKsAndAliases()
-            ^(FakeTask *task){ 
+            ^(FakeTask *task){
               if ([[task launchPath] isEqualToString:@"/bin/bash"] &&
                   [[task arguments] isEqualToArray:@[
                    @"-c",

@@ -91,7 +91,7 @@
                             [NSXMLNode attributeWithName:@"timestamp" stringValue:[self.formatter stringFromDate:[NSDate date]]],
                             [NSXMLNode attributeWithName:@"name" stringValue:suiteEvent[kReporter_EndTestSuite_SuiteKey]]];
     [testsuite setAttributes:attributes];
-    
+
     for (NSDictionary *testResult in suiteResults) {
       NSXMLElement *testcase = [[NSXMLElement alloc] initWithName:@"testcase"];
       NSMutableDictionary *attributes = [[NSMutableDictionary alloc] initWithCapacity:3];
@@ -111,7 +111,7 @@
         [failureValue release];
         [failure release];
       }
-      
+
 
       NSString *output = testResult[kReporter_EndTest_OutputKey];
       if (output && output.length > 0) {
@@ -120,7 +120,7 @@
         [systemOutput release];
       }
       [testsuite addChild:testcase];
-      
+
       [testcase release];
     }
     [testsuites addChild:testsuite];
@@ -131,10 +131,10 @@
   [doc setStandalone:YES];
   doc.characterEncoding = @"UTF-8";
   [_outputHandle writeData:[doc XMLDataWithOptions:NSXMLNodePrettyPrint]];
-  
+
   [testsuites release];
   [doc release];
-  
+
   self.testSuites = nil;
 }
 

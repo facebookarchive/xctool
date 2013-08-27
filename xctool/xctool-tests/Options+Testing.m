@@ -143,7 +143,7 @@
 - (Options *)assertOptionsValidateWithBuildSettingsFromFile:(NSString *)path
 {
   [self assertReporterOptionsValidate];
-  
+
   NSString *errorMessage = nil;
   BOOL valid = NO;
 

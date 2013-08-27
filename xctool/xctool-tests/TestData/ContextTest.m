@@ -14,7 +14,7 @@ static int test() {
 }
 
 static int test2() {
-  NSObject *blah = [[NSObject alloc] init];        
+  NSObject *blah = [[NSObject alloc] init];
 }
 
 @end

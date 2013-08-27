@@ -734,7 +734,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
     BOOL forRunning = [[[node attributeForName:@"buildForRunning"] stringValue] isEqual:@"YES"];
     BOOL forTesting = [[[node attributeForName:@"buildForTesting"] stringValue] isEqual:@"YES"];
     BOOL forAnalyzing = [[[node attributeForName:@"buildForAnalyzing"] stringValue] isEqual:@"YES"];
-    
+
     Buildable *buildable = [[[Buildable alloc] init] autorelease];
     buildable.projectPath = projectPath;
     buildable.target = target;
@@ -743,7 +743,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
     buildable.buildForRunning = forRunning;
     buildable.buildForTesting = forTesting;
     buildable.buildForAnalyzing = forAnalyzing;
-    
+
     [buildables addObject:buildable];
   }
 

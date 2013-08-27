@@ -32,7 +32,7 @@
 
   // Come up with a set of test cases that match the senTestList pattern.
   NSMutableSet *matchingSet = [NSMutableSet set];
-  
+
   if ([senTestList isEqualToString:@"All"]) {
     [matchingSet addObjectsFromArray:testCases];
   } else if ([senTestList isEqualToString:@"None"]) {
@@ -41,7 +41,7 @@
     for (NSString *specifier in [senTestList componentsSeparatedByString:@","]) {
       // If we have a slash, assume it's int he form of "SomeClass/testMethod"
       BOOL hasClassAndMethod = [specifier rangeOfString:@"/"].length > 0;
-      
+
       if (hasClassAndMethod) {
         if ([originalSet containsObject:specifier]) {
           [matchingSet addObject:specifier];
@@ -56,9 +56,9 @@
       }
     }
   }
-  
+
   NSMutableArray *result = [NSMutableArray array];
-  
+
   if (!senTestInvertScope) {
     [result addObjectsFromArray:[matchingSet allObjects]];
   } else {
@@ -66,7 +66,7 @@
     [invertedSet minusSet:matchingSet];
     [result addObjectsFromArray:[invertedSet allObjects]];
   }
-  
+
   [result sortUsingSelector:@selector(compare:)];
   return result;
 }
@@ -79,26 +79,26 @@
 
   NSDictionary *(^testCasesGroupedByClass)(NSSet *) = ^(NSSet *testCaseSet) {
     NSMutableDictionary *testCasesByClass = [NSMutableDictionary dictionary];
-    
+
     for (NSString *classAndMethod in testCaseSet) {
       NSString *className = [classAndMethod componentsSeparatedByString:@"/"][0];
-      
+
       if (testCasesByClass[className] == nil) {
         testCasesByClass[className] = [NSMutableSet set];
       }
-      
+
       [testCasesByClass[className] addObject:classAndMethod];
     }
-    
+
     return testCasesByClass;
   };
-  
+
   NSMutableSet *senTestListSet = [NSMutableSet setWithArray:senTestList];
   NSSet *allTestCasesSet = [NSSet setWithArray:allTestCases];
   NSAssert([senTestListSet isSubsetOfSet:allTestCasesSet],
            @"senTestList should be a subset of allTestCases");
-  
-  
+
+
   if ([senTestListSet isEqualToSet:allTestCasesSet]) {
     return @"All";
   } else if ([senTestListSet count] == 0) {
@@ -106,15 +106,15 @@
   } else {
     NSDictionary *senTestListCasesGroupedByClass = testCasesGroupedByClass(senTestListSet);
     NSDictionary *allTestCasesGroupedByClass = testCasesGroupedByClass(allTestCasesSet);
-    
+
     NSMutableArray *result = [NSMutableArray array];
-    
+
     for (NSString *className in [senTestListCasesGroupedByClass allKeys]) {
       NSSet *testCasesForThisClass = senTestListCasesGroupedByClass[className];
       NSSet *allTestCasesForThisClass = allTestCasesGroupedByClass[className];
-      
+
       BOOL hasAllTestsInClass = [testCasesForThisClass isEqualToSet:allTestCasesForThisClass];
-      
+
       if (hasAllTestsInClass) {
         // Just emit the class name, and otest will run all tests in that class.
         [result addObject:className];
@@ -124,7 +124,7 @@
     }
 
     [result sortUsingSelector:@selector(compare:)];
-    
+
     return [result componentsJoinedByString:@","];
   }
 }
@@ -235,7 +235,7 @@
 
   NSString *runTestsError = nil;
   BOOL didTerminateWithUncaughtSignal = NO;
-  
+
   BOOL succeeded = [self runTestsAndFeedOutputTo:feedOutputToBlock
                                  gotUncaughtSignal:&didTerminateWithUncaughtSignal
                                              error:&runTestsError];

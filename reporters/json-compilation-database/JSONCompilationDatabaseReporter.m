@@ -78,7 +78,7 @@
   if (succeeded && _currentBuildCommand) {
     [self collectEvent:_currentBuildCommand];
   }
-  
+
   [_currentBuildCommand release];
   _currentBuildCommand = nil;
 }
@@ -93,16 +93,16 @@
       [compilationDatabase addObject:compile];
     }
   }
-  
+
   NSError *error = nil;
   NSData *data =  [NSJSONSerialization dataWithJSONObject:compilationDatabase
                                                   options:NSJSONWritingPrettyPrinted
                                                     error:&error];
   NSAssert(error == nil, @"Failed while trying to encode as JSON: %@", error);
-  
+
   [_outputHandle writeData:data];
   [_outputHandle writeData:[@"\n" dataUsingEncoding:NSUTF8StringEncoding]];
-  
+
   [compilationDatabase release];
   compilationDatabase = nil;
 }
@@ -125,11 +125,11 @@
   if (!rawCompilerCommand) {
     return nil;
   }
-  
+
   NSTextCheckingResult *workingDirectoryMatch = [rawWorkingDirectory firstMatch:@[@"^cd \"(.+)\"", @"^cd (.+)"]];
   NSTextCheckingResult *sourceFileMatch = [rawCompilerCommand firstMatch:@[@"-c \"(.+?)\"", @" -c (.+?) -o"]];
   NSTextCheckingResult *pchMatch = [rawCompilerCommand firstMatch:@[@"-include \"(.+?\\.pch)\"", @"-include (.+?\\.pch)"]];
-  
+
   if (sourceFileMatch && workingDirectoryMatch && pchMatch) {
     NSRange cachedPrecompilePathRange = [pchMatch rangeAtIndex:1];
     NSString *cachedPrecompiledPath = [rawCompilerCommand substringWithRange:cachedPrecompilePathRange];
@@ -140,7 +140,7 @@
       compile[@"command"] = [rawCompilerCommand stringByReplacingCharactersInRange:cachedPrecompilePathRange withString:localPrecompilePath];
       compile[@"file"] = [rawCompilerCommand substringWithRange:[sourceFileMatch rangeAtIndex:1]];
       return [compile autorelease];
-    }    
+    }
   }
   return nil;
 }

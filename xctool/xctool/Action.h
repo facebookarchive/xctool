@@ -55,7 +55,7 @@
 /**
  Perform any pre-flight validation that the action needs.  An action might
  check that required arguments are present, or that they have the right values.
- 
+
  @param Options The main Options object with xctool-wide options.
  @param XcodeSubjectInfo The XcodeSubjectInfo option, which gathers a bunch of
    information about the subject workspace/project being built or tested.

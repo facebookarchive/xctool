@@ -51,7 +51,7 @@
                      @"SomeTests/testStream",
                      @"SomeTests/testWillFail",
                      @"SomeTests/testWillPass",
-                     ]));  
+                     ]));
 }
 
 @end

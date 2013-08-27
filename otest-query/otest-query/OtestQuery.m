@@ -30,12 +30,12 @@
 
   [[NSBundle allFrameworks] makeObjectsPerformSelector:@selector(principalClass)];
   NSArray *testClasses = objc_msgSend(NSClassFromString(@"SenTestCase"), @selector(senAllSubclasses));
-  
+
   NSMutableArray *testNames = [NSMutableArray array];
   for (Class testClass in testClasses) {
     unsigned int methodCount = 0;
     Method *methods = class_copyMethodList(testClass, &methodCount);
-    
+
     for (int i = 0; i < methodCount; i++) {
       NSString *methodName = [NSString stringWithUTF8String:sel_getName(method_getName(methods[i]))];
       if ([methodName hasPrefix:@"test"]) {
@@ -43,9 +43,9 @@
       }
     }
   }
-  
+
   [testNames sortUsingSelector:@selector(compare:)];
-  
+
   NSData *json = [NSJSONSerialization dataWithJSONObject:testNames options:0 error:nil];
   [(NSFileHandle *)[NSFileHandle fileHandleWithStandardOutput] writeData:json];
 }

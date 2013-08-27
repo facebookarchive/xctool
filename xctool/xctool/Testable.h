@@ -31,7 +31,7 @@
 @property (nonatomic, assign) BOOL senTestInvertScope;
 
 /**
- * YES if this testable was deselected in the Xcode scheme 
+ * YES if this testable was deselected in the Xcode scheme
  * (i.e. it gets skipped)
  */
 @property (nonatomic, assign) BOOL skipped;
@@ -43,7 +43,7 @@
 @property (nonatomic, retain) NSArray *arguments;
 
 /**
- * Dictionary of environment variables to set before launching the test bundle.  
+ * Dictionary of environment variables to set before launching the test bundle.
  * These are optionally set by the Xcode scheme.
  */
 @property (nonatomic, retain) NSDictionary *environment;

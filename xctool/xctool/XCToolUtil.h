@@ -28,7 +28,7 @@ BOOL IsRunningUnderTest();
 /**
  Launches a task that will invoke xcodebuild.  It will automatically feed
  build events to the provided reporters.
- 
+
  Returns YES if xcodebuild succeeded.  If it fails, errorMessage and errorCode
  will be populated.
  */
@@ -49,7 +49,7 @@ BOOL RunXcodebuildAndFeedEventsToReporters(NSArray *arguments,
 /**
  Finds an occurrence of '-someoption', 'somevalue' in an argument list and
  replaces 'somevalue' with a new value.
- 
+
  If the option was never present in the argument list, it gets added to the end.
  */
 NSArray *ArgumentListByOverriding(NSArray *arguments,
@@ -78,7 +78,7 @@ void CleanupTemporaryDirectoryForAction();
 void PublishEventToReporters(NSArray *reporters, NSDictionary *event);
 
 /**
- @return array A list of available reporter executables in the reporters 
+ @return array A list of available reporter executables in the reporters
   directory.
  */
 NSArray *AvailableReporters();

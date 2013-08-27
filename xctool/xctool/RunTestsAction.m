@@ -278,10 +278,10 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
 {
   NSString *sdkName = testableBuildSettings[@"SDK_NAME"];
   BOOL isApplicationTest = testableBuildSettings[@"TEST_HOST"] != nil;
-  
+
   // array of [class, (bool) GC Enabled]
   NSMutableArray *testConfigurations = [NSMutableArray array];
-  
+
   if ([sdkName hasPrefix:@"iphonesimulator"]) {
     if (isApplicationTest) {
       [testConfigurations addObject:@[[OCUnitIOSAppTestRunner class], @NO]];
@@ -295,9 +295,9 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
     } else {
       testClass = [OCUnitOSXLogicTestRunner class];
     }
-    
+
     NSString *enableGC = testableBuildSettings[@"GCC_ENABLE_OBJC_GC"];
-    
+
     if ([enableGC isEqualToString:@"required"]) {
       [testConfigurations addObject:@[testClass, @YES]];
     } else if ([enableGC isEqualToString:@"supported"]) {
@@ -346,18 +346,18 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                                      freshInstall:self.freshInstall
                                      simulatorType:self.simulatorType
                                      reporters:reporters] autorelease];
-    
+
     NSDictionary *commonEventInfo = @{kReporter_BeginOCUnit_BundleNameKey: testableBuildSettings[@"FULL_PRODUCT_NAME"],
                                       kReporter_BeginOCUnit_SDKNameKey: testableBuildSettings[@"SDK_NAME"],
                                       kReporter_BeginOCUnit_TestTypeKey: isApplicationTest ? @"application-test" : @"logic-test",
                                       kReporter_BeginOCUnit_GCEnabledKey: @(garbageCollectionEnabled),
                                       };
-    
+
     NSMutableDictionary *beginEvent =
     [NSMutableDictionary dictionaryWithDictionary:@{@"event": kReporter_Events_BeginOCUnit}];
     [beginEvent addEntriesFromDictionary:commonEventInfo];
     PublishEventToReporters(reporters, beginEvent);
-    
+
     NSString *error = nil;
     BOOL succeeded = [testRunner runTestsWithError:&error];
 
@@ -368,7 +368,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                                      }];
     [endEvent addEntriesFromDictionary:commonEventInfo];
     PublishEventToReporters(reporters, endEvent);
-    
+
     return succeeded;
   } copy] autorelease];
 }
@@ -395,36 +395,36 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                                                                   xcodeSubjectInfo:xcodeSubjectInfo];
 
   NSMutableArray *testableExecutionInfos = [NSMutableArray array];
-  
+
   ReportStatusMessageBegin(options.reporters, REPORTER_MESSAGE_INFO,
                            @"Collecting info for testables...");
-  
+
   for (Testable *testable in testables) {
     dispatch_group_async(group, q, ^{
       dispatch_semaphore_wait(jobLimiter, DISPATCH_TIME_FOREVER);
-      
+
       TestableExecutionInfo *info = [TestableExecutionInfo infoForTestable:testable
                                                           xcodeSubjectInfo:xcodeSubjectInfo
                                                        xcodebuildArguments:xcodebuildArguments
                                                                    testSDK:_testSDK];
-      
+
       @synchronized (self) {
         [testableExecutionInfos addObject:info];
       }
-      
+
       dispatch_semaphore_signal(jobLimiter);
     });
   }
-  
+
   dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
   ReportStatusMessageEnd(options.reporters, REPORTER_MESSAGE_INFO,
                          @"Collecting info for testables...");
-  
+
   for (TestableExecutionInfo *info in testableExecutionInfos) {
     // array of [class, (bool) GC Enabled]
     NSArray *testConfigurations = [self testConfigurationsForBuildSettings:info.buildSettings];
     BOOL isApplicationTest = info.buildSettings[@"TEST_HOST"] != nil;
-    
+
     NSArray *testCases = [OCUnitTestRunner filterTestCases:info.testCases
                                            withSenTestList:info.testable.senTestList
                                         senTestInvertScope:info.testable.senTestInvertScope];
@@ -445,10 +445,10 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
       BOOL garbageCollectionEnabled = [testConfiguration[1] boolValue];
 
       for (NSArray *senTestListChunk in testChunks) {
-        
+
         NSString *senTestListString = [OCUnitTestRunner reduceSenTestListToBroadestForm:senTestListChunk
                                                                            allTestCases:info.testCases];
-        
+
         TestableBlock block = [self blockForTestable:info.testable
                                          senTestList:senTestListString
                                testableBuildSettings:info.buildSettings
@@ -466,12 +466,12 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
       }
     }
   }
-  
+
   __block BOOL succeeded = YES;
 
   void (^runTestableBlockAndSaveSuccess)(TestableBlock) = ^(TestableBlock block) {
     NSArray *reporters;
-    
+
     if (_parallelize) {
       // Buffer reporter output, and we'll make sure it gets flushed serially
       // when the block is done.
@@ -479,14 +479,14 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
     } else {
       reporters = options.reporters;
     }
-    
+
     BOOL blockSucceeded = block(reporters);
-    
+
     @synchronized (self) {
       if (_parallelize) {
         [reporters makeObjectsPerformSelector:@selector(flush)];
       }
-      
+
       succeeded &= blockSucceeded;
     }
   };
@@ -494,16 +494,16 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
   for (TestableBlock block in blocksToRunOnDispatchQueue) {
     dispatch_group_async(group, q, ^{
       dispatch_semaphore_wait(jobLimiter, DISPATCH_TIME_FOREVER);
-    
+
       runTestableBlockAndSaveSuccess(block);
-      
+
       dispatch_semaphore_signal(jobLimiter);
     });
   }
-  
+
   // Wait for logic tests to finish before we start running simulator tests.
   dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-  
+
   for (TestableBlock block in blocksToRunOnMainThread) {
     runTestableBlockAndSaveSuccess(block);
   }

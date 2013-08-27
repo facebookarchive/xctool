@@ -29,7 +29,7 @@ NSArray *BucketizeTestCasesByTestCase(NSArray *testCases, int bucketSize);
  * Break test cases into groups of `bucketSize` test classes.
  *
  * e.g. ['Cls1/test1', 'Cls1/test2', 'Cls1/test3', 'Cls2/test2', 'Cls3/test1']
- * with bucketSize=2 would be broken into [['Cls1/test1', 'Cls1/test2', 
+ * with bucketSize=2 would be broken into [['Cls1/test1', 'Cls1/test2',
  * 'Cls1/test3', 'Cls2/test2'], ['Cls3/test1']].
  */
 NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize);

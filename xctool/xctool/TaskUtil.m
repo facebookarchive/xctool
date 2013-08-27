@@ -117,7 +117,7 @@ NSDictionary *LaunchTaskAndCaptureOutput(NSTask *task)
 
   [outputs[0] release];
   [outputs[1] release];
-  
+
   return output;
 }
 

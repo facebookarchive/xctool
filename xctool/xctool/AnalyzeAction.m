@@ -107,9 +107,9 @@
 }
 
 /*! Normalize the "path" of the diagnostic.
- 
+
  @return NSArray of path elements, each of whic are dictionaries in the form:
-          { "file": string, 
+          { "file": string,
             "line": int,
             "col": int,
             "message"  : string

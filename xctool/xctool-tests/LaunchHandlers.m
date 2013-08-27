@@ -134,12 +134,12 @@ static BOOL ArrayContainsSubArray(NSArray *arr, NSArray *subArr)
   return [[^(FakeTask *task){
 
     BOOL isOtestQuery = NO;
-    
+
     if ([[task launchPath] hasSuffix:@"otest-query-osx"] ||
         [[task launchPath] hasSuffix:@"otest-query-ios"]) {
       isOtestQuery = YES;
     }
-    
+
     if (isOtestQuery) {
       [task pretendExitStatusOf:0];
       [task pretendTaskReturnsStandardOutput:

@@ -36,7 +36,7 @@
 
 /**
  * If YES (default), this task will be included in the list of launched
- * tasks that's accessible from runWithFakeTasks:onTaskLaunch:.  We use this 
+ * tasks that's accessible from runWithFakeTasks:onTaskLaunch:.  We use this
  * to exclude tasks we don't care about interacting with during tests.
  */
 @property (nonatomic, assign) BOOL includeInLaunchedTasks;

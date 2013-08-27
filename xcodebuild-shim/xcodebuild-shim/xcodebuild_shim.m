@@ -253,7 +253,7 @@ static void IDECommandLineBuildLogRecorder__cleanupClosedSection_inSupersection(
 /**
  xcodebuild will call printErrorString:andFailWithCode: whenever it exits with
  an error, and we'll turn that into a JSON event.  We won't let this event float
- up to the reporters they - we'll capture it in 
+ up to the reporters they - we'll capture it in
  LaunchXcodebuildTaskAndFeedEventsToReporters()
  */
 static void Xcode3CommandLineBuildTool__printErrorString_andFailWithCode(id self, SEL sel, NSString *str, long long code)

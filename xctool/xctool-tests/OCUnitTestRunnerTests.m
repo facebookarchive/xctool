@@ -89,7 +89,7 @@
                      ]));
   assertThat([config simulatedApplicationLaunchEnvironment][@"SomeEnvKey"],
              equalTo(@"SomeEnvValue"));
-  
+
   [config release];
 }
 
@@ -305,7 +305,7 @@
 /// otest-query returns a list of all classes. This tests the post-filtering of
 /// that list to only contain specified tests.
 - (void)testClassNameDiscoveryFiltering
-{  
+{
   NSArray *testCases = @[
                          @"Cls1/test1",
                          @"Cls1/test2",
@@ -353,7 +353,7 @@
                             @"Cls2/test2",
                             @"Cls3/test1",
                             ];
-  
+
   // All test cases can be expressed as "All"
   assertThat(([OCUnitTestRunner reduceSenTestListToBroadestForm:allTestCases allTestCases:allTestCases]),
              equalTo(@"All"));

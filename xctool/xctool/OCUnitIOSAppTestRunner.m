@@ -149,7 +149,7 @@ static void KillSimulatorJobs()
    }];
   [sessionConfig setSimulatedApplicationLaunchEnvironment:
    [self otestEnvironmentWithOverrides:launchEnvironment]];
-  
+
   [sessionConfig setSimulatedApplicationStdOutPath:outputPath];
   [sessionConfig setSimulatedApplicationStdErrPath:outputPath];
 
@@ -273,7 +273,7 @@ static void KillSimulatorJobs()
                              );
     }
   }
-  
+
   *error = [NSString stringWithFormat:
             @"Failed to uninstall the test host app '%@' "
             @"before running tests.",

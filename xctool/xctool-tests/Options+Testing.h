@@ -36,7 +36,7 @@
                    withBuildSettingsFromFile:(NSString *)path;
 
 /**
- * Assert that validation passes.  A fake XcodeSubjectInfo is given to 
+ * Assert that validation passes.  A fake XcodeSubjectInfo is given to
  * validateOptions: populated with build settings from the given path.
  */
 - (Options *)assertOptionsValidateWithBuildSettingsFromFile:(NSString *)path;

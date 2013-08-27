@@ -262,7 +262,7 @@
 - (XcodeSubjectInfo *)xcodeSubjectInfoPopulatedWithProject:(NSString *)project scheme:(NSString *)scheme
 {
   __block XcodeSubjectInfo *subjectInfo = nil;
-  
+
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
      // Make sure -showBuildSettings returns some data

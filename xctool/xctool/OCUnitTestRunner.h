@@ -61,7 +61,7 @@
  *   - If we're running all test cases for a given class, then we can express
  *     that just as 'SomeClass' rather than 'SomeClass/test1,SomeClass/test2,
  *     SomeClass/test3'.
- * 
+ *
  * @param senTestList Array in the form of ['Cls1/test1,Cls2/test1,Cls2/test2']
  * @param allTestCases Array in the same form as senTestList.
  * @return A string meant to be passed as the `-SenTest` argument.

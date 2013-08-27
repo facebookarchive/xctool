@@ -28,7 +28,7 @@ int main(int argc, const char * argv[])
     } else {
       cls = [PlainTextReporter class];
     }
-    
+
     [cls readFromInput:[NSFileHandle fileHandleWithStandardInput]
            andOutputTo:[NSFileHandle fileHandleWithStandardOutput]];
   }

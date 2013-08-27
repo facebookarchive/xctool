@@ -405,7 +405,7 @@ static NSString *abbreviatePath(NSString *string) {
   } else if ([name isEqual:@"analyze"]) {
     [self printAnalyzerSummary];
   }
-  
+
   NSString *color = succeeded ? @"<green>" : @"<red>";
   [self.reportWriter printLine:@"<bold>%@** %@ %@%@ **<reset> <faint>(%03d ms)<reset>",
    color,

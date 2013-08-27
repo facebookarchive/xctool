@@ -102,7 +102,7 @@ static NSString *AbsoluteExecutablePath(void) {
   char execRelativePath[PATH_MAX] = {0};
   uint32_t execRelativePathSize = sizeof(execRelativePath);
   _NSGetExecutablePath(execRelativePath, &execRelativePathSize);
-  
+
   return AbsolutePathFromRelative([NSString stringWithUTF8String:execRelativePath]);
 }
 
@@ -196,7 +196,7 @@ NSDictionary *GetAvailableSDKsAndAliases()
       ],
      ]];
     [task setEnvironment:@{@"PATH": SystemPaths()}];
-    
+
     NSDictionary *output = LaunchTaskAndCaptureOutput(task);
     NSCAssert([task terminationStatus] == 0,
               @"xcodebuild failed to run with error: %@", output[@"stderr"]);
@@ -451,7 +451,7 @@ NSString *AbsolutePathFromRelative(NSString *path)
 {
   char absolutePath[PATH_MAX] = {0};
   assert(realpath((const char *)[path UTF8String], absolutePath) != NULL);
-  
+
   return [NSString stringWithUTF8String:absolutePath];
 }
 
@@ -462,6 +462,6 @@ NSString *SystemPaths()
                                                   encoding:NSUTF8StringEncoding
                                                      error:&error];
   NSCAssert(error == nil, @"Failed to read from /etc/paths: %@", [error localizedFailureReason]);
-  
+
   return [[pathLines componentsSeparatedByString:@"\n"] componentsJoinedByString:@":"];
 }
