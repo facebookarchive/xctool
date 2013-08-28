@@ -16,6 +16,8 @@
 
 
 #import "OtestQuery.h"
+
+#import <dlfcn.h>
 #import <objc/objc-runtime.h>
 #import <objc/runtime.h>
 #import <stdio.h>
@@ -26,7 +28,13 @@
 {
   NSString *testBundlePath = [[[NSProcessInfo processInfo] arguments] lastObject];
   NSBundle *bundle = [NSBundle bundleWithPath:testBundlePath];
-  [bundle load];
+
+  // We use dlopen() instead of -[NSBundle loadAndReturnError] because, if
+  // something goes wrong, dlerror() gives us a much more helpful error message.
+  if (dlopen([[bundle executablePath] UTF8String], RTLD_NOW) == NULL) {
+    fprintf(stderr, "%s\n", dlerror());
+    exit(1);
+  }
 
   [[NSBundle allFrameworks] makeObjectsPerformSelector:@selector(principalClass)];
   NSArray *testClasses = objc_msgSend(NSClassFromString(@"SenTestCase"), @selector(senAllSubclasses));
@@ -48,6 +56,7 @@
 
   NSData *json = [NSJSONSerialization dataWithJSONObject:testNames options:0 error:nil];
   [(NSFileHandle *)[NSFileHandle fileHandleWithStandardOutput] writeData:json];
+  exit(0);
 }
 
 @end
