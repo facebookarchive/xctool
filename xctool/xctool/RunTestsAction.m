@@ -34,6 +34,10 @@
 
 /// Break up an array into chunks of specified size
 static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
+  if (array.count == 0) {
+    return @[@[]];
+  }
+
   NSMutableArray *chunks = [NSMutableArray array];
   NSMutableArray *currentChunk = [NSMutableArray array];
   for (id chunk in array) {
