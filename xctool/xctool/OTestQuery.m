@@ -46,9 +46,26 @@ static NSArray *RunTaskAndReturnResult(NSTask *task, NSString **error)
   }
 }
 
+static BOOL SetErrorIfBundleDoesNotExist(NSString *bundlePath, NSString **error)
+{
+  BOOL isDir = NO;
+  BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:bundlePath isDirectory:&isDir];
+
+  if (!IsRunningUnderTest() && !(exists && isDir)) {
+    *error = [NSString stringWithFormat:@"Test bundle not found at: %@", bundlePath];
+    return YES;
+  } else {
+    return NO;
+  }
+}
+
 NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk, NSString **error)
 {
   NSCAssert([sdk hasPrefix:@"iphonesimulator"], @"Only iphonesimulator SDKs are supported.");
+
+  if (SetErrorIfBundleDoesNotExist(bundlePath, error)) {
+    return nil;
+  }
 
   NSString *version = [sdk stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
   DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKVersion:version];
@@ -74,6 +91,10 @@ NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk, NSS
 NSArray *OTestQueryTestCasesInIOSBundleWithTestHost(NSString *bundlePath, NSString *testHostExecutablePath, NSString *sdk, NSString **error)
 {
   NSCAssert([sdk hasPrefix:@"iphonesimulator"], @"Only iphonesimulator SDKs are supported.");
+
+  if (SetErrorIfBundleDoesNotExist(bundlePath, error)) {
+    return nil;
+  }
 
   if (![[NSFileManager defaultManager] isExecutableFileAtPath:testHostExecutablePath]) {
     *error = [NSString stringWithFormat:@"The test host executable is missing: '%@'", testHostExecutablePath];
@@ -109,6 +130,10 @@ NSArray *OTestQueryTestCasesInIOSBundleWithTestHost(NSString *bundlePath, NSStri
 
 NSArray *OTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtProductsDir, BOOL disableGC, NSString **error)
 {
+  if (SetErrorIfBundleDoesNotExist(bundlePath, error)) {
+    return nil;
+  }
+
   NSTask *task = [[NSTask alloc] init];
   [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-osx"]];
   [task setArguments:@[bundlePath]];
