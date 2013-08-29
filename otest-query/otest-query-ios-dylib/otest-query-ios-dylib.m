@@ -18,7 +18,7 @@
 
 __attribute__((constructor)) static void EntryPoint(void)
 {
-  NSString *otestQueryBundlePath = [[NSProcessInfo processInfo] environment][@"OtestQueryBundlePath"];
+  NSString *otestQueryBundlePath = [[[NSProcessInfo processInfo] environment] objectForKey:@"OtestQueryBundlePath"];
   NSCAssert(otestQueryBundlePath != nil,
             @"The environment variable 'OtestQueryBundlePath' is missing.");
 
