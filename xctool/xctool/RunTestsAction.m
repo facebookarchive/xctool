@@ -321,6 +321,43 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
   return testConfigurations;
 }
 
++ (NSDictionary *)commonOCUnitEventInfoFromBuildSettings:(NSDictionary *)testableBuildSettings
+                                garbageCollectionEnabled:(BOOL)garbageCollectionEnabled
+{
+  BOOL isApplicationTest = testableBuildSettings[@"TEST_HOST"] != nil;
+  return @{
+           kReporter_BeginOCUnit_BundleNameKey: testableBuildSettings[@"FULL_PRODUCT_NAME"],
+           kReporter_BeginOCUnit_SDKNameKey: testableBuildSettings[@"SDK_NAME"],
+           kReporter_BeginOCUnit_TestTypeKey: isApplicationTest ? @"application-test" : @"logic-test",
+           kReporter_BeginOCUnit_GCEnabledKey: @(garbageCollectionEnabled),
+           };
+}
+
++ (NSDictionary *)eventForBeginOCUnitFromBuildSettings:(NSDictionary *)testableBuildSettings
+                              garbageCollectionEnabled:(BOOL)garbageCollectionEnabled
+{
+  NSMutableDictionary *event =
+  [NSMutableDictionary dictionaryWithDictionary:@{@"event": kReporter_Events_BeginOCUnit}];
+  [event addEntriesFromDictionary:[self commonOCUnitEventInfoFromBuildSettings:testableBuildSettings
+                                                      garbageCollectionEnabled:garbageCollectionEnabled]];
+  return event;
+}
+
++ (NSDictionary *)eventForEndOCUnitFromBuildSettings:(NSDictionary *)testableBuildSettings
+                            garbageCollectionEnabled:(BOOL)garbageCollectionEnabled
+                                           succeeded:(BOOL)succeeded
+                                       failureReason:(NSString *)failureReason
+{
+  NSMutableDictionary *event =
+  [NSMutableDictionary dictionaryWithDictionary:@{@"event": kReporter_Events_EndOCUnit,
+                                                  kReporter_EndOCUnit_SucceededKey: @(succeeded),
+                                                  kReporter_EndOCUnit_FailureReasonKey: (failureReason ?: [NSNull null]),
+   }];
+  [event addEntriesFromDictionary:[self commonOCUnitEventInfoFromBuildSettings:testableBuildSettings
+                                                      garbageCollectionEnabled:garbageCollectionEnabled]];
+  return event;
+}
+
 /**
  * Block used to run otest for a test bundle, with a specific test list.
  *
@@ -328,6 +365,30 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
  * @return YES if tests ran and all passed.
  */
 typedef BOOL (^TestableBlock)(NSArray *reporters);
+
+/**
+ * In some cases, we're not going to run the tests for this bundle, but we'd still
+ * like to publish the usual begin-ocunit / end-ocunit events so that we have
+ * a place to advertise errors.
+ */
+- (TestableBlock)blockToAdvertiseError:(NSString *)error
+              forTestableExecutionInfo:(TestableExecutionInfo *)testableExecutionInfo
+                             gcEnabled:(BOOL)garbageCollectionEnabled
+{
+  return [[^(NSArray *reporters){
+    PublishEventToReporters(reporters,
+                            [[self class] eventForBeginOCUnitFromBuildSettings:testableExecutionInfo.buildSettings
+                                                      garbageCollectionEnabled:garbageCollectionEnabled]);
+
+    PublishEventToReporters(reporters,
+                            [[self class] eventForEndOCUnitFromBuildSettings:testableExecutionInfo.buildSettings
+                                                    garbageCollectionEnabled:garbageCollectionEnabled
+                                                                   succeeded:NO
+                                                               failureReason:error]);
+
+    return NO;
+  } copy] autorelease];
+}
 
 - (TestableBlock)blockForTestable:(Testable *)testable
                       senTestList:(NSString *)senTestList
@@ -351,27 +412,18 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                                      simulatorType:self.simulatorType
                                      reporters:reporters] autorelease];
 
-    NSDictionary *commonEventInfo = @{kReporter_BeginOCUnit_BundleNameKey: testableBuildSettings[@"FULL_PRODUCT_NAME"],
-                                      kReporter_BeginOCUnit_SDKNameKey: testableBuildSettings[@"SDK_NAME"],
-                                      kReporter_BeginOCUnit_TestTypeKey: isApplicationTest ? @"application-test" : @"logic-test",
-                                      kReporter_BeginOCUnit_GCEnabledKey: @(garbageCollectionEnabled),
-                                      };
-
-    NSMutableDictionary *beginEvent =
-    [NSMutableDictionary dictionaryWithDictionary:@{@"event": kReporter_Events_BeginOCUnit}];
-    [beginEvent addEntriesFromDictionary:commonEventInfo];
-    PublishEventToReporters(reporters, beginEvent);
+    PublishEventToReporters(reporters,
+                            [[self class] eventForBeginOCUnitFromBuildSettings:testableBuildSettings
+                                                      garbageCollectionEnabled:garbageCollectionEnabled]);
 
     NSString *error = nil;
     BOOL succeeded = [testRunner runTestsWithError:&error];
 
-    NSMutableDictionary *endEvent = [NSMutableDictionary dictionaryWithDictionary:
-                                     @{@"event": kReporter_Events_EndOCUnit,
-                                                 kReporter_EndOCUnit_SucceededKey: @(succeeded),
-                                             kReporter_EndOCUnit_FailureReasonKey: (error ? error : [NSNull null]),
-                                     }];
-    [endEvent addEntriesFromDictionary:commonEventInfo];
-    PublishEventToReporters(reporters, endEvent);
+    PublishEventToReporters(reporters,
+                            [[self class] eventForEndOCUnitFromBuildSettings:testableBuildSettings
+                                                    garbageCollectionEnabled:garbageCollectionEnabled
+                                                                   succeeded:succeeded
+                                                               failureReason:error]);
 
     return succeeded;
   } copy] autorelease];
@@ -450,18 +502,28 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
 
       for (NSArray *senTestListChunk in testChunks) {
 
-        NSString *senTestListString = [OCUnitTestRunner reduceSenTestListToBroadestForm:senTestListChunk
-                                                                           allTestCases:info.testCases];
+        TestableBlock block;
 
-        TestableBlock block = [self blockForTestable:info.testable
-                                         senTestList:senTestListString
-                               testableBuildSettings:info.buildSettings
-                                      testableTarget:info.testable.target
-                                   isApplicationTest:isApplicationTest
-                                           arguments:info.expandedArguments
-                                         environment:info.expandedEnvironment
-                                     testRunnerClass:testRunnerClass
-                                           gcEnabled:garbageCollectionEnabled];
+        if (info.testCasesQueryError != nil) {
+          block = [self blockToAdvertiseError:[NSString stringWithFormat:
+                                               @"Failed to query the list of test cases in the test bundle: %@", info.testCasesQueryError]
+                     forTestableExecutionInfo:info
+                                    gcEnabled:garbageCollectionEnabled];
+        } else {
+          NSString *senTestListString = [OCUnitTestRunner reduceSenTestListToBroadestForm:senTestListChunk
+                                                                             allTestCases:info.testCases];
+
+          block = [self blockForTestable:info.testable
+                             senTestList:senTestListString
+                   testableBuildSettings:info.buildSettings
+                          testableTarget:info.testable.target
+                       isApplicationTest:isApplicationTest
+                               arguments:info.expandedArguments
+                             environment:info.expandedEnvironment
+                         testRunnerClass:testRunnerClass
+                               gcEnabled:garbageCollectionEnabled];
+        }
+
         if (isApplicationTest) {
           [blocksToRunOnMainThread addObject:block];
         } else {
