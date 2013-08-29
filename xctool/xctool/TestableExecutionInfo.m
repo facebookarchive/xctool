@@ -123,11 +123,13 @@
                               testableBuildSettings[@"BUILT_PRODUCTS_DIR"],
                               testableBuildSettings[@"FULL_PRODUCT_NAME"]];
 
-  NSString *testHostAppPath = testableBuildSettings[@"TEST_HOST"];
+  // TEST_HOST will sometimes be wrapped in "quotes".
+  NSString *testHostExecutablePath = [testableBuildSettings[@"TEST_HOST"]
+                                      stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
 
   if ([sdkName hasPrefix:@"iphonesimulator"]) {
-    if (testHostAppPath) {
-      return OTestQueryTestCasesInIOSBundleWithTestHost(testBundlePath, testHostAppPath, sdkName, error);
+    if (testHostExecutablePath) {
+      return OTestQueryTestCasesInIOSBundleWithTestHost(testBundlePath, testHostExecutablePath, sdkName, error);
     } else {
       return OTestQueryTestCasesInIOSBundle(testBundlePath, sdkName, error);
     }
