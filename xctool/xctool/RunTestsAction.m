@@ -499,16 +499,19 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
     for (NSArray *testConfiguration in testConfigurations) {
       Class testRunnerClass = testConfiguration[0];
       BOOL garbageCollectionEnabled = [testConfiguration[1] boolValue];
+      int bucketCount = 1;
 
       for (NSArray *senTestListChunk in testChunks) {
 
         TestableBlock block;
+        NSString *blockAnnotation;
 
         if (info.testCasesQueryError != nil) {
           block = [self blockToAdvertiseError:[NSString stringWithFormat:
                                                @"Failed to query the list of test cases in the test bundle: %@", info.testCasesQueryError]
                      forTestableExecutionInfo:info
                                     gcEnabled:garbageCollectionEnabled];
+          blockAnnotation = @"";
         } else {
           NSString *senTestListString = [OCUnitTestRunner reduceSenTestListToBroadestForm:senTestListChunk
                                                                              allTestCases:info.testCases];
@@ -522,23 +525,34 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                              environment:info.expandedEnvironment
                          testRunnerClass:testRunnerClass
                                gcEnabled:garbageCollectionEnabled];
+          blockAnnotation = [NSString stringWithFormat:
+                        @"%@ (bucket #%d, %ld tests)", info.buildSettings[@"FULL_PRODUCT_NAME"], bucketCount, [senTestListChunk count]
+                        ];
         }
+        NSArray *annotatedBlock = @[block, blockAnnotation];
 
         if (isApplicationTest) {
-          [blocksToRunOnMainThread addObject:block];
+          [blocksToRunOnMainThread addObject:annotatedBlock];
         } else {
-          [blocksToRunOnDispatchQueue addObject:block];
+          [blocksToRunOnDispatchQueue addObject:annotatedBlock];
         }
+
+        bucketCount++;
       }
     }
   }
 
   __block BOOL succeeded = YES;
+  __block NSMutableArray *bundlesInProgress = [NSMutableArray array];
 
-  void (^runTestableBlockAndSaveSuccess)(TestableBlock) = ^(TestableBlock block) {
+  void (^runTestableBlockAndSaveSuccess)(TestableBlock, NSString *) = ^(TestableBlock block, NSString *blockAnnotation) {
     NSArray *reporters;
 
     if (_parallelize) {
+      @synchronized (self) {
+        [bundlesInProgress addObject:blockAnnotation];
+        ReportStatusMessage(options.reporters, REPORTER_MESSAGE_INFO, @"Starting %@", blockAnnotation);
+      }
       // Buffer reporter output, and we'll make sure it gets flushed serially
       // when the block is done.
       reporters = [EventBuffer wrapSinks:options.reporters];
@@ -550,6 +564,10 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
 
     @synchronized (self) {
       if (_parallelize) {
+        [bundlesInProgress removeObject:blockAnnotation];
+        if ([bundlesInProgress count] > 0) {
+          ReportStatusMessage(reporters, REPORTER_MESSAGE_INFO, @"In Progress [%@]", [bundlesInProgress componentsJoinedByString:@", "]);
+        }
         [reporters makeObjectsPerformSelector:@selector(flush)];
       }
 
@@ -557,11 +575,13 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
     }
   };
 
-  for (TestableBlock block in blocksToRunOnDispatchQueue) {
+  for (NSArray *annotatedBlock in blocksToRunOnDispatchQueue) {
     dispatch_group_async(group, q, ^{
       dispatch_semaphore_wait(jobLimiter, DISPATCH_TIME_FOREVER);
 
-      runTestableBlockAndSaveSuccess(block);
+      TestableBlock block = annotatedBlock[0];
+      NSString *blockAnnotation = annotatedBlock[1];
+      runTestableBlockAndSaveSuccess(block, blockAnnotation);
 
       dispatch_semaphore_signal(jobLimiter);
     });
@@ -570,8 +590,10 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
   // Wait for logic tests to finish before we start running simulator tests.
   dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 
-  for (TestableBlock block in blocksToRunOnMainThread) {
-    runTestableBlockAndSaveSuccess(block);
+  for (NSArray *annotatedBlock in blocksToRunOnMainThread) {
+    TestableBlock block = annotatedBlock[0];
+    NSString *blockAnnotation = annotatedBlock[1];
+    runTestableBlockAndSaveSuccess(block, blockAnnotation);
   }
 
   dispatch_release(group);
