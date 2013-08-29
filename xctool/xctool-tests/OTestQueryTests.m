@@ -84,4 +84,16 @@
   assertThat(error, containsString(@"no suitable image found."));
 }
 
+- (void)testIOSAppTestQueryFailsWhenTestHostExecutableIsMissing
+{
+  NSString *error = nil;
+  NSString *latestSDK = GetAvailableSDKsAndAliases()[@"iphonesimulator"];
+  NSArray *classes = OTestQueryTestCasesInIOSBundleWithTestHost(TEST_DATA @"otest-query-tests-ios-test-bundle/TestProject-LibraryTests.octest",
+                                                                @"/path/to/executable/that/does/not/exist",
+                                                                latestSDK,
+                                                                &error);
+  assertThat(classes, equalTo(nil));
+  assertThat(error, containsString(@"The test host executable is missing: '/path/to/executable/that/does/not/exist'"));
+}
+
 @end

@@ -75,6 +75,11 @@ NSArray *OTestQueryTestCasesInIOSBundleWithTestHost(NSString *bundlePath, NSStri
 {
   NSCAssert([sdk hasPrefix:@"iphonesimulator"], @"Only iphonesimulator SDKs are supported.");
 
+  if (![[NSFileManager defaultManager] isExecutableFileAtPath:testHostExecutablePath]) {
+    *error = [NSString stringWithFormat:@"The test host executable is missing: '%@'", testHostExecutablePath];
+    return nil;
+  }
+
   NSString *version = [sdk stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
   DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKVersion:version];
   NSCAssert(systemRoot != nil, @"Cannot get systemRoot");
