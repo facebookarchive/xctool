@@ -123,8 +123,14 @@
                               testableBuildSettings[@"BUILT_PRODUCTS_DIR"],
                               testableBuildSettings[@"FULL_PRODUCT_NAME"]];
 
+  NSString *testHostAppPath = testableBuildSettings[@"TEST_HOST"];
+
   if ([sdkName hasPrefix:@"iphonesimulator"]) {
-    return OTestQueryTestCasesInIOSBundle(testBundlePath, sdkName, error);
+    if (testHostAppPath) {
+      return OTestQueryTestCasesInIOSBundleWithTestHost(testBundlePath, testHostAppPath, sdkName, error);
+    } else {
+      return OTestQueryTestCasesInIOSBundle(testBundlePath, sdkName, error);
+    }
   } else if ([sdkName hasPrefix:@"macosx"]) {
     BOOL disableGC;
 

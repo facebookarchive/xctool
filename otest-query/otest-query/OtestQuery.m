@@ -24,9 +24,8 @@
 
 @implementation OtestQuery
 
-+ (void)run
++ (void)queryTestBundlePath:(NSString *)testBundlePath
 {
-  NSString *testBundlePath = [[[NSProcessInfo processInfo] arguments] lastObject];
   NSBundle *bundle = [NSBundle bundleWithPath:testBundlePath];
 
   // We use dlopen() instead of -[NSBundle loadAndReturnError] because, if

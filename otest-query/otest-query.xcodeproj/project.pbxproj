@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		283758E517CED68F006E1544 /* otest-query-ios-dylib.m in Sources */ = {isa = PBXBuildFile; fileRef = 283758E417CED68F006E1544 /* otest-query-ios-dylib.m */; };
+		283758EA17CED7AF006E1544 /* OtestQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = CD9049131756C6C0006CF16D /* OtestQuery.m */; };
+		283758EB17CED83B006E1544 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283758DF17CED68F006E1544 /* Foundation.framework */; };
 		CD66612D175D1A890057DF4D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9049011756C5B1006CF16D /* Foundation.framework */; };
 		CD666139175D31BF0057DF4D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CD9049041756C5B1006CF16D /* main.m */; };
 		CD66613A175D31BF0057DF4D /* OtestQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = CD9049131756C6C0006CF16D /* OtestQuery.m */; };
@@ -37,6 +40,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		283758D917CED68F006E1544 /* otest-query-ios-dylib.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "otest-query-ios-dylib.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		283758DA17CED68F006E1544 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		283758DD17CED68F006E1544 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		283758DE17CED68F006E1544 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		283758DF17CED68F006E1544 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		283758E417CED68F006E1544 /* otest-query-ios-dylib.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "otest-query-ios-dylib.m"; sourceTree = "<group>"; };
+		283758E917CED6A7006E1544 /* otest-query-ios-dylib.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "otest-query-ios-dylib.xcconfig"; sourceTree = "<group>"; };
 		CD66612C175D1A890057DF4D /* otest-query-osx */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "otest-query-osx"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD666138175D1B090057DF4D /* otest-query-osx.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "otest-query-osx.xcconfig"; sourceTree = "<group>"; };
 		CD9048FE1756C5B1006CF16D /* otest-query-ios */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "otest-query-ios"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -50,6 +60,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		283758D617CED68F006E1544 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				283758EB17CED83B006E1544 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CD666129175D1A890057DF4D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -69,12 +87,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		283758DC17CED68F006E1544 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				283758DD17CED68F006E1544 /* AppKit.framework */,
+				283758DE17CED68F006E1544 /* CoreData.framework */,
+				283758DF17CED68F006E1544 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		283758E017CED68F006E1544 /* otest-query-ios-dylib */ = {
+			isa = PBXGroup;
+			children = (
+				283758E417CED68F006E1544 /* otest-query-ios-dylib.m */,
+			);
+			path = "otest-query-ios-dylib";
+			sourceTree = "<group>";
+		};
 		CD9048F51756C5B1006CF16D = {
 			isa = PBXGroup;
 			children = (
 				CD666138175D1B090057DF4D /* otest-query-osx.xcconfig */,
 				CD9049151756CDF4006CF16D /* otest-query-ios.xcconfig */,
+				283758E917CED6A7006E1544 /* otest-query-ios-dylib.xcconfig */,
 				CD9049031756C5B1006CF16D /* otest-query */,
+				283758E017CED68F006E1544 /* otest-query-ios-dylib */,
 				CD9049001756C5B1006CF16D /* Frameworks */,
 				CD9048FF1756C5B1006CF16D /* Products */,
 			);
@@ -85,6 +123,7 @@
 			children = (
 				CD9048FE1756C5B1006CF16D /* otest-query-ios */,
 				CD66612C175D1A890057DF4D /* otest-query-osx */,
+				283758D917CED68F006E1544 /* otest-query-ios-dylib.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -94,6 +133,8 @@
 			children = (
 				CD9049011756C5B1006CF16D /* Foundation.framework */,
 				CD90490F1756C685006CF16D /* SenTestingKit.framework */,
+				283758DA17CED68F006E1544 /* Cocoa.framework */,
+				283758DC17CED68F006E1544 /* Other Frameworks */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -119,7 +160,34 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		283758D717CED68F006E1544 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
+		283758D817CED68F006E1544 /* otest-query-ios-dylib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 283758E817CED68F006E1544 /* Build configuration list for PBXNativeTarget "otest-query-ios-dylib" */;
+			buildPhases = (
+				283758D517CED68F006E1544 /* Sources */,
+				283758D617CED68F006E1544 /* Frameworks */,
+				283758D717CED68F006E1544 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "otest-query-ios-dylib";
+			productName = "otest-query-ios-dylib";
+			productReference = 283758D917CED68F006E1544 /* otest-query-ios-dylib.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
 		CD66612B175D1A890057DF4D /* otest-query-osx */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CD666137175D1A890057DF4D /* Build configuration list for PBXNativeTarget "otest-query-osx" */;
@@ -177,11 +245,21 @@
 			targets = (
 				CD9048FD1756C5B1006CF16D /* otest-query-ios */,
 				CD66612B175D1A890057DF4D /* otest-query-osx */,
+				283758D817CED68F006E1544 /* otest-query-ios-dylib */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		283758D517CED68F006E1544 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				283758EA17CED7AF006E1544 /* OtestQuery.m in Sources */,
+				283758E517CED68F006E1544 /* otest-query-ios-dylib.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CD666128175D1A890057DF4D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -203,6 +281,26 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		283758E617CED68F006E1544 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 283758E917CED6A7006E1544 /* otest-query-ios-dylib.xcconfig */;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		283758E717CED68F006E1544 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 283758E917CED6A7006E1544 /* otest-query-ios-dylib.xcconfig */;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		CD666135175D1A890057DF4D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CD666138175D1B090057DF4D /* otest-query-osx.xcconfig */;
@@ -308,6 +406,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		283758E817CED68F006E1544 /* Build configuration list for PBXNativeTarget "otest-query-ios-dylib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				283758E617CED68F006E1544 /* Debug */,
+				283758E717CED68F006E1544 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		CD666137175D1A890057DF4D /* Build configuration list for PBXNativeTarget "otest-query-osx" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

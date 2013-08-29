@@ -22,7 +22,7 @@
 int main(int argc, const char * argv[])
 {
   @autoreleasepool {
-    [OtestQuery run];
+    [OtestQuery queryTestBundlePath:[NSString stringWithUTF8String:argv[1]]];
   }
   return 0;
 }

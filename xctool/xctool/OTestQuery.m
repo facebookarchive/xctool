@@ -71,6 +71,37 @@ NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk, NSS
   return result;
 }
 
+NSArray *OTestQueryTestCasesInIOSBundleWithTestHost(NSString *bundlePath, NSString *testHostExecutablePath, NSString *sdk, NSString **error)
+{
+  NSCAssert([sdk hasPrefix:@"iphonesimulator"], @"Only iphonesimulator SDKs are supported.");
+
+  NSString *version = [sdk stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
+  DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKVersion:version];
+  NSCAssert(systemRoot != nil, @"Cannot get systemRoot");
+  NSString *simulatorHome = [NSString stringWithFormat:@"%@/Library/Application Support/iPhone Simulator/%@", NSHomeDirectory(), version];
+
+  NSTask *task = [[NSTask alloc] init];
+  [task setLaunchPath:testHostExecutablePath];
+  [task setEnvironment:@{
+   // Inserted this dylib, which will then load whatever is in `OtestQueryBundlePath`.
+   @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"otest-query-ios-dylib.dylib"],
+   // The test bundle that we want to query from.
+   @"OtestQueryBundlePath" : bundlePath,
+
+   @"CFFIXED_USER_HOME" : simulatorHome,
+   @"HOME" : simulatorHome,
+   @"IPHONE_SHARED_RESOURCES_DIRECTORY" : simulatorHome,
+   @"DYLD_ROOT_PATH" : [systemRoot sdkRootPath],
+   @"IPHONE_SIMULATOR_ROOT" : [systemRoot sdkRootPath],
+   @"IPHONE_SIMULATOR_VERSIONS" : @"iPhone Simulator (external launch) , iPhone OS 6.0 (unknown/10A403)",
+   @"NSUnbufferedIO" : @"YES"}];
+  [task setArguments:@[bundlePath]];
+
+  NSArray *result = RunTaskAndReturnResult(task, error);
+  [task release];
+  return result;
+}
+
 NSArray *OTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtProductsDir, BOOL disableGC, NSString **error)
 {
   NSTask *task = [[NSTask alloc] init];

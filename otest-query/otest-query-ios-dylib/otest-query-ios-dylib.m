@@ -14,11 +14,14 @@
 // limitations under the License.
 //
 
+#import "OtestQuery.h"
 
-#import <Foundation/Foundation.h>
+__attribute__((constructor)) static void EntryPoint(void)
+{
+  NSString *otestQueryBundlePath = [[NSProcessInfo processInfo] environment][@"OtestQueryBundlePath"];
+  NSCAssert(otestQueryBundlePath != nil,
+            @"The environment variable 'OtestQueryBundlePath' is missing.");
 
-@interface OtestQuery : NSObject
-
-+ (void)queryTestBundlePath:(NSString *)testBundlePath;
-
-@end
+  NSLog(@"Querying!");
+  [OtestQuery queryTestBundlePath:otestQueryBundlePath];
+}
