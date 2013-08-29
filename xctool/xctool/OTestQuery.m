@@ -21,7 +21,32 @@
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
 
-NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk)
+static NSArray *RunTaskAndReturnResult(NSTask *task, NSString **error)
+{
+  NSDictionary *output = LaunchTaskAndCaptureOutput(task);
+
+  if ([task terminationStatus] != 0) {
+    *error = output[@"stderr"];
+    return nil;
+  } else {
+    NSString *jsonOutput = output[@"stdout"];
+
+    NSError *parseError = nil;
+    NSArray *list = [NSJSONSerialization JSONObjectWithData:[jsonOutput dataUsingEncoding:NSUTF8StringEncoding]
+                                                    options:0
+                                                      error:&parseError];
+    if (list) {
+      return list;
+    } else {
+      *error = [NSString stringWithFormat:@"Error while parsing JSON: %@: %@",
+                [parseError localizedFailureReason],
+                jsonOutput];
+      return nil;
+    }
+  }
+}
+
+NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk, NSString **error)
 {
   NSCAssert([sdk hasPrefix:@"iphonesimulator"], @"Only iphonesimulator SDKs are supported.");
 
@@ -40,14 +65,13 @@ NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk)
                          @"IPHONE_SIMULATOR_VERSIONS" : @"iPhone Simulator (external launch) , iPhone OS 6.0 (unknown/10A403)",
                          @"NSUnbufferedIO" : @"YES"}];
   [task setArguments:@[bundlePath]];
-  NSDictionary *output = LaunchTaskAndCaptureOutput(task);
-  NSCAssert([task terminationStatus] == 0, @"otest-query-ios failed with stderr: %@", output[@"stderr"]);
-  NSData *outputData = [output[@"stdout"] dataUsingEncoding:NSUTF8StringEncoding];
+
+  NSArray *result = RunTaskAndReturnResult(task, error);
   [task release];
-  return [NSJSONSerialization JSONObjectWithData:outputData options:0 error:nil];
+  return result;
 }
 
-NSArray *OTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtProductsDir, BOOL disableGC)
+NSArray *OTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtProductsDir, BOOL disableGC, NSString **error)
 {
   NSTask *task = [[NSTask alloc] init];
   [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-osx"]];
@@ -59,9 +83,8 @@ NSArray *OTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtPro
    @"NSUnbufferedIO" : @"YES",
    @"OBJC_DISABLE_GC" : disableGC ? @"YES" : @"NO"
    }];
-  NSDictionary *output = LaunchTaskAndCaptureOutput(task);
-  NSCAssert([task terminationStatus] == 0, @"otest-query-ios failed with stderr: %@", output[@"stderr"]);
+
+  NSArray *result = RunTaskAndReturnResult(task, error);
   [task release];
-  NSData *outputData = [output[@"stdout"] dataUsingEncoding:NSUTF8StringEncoding];
-  return [NSJSONSerialization JSONObjectWithData:outputData options:0 error:nil];
+  return result;
 }

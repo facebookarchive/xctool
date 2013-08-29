@@ -40,9 +40,14 @@
  * A list of all test cases in the bundle, the form of:
  * ['SomeClass/testA', 'SomeClass/testB']
  *
- * These are fetched via otest-query
+ * These are fetched via otest-query.  May be nil if an error occurred.
  */
 @property (nonatomic, retain) NSArray *testCases;
+
+/**
+ * Will contain an error message if `otest-query` fails.
+ */
+@property (nonatomic, retain) NSString *testCasesQueryError;
 
 /**
  * Any arguments that should be passed to otest, with all macros expanded.

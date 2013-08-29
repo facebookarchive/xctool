@@ -26,9 +26,11 @@
 
 - (void)testCanQueryClassesFromOSXBundle
 {
+  NSString *error = nil;
   NSArray *classes = OTestQueryTestCasesInOSXBundle(TEST_DATA @"otest-query-tests-osx-test-bundle/TestProject-Library-OSXTests.octest",
-                                                      AbsolutePathFromRelative(TEST_DATA @"otest-query-tests-osx-test-bundle"),
-                                                      YES);
+                                                    AbsolutePathFromRelative(TEST_DATA @"otest-query-tests-osx-test-bundle"),
+                                                    YES,
+                                                    &error);
   assertThat(classes,
              equalTo(@[
                      @"TestProject_Library_OSXTests/testOutput",
@@ -39,9 +41,11 @@
 
 - (void)testCanQueryClassesFromIOSBundle
 {
+  NSString *error = nil;
   NSString *latestSDK = GetAvailableSDKsAndAliases()[@"iphonesimulator"];
   NSArray *classes = OTestQueryTestCasesInIOSBundle(TEST_DATA @"otest-query-tests-ios-test-bundle/TestProject-LibraryTests.octest",
-                                                      latestSDK);
+                                                    latestSDK,
+                                                    &error);
   assertThat(classes,
              equalTo(@[
                      @"OtherTests/testSomething",
@@ -52,6 +56,32 @@
                      @"SomeTests/testWillFail",
                      @"SomeTests/testWillPass",
                      ]));
+}
+
+- (void)testQueryFailsWhenDYLDRejectsBundle_OSX
+{
+  NSString *error = nil;
+  // This is going to fail, because we're trying to load an iOS test bundle using
+  // the OS X version of otest.
+  NSArray *classes = OTestQueryTestCasesInOSXBundle(TEST_DATA @"otest-query-tests-ios-test-bundle/TestProject-LibraryTests.octest",
+                                                    AbsolutePathFromRelative(TEST_DATA @"otest-query-tests-osx-test-bundle"),
+                                                    YES,
+                                                    &error);
+  assertThat(classes, equalTo(nil));
+  assertThat(error, containsString(@"no suitable image found."));
+}
+
+- (void)testQueryFailsWhenDYLDRejectsBundle_iOS
+{
+  NSString *error = nil;
+  // This is going to fail, because we're trying to load an OS X test bundle
+  // using the iOS version of otest.
+  NSString *latestSDK = GetAvailableSDKsAndAliases()[@"iphonesimulator"];
+  NSArray *classes = OTestQueryTestCasesInIOSBundle(TEST_DATA @"otest-query-tests-osx-test-bundle/TestProject-Library-OSXTests.octest",
+                                                    latestSDK,
+                                                    &error);
+  assertThat(classes, equalTo(nil));
+  assertThat(error, containsString(@"no suitable image found."));
 }
 
 @end
