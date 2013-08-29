@@ -573,6 +573,8 @@
                          @"Cls3/test3"
                          ],
                        ]));
+  // If there are no tests, we should get an empty bucket.
+  assertThat(BucketizeTestCasesByTestCase(@[], 3), equalTo(@[@[]]));
 }
 
 - (void)testCanBucketizeTestCasesByTestClass
@@ -609,6 +611,8 @@
                          @"Cls7/test1",
                          ],
                        ]));
+  // If there are no tests, we should get an empty bucket.
+  assertThat(BucketizeTestCasesByTestClass(@[], 3), equalTo(@[@[]]));
 }
 
 @end

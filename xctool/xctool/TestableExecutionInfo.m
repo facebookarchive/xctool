@@ -39,7 +39,14 @@
                                                       xcodeArguments:xcodebuildArguments
                                                              testSDK:testSDK];
 
-  info.testCases = [[self class] queryTestCasesWithBuildSettings:info.buildSettings];
+  NSString *otestQueryError = nil;
+  NSArray *testCases = [[self class] queryTestCasesWithBuildSettings:info.buildSettings
+                                                               error:&otestQueryError];
+  if (testCases) {
+    info.testCases = testCases;
+  } else {
+    info.testCasesQueryError = otestQueryError;
+  }
 
   // In Xcode, you can optionally include variables in your args or environment
   // variables.  i.e. "$(ARCHS)" gets transformed into "armv7".
@@ -109,14 +116,23 @@
  * test bundle.
  */
 + (NSArray *)queryTestCasesWithBuildSettings:(NSDictionary *)testableBuildSettings
+                                       error:(NSString **)error
 {
   NSString *sdkName = testableBuildSettings[@"SDK_NAME"];
   NSString *testBundlePath = [NSString stringWithFormat:@"%@/%@",
                               testableBuildSettings[@"BUILT_PRODUCTS_DIR"],
                               testableBuildSettings[@"FULL_PRODUCT_NAME"]];
 
+  // TEST_HOST will sometimes be wrapped in "quotes".
+  NSString *testHostExecutablePath = [testableBuildSettings[@"TEST_HOST"]
+                                      stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
+
   if ([sdkName hasPrefix:@"iphonesimulator"]) {
-    return OTestQueryTestCasesInIOSBundle(testBundlePath, sdkName);
+    if (testHostExecutablePath) {
+      return OTestQueryTestCasesInIOSBundleWithTestHost(testBundlePath, testHostExecutablePath, sdkName, error);
+    } else {
+      return OTestQueryTestCasesInIOSBundle(testBundlePath, sdkName, error);
+    }
   } else if ([sdkName hasPrefix:@"macosx"]) {
     BOOL disableGC;
 
@@ -130,7 +146,8 @@
 
     return OTestQueryTestCasesInOSXBundle(testBundlePath,
                                           testableBuildSettings[@"BUILT_PRODUCTS_DIR"],
-                                          disableGC);
+                                          disableGC,
+                                          error);
   } else if ([sdkName hasPrefix:@"iphoneos"]) {
     // We can't run tests on device yet, but we must return a test list here or
     // we'll never get far enough to run OCUnitIOSDeviceTestRunner.

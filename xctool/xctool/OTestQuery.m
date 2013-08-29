@@ -21,9 +21,51 @@
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
 
-NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk)
+static NSArray *RunTaskAndReturnResult(NSTask *task, NSString **error)
+{
+  NSDictionary *output = LaunchTaskAndCaptureOutput(task);
+
+  if ([task terminationStatus] != 0) {
+    *error = output[@"stderr"];
+    return nil;
+  } else {
+    NSString *jsonOutput = output[@"stdout"];
+
+    NSError *parseError = nil;
+    NSArray *list = [NSJSONSerialization JSONObjectWithData:[jsonOutput dataUsingEncoding:NSUTF8StringEncoding]
+                                                    options:0
+                                                      error:&parseError];
+    if (list) {
+      return list;
+    } else {
+      *error = [NSString stringWithFormat:@"Error while parsing JSON: %@: %@",
+                [parseError localizedFailureReason],
+                jsonOutput];
+      return nil;
+    }
+  }
+}
+
+static BOOL SetErrorIfBundleDoesNotExist(NSString *bundlePath, NSString **error)
+{
+  BOOL isDir = NO;
+  BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:bundlePath isDirectory:&isDir];
+
+  if (!IsRunningUnderTest() && !(exists && isDir)) {
+    *error = [NSString stringWithFormat:@"Test bundle not found at: %@", bundlePath];
+    return YES;
+  } else {
+    return NO;
+  }
+}
+
+NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk, NSString **error)
 {
   NSCAssert([sdk hasPrefix:@"iphonesimulator"], @"Only iphonesimulator SDKs are supported.");
+
+  if (SetErrorIfBundleDoesNotExist(bundlePath, error)) {
+    return nil;
+  }
 
   NSString *version = [sdk stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
   DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKVersion:version];
@@ -40,15 +82,58 @@ NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk)
                          @"IPHONE_SIMULATOR_VERSIONS" : @"iPhone Simulator (external launch) , iPhone OS 6.0 (unknown/10A403)",
                          @"NSUnbufferedIO" : @"YES"}];
   [task setArguments:@[bundlePath]];
-  NSDictionary *output = LaunchTaskAndCaptureOutput(task);
-  NSCAssert([task terminationStatus] == 0, @"otest-query-ios failed with stderr: %@", output[@"stderr"]);
-  NSData *outputData = [output[@"stdout"] dataUsingEncoding:NSUTF8StringEncoding];
+
+  NSArray *result = RunTaskAndReturnResult(task, error);
   [task release];
-  return [NSJSONSerialization JSONObjectWithData:outputData options:0 error:nil];
+  return result;
 }
 
-NSArray *OTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtProductsDir, BOOL disableGC)
+NSArray *OTestQueryTestCasesInIOSBundleWithTestHost(NSString *bundlePath, NSString *testHostExecutablePath, NSString *sdk, NSString **error)
 {
+  NSCAssert([sdk hasPrefix:@"iphonesimulator"], @"Only iphonesimulator SDKs are supported.");
+
+  if (SetErrorIfBundleDoesNotExist(bundlePath, error)) {
+    return nil;
+  }
+
+  if (![[NSFileManager defaultManager] isExecutableFileAtPath:testHostExecutablePath]) {
+    *error = [NSString stringWithFormat:@"The test host executable is missing: '%@'", testHostExecutablePath];
+    return nil;
+  }
+
+  NSString *version = [sdk stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
+  DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKVersion:version];
+  NSCAssert(systemRoot != nil, @"Cannot get systemRoot");
+  NSString *simulatorHome = [NSString stringWithFormat:@"%@/Library/Application Support/iPhone Simulator/%@", NSHomeDirectory(), version];
+
+  NSTask *task = [[NSTask alloc] init];
+  [task setLaunchPath:testHostExecutablePath];
+  [task setEnvironment:@{
+   // Inserted this dylib, which will then load whatever is in `OtestQueryBundlePath`.
+   @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"otest-query-ios-dylib.dylib"],
+   // The test bundle that we want to query from.
+   @"OtestQueryBundlePath" : bundlePath,
+
+   @"CFFIXED_USER_HOME" : simulatorHome,
+   @"HOME" : simulatorHome,
+   @"IPHONE_SHARED_RESOURCES_DIRECTORY" : simulatorHome,
+   @"DYLD_ROOT_PATH" : [systemRoot sdkRootPath],
+   @"IPHONE_SIMULATOR_ROOT" : [systemRoot sdkRootPath],
+   @"IPHONE_SIMULATOR_VERSIONS" : @"iPhone Simulator (external launch) , iPhone OS 6.0 (unknown/10A403)",
+   @"NSUnbufferedIO" : @"YES"}];
+  [task setArguments:@[bundlePath]];
+
+  NSArray *result = RunTaskAndReturnResult(task, error);
+  [task release];
+  return result;
+}
+
+NSArray *OTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtProductsDir, BOOL disableGC, NSString **error)
+{
+  if (SetErrorIfBundleDoesNotExist(bundlePath, error)) {
+    return nil;
+  }
+
   NSTask *task = [[NSTask alloc] init];
   [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-osx"]];
   [task setArguments:@[bundlePath]];
@@ -59,9 +144,8 @@ NSArray *OTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtPro
    @"NSUnbufferedIO" : @"YES",
    @"OBJC_DISABLE_GC" : disableGC ? @"YES" : @"NO"
    }];
-  NSDictionary *output = LaunchTaskAndCaptureOutput(task);
-  NSCAssert([task terminationStatus] == 0, @"otest-query-ios failed with stderr: %@", output[@"stderr"]);
+
+  NSArray *result = RunTaskAndReturnResult(task, error);
   [task release];
-  NSData *outputData = [output[@"stdout"] dataUsingEncoding:NSUTF8StringEncoding];
-  return [NSJSONSerialization JSONObjectWithData:outputData options:0 error:nil];
+  return result;
 }

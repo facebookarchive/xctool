@@ -18,12 +18,33 @@
 #import <Foundation/Foundation.h>
 
 /**
- * Returns a list of all classes inheriting from SenTestCase in the bundle.
+ * Returns a list of all test cases in the bundle.
  *
  * @param bundlePath Path to OCUnit test bundle (ending in .octest)
  * @param sdk SDK to use (e.g. iphonesimulator6.1)
  */
-NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk);
+NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk, NSString **error);
+
+/**
+ * Returns a list of all test cases in the bundle.
+ *
+ * This will...
+ *
+ *   1) launch `testHostExecutablePath` with `otest-query-ios-dylib.dylib`
+ *      injected via DYLD_INSERT_LIBRARIES.
+ *   2) otest-query-ios-dylib will then dynamically load whatver bundle is
+ *      specified by the "OtestQueryBundlePath" environment variable.
+ *   3) dump all the test cases.
+ *
+ * @param bundlePath path to Something.octest
+ * @param testHostExecutablePath Path to the test host executable
+ * @param sdk the sdk name and version (e.g. 'iphonesimulator6.1')
+ * @param error any error that occurs
+ */
+NSArray *OTestQueryTestCasesInIOSBundleWithTestHost(NSString *bundlePath,
+                                                    NSString *testHostExecutablePath,
+                                                    NSString *sdk,
+                                                    NSString **error);
 
 /**
  * Returns a list of all classes inheriting from SenTestCase in the bundle.
@@ -33,4 +54,4 @@ NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk);
  *   path would normally be something like '.../Build/Products/Debug".
  * @param disableGC If YES, OBJC_DISABLE_GC will be set to YES.
  */
-NSArray *OTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtProductsDir, BOOL disableGC);
+NSArray *OTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtProductsDir, BOOL disableGC, NSString **error);
