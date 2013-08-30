@@ -22,6 +22,5 @@ __attribute__((constructor)) static void EntryPoint(void)
   NSCAssert(otestQueryBundlePath != nil,
             @"The environment variable 'OtestQueryBundlePath' is missing.");
 
-  NSLog(@"Querying!");
   [OtestQuery queryTestBundlePath:otestQueryBundlePath];
 }
