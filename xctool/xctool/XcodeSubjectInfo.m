@@ -852,10 +852,10 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   self.testables = [[self class] testablesInSchemePath:schemePath
                                               basePath:BasePathFromSchemePath(schemePath)];
 
-  NSArray *buildables = [[self class] buildablesInSchemePath:schemePath
+  self.buildables = [[self class] buildablesInSchemePath:schemePath
                                                     basePath:BasePathFromSchemePath(schemePath)];
-  self.buildablesForTest = [buildables objectsAtIndexes:
-                            [buildables indexesOfObjectsPassingTest:
+  self.buildablesForTest = [self.buildables objectsAtIndexes:
+                            [self.buildables indexesOfObjectsPassingTest:
                              ^BOOL(Buildable *obj, NSUInteger idx, BOOL *stop) {
                                return obj.buildForTesting;
                              }]];

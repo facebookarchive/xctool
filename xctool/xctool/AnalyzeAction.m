@@ -16,12 +16,13 @@
 
 #import "AnalyzeAction.h"
 
+#import "Buildable.h"
+#import "BuildStateParser.h"
 #import "EventSink.h"
 #import "Options.h"
+#import "ReporterEvents.h"
 #import "XCToolUtil.h"
 #import "XcodeSubjectInfo.h"
-#import "BuildStateParser.h"
-#import "ReporterEvents.h"
 
 @interface BuildTargetsCollector : NSObject <EventSink>
 /// Array of @{@"projectName": projectName, @"targetName": targetName}
@@ -229,17 +230,17 @@
     }
 
     if (success) {
-      for (NSDictionary *buildable in xcodeSubjectInfo.buildables) {
-        if (![buildable[@"forAnalyzing"] boolValue] ||
-            ![_onlySet containsObject:buildable[@"target"]]) {
+      for (Buildable *buildable in xcodeSubjectInfo.buildables) {
+        if (!buildable.buildForAnalyzing ||
+            ![_onlySet containsObject:buildable.target]) {
           continue;
         }
         NSArray *args =
         [[options commonXcodeBuildArgumentsForSchemeAction:@"AnalyzeAction"
                                           xcodeSubjectInfo:xcodeSubjectInfo]
          arrayByAddingObjectsFromArray:@[
-         @"-project", buildable[@"projectPath"],
-         @"-target", buildable[@"target"],
+         @"-project", buildable.projectPath,
+         @"-target", buildable.target,
          @"RUN_CLANG_STATIC_ANALYZER=YES",
          [NSString stringWithFormat:@"OBJROOT=%@", xcodeSubjectInfo.objRoot],
          [NSString stringWithFormat:@"SYMROOT=%@", xcodeSubjectInfo.symRoot],
