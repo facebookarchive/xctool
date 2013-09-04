@@ -45,18 +45,55 @@ XT_IOS_SDK_VERSION_EXPANDED=$(xcodebuild -showsdks | grep iphonesimulator | \
   head -n 1 | \
   perl -ne '/iphonesimulator(\d)\.(\d)$/ && print "${1}${2}000"')
 
-# We pass OBJROOT, SYMROOT, and SHARED_PRECOMPS_DIR so that we can be sure
-# no build output ends up in DerivedData.
-xcodebuild \
-  -workspace "$XCTOOL_DIR"/xctool.xcworkspace \
-  -scheme xctool \
-  -configuration Release \
-  -IDEBuildLocationStyle=Custom \
-  -IDECustomBuildLocationType=Absolute \
-  -IDECustomBuildProductsPath="$BUILD_OUTPUT_DIR/Products" \
-  -IDECustomBuildIntermediatesPath="$BUILD_OUTPUT_DIR/Intermediates" \
-  XT_IOS_SDK_VERSION="$XT_IOS_SDK_VERSION" \
-  XT_IOS_SDK_VERSION_EXPANDED="$XT_IOS_SDK_VERSION_EXPANDED" \
-  $@
+# xcodebuild intermittently crashes while building xctool.
+#
+# With Xcode 4, the crash was "Exception: Collection ... was mutated while
+# being enumerated." (https://gist.github.com/fpotter/6440435).  With Xcode 5,
+# we're seeing intermittent seg faults (EXC_BAD_ACCESS).
+#
+# To workaround these problems, let's retry the build if we don't see the
+# typical "BUILD SUCCEEDED" or "BUILD FAILED" banners in the xcodebuild output.
+
+BUILD_OUTPUT_PATH=$(/usr/bin/mktemp -t xctool-build)
+trap "rm -f $BUILD_OUTPUT_PATH" EXIT
+ATTEMPTS=0
+
+while true; do
+  ATTEMPTS=$((ATTEMPTS + 1))
+
+  xcodebuild \
+    -workspace "$XCTOOL_DIR"/xctool.xcworkspace \
+    -scheme xctool \
+    -configuration Release \
+    -IDEBuildLocationStyle=Custom \
+    -IDECustomBuildLocationType=Absolute \
+    -IDECustomBuildProductsPath="$BUILD_OUTPUT_DIR/Products" \
+    -IDECustomBuildIntermediatesPath="$BUILD_OUTPUT_DIR/Intermediates" \
+    XT_IOS_SDK_VERSION="$XT_IOS_SDK_VERSION" \
+    XT_IOS_SDK_VERSION_EXPANDED="$XT_IOS_SDK_VERSION_EXPANDED" \
+    $@ 2>&1 | /usr/bin/tee "$BUILD_OUTPUT_PATH"
+  BUILD_RESULT=${PIPESTATUS[0]}
+
+  if ! grep -q -E 'BUILD (SUCCEEDED|FAILED)' "$BUILD_OUTPUT_PATH"; then
+    # Assume xcodebuild crashed since we didn't get the typical 'BUILD
+    # SUCCEEDED' or 'BUILD FAILED' banner in the output.
+
+    if [[ $ATTEMPTS -le 10 ]]; then
+      echo
+      echo -n "xcodebuild appears to have crashed while building xctool; "
+      echo    "retrying..."
+      echo
+      continue
+    else
+      echo
+      echo -n "xcodebuild crashed while building xctool; giving up "
+      echo    "after 10 tries."
+      echo
+      exit 1
+    fi
+  fi
+
+  exit $BUILD_RESULT
+done
 
 # vim: set tabstop=2 shiftwidth=2 filetype=sh:
