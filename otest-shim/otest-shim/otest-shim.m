@@ -64,6 +64,25 @@ static dispatch_queue_t EventQueue()
   return eventQueue;
 }
 
+// This function will strip ANSI escape codes from a string passed to it
+//
+// Used to clean the output from certain tests which contain ANSI escape codes, and create problems for XML and JSON
+// representations of output data.
+// The regex here will identify all screen oriented ANSI escape codes, but will not identify Keyboard String codes.
+// Since Keyboard String codes make no sense in this context, the added complexity of having a regex try to identify
+// those codes as well was not necessary
+static NSString *StripAnsi(NSString *inputString)
+{
+  NSRegularExpression *regex =
+    [NSRegularExpression regularExpressionWithPattern:@"\\e.(\\d{1,1};)??(\\d{1,2}[mHfABCDJhI])"
+                                        options:0
+                                          error:nil];
+  NSString *outputString = [regex stringByReplacingMatchesInString:inputString
+                                                            options:0
+                                                              range:NSMakeRange(0, [inputString length])
+                                                       withTemplate:@""];
+  return outputString;
+}
 
 static NSArray *CreateParseTestName(NSString *fullTestName)
 {
@@ -172,7 +191,7 @@ static void SenTestLog_testCaseDidStop(id self, SEL sel, NSNotification *notific
                                  kReporter_EndTest_MethodNameKey : [classAndMethodNames objectAtIndex:1],
                                  kReporter_EndTest_SucceededKey : [run hasSucceeded] ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO],
                                  kReporter_EndTest_TotalDurationKey : @([run totalDuration]),
-                                 kReporter_EndTest_OutputKey : __testOutput,
+                                 kReporter_EndTest_OutputKey : StripAnsi(__testOutput),
                                  }];
 
     if (__testException != nil) {
@@ -239,7 +258,7 @@ static ssize_t ___write_nocancel(int fildes, const void *buf, size_t nbyte)
     dispatch_sync(EventQueue(), ^{
       if (__testIsRunning && nbyte > 0) {
         NSString *output = [[NSString alloc] initWithBytes:buf length:nbyte encoding:NSUTF8StringEncoding];
-        PrintJSON(@{@"event": kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey: output});
+        PrintJSON(@{@"event": kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey: StripAnsi(output)});
         [__testOutput appendString:output];
         [output release];
       }
@@ -258,7 +277,7 @@ static ssize_t __write(int fildes, const void *buf, size_t nbyte)
     dispatch_sync(EventQueue(), [^{
       if (__testIsRunning && nbyte > 0) {
         NSString *output = [[NSString alloc] initWithBytes:buf length:nbyte encoding:NSUTF8StringEncoding];
-        PrintJSON(@{@"event": kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey: output});
+        PrintJSON(@{@"event": kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey: StripAnsi(output)});
         [__testOutput appendString:output];
         [output release];
       }
@@ -309,7 +328,7 @@ static ssize_t ___writev_nocancel(int fildes, const struct iovec *iov, int iovcn
     dispatch_sync(EventQueue(), ^{
       if (__testIsRunning && iovcnt > 0) {
         NSString *buffer = CreateStringFromIOV(iov, iovcnt);
-        PrintJSON(@{@"event": kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey: buffer});
+        PrintJSON(@{@"event": kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey: StripAnsi(buffer)});
         [__testOutput appendString:buffer];
         [buffer release];
       }
@@ -328,7 +347,7 @@ static ssize_t __writev(int fildes, const struct iovec *iov, int iovcnt)
     dispatch_sync(EventQueue(), ^{
       if (__testIsRunning && iovcnt > 0) {
         NSString *buffer = CreateStringFromIOV(iov, iovcnt);
-        PrintJSON(@{@"event": kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey: buffer});
+        PrintJSON(@{@"event": kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey: StripAnsi(buffer)});
         [__testOutput appendString:buffer];
         [buffer release];
       }
