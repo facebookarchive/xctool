@@ -74,7 +74,7 @@ static dispatch_queue_t EventQueue()
 static NSString *StripAnsi(NSString *inputString)
 {
   NSRegularExpression *regex =
-    [NSRegularExpression regularExpressionWithPattern:@"\\e.(\\d{1,1};)??(\\d{1,2}[mHfABCDJhI])"
+    [NSRegularExpression regularExpressionWithPattern:@"\\e\\[(\\d;)??(\\d{1,2}[mHfABCDJhI])"
                                         options:0
                                           error:nil];
   NSString *outputString = [regex stringByReplacingMatchesInString:inputString
