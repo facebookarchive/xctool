@@ -106,11 +106,12 @@
            @"fcntl() failed: %s", strerror(errno));
 
   if (IsRunningUnderTest()) {
-    // In tests, we swizzle +[NSTask alloc] to always return FakeTask's.  We can
-    // still access the original 'allocWithZone:' selector, though.
-    _task = objc_msgSend([NSTask class],
-                         @selector(__NSTask_allocWithZone:),
-                         NSDefaultMallocZone());
+    // Make sure we get a REAL task when running under test!  If FakeTaskManager
+    // is enabled, then we'd normally get a `FakeTask` instance when we call
+    // `+[NSTask alloc]`.
+    _task = [objc_msgSend([NSTask class],
+                          @selector(__NSTask_allocWithZone:),
+                          NSDefaultMallocZone()) init];
   } else {
     _task = [[NSTask alloc] init];
   }
