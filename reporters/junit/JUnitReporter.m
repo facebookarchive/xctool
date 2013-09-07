@@ -130,7 +130,7 @@
   doc.version = @"1.0";
   [doc setStandalone:YES];
   doc.characterEncoding = @"UTF-8";
-  [_outputHandle writeData:[doc XMLDataWithOptions:NSXMLNodePrettyPrint]];
+  [_outputHandle writeData:[doc XMLDataWithOptions:NSXMLNodePrettyPrint|NSXMLNodeNeverEscapeContents]];
 
   [testsuites release];
   [doc release];
