@@ -65,7 +65,7 @@
       NSMutableArray *trimmedLines = [[NSMutableArray alloc] init];
       for (NSString *line in lines) {
         
-        // Trim the end, then the beginning.
+        // Trim the end, then the beginning, and discard if an empty newline after stripping.
         NSMutableString *trimmedLine = [line mutableCopy];
         for (NSString *trimRegexPattern in @[@"^\\s*", @"\\s*$"]) {
           NSRange range = [trimmedLine rangeOfString:trimRegexPattern options:NSRegularExpressionSearch];
