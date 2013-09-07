@@ -10,83 +10,93 @@
 @implementation JUnitReporterTests
 
 - (void)testTestResults {
+  NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+  
+  NSError *error = nil;
+  
   NSData *outputData =
     [JUnitReporter outputDataWithEventsFromFile:TEST_DATA @"JSONStreamReporter-runtests.txt"];
-  NSMutableString *xmlStr = [[[NSMutableString alloc] initWithData:outputData
-                                                          encoding:NSUTF8StringEncoding] autorelease];
+  
+  NSXMLDocument *actualOutput = [[NSXMLDocument alloc] initWithData:outputData options:0 error:&error];
+  if (error) {
+    STFail(@"Error parsing the actual JUnit reporter output XML:\n%@", error);
+    [pool drain];
+    return;
+  }
 
-  NSRegularExpression *timeRegex = [[NSRegularExpression alloc] initWithPattern:@"time=\\\"[0-9\\.]*\\\""
-                                                                        options:0
-                                                                          error:nil];
-  [timeRegex replaceMatchesInString:xmlStr
-                            options:0
-                              range:NSMakeRange(0, [xmlStr length])
-                       withTemplate:@"time=\"\""];
-  [timeRegex release];
-  timeRegex = [[NSRegularExpression alloc] initWithPattern:@"timestamp=\\\"[GMT:\\-0-9\\.\\+]*\\\""
-                                                                        options:0
-                                                                          error:nil];
-  [timeRegex replaceMatchesInString:xmlStr
-                            options:0
-                              range:NSMakeRange(0, [xmlStr length])
-                       withTemplate:@"timestamp=\"\""];
-  [timeRegex release];
-  timeRegex = nil;
-    STAssertEqualObjects(@"\
-<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n\
-<testsuites name=\"AllTestUnits\" tests=\"7\" failures=\"1\" errors=\"0\" time=\"\">\n\
-    <testsuite tests=\"1\" failures=\"0\" errors=\"0\" time=\"\" timestamp=\"\" name=\"OtherTests\">\n\
-        <testcase classname=\"OtherTests\" name=\"testSomething\" time=\"\"></testcase>\n\
-    </testsuite>\n\
-    <testsuite tests=\"6\" failures=\"1\" errors=\"0\" time=\"\" timestamp=\"\" name=\"SomeTests\">\n\
-        <testcase classname=\"SomeTests\" name=\"testBacktraceOutputIsCaptured\" time=\"\">\n\
-            <system-out>0   TestProject-LibraryTests            0x016c9827 -[SomeTests testBacktraceOutputIsCaptured] + 103\n\
-1   CoreFoundation                      0x00a011bd __invoking___ + 29\n\
-2   CoreFoundation                      0x00a010d6 -[NSInvocation invoke] + 342\n\
-3   SenTestingKit                       0x20103ed1 -[SenTestCase invokeTest] + 219\n\
-4   SenTestingKit                       0x2010405b -[SenTestCase performTest:] + 183\n\
-5   SenTestingKit                       0x201037bf -[SenTest run] + 82\n\
-6   SenTestingKit                       0x2010792b -[SenTestSuite performTest:] + 139\n\
-7   SenTestingKit                       0x201037bf -[SenTest run] + 82\n\
-8   SenTestingKit                       0x2010792b -[SenTestSuite performTest:] + 139\n\
-9   SenTestingKit                       0x201037bf -[SenTest run] + 82\n\
-10  SenTestingKit                       0x2010792b -[SenTestSuite performTest:] + 139\n\
-11  SenTestingKit                       0x201037bf -[SenTest run] + 82\n\
-12  SenTestingKit                       0x201063ec +[SenTestProbe runTests:] + 174\n\
-13  libobjc.A.dylib                     0x007385c8 +[NSObject performSelector:withObject:] + 70\n\
-14  otest                               0x00002342 otest + 4930\n\
-15  otest                               0x000025ef otest + 5615\n\
-16  otest                               0x0000268c otest + 5772\n\
-17  otest                               0x00002001 otest + 4097\n\
-18  otest                               0x00001f71 otest + 3953\n\
-</system-out>\n\
-        </testcase>\n\
-        <testcase classname=\"SomeTests\" name=\"testOutputMerging\" time=\"\">\n\
-            <system-out>stdout-line1\n\
-stderr-line1\n\
-stdout-line2\n\
-stdout-line3\n\
-stderr-line2\n\
-stderr-line3\n\
-</system-out>\n\
-        </testcase>\n\
-        <testcase classname=\"SomeTests\" name=\"testPrintSDK\" time=\"\">\n\
-            <system-out>2013-05-08 20:51:11.809 otest[88423:707] SDK: 6.1\n\
-</system-out>\n\
-        </testcase>\n\
-        <testcase classname=\"SomeTests\" name=\"testStream\" time=\"\">\n\
-            <system-out>2013-05-08 20:51:11.809 otest[88423:707] >>>> i = 0\n\
-2013-05-08 20:51:12.060 otest[88423:707] >>>> i = 1\n\
-2013-05-08 20:51:12.312 otest[88423:707] >>>> i = 2\n\
-</system-out>\n\
-        </testcase>\n\
-        <testcase classname=\"SomeTests\" name=\"testWillFail\" time=\"\">\n\
-            <failure type=\"Failure\" message=\"'a' should be equal to 'b' Strings aren't equal\">/Users/fpotter/xctool/xctool/xctool-tests/TestData/TestProject-Library/TestProject-LibraryTests/SomeTests.m:40</failure>\n\
-        </testcase>\n\
-        <testcase classname=\"SomeTests\" name=\"testWillPass\" time=\"\"></testcase>\n\
-    </testsuite>\n\
-</testsuites>\
-", xmlStr, @"JUnit XML should match");
+  NSString *expectedFilePath = TEST_DATA @"JSONStreamReporter-expected.xml";
+  expectedOutput = [[NSXMLDocument alloc] initWithData:[NSData dataWithContentsOfFile:expectedFilePath] options:0 error:&error];
+  if (error) {
+    STFail(@"Error opening file %@ the expected XML for this unit test:\n%@", expectedFilePath, error);
+    [pool drain];
+    return;
+  }
+
+  for (NSXMLDocument *doc in @[expectedOutput, actualOutput]) {
+
+    // Remove the "time" attribute values, and "timestamp" attribute values.
+    for (NSString *attributeName in @[@"time", @"timestamp"]) {
+      NSString *xpath = [NSString stringWithFormat:@"//*[@%@]", attributeName];
+      NSArray *elementsWithTimeAttr = [doc nodesForXPath:xpath error:&error];
+      if (error) {
+        STFail(@"Error while searching for time-related nodes using XPath.");
+        [pool drain];
+        return;
+      }
+      for (NSXMLElement *element in elementsWithTimeAttr) {
+        [element removeAttributeForName:attributeName];
+        [element addAttribute:[NSXMLNode attributeWithName:attributeName stringValue:@""]];
+      }
+    }
+    
+    // Strip leading & trailing whitespace in each line of the <system-out> tags
+    NSArray *systemOutElements = [doc nodesForXPath:@"//system-out" error:&error];
+    if (error) {
+      STFail(@"Error while searching for <system-out> nodes using Xpath.");
+      [pool drain];
+      return;
+    }
+    for (NSXMLElement *systemOutElement in systemOutElements) {
+      STAssertEquals([systemOutElement childCount], (NSUInteger) 1, @"A <system-out> tag has %d children, but should have 1. Element in question: %@", [systemOutElement childCount], systemOutElement);
+      NSXMLNode *innerText = [systemOutElement childAtIndex:0];
+      STAssertEquals([innerText kind], NSXMLTextKind, @"There is a non-text type inside the <system-out> tag.");
+      NSArray *lines = [[innerText stringValue] componentsSeparatedByString:@"\n"];
+      NSMutableArray *resultingLines = [[NSMutableArray alloc] init];
+      for (NSString *line in lines) {
+        NSString *trimmed = line;
+        NSRange range = [trimmed rangeOfString:@"^\\s*" options:NSRegularExpressionSearch];
+        if (range.location != NSNotFound) {
+          trimmed = [trimmed stringByReplacingCharactersInRange:range withString:@""];
+        }
+        range = [trimmed rangeOfString:@"\\s*$" options:NSRegularExpressionSearch];
+        if (range.location != NSNotFound) {
+          trimmed = [trimmed stringByReplacingCharactersInRange:range withString:@""];
+        }
+        if ([trimmed isEqualToString:@""])
+          [resultingLines addObject:trimmed];
+      }
+      NSXMLNode *trimmedInnerText = [[NSXMLNode alloc] initWithKind:NSXMLTextKind];
+      [trimmedInnerText setStringValue:[resultingLines componentsJoinedByString:@"\n"]];
+      [systemOutElement replaceChildAtIndex:0 withNode:trimmedInnerText];
+      [trimmedInnerText release];
+      [resultingLines release];
+    }
+    
+  }
+  
+  STAssertEqualObjects(expectedOutput, actualOutput, @"The XML doc generated by the JUnit Reporter differs from the one expected by this test.");
+//  NSArray *expectedNodes = [[expectedOutput rootElement] children];
+//  NSArray *actualNodes = [[actualOutput rootElement] children];
+////  STAssertEqualObjects([expectedOutput rootElement], [actualOutput rootElement], @"The root elements differ.");
+//  STAssertEquals([expectedNodes count], [actualNodes count], @"Derp");
+//  for (NSUInteger i = 0; i < [expectedNodes count]; ++i) {
+//    NSXMLNode *expectedNode = expectedNodes[i];
+//    NSXMLNode *actualNode = actualNodes[i];
+//    if (![expectedNode isEqual:actualNode]) {
+//      STFail(@"Failed on iteration: %d\n\nexpected:\n%@\n\nactual:\n%@", i, expectedNode, actualNode);
+//    }
+//  }
+  [pool drain];
 }
 
 @end
