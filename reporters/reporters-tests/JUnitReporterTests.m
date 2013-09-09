@@ -38,37 +38,6 @@
       [element addAttribute:[NSXMLNode attributeWithName:attributeName stringValue:@""]];
     }
     
-    // Trim leading & trailing whitespace in each line of the inside of <system-out> tags
-    NSArray *systemOutElements = [doc nodesForXPath:@"//system-out" error:&error];
-    STAssertNil(error, @"Error while searching for <system-out> nodes using Xpath.");
-
-    for (NSXMLElement *systemOutElement in systemOutElements) {
-      STAssertEquals([systemOutElement childCount], (NSUInteger) 1, @"A <system-out> tag has %d children, but should have 1. Element in question: %@", [systemOutElement childCount], systemOutElement);
-      NSXMLNode *innerText = [systemOutElement childAtIndex:0];
-      STAssertEquals([innerText kind], NSXMLTextKind, @"The <system-out> tag child should be a text node.");
-      NSArray *lines = [[innerText stringValue] componentsSeparatedByString:@"\n"];
-      NSMutableArray *trimmedLines = [[NSMutableArray alloc] init];
-      for (NSString *line in lines) {
-        
-        // Trim the end, then the beginning, and discard if an empty newline after stripping.
-        NSMutableString *trimmedLine = [line mutableCopy];
-        for (NSString *trimRegexPattern in @[@"^\\s*", @"\\s*$"]) {
-          NSRange range = [trimmedLine rangeOfString:trimRegexPattern options:NSRegularExpressionSearch];
-          if (range.location != NSNotFound)
-            [trimmedLine deleteCharactersInRange:range];
-        }
-        if (![trimmedLine isEqualToString:@""])
-          [trimmedLines addObject:[[trimmedLine copy] autorelease]];
-        [trimmedLine release];
-        
-      }
-      NSXMLNode *trimmedInnerText = [[NSXMLNode alloc] initWithKind:NSXMLTextKind];
-      [trimmedInnerText setStringValue:[trimmedLines componentsJoinedByString:@"\n"]];
-      [systemOutElement replaceChildAtIndex:0 withNode:trimmedInnerText];
-      [trimmedInnerText release];
-      [trimmedLines release];
-    }
-    
   }
   
   // When this assertion fails, figuring out which part of the XML is different is a bitch.
