@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<testsuites name="AllTestUnits" tests="7" failures="1" errors="0" time="">
-  <testsuite tests="1" failures="0" errors="0" time="" timestamp="" name="OtherTests">
-    <testcase classname="OtherTests" name="testSomething" time=""/>
+<testsuites name="AllTestUnits" tests="7" failures="1" errors="0" time="0.760212">
+  <testsuite tests="1" failures="0" errors="0" time="0.003804" timestamp="" name="OtherTests">
+    <testcase classname="OtherTests" name="testSomething" time="0.003651"/>
   </testsuite>
-  <testsuite tests="6" failures="1" errors="0" time="" timestamp="" name="SomeTests">
-    <testcase classname="SomeTests" name="testBacktraceOutputIsCaptured" time="">
+  <testsuite tests="6" failures="1" errors="0" time="0.756408" timestamp="" name="SomeTests">
+    <testcase classname="SomeTests" name="testBacktraceOutputIsCaptured" time="0.000419">
       <system-out>
         0   TestProject-LibraryTests            0x016c9827 -[SomeTests testBacktraceOutputIsCaptured] + 103
         1   CoreFoundation                      0x00a011bd __invoking___ + 29
@@ -27,7 +27,7 @@
         18  otest                               0x00001f71 otest + 3953
       </system-out>
     </testcase>
-    <testcase classname="SomeTests" name="testOutputMerging" time="">
+    <testcase classname="SomeTests" name="testOutputMerging" time="0.000088">
       <system-out>
         stdout-line1
         stderr-line1
@@ -37,21 +37,21 @@
         stderr-line3
       </system-out>
     </testcase>
-    <testcase classname="SomeTests" name="testPrintSDK" time="">
+    <testcase classname="SomeTests" name="testPrintSDK" time="0.000507">
       <system-out>
         2013-05-08 20:51:11.809 otest[88423:707] SDK: 6.1
       </system-out>
     </testcase>
-    <testcase classname="SomeTests" name="testStream" time="">
+    <testcase classname="SomeTests" name="testStream" time="0.754212">
       <system-out>
         2013-05-08 20:51:11.809 otest[88423:707] &gt;&gt;&gt;&gt; i = 0
         2013-05-08 20:51:12.060 otest[88423:707] &gt;&gt;&gt;&gt; i = 1
         2013-05-08 20:51:12.312 otest[88423:707] &gt;&gt;&gt;&gt; i = 2
       </system-out>
     </testcase>
-    <testcase classname="SomeTests" name="testWillFail" time="">
+    <testcase classname="SomeTests" name="testWillFail" time="0.000193">
       <failure type="Failure" message="'a' should be equal to 'b' Strings aren't equal">/Users/fpotter/xctool/xctool/xctool-tests/TestData/TestProject-Library/TestProject-LibraryTests/SomeTests.m:40</failure>
     </testcase>
-    <testcase classname="SomeTests" name="testWillPass" time=""/>
+    <testcase classname="SomeTests" name="testWillPass" time="0.000105"/>
   </testsuite>
 </testsuites>
