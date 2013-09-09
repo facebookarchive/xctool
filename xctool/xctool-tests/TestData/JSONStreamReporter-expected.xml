@@ -5,49 +5,45 @@
   </testsuite>
   <testsuite tests="6" failures="1" errors="0" time="0.756408" timestamp="" name="SomeTests">
     <testcase classname="SomeTests" name="testBacktraceOutputIsCaptured" time="0.000419">
-      <system-out>
-        0   TestProject-LibraryTests            0x016c9827 -[SomeTests testBacktraceOutputIsCaptured] + 103
-        1   CoreFoundation                      0x00a011bd __invoking___ + 29
-        2   CoreFoundation                      0x00a010d6 -[NSInvocation invoke] + 342
-        3   SenTestingKit                       0x20103ed1 -[SenTestCase invokeTest] + 219
-        4   SenTestingKit                       0x2010405b -[SenTestCase performTest:] + 183
-        5   SenTestingKit                       0x201037bf -[SenTest run] + 82
-        6   SenTestingKit                       0x2010792b -[SenTestSuite performTest:] + 139
-        7   SenTestingKit                       0x201037bf -[SenTest run] + 82
-        8   SenTestingKit                       0x2010792b -[SenTestSuite performTest:] + 139
-        9   SenTestingKit                       0x201037bf -[SenTest run] + 82
-        10  SenTestingKit                       0x2010792b -[SenTestSuite performTest:] + 139
-        11  SenTestingKit                       0x201037bf -[SenTest run] + 82
-        12  SenTestingKit                       0x201063ec +[SenTestProbe runTests:] + 174
-        13  libobjc.A.dylib                     0x007385c8 +[NSObject performSelector:withObject:] + 70
-        14  otest                               0x00002342 otest + 4930
-        15  otest                               0x000025ef otest + 5615
-        16  otest                               0x0000268c otest + 5772
-        17  otest                               0x00002001 otest + 4097
-        18  otest                               0x00001f71 otest + 3953
-      </system-out>
+      <system-out>0   TestProject-LibraryTests            0x016c9827 -[SomeTests testBacktraceOutputIsCaptured] + 103
+1   CoreFoundation                      0x00a011bd __invoking___ + 29
+2   CoreFoundation                      0x00a010d6 -[NSInvocation invoke] + 342
+3   SenTestingKit                       0x20103ed1 -[SenTestCase invokeTest] + 219
+4   SenTestingKit                       0x2010405b -[SenTestCase performTest:] + 183
+5   SenTestingKit                       0x201037bf -[SenTest run] + 82
+6   SenTestingKit                       0x2010792b -[SenTestSuite performTest:] + 139
+7   SenTestingKit                       0x201037bf -[SenTest run] + 82
+8   SenTestingKit                       0x2010792b -[SenTestSuite performTest:] + 139
+9   SenTestingKit                       0x201037bf -[SenTest run] + 82
+10  SenTestingKit                       0x2010792b -[SenTestSuite performTest:] + 139
+11  SenTestingKit                       0x201037bf -[SenTest run] + 82
+12  SenTestingKit                       0x201063ec +[SenTestProbe runTests:] + 174
+13  libobjc.A.dylib                     0x007385c8 +[NSObject performSelector:withObject:] + 70
+14  otest                               0x00002342 otest + 4930
+15  otest                               0x000025ef otest + 5615
+16  otest                               0x0000268c otest + 5772
+17  otest                               0x00002001 otest + 4097
+18  otest                               0x00001f71 otest + 3953
+</system-out>
     </testcase>
     <testcase classname="SomeTests" name="testOutputMerging" time="0.000088">
-      <system-out>
-        stdout-line1
-        stderr-line1
-        stdout-line2
-        stdout-line3
-        stderr-line2
-        stderr-line3
-      </system-out>
+      <system-out>stdout-line1
+stderr-line1
+stdout-line2
+stdout-line3
+stderr-line2
+stderr-line3
+</system-out>
     </testcase>
     <testcase classname="SomeTests" name="testPrintSDK" time="0.000507">
-      <system-out>
-        2013-05-08 20:51:11.809 otest[88423:707] SDK: 6.1
-      </system-out>
+      <system-out>2013-05-08 20:51:11.809 otest[88423:707] SDK: 6.1
+</system-out>
     </testcase>
     <testcase classname="SomeTests" name="testStream" time="0.754212">
-      <system-out>
-        2013-05-08 20:51:11.809 otest[88423:707] &gt;&gt;&gt;&gt; i = 0
-        2013-05-08 20:51:12.060 otest[88423:707] &gt;&gt;&gt;&gt; i = 1
-        2013-05-08 20:51:12.312 otest[88423:707] &gt;&gt;&gt;&gt; i = 2
-      </system-out>
+      <system-out>2013-05-08 20:51:11.809 otest[88423:707] &gt;&gt;&gt;&gt; i = 0
+2013-05-08 20:51:12.060 otest[88423:707] &gt;&gt;&gt;&gt; i = 1
+2013-05-08 20:51:12.312 otest[88423:707] &gt;&gt;&gt;&gt; i = 2
+</system-out>
     </testcase>
     <testcase classname="SomeTests" name="testWillFail" time="0.000193">
       <failure type="Failure" message="'a' should be equal to 'b' Strings aren't equal">/Users/fpotter/xctool/xctool/xctool-tests/TestData/TestProject-Library/TestProject-LibraryTests/SomeTests.m:40</failure>
