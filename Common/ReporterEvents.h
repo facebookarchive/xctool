@@ -56,6 +56,8 @@
 #define kReporter_EndOCUnit_SucceededKey @"succeeded"
 #define kReporter_EndOCUnit_FailureReasonKey @"failureReason"
 
+#define kReporter_TestSuite_TopLevelSuiteName @"Toplevel Test Suite"
+
 #define kReporter_BeginTestSuite_SuiteKey @"suite"
 
 #define kReporter_EndTestSuite_SuiteKey @"suite"

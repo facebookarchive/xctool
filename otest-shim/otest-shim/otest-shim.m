@@ -37,6 +37,7 @@ static FILE *__stderr;
 static BOOL __testIsRunning = NO;
 static NSMutableArray *__testExceptions = nil;
 static NSMutableString *__testOutput = nil;
+static int __testSuiteDepth = 0;
 
 static dispatch_queue_t EventQueue()
 {
@@ -131,29 +132,35 @@ static void PrintJSON(id JSONObject)
 
 static void SenTestLog_testSuiteDidStart(id self, SEL sel, NSNotification *notification)
 {
-  dispatch_sync(EventQueue(), ^{
-    SenTestRun *run = [notification run];
-    PrintJSON(@{
-              @"event" : kReporter_Events_BeginTestSuite,
-              kReporter_BeginTestSuite_SuiteKey : [[run test] description],
-              });
-  });
+  if (__testSuiteDepth == 0) {
+    dispatch_sync(EventQueue(), ^{
+      PrintJSON(@{
+                @"event" : kReporter_Events_BeginTestSuite,
+                kReporter_BeginTestSuite_SuiteKey : @"Toplevel Test Suite",
+                });
+    });
+  }
+  __testSuiteDepth++;
 }
 
 static void SenTestLog_testSuiteDidStop(id self, SEL sel, NSNotification *notification)
 {
-  dispatch_sync(EventQueue(), ^{
-    SenTestRun *run = [notification run];
-    PrintJSON(@{
-              @"event" : kReporter_Events_EndTestSuite,
-              kReporter_EndTestSuite_SuiteKey : [[run test] description],
-              kReporter_EndTestSuite_TestCaseCountKey : @([run testCaseCount]),
-              kReporter_EndTestSuite_TotalFailureCountKey : @([run totalFailureCount]),
-              kReporter_EndTestSuite_UnexpectedExceptionCountKey : @([run unexpectedExceptionCount]),
-              kReporter_EndTestSuite_TestDurationKey: @([run testDuration]),
-              kReporter_EndTestSuite_TotalDurationKey : @([run totalDuration]),
-              });
-  });
+  __testSuiteDepth--;
+
+  if (__testSuiteDepth == 0) {
+    dispatch_sync(EventQueue(), ^{
+      SenTestRun *run = [notification run];
+      PrintJSON(@{
+                @"event" : kReporter_Events_EndTestSuite,
+                kReporter_EndTestSuite_SuiteKey : kReporter_TestSuite_TopLevelSuiteName,
+                kReporter_EndTestSuite_TestCaseCountKey : @([run testCaseCount]),
+                kReporter_EndTestSuite_TotalFailureCountKey : @([run totalFailureCount]),
+                kReporter_EndTestSuite_UnexpectedExceptionCountKey : @([run unexpectedExceptionCount]),
+                kReporter_EndTestSuite_TestDurationKey: @([run testDuration]),
+                kReporter_EndTestSuite_TotalDurationKey : @([run totalDuration]),
+                });
+    });
+  }
 }
 
 static void SenTestLog_testCaseDidStart(id self, SEL sel, NSNotification *notification)

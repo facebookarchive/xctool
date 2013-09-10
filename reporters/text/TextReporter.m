@@ -564,7 +564,7 @@ static NSString *abbreviatePath(NSString *string) {
   NSString *suite = event[kReporter_BeginTestSuite_SuiteKey];
   [_resultCounter suiteBegin];
 
-  if (![suite isEqualToString:@"All tests"] && ![suite hasSuffix:@".octest(Tests)"]) {
+  if (![suite isEqualToString:kReporter_TestSuite_TopLevelSuiteName] && ![suite hasSuffix:@".octest(Tests)"]) {
     if ([suite hasPrefix:@"/"]) {
       suite = [suite lastPathComponent];
     }
@@ -579,7 +579,7 @@ static NSString *abbreviatePath(NSString *string) {
   NSString *suite = event[kReporter_EndTestSuite_SuiteKey];
   [_resultCounter suiteEnd];
 
-  if (![suite isEqualToString:@"All tests"] && ![suite hasSuffix:@".octest(Tests)"]) {
+  if (![suite isEqualToString:kReporter_TestSuite_TopLevelSuiteName] && ![suite hasSuffix:@".octest(Tests)"]) {
     [self.reportWriter printLine:@"<bold>%lu passed, %lu failed, %lu errored, %lu total %@<reset>",
       [_resultCounter suitePassed],
       [_resultCounter suiteFailed],
@@ -589,7 +589,7 @@ static NSString *abbreviatePath(NSString *string) {
      ];
     [self.reportWriter decreaseIndent];
     [self.reportWriter printNewline];
-  } else if ([suite isEqualToString:@"All tests"] && [_resultCounter suiteTotal] > 0) {
+  } else if ([suite isEqualToString:kReporter_TestSuite_TopLevelSuiteName] && [_resultCounter suiteTotal] > 0) {
     [self.reportWriter printLine:@"<bold>%lu passed, %lu failed, %lu errored, %lu total %@<reset>",
       [_resultCounter suitePassed],
       [_resultCounter suiteFailed],

@@ -1,0 +1,10 @@
+{"message":"Loading settings for scheme 'TestProject-Library' ...","timestamp":1378756188.049324,"level":"Info","event":"begin-status"}
+{"message":"Loading settings for scheme 'TestProject-Library' ...","timestamp":1378756188.609566,"level":"Info","event":"end-status"}
+{"workspace":null,"project":"\/Users\/zacharyl\/projects\/xctool\/xctool\/xctool-tests\/TestData\/TestProject-Library\/TestProject-Library.xcodeproj","event":"begin-action","name":"run-tests","scheme":"TestProject-Library"}
+{"message":"Collecting info for testables...","timestamp":1378756188.609704,"level":"Info","event":"begin-status"}
+{"message":"Collecting info for testables...","timestamp":1378756189.454224,"level":"Info","event":"end-status"}
+{"gcEnabled":false,"sdkName":"iphonesimulator6.1","event":"begin-ocunit","testType":"logic-test","bundleName":"TestProject-LibraryTests.octest"}
+{"suite":"Toplevel Test Suite","event":"begin-test-suite"}
+{"totalFailureCount":1,"testCaseCount":7,"totalDuration":0.7618290185928345,"testDuration":0.7605989575386047,"event":"end-test-suite","suite":"Toplevel Test Suite","unexpectedExceptionCount":0}
+{"bundleName":"TestProject-LibraryTests.octest","gcEnabled":false,"succeeded":false,"failureReason":null,"event":"end-ocunit","testType":"logic-test","sdkName":"iphonesimulator6.1"}
+{"scheme":"TestProject-Library","event":"end-action","succeeded":false,"workspace":null,"project":"\/Users\/zacharyl\/projects\/xctool\/xctool\/xctool-tests\/TestData\/TestProject-Library\/TestProject-Library.xcodeproj","duration":1.803221598995151,"name":"run-tests"}
