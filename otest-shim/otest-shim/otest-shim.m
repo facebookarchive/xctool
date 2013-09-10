@@ -274,14 +274,14 @@ static ssize_t __write(int fildes, const void *buf, size_t nbyte);
 static ssize_t __write(int fildes, const void *buf, size_t nbyte)
 {
   if (fildes == STDOUT_FILENO || fildes == STDERR_FILENO) {
-    dispatch_sync(EventQueue(), [^{
+    dispatch_sync(EventQueue(), ^{
       if (__testIsRunning && nbyte > 0) {
         NSString *output = [[NSString alloc] initWithBytes:buf length:nbyte encoding:NSUTF8StringEncoding];
         PrintJSON(@{@"event": kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey: StripAnsi(output)});
         [__testOutput appendString:output];
         [output release];
       }
-    } copy]);
+    });
     return nbyte;
   } else {
     return write(fildes, buf, nbyte);
