@@ -133,6 +133,13 @@
 
 - (void)testRunTestsAction
 {
+  NSArray *testList = @[@"TestProject_LibraryTests/testOutputMerging",
+                        @"TestProject_LibraryTests/testPrintSDK",
+                        @"TestProject_LibraryTests/testStream",
+                        @"TestProject_LibraryTests/testWillFail",
+                        @"TestProject_LibraryTests/testWillPass",
+                        @"TestProject_LibraryTests/testOutputMerging"];
+
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
      // Make sure -showBuildSettings returns some data
@@ -144,14 +151,14 @@
                                                      target:@"TestProject-LibraryTests"
                                                settingsPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings.txt"
                                                        hide:NO],
-     [LaunchHandlers handlerForOtestQueryReturningTestList:@[@"TestA", @"TestB"]],
+     [LaunchHandlers handlerForOtestQueryReturningTestList:testList],
      [[^(FakeTask *task){
       if ([[task launchPath] hasSuffix:@"otest"]) {
         // Pretend the tests fail, which should make xctool return an overall
         // status of 1.
         [task pretendExitStatusOf:1];
         [task pretendTaskReturnsStandardOutput:
-         [NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results.txt"
+         [NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results-notests.txt"
                                    encoding:NSUTF8StringEncoding
                                       error:nil]];
       }
@@ -187,7 +194,7 @@
                equalTo(@[
                        @"-NSTreatUnknownArgumentsAsOpen", @"NO",
                        @"-ApplePersistenceIgnoreState", @"YES",
-                       @"-SenTest", @"All",
+                       @"-SenTest", @"TestProject_LibraryTests/testOutputMerging,TestProject_LibraryTests/testPrintSDK,TestProject_LibraryTests/testStream,TestProject_LibraryTests/testWillFail,TestProject_LibraryTests/testWillPass",
                        @"-SenTestInvertScope", @"NO",
                        @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
                        ]));
@@ -197,6 +204,14 @@
 
 - (void)testCanRunTestsAgainstDifferentTestSDK
 {
+  NSArray *testList = @[@"OtherTests/testSomething",
+                        @"SomeTests/testBacktraceOutputIsCaptured",
+                        @"SomeTests/testOutputMerging",
+                        @"SomeTests/testPrintSDK",
+                        @"SomeTests/testStream",
+                        @"SomeTests/testWillFail",
+                        @"SomeTests/testWillPass"];
+
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
      // Make sure -showBuildSettings returns some data
@@ -208,7 +223,7 @@
                                                      target:@"TestProject-LibraryTests"
                                                settingsPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings-5.0.txt"
                                                        hide:NO],
-     [LaunchHandlers handlerForOtestQueryReturningTestList:@[@"TestA", @"TestB"]],
+     [LaunchHandlers handlerForOtestQueryReturningTestList:testList],
      [[^(FakeTask *task){
       if ([[task launchPath] hasSuffix:@"otest"]) {
         // Pretend the tests fail, which should make xctool return an overall
@@ -252,7 +267,7 @@
                equalTo(@[
                        @"-NSTreatUnknownArgumentsAsOpen", @"NO",
                        @"-ApplePersistenceIgnoreState", @"YES",
-                       @"-SenTest", @"All",
+                       @"-SenTest", [testList componentsJoinedByString:@","],
                        @"-SenTestInvertScope", @"NO",
                        @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
                        ]));
@@ -265,6 +280,14 @@
 
 - (void)testCanSelectSpecificTestClassOrTestMethodWithOnly
 {
+  NSArray *testList = @[@"OtherTests/testSomething",
+                        @"SomeTests/testBacktraceOutputIsCaptured",
+                        @"SomeTests/testOutputMerging",
+                        @"SomeTests/testPrintSDK",
+                        @"SomeTests/testStream",
+                        @"SomeTests/testWillFail",
+                        @"SomeTests/testWillPass"];
+
   void (^runWithOnlyArgumentAndExpectSenTestToBe)(NSString *, NSString *) = ^(NSString *onlyArgument, NSString *expectedSenTest) {
     [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
       [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
@@ -277,15 +300,11 @@
                                                                                                                 target:@"TestProject-LibraryTests"
                                                                                                           settingsPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings-5.0.txt"
                                                                                                                   hide:NO],
-                                                                [LaunchHandlers handlerForOtestQueryReturningTestList:@[
-                                                                                                                        @"OtherTests/testSomething",
-                                                                                                                        @"SomeTests/testWillFail",
-                                                                                                                        @"SomeTests/testWillPass",
-                                                                                                                        ]],
+                                                                [LaunchHandlers handlerForOtestQueryReturningTestList:testList],
                                                                 [[^(FakeTask *task){
         if ([[task launchPath] hasSuffix:@"otest"]) {
           [task pretendTaskReturnsStandardOutput:
-           [NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results.txt"
+           [NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results-notests.txt"
                                      encoding:NSUTF8StringEncoding
                                         error:nil]];
         }
@@ -317,12 +336,11 @@
     }];
   };
 
-  runWithOnlyArgumentAndExpectSenTestToBe(@"TestProject-LibraryTests:SomeTests", @"SomeTests");
+  runWithOnlyArgumentAndExpectSenTestToBe(@"TestProject-LibraryTests:SomeTests/testOutputMerging", @"SomeTests/testOutputMerging");
   runWithOnlyArgumentAndExpectSenTestToBe(@"TestProject-LibraryTests:SomeTests/testWillPass", @"SomeTests/testWillPass");
   runWithOnlyArgumentAndExpectSenTestToBe(@"TestProject-LibraryTests:SomeTests/testWillPass,OtherTests/testSomething",
-                                          // Since OtherTests has only 1 test, it will get reduced to just the test name.
-                                          // And, the ordering will be alphabetized.
-                                          @"OtherTests,SomeTests/testWillPass");
+                                          // The ordering will be alphabetized.
+                                          @"OtherTests/testSomething,SomeTests/testWillPass");
 }
 
 /**

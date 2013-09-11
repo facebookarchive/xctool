@@ -391,7 +391,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
 }
 
 - (TestableBlock)blockForTestable:(Testable *)testable
-                      senTestList:(NSString *)senTestList
+                      senTestList:(NSArray *)senTestList
             testableBuildSettings:(NSDictionary *)testableBuildSettings
                    testableTarget:(NSString *)testableTarget
                 isApplicationTest:(BOOL)isApplicationTest
@@ -513,11 +513,8 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                                     gcEnabled:garbageCollectionEnabled];
           blockAnnotation = @"";
         } else {
-          NSString *senTestListString = [OCUnitTestRunner reduceSenTestListToBroadestForm:senTestListChunk
-                                                                             allTestCases:info.testCases];
-
           block = [self blockForTestable:info.testable
-                             senTestList:senTestListString
+                             senTestList:senTestListChunk
                    testableBuildSettings:info.buildSettings
                           testableTarget:info.testable.target
                        isApplicationTest:isApplicationTest

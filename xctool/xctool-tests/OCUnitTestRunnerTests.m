@@ -40,7 +40,7 @@
    ^{
      OCUnitIOSAppTestRunner *runner =
       [[[OCUnitIOSAppTestRunner alloc] initWithBuildSettings:testSettings
-                                                 senTestList:@"All"
+                                                 senTestList:@[]
                                                    arguments:
        @[
        @"-SomeArg", @"SomeVal",
@@ -81,7 +81,7 @@
                      @"-ApplePersistenceIgnoreState",
                      @"YES",
                      @"-SenTest",
-                     @"All",
+                     @"",
                      @"-SenTestInvertScope",
                      @"NO",
                      @"-SomeArg",
@@ -125,7 +125,7 @@
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
      OCUnitIOSLogicTestRunner *runner =
      [[[OCUnitIOSLogicTestRunner alloc] initWithBuildSettings:testSettings
-                                                  senTestList:@"All"
+                                                  senTestList:@[]
                                                     arguments:
       @[
       @"-SomeArg", @"SomeVal",
@@ -152,7 +152,7 @@
                        @"-ApplePersistenceIgnoreState",
                        @"YES",
                        @"-SenTest",
-                       @"All",
+                       @"",
                        @"-SenTestInvertScope",
                        @"NO",
                        @"-SomeArg",
@@ -176,7 +176,7 @@
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     OCUnitOSXAppTestRunner *runner =
     [[[OCUnitOSXAppTestRunner alloc] initWithBuildSettings:testSettings
-                                               senTestList:@"All"
+                                               senTestList:@[]
                                                  arguments:
      @[
      @"-SomeArg", @"SomeVal",
@@ -220,7 +220,7 @@
                      @"-ApplePersistenceIgnoreState",
                      @"YES",
                      @"-SenTest",
-                     @"All",
+                     @"",
                      @"-SenTestInvertScope",
                      @"NO",
                      @"-SomeArg",
@@ -261,7 +261,7 @@
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     OCUnitOSXLogicTestRunner *runner =
     [[[OCUnitOSXLogicTestRunner alloc] initWithBuildSettings:testSettings
-                                                 senTestList:@"All"
+                                                 senTestList:@[]
                                                    arguments:
       @[
       @"-SomeArg", @"SomeVal",
@@ -288,7 +288,7 @@
                        @"-ApplePersistenceIgnoreState",
                        @"YES",
                        @"-SenTest",
-                       @"All",
+                       @"",
                        @"-SenTestInvertScope",
                        @"NO",
                        @"-SomeArg",
@@ -341,41 +341,6 @@
              equalTo(@[
                      @"Cls2/test2",
                      ]));
-}
-
-- (void)testCanReduceSenTestListToBroadestForm
-{
-  NSArray *allTestCases = @[
-                            @"Cls1/test1",
-                            @"Cls1/test2",
-                            @"Cls1/test3",
-                            @"Cls2/test1",
-                            @"Cls2/test2",
-                            @"Cls3/test1",
-                            ];
-
-  // All test cases can be expressed as "All"
-  assertThat(([OCUnitTestRunner reduceSenTestListToBroadestForm:allTestCases allTestCases:allTestCases]),
-             equalTo(@"All"));
-  // All test cases of a specific test class (e.g. Cls2) can be expressed as just
-  // the class name.
-  assertThat(([OCUnitTestRunner reduceSenTestListToBroadestForm:@[
-               @"Cls2/test1",
-               @"Cls2/test2"]
-                                                   allTestCases:allTestCases]),
-             equalTo(@"Cls2"));
-  // If only 1 test case in a specific class is selected, it should be expressed
-  // with the full Class/method form.
-  assertThat(([OCUnitTestRunner reduceSenTestListToBroadestForm:@[
-               @"Cls1/test3",
-               @"Cls2/test1",
-               @"Cls2/test2"]
-                                                   allTestCases:allTestCases]),
-             equalTo(@"Cls1/test3,Cls2"));
-  // No tests cases means 'None'
-  assertThat(([OCUnitTestRunner reduceSenTestListToBroadestForm:@[]
-                                                   allTestCases:allTestCases]),
-             equalTo(@"None"));
 }
 
 @end
