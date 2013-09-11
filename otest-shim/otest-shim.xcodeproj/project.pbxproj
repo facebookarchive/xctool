@@ -19,6 +19,8 @@
 		28E28FB417968EC50072376C /* ReporterEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 28E28FB317968EC50072376C /* ReporterEvents.h */; };
 		28E28FB517968EC50072376C /* ReporterEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 28E28FB317968EC50072376C /* ReporterEvents.h */; };
 		28E9B9DF16C32E9A00A52E4D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283CCA9416C2EE4C00F2E343 /* Foundation.framework */; };
+		AA56530017E059E600E76879 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 282BFE2C1716049F0022F9FF /* SenTestingKit.framework */; };
+		AA56530217E059ED00E76879 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA56530117E059ED00E76879 /* XCTest.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +41,7 @@
 		28A094B31731DA3500838CDD /* dyld_priv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dyld_priv.h; sourceTree = "<group>"; };
 		28E28FB317968EC50072376C /* ReporterEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReporterEvents.h; sourceTree = "<group>"; };
 		28E9B98216C2F2D400A52E4D /* otest-shim-ios.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "otest-shim-ios.xcconfig"; sourceTree = "<group>"; };
+		AA56530117E059ED00E76879 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,7 +57,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA56530217E059ED00E76879 /* XCTest.framework in Frameworks */,
 				28E9B9DF16C32E9A00A52E4D /* Foundation.framework in Frameworks */,
+				AA56530017E059E600E76879 /* SenTestingKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,6 +100,7 @@
 		283CCA8E16C2EE4C00F2E343 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AA56530117E059ED00E76879 /* XCTest.framework */,
 				282BFE2C1716049F0022F9FF /* SenTestingKit.framework */,
 				283CCA9416C2EE4C00F2E343 /* Foundation.framework */,
 				282BFE1A171602C60022F9FF /* Cocoa.framework */,
@@ -328,6 +334,10 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
 				GCC_PREFIX_HEADER = "otest-shim/otest-shim-Prefix.pch";
 				PRODUCT_NAME = "otest-shim-ios";
 			};
@@ -339,6 +349,10 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
 				GCC_PREFIX_HEADER = "otest-shim/otest-shim-Prefix.pch";
 				PRODUCT_NAME = "otest-shim-ios";
 			};
