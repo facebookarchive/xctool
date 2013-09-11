@@ -10,12 +10,14 @@
 
 #define TESTING_FRAMEWORK_CLASS_KEY @"class"
 #define TESTING_FRAMEWORK_SELECTOR_KEY @"selector"
+#define TESTING_FRAMEWORK_EXECUTABLE_KEY @"executable"
 #define WRAPPER_EXTENSION_KEY @"WRAPPER_EXTENSION"
 
 @interface TestingFramework ()
 
 @property (nonatomic, retain) NSString *unitTestClassName;
 @property (nonatomic, retain) NSString *unitTestSelectorName;
+@property (nonatomic, retain) NSString *executableName;
 
 @end
 
@@ -28,11 +30,13 @@ NSDictionary *getWrapperToFrameworkMapping() {
     wrapperToFrameworkMapping = @{
                                   @"octest": @{
                                       TESTING_FRAMEWORK_CLASS_KEY: @"SenTestCase",
-                                      TESTING_FRAMEWORK_SELECTOR_KEY: @"senAllSubclasses"
+                                      TESTING_FRAMEWORK_SELECTOR_KEY: @"senAllSubclasses",
+                                      TESTING_FRAMEWORK_EXECUTABLE_KEY: @"otest"
                                       },
                                   @"xctest": @{
                                       TESTING_FRAMEWORK_CLASS_KEY: @"XCTestCase",
-                                      TESTING_FRAMEWORK_SELECTOR_KEY: @"xct_allSubclasses"
+                                      TESTING_FRAMEWORK_SELECTOR_KEY: @"xct_allSubclasses",
+                                      TESTING_FRAMEWORK_EXECUTABLE_KEY: @"xctest"
                                       }
                                   };
     [wrapperToFrameworkMapping retain];
@@ -78,6 +82,11 @@ NSDictionary *getWrapperToFrameworkMapping() {
   return [self frameworkInfoForWrapperExtension: extension][TESTING_FRAMEWORK_SELECTOR_KEY];
 }
 
++ (NSString *)executableNameFromBundleExtension: (NSString *)extension
+{
+  return [self frameworkInfoForWrapperExtension: extension][TESTING_FRAMEWORK_EXECUTABLE_KEY];
+}
+
 + (instancetype)XCTest
 {
   return [[[self alloc] initWithBundleExtension:@"xctest"] autorelease];
@@ -93,6 +102,7 @@ NSDictionary *getWrapperToFrameworkMapping() {
   if (self = [super init]) {
     self.unitTestClassName = [[self class] classNameFromBundleExtension: extension];
     self.unitTestSelectorName = [[self class] selectorNameFromBundleExtension: extension];
+    self.executableName = [[self class] executableNameFromBundleExtension: extension];
   }
   return self;
 }

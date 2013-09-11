@@ -28,8 +28,6 @@
 
 - (void)testExample
 {
-  system([[NSString stringWithFormat:@"echo '%@' > ~/Desktop/xct_allSubclasses.txt", objc_msgSend(NSClassFromString(@"XCTestCase"), @selector(xct_allSubclasses))] cStringUsingEncoding:NSASCIIStringEncoding]);
-  
   XCTAssert(YES, @"Derp");
 }
 

@@ -19,6 +19,7 @@
 #import "OTestQuery.h"
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
+#import "TestingFramework.h"
 
 @implementation OCUnitIOSLogicTestRunner
 
@@ -42,7 +43,10 @@
 - (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath
 {
   NSTask *task = [[[NSTask alloc] init] autorelease];
-  [task setLaunchPath:[NSString stringWithFormat:@"%@/Developer/usr/bin/otest", _buildSettings[@"SDKROOT"]]];
+  NSString *bundleExtension = [testBundlePath pathExtension];
+  TestingFramework *framework = [[TestingFramework alloc] initWithBundleExtension:bundleExtension];
+  [task setLaunchPath:[NSString stringWithFormat:@"%@/Developer/usr/bin/%@", _buildSettings[@"SDKROOT"], framework.executableName]];
+  [framework release];
   [task setArguments:[[self otestArguments] arrayByAddingObject:testBundlePath]];
   NSMutableDictionary *env = [[self.environmentOverrides mutableCopy] autorelease];
   env[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"];

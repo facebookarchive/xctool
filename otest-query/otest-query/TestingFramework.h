@@ -12,6 +12,7 @@
 
 @property (nonatomic, readonly) NSString *unitTestClassName;
 @property (nonatomic, readonly) NSString *unitTestSelectorName;
+@property (nonatomic, readonly) NSString *executableName;
 
 - (id)initWithBundleExtension: (NSString *)extension;
 + (instancetype)XCTest;

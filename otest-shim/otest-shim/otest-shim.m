@@ -226,6 +226,100 @@ static void SenTestLog_testCaseDidFail(id self, SEL sel, NSNotification *notific
   });
 }
 
+static void XCTestLog_testSuiteDidStart(id self, SEL sel, XCTestSuiteRun *run)
+{
+  dispatch_sync(EventQueue(), ^{
+    PrintJSON(@{
+                @"event" : kReporter_Events_BeginTestSuite,
+                kReporter_BeginTestSuite_SuiteKey : [[run test] name],
+                });
+  });
+}
+
+static void XCTestLog_testSuiteDidStop(id self, SEL sel, XCTestSuiteRun *run)
+{
+  dispatch_sync(EventQueue(), ^{
+    PrintJSON(@{
+                @"event" : kReporter_Events_EndTestSuite,
+                kReporter_EndTestSuite_SuiteKey : [[run test] name],
+                kReporter_EndTestSuite_TestCaseCountKey : @([run testCaseCount]),
+                kReporter_EndTestSuite_TotalFailureCountKey : @([run totalFailureCount]),
+                kReporter_EndTestSuite_UnexpectedExceptionCountKey : @([run unexpectedExceptionCount]),
+                kReporter_EndTestSuite_TestDurationKey: @([run testDuration]),
+                kReporter_EndTestSuite_TotalDurationKey : @([run totalDuration]),
+                });
+  });
+}
+
+static void XCTestLog_testCaseDidStart(id self, SEL sel, XCTestCaseRun *run)
+{
+  dispatch_sync(EventQueue(), ^{
+    NSString *fullTestName = [[run test] name];
+    NSArray *classAndMethodNames = CreateParseTestName(fullTestName);
+    PrintJSON(@{
+                @"event" : kReporter_Events_BeginTest,
+                kReporter_BeginTest_TestKey : [[run test] name],
+                kReporter_BeginTest_ClassNameKey : [classAndMethodNames objectAtIndex:0],
+                kReporter_BeginTest_MethodNameKey : [classAndMethodNames objectAtIndex:1],
+                });
+
+    [classAndMethodNames release];
+    classAndMethodNames = nil;
+    [__testException release];
+    __testException = nil;
+    __testIsRunning = YES;
+    __testOutput = [[NSMutableString string] retain];
+  });
+}
+
+static void XCTestLog_testCaseDidStop(id self, SEL sel, XCTestCaseRun *run)
+{
+  dispatch_sync(EventQueue(), ^{
+    NSString *fullTestName = [[run test] name];
+    NSArray *classAndMethodNames = CreateParseTestName(fullTestName);
+    NSMutableDictionary *json = [NSMutableDictionary dictionaryWithDictionary:@{
+                                   @"event" : kReporter_Events_EndTest,
+                                   kReporter_EndTest_TestKey : [[run test] name],
+                                   kReporter_EndTest_ClassNameKey : [classAndMethodNames objectAtIndex:0],
+                                   kReporter_EndTest_MethodNameKey : [classAndMethodNames objectAtIndex:1],
+                                   kReporter_EndTest_SucceededKey : [run hasSucceeded] ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO],
+                                   kReporter_EndTest_TotalDurationKey : @([run totalDuration]),
+                                   kReporter_EndTest_OutputKey : StripAnsi(__testOutput),
+                                   }];
+
+    if (__testException != nil) {
+      [json setObject:@{
+                        kReporter_EndTest_Exception_FilePathInProjectKey : [__testException filePathInProject],
+                        kReporter_EndTest_Exception_LineNumberKey : [__testException lineNumber],
+                        kReporter_EndTest_Exception_ReasonKey : [__testException reason],
+                        kReporter_EndTest_Exception_NameKey : [__testException name],
+                        }
+               forKey:kReporter_EndTest_ExceptionKey];
+    }
+
+    PrintJSON(json);
+    
+    [classAndMethodNames release];
+    classAndMethodNames = nil;
+    __testIsRunning = NO;
+    [__testOutput release];
+    __testOutput = nil;
+  });
+}
+
+static void XCTestLog_testCaseDidFail(id self, SEL sel, NSNotification *notification)
+{
+  exit(-1);
+
+  dispatch_sync(EventQueue(), ^{
+    NSException *exception = [notification exception];
+    if (__testException != exception) {
+      [__testException release];
+      __testException = [exception retain];
+    }
+  });
+}
+
 static void SaveExitMode(NSDictionary *exitMode)
 {
   NSDictionary *env = [[NSProcessInfo processInfo] environment];
@@ -241,14 +335,14 @@ static void __exit(int status)
   SaveExitMode(@{@"via" : @"exit", @"status" : @(status) });
   exit(status);
 }
-DYLD_INTERPOSE(__exit, exit);
+//DYLD_INTERPOSE(__exit, exit);
 
 static void __abort()
 {
   SaveExitMode(@{@"via" : @"abort"});
   abort();
 }
-DYLD_INTERPOSE(__abort, abort);
+//DYLD_INTERPOSE(__abort, abort);
 
 // From /usr/lib/system/libsystem_kernel.dylib - output from printf/fprintf/fwrite will flow to
 // __write_nonancel just before it does the system call.
@@ -269,7 +363,7 @@ static ssize_t ___write_nocancel(int fildes, const void *buf, size_t nbyte)
     return write(fildes, buf, nbyte);
   }
 }
-DYLD_INTERPOSE(___write_nocancel, __write_nocancel);
+//DYLD_INTERPOSE(___write_nocancel, __write_nocancel);
 
 static ssize_t __write(int fildes, const void *buf, size_t nbyte);
 static ssize_t __write(int fildes, const void *buf, size_t nbyte)
@@ -288,7 +382,7 @@ static ssize_t __write(int fildes, const void *buf, size_t nbyte)
     return write(fildes, buf, nbyte);
   }
 }
-DYLD_INTERPOSE(__write, write);
+//DYLD_INTERPOSE(__write, write);
 
 static NSString *CreateStringFromIOV(const struct iovec *iov, int iovcnt) {
   NSMutableData *buffer = [[NSMutableData alloc] initWithCapacity:0];
@@ -339,7 +433,7 @@ static ssize_t ___writev_nocancel(int fildes, const struct iovec *iov, int iovcn
     return __writev_nocancel(fildes, iov, iovcnt);
   }
 }
-DYLD_INTERPOSE(___writev_nocancel, __writev_nocancel);
+//DYLD_INTERPOSE(___writev_nocancel, __writev_nocancel);
 
 // Output from NSLog flows through writev
 static ssize_t __writev(int fildes, const struct iovec *iov, int iovcnt)
@@ -359,7 +453,7 @@ static ssize_t __writev(int fildes, const struct iovec *iov, int iovcnt)
     return writev(fildes, iov, iovcnt);
   }
 }
-DYLD_INTERPOSE(__writev, writev);
+//DYLD_INTERPOSE(__writev, writev);
 
 static const char *DyldImageStateChangeHandler(enum dyld_image_states state,
                                                uint32_t infoCount,
@@ -389,22 +483,23 @@ static const char *DyldImageStateChangeHandler(enum dyld_image_states state,
                                       (IMP)SenTestLog_testCaseDidFail);
     }
     if (strstr(info[i].imageFilePath, "XCTest.framework") != NULL) {
+      
       // Since the 'XCTestLog' class now exists, we can swizzle it!
-      XTSwizzleClassSelectorForFunction(NSClassFromString(@"XCTestLog"),
+      XTSwizzleSelectorForFunction(NSClassFromString(@"XCTestLog"),
                                         @selector(testSuiteDidStart:),
-                                        (IMP)SenTestLog_testSuiteDidStart);
-      XTSwizzleClassSelectorForFunction(NSClassFromString(@"XCTestLog"),
+                                        (IMP)XCTestLog_testSuiteDidStart);
+      XTSwizzleSelectorForFunction(NSClassFromString(@"XCTestLog"),
                                         @selector(testSuiteDidStop:),
-                                        (IMP)SenTestLog_testSuiteDidStop);
-      XTSwizzleClassSelectorForFunction(NSClassFromString(@"XCTestLog"),
+                                        (IMP)XCTestLog_testSuiteDidStop);
+      XTSwizzleSelectorForFunction(NSClassFromString(@"XCTestLog"),
                                         @selector(testCaseDidStart:),
-                                        (IMP)SenTestLog_testCaseDidStart);
-      XTSwizzleClassSelectorForFunction(NSClassFromString(@"XCTestLog"),
+                                        (IMP)XCTestLog_testCaseDidStart);
+      XTSwizzleSelectorForFunction(NSClassFromString(@"XCTestLog"),
                                         @selector(testCaseDidStop:),
-                                        (IMP)SenTestLog_testCaseDidStop);
-      XTSwizzleClassSelectorForFunction(NSClassFromString(@"XCTestLog"),
+                                        (IMP)XCTestLog_testCaseDidStop);
+      XTSwizzleSelectorForFunction(NSClassFromString(@"XCTestLog"),
                                         @selector(testCaseDidFail:),
-                                        (IMP)SenTestLog_testCaseDidFail);
+                                        (IMP)XCTestLog_testCaseDidFail);
     }
   }
 

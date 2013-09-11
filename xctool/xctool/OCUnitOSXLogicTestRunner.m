@@ -20,6 +20,7 @@
 #import "OTestQuery.h"
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
+#import "TestingFramework.h"
 
 @implementation OCUnitOSXLogicTestRunner
 
@@ -36,7 +37,10 @@
 - (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath
 {
   NSTask *task = [[[NSTask alloc] init] autorelease];
-  [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Tools/otest"]];
+  NSString *bundleExtension = [testBundlePath pathExtension];
+  TestingFramework *framework = [[TestingFramework alloc] initWithBundleExtension:bundleExtension];
+  [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:[@"Tools/%@" stringByAppendingString:framework.executableName]]];
+  [framework release];
   // When invoking otest directly, the last arg needs to be the the test bundle.
   [task setArguments:[[self otestArguments] arrayByAddingObject:testBundlePath]];
   NSMutableDictionary *env = [[self.environmentOverrides mutableCopy] autorelease];
