@@ -20,7 +20,6 @@
 
 #import "OCUnitCrashFilter.h"
 #import "ReportStatus.h"
-#import "XCToolUtil.h"
 
 @implementation OCUnitTestRunner
 
@@ -114,69 +113,24 @@
   return NO;
 }
 
-- (NSArray *)collectCrashReportPaths
-{
-  NSFileManager *fm = [NSFileManager defaultManager];
-  NSString *diagnosticReportsPath = [@"~/Library/Logs/DiagnosticReports" stringByStandardizingPath];
-
-  BOOL isDirectory = NO;
-  BOOL fileExists = [fm fileExistsAtPath:diagnosticReportsPath
-                             isDirectory:&isDirectory];
-  if (!fileExists || !isDirectory) {
-    return @[];
-  }
-
-  NSError *error = nil;
-  NSArray *allContents = [fm contentsOfDirectoryAtPath:diagnosticReportsPath
-                                                 error:&error];
-  NSAssert(error == nil, @"Failed getting contents of directory: %@", error);
-
-  NSMutableArray *matchingContents = [NSMutableArray array];
-
-  for (NSString *path in allContents) {
-    if ([[path pathExtension] isEqualToString:@"crash"]) {
-      NSString *fullPath = [[@"~/Library/Logs/DiagnosticReports" stringByAppendingPathComponent:path] stringByStandardizingPath];
-      [matchingContents addObject:fullPath];
-    }
-  }
-
-  return matchingContents;
-}
-
-- (NSString *)concatenatedCrashReports:(NSArray *)reports
-{
-  NSMutableString *buffer = [NSMutableString string];
-
-  for (NSString *path in reports) {
-    NSString *crashReportText = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-    // Throw out everything below "Binary Images" - we mostly just care about the thread backtraces.
-    NSString *minimalCrashReportText = [crashReportText substringToIndex:[crashReportText rangeOfString:@"\nBinary Images:"].location];
-
-    [buffer appendFormat:@"CRASH REPORT: %@\n\n", [path lastPathComponent]];
-    [buffer appendString:minimalCrashReportText];
-    [buffer appendString:@"\n"];
-  }
-
-  return buffer;
-}
-
 - (BOOL)runTestsWithError:(NSString **)error {
-  OCUnitCrashFilter *crashFilter = [[[OCUnitCrashFilter alloc] init] autorelease];
   __block BOOL didReceiveTestEvents = NO;
+
+  _testRunnerState = [[OCUnitCrashFilter alloc] initWithTests:_senTestList reporters:_reporters];
 
   void (^feedOutputToBlock)(NSString *) = ^(NSString *line) {
     NSData *lineData = [line dataUsingEncoding:NSUTF8StringEncoding];
 
-    [crashFilter publishDataForEvent:lineData];
+    [_testRunnerState parseAndHandleEvent:line];
     [_reporters makeObjectsPerformSelector:@selector(publishDataForEvent:) withObject:lineData];
 
     didReceiveTestEvents = YES;
   };
 
-  NSSet *crashReportsAtStart = [NSSet setWithArray:[self collectCrashReportPaths]];
-
   NSString *runTestsError = nil;
   BOOL didTerminateWithUncaughtSignal = NO;
+
+  [_testRunnerState prepareToRun];
 
   BOOL succeeded = [self runTestsAndFeedOutputTo:feedOutputToBlock
                                  gotUncaughtSignal:&didTerminateWithUncaughtSignal
@@ -205,25 +159,7 @@
     succeeded = YES;
   }
 
-  if ([crashFilter testRunWasUnfinished] || didTerminateWithUncaughtSignal) {
-    // The test runner must have crashed.
-
-    // Wait for a moment to see if a crash report shows up.
-    NSSet *crashReportsAtEnd = [NSSet setWithArray:[self collectCrashReportPaths]];
-    CFTimeInterval start = CACurrentMediaTime();
-    while ([crashReportsAtEnd isEqualToSet:crashReportsAtStart] && (CACurrentMediaTime() - start < 10.0)) {
-      [NSThread sleepForTimeInterval:0.25];
-      crashReportsAtEnd = [NSSet setWithArray:[self collectCrashReportPaths]];
-    }
-
-    NSMutableSet *crashReportsGenerated = [NSMutableSet setWithSet:crashReportsAtEnd];
-    [crashReportsGenerated minusSet:crashReportsAtStart];
-    NSString *concatenatedCrashReports = [self concatenatedCrashReports:[crashReportsGenerated allObjects]];
-
-    [crashFilter fireEventsToSimulateTestRunFinishing:_reporters
-                                      fullProductName:_buildSettings[@"FULL_PRODUCT_NAME"]
-                             concatenatedCrashReports:concatenatedCrashReports];
-  }
+  [_testRunnerState finishedRun:didTerminateWithUncaughtSignal];
 
   return succeeded;
 }

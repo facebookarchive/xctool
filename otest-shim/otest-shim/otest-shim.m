@@ -136,7 +136,7 @@ static void SenTestLog_testSuiteDidStart(id self, SEL sel, NSNotification *notif
     dispatch_sync(EventQueue(), ^{
       PrintJSON(@{
                 @"event" : kReporter_Events_BeginTestSuite,
-                kReporter_BeginTestSuite_SuiteKey : @"Toplevel Test Suite",
+                kReporter_BeginTestSuite_SuiteKey : kReporter_TestSuite_TopLevelSuiteName,
                 });
     });
   }

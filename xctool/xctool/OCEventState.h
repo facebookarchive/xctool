@@ -16,22 +16,20 @@
 
 #import <Foundation/Foundation.h>
 
-#import "Reporter.h"
-#import "OCTestSuiteEventState.h"
-#import "OCTestEventState.h"
+/**
+ * The event state classes help track the process of events coming from
+ * otest-shim. The intended use is to listen to events going to reporters.
+ * If at any point otest-shim crashes we can then use these classes to
+ * publish any remaining events to the reporters within OCUnitTestRunner
+ */
 
-@interface OCUnitCrashFilter : Reporter {
-  OCTestSuiteEventState *_testSuiteState;
-  OCTestEventState *_previousTestState;
-  NSSet *_crashReportsAtStart;
-}
+@interface OCEventState : NSObject
 
-@property (nonatomic, assign) double crashReportCollectionTime;
+@property (nonatomic, retain) NSArray *reporters;
 
-- (instancetype)initWithTests:(NSArray *)testList
-                    reporters:(NSArray *)reporters;
+- (instancetype)initWithReporters:(NSArray *)reporters;
 
-- (void)prepareToRun;
-- (void)finishedRun:(BOOL)unexpectedTermination;
+- (void)publishWithEvent:(NSDictionary *)event;
+- (void)publishEvents;
 
 @end

@@ -19,233 +19,249 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import "ReporterEvents.h"
-#import "XCToolUtil.h"
+#import "OCTestSuiteEventState.h"
+#import "OCTestEventState.h"
 
 @implementation OCUnitCrashFilter
 
-+ (void)emitDummyTestEventsTo:(NSArray *)reporters
-                     testName:(NSString *)testName
-                    className:(NSString *)className
-                   methodName:(NSString *)methodName
-                       output:(NSString *)output
+- (instancetype)initWithTests:(NSArray *)testList
+                    reporters:(NSArray *)reporters
 {
-  PublishEventToReporters(reporters, @{
-   @"event" : kReporter_Events_BeginTest,
-   kReporter_BeginTest_TestKey : testName,
-   kReporter_BeginTest_ClassNameKey : className,
-   kReporter_BeginTest_MethodNameKey : methodName,
-   });
-  PublishEventToReporters(reporters, @{
-   @"event" : kReporter_Events_TestOuput,
-   kReporter_TestOutput_OutputKey : output,
-   });
-  PublishEventToReporters(reporters, @{
-   @"event" : kReporter_Events_EndTest,
-   kReporter_EndTest_TestKey : testName,
-   kReporter_EndTest_ClassNameKey : className,
-   kReporter_EndTest_MethodNameKey : methodName,
-   kReporter_EndTest_SucceededKey: @NO,
-   kReporter_EndTest_ResultKey : @"error",
-   kReporter_EndTest_TotalDurationKey : @(0),
-   kReporter_EndTest_OutputKey : output,
-   });
-}
-
-
-- (id)init
-{
-  if (self = [super init])
-  {
-    self.currentTestSuiteEventStack = [NSMutableArray array];
-    self.currentTestSuiteEventTimestampStack = [NSMutableArray array];
-    self.currentTestSuiteEventTestCountStack = [NSMutableArray array];
+  self = [super init];
+  if (self) {
+    _testSuiteState =
+      [[OCTestSuiteEventState alloc] initWithName:kReporter_TestSuite_TopLevelSuiteName
+                                        reporters:reporters];
+    [_testSuiteState addTestsFromArray:testList];
+    _crashReportCollectionTime = 10.0;
   }
   return self;
 }
 
 - (void)dealloc
 {
-  self.currentTestEvent = nil;
-  self.currentTestSuiteEventStack = nil;
-  self.currentTestSuiteEventTestCountStack = nil;
-  self.currentTestSuiteEventTimestampStack = nil;
-  self.currentTestOutput = nil;
-  self.lastTestEvent = nil;
+  [_testSuiteState dealloc];
+
   [super dealloc];
 }
 
-- (void)publishDataForEvent:(NSData *)data
+- (void)setReporters:(NSArray *)reporters
 {
-  NSString *jsonString = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
-  NSError *parseError = nil;
-  NSDictionary *event = [NSJSONSerialization JSONObjectWithData:data
-                                                        options:0
-                                                          error:&parseError];
-  if (parseError) {
-    [NSException raise:NSGenericException
-                format:@"Failed to parse test output '%@' with error '%@'.",
-     jsonString,
-     [parseError localizedFailureReason]];
-  }
+  _testSuiteState.reporters = reporters;
+}
 
-  NSString *eventName = event[@"event"];
+- (void)prepareToRun
+{
+  _crashReportsAtStart = [NSSet setWithArray:[self collectCrashReportPaths]];
+}
 
-  if ([eventName isEqualToString:kReporter_Events_BeginTest]) {
-    NSAssert(self.currentTestEvent == nil, @"Got 'begin-test' before receiving the 'end-test' event from the last test.");
-    self.currentTestEvent = event;
-    self.currentTestEventTimestamp = CACurrentMediaTime();
-    self.currentTestOutput = [NSMutableString string];
-
-    for (NSMutableDictionary *testSuiteEvent in [self.currentTestSuiteEventTestCountStack reverseObjectEnumerator]) {
-      testSuiteEvent[kReporter_EndTestSuite_TestCaseCountKey] = @([testSuiteEvent[kReporter_EndTestSuite_TestCaseCountKey] intValue] + 1);
-    }
-  } else if ([eventName isEqualToString:kReporter_Events_EndTest]) {
-    NSAssert(self.currentTestEvent != nil, @"Got 'end-test' event before getting the 'begin-test' event.");
-    self.lastTestEvent = self.currentTestEvent;
-    self.currentTestEvent = nil;
-    self.currentTestEventTimestamp = 0;
-    self.currentTestOutput = nil;
-
-    BOOL succeeded = [event[kReporter_EndTest_SucceededKey] boolValue];
-    if (!succeeded) {
-      for (NSMutableDictionary *testSuiteEvent in [self.currentTestSuiteEventTestCountStack reverseObjectEnumerator]) {
-        testSuiteEvent[kReporter_EndTestSuite_TotalFailureCountKey] = @([testSuiteEvent[kReporter_EndTestSuite_TotalFailureCountKey] intValue] + 1);
-      }
-    }
-  } else if ([eventName isEqualToString:kReporter_Events_BeginTestSuite]) {
-    [self.currentTestSuiteEventStack addObject:event];
-
-    // Keep track of when the suite started, so that we can generate a complete
-    // 'end-test-suite' event later (if tests crash).
-    [self.currentTestSuiteEventTimestampStack addObject:@(CACurrentMediaTime())];
-
-    // Keep track of test counts so we can generate a complete 'end-test-suite'
-    // event later (if tests crash).
-    [self.currentTestSuiteEventTestCountStack addObject:
-     [NSMutableDictionary dictionaryWithDictionary:@{
-      kReporter_EndTestSuite_TotalFailureCountKey : @0,
-      kReporter_EndTestSuite_TestCaseCountKey : @0,
-      }]];
-  } else if ([eventName isEqualToString:kReporter_Events_EndTestSuite]) {
-    [self.currentTestSuiteEventStack removeLastObject];
-    [self.currentTestSuiteEventTimestampStack removeLastObject];
-    [self.currentTestSuiteEventTestCountStack removeLastObject];
-  } else if ([eventName isEqualToString:kReporter_Events_TestOuput]) {
-    NSAssert(_currentTestEvent != nil,
-             @"'test-output' event should only come during a test: %@",
-             event);
-    [self.currentTestOutput appendString:event[kReporter_TestOutput_OutputKey]];
+- (void)finishedRun:(BOOL)unexpectedTermination
+{
+  if (unexpectedTermination) {
+    [self handleEarlyTermination:_crashReportsAtStart];
   }
 }
 
-- (void)fireEventsToSimulateTestRunFinishing:(NSArray *)reporters
-                             fullProductName:(NSString *)fullProductName
-                    concatenatedCrashReports:(NSString *)concatenatedCrashReports
+- (void)beginTestSuite:(NSDictionary *)event
 {
-  if (self.currentTestEvent != nil) {
-    // It looks like we've crashed in the middle of running a test.  Record this test as a failure
-    // in the test suite counts.
-    for (NSMutableDictionary *testSuiteEvent in [self.currentTestSuiteEventTestCountStack reverseObjectEnumerator]) {
-      testSuiteEvent[kReporter_EndTestSuite_TotalFailureCountKey] = @([testSuiteEvent[kReporter_EndTestSuite_TotalFailureCountKey] intValue] + 1);
-    }
+  NSAssert(![_testSuiteState isStarted], @"Test suite already started!");
+  NSAssert([event[kReporter_BeginTestSuite_SuiteKey] isEqualTo:kReporter_TestSuite_TopLevelSuiteName],
+           @"Expected to begin test suite `%@', got `%@'",
+           kReporter_TestSuite_TopLevelSuiteName, event[kReporter_BeginTestSuite_SuiteKey]);
 
-    // Fire another 'test-output' event - we'll include the crash report as if it
-    // was written to stdout in the test.
-    PublishEventToReporters(reporters, @{
-     @"event" : kReporter_Events_TestOuput,
-     kReporter_TestOutput_OutputKey : concatenatedCrashReports,
-     });
+  [_testSuiteState beginTestSuite];
+}
 
-    // Fire a fake 'end-test' event.
-    PublishEventToReporters(reporters, @{
-     @"event" : kReporter_Events_EndTest,
-     kReporter_EndTest_TestKey : self.currentTestEvent[kReporter_EndTest_TestKey],
-     kReporter_EndTest_ClassNameKey : self.currentTestEvent[kReporter_EndTest_ClassNameKey],
-     kReporter_EndTest_MethodNameKey : self.currentTestEvent[kReporter_EndTest_MethodNameKey],
-     kReporter_EndTest_SucceededKey: @NO,
-     kReporter_EndTest_ResultKey : @"error",
-     kReporter_EndTest_TotalDurationKey : @(CACurrentMediaTime() - self.currentTestEventTimestamp),
-     kReporter_EndTest_OutputKey : [self.currentTestOutput stringByAppendingString:concatenatedCrashReports],
-     });
-  } else if (self.currentTestSuiteEventStack.count > 0) {
-    // We've crashed outside of a running test.  Usually this means the previously run test
-    // over-released something and OCUnit got an EXC_BAD_ACCESS while trying to drain the
-    // NSAutoreleasePool.  It could be anything, though (e.g. some background thread).
+- (void)beginTest:(NSDictionary *)event
+{
+  NSAssert(_testSuiteState, @"Starting test without a test suite");
+  NSString *testName = event[kReporter_BeginTest_TestKey];
+  OCTestEventState *state = [_testSuiteState getTestWithTestName:testName];
+  NSAssert(state, @"Can't find test state for '%@', check senTestList", testName);
+  [state stateBeginTest];
+}
 
-    // To surface this to the Reporter, we create a fictional test.
+- (void)endTest:(NSDictionary *)event
+{
+  NSAssert(_testSuiteState, @"Ending test without a test suite");
+  NSString *testName = event[kReporter_EndTest_TestKey];
+  OCTestEventState *state = [_testSuiteState getTestWithTestName:testName];
+  NSAssert(state, @"Can't find test state for '%@', check senTestList", testName);
+  [state stateEndTest:[event[kReporter_EndTest_SucceededKey] intValue]
+               result:event[kReporter_EndTest_ResultKey]
+             duration:[event[kReporter_EndTest_TotalDurationKey] doubleValue]];
 
-    NSString *output =
-      [NSString stringWithFormat:
-       @"The tests crashed immediately after running '%@'.  Even though that test finished, it's "
-       @"likely responsible for the crash.\n"
-       @"\n"
-       @"Tip: Consider re-running this test in Xcode with NSZombieEnabled=YES.  A common cause for "
-       @"these kinds of crashes is over-released objects.  OCUnit creates a NSAutoreleasePool "
-       @"before starting your test and drains it at the end of your test.  If an object has been "
-       @"over-released, it'll trigger an EXC_BAD_ACCESS crash when draining the pool.\n"
-       @"\n"
-       @"%@",
-       self.lastTestEvent[kReporter_EndTest_TestKey],
-       concatenatedCrashReports];
+  if (_previousTestState) {
+    [_previousTestState release];
+  }
+  _previousTestState = [state retain];
+}
 
-    [OCUnitCrashFilter emitDummyTestEventsTo:reporters
-                                    testName:[NSString stringWithFormat:@"%@_CRASHED", fullProductName]
-                                   className:fullProductName
-                                  methodName:@"CRASHED"
-                                      output:output];
+- (void)endTestSuite:(NSDictionary *)event
+{
+  [_testSuiteState endTestSuite];
+  _testSuiteState = nil;
+}
 
-    for (NSMutableDictionary *testSuiteEvent in [self.currentTestSuiteEventTestCountStack reverseObjectEnumerator]) {
-      testSuiteEvent[kReporter_EndTestSuite_TestCaseCountKey] =
-        @([testSuiteEvent[kReporter_EndTestSuite_TestCaseCountKey] intValue] + 1);
-      testSuiteEvent[kReporter_EndTestSuite_TotalFailureCountKey] =
-        @([testSuiteEvent[kReporter_EndTestSuite_TotalFailureCountKey] intValue] + 1);
-    }
+- (void)testOutput:(NSDictionary *)event
+{
+  OCTestEventState *test = [_testSuiteState runningTest];
+  NSAssert(test, @"Got output with no test running");
+  [test stateTestOutput:event[kReporter_TestOutput_OutputKey]];
+}
+
+- (void)handleEarlyTermination:(NSSet *)crashReportsAtStart
+{
+  NSString *summaryTestOutput = @"";
+  NSString *extendedTestOutput = [NSString stringWithFormat:
+                                  @"\n"
+                                  @"%@",
+                                  [self collectCrashReports:crashReportsAtStart]];
+
+
+  // Create a summary based on the inferred reason for the crash
+  if (![_testSuiteState isStarted]) {
+    summaryTestOutput = @"The test binary crashed before starting a test-suite\n";
+  } else if ([_testSuiteState isFinished]) {
+    // We have no way to output this, so just print a warning and move on with life
+    NSLog(@"WARNING: Test suite crashed after finishing, strange indeed");
+  } else if ([_testSuiteState runningTest]) {
+    summaryTestOutput = [NSString stringWithFormat:
+                         @"Test `%@` crashed binary while running\n", [[_testSuiteState runningTest] testName]];
+  } else if (_previousTestState) {
+    summaryTestOutput = [NSString stringWithFormat:
+                         @"The tests crashed immediately after running '%@'.  Even though that test finished, it's "
+                         @"likely responsible for the crash.\n",
+                         [_previousTestState testName]];
+    extendedTestOutput = [NSString stringWithFormat:
+                          @"\nTip: Consider re-running this test in Xcode with NSZombieEnabled=YES.  A common cause for "
+                          @"these kinds of crashes is over-released objects.  OCUnit creates a NSAutoreleasePool "
+                          @"before starting your test and drains it at the end of your test.  If an object has been "
+                          @"over-released, it'll trigger an EXC_BAD_ACCESS crash when draining the pool.\n"
+                          @"\n"
+                          @"%@",
+                          [self collectCrashReports:crashReportsAtStart]];
   } else {
-    NSString *testName = [NSString stringWithFormat:@"%@_CRASHED", fullProductName];
-
-    NSString *output =
-      [NSString stringWithFormat:
-       @"The test binary crashed outside of a running test or test-suite."
-       @"\n"
-       @"%@",
-       concatenatedCrashReports];
-
-    // create a dummy suite and test
-    PublishEventToReporters(reporters, @{
-     @"event" : kReporter_Events_BeginTestSuite,
-     kReporter_BeginTestSuite_SuiteKey : testName,
-     });
-    [OCUnitCrashFilter emitDummyTestEventsTo:reporters
-                                    testName:testName
-                                   className:fullProductName
-                                  methodName:@"CRASHED"
-                                      output:output];
-    PublishEventToReporters(reporters, @{
-     @"event" : kReporter_Events_EndTestSuite,
-     kReporter_BeginTestSuite_SuiteKey : testName,
-     });
+    summaryTestOutput = @"The test binary crashed after starting a test-suite but before starting a test\n";
   }
 
-  // For off any 'end-test-suite' events to keep the reporter sane (it expects every
-  // suite to finish).
-  for (int i = (int)[self.currentTestSuiteEventTimestampStack count] - 1; i >= 0; i--) {
-    NSDictionary *testSuite = self.currentTestSuiteEventStack[i];
-    CFTimeInterval testSuiteTimestamp = [self.currentTestSuiteEventTimestampStack[i] doubleValue];
-    NSDictionary *testSuiteCounts = self.currentTestSuiteEventTestCountStack[i];
+  [self publishTestOutputWithSummary:summaryTestOutput extended:extendedTestOutput];
 
-    PublishEventToReporters(reporters, @{
-     @"event" : kReporter_Events_EndTestSuite,
-     kReporter_EndTestSuite_SuiteKey : testSuite[kReporter_EndTestSuite_SuiteKey],
-     kReporter_EndTestSuite_TotalDurationKey : @(CACurrentMediaTime() - testSuiteTimestamp),
-     kReporter_EndTestSuite_TestCaseCountKey : testSuiteCounts[kReporter_EndTestSuite_TestCaseCountKey],
-     kReporter_EndTestSuite_TotalFailureCountKey : testSuiteCounts[kReporter_EndTestSuite_TotalFailureCountKey],
-     });
+  if (_previousTestState) {
+    [_previousTestState release];
   }
 }
 
-- (BOOL)testRunWasUnfinished
+- (void)publishTestOutputWithSummary:(NSString *)summary extended:(NSString *)extended
 {
-  return (self.currentTestEvent != nil || self.currentTestSuiteEventStack.count > 0);
+  NSMutableArray *unfinishedTests =
+  [[[_testSuiteState tests] filteredArrayUsingPredicate:
+    [NSPredicate predicateWithBlock:^BOOL(OCTestEventState *test, NSDictionary *bindings) {
+    return ![test isFinished];
+  }]] mutableCopy];
+
+  if ([unfinishedTests count] > 0) {
+    // The next test to run gets the full debug output
+    OCTestEventState *nextTest = unfinishedTests[0];
+    [unfinishedTests removeObjectAtIndex:0];
+    [nextTest appendOutput:[summary stringByAppendingString:extended]];
+
+    // The rest just get a summary
+    [unfinishedTests enumerateObjectsUsingBlock:^(OCTestEventState *testState, NSUInteger idx, BOOL *stop) {
+      [testState appendOutput:summary];
+    }];
+  } else {
+    // No tests left to attach the output to, we'll emit a fake one :(
+    NSString *fakeTestName;
+    if (_previousTestState) {
+      fakeTestName = [NSString stringWithFormat:@"%@/%@_MAYBE_CRASHED",
+                      [_previousTestState className],
+                      [_previousTestState methodName]];
+    } else {
+      fakeTestName = [NSString stringWithFormat:@"FAILED_AFTER/TESTS_RAN"];
+    }
+    [self emitFakeTestWithName:fakeTestName
+                     andOutput:[summary stringByAppendingString:extended]];
+  }
+
+  [_testSuiteState publishEvents];
+  [unfinishedTests release];
+}
+
+- (void)emitFakeTestWithName:(NSString *)testName andOutput:(NSString *)testOutput
+{
+  OCTestEventState *fakeTest =
+  [[OCTestEventState alloc] initWithInputName:testName];
+
+  [_testSuiteState addTest:fakeTest];
+  [fakeTest appendOutput:testOutput];
+
+  [fakeTest publishEvents];
+  [fakeTest release];
+}
+
+- (NSArray *)collectCrashReportPaths
+{
+  NSFileManager *fm = [NSFileManager defaultManager];
+  NSString *diagnosticReportsPath = [@"~/Library/Logs/DiagnosticReports" stringByStandardizingPath];
+
+  BOOL isDirectory = NO;
+  BOOL fileExists = [fm fileExistsAtPath:diagnosticReportsPath
+                             isDirectory:&isDirectory];
+  if (!fileExists || !isDirectory) {
+    return @[];
+  }
+
+  NSError *error = nil;
+  NSArray *allContents = [fm contentsOfDirectoryAtPath:diagnosticReportsPath
+                                                 error:&error];
+  NSAssert(error == nil, @"Failed getting contents of directory: %@", error);
+
+  NSMutableArray *matchingContents = [NSMutableArray array];
+
+  for (NSString *path in allContents) {
+    if ([[path pathExtension] isEqualToString:@"crash"]) {
+      NSString *fullPath = [[@"~/Library/Logs/DiagnosticReports" stringByAppendingPathComponent:path] stringByStandardizingPath];
+      [matchingContents addObject:fullPath];
+    }
+  }
+
+  return matchingContents;
+}
+
+- (NSString *)concatenatedCrashReports:(NSArray *)reports
+{
+  NSMutableString *buffer = [NSMutableString string];
+
+  for (NSString *path in reports) {
+    NSString *crashReportText = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+    // Throw out everything below "Binary Images" - we mostly just care about the thread backtraces.
+    NSString *minimalCrashReportText = [crashReportText substringToIndex:[crashReportText rangeOfString:@"\nBinary Images:"].location];
+
+    [buffer appendFormat:@"CRASH REPORT: %@\n\n", [path lastPathComponent]];
+    [buffer appendString:minimalCrashReportText];
+    [buffer appendString:@"\n"];
+  }
+
+  return buffer;
+}
+
+- (NSString *)collectCrashReports:(NSSet *)crashReportsAtStart
+{
+  // Wait for a moment to see if a crash report shows up.
+  NSSet *crashReportsAtEnd = [NSSet setWithArray:[self collectCrashReportPaths]];
+  CFTimeInterval start = CACurrentMediaTime();
+
+  while ([crashReportsAtEnd isEqualToSet:crashReportsAtStart] &&
+         (CACurrentMediaTime() - start < _crashReportCollectionTime)) {
+    [NSThread sleepForTimeInterval:0.25];
+    crashReportsAtEnd = [NSSet setWithArray:[self collectCrashReportPaths]];
+  }
+
+  NSMutableSet *crashReportsGenerated = [NSMutableSet setWithSet:crashReportsAtEnd];
+  [crashReportsGenerated minusSet:crashReportsAtStart];
+  NSString *concatenatedCrashReports = [self concatenatedCrashReports:[crashReportsGenerated allObjects]];
+  return concatenatedCrashReports;
 }
 
 @end

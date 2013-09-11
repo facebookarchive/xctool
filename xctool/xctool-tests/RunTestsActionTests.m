@@ -137,8 +137,7 @@
                         @"TestProject_LibraryTests/testPrintSDK",
                         @"TestProject_LibraryTests/testStream",
                         @"TestProject_LibraryTests/testWillFail",
-                        @"TestProject_LibraryTests/testWillPass",
-                        @"TestProject_LibraryTests/testOutputMerging"];
+                        @"TestProject_LibraryTests/testWillPass"];
 
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
@@ -194,7 +193,7 @@
                equalTo(@[
                        @"-NSTreatUnknownArgumentsAsOpen", @"NO",
                        @"-ApplePersistenceIgnoreState", @"YES",
-                       @"-SenTest", @"TestProject_LibraryTests/testOutputMerging,TestProject_LibraryTests/testPrintSDK,TestProject_LibraryTests/testStream,TestProject_LibraryTests/testWillFail,TestProject_LibraryTests/testWillPass",
+                       @"-SenTest", [testList componentsJoinedByString:@","],
                        @"-SenTestInvertScope", @"NO",
                        @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
                        ]));
@@ -204,13 +203,12 @@
 
 - (void)testCanRunTestsAgainstDifferentTestSDK
 {
-  NSArray *testList = @[@"OtherTests/testSomething",
-                        @"SomeTests/testBacktraceOutputIsCaptured",
-                        @"SomeTests/testOutputMerging",
-                        @"SomeTests/testPrintSDK",
-                        @"SomeTests/testStream",
-                        @"SomeTests/testWillFail",
-                        @"SomeTests/testWillPass"];
+  NSArray *testList = @[@"TestProject_LibraryTests/testBacktraceOutputIsCaptured",
+                        @"TestProject_LibraryTests/testOutputMerging",
+                        @"TestProject_LibraryTests/testPrintSDK",
+                        @"TestProject_LibraryTests/testStream",
+                        @"TestProject_LibraryTests/testWillFail",
+                        @"TestProject_LibraryTests/testWillPass"];
 
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
@@ -360,7 +358,7 @@
                                                      target:@"TestsWithArgAndEnvSettingsTests"
                                                settingsPath:TEST_DATA @"TestsWithArgAndEnvSettingsInRunAction-TestsWithArgAndEnvSettings-TestsWithArgAndEnvSettingsTests-showBuildSettings.txt"
                                                        hide:NO],
-     [LaunchHandlers handlerForOtestQueryReturningTestList:@[@"TestA", @"TestB"]],
+     [LaunchHandlers handlerForOtestQueryReturningTestList:@[@"FakeTest/TestA", @"FakeTest/TestB"]],
      ]];
 
     XCTool *tool = [[[XCTool alloc] init] autorelease];
@@ -413,7 +411,7 @@
                                                      target:@"TestsWithArgAndEnvSettingsTests"
                                                settingsPath:TEST_DATA @"TestsWithArgAndEnvSettingsInTestAction-TestsWithArgAndEnvSettings-TestsWithArgAndEnvSettingsTests-showBuildSettings.txt"
                                                        hide:NO],
-     [LaunchHandlers handlerForOtestQueryReturningTestList:@[@"TestA", @"TestB"]],
+     [LaunchHandlers handlerForOtestQueryReturningTestList:@[@"FakeTest/TestA", @"FakeTest/TestB"]],
      ]];
 
     XCTool *tool = [[[XCTool alloc] init] autorelease];
@@ -466,7 +464,7 @@
                                                      target:@"TestsWithArgAndEnvSettingsTests"
                                                settingsPath:TEST_DATA @"TestsWithArgAndEnvSettingsWithMacroExpansion-TestsWithArgAndEnvSettings-TestsWithArgAndEnvSettingsTests-showBuildSettings.txt"
                                                        hide:NO],
-     [LaunchHandlers handlerForOtestQueryReturningTestList:@[@"TestA", @"TestB"]],
+     [LaunchHandlers handlerForOtestQueryReturningTestList:@[@"FakeTest/TestA", @"FakeTest/TestB"]],
      ]];
 
     XCTool *tool = [[[XCTool alloc] init] autorelease];
@@ -530,7 +528,7 @@
                                                      target:@"TestProject-LibraryTests"
                                                settingsPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings-5.0.txt"
                                                        hide:NO],
-     [LaunchHandlers handlerForOtestQueryReturningTestList:@[@"TestA", @"TestB"]],
+     [LaunchHandlers handlerForOtestQueryReturningTestList:@[@"FakeTest/TestA", @"FakeTest/TestB"]],
      ]];
 
     XCTool *tool = [[[XCTool alloc] init] autorelease];
