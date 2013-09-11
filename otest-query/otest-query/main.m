@@ -22,7 +22,15 @@
 int main(int argc, const char * argv[])
 {
   @autoreleasepool {
-    [OtestQuery queryTestBundlePath:[NSString stringWithUTF8String:argv[1]]];
+    NSString *bundlePath = [NSString stringWithUTF8String:argv[1]];
+    if (argc == 2)
+      [OtestQuery queryTestBundlePath:bundlePath];
+    else if (argc == 3) {
+      NSString *unitTestClassName = [NSString stringWithUTF8String:argv[2]];
+      [OtestQuery queryTestBundlePath:bundlePath unitTestClassName:unitTestClassName];
+    }
+    else
+      return -1;
   }
   return 0;
 }

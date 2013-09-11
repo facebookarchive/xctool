@@ -22,6 +22,7 @@
 
 #import <Foundation/Foundation.h>
 #import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "ReporterEvents.h"
 #import "Swizzle.h"
@@ -386,6 +387,24 @@ static const char *DyldImageStateChangeHandler(enum dyld_image_states state,
       XTSwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
                                       @selector(testCaseDidFail:),
                                       (IMP)SenTestLog_testCaseDidFail);
+    }
+    if (strstr(info[i].imageFilePath, "XCTest.framework") != NULL) {
+      // Since the 'XCTestLog' class now exists, we can swizzle it!
+      XTSwizzleClassSelectorForFunction(NSClassFromString(@"XCTestLog"),
+                                        @selector(testSuiteDidStart:),
+                                        (IMP)SenTestLog_testSuiteDidStart);
+      XTSwizzleClassSelectorForFunction(NSClassFromString(@"XCTestLog"),
+                                        @selector(testSuiteDidStop:),
+                                        (IMP)SenTestLog_testSuiteDidStop);
+      XTSwizzleClassSelectorForFunction(NSClassFromString(@"XCTestLog"),
+                                        @selector(testCaseDidStart:),
+                                        (IMP)SenTestLog_testCaseDidStart);
+      XTSwizzleClassSelectorForFunction(NSClassFromString(@"XCTestLog"),
+                                        @selector(testCaseDidStop:),
+                                        (IMP)SenTestLog_testCaseDidStop);
+      XTSwizzleClassSelectorForFunction(NSClassFromString(@"XCTestLog"),
+                                        @selector(testCaseDidFail:),
+                                        (IMP)SenTestLog_testCaseDidFail);
     }
   }
 

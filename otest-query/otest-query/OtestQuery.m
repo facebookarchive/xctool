@@ -26,6 +26,11 @@
 
 + (void)queryTestBundlePath:(NSString *)testBundlePath
 {
+  [self queryTestBundlePath:testBundlePath unitTestClassName:@"SenTestCase"];
+}
+
++ (void)queryTestBundlePath:(NSString *)testBundlePath unitTestClassName:(NSString *)unitTestClassName
+{
   NSBundle *bundle = [NSBundle bundleWithPath:testBundlePath];
 
   // We use dlopen() instead of -[NSBundle loadAndReturnError] because, if
@@ -36,7 +41,7 @@
   }
 
   [[NSBundle allFrameworks] makeObjectsPerformSelector:@selector(principalClass)];
-  NSArray *testClasses = objc_msgSend(NSClassFromString(@"SenTestCase"), @selector(senAllSubclasses));
+  NSArray *testClasses = objc_msgSend(NSClassFromString(unitTestClassName), @selector(senAllSubclasses));
 
   NSMutableArray *testNames = [NSMutableArray array];
   for (Class testClass in testClasses) {
