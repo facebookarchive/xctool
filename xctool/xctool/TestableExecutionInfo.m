@@ -21,38 +21,6 @@
 #import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
 
-NSString *unitTestClassNameFromBuildSettings(NSDictionary *testableBuildSettings, NSString **error)
-{
-  // Only set these once. Easy optimization!
-  NSString __block *wrapperExtensionKey = nil;
-  NSDictionary __block *wrapperToFrameworkMapping = nil;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    wrapperToFrameworkMapping = @{
-      @"octest": @"SenTestCase",
-      @"xctest": @"XCTestCase"
-    };
-    wrapperExtensionKey = @"WRAPPER_EXTENSION";
-  });
-
-  NSString *wrapperExtension = nil;
-  
-  if (![[testableBuildSettings allKeys] containsObject:wrapperExtensionKey] || [testableBuildSettings[wrapperExtensionKey] isEqualToString:@""]) {
-    NSLog(@"The %@ key isn't set or its value is empty in the build settings for this project. Defaulting to SenTestingKit.", wrapperExtensionKey);
-    return @"SenTestCase";
-  } else {
-    wrapperExtension = testableBuildSettings[wrapperExtensionKey];
-  }
-
-  if (![[wrapperToFrameworkMapping allKeys] containsObject:wrapperExtension]) {
-    NSLog(@"The wrapper extension %@ is not supported. The supported extensions are: %@",
-          wrapperExtension, [wrapperToFrameworkMapping allKeys]);
-    abort();
-  }
-  
-  return wrapperToFrameworkMapping[wrapperExtension];
-}
-
 @implementation TestableExecutionInfo
 
 + (instancetype)infoForTestable:(Testable *)testable
@@ -158,13 +126,12 @@ NSString *unitTestClassNameFromBuildSettings(NSDictionary *testableBuildSettings
   // TEST_HOST will sometimes be wrapped in "quotes".
   NSString *testHostExecutablePath = [testableBuildSettings[@"TEST_HOST"]
                                       stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
-  NSString *unitTestClassName = unitTestClassNameFromBuildSettings(testableBuildSettings, error);
 
   if ([sdkName hasPrefix:@"iphonesimulator"]) {
     if (testHostExecutablePath) {
-      return OTestQueryTestCasesInIOSBundleWithTestHost(testBundlePath, testHostExecutablePath, sdkName, unitTestClassName, error);
+      return OTestQueryTestCasesInIOSBundleWithTestHost(testBundlePath, testHostExecutablePath, sdkName, error);
     } else {
-      return OTestQueryTestCasesInIOSBundle(testBundlePath, sdkName, unitTestClassName, error);
+      return OTestQueryTestCasesInIOSBundle(testBundlePath, sdkName, error);
     }
   } else if ([sdkName hasPrefix:@"macosx"]) {
     BOOL disableGC;
@@ -180,7 +147,6 @@ NSString *unitTestClassNameFromBuildSettings(NSDictionary *testableBuildSettings
     return OTestQueryTestCasesInOSXBundle(testBundlePath,
                                           testableBuildSettings[@"BUILT_PRODUCTS_DIR"],
                                           disableGC,
-                                          unitTestClassName,
                                           error);
   } else if ([sdkName hasPrefix:@"iphoneos"]) {
     // We can't run tests on device yet, but we must return a test list here or

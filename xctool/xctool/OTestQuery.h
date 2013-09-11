@@ -23,7 +23,7 @@
  * @param bundlePath Path to OCUnit test bundle (ending in .octest)
  * @param sdk SDK to use (e.g. iphonesimulator6.1)
  */
-NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk, NSString *unitTestClassName, NSString **error);
+NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk, NSString **error);
 
 /**
  * Returns a list of all test cases in the bundle.
@@ -44,7 +44,6 @@ NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk, NSS
 NSArray *OTestQueryTestCasesInIOSBundleWithTestHost(NSString *bundlePath,
                                                     NSString *testHostExecutablePath,
                                                     NSString *sdk,
-                                                    NSString *unitTestClassName,
                                                     NSString **error);
 
 /**
@@ -55,4 +54,4 @@ NSArray *OTestQueryTestCasesInIOSBundleWithTestHost(NSString *bundlePath,
  *   path would normally be something like '.../Build/Products/Debug".
  * @param disableGC If YES, OBJC_DISABLE_GC will be set to YES.
  */
-NSArray *OTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtProductsDir, BOOL disableGC, NSString *unitTestClassName, NSString **error);
+NSArray *OTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtProductsDir, BOOL disableGC, NSString **error);

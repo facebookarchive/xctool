@@ -20,6 +20,5 @@
 @interface OtestQuery : NSObject
 
 + (void)queryTestBundlePath:(NSString *)testBundlePath;
-+ (void)queryTestBundlePath:(NSString *)testBundlePath unitTestClassName:(NSString *)unitTestClassName;
 
 @end

@@ -59,12 +59,13 @@ static BOOL SetErrorIfBundleDoesNotExist(NSString *bundlePath, NSString **error)
   }
 }
 
-NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk, NSString *unitTestClassName, NSString **error)
+NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk, NSString **error)
 {
-  return OTestQueryTestCasesInIOSBundleWithTestHost(bundlePath, nil, sdk, unitTestClassName, error);
+  return OTestQueryTestCasesInIOSBundleWithTestHost(bundlePath, nil, sdk, error);
 }
 
-NSArray *OTestQueryTestCasesInIOSBundleWithTestHost(NSString *bundlePath, NSString *testHostExecutablePath, NSString *sdk, NSString *unitTestClassName, NSString **error)
+NSArray *OTestQueryTestCasesInIOSBundleWithTestHost(NSString *bundlePath, NSString *testHostExecutablePath, NSString *sdk,
+                                                    NSString **error)
 {
   NSCAssert([sdk hasPrefix:@"iphonesimulator"], @"Only iphonesimulator SDKs are supported.");
 
@@ -105,14 +106,15 @@ NSArray *OTestQueryTestCasesInIOSBundleWithTestHost(NSString *bundlePath, NSStri
   [task setEnvironment:[[environment copy] autorelease]];
   [environment release];
   [task setLaunchPath:launchPath];
-  [task setArguments:@[bundlePath, unitTestClassName]];
+  [task setArguments:@[bundlePath]];
 
   NSArray *result = RunTaskAndReturnResult(task, error);
   [task release];
   return result;
 }
 
-NSArray *OTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtProductsDir, BOOL disableGC, NSString *unitTestClassName, NSString **error)
+NSArray *OTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtProductsDir, BOOL disableGC,
+                                        NSString **error)
 {
   if (SetErrorIfBundleDoesNotExist(bundlePath, error)) {
     return nil;
@@ -120,7 +122,7 @@ NSArray *OTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtPro
 
   NSTask *task = [[NSTask alloc] init];
   [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-osx"]];
-  [task setArguments:@[bundlePath, unitTestClassName]];
+  [task setArguments:@[bundlePath]];
   [task setEnvironment:@{
    @"DYLD_FRAMEWORK_PATH" : builtProductsDir,
    @"DYLD_LIBRARY_PATH" : builtProductsDir,
@@ -128,7 +130,7 @@ NSArray *OTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtPro
    @"NSUnbufferedIO" : @"YES",
    @"OBJC_DISABLE_GC" : disableGC ? @"YES" : @"NO"
    }];
-
+  
   NSArray *result = RunTaskAndReturnResult(task, error);
   [task release];
   return result;

@@ -15,6 +15,7 @@
 //
 
 #define ST_TESTCASE_CLASS_NAME @"SenTestCase"
+#define XCT_TESTCASE_CLASS_NAME @"XCTestCase"
 
 #import <SenTestingKit/SenTestingKit.h>
 
@@ -32,7 +33,6 @@
   NSArray *classes = OTestQueryTestCasesInOSXBundle(TEST_DATA @"otest-query-tests-osx-test-bundle/TestProject-Library-OSXTests.octest",
                                                     AbsolutePathFromRelative(TEST_DATA @"otest-query-tests-osx-test-bundle"),
                                                     YES,
-                                                    ST_TESTCASE_CLASS_NAME,
                                                     &error);
   assertThat(classes,
              equalTo(@[
@@ -42,13 +42,23 @@
                      ]));
 }
 
+- (void)testCanQueryXCTestClassesFromOSXBundle
+{
+  NSString *error = nil;
+  NSArray *classes = OTestQueryTestCasesInOSXBundle(TEST_DATA @"otest-query-tests-osx-test-bundle/TestProject-Library-XCTest-OSXTests.xctest",
+                                                    AbsolutePathFromRelative(TEST_DATA @"otest-query-tests-osx-test-bundle"),
+                                                    YES,
+                                                    &error);
+  assertThat(classes,
+             equalTo(@[@"TestProject_Library_XCTest_OSXTests/testExample"]));
+}
+
 - (void)testCanQueryClassesFromIOSBundle
 {
   NSString *error = nil;
   NSString *latestSDK = GetAvailableSDKsAndAliases()[@"iphonesimulator"];
   NSArray *classes = OTestQueryTestCasesInIOSBundle(TEST_DATA @"otest-query-tests-ios-test-bundle/TestProject-LibraryTests.octest",
                                                     latestSDK,
-                                                    ST_TESTCASE_CLASS_NAME,
                                                     &error);
   assertThat(classes,
              equalTo(@[
@@ -70,7 +80,6 @@
   NSArray *classes = OTestQueryTestCasesInOSXBundle(TEST_DATA @"otest-query-tests-ios-test-bundle/TestProject-LibraryTests.octest",
                                                     AbsolutePathFromRelative(TEST_DATA @"otest-query-tests-osx-test-bundle"),
                                                     YES,
-                                                    ST_TESTCASE_CLASS_NAME,
                                                     &error);
   assertThat(classes, equalTo(nil));
   assertThat(error, containsString(@"no suitable image found."));
@@ -84,7 +93,6 @@
   NSString *latestSDK = GetAvailableSDKsAndAliases()[@"iphonesimulator"];
   NSArray *classes = OTestQueryTestCasesInIOSBundle(TEST_DATA @"otest-query-tests-osx-test-bundle/TestProject-Library-OSXTests.octest",
                                                     latestSDK,
-                                                    ST_TESTCASE_CLASS_NAME,
                                                     &error);
   assertThat(classes, equalTo(nil));
   assertThat(error, containsString(@"no suitable image found."));
@@ -97,7 +105,6 @@
   NSArray *classes = OTestQueryTestCasesInIOSBundleWithTestHost(TEST_DATA @"otest-query-tests-ios-test-bundle/TestProject-LibraryTests.octest",
                                                                 @"/path/to/executable/that/does/not/exist",
                                                                 latestSDK,
-                                                                ST_TESTCASE_CLASS_NAME,
                                                                 &error);
   assertThat(classes, equalTo(nil));
   assertThat(error, containsString(@"The test host executable is missing: '/path/to/executable/that/does/not/exist'"));
