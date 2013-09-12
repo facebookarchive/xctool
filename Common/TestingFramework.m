@@ -56,16 +56,18 @@ NSDictionary *getWrapperToFrameworkMapping() {
 
 @implementation TestingFramework
 
+@synthesize testClassName, allTestSelectorName, testRunnerPath, filterTestsArgKey, invertScopeArgKey;
+
 + (NSDictionary *)frameworkInfoForBuildSettings: (NSDictionary *)testableBuildSettings
 {
   NSString *wrapperExtension = nil;
   
   if (![[testableBuildSettings allKeys] containsObject:WRAPPER_EXTENSION_KEY]
-      || [testableBuildSettings[WRAPPER_EXTENSION_KEY] isEqualToString:@""]) {
+      || [[testableBuildSettings objectForKey:WRAPPER_EXTENSION_KEY] isEqualToString:@""]) {
     NSLog(@"The %@ key isn't set or its value is empty in the build settings for this project. Defaulting to SenTestingKit.", WRAPPER_EXTENSION_KEY);
     wrapperExtension = @"octest";
   } else {
-    wrapperExtension = testableBuildSettings[WRAPPER_EXTENSION_KEY];
+    wrapperExtension = [testableBuildSettings objectForKey:WRAPPER_EXTENSION_KEY];
   }
   
   return [self frameworkInfoForWrapperExtension: wrapperExtension];
@@ -80,7 +82,7 @@ NSDictionary *getWrapperToFrameworkMapping() {
     abort();
   }
   
-  return wrapperToFrameworkMapping[wrapperExtension];
+  return [wrapperToFrameworkMapping objectForKey:wrapperExtension];
 }
 
 + (instancetype)XCTest
@@ -97,11 +99,11 @@ NSDictionary *getWrapperToFrameworkMapping() {
 {
   if (self = [super init]) {
     NSDictionary *frameworkInfo = [[self class] frameworkInfoForWrapperExtension:extension];
-    self.testClassName        = frameworkInfo[TF_CLASS_NAME];
-    self.allTestSelectorName  = frameworkInfo[TF_ALL_TESTS_SELECTOR_NAME];
-    self.testRunnerPath       = frameworkInfo[TF_TESTRUNNER_NAME];
-    self.filterTestsArgKey    = frameworkInfo[TF_FILTER_TESTS_ARG_KEY];
-    self.invertScopeArgKey    = frameworkInfo[TF_INVERT_SCOPE_ARG_KEY];
+    self.testClassName        = [frameworkInfo objectForKey:TF_CLASS_NAME];
+    self.allTestSelectorName  = [frameworkInfo objectForKey:TF_ALL_TESTS_SELECTOR_NAME];
+    self.testRunnerPath       = [frameworkInfo objectForKey:TF_TESTRUNNER_NAME];
+    self.filterTestsArgKey    = [frameworkInfo objectForKey:TF_FILTER_TESTS_ARG_KEY];
+    self.invertScopeArgKey    = [frameworkInfo objectForKey:TF_INVERT_SCOPE_ARG_KEY];
   }
   return self;
 }

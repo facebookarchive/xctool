@@ -22,7 +22,7 @@
 
 #import <Foundation/Foundation.h>
 #import <SenTestingKit/SenTestingKit.h>
-#import <XCTest/XCTest.h>
+#import "XCTest.h"
 
 #import "ReporterEvents.h"
 #import "Swizzle.h"

@@ -56,48 +56,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AAD5098F17E2164500848EC9"
-               BuildableName = "otest-query-ios copy"
-               BlueprintName = "xctest-query-ios"
-               ReferencedContainer = "container:../otest-query/otest-query.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AAD5099B17E2164600848EC9"
-               BuildableName = "otest-query-osx copy"
-               BlueprintName = "xctest-query-osx"
-               ReferencedContainer = "container:../otest-query/otest-query.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "AAD509A717E2164700848EC9"
-               BuildableName = "otest-query-ios-dylib copy.dylib"
-               BlueprintName = "xctest-query-ios-dylib"
-               ReferencedContainer = "container:../otest-query/otest-query.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "283CCA8B16C2EE4C00F2E343"
                BuildableName = "otest-shim-ios.dylib"
                BlueprintName = "otest-shim-ios"
