@@ -21,6 +21,13 @@
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
 
+static NSString *SimulatorSDKRootPathWithVersion(NSString *version)
+{
+  return [NSString stringWithFormat:@"%@/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator%@.sdk",
+          XcodeDeveloperDirPath(),
+          version];
+}
+
 static NSArray *RunTaskAndReturnResult(NSTask *task, NSString **error)
 {
   NSDictionary *output = LaunchTaskAndCaptureOutput(task);
@@ -68,17 +75,16 @@ NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk, NSS
   }
 
   NSString *version = [sdk stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
-  DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKVersion:version];
-  NSCAssert(systemRoot != nil, @"Cannot get systemRoot");
   NSString *simulatorHome = [NSString stringWithFormat:@"%@/Library/Application Support/iPhone Simulator/%@", NSHomeDirectory(), version];
+  NSString *sdkRootPath = SimulatorSDKRootPathWithVersion(version);
 
   NSTask *task = [[NSTask alloc] init];
   [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-ios"]];
   [task setEnvironment:@{@"CFFIXED_USER_HOME" : simulatorHome,
                          @"HOME" : simulatorHome,
                          @"IPHONE_SHARED_RESOURCES_DIRECTORY" : simulatorHome,
-                         @"DYLD_ROOT_PATH" : [systemRoot sdkRootPath],
-                         @"IPHONE_SIMULATOR_ROOT" : [systemRoot sdkRootPath],
+                         @"DYLD_ROOT_PATH" : sdkRootPath,
+                         @"IPHONE_SIMULATOR_ROOT" : sdkRootPath,
                          @"IPHONE_SIMULATOR_VERSIONS" : @"iPhone Simulator (external launch) , iPhone OS 6.0 (unknown/10A403)",
                          @"NSUnbufferedIO" : @"YES"}];
   [task setArguments:@[bundlePath]];
@@ -102,9 +108,8 @@ NSArray *OTestQueryTestCasesInIOSBundleWithTestHost(NSString *bundlePath, NSStri
   }
 
   NSString *version = [sdk stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
-  DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKVersion:version];
-  NSCAssert(systemRoot != nil, @"Cannot get systemRoot");
   NSString *simulatorHome = [NSString stringWithFormat:@"%@/Library/Application Support/iPhone Simulator/%@", NSHomeDirectory(), version];
+  NSString *sdkRootPath = SimulatorSDKRootPathWithVersion(version);
 
   NSTask *task = [[NSTask alloc] init];
   [task setLaunchPath:testHostExecutablePath];
@@ -117,8 +122,8 @@ NSArray *OTestQueryTestCasesInIOSBundleWithTestHost(NSString *bundlePath, NSStri
    @"CFFIXED_USER_HOME" : simulatorHome,
    @"HOME" : simulatorHome,
    @"IPHONE_SHARED_RESOURCES_DIRECTORY" : simulatorHome,
-   @"DYLD_ROOT_PATH" : [systemRoot sdkRootPath],
-   @"IPHONE_SIMULATOR_ROOT" : [systemRoot sdkRootPath],
+   @"DYLD_ROOT_PATH" : sdkRootPath,
+   @"IPHONE_SIMULATOR_ROOT" : sdkRootPath,
    @"IPHONE_SIMULATOR_VERSIONS" : @"iPhone Simulator (external launch) , iPhone OS 6.0 (unknown/10A403)",
    @"NSUnbufferedIO" : @"YES"}];
   [task setArguments:@[bundlePath]];
