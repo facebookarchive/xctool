@@ -364,7 +364,6 @@
 		AA3BF0EF17E06B2C001E307D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TestProject-Library-XCTest-OSX.dylib";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
@@ -378,7 +377,6 @@
 				);
 				INFOPLIST_FILE = "TestProject-Library-XCTest-OSXTests/TestProject-Library-XCTest-OSXTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Debug;
@@ -386,7 +384,6 @@
 		AA3BF0F017E06B2C001E307D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TestProject-Library-XCTest-OSX.dylib";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
@@ -396,7 +393,6 @@
 				GCC_PREFIX_HEADER = "TestProject-Library-XCTest-OSX/TestProject-Library-XCTest-OSX-Prefix.pch";
 				INFOPLIST_FILE = "TestProject-Library-XCTest-OSXTests/TestProject-Library-XCTest-OSXTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Release;
@@ -420,6 +416,7 @@
 				AA3BF0ED17E06B2C001E307D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		AA3BF0EE17E06B2C001E307D /* Build configuration list for PBXNativeTarget "TestProject-Library-XCTest-OSXTests" */ = {
 			isa = XCConfigurationList;
@@ -428,6 +425,7 @@
 				AA3BF0F017E06B2C001E307D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

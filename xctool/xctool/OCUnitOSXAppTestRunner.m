@@ -52,7 +52,6 @@
 
   NSTask *task = [[NSTask alloc] init];
   [task setLaunchPath:testHostPath];
-//FIXME: Don't hardcode the extension here.
   NSString *bundlePath = [_buildSettings[@"BUILT_PRODUCTS_DIR"] stringByAppendingPathComponent:_buildSettings[@"FULL_PRODUCT_NAME"]];
   NSString *bundleExtension = [bundlePath pathExtension];
   

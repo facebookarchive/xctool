@@ -20,7 +20,7 @@
 
 @property (nonatomic, retain) NSString *testClassName;
 @property (nonatomic, retain) NSString *allTestSelectorName;
-@property (nonatomic, retain) NSString *testRunnerName;
+@property (nonatomic, retain) NSString *testRunnerPath;
 @property (nonatomic, retain) NSString *filterTestsArgKey;
 @property (nonatomic, retain) NSString *invertScopeArgKey;
 
@@ -35,20 +35,20 @@ NSDictionary *getWrapperToFrameworkMapping() {
   dispatch_once(&onceToken, ^{
     wrapperToFrameworkMapping = @{
       @"octest": @{
-          TF_CLASS_NAME: @"SenTestCase",
-          TF_ALL_TESTS_SELECTOR_NAME: @"senAllSubclasses",
-          TF_TESTRUNNER_NAME: @"otest",
-          TF_FILTER_TESTS_ARG_KEY: @"-SenTest",
-          TF_INVERT_SCOPE_ARG_KEY: @"-SenTestInvertScope"
-          },
+        TF_CLASS_NAME: @"SenTestCase",
+        TF_ALL_TESTS_SELECTOR_NAME: @"senAllSubclasses",
+        TF_TESTRUNNER_NAME: @"Tools/otest",
+        TF_FILTER_TESTS_ARG_KEY: @"-SenTest",
+        TF_INVERT_SCOPE_ARG_KEY: @"-SenTestInvertScope"
+      },
       @"xctest": @{
-          TF_CLASS_NAME: @"XCTestCase",
-          TF_ALL_TESTS_SELECTOR_NAME: @"xct_allSubclasses",
-          TF_TESTRUNNER_NAME: @"xctest",
-          TF_FILTER_TESTS_ARG_KEY: @"-XCTest",
-          TF_INVERT_SCOPE_ARG_KEY: @"-XCTestInvertScope"
-          }
-      };
+        TF_CLASS_NAME: @"XCTestCase",
+        TF_ALL_TESTS_SELECTOR_NAME: @"xct_allSubclasses",
+        TF_TESTRUNNER_NAME: @"usr/bin/xctest",
+        TF_FILTER_TESTS_ARG_KEY: @"-XCTest",
+        TF_INVERT_SCOPE_ARG_KEY: @"-XCTestInvertScope"
+      }
+    };
     [wrapperToFrameworkMapping retain];
   });
   return wrapperToFrameworkMapping;
@@ -60,7 +60,8 @@ NSDictionary *getWrapperToFrameworkMapping() {
 {
   NSString *wrapperExtension = nil;
   
-  if (![[testableBuildSettings allKeys] containsObject:WRAPPER_EXTENSION_KEY] || [testableBuildSettings[WRAPPER_EXTENSION_KEY] isEqualToString:@""]) {
+  if (![[testableBuildSettings allKeys] containsObject:WRAPPER_EXTENSION_KEY]
+      || [testableBuildSettings[WRAPPER_EXTENSION_KEY] isEqualToString:@""]) {
     NSLog(@"The %@ key isn't set or its value is empty in the build settings for this project. Defaulting to SenTestingKit.", WRAPPER_EXTENSION_KEY);
     wrapperExtension = @"octest";
   } else {
@@ -98,7 +99,7 @@ NSDictionary *getWrapperToFrameworkMapping() {
     NSDictionary *frameworkInfo = [[self class] frameworkInfoForWrapperExtension:extension];
     self.testClassName        = frameworkInfo[TF_CLASS_NAME];
     self.allTestSelectorName  = frameworkInfo[TF_ALL_TESTS_SELECTOR_NAME];
-    self.testRunnerName       = frameworkInfo[TF_TESTRUNNER_NAME];
+    self.testRunnerPath       = frameworkInfo[TF_TESTRUNNER_NAME];
     self.filterTestsArgKey    = frameworkInfo[TF_FILTER_TESTS_ARG_KEY];
     self.invertScopeArgKey    = frameworkInfo[TF_INVERT_SCOPE_ARG_KEY];
   }

@@ -302,13 +302,13 @@
      @"-ApplePersistenceIgnoreState", @"YES",
      // SenTest / XCTest is one of Self, All, None,
      // or TestClassName[/testCaseName][,TestClassName2]
-//#error add the filter testcase arg here
      framework.filterTestsArgKey, _senTestList,
      // SenTestInvertScope / XCTestInvertScope optionally inverts whatever
      // SenTest would normally select. We never invert, since we always
      // pass the exact list of test cases to be run.
      framework.invertScopeArgKey, @"NO",
   ]];
+  [framework release];
   
   // Add any argments that might have been specifed in the scheme.
   [args addObjectsFromArray:_arguments];

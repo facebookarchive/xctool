@@ -258,7 +258,7 @@
 		32707EE31725FE9500AF2F53 /* TestActionInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestActionInternal.h; sourceTree = "<group>"; };
 		32A90C521725F05800C2349E /* TestAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestAction.m; sourceTree = "<group>"; };
 		32A90C531725F05800C2349E /* TestAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestAction.h; sourceTree = "<group>"; };
-		AA3BF12017E0970C001E307D /* TestingFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; name = TestingFramework.h; path = "../../otest-query/otest-query/TestingFramework.h"; sourceTree = "<group>"; };
+		AA3BF12017E0970C001E307D /* TestingFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestingFramework.h; path = "../../otest-query/otest-query/TestingFramework.h"; sourceTree = "<group>"; };
 		AA3BF12517E099EE001E307D /* TestingFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestingFramework.m; path = "../../otest-query/otest-query/TestingFramework.m"; sourceTree = "<group>"; };
 		C9D5B9871733CC2100011C1F /* ArchiveAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArchiveAction.h; sourceTree = "<group>"; };
 		C9D5B9881733CC2100011C1F /* ArchiveAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArchiveAction.m; sourceTree = "<group>"; };

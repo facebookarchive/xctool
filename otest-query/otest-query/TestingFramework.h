@@ -12,7 +12,7 @@
 
 @property (nonatomic, readonly) NSString *testClassName;
 @property (nonatomic, readonly) NSString *allTestSelectorName;
-@property (nonatomic, readonly) NSString *testRunnerName;
+@property (nonatomic, readonly) NSString *testRunnerPath;
 @property (nonatomic, readonly) NSString *filterTestsArgKey;
 @property (nonatomic, readonly) NSString *invertScopeArgKey;
 

@@ -39,7 +39,7 @@
   NSTask *task = [[[NSTask alloc] init] autorelease];
   NSString *bundleExtension = [testBundlePath pathExtension];
   TestingFramework *framework = [[TestingFramework alloc] initWithBundleExtension:bundleExtension];
-  [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:[@"Tools/%@" stringByAppendingString:framework.testRunnerName]]];
+  [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:framework.testRunnerPath]];
   [framework release];
   // When invoking otest directly, the last arg needs to be the the test bundle.
   [task setArguments:[[self testArgumentsForExtension:bundleExtension] arrayByAddingObject:testBundlePath]];

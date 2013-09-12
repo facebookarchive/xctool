@@ -199,29 +199,29 @@
 {
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
-     // Make sure -showBuildSettings returns some data
-     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
+      // Make sure -showBuildSettings returns some data
+      [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
                                                      scheme:@"TestProject-Library"
                                                settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
-     // We're going to call -showBuildSettings on the test target.
-     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
+      // We're going to call -showBuildSettings on the test target.
+      [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
                                                      target:@"TestProject-LibraryTests"
                                                settingsPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings-5.0.txt"
                                                        hide:NO],
-     [LaunchHandlers handlerForOtestQueryReturningTestList:@[@"TestA", @"TestB"]],
-     [[^(FakeTask *task){
-      if ([[task launchPath] hasSuffix:@"otest"]) {
-        // Pretend the tests fail, which should make xctool return an overall
-        // status of 1.
-        [task pretendExitStatusOf:1];
-        [task pretendTaskReturnsStandardOutput:
-         [NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results.txt"
-                                   encoding:NSUTF8StringEncoding
-                                      error:nil]];
-      }
+      [LaunchHandlers handlerForOtestQueryReturningTestList:@[@"TestA", @"TestB"]],
+      [[^(FakeTask *task){
+        if ([[task launchPath] hasSuffix:@"otest"]) {
+          // Pretend the tests fail, which should make xctool return an overall
+          // status of 1.
+          [task pretendExitStatusOf:1];
+          [task pretendTaskReturnsStandardOutput:
+           [NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results.txt"
+                                     encoding:NSUTF8StringEncoding
+                                        error:nil]];
+        }
 
-    } copy] autorelease],
-     ]];
+      } copy] autorelease],
+    ]];
 
     XCTool *tool = [[[XCTool alloc] init] autorelease];
 
@@ -268,31 +268,31 @@
   void (^runWithOnlyArgumentAndExpectSenTestToBe)(NSString *, NSString *) = ^(NSString *onlyArgument, NSString *expectedSenTest) {
     [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
       [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
-                                                                // Make sure -showBuildSettings returns some data
-                                                                [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
-                                                                                                                scheme:@"TestProject-Library"
-                                                                                                          settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
-                                                                // We're going to call -showBuildSettings on the test target.
-                                                                [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
-                                                                                                                target:@"TestProject-LibraryTests"
-                                                                                                          settingsPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings-5.0.txt"
-                                                                                                                  hide:NO],
-                                                                [LaunchHandlers handlerForOtestQueryReturningTestList:@[
-                                                                                                                        @"OtherTests/testSomething",
-                                                                                                                        @"SomeTests/testWillFail",
-                                                                                                                        @"SomeTests/testWillPass",
-                                                                                                                        ]],
-                                                                [[^(FakeTask *task){
-        if ([[task launchPath] hasSuffix:@"otest"]) {
-          [task pretendTaskReturnsStandardOutput:
-           [NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results.txt"
-                                     encoding:NSUTF8StringEncoding
-                                        error:nil]];
-        }
-
-      } copy] autorelease],
-                                                                ]];
-
+        // Make sure -showBuildSettings returns some data
+        [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
+                                                        scheme:@"TestProject-Library"
+                                                  settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
+        // We're going to call -showBuildSettings on the test target.
+        [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
+                                                        target:@"TestProject-LibraryTests"
+                                                  settingsPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings-5.0.txt"
+                                                          hide:NO],
+        [LaunchHandlers handlerForOtestQueryReturningTestList:@[
+                                                                @"OtherTests/testSomething",
+                                                                @"SomeTests/testWillFail",
+                                                                @"SomeTests/testWillPass",
+                                                                ]],
+        [[^(FakeTask *task){
+          if ([[task launchPath] hasSuffix:@"otest"]) {
+            [task pretendTaskReturnsStandardOutput:
+             [NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results.txt"
+                                       encoding:NSUTF8StringEncoding
+                                          error:nil]];
+          }
+          
+        } copy] autorelease],
+      ]];
+        
       XCTool *tool = [[[XCTool alloc] init] autorelease];
 
       tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",

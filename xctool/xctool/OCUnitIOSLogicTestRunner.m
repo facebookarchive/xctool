@@ -45,7 +45,7 @@
   NSTask *task = [[[NSTask alloc] init] autorelease];
   NSString *bundleExtension = [testBundlePath pathExtension];
   TestingFramework *framework = [[TestingFramework alloc] initWithBundleExtension:bundleExtension];
-  [task setLaunchPath:[NSString stringWithFormat:@"%@/Developer/usr/bin/%@", _buildSettings[@"SDKROOT"], framework.testRunnerName]];
+  [task setLaunchPath:[NSString stringWithFormat:@"%@/Developer/%@", _buildSettings[@"SDKROOT"], framework.testRunnerPath]];
   [framework release];
   [task setArguments:[[self testArgumentsForExtension:bundleExtension] arrayByAddingObject:testBundlePath]];
   NSMutableDictionary *env = [[self.environmentOverrides mutableCopy] autorelease];
