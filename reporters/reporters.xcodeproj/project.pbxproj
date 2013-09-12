@@ -17,11 +17,8 @@
 		28F489D6179735B700068E00 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F489D1179735B700068E00 /* main.m */; };
 		28F489D7179735B700068E00 /* TextReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F489D4179735B700068E00 /* TextReporter.m */; };
 		28F489D8179735B700068E00 /* TextReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F489D4179735B700068E00 /* TextReporter.m */; };
-		28F489DD1797360600068E00 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F489D91797360600068E00 /* Reporter.m */; };
-		28F489DE1797360600068E00 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F489D91797360600068E00 /* Reporter.m */; };
 		28F489E31797362400068E00 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F489D1179735B700068E00 /* main.m */; };
 		28F489E41797362400068E00 /* TextReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F489D4179735B700068E00 /* TextReporter.m */; };
-		28F489E51797362400068E00 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F489D91797360600068E00 /* Reporter.m */; };
 		28F489E81797362400068E00 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2893A96A17960D2000EFBD28 /* Foundation.framework */; };
 		28F489F01797388400068E00 /* TextReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F489EF1797388400068E00 /* TextReporterTests.m */; };
 		28F489F817973B7100068E00 /* NSFileHandle+Print.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F489F517973B7100068E00 /* NSFileHandle+Print.m */; };
@@ -34,24 +31,28 @@
 		28F48A17179743C600068E00 /* PhabricatorReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F48A16179743C600068E00 /* PhabricatorReporter.m */; };
 		28F48A18179743C600068E00 /* PhabricatorReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F48A16179743C600068E00 /* PhabricatorReporter.m */; };
 		28F48A191797447200068E00 /* NSFileHandle+Print.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F489F517973B7100068E00 /* NSFileHandle+Print.m */; };
-		28F48A1A1797447200068E00 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F489D91797360600068E00 /* Reporter.m */; };
 		28F48A1C1797462400068E00 /* PhabricatorReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F48A1B1797462400068E00 /* PhabricatorReporterTests.m */; };
 		28F48A2317974D4100068E00 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2893A96A17960D2000EFBD28 /* Foundation.framework */; };
 		28F48A2617974D4100068E00 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F48A2517974D4100068E00 /* main.m */; };
 		28F48A2E17974D5400068E00 /* NSFileHandle+Print.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F489F517973B7100068E00 /* NSFileHandle+Print.m */; };
-		28F48A2F17974D5400068E00 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F489D91797360600068E00 /* Reporter.m */; };
 		28F48A3217974E3900068E00 /* JUnitReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F48A3117974E3900068E00 /* JUnitReporter.m */; };
 		28F48A3317974E3900068E00 /* JUnitReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F48A3117974E3900068E00 /* JUnitReporter.m */; };
 		28F48A3517974EA000068E00 /* JUnitReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F48A3417974EA000068E00 /* JUnitReporterTests.m */; };
 		28F48A3C17974EF600068E00 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2893A96A17960D2000EFBD28 /* Foundation.framework */; };
 		28F48A3F17974EF600068E00 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F48A3E17974EF600068E00 /* main.m */; };
 		28F48A4717974F1000068E00 /* NSFileHandle+Print.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F489F517973B7100068E00 /* NSFileHandle+Print.m */; };
-		28F48A4817974F1000068E00 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F489D91797360600068E00 /* Reporter.m */; };
 		28F48A4A17974F3F00068E00 /* JSONCompilationDatabaseReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F48A4917974F3F00068E00 /* JSONCompilationDatabaseReporter.m */; };
 		28F48A4B17974F3F00068E00 /* JSONCompilationDatabaseReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F48A4917974F3F00068E00 /* JSONCompilationDatabaseReporter.m */; };
 		28F48A4D17974FEB00068E00 /* JSONCompilationDatabaseReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F48A4C17974FEB00068E00 /* JSONCompilationDatabaseReporterTests.m */; };
 		28F48A54179750A600068E00 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2893A96A17960D2000EFBD28 /* Foundation.framework */; };
 		28F48A57179750A600068E00 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F48A56179750A600068E00 /* main.m */; };
+		EE61734717E284DD00F02C91 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE61734617E284DD00F02C91 /* Reporter.m */; };
+		EE61734817E284DD00F02C91 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE61734617E284DD00F02C91 /* Reporter.m */; };
+		EE61734917E284DD00F02C91 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE61734617E284DD00F02C91 /* Reporter.m */; };
+		EE61734A17E284DD00F02C91 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE61734617E284DD00F02C91 /* Reporter.m */; };
+		EE61734B17E284DD00F02C91 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE61734617E284DD00F02C91 /* Reporter.m */; };
+		EE61734C17E284DD00F02C91 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE61734617E284DD00F02C91 /* Reporter.m */; };
+		EE61734D17E284DD00F02C91 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE61734617E284DD00F02C91 /* Reporter.m */; };
 		EE9E73E317A7323B008A5ED2 /* TestResultCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE9E73E217A7323B008A5ED2 /* TestResultCounter.m */; };
 		EE9E73E417A732F0008A5ED2 /* TestResultCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE9E73E217A7323B008A5ED2 /* TestResultCounter.m */; };
 		EE9E73E517A73308008A5ED2 /* TestResultCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE9E73E217A7323B008A5ED2 /* TestResultCounter.m */; };
@@ -142,8 +143,6 @@
 		28F489D1179735B700068E00 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		28F489D3179735B700068E00 /* TextReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextReporter.h; sourceTree = "<group>"; };
 		28F489D4179735B700068E00 /* TextReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextReporter.m; sourceTree = "<group>"; };
-		28F489D91797360600068E00 /* Reporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reporter.m; sourceTree = "<group>"; };
-		28F489DA1797360600068E00 /* Reporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reporter.h; sourceTree = "<group>"; };
 		28F489ED1797362400068E00 /* plain */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = plain; sourceTree = BUILT_PRODUCTS_DIR; };
 		28F489EF1797388400068E00 /* TextReporterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextReporterTests.m; sourceTree = "<group>"; };
 		28F489F417973B7100068E00 /* NSFileHandle+Print.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSFileHandle+Print.h"; path = "../Common/NSFileHandle+Print.h"; sourceTree = "<group>"; };
@@ -171,6 +170,8 @@
 		28F48A4E1797500300068E00 /* JSONCompilationDatabaseReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONCompilationDatabaseReporter.h; sourceTree = "<group>"; };
 		28F48A53179750A600068E00 /* json-stream */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "json-stream"; sourceTree = BUILT_PRODUCTS_DIR; };
 		28F48A56179750A600068E00 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		EE61734517E2785F00F02C91 /* Reporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reporter.h; path = ../Common/Reporter.h; sourceTree = "<group>"; };
+		EE61734617E284DD00F02C91 /* Reporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reporter.m; path = ../Common/Reporter.m; sourceTree = "<group>"; };
 		EE9E73E117A7323B008A5ED2 /* TestResultCounter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestResultCounter.h; sourceTree = "<group>"; };
 		EE9E73E217A7323B008A5ED2 /* TestResultCounter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestResultCounter.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -317,6 +318,8 @@
 		2893A97E179614D400EFBD28 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				EE61734617E284DD00F02C91 /* Reporter.m */,
+				EE61734517E2785F00F02C91 /* Reporter.h */,
 				28F489F417973B7100068E00 /* NSFileHandle+Print.h */,
 				28F489F517973B7100068E00 /* NSFileHandle+Print.m */,
 				28F489F617973B7100068E00 /* FakeFileHandle.h */,
@@ -333,8 +336,6 @@
 			children = (
 				28F489FE17973CF600068E00 /* Reporter+Testing.h */,
 				28F489FF17973CF600068E00 /* Reporter+Testing.m */,
-				28F489D91797360600068E00 /* Reporter.m */,
-				28F489DA1797360600068E00 /* Reporter.h */,
 			);
 			path = reporters;
 			sourceTree = "<group>";
@@ -576,7 +577,6 @@
 			files = (
 				28F489D5179735B700068E00 /* main.m in Sources */,
 				28F489D7179735B700068E00 /* TextReporter.m in Sources */,
-				28F489DD1797360600068E00 /* Reporter.m in Sources */,
 				28F489F01797388400068E00 /* TextReporterTests.m in Sources */,
 				28F489F817973B7100068E00 /* NSFileHandle+Print.m in Sources */,
 				28F489F917973B7100068E00 /* FakeFileHandle.m in Sources */,
@@ -585,6 +585,7 @@
 				28F48A1C1797462400068E00 /* PhabricatorReporterTests.m in Sources */,
 				28F48A3217974E3900068E00 /* JUnitReporter.m in Sources */,
 				28F48A3517974EA000068E00 /* JUnitReporterTests.m in Sources */,
+				EE61734717E284DD00F02C91 /* Reporter.m in Sources */,
 				28F48A4A17974F3F00068E00 /* JSONCompilationDatabaseReporter.m in Sources */,
 				28F48A4D17974FEB00068E00 /* JSONCompilationDatabaseReporterTests.m in Sources */,
 				EE9E73E317A7323B008A5ED2 /* TestResultCounter.m in Sources */,
@@ -595,10 +596,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE61734817E284DD00F02C91 /* Reporter.m in Sources */,
 				EE9E73E417A732F0008A5ED2 /* TestResultCounter.m in Sources */,
 				28F489D6179735B700068E00 /* main.m in Sources */,
 				28F489D8179735B700068E00 /* TextReporter.m in Sources */,
-				28F489DE1797360600068E00 /* Reporter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -606,10 +607,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE61734917E284DD00F02C91 /* Reporter.m in Sources */,
 				EE9E73E517A73308008A5ED2 /* TestResultCounter.m in Sources */,
 				28F489E31797362400068E00 /* main.m in Sources */,
 				28F489E41797362400068E00 /* TextReporter.m in Sources */,
-				28F489E51797362400068E00 /* Reporter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -617,8 +618,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE61734A17E284DD00F02C91 /* Reporter.m in Sources */,
 				28F48A191797447200068E00 /* NSFileHandle+Print.m in Sources */,
-				28F48A1A1797447200068E00 /* Reporter.m in Sources */,
 				28F48A0D179743AE00068E00 /* main.m in Sources */,
 				28F48A18179743C600068E00 /* PhabricatorReporter.m in Sources */,
 			);
@@ -628,8 +629,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE61734B17E284DD00F02C91 /* Reporter.m in Sources */,
 				28F48A2E17974D5400068E00 /* NSFileHandle+Print.m in Sources */,
-				28F48A2F17974D5400068E00 /* Reporter.m in Sources */,
 				28F48A2617974D4100068E00 /* main.m in Sources */,
 				28F48A3317974E3900068E00 /* JUnitReporter.m in Sources */,
 			);
@@ -639,8 +640,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE61734C17E284DD00F02C91 /* Reporter.m in Sources */,
 				28F48A4717974F1000068E00 /* NSFileHandle+Print.m in Sources */,
-				28F48A4817974F1000068E00 /* Reporter.m in Sources */,
 				28F48A3F17974EF600068E00 /* main.m in Sources */,
 				28F48A4B17974F3F00068E00 /* JSONCompilationDatabaseReporter.m in Sources */,
 			);
@@ -650,6 +651,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE61734D17E284DD00F02C91 /* Reporter.m in Sources */,
 				28F48A57179750A600068E00 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

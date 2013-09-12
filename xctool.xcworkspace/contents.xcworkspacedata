@@ -23,6 +23,12 @@
       location = "group:Common"
       name = "Common">
       <FileRef
+         location = "group:Reporter.m">
+      </FileRef>
+      <FileRef
+         location = "group:Reporter.h">
+      </FileRef>
+      <FileRef
          location = "group:Swizzle.h">
       </FileRef>
       <FileRef
