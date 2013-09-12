@@ -8,16 +8,22 @@
 
 #import "TestingFramework.h"
 
-#define TESTING_FRAMEWORK_CLASS_KEY @"class"
-#define TESTING_FRAMEWORK_SELECTOR_KEY @"selector"
-#define TESTING_FRAMEWORK_EXECUTABLE_KEY @"executable"
+#define TF_CLASS_NAME @"class"
+#define TF_ALL_TESTS_SELECTOR_NAME @"selector"
+#define TF_TESTRUNNER_NAME @"executable"
+#define TF_INVERT_SCOPE_ARG_KEY @"invertScope"
+#define TF_FILTER_TESTS_ARG_KEY @"filterTestcasesArg"
+
 #define WRAPPER_EXTENSION_KEY @"WRAPPER_EXTENSION"
 
 @interface TestingFramework ()
 
-@property (nonatomic, retain) NSString *unitTestClassName;
-@property (nonatomic, retain) NSString *unitTestSelectorName;
-@property (nonatomic, retain) NSString *executableName;
+@property (nonatomic, retain) NSString *testClassName;
+@property (nonatomic, retain) NSString *allTestSelectorName;
+@property (nonatomic, retain) NSString *testRunnerName;
+@property (nonatomic, retain) NSString *filterTestsArgKey;
+@property (nonatomic, retain) NSString *invertScopeArgKey;
+
 
 @end
 
@@ -28,17 +34,21 @@ NSDictionary *getWrapperToFrameworkMapping() {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     wrapperToFrameworkMapping = @{
-                                  @"octest": @{
-                                      TESTING_FRAMEWORK_CLASS_KEY: @"SenTestCase",
-                                      TESTING_FRAMEWORK_SELECTOR_KEY: @"senAllSubclasses",
-                                      TESTING_FRAMEWORK_EXECUTABLE_KEY: @"otest"
-                                      },
-                                  @"xctest": @{
-                                      TESTING_FRAMEWORK_CLASS_KEY: @"XCTestCase",
-                                      TESTING_FRAMEWORK_SELECTOR_KEY: @"xct_allSubclasses",
-                                      TESTING_FRAMEWORK_EXECUTABLE_KEY: @"xctest"
-                                      }
-                                  };
+      @"octest": @{
+          TF_CLASS_NAME: @"SenTestCase",
+          TF_ALL_TESTS_SELECTOR_NAME: @"senAllSubclasses",
+          TF_TESTRUNNER_NAME: @"otest",
+          TF_FILTER_TESTS_ARG_KEY: @"-SenTest",
+          TF_INVERT_SCOPE_ARG_KEY: @"-SenTestInvertScope"
+          },
+      @"xctest": @{
+          TF_CLASS_NAME: @"XCTestCase",
+          TF_ALL_TESTS_SELECTOR_NAME: @"xct_allSubclasses",
+          TF_TESTRUNNER_NAME: @"xctest",
+          TF_FILTER_TESTS_ARG_KEY: @"-XCTest",
+          TF_INVERT_SCOPE_ARG_KEY: @"-XCTestInvertScope"
+          }
+      };
     [wrapperToFrameworkMapping retain];
   });
   return wrapperToFrameworkMapping;
@@ -72,21 +82,6 @@ NSDictionary *getWrapperToFrameworkMapping() {
   return wrapperToFrameworkMapping[wrapperExtension];
 }
 
-+ (NSString *)classNameFromBundleExtension: (NSString *)extension
-{
-  return [self frameworkInfoForWrapperExtension: extension][TESTING_FRAMEWORK_CLASS_KEY];
-}
-
-+ (NSString *)selectorNameFromBundleExtension: (NSString *)extension
-{
-  return [self frameworkInfoForWrapperExtension: extension][TESTING_FRAMEWORK_SELECTOR_KEY];
-}
-
-+ (NSString *)executableNameFromBundleExtension: (NSString *)extension
-{
-  return [self frameworkInfoForWrapperExtension: extension][TESTING_FRAMEWORK_EXECUTABLE_KEY];
-}
-
 + (instancetype)XCTest
 {
   return [[[self alloc] initWithBundleExtension:@"xctest"] autorelease];
@@ -100,9 +95,12 @@ NSDictionary *getWrapperToFrameworkMapping() {
 - (id)initWithBundleExtension: (NSString *)extension;
 {
   if (self = [super init]) {
-    self.unitTestClassName = [[self class] classNameFromBundleExtension: extension];
-    self.unitTestSelectorName = [[self class] selectorNameFromBundleExtension: extension];
-    self.executableName = [[self class] executableNameFromBundleExtension: extension];
+    NSDictionary *frameworkInfo = [[self class] frameworkInfoForWrapperExtension:extension];
+    self.testClassName        = frameworkInfo[TF_CLASS_NAME];
+    self.allTestSelectorName  = frameworkInfo[TF_ALL_TESTS_SELECTOR_NAME];
+    self.testRunnerName       = frameworkInfo[TF_TESTRUNNER_NAME];
+    self.filterTestsArgKey    = frameworkInfo[TF_FILTER_TESTS_ARG_KEY];
+    self.invertScopeArgKey    = frameworkInfo[TF_INVERT_SCOPE_ARG_KEY];
   }
   return self;
 }

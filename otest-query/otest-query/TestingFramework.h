@@ -10,9 +10,11 @@
 
 @interface TestingFramework : NSObject
 
-@property (nonatomic, readonly) NSString *unitTestClassName;
-@property (nonatomic, readonly) NSString *unitTestSelectorName;
-@property (nonatomic, readonly) NSString *executableName;
+@property (nonatomic, readonly) NSString *testClassName;
+@property (nonatomic, readonly) NSString *allTestSelectorName;
+@property (nonatomic, readonly) NSString *testRunnerName;
+@property (nonatomic, readonly) NSString *filterTestsArgKey;
+@property (nonatomic, readonly) NSString *invertScopeArgKey;
 
 - (id)initWithBundleExtension: (NSString *)extension;
 + (instancetype)XCTest;

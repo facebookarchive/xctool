@@ -335,14 +335,14 @@ static void __exit(int status)
   SaveExitMode(@{@"via" : @"exit", @"status" : @(status) });
   exit(status);
 }
-//DYLD_INTERPOSE(__exit, exit);
+DYLD_INTERPOSE(__exit, exit);
 
 static void __abort()
 {
   SaveExitMode(@{@"via" : @"abort"});
   abort();
 }
-//DYLD_INTERPOSE(__abort, abort);
+DYLD_INTERPOSE(__abort, abort);
 
 // From /usr/lib/system/libsystem_kernel.dylib - output from printf/fprintf/fwrite will flow to
 // __write_nonancel just before it does the system call.
@@ -363,7 +363,7 @@ static ssize_t ___write_nocancel(int fildes, const void *buf, size_t nbyte)
     return write(fildes, buf, nbyte);
   }
 }
-//DYLD_INTERPOSE(___write_nocancel, __write_nocancel);
+DYLD_INTERPOSE(___write_nocancel, __write_nocancel);
 
 static ssize_t __write(int fildes, const void *buf, size_t nbyte);
 static ssize_t __write(int fildes, const void *buf, size_t nbyte)
@@ -382,7 +382,7 @@ static ssize_t __write(int fildes, const void *buf, size_t nbyte)
     return write(fildes, buf, nbyte);
   }
 }
-//DYLD_INTERPOSE(__write, write);
+DYLD_INTERPOSE(__write, write);
 
 static NSString *CreateStringFromIOV(const struct iovec *iov, int iovcnt) {
   NSMutableData *buffer = [[NSMutableData alloc] initWithCapacity:0];
@@ -433,7 +433,7 @@ static ssize_t ___writev_nocancel(int fildes, const struct iovec *iov, int iovcn
     return __writev_nocancel(fildes, iov, iovcnt);
   }
 }
-//DYLD_INTERPOSE(___writev_nocancel, __writev_nocancel);
+DYLD_INTERPOSE(___writev_nocancel, __writev_nocancel);
 
 // Output from NSLog flows through writev
 static ssize_t __writev(int fildes, const struct iovec *iov, int iovcnt)

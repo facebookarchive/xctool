@@ -41,7 +41,7 @@
 
   [[NSBundle allFrameworks] makeObjectsPerformSelector:@selector(principalClass)];
   
-  NSArray *testClasses = objc_msgSend(NSClassFromString(framework.unitTestClassName), NSSelectorFromString(framework.unitTestSelectorName));
+  NSArray *testClasses = objc_msgSend(NSClassFromString(framework.testClassName), NSSelectorFromString(framework.allTestSelectorName));
 
   NSMutableArray *testNames = [NSMutableArray array];
   for (Class testClass in testClasses) {

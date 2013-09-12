@@ -21,6 +21,7 @@
 #import "OCUnitCrashFilter.h"
 #import "ReportStatus.h"
 #import "XCToolUtil.h"
+#import "TestingFramework.h"
 
 @implementation OCUnitTestRunner
 
@@ -286,29 +287,32 @@
   return succeeded;
 }
 
-- (NSArray *)otestArguments
+- (NSArray *)testArgumentsForExtension: (NSString *)extension
 {
+  TestingFramework *framework = [[TestingFramework alloc] initWithBundleExtension:extension];
+  
   // These are the same arguments Xcode would use when invoking otest.  To capture these, we
   // just ran a test case from Xcode that dumped 'argv'.  It's a little tricky to do that outside
   // of the 'main' function, but you can use _NSGetArgc and _NSGetArgv.  See --
   // http://unixjunkie.blogspot.com/2006/07/access-argc-and-argv-from-anywhere.html
-  NSMutableArray *args = [NSMutableArray arrayWithArray:@[
-           // Not sure exactly what this does...
-           @"-NSTreatUnknownArgumentsAsOpen", @"NO",
-           // Not sure exactly what this does...
-           @"-ApplePersistenceIgnoreState", @"YES",
-           // SenTest is one of Self, All, None,
-           // or TestClassName[/testCaseName][,TestClassName2]
-           @"-SenTest", _senTestList,
-           // SenTestInvertScope optionally inverts whatever SenTest would normally select.
-           // We never invert, since we always pass the exact list of test cases
-           // to be run.
-           @"-SenTestInvertScope", @"NO",
-           ]];
-
+  NSMutableArray *args =[NSMutableArray arrayWithArray: @[
+     // Not sure exactly what this does...
+     @"-NSTreatUnknownArgumentsAsOpen", @"NO",
+     // Not sure exactly what this does...
+     @"-ApplePersistenceIgnoreState", @"YES",
+     // SenTest / XCTest is one of Self, All, None,
+     // or TestClassName[/testCaseName][,TestClassName2]
+//#error add the filter testcase arg here
+     framework.filterTestsArgKey, _senTestList,
+     // SenTestInvertScope / XCTestInvertScope optionally inverts whatever
+     // SenTest would normally select. We never invert, since we always
+     // pass the exact list of test cases to be run.
+     framework.invertScopeArgKey, @"NO",
+  ]];
+  
   // Add any argments that might have been specifed in the scheme.
   [args addObjectsFromArray:_arguments];
-
+  
   return args;
 }
 
