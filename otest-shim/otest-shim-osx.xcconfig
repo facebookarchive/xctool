@@ -22,7 +22,7 @@ XT_INSTALL_DIR = lib
 MACOSX_DEPLOYMENT_TARGET = 10.7
 
 // Needed so we can #import from SenTestingKit.
-OTHER_CFLAGS = -F$(DEVELOPER_FRAMEWORKS_DIR)
+OTHER_CFLAGS = -F"$(DEVELOPER_FRAMEWORKS_DIR)"
 
 // OSX tests or test hosts may use GC, so we have to be GC friendly.
 // By setting the main value to 'unsupported' and then setting the arch-specific setting to
