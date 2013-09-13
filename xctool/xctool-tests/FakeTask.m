@@ -206,4 +206,9 @@ static void writeAll(int fildes, const void *buf, size_t nbyte) {
           [self arguments]];
 }
 
+- (void)setPreferredArchitectures:(NSArray *)architectures
+{
+  // This is part of NSConcreteTask - we're fine if it's a no-op in tests.
+}
+
 @end
