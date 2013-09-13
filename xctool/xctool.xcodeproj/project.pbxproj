@@ -243,6 +243,7 @@
 		28E9B9D516C3275200A52E4D /* OCUnitTestRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUnitTestRunner.h; sourceTree = "<group>"; };
 		28E9B9D616C3275200A52E4D /* OCUnitTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitTestRunner.m; sourceTree = "<group>"; };
 		28E9B9DE16C3278D00A52E4D /* iPhoneSimulatorRemoteClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iPhoneSimulatorRemoteClient.h; sourceTree = "<group>"; };
+		28EAB46017E29647005EB9CF /* NSConcreteTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSConcreteTask.h; sourceTree = "<group>"; };
 		28F489F117973B6100068E00 /* FakeFileHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeFileHandle.h; sourceTree = "<group>"; };
 		28F489F217973B6100068E00 /* FakeFileHandle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeFileHandle.m; sourceTree = "<group>"; };
 		28F489FA17973BF900068E00 /* NSFileHandle+Print.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileHandle+Print.h"; sourceTree = "<group>"; };
@@ -414,6 +415,7 @@
 				28BB043C17C7FF43004F6C13 /* Buildable.m */,
 				2869F3C317C82FB80078F078 /* TestableExecutionInfo.h */,
 				2869F3C417C82FB80078F078 /* TestableExecutionInfo.m */,
+				28EAB46017E29647005EB9CF /* NSConcreteTask.h */,
 			);
 			path = xctool;
 			sourceTree = "<group>";
