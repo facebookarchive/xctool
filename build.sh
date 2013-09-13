@@ -37,11 +37,11 @@ fi
 # test host) targetted 5.0, you'd see errors.  We don't go older than 5.0 since
 # we depend on some iOS 5+ APIs.
 XT_IOS_SDK_VERSION=$(xcodebuild -showsdks | grep iphonesimulator | \
-  perl -ne '/iphonesimulator(.*?)$/ && $1 >= 6.0 && print' | \
+  perl -ne '/iphonesimulator(.*?)$/ && $1 >= 5.0 && print' | \
   head -n 1 | \
   perl -ne '/iphonesimulator(.*?)$/ && print $1')
 XT_IOS_SDK_VERSION_EXPANDED=$(xcodebuild -showsdks | grep iphonesimulator | \
-  perl -ne '/iphonesimulator(\d)\.(\d)$/ && $1 >= 6 && print' | \
+  perl -ne '/iphonesimulator(\d)\.(\d)$/ && $1 >= 5 && print' | \
   head -n 1 | \
   perl -ne '/iphonesimulator(\d)\.(\d)$/ && print "${1}${2}000"')
 
