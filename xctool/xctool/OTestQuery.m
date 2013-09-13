@@ -78,7 +78,7 @@ NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk, NSS
   NSString *simulatorHome = [NSString stringWithFormat:@"%@/Library/Application Support/iPhone Simulator/%@", NSHomeDirectory(), version];
   NSString *sdkRootPath = SimulatorSDKRootPathWithVersion(version);
 
-  NSTask *task = [[NSTask alloc] init];
+  NSTask *task = CreateTaskInSameProcessGroup();
   [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-ios"]];
   [task setEnvironment:@{@"CFFIXED_USER_HOME" : simulatorHome,
                          @"HOME" : simulatorHome,
@@ -111,7 +111,7 @@ NSArray *OTestQueryTestCasesInIOSBundleWithTestHost(NSString *bundlePath, NSStri
   NSString *simulatorHome = [NSString stringWithFormat:@"%@/Library/Application Support/iPhone Simulator/%@", NSHomeDirectory(), version];
   NSString *sdkRootPath = SimulatorSDKRootPathWithVersion(version);
 
-  NSTask *task = [[NSTask alloc] init];
+  NSTask *task = CreateTaskInSameProcessGroup();
   [task setLaunchPath:testHostExecutablePath];
   [task setEnvironment:@{
    // Inserted this dylib, which will then load whatever is in `OtestQueryBundlePath`.
@@ -139,7 +139,7 @@ NSArray *OTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtPro
     return nil;
   }
 
-  NSTask *task = [[NSTask alloc] init];
+  NSTask *task = CreateTaskInSameProcessGroup();
   [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-osx"]];
   [task setArguments:@[bundlePath]];
   [task setEnvironment:@{

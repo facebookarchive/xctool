@@ -18,6 +18,8 @@
 
 #import <poll.h>
 
+#import "NSConcreteTask.h"
+
 static void readOutputs(NSString **outputs, int *fildes, int sz) {
   struct pollfd fds[sz];
   dispatch_data_t data[sz];
@@ -224,4 +226,11 @@ void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, void (^block)(NSString *))
 
   [task waitUntilExit];
   [buffer release];
+}
+
+NSTask *CreateTaskInSameProcessGroup()
+{
+  NSConcreteTask *task = (NSConcreteTask *)[[NSTask alloc] init];
+  [task setStartsNewProcessGroup:NO];
+  return task;
 }

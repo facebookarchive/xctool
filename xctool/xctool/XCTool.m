@@ -142,7 +142,7 @@
   }
 
   if (options.showBuildSettings) {
-    NSTask *task = [[NSTask alloc] init];
+    NSTask *task = CreateTaskInSameProcessGroup();
     [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
     [task setArguments:[[[options xcodeBuildArgumentsForSubject]
                          arrayByAddingObjectsFromArray:[options commonXcodeBuildArgumentsForSchemeAction:nil xcodeSubjectInfo:nil]]

@@ -752,7 +752,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 
 - (NSDictionary *)buildSettingsForFirstBuildable
 {
-  NSTask *task = [[NSTask alloc] init];
+  NSTask *task = CreateTaskInSameProcessGroup();
   [task setLaunchPath:
    [XcodeDeveloperDirPath() stringByAppendingPathComponent:
     @"usr/bin/xcodebuild"]];
