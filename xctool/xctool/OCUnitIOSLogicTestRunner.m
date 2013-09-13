@@ -43,11 +43,8 @@
 - (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath
 {
   NSTask *task = [[[NSTask alloc] init] autorelease];
-  NSString *bundleExtension = [testBundlePath pathExtension];
-  TestingFramework *framework = [[TestingFramework alloc] initWithBundleExtension:bundleExtension];
-  [task setLaunchPath:[NSString stringWithFormat:@"%@/Developer/%@", _buildSettings[@"SDKROOT"], framework.testRunnerPath]];
-  [framework release];
-  [task setArguments:[[self testArgumentsForExtension:bundleExtension] arrayByAddingObject:testBundlePath]];
+  [task setLaunchPath:[NSString stringWithFormat:@"%@/Developer/%@", _buildSettings[@"SDKROOT"], _framework.testRunnerPath]];
+  [task setArguments:[[self testArguments] arrayByAddingObject:testBundlePath]];
   NSMutableDictionary *env = [[self.environmentOverrides mutableCopy] autorelease];
   env[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"];
   [task setEnvironment:[self otestEnvironmentWithOverrides:env]];

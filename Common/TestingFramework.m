@@ -24,16 +24,17 @@
 @property (nonatomic, retain) NSString *filterTestsArgKey;
 @property (nonatomic, retain) NSString *invertScopeArgKey;
 
-
 @end
 
-NSDictionary *getWrapperToFrameworkMapping() {
-  // Only set this once. Easy optimization!
-  static NSDictionary *wrapperToFrameworkMapping = nil;
-  
+static NSDictionary *frameworks;
+
+@implementation TestingFramework
+
++ (void)initialize
+{
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    wrapperToFrameworkMapping = @{
+    NSDictionary *extensionToFrameworkInfoMapping = @{
       @"octest": @{
         TF_CLASS_NAME: @"SenTestCase",
         TF_ALL_TESTS_SELECTOR_NAME: @"senAllSubclasses",
@@ -49,63 +50,47 @@ NSDictionary *getWrapperToFrameworkMapping() {
         TF_INVERT_SCOPE_ARG_KEY: @"-XCTestInvertScope"
       }
     };
-    [wrapperToFrameworkMapping retain];
+    NSMutableDictionary *_frameworks = [[NSMutableDictionary alloc] init];
+    for (NSString *extension in [extensionToFrameworkInfoMapping allKeys]) {
+      NSDictionary *frameworkInfo = [extensionToFrameworkInfoMapping objectForKey:extension];
+      TestingFramework *framework = [[self alloc] init];
+      framework.testClassName        = [frameworkInfo objectForKey:TF_CLASS_NAME];
+      framework.allTestSelectorName  = [frameworkInfo objectForKey:TF_ALL_TESTS_SELECTOR_NAME];
+      framework.testRunnerPath       = [frameworkInfo objectForKey:TF_TESTRUNNER_NAME];
+      framework.filterTestsArgKey    = [frameworkInfo objectForKey:TF_FILTER_TESTS_ARG_KEY];
+      framework.invertScopeArgKey    = [frameworkInfo objectForKey:TF_INVERT_SCOPE_ARG_KEY];
+      [_frameworks setObject:framework forKey:extension];
+      [frameworks release];
+    }
+    frameworks = [_frameworks copy];
+    [_frameworks release];
   });
-  return wrapperToFrameworkMapping;
-}
-
-@implementation TestingFramework
-
-@synthesize testClassName, allTestSelectorName, testRunnerPath, filterTestsArgKey, invertScopeArgKey;
-
-+ (NSDictionary *)frameworkInfoForBuildSettings: (NSDictionary *)testableBuildSettings
-{
-  NSString *wrapperExtension = nil;
-  
-  if (![[testableBuildSettings allKeys] containsObject:WRAPPER_EXTENSION_KEY]
-      || [[testableBuildSettings objectForKey:WRAPPER_EXTENSION_KEY] isEqualToString:@""]) {
-    NSLog(@"The %@ key isn't set or its value is empty in the build settings for this project. Defaulting to SenTestingKit.", WRAPPER_EXTENSION_KEY);
-    wrapperExtension = @"octest";
-  } else {
-    wrapperExtension = [testableBuildSettings objectForKey:WRAPPER_EXTENSION_KEY];
-  }
-  
-  return [self frameworkInfoForWrapperExtension: wrapperExtension];
-}
-
-+ (NSDictionary *)frameworkInfoForWrapperExtension: (NSString *)wrapperExtension
-{
-  NSDictionary *wrapperToFrameworkMapping = getWrapperToFrameworkMapping();
-  if (![[wrapperToFrameworkMapping allKeys] containsObject:wrapperExtension]) {
-    NSLog(@"The wrapper extension %@ is not supported. The supported extensions are: %@",
-          wrapperExtension, [wrapperToFrameworkMapping allKeys]);
-    abort();
-  }
-  
-  return [wrapperToFrameworkMapping objectForKey:wrapperExtension];
 }
 
 + (instancetype)XCTest
 {
-  return [[[self alloc] initWithBundleExtension:@"xctest"] autorelease];
+  return [frameworks objectForKey:@"xctest"];
 }
 
 + (instancetype)SenTestingKit
 {
-  return [[[self alloc] initWithBundleExtension:@"octest"] autorelease];
+  return [frameworks objectForKey:@"octest"];
 }
 
-- (id)initWithBundleExtension: (NSString *)extension;
++ (instancetype)frameworkForExtension: (NSString *)extension
 {
-  if (self = [super init]) {
-    NSDictionary *frameworkInfo = [[self class] frameworkInfoForWrapperExtension:extension];
-    self.testClassName        = [frameworkInfo objectForKey:TF_CLASS_NAME];
-    self.allTestSelectorName  = [frameworkInfo objectForKey:TF_ALL_TESTS_SELECTOR_NAME];
-    self.testRunnerPath       = [frameworkInfo objectForKey:TF_TESTRUNNER_NAME];
-    self.filterTestsArgKey    = [frameworkInfo objectForKey:TF_FILTER_TESTS_ARG_KEY];
-    self.invertScopeArgKey    = [frameworkInfo objectForKey:TF_INVERT_SCOPE_ARG_KEY];
+  if (![[frameworks allKeys] containsObject:extension]) {
+    NSLog(@"The bundle extension %@ is not supported. The supported extensions are: %@. Defaulting to use SenTestingKit instead.",
+          extension, [frameworks allKeys]);
+    return [[self class] SenTestingKit];
   }
-  return self;
+  return [frameworks objectForKey:extension];
+}
+
++ (instancetype)frameworkForTestBundleAtPath: (NSString *)path
+{
+  NSString *extension = [path pathExtension];
+  return [self frameworkForExtension:extension];
 }
 
 @end

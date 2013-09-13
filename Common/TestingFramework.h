@@ -16,8 +16,8 @@
 @property (nonatomic, readonly) NSString *filterTestsArgKey;
 @property (nonatomic, readonly) NSString *invertScopeArgKey;
 
-- (id)initWithBundleExtension: (NSString *)extension;
 + (instancetype)XCTest;
 + (instancetype)SenTestingKit;
++ (instancetype)frameworkForTestBundleAtPath: (NSString *)path;
 
 @end

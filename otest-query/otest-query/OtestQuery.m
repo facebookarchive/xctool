@@ -28,8 +28,7 @@
 
 + (void)queryTestBundlePath:(NSString *)testBundlePath
 {
-  NSString *bundleExtension = [testBundlePath pathExtension];
-  TestingFramework *framework = [[TestingFramework alloc] initWithBundleExtension: bundleExtension];
+  TestingFramework *framework = [TestingFramework frameworkForTestBundleAtPath:testBundlePath];
   NSBundle *bundle = [NSBundle bundleWithPath:testBundlePath];
 
   // We use dlopen() instead of -[NSBundle loadAndReturnError] because, if

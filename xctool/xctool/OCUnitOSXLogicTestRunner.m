@@ -37,12 +37,9 @@
 - (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath
 {
   NSTask *task = [[[NSTask alloc] init] autorelease];
-  NSString *bundleExtension = [testBundlePath pathExtension];
-  TestingFramework *framework = [[TestingFramework alloc] initWithBundleExtension:bundleExtension];
-  [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:framework.testRunnerPath]];
-  [framework release];
+  [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:_framework.testRunnerPath]];
   // When invoking otest directly, the last arg needs to be the the test bundle.
-  [task setArguments:[[self testArgumentsForExtension:bundleExtension] arrayByAddingObject:testBundlePath]];
+  [task setArguments:[[self testArguments] arrayByAddingObject:testBundlePath]];
   NSMutableDictionary *env = [[self.environmentOverrides mutableCopy] autorelease];
   env[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-osx.dylib"];
   [task setEnvironment:[self otestEnvironmentWithOverrides:env]];

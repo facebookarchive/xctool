@@ -129,8 +129,7 @@ static void KillSimulatorJobs()
   [sessionConfig setSimulatedDeviceFamily:[self simulatedDeviceFamily]];
   [sessionConfig setSimulatedApplicationShouldWaitForDebugger:NO];
   
-  NSString *bundleExtension = [testBundlePath pathExtension];
-  [sessionConfig setSimulatedApplicationLaunchArgs:[self testArgumentsForExtension:bundleExtension]];
+  [sessionConfig setSimulatedApplicationLaunchArgs:[self testArguments]];
 
   NSMutableDictionary *launchEnvironment = [NSMutableDictionary dictionary];
   [launchEnvironment addEntriesFromDictionary:environment];

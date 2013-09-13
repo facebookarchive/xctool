@@ -52,10 +52,9 @@
 
   NSTask *task = [[NSTask alloc] init];
   [task setLaunchPath:testHostPath];
-  NSString *bundlePath = [_buildSettings[@"BUILT_PRODUCTS_DIR"] stringByAppendingPathComponent:_buildSettings[@"FULL_PRODUCT_NAME"]];
-  NSString *bundleExtension = [bundlePath pathExtension];
+  NSString *testBundlePath = [_buildSettings[@"BUILT_PRODUCTS_DIR"] stringByAppendingPathComponent:_buildSettings[@"FULL_PRODUCT_NAME"]];
   
-  [task setArguments:[self testArgumentsForExtension:bundleExtension]];
+  [task setArguments:[self testArguments]];
   [task setEnvironment:[self otestEnvironmentWithOverrides:@{
                         @"DYLD_INSERT_LIBRARIES" : [libraries componentsJoinedByString:@":"],
                         @"DYLD_FRAMEWORK_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
@@ -63,7 +62,7 @@
                         @"DYLD_FALLBACK_FRAMEWORK_PATH" : [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"],
                         @"NSUnbufferedIO" : @"YES",
                         @"OBJC_DISABLE_GC" : !_garbageCollection ? @"YES" : @"NO",
-                        @"XCInjectBundle" : bundlePath,
+                        @"XCInjectBundle" : testBundlePath,
                         @"XCInjectBundleInto" : testHostPath,
                         }]];
   // For OSX test bundles only, Xcode will chdir to the project's directory.

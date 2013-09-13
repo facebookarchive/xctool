@@ -15,6 +15,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TestingFramework.h"
 
 @interface OCUnitTestRunner : NSObject {
 @public
@@ -27,6 +28,7 @@
   BOOL _freshInstall;
   NSString *_simulatorType;
   NSArray *_reporters;
+  TestingFramework *_framework;
 }
 
 /**
@@ -81,9 +83,8 @@
 
 - (BOOL)runTestsWithError:(NSString **)error;
 
-- (NSArray *)testArgumentsForExtension: (NSString *)extension;
+- (NSArray *)testArguments;
 - (NSDictionary *)otestEnvironmentWithOverrides:(NSDictionary *)overrides;
-
 - (NSString *)testBundlePath;
 
 @end

@@ -21,7 +21,6 @@
 #import "OCUnitCrashFilter.h"
 #import "ReportStatus.h"
 #import "XCToolUtil.h"
-#import "TestingFramework.h"
 
 @implementation OCUnitTestRunner
 
@@ -150,6 +149,7 @@
     _freshInstall = freshInstall;
     _simulatorType = [simulatorType retain];
     _reporters = [reporters retain];
+    _framework = [TestingFramework frameworkForTestBundleAtPath:[self testBundlePath]];
   }
   return self;
 }
@@ -287,10 +287,8 @@
   return succeeded;
 }
 
-- (NSArray *)testArgumentsForExtension: (NSString *)extension
+- (NSArray *)testArguments
 {
-  TestingFramework *framework = [[TestingFramework alloc] initWithBundleExtension:extension];
-  
   // These are the same arguments Xcode would use when invoking otest.  To capture these, we
   // just ran a test case from Xcode that dumped 'argv'.  It's a little tricky to do that outside
   // of the 'main' function, but you can use _NSGetArgc and _NSGetArgv.  See --
@@ -302,13 +300,12 @@
      @"-ApplePersistenceIgnoreState", @"YES",
      // SenTest / XCTest is one of Self, All, None,
      // or TestClassName[/testCaseName][,TestClassName2]
-     framework.filterTestsArgKey, _senTestList,
+     _framework.filterTestsArgKey, _senTestList,
      // SenTestInvertScope / XCTestInvertScope optionally inverts whatever
      // SenTest would normally select. We never invert, since we always
      // pass the exact list of test cases to be run.
-     framework.invertScopeArgKey, @"NO",
+     _framework.invertScopeArgKey, @"NO",
   ]];
-  [framework release];
   
   // Add any argments that might have been specifed in the scheme.
   [args addObjectsFromArray:_arguments];
