@@ -211,4 +211,9 @@ static void writeAll(int fildes, const void *buf, size_t nbyte) {
   // This is part of NSConcreteTask - we're fine if it's a no-op in tests.
 }
 
+- (void)setStartsNewProcessGroup:(BOOL)startsNewProcessGroup
+{
+  // This is part of NSConcreteTask - we're fine if it's a no-op in tests.
+}
+
 @end

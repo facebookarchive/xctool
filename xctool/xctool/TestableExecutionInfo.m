@@ -72,7 +72,7 @@
                                           testSDK:(NSString *)testSDK
 {
   // Collect build settings for this test target.
-  NSTask *settingsTask = [[NSTask alloc] init];
+  NSTask *settingsTask = CreateTaskInSameProcessGroup();
   [settingsTask setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
 
   if (testSDK) {

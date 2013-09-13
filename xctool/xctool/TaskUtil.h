@@ -26,3 +26,12 @@ NSDictionary *LaunchTaskAndCaptureOutput(NSTask *task);
  * Launchs a task, waits for exit, and feeds lines from standard out to a block.
  */
 void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, void (^block)(NSString *));
+
+/**
+ * Returns an NSTask that is configured NOT to start a new process group.  This
+ * way, the child will be killed if the parent is killed (or interrupted).  This
+ * is what we want all the time.
+ *
+ * @return Task with a retain count of 1.
+ */
+NSTask *CreateTaskInSameProcessGroup();
