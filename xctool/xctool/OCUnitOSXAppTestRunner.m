@@ -49,7 +49,7 @@
                          [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection"],
                          ];
 
-  NSTask *task = [[NSTask alloc] init];
+  NSTask *task = CreateTaskInSameProcessGroup();
   [task setLaunchPath:testHostPath];
   [task setArguments:[self otestArguments]];
   [task setEnvironment:[self otestEnvironmentWithOverrides:@{

@@ -20,6 +20,7 @@
 #import <objc/message.h>
 
 #import "NSFileHandle+Print.h"
+#import "TaskUtil.h"
 #import "XCToolUtil.h"
 
 
@@ -113,7 +114,7 @@
                           @selector(__NSTask_allocWithZone:),
                           NSDefaultMallocZone()) init];
   } else {
-    _task = [[NSTask alloc] init];
+    _task = CreateTaskInSameProcessGroup();
   }
 
   [_task setLaunchPath:_reporterPath];
