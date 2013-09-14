@@ -21,5 +21,7 @@
 @interface TestUtil : NSObject
 
 + (NSDictionary *)runWithFakeStreams:(XCTool *)tool;
++ (NSArray *)getEventsForStates:(NSArray *)states
+                      withBlock:(void (^)(void))block;
 
 @end

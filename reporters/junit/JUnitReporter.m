@@ -101,15 +101,19 @@
       [attributes release];
 
       if (![testResult[kReporter_EndTest_SucceededKey] boolValue]) {
-        NSDictionary *exception = testResult[kReporter_EndTest_ExceptionKey];
-        NSString *failureValue = [[NSString alloc] initWithFormat:@"%@:%d", exception[kReporter_EndTest_Exception_FilePathInProjectKey],
-                                  [exception[kReporter_EndTest_Exception_LineNumberKey] intValue]];
-        NSXMLElement *failure = [[NSXMLElement alloc] initWithName:@"failure" stringValue:failureValue];
-        [failure setAttributes:@[[NSXMLNode attributeWithName:@"type" stringValue:@"Failure"],
-                                 [NSXMLNode attributeWithName:@"message" stringValue:exception[kReporter_EndTest_Exception_ReasonKey]]]];
-        [testcase addChild:failure];
-        [failureValue release];
-        [failure release];
+        NSArray *exceptions = testResult[kReporter_EndTest_ExceptionsKey];
+        if ([exceptions count] > 0) {
+          NSDictionary *exception = exceptions[0];
+
+          NSString *failureValue = [[NSString alloc] initWithFormat:@"%@:%d", exception[kReporter_EndTest_Exception_FilePathInProjectKey],
+                                    [exception[kReporter_EndTest_Exception_LineNumberKey] intValue]];
+          NSXMLElement *failure = [[NSXMLElement alloc] initWithName:@"failure" stringValue:failureValue];
+          [failure setAttributes:@[[NSXMLNode attributeWithName:@"type" stringValue:@"Failure"],
+                                   [NSXMLNode attributeWithName:@"message" stringValue:exception[kReporter_EndTest_Exception_ReasonKey]]]];
+          [testcase addChild:failure];
+          [failureValue release];
+          [failure release];
+        }
       }
 
 

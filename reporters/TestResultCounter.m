@@ -14,24 +14,37 @@
 // limitations under the License.
 //
 
-#import <Foundation/Foundation.h>
+#import "TestResultCounter.h"
 
-#import "Reporter.h"
-#import "OCTestSuiteEventState.h"
-#import "OCTestEventState.h"
+@implementation TestResultCounter
 
-@interface OCUnitCrashFilter : Reporter {
-  OCTestSuiteEventState *_testSuiteState;
-  OCTestEventState *_previousTestState;
-  NSSet *_crashReportsAtStart;
+- (void)suiteBegin {
+  _suitePassed = 0;
+  _suiteFailed = 0;
+  _suiteErrored = 0;
+  _suiteTotal = 0;
 }
 
-@property (nonatomic, assign) double crashReportCollectionTime;
+- (void)suiteEnd {
+  _actionPassed += _suitePassed;
+  _actionFailed += _suiteFailed;
+  _actionErrored += _suiteErrored;
+  _actionTotal += _suiteTotal;
+}
 
-- (instancetype)initWithTests:(NSArray *)testList
-                    reporters:(NSArray *)reporters;
+- (void)testPassed {
+  _suitePassed++;
+  _suiteTotal++;
+}
 
-- (void)prepareToRun;
-- (void)finishedRun:(BOOL)unexpectedTermination;
+- (void)testFailed {
+  _suiteFailed++;
+  _suiteTotal++;
+}
+
+- (void)testErrored {
+  _suiteErrored++;
+  _suiteTotal++;
+}
 
 @end

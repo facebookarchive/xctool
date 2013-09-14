@@ -14,24 +14,34 @@
 // limitations under the License.
 //
 
-#import <Foundation/Foundation.h>
+#import "OCEventState.h"
+#import "XCToolUtil.h"
 
-#import "Reporter.h"
-#import "OCTestSuiteEventState.h"
-#import "OCTestEventState.h"
+@implementation OCEventState
 
-@interface OCUnitCrashFilter : Reporter {
-  OCTestSuiteEventState *_testSuiteState;
-  OCTestEventState *_previousTestState;
-  NSSet *_crashReportsAtStart;
+- (instancetype)initWithReporters:(NSArray *)reporters
+{
+  self = [super init];
+  if (self) {
+    _reporters = [reporters retain];
+  }
+  return self;
 }
 
-@property (nonatomic, assign) double crashReportCollectionTime;
+- (void)dealloc
+{
+  [_reporters release];
+  [super dealloc];
+}
 
-- (instancetype)initWithTests:(NSArray *)testList
-                    reporters:(NSArray *)reporters;
+- (void)publishWithEvent:(NSDictionary *)event
+{
+  PublishEventToReporters(_reporters, event);
+}
 
-- (void)prepareToRun;
-- (void)finishedRun:(BOOL)unexpectedTermination;
+- (void)publishEvents
+{
+  // Implemented by subclasses
+}
 
 @end

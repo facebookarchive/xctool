@@ -20,7 +20,6 @@
 
 #import "OCUnitCrashFilter.h"
 #import "ReportStatus.h"
-#import "XCToolUtil.h"
 
 @implementation OCUnitTestRunner
 
@@ -71,66 +70,8 @@
   return result;
 }
 
-+ (NSString *)reduceSenTestListToBroadestForm:(NSArray *)senTestList
-                                 allTestCases:(NSArray *)allTestCases
-{
-  senTestList = [senTestList sortedArrayUsingSelector:@selector(compare:)];
-  allTestCases = [allTestCases sortedArrayUsingSelector:@selector(compare:)];
-
-  NSDictionary *(^testCasesGroupedByClass)(NSSet *) = ^(NSSet *testCaseSet) {
-    NSMutableDictionary *testCasesByClass = [NSMutableDictionary dictionary];
-
-    for (NSString *classAndMethod in testCaseSet) {
-      NSString *className = [classAndMethod componentsSeparatedByString:@"/"][0];
-
-      if (testCasesByClass[className] == nil) {
-        testCasesByClass[className] = [NSMutableSet set];
-      }
-
-      [testCasesByClass[className] addObject:classAndMethod];
-    }
-
-    return testCasesByClass;
-  };
-
-  NSMutableSet *senTestListSet = [NSMutableSet setWithArray:senTestList];
-  NSSet *allTestCasesSet = [NSSet setWithArray:allTestCases];
-  NSAssert([senTestListSet isSubsetOfSet:allTestCasesSet],
-           @"senTestList should be a subset of allTestCases");
-
-
-  if ([senTestListSet isEqualToSet:allTestCasesSet]) {
-    return @"All";
-  } else if ([senTestListSet count] == 0) {
-    return @"None";
-  } else {
-    NSDictionary *senTestListCasesGroupedByClass = testCasesGroupedByClass(senTestListSet);
-    NSDictionary *allTestCasesGroupedByClass = testCasesGroupedByClass(allTestCasesSet);
-
-    NSMutableArray *result = [NSMutableArray array];
-
-    for (NSString *className in [senTestListCasesGroupedByClass allKeys]) {
-      NSSet *testCasesForThisClass = senTestListCasesGroupedByClass[className];
-      NSSet *allTestCasesForThisClass = allTestCasesGroupedByClass[className];
-
-      BOOL hasAllTestsInClass = [testCasesForThisClass isEqualToSet:allTestCasesForThisClass];
-
-      if (hasAllTestsInClass) {
-        // Just emit the class name, and otest will run all tests in that class.
-        [result addObject:className];
-      } else {
-        [result addObjectsFromArray:[testCasesForThisClass allObjects]];
-      }
-    }
-
-    [result sortUsingSelector:@selector(compare:)];
-
-    return [result componentsJoinedByString:@","];
-  }
-}
-
 - (id)initWithBuildSettings:(NSDictionary *)buildSettings
-                senTestList:(NSString *)senTestList
+                senTestList:(NSArray *)senTestList
                   arguments:(NSArray *)arguments
                 environment:(NSDictionary *)environment
           garbageCollection:(BOOL)garbageCollection
@@ -172,69 +113,24 @@
   return NO;
 }
 
-- (NSArray *)collectCrashReportPaths
-{
-  NSFileManager *fm = [NSFileManager defaultManager];
-  NSString *diagnosticReportsPath = [@"~/Library/Logs/DiagnosticReports" stringByStandardizingPath];
-
-  BOOL isDirectory = NO;
-  BOOL fileExists = [fm fileExistsAtPath:diagnosticReportsPath
-                             isDirectory:&isDirectory];
-  if (!fileExists || !isDirectory) {
-    return @[];
-  }
-
-  NSError *error = nil;
-  NSArray *allContents = [fm contentsOfDirectoryAtPath:diagnosticReportsPath
-                                                 error:&error];
-  NSAssert(error == nil, @"Failed getting contents of directory: %@", error);
-
-  NSMutableArray *matchingContents = [NSMutableArray array];
-
-  for (NSString *path in allContents) {
-    if ([[path pathExtension] isEqualToString:@"crash"]) {
-      NSString *fullPath = [[@"~/Library/Logs/DiagnosticReports" stringByAppendingPathComponent:path] stringByStandardizingPath];
-      [matchingContents addObject:fullPath];
-    }
-  }
-
-  return matchingContents;
-}
-
-- (NSString *)concatenatedCrashReports:(NSArray *)reports
-{
-  NSMutableString *buffer = [NSMutableString string];
-
-  for (NSString *path in reports) {
-    NSString *crashReportText = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-    // Throw out everything below "Binary Images" - we mostly just care about the thread backtraces.
-    NSString *minimalCrashReportText = [crashReportText substringToIndex:[crashReportText rangeOfString:@"\nBinary Images:"].location];
-
-    [buffer appendFormat:@"CRASH REPORT: %@\n\n", [path lastPathComponent]];
-    [buffer appendString:minimalCrashReportText];
-    [buffer appendString:@"\n"];
-  }
-
-  return buffer;
-}
-
 - (BOOL)runTestsWithError:(NSString **)error {
-  OCUnitCrashFilter *crashFilter = [[[OCUnitCrashFilter alloc] init] autorelease];
   __block BOOL didReceiveTestEvents = NO;
+
+  _testRunnerState = [[OCUnitCrashFilter alloc] initWithTests:_senTestList reporters:_reporters];
 
   void (^feedOutputToBlock)(NSString *) = ^(NSString *line) {
     NSData *lineData = [line dataUsingEncoding:NSUTF8StringEncoding];
 
-    [crashFilter publishDataForEvent:lineData];
+    [_testRunnerState parseAndHandleEvent:line];
     [_reporters makeObjectsPerformSelector:@selector(publishDataForEvent:) withObject:lineData];
 
     didReceiveTestEvents = YES;
   };
 
-  NSSet *crashReportsAtStart = [NSSet setWithArray:[self collectCrashReportPaths]];
-
   NSString *runTestsError = nil;
   BOOL didTerminateWithUncaughtSignal = NO;
+
+  [_testRunnerState prepareToRun];
 
   BOOL succeeded = [self runTestsAndFeedOutputTo:feedOutputToBlock
                                  gotUncaughtSignal:&didTerminateWithUncaughtSignal
@@ -263,25 +159,7 @@
     succeeded = YES;
   }
 
-  if ([crashFilter testRunWasUnfinished] || didTerminateWithUncaughtSignal) {
-    // The test runner must have crashed.
-
-    // Wait for a moment to see if a crash report shows up.
-    NSSet *crashReportsAtEnd = [NSSet setWithArray:[self collectCrashReportPaths]];
-    CFTimeInterval start = CACurrentMediaTime();
-    while ([crashReportsAtEnd isEqualToSet:crashReportsAtStart] && (CACurrentMediaTime() - start < 10.0)) {
-      [NSThread sleepForTimeInterval:0.25];
-      crashReportsAtEnd = [NSSet setWithArray:[self collectCrashReportPaths]];
-    }
-
-    NSMutableSet *crashReportsGenerated = [NSMutableSet setWithSet:crashReportsAtEnd];
-    [crashReportsGenerated minusSet:crashReportsAtStart];
-    NSString *concatenatedCrashReports = [self concatenatedCrashReports:[crashReportsGenerated allObjects]];
-
-    [crashFilter fireEventsToSimulateTestRunFinishing:_reporters
-                                      fullProductName:_buildSettings[@"FULL_PRODUCT_NAME"]
-                             concatenatedCrashReports:concatenatedCrashReports];
-  }
+  [_testRunnerState finishedRun:didTerminateWithUncaughtSignal];
 
   return succeeded;
 }
@@ -299,7 +177,7 @@
            @"-ApplePersistenceIgnoreState", @"YES",
            // SenTest is one of Self, All, None,
            // or TestClassName[/testCaseName][,TestClassName2]
-           @"-SenTest", _senTestList,
+           @"-SenTest", [_senTestList componentsJoinedByString:@","],
            // SenTestInvertScope optionally inverts whatever SenTest would normally select.
            // We never invert, since we always pass the exact list of test cases
            // to be run.

@@ -35,8 +35,9 @@ static int __stderrHandle;
 static FILE *__stderr;
 
 static BOOL __testIsRunning = NO;
-static NSException *__testException = nil;
+static NSMutableArray *__testExceptions = nil;
 static NSMutableString *__testOutput = nil;
+static int __testSuiteDepth = 0;
 
 static dispatch_queue_t EventQueue()
 {
@@ -131,29 +132,35 @@ static void PrintJSON(id JSONObject)
 
 static void SenTestLog_testSuiteDidStart(id self, SEL sel, NSNotification *notification)
 {
-  dispatch_sync(EventQueue(), ^{
-    SenTestRun *run = [notification run];
-    PrintJSON(@{
-              @"event" : kReporter_Events_BeginTestSuite,
-              kReporter_BeginTestSuite_SuiteKey : [[run test] description],
-              });
-  });
+  if (__testSuiteDepth == 0) {
+    dispatch_sync(EventQueue(), ^{
+      PrintJSON(@{
+                @"event" : kReporter_Events_BeginTestSuite,
+                kReporter_BeginTestSuite_SuiteKey : kReporter_TestSuite_TopLevelSuiteName,
+                });
+    });
+  }
+  __testSuiteDepth++;
 }
 
 static void SenTestLog_testSuiteDidStop(id self, SEL sel, NSNotification *notification)
 {
-  dispatch_sync(EventQueue(), ^{
-    SenTestRun *run = [notification run];
-    PrintJSON(@{
-              @"event" : kReporter_Events_EndTestSuite,
-              kReporter_EndTestSuite_SuiteKey : [[run test] description],
-              kReporter_EndTestSuite_TestCaseCountKey : @([run testCaseCount]),
-              kReporter_EndTestSuite_TotalFailureCountKey : @([run totalFailureCount]),
-              kReporter_EndTestSuite_UnexpectedExceptionCountKey : @([run unexpectedExceptionCount]),
-              kReporter_EndTestSuite_TestDurationKey: @([run testDuration]),
-              kReporter_EndTestSuite_TotalDurationKey : @([run totalDuration]),
-              });
-  });
+  __testSuiteDepth--;
+
+  if (__testSuiteDepth == 0) {
+    dispatch_sync(EventQueue(), ^{
+      SenTestRun *run = [notification run];
+      PrintJSON(@{
+                @"event" : kReporter_Events_EndTestSuite,
+                kReporter_EndTestSuite_SuiteKey : kReporter_TestSuite_TopLevelSuiteName,
+                kReporter_EndTestSuite_TestCaseCountKey : @([run testCaseCount]),
+                kReporter_EndTestSuite_TotalFailureCountKey : @([run totalFailureCount]),
+                kReporter_EndTestSuite_UnexpectedExceptionCountKey : @([run unexpectedExceptionCount]),
+                kReporter_EndTestSuite_TestDurationKey: @([run testDuration]),
+                kReporter_EndTestSuite_TotalDurationKey : @([run totalDuration]),
+                });
+    });
+  }
 }
 
 static void SenTestLog_testCaseDidStart(id self, SEL sel, NSNotification *notification)
@@ -171,8 +178,8 @@ static void SenTestLog_testCaseDidStart(id self, SEL sel, NSNotification *notifi
 
     [classAndMethodNames release];
     classAndMethodNames = nil;
-    [__testException release];
-    __testException = nil;
+    [__testExceptions release];
+    __testExceptions = [[NSMutableArray alloc] init];
     __testIsRunning = YES;
     __testOutput = [[NSMutableString string] retain];
   });
@@ -184,25 +191,41 @@ static void SenTestLog_testCaseDidStop(id self, SEL sel, NSNotification *notific
     SenTestRun *run = [notification run];
     NSString *fullTestName = [[run test] description];
     NSArray *classAndMethodNames = CreateParseTestName(fullTestName);
+    BOOL errored = [run unexpectedExceptionCount] > 0;
+    BOOL failed = [run failureCount] > 0;
+    BOOL succeeded = NO;
+    NSString *result;
+    if (errored) {
+      result = @"error";
+    } else if (failed) {
+      result = @"failure";
+    } else {
+      result = @"success";
+      succeeded = YES;
+    }
     NSMutableDictionary *json = [NSMutableDictionary dictionaryWithDictionary:@{
                                  @"event" : kReporter_Events_EndTest,
                                  kReporter_EndTest_TestKey : [[run test] description],
                                  kReporter_EndTest_ClassNameKey : [classAndMethodNames objectAtIndex:0],
                                  kReporter_EndTest_MethodNameKey : [classAndMethodNames objectAtIndex:1],
-                                 kReporter_EndTest_SucceededKey : [run hasSucceeded] ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO],
+                                 kReporter_EndTest_SucceededKey: @(succeeded),
+                                 kReporter_EndTest_ResultKey : result,
                                  kReporter_EndTest_TotalDurationKey : @([run totalDuration]),
                                  kReporter_EndTest_OutputKey : StripAnsi(__testOutput),
                                  }];
 
-    if (__testException != nil) {
-      [json setObject:@{
-       kReporter_EndTest_Exception_FilePathInProjectKey : [__testException filePathInProject],
-       kReporter_EndTest_Exception_LineNumberKey : [__testException lineNumber],
-       kReporter_EndTest_Exception_ReasonKey : [__testException reason],
-       kReporter_EndTest_Exception_NameKey : [__testException name],
-       }
-               forKey:kReporter_EndTest_ExceptionKey];
-    }
+    NSMutableArray *retExceptions = [NSMutableArray array];
+    [__testExceptions enumerateObjectsUsingBlock:
+     ^(NSException *entry, NSUInteger idx, BOOL *stop) {
+         [retExceptions addObject:@{
+             kReporter_EndTest_Exception_FilePathInProjectKey : [entry filePathInProject],
+             kReporter_EndTest_Exception_LineNumberKey : [entry lineNumber],
+             kReporter_EndTest_Exception_ReasonKey : [entry reason],
+             kReporter_EndTest_Exception_NameKey : [entry name],
+         }];
+     }];
+    [json setObject:retExceptions
+             forKey:kReporter_EndTest_ExceptionsKey];
 
     PrintJSON(json);
 
@@ -217,11 +240,7 @@ static void SenTestLog_testCaseDidStop(id self, SEL sel, NSNotification *notific
 static void SenTestLog_testCaseDidFail(id self, SEL sel, NSNotification *notification)
 {
   dispatch_sync(EventQueue(), ^{
-    NSException *exception = [notification exception];
-    if (__testException != exception) {
-      [__testException release];
-      __testException = [exception retain];
-    }
+    [__testExceptions addObject: [notification exception]];
   });
 }
 

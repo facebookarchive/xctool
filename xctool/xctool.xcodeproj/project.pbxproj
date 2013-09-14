@@ -28,15 +28,12 @@
 		283479B916E3EBE5003C3B77 /* TestUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 283479B816E3EBE5003C3B77 /* TestUtil.m */; };
 		283479BC16E3FC0F003C3B77 /* BuildTestsActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 283479BB16E3FC0E003C3B77 /* BuildTestsActionTests.m */; };
 		283CCA4616C2EA3800F2E343 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283CCA4516C2EA3800F2E343 /* Foundation.framework */; };
-		283CCA4916C2EA3800F2E343 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCA4816C2EA3800F2E343 /* main.m */; };
 		283CCAC316C2EE9900F2E343 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283CCA5916C2EA8B00F2E343 /* SenTestingKit.framework */; };
 		283CCAC416C2EE9900F2E343 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283CCA5B16C2EA8B00F2E343 /* Cocoa.framework */; };
 		283CCACA16C2EE9900F2E343 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 283CCAC816C2EE9900F2E343 /* InfoPlist.strings */; };
 		283CCACD16C2EE9900F2E343 /* XCToolTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCACC16C2EE9900F2E343 /* XCToolTests.m */; };
 		283CCAD616C2F10A00F2E343 /* XCTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCAD516C2F10A00F2E343 /* XCTool.m */; };
 		283CCADB16C2F14C00F2E343 /* XCTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCAD516C2F10A00F2E343 /* XCTool.m */; };
-		283EAF12170288FE00CE0A0C /* OCUnitCrashFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 283EAF11170288FE00CE0A0C /* OCUnitCrashFilter.m */; };
-		283EAF13170288FE00CE0A0C /* OCUnitCrashFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 283EAF11170288FE00CE0A0C /* OCUnitCrashFilter.m */; };
 		283EAF161702BB0600CE0A0C /* OCUnitCrashFilterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 283EAF151702BB0600CE0A0C /* OCUnitCrashFilterTests.m */; };
 		28404ADF17C7E16F00CB436A /* Testable.m in Sources */ = {isa = PBXBuildFile; fileRef = 28404ADE17C7E16F00CB436A /* Testable.m */; };
 		28404AE017C7E16F00CB436A /* Testable.m in Sources */ = {isa = PBXBuildFile; fileRef = 28404ADE17C7E16F00CB436A /* Testable.m */; };
@@ -115,6 +112,21 @@
 		CDD81F51174EAFDC00F42111 /* EventBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = CDD81F50174EAFDC00F42111 /* EventBuffer.m */; };
 		CDD81F52174EAFDC00F42111 /* EventBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = CDD81F50174EAFDC00F42111 /* EventBuffer.m */; };
 		CDEE9EA1176950DC0026D278 /* BuildStateParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CDEE9EA0176950DC0026D278 /* BuildStateParserTests.m */; };
+		EE30659B17DEBE6600733D72 /* FakeFileHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F489F217973B6100068E00 /* FakeFileHandle.m */; };
+		EE37291217E2886200554867 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE37291017E2886200554867 /* Reporter.m */; };
+		EE37291317E288AD00554867 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCA4816C2EA3800F2E343 /* main.m */; };
+		EE37291417E2898200554867 /* OCUnitCrashFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE30658E17DEA92F00733D72 /* OCUnitCrashFilter.m */; };
+		EE37291517E289A900554867 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE37291017E2886200554867 /* Reporter.m */; };
+		EE37291617E28A3000554867 /* OCUnitCrashFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE30658E17DEA92F00733D72 /* OCUnitCrashFilter.m */; };
+		EEB31CEA17C685E500CFB0E1 /* OCEventState.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB31CE917C685E500CFB0E1 /* OCEventState.m */; };
+		EEB31CED17C6867300CFB0E1 /* OCEventStateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB31CEC17C6867300CFB0E1 /* OCEventStateTests.m */; };
+		EEB31CEE17C6904500CFB0E1 /* OCEventState.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB31CE917C685E500CFB0E1 /* OCEventState.m */; };
+		EEB31CF117C6A1EF00CFB0E1 /* OCTestEventState.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB31CF017C6A1EF00CFB0E1 /* OCTestEventState.m */; };
+		EEB31CF417C6A21400CFB0E1 /* OCTestEventStateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB31CF317C6A21400CFB0E1 /* OCTestEventStateTests.m */; };
+		EEB31CF517C6A23E00CFB0E1 /* OCTestEventState.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB31CF017C6A1EF00CFB0E1 /* OCTestEventState.m */; };
+		EEB31CF917C6D57B00CFB0E1 /* OCTestSuiteEventState.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB31CF817C6D57B00CFB0E1 /* OCTestSuiteEventState.m */; };
+		EEB31CFA17C6D57B00CFB0E1 /* OCTestSuiteEventState.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB31CF817C6D57B00CFB0E1 /* OCTestSuiteEventState.m */; };
+		EEB31CFD17C6D5AB00CFB0E1 /* OCTestSuiteEventStateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB31CFC17C6D5AB00CFB0E1 /* OCTestSuiteEventStateTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -178,8 +190,6 @@
 		283CCACE16C2EE9900F2E343 /* xctool-tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "xctool-tests-Prefix.pch"; sourceTree = "<group>"; };
 		283CCAD416C2F10A00F2E343 /* XCTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCTool.h; sourceTree = "<group>"; };
 		283CCAD516C2F10A00F2E343 /* XCTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = XCTool.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		283EAF10170288FE00CE0A0C /* OCUnitCrashFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUnitCrashFilter.h; sourceTree = "<group>"; };
-		283EAF11170288FE00CE0A0C /* OCUnitCrashFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitCrashFilter.m; sourceTree = "<group>"; };
 		283EAF151702BB0600CE0A0C /* OCUnitCrashFilterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitCrashFilterTests.m; sourceTree = "<group>"; };
 		28404ADD17C7E16F00CB436A /* Testable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Testable.h; sourceTree = "<group>"; };
 		28404ADE17C7E16F00CB436A /* Testable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Testable.m; sourceTree = "<group>"; };
@@ -267,6 +277,20 @@
 		CDD81F4F174EAFDC00F42111 /* EventBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventBuffer.h; sourceTree = "<group>"; };
 		CDD81F50174EAFDC00F42111 /* EventBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventBuffer.m; sourceTree = "<group>"; };
 		CDEE9EA0176950DC0026D278 /* BuildStateParserTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuildStateParserTests.m; sourceTree = "<group>"; };
+		EE30658D17DEA92F00733D72 /* OCUnitCrashFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUnitCrashFilter.h; sourceTree = "<group>"; };
+		EE30658E17DEA92F00733D72 /* OCUnitCrashFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitCrashFilter.m; sourceTree = "<group>"; };
+		EE37290F17E2871700554867 /* Reporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reporter.h; sourceTree = "<group>"; };
+		EE37291017E2886200554867 /* Reporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reporter.m; sourceTree = "<group>"; };
+		EEB31CE817C685E500CFB0E1 /* OCEventState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCEventState.h; sourceTree = "<group>"; };
+		EEB31CE917C685E500CFB0E1 /* OCEventState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCEventState.m; sourceTree = "<group>"; };
+		EEB31CEC17C6867300CFB0E1 /* OCEventStateTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCEventStateTests.m; sourceTree = "<group>"; };
+		EEB31CEF17C6A1EF00CFB0E1 /* OCTestEventState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCTestEventState.h; sourceTree = "<group>"; };
+		EEB31CF017C6A1EF00CFB0E1 /* OCTestEventState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCTestEventState.m; sourceTree = "<group>"; };
+		EEB31CF317C6A21400CFB0E1 /* OCTestEventStateTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCTestEventStateTests.m; sourceTree = "<group>"; };
+		EEB31CF717C6D57B00CFB0E1 /* OCTestSuiteEventState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCTestSuiteEventState.h; sourceTree = "<group>"; };
+		EEB31CF817C6D57B00CFB0E1 /* OCTestSuiteEventState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCTestSuiteEventState.m; sourceTree = "<group>"; };
+		EEB31CFC17C6D5AB00CFB0E1 /* OCTestSuiteEventStateTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCTestSuiteEventStateTests.m; sourceTree = "<group>"; };
+		EEE4E9C517DFF42500B701A8 /* OCUnitCrashFilterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitCrashFilterTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -371,8 +395,6 @@
 				287A37DC16C711AE00319E81 /* LineReader.h */,
 				287A37DD16C711AE00319E81 /* LineReader.m */,
 				283CCA4816C2EA3800F2E343 /* main.m */,
-				283EAF10170288FE00CE0A0C /* OCUnitCrashFilter.h */,
-				283EAF11170288FE00CE0A0C /* OCUnitCrashFilter.m */,
 				28E9B9D116C3275200A52E4D /* OCUnitIOSAppTestRunner.h */,
 				28E9B9D216C3275200A52E4D /* OCUnitIOSAppTestRunner.m */,
 				28E9B9D316C3275200A52E4D /* OCUnitIOSLogicTestRunner.h */,
@@ -385,6 +407,8 @@
 				28B714541760767D00BB016A /* OCUnitIOSDeviceTestRunner.m */,
 				28E9B9D516C3275200A52E4D /* OCUnitTestRunner.h */,
 				28E9B9D616C3275200A52E4D /* OCUnitTestRunner.m */,
+				EE30658D17DEA92F00733D72 /* OCUnitCrashFilter.h */,
+				EE30658E17DEA92F00733D72 /* OCUnitCrashFilter.m */,
 				2804514017C4106C00D16420 /* OTestQuery.h */,
 				2804514117C4106C00D16420 /* OTestQuery.m */,
 				CD522EC017471D6300048AF9 /* SchemeGenerator.h */,
@@ -416,6 +440,12 @@
 				2869F3C317C82FB80078F078 /* TestableExecutionInfo.h */,
 				2869F3C417C82FB80078F078 /* TestableExecutionInfo.m */,
 				28EAB46017E29647005EB9CF /* NSConcreteTask.h */,
+				EEB31CE817C685E500CFB0E1 /* OCEventState.h */,
+				EEB31CE917C685E500CFB0E1 /* OCEventState.m */,
+				EEB31CEF17C6A1EF00CFB0E1 /* OCTestEventState.h */,
+				EEB31CF017C6A1EF00CFB0E1 /* OCTestEventState.m */,
+				EEB31CF717C6D57B00CFB0E1 /* OCTestSuiteEventState.h */,
+				EEB31CF817C6D57B00CFB0E1 /* OCTestSuiteEventState.m */,
 			);
 			path = xctool;
 			sourceTree = "<group>";
@@ -442,6 +472,7 @@
 			isa = PBXGroup;
 			children = (
 				2804514417C410F100D16420 /* OTestQueryTests.m */,
+				EEE4E9C517DFF42500B701A8 /* OCUnitCrashFilterTests.m */,
 				28046D2F16D76665000AA15C /* ActionTests.m */,
 				283CCACC16C2EE9900F2E343 /* XCToolTests.m */,
 				28ADB43A16E410F9006301ED /* BuildActionTests.m */,
@@ -452,6 +483,14 @@
 				2889805E1742B675004BA024 /* FakeTaskManager.h */,
 				2889805F1742B675004BA024 /* FakeTaskManager.m */,
 				28897FBA173E4C73004BA024 /* FakeTaskManagerTests.m */,
+				2889806E174435AD004BA024 /* LaunchHandlers.h */,
+				2889806F174435AD004BA024 /* LaunchHandlers.m */,
+				EEB31CEC17C6867300CFB0E1 /* OCEventStateTests.m */,
+				EEB31CF317C6A21400CFB0E1 /* OCTestEventStateTests.m */,
+				EEB31CFC17C6D5AB00CFB0E1 /* OCTestSuiteEventStateTests.m */,
+				2868B1C21746ED9C0062F4BA /* OCUnitTestRunnerTests.m */,
+				28897FB7173CB512004BA024 /* Options+Testing.h */,
+				28897FB8173CB512004BA024 /* Options+Testing.m */,
 				28AC9E2F16DB3478009E5B9A /* OptionsTests.m */,
 				283479A416E1B242003C3B77 /* RunTestsActionTests.m */,
 				32707EE11725FE7F00AF2F53 /* TestActionTests.m */,
@@ -490,6 +529,8 @@
 		28897FCD173E6215004BA024 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				EE37291017E2886200554867 /* Reporter.m */,
+				EE37290F17E2871700554867 /* Reporter.h */,
 				28F489FA17973BF900068E00 /* NSFileHandle+Print.h */,
 				28F489FB17973BF900068E00 /* NSFileHandle+Print.m */,
 				28F489F117973B6100068E00 /* FakeFileHandle.h */,
@@ -610,7 +651,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				283CCA4916C2EA3800F2E343 /* main.m in Sources */,
+				EE37291517E289A900554867 /* Reporter.m in Sources */,
+				EE37291417E2898200554867 /* OCUnitCrashFilter.m in Sources */,
+				EE37291317E288AD00554867 /* main.m in Sources */,
+				EE30659B17DEBE6600733D72 /* FakeFileHandle.m in Sources */,
 				283CCAD616C2F10A00F2E343 /* XCTool.m in Sources */,
 				28E9B97F16C2F1C600A52E4D /* XCToolUtil.m in Sources */,
 				28E9B9D716C3275200A52E4D /* OCUnitIOSAppTestRunner.m in Sources */,
@@ -627,7 +671,6 @@
 				28BB043D17C7FF43004F6C13 /* Buildable.m in Sources */,
 				287BF08416F1A97900590E06 /* XcodeSubjectInfo.m in Sources */,
 				28ACFC8316FBA888004BAF33 /* TaskUtil.m in Sources */,
-				283EAF12170288FE00CE0A0C /* OCUnitCrashFilter.m in Sources */,
 				288B9FB8171A50C1008F0BDF /* OCUnitOSXLogicTestRunner.m in Sources */,
 				288B9FBC171A5509008F0BDF /* OCUnitOSXAppTestRunner.m in Sources */,
 				324BB4C51725BD990073A862 /* XcodeTargetMatch.m in Sources */,
@@ -645,6 +688,9 @@
 				2804514217C4106C00D16420 /* OTestQuery.m in Sources */,
 				28404ADF17C7E16F00CB436A /* Testable.m in Sources */,
 				2869F3C517C82FB80078F078 /* TestableExecutionInfo.m in Sources */,
+				EEB31CEA17C685E500CFB0E1 /* OCEventState.m in Sources */,
+				EEB31CF117C6A1EF00CFB0E1 /* OCTestEventState.m in Sources */,
+				EEB31CF917C6D57B00CFB0E1 /* OCTestSuiteEventState.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -652,6 +698,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE37291617E28A3000554867 /* OCUnitCrashFilter.m in Sources */,
+				EEB31CF517C6A23E00CFB0E1 /* OCTestEventState.m in Sources */,
+				EEB31CEE17C6904500CFB0E1 /* OCEventState.m in Sources */,
 				28E28FB91796934B0072376C /* ReportStatus.m in Sources */,
 				28B714561760769E00BB016A /* OCUnitIOSDeviceTestRunner.m in Sources */,
 				283479A216E1A164003C3B77 /* CleanAction.m in Sources */,
@@ -669,6 +718,7 @@
 				28046D2D16D7603B000AA15C /* Action.m in Sources */,
 				28046D3016D76665000AA15C /* ActionTests.m in Sources */,
 				28AC9E3016DB3478009E5B9A /* OptionsTests.m in Sources */,
+				EE37291217E2886200554867 /* Reporter.m in Sources */,
 				283479A616E1B242003C3B77 /* RunTestsActionTests.m in Sources */,
 				2869F3C617C82FB80078F078 /* TestableExecutionInfo.m in Sources */,
 				283479AE16E2A736003C3B77 /* BuildTestsAction.m in Sources */,
@@ -680,7 +730,6 @@
 				287BF04D16F1A6EB00590E06 /* XcodeSubjectInfoTests.m in Sources */,
 				287BF08516F1A97900590E06 /* XcodeSubjectInfo.m in Sources */,
 				28ACFC8416FBA888004BAF33 /* TaskUtil.m in Sources */,
-				283EAF13170288FE00CE0A0C /* OCUnitCrashFilter.m in Sources */,
 				283EAF161702BB0600CE0A0C /* OCUnitCrashFilterTests.m in Sources */,
 				288B9FB9171A50C1008F0BDF /* OCUnitOSXLogicTestRunner.m in Sources */,
 				288B9FBD171A5509008F0BDF /* OCUnitOSXAppTestRunner.m in Sources */,
@@ -713,6 +762,10 @@
 				2804514317C4106C00D16420 /* OTestQuery.m in Sources */,
 				2804514517C410F100D16420 /* OTestQueryTests.m in Sources */,
 				28404AE017C7E16F00CB436A /* Testable.m in Sources */,
+				EEB31CED17C6867300CFB0E1 /* OCEventStateTests.m in Sources */,
+				EEB31CF417C6A21400CFB0E1 /* OCTestEventStateTests.m in Sources */,
+				EEB31CFA17C6D57B00CFB0E1 /* OCTestSuiteEventState.m in Sources */,
+				EEB31CFD17C6D5AB00CFB0E1 /* OCTestSuiteEventStateTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
