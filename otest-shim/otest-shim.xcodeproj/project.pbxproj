@@ -255,6 +255,7 @@
 				);
 				GCC_PREFIX_HEADER = "otest-shim/otest-shim-Prefix.pch";
 				PRODUCT_NAME = "otest-shim-osx";
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -271,6 +272,7 @@
 				);
 				GCC_PREFIX_HEADER = "otest-shim/otest-shim-Prefix.pch";
 				PRODUCT_NAME = "otest-shim-osx";
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
