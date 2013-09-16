@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<testsuites name="AllTestUnits" tests="4" failures="0" errors="0" time="0.015212">
+  <testsuite tests="1" failures="0" errors="0" time="0.003800" name="Tests" timestamp="">
+    <testcase classname="Tests" name="testSomethingDifferent" time="0.004000"></testcase>
+  </testsuite>
+  <testsuite tests="3" failures="0" errors="0" time="0.011412" name="OtherTests" timestamp="">
+    <testcase classname="OtherTests" name="testSomething" time="0.003651"></testcase>
+    <testcase classname="OtherTests" name="testSomething" time="0.003651"></testcase>
+    <testcase classname="OtherTests" name="testSomething" time="0.003651"></testcase>
+  </testsuite>
+</testsuites>
+
+
