@@ -21,6 +21,7 @@
 #import "SimulatorLauncher.h"
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
+#import "TestingFramework.h"
 
 @implementation OCUnitOSXAppTestRunner
 
@@ -51,7 +52,9 @@
 
   NSTask *task = CreateTaskInSameProcessGroup();
   [task setLaunchPath:testHostPath];
-  [task setArguments:[self otestArguments]];
+  NSString *testBundlePath = [_buildSettings[@"BUILT_PRODUCTS_DIR"] stringByAppendingPathComponent:_buildSettings[@"FULL_PRODUCT_NAME"]];
+  
+  [task setArguments:[self testArguments]];
   [task setEnvironment:[self otestEnvironmentWithOverrides:@{
                         @"DYLD_INSERT_LIBRARIES" : [libraries componentsJoinedByString:@":"],
                         @"DYLD_FRAMEWORK_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
@@ -59,7 +62,7 @@
                         @"DYLD_FALLBACK_FRAMEWORK_PATH" : [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"],
                         @"NSUnbufferedIO" : @"YES",
                         @"OBJC_DISABLE_GC" : !_garbageCollection ? @"YES" : @"NO",
-                        @"XCInjectBundle" : [_buildSettings[@"BUILT_PRODUCTS_DIR"] stringByAppendingPathComponent:_buildSettings[@"FULL_PRODUCT_NAME"]],
+                        @"XCInjectBundle" : testBundlePath,
                         @"XCInjectBundleInto" : testHostPath,
                         }]];
   // For OSX test bundles only, Xcode will chdir to the project's directory.

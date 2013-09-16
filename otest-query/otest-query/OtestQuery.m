@@ -22,10 +22,13 @@
 #import <objc/runtime.h>
 #import <stdio.h>
 
+#import "TestingFramework.h"
+
 @implementation OtestQuery
 
 + (void)queryTestBundlePath:(NSString *)testBundlePath
 {
+  TestingFramework *framework = [TestingFramework frameworkForTestBundleAtPath:testBundlePath];
   NSBundle *bundle = [NSBundle bundleWithPath:testBundlePath];
 
   // We use dlopen() instead of -[NSBundle loadAndReturnError] because, if
@@ -36,7 +39,8 @@
   }
 
   [[NSBundle allFrameworks] makeObjectsPerformSelector:@selector(principalClass)];
-  NSArray *testClasses = objc_msgSend(NSClassFromString(@"SenTestCase"), @selector(senAllSubclasses));
+  
+  NSArray *testClasses = objc_msgSend(NSClassFromString(framework.testClassName), NSSelectorFromString(framework.allTestSelectorName));
 
   NSMutableArray *testNames = [NSMutableArray array];
   for (Class testClass in testClasses) {

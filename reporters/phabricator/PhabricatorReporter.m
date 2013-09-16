@@ -131,10 +131,9 @@
   NSArray *exceptions = event[kReporter_EndTest_ExceptionsKey];
   if ([exceptions count] > 0) {
     NSDictionary *exception = exceptions[0];
-    [userdata appendFormat:@"%@:%d: %@: %@",
+    [userdata appendFormat:@"%@:%d: %@",
      exception[kReporter_EndTest_Exception_FilePathInProjectKey],
      [exception[kReporter_EndTest_Exception_LineNumberKey] intValue],
-     exception[kReporter_EndTest_Exception_NameKey],
      exception[kReporter_EndTest_Exception_ReasonKey]];
   }
 

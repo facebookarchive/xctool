@@ -15,6 +15,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TestingFramework.h"
 
 #import "OCUnitCrashFilter.h"
 
@@ -30,6 +31,7 @@
   NSString *_simulatorType;
   NSArray *_reporters;
   OCUnitCrashFilter *_testRunnerState;
+  TestingFramework *_framework;
 }
 
 /**
@@ -56,9 +58,8 @@
 
 - (BOOL)runTestsWithError:(NSString **)error;
 
-- (NSArray *)otestArguments;
+- (NSArray *)testArguments;
 - (NSDictionary *)otestEnvironmentWithOverrides:(NSDictionary *)overrides;
-
 - (NSString *)testBundlePath;
 
 @end

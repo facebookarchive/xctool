@@ -14,6 +14,9 @@
 // limitations under the License.
 //
 
+#define ST_TESTCASE_CLASS_NAME @"SenTestCase"
+#define XCT_TESTCASE_CLASS_NAME @"XCTestCase"
+
 #import <SenTestingKit/SenTestingKit.h>
 
 #import "OTestQuery.h"
@@ -37,6 +40,19 @@
                      @"TestProject_Library_OSXTests/testWillFail",
                      @"TestProject_Library_OSXTests/testWillPass",
                      ]));
+}
+
+- (void)testCanQueryXCTestClassesFromOSXBundle
+{
+  NSString *error = nil;
+  NSArray *classes = OTestQueryTestCasesInOSXBundle(TEST_DATA @"otest-query-tests-osx-test-bundle/TestProject-Library-XCTest-OSXTests.xctest",
+                                                    AbsolutePathFromRelative(TEST_DATA @"otest-query-tests-osx-test-bundle"),
+                                                    YES,
+                                                    &error);
+  assertThat(classes,
+             equalTo(@[@"TestProject_Library_XCTest_OSXTests/testOutput",
+                       @"TestProject_Library_XCTest_OSXTests/testWillFail",
+                       @"TestProject_Library_XCTest_OSXTests/testWillPass"]));
 }
 
 - (void)testCanQueryClassesFromIOSBundle
