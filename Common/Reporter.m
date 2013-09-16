@@ -107,6 +107,16 @@ static void ReadFileDescriptorAndOutputLinesToBlock(int inputFD,
   // Subclass should implement.
 }
 
+- (void)parseAndHandleEvent:(NSString *)line
+{
+  NSError *error = nil;
+  NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[line dataUsingEncoding:NSUTF8StringEncoding]
+                                                       options:0
+                                                         error:&error];
+  NSAssert(dict != nil, @"Failed to decode JSON '%@' with error: %@", line, [error localizedFailureReason]);
+  [self handleEvent:dict];
+}
+
 - (void)handleEvent:(NSDictionary *)eventDict
 {
   NSAssert(([eventDict count] > 0), @"Event was empty.");

@@ -104,9 +104,9 @@
                      @{
                      @"name" : @"TestProject-Library: -[SomeTests testBacktraceOutputIsCaptured]",
                      @"result" : @"pass",
-                     @"userdata" : @"0   TestProject-LibraryTests            0x016c9827 -[SomeTests testBacktraceOutputIsCaptured] + 103\n"
-                                   @"1   CoreFoundation                      0x00a011bd __invoking___ + 29\n"
-                                   @"2   CoreFoundation                      0x00a010d6 -[NSInvocation invoke] + 342\n"
+                     @"userdata" : @"0   TestProject-LibraryTests            0x016cd817 -[SomeTests testBacktraceOutputIsCaptured] + 103\n"
+                                   @"1   CoreFoundation                      0x00a051bd __invoking___ + 29\n"
+                                   @"2   CoreFoundation                      0x00a050d6 -[NSInvocation invoke] + 342\n"
                                    @"3   SenTestingKit                       0x20103ed1 -[SenTestCase invokeTest] + 219\n"
                                    @"4   SenTestingKit                       0x2010405b -[SenTestCase performTest:] + 183\n"
                                    @"5   SenTestingKit                       0x201037bf -[SenTest run] + 82\n"
@@ -114,15 +114,13 @@
                                    @"7   SenTestingKit                       0x201037bf -[SenTest run] + 82\n"
                                    @"8   SenTestingKit                       0x2010792b -[SenTestSuite performTest:] + 139\n"
                                    @"9   SenTestingKit                       0x201037bf -[SenTest run] + 82\n"
-                                   @"10  SenTestingKit                       0x2010792b -[SenTestSuite performTest:] + 139\n"
-                                   @"11  SenTestingKit                       0x201037bf -[SenTest run] + 82\n"
-                                   @"12  SenTestingKit                       0x201063ec +[SenTestProbe runTests:] + 174\n"
-                                   @"13  libobjc.A.dylib                     0x007385c8 +[NSObject performSelector:withObject:] + 70\n"
-                                   @"14  otest                               0x00002342 otest + 4930\n"
-                                   @"15  otest                               0x000025ef otest + 5615\n"
-                                   @"16  otest                               0x0000268c otest + 5772\n"
-                                   @"17  otest                               0x00002001 otest + 4097\n"
-                                   @"18  otest                               0x00001f71 otest + 3953\n",
+                                   @"10  SenTestingKit                       0x201063ec +[SenTestProbe runTests:] + 174\n"
+                                   @"11  libobjc.A.dylib                     0x0073c5c8 +[NSObject performSelector:withObject:] + 70\n"
+                                   @"12  otest                               0x00002342 otest + 4930\n"
+                                   @"13  otest                               0x000025ef otest + 5615\n"
+                                   @"14  otest                               0x0000268c otest + 5772\n"
+                                   @"15  otest                               0x00002001 otest + 4097\n"
+                                   @"16  otest                               0x00001f71 otest + 3953\n",
                      @"coverage" : [NSNull null],
                      @"extra" :  [NSNull null],
                      @"link" : [NSNull null],
@@ -138,7 +136,7 @@
                      @{
                      @"name" : @"TestProject-Library: -[SomeTests testPrintSDK]",
                      @"result" : @"pass",
-                     @"userdata" : @"2013-05-08 20:51:11.809 otest[88423:707] SDK: 6.1\n",
+                     @"userdata" : @"2013-09-10 15:06:05.784 otest[25153:707] SDK: 6.1\n",
                      @"coverage" : [NSNull null],
                      @"extra" :  [NSNull null],
                      @"link" : [NSNull null],
@@ -146,7 +144,7 @@
                      @{
                      @"name" : @"TestProject-Library: -[SomeTests testStream]",
                      @"result" : @"pass",
-                     @"userdata" : @"2013-05-08 20:51:11.809 otest[88423:707] >>>> i = 0\n2013-05-08 20:51:12.060 otest[88423:707] >>>> i = 1\n2013-05-08 20:51:12.312 otest[88423:707] >>>> i = 2\n",
+                     @"userdata" : @"2013-09-10 15:06:05.784 otest[25153:707] >>>> i = 0\n2013-09-10 15:06:06.035 otest[25153:707] >>>> i = 1\n2013-09-10 15:06:06.286 otest[25153:707] >>>> i = 2\n",
                      @"coverage" : [NSNull null],
                      @"extra" :  [NSNull null],
                      @"link" : [NSNull null],

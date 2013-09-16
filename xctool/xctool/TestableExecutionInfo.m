@@ -151,7 +151,7 @@
   } else if ([sdkName hasPrefix:@"iphoneos"]) {
     // We can't run tests on device yet, but we must return a test list here or
     // we'll never get far enough to run OCUnitIOSDeviceTestRunner.
-    return @[@"PlaceHolderForDeviceTests"];
+    return @[@"Placeholder/ForDeviceTests"];
   } else {
     NSAssert(NO, @"Unexpected SDK: %@", sdkName);
     abort();

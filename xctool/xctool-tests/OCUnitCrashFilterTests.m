@@ -16,125 +16,245 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
-#import "EventBuffer.h"
 #import "OCUnitCrashFilter.h"
-#import "OCUnitTestRunner.h"
-#import "XCToolUtil.h"
+#import "ReporterEvents.h"
+#import "TestUtil.h"
 
-@interface OCUnitCrashFilterTests : SenTestCase
+@interface OCUnitCrashFilterTests : SenTestCase {
+  NSArray *_events;
+  NSArray *_testList;
+  OCUnitCrashFilter *_state;
+}
 @end
 
 @implementation OCUnitCrashFilterTests
 
-- (OCUnitCrashFilter *)filterWithEvents:(NSArray *)events
+- (void)setUp
 {
-  OCUnitCrashFilter *filter = [[[OCUnitCrashFilter alloc] init] autorelease];
+  _events = @[
+    @{@"event" : @"begin-test-suite", @"suite" : kReporter_TestSuite_TopLevelSuiteName},
+      @{@"event" : @"begin-test", @"test" : @"-[OtherTests testSomething]"},
+      @{@"event" : @"test-output", @"output" : @"puppies!\n"},
+      @{@"event" : @"end-test", @"test" : @"-[OtherTests testSomething]", @"succeeded" : @NO, @"output" : @"puppies!\n", @"totalDuration" : @1.0},
+      @{@"event" : @"begin-test", @"test" : @"-[OtherTests testAnother]"},
+      @{@"event" : @"end-test", @"test" : @"-[OtherTests testAnother]", @"succeeded" : @YES, @"output" : @"", @"totalDuration" : @1.0},
+    @{@"event" : @"end-test-suite", @"suite" : @"OtherTests", @"testCaseCount" : @2, @"totalFailureCount" : @1, @"totalDuration" : @1.0, @"testDuration" : @1.0, @"unexpectedExceptionCount" : @1},
+  ];
 
+  _testList = @[@"OtherTests/testSomething", @"OtherTests/testAnother"];
+
+  _state = [[[OCUnitCrashFilter alloc] initWithTests:_testList
+                                           reporters:@[]] autorelease];
+  _state.crashReportCollectionTime = 0.25;
+}
+
+- (void)assertEvents:(NSArray *)events containsEvents:(NSArray *)eventKeys
+{
+  NSAssert([events count] == [eventKeys count],
+           @"Expected event keys '%@' but got events: %@", eventKeys, [events valueForKey:@"event"]);
+
+  [eventKeys enumerateObjectsUsingBlock:^(NSString *eventKey, NSUInteger idx, BOOL *stop) {
+    NSAssert([eventKey isEqualToString:events[idx][@"event"]],
+             @"Expected event key '%@' but got event key '%@'", eventKey, events[idx][@"event"]);
+  }];
+}
+
+- (void)sendEvents:(NSArray *)events toReporter:(Reporter *)reporter
+{
   for (NSDictionary *event in events) {
-    PublishEventToReporters(@[filter], event);
+    [reporter handleEvent:event];
   }
-
-  return filter;
 }
 
-- (void)testGoodTestRunDoesNotHaveAnUnfinishedTest
+- (void)sendEventsFromFile:(NSString *)path toReporter:(Reporter *)reporter
 {
-  OCUnitCrashFilter *filter =
-    [self filterWithEvents:@[
-     @{@"event" : @"begin-test-suite", @"suite" : @"All tests"},
-     @{@"event" : @"begin-test-suite", @"suite" : @"/path/to/TestProject-LibraryTests.octest(Tests)"},
-     @{@"event" : @"begin-test-suite", @"suite" : @"OtherTests"},
-     @{@"event" : @"begin-test", @"test" : @"-[OtherTests testSomething]"},
-     @{@"event" : @"end-test", @"test" : @"-[OtherTests testSomething]", @"succeeded" : @YES, @"output" : @"", @"totalDuration" : @1.0},
-     @{@"event" : @"end-test-suite", @"suite" : @"OtherTests", @"testCaseCount" : @1, @"totalFailureCount" : @0, @"totalDuration" : @1.0, @"testDuration" : @1.0, @"unexpectedExceptionCount" : @0},
-     @{@"event" : @"end-test-suite", @"suite" : @"/path/to/TestProject-LibraryTests.octest(Tests)", @"testCaseCount" : @1, @"totalFailureCount" : @0, @"totalDuration" : @1.0, @"testDuration" : @1.0, @"unexpectedExceptionCount" : @0},
-     @{@"event" : @"end-test-suite", @"suite" : @"All tests", @"testCaseCount" : @1, @"totalFailureCount" : @0, @"totalDuration" : @1.0, @"testDuration" : @1.0, @"unexpectedExceptionCount" : @0},
-     ]];
-  assertThatBool([filter testRunWasUnfinished], equalToBool(NO));
+  NSString *pathContents = [NSString stringWithContentsOfFile:path
+                                                     encoding:NSUTF8StringEncoding
+                                                        error:nil];
+  NSArray *lines = [pathContents componentsSeparatedByCharactersInSet:
+                    [NSCharacterSet newlineCharacterSet]];
+  for (NSString *line in lines) {
+    if ([line length] == 0) {
+      break;
+    }
+
+    NSError *error = nil;
+    NSDictionary *event = [NSJSONSerialization JSONObjectWithData:[line dataUsingEncoding:NSUTF8StringEncoding]
+                                                          options:0
+                                                            error:&error];
+    NSAssert(event != nil, @"Error decoding JSON '%@' with error: %@",
+             line,
+             [error localizedFailureReason]);
+    NSAssert(event[@"event"], @"Event type not found: '%@'", line);
+    [reporter handleEvent:event];
+  }
 }
 
-- (void)testCanGenerateCorrectEventsWhenTestNeverFinishes
+- (void)testSuccessfulRun
 {
-  OCUnitCrashFilter *filter =
-    [self filterWithEvents:@[
-     @{@"event" : @"begin-test-suite", @"suite" : @"All tests"},
-     @{@"event" : @"begin-test-suite", @"suite" : @"/path/to/TestProject-LibraryTests.octest(Tests)"},
-     @{@"event" : @"begin-test-suite", @"suite" : @"OtherTests"},
-     @{@"event" : @"begin-test", @"test" : @"-[OtherTests testSomething]", @"className" : @"OtherTests", @"methodName" : @"testSomething"},
-     ]];
-  assertThatBool([filter testRunWasUnfinished], equalToBool(YES));
-  assertThat(filter.currentTestEvent, notNilValue());
+  NSArray *testList = @[@"OtherTests/testSomething",
+                        @"SomeTests/testBacktraceOutputIsCaptured",
+                        @"SomeTests/testOutputMerging",
+                        @"SomeTests/testPrintSDK",
+                        @"SomeTests/testStream",
+                        @"SomeTests/testWillFail",
+                        @"SomeTests/testWillPass"];
 
-  EventBuffer *buffer = [[[EventBuffer alloc] init] autorelease];
+  OCUnitCrashFilter *state =
+    [[[OCUnitCrashFilter alloc] initWithTests:testList
+                                    reporters:@[]] autorelease];
 
-  [filter fireEventsToSimulateTestRunFinishing:@[buffer]
-                               fullProductName:@"TestProject-LibraryTests.octest"
-                      concatenatedCrashReports:@"CONCATENATED_CRASH_REPORTS_GO_HERE"];
-
-  NSArray *generatedEvents = [buffer events];
-  assertThatInteger((generatedEvents.count), equalToInteger(5));
-
-  // We should see another 'test-output' event with the crash report text.
-  assertThat(generatedEvents[0][@"event"], equalTo(@"test-output"));
-  assertThat(generatedEvents[0][@"output"], equalTo(@"CONCATENATED_CRASH_REPORTS_GO_HERE"));
-
-  // The test should get marked as a failure
-  assertThat(generatedEvents[1][@"event"], equalTo(@"end-test"));
-  assertThat(generatedEvents[1][@"test"], equalTo(@"-[OtherTests testSomething]"));
-  assertThat(generatedEvents[1][@"className"], equalTo(@"OtherTests"));
-  assertThat(generatedEvents[1][@"methodName"], equalTo(@"testSomething"));
-  assertThat(generatedEvents[1][@"succeeded"], equalTo(@NO));
-
-  // And 'end-test-suite' events should get sent for each of the suites we were in.
-  assertThat(generatedEvents[2][@"event"], equalTo(@"end-test-suite"));
-  assertThat(generatedEvents[3][@"event"], equalTo(@"end-test-suite"));
-  assertThat(generatedEvents[4][@"event"], equalTo(@"end-test-suite"));
+  NSArray *events = [TestUtil getEventsForStates:@[state]
+                                       withBlock:^{
+                                         [state prepareToRun];
+                                         [self sendEventsFromFile:TEST_DATA @"JSONStreamReporter-runtests.txt"
+                                                       toReporter:state];
+                                         [state finishedRun:NO];
+                                       }];
+  assertThat(events, hasCountOf(0));
 }
 
-- (void)testCanGenerateCorrectEventsWhenTestFinishesButCrashesImmediatelyAfterwards
+- (void)testCrashedBeforeTestSuiteStart
 {
-  // This is a common case where we've over-released something.  When OCUnit runs
-  // a test, it creates a new NSAutoreleasePool before starting the test, and drains
-  // it immediately afterwards.  If we over-release something that's already been
-  // added to the autorelease pool, then the test runner will crash with EXC_BAD_ACCESS
-  // as soon as the pool is drained.
+  NSArray *fakeEvents = [TestUtil getEventsForStates:@[_state]
+                                           withBlock:^{
+                                             [_state prepareToRun];
+                                             [self sendEvents:@[]
+                                                   toReporter:_state];
+                                             [_state finishedRun:YES];
+                                       }];
 
-  OCUnitCrashFilter *filter =
-    [self filterWithEvents:@[
-     @{@"event" : @"begin-test-suite", @"suite" : @"All tests"},
-     @{@"event" : @"begin-test-suite", @"suite" : @"/path/to/TestProject-LibraryTests.octest(Tests)"},
-     @{@"event" : @"begin-test-suite", @"suite" : @"OtherTests"},
-     @{@"event" : @"begin-test", @"test" : @"-[OtherTests testSomething]", @"className" : @"OtherTests", @"methodName" : @"testSomething"},
-     @{@"event" : @"end-test", @"test" : @"-[OtherTests testSomething]", @"className" : @"OtherTests", @"methodName" : @"testSomething", @"succeeded" : @YES, @"output" : @"", @"totalDuration" : @1.0},
-     ]];
-  assertThatBool([filter testRunWasUnfinished], equalToBool(YES));
+  [self assertEvents:fakeEvents containsEvents:
+    @[kReporter_Events_BeginTestSuite,
+      kReporter_Events_BeginTest,
+      kReporter_Events_TestOuput,
+      kReporter_Events_EndTest,
+      kReporter_Events_BeginTest,
+      kReporter_Events_TestOuput,
+      kReporter_Events_EndTest,
+      kReporter_Events_EndTestSuite]];
 
-  EventBuffer *buffer = [[[EventBuffer alloc] init] autorelease];
+  assertThat(fakeEvents[2][@"output"], containsString(@"crashed before starting a test-suite"));
+}
 
-  [filter fireEventsToSimulateTestRunFinishing:@[buffer]
-                               fullProductName:@"TestProject-LibraryTests.octest"
-                      concatenatedCrashReports:@"CONCATENATED_CRASH_REPORTS_GO_HERE"];
+- (void)testCrashedAfterTestSuiteStartBeforeTests
+{
+  NSArray *fakeEvents = [TestUtil getEventsForStates:@[_state]
+                                           withBlock:^{
+                                             [_state prepareToRun];
+                                             [self sendEvents:[_events subarrayWithRange:NSMakeRange(0, 1)]
+                                                   toReporter:_state];
+                                             [_state finishedRun:YES];
+                                           }];
+  [self assertEvents:fakeEvents containsEvents:
+   @[kReporter_Events_BeginTest,
+     kReporter_Events_TestOuput,
+     kReporter_Events_EndTest,
+     kReporter_Events_BeginTest,
+     kReporter_Events_TestOuput,
+     kReporter_Events_EndTest,
+     kReporter_Events_EndTestSuite]];
 
-  NSArray *generatedEvents = [buffer events];
-  assertThatInteger((generatedEvents.count), equalToInteger(6));
+  assertThat(fakeEvents[1][@"output"],
+             containsString(@"after starting a test-suite but before starting a test\n\n"));
+}
 
-  // The test should get marked as a failure
-  assertThat(generatedEvents[0][@"event"], equalTo(@"begin-test"));
-  assertThat(generatedEvents[0][@"test"], equalTo(@"TestProject-LibraryTests.octest_CRASHED"));
+- (void)testCrashedAfterFirstTestStarts
+{
+  NSArray *fakeEvents = [TestUtil getEventsForStates:@[_state]
+                                           withBlock:^{
+                                             [_state prepareToRun];
+                                             [self sendEvents:[_events subarrayWithRange:NSMakeRange(0, 2)]
+                                                   toReporter:_state];
+                                             [_state finishedRun:YES];
+                                           }];
+  [self assertEvents:fakeEvents containsEvents:
+   @[kReporter_Events_TestOuput,
+     kReporter_Events_EndTest,
+     kReporter_Events_BeginTest,
+     kReporter_Events_TestOuput,
+     kReporter_Events_EndTest,
+     kReporter_Events_EndTestSuite]];
 
-  assertThat(generatedEvents[1][@"event"], equalTo(@"test-output"));
-  assertThat(generatedEvents[1][@"output"], startsWith(@"The tests crashed"));
+  assertThat(fakeEvents[0][@"output"], containsString(@"crashed binary while running\n"));
+}
 
-  assertThat(generatedEvents[2][@"event"], equalTo(@"end-test"));
-  assertThat(generatedEvents[2][@"test"], equalTo(@"TestProject-LibraryTests.octest_CRASHED"));
-  assertThat(generatedEvents[2][@"className"], equalTo(@"TestProject-LibraryTests.octest"));
-  assertThat(generatedEvents[2][@"methodName"], equalTo(@"CRASHED"));
-  assertThat(generatedEvents[2][@"succeeded"], equalTo(@NO));
+- (void)testCrashedAfterFirstTestFinishes
+{
+  NSArray *fakeEvents = [TestUtil getEventsForStates:@[_state]
+                                           withBlock:^{
+                                             [_state prepareToRun];
+                                             [self sendEvents:[_events subarrayWithRange:NSMakeRange(0, 4)]
+                                                   toReporter:_state];
+                                             [_state finishedRun:YES];
+                                           }];
+  [self assertEvents:fakeEvents containsEvents:
+   @[kReporter_Events_BeginTest,
+     kReporter_Events_TestOuput,
+     kReporter_Events_EndTest,
+     kReporter_Events_EndTestSuite]];
 
-  // And 'end-test-suite' events should get sent for each of the suites we were in.
-  assertThat(generatedEvents[3][@"event"], equalTo(@"end-test-suite"));
-  assertThat(generatedEvents[4][@"event"], equalTo(@"end-test-suite"));
-  assertThat(generatedEvents[5][@"event"], equalTo(@"end-test-suite"));
+  assertThat(fakeEvents[1][@"output"], containsString(@"crashed immediately after running"));
+}
+
+- (void)testCrashedAfterLastTestFinishes
+{
+  NSArray *fakeEvents = [TestUtil getEventsForStates:@[_state]
+                                           withBlock:^{
+                                             [_state prepareToRun];
+                                             [self sendEvents:[_events subarrayWithRange:NSMakeRange(0, 6)]
+                                                   toReporter:_state];
+                                             [_state finishedRun:YES];
+                                           }];
+  // In this case there are no tests left with which to report the error, so we have to create a fake one
+  [self assertEvents:fakeEvents containsEvents:
+   @[kReporter_Events_BeginTest,
+     kReporter_Events_TestOuput,
+     kReporter_Events_EndTest,
+     kReporter_Events_EndTestSuite]];
+
+  assertThat(fakeEvents[0][@"test"], containsString(@"_MAYBE_CRASHED"));
+  assertThat(fakeEvents[1][@"output"], containsString(@"crashed immediately after running"));
+}
+
+- (void)testCrashedAfterTestSuiteFinishes
+{
+  NSArray *fakeEvents = [TestUtil getEventsForStates:@[_state]
+                                           withBlock:^{
+                                             [_state prepareToRun];
+                                             [self sendEvents:_events
+                                                   toReporter:_state];
+                                             [_state finishedRun:YES];
+                                           }];
+
+  // Not much we can do here, make sure no events are shipped out
+  [self assertEvents:fakeEvents containsEvents:@[]];
+}
+
+- (void)testExtendedInfo
+{
+  NSArray *fakeEvents = [TestUtil getEventsForStates:@[_state]
+                                           withBlock:^{
+                                             [_state prepareToRun];
+                                             [self sendEvents:@[]
+                                                   toReporter:_state];
+                                             [_state finishedRun:YES];
+                                           }];
+
+  [self assertEvents:fakeEvents containsEvents:
+   @[kReporter_Events_BeginTestSuite,
+     kReporter_Events_BeginTest,
+     kReporter_Events_TestOuput,
+     kReporter_Events_EndTest,
+     kReporter_Events_BeginTest,
+     kReporter_Events_TestOuput,
+     kReporter_Events_EndTest,
+     kReporter_Events_EndTestSuite]];
+
+  // Normally the extended info has the crash report, but since we're just testing here we'll instead just look
+  // for the double newline that comes before the crash report
+  assertThat(fakeEvents[2][@"output"], containsString(@"crashed before starting a test-suite\n\n"));
+  assertThat(fakeEvents[5][@"output"], endsWith(@"crashed before starting a test-suite\n"));
 }
 
 @end

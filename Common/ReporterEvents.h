@@ -56,6 +56,8 @@
 #define kReporter_EndOCUnit_SucceededKey @"succeeded"
 #define kReporter_EndOCUnit_FailureReasonKey @"failureReason"
 
+#define kReporter_TestSuite_TopLevelSuiteName @"Toplevel Test Suite"
+
 #define kReporter_BeginTestSuite_SuiteKey @"suite"
 
 #define kReporter_EndTestSuite_SuiteKey @"suite"
@@ -73,9 +75,10 @@
 #define kReporter_EndTest_ClassNameKey @"className"
 #define kReporter_EndTest_MethodNameKey @"methodName"
 #define kReporter_EndTest_SucceededKey @"succeeded"
+#define kReporter_EndTest_ResultKey @"result"
 #define kReporter_EndTest_TotalDurationKey @"totalDuration"
 #define kReporter_EndTest_OutputKey @"output"
-#define kReporter_EndTest_ExceptionKey @"exception"
+#define kReporter_EndTest_ExceptionsKey @"exceptions"
 #define kReporter_EndTest_Exception_FilePathInProjectKey @"filePathInProject"
 #define kReporter_EndTest_Exception_LineNumberKey @"lineNumber"
 #define kReporter_EndTest_Exception_ReasonKey @"reason"

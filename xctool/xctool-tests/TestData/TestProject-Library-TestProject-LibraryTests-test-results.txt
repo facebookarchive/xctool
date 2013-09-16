@@ -1,6 +1,4 @@
-{"suite":"All tests","event":"begin-test-suite"}
-{"suite":"\/Users\/fpotter\/Library\/Developer\/Xcode\/DerivedData\/TestProject-Library-fsljtldcjttttseqpqryyyihhqjz\/Build\/Products\/Debug-iphonesimulator\/TestProject-LibraryTests.octest(Tests)","event":"begin-test-suite"}
-{"suite":"TestProject_LibraryTests","event":"begin-test-suite"}
+{"suite":"Toplevel Test Suite","event":"begin-test-suite"}
 {"event":"begin-test","test":"-[TestProject_LibraryTests testOutputMerging]"}
 {"event":"test-output","output":"stdout-line1\nstderr-line1\nstdout-line2\nstdout-line3\nstderr-line2\nstderr-line3\n"}
 {"succeeded":true,"test":"-[TestProject_LibraryTests testOutputMerging]","output":"stdout-line1\nstderr-line1\nstdout-line2\nstdout-line3\nstderr-line2\nstderr-line3\n","totalDuration":0.001870989799499512,"event":"end-test"}
@@ -16,6 +14,4 @@
 {"succeeded":false,"test":"-[TestProject_LibraryTests testWillFail]","exception":{"lineNumber":40,"filePathInProject":"\/Users\/fpotter\/fb\/git\/xctool\/xctool\/xctool-tests\/TestData\/TestProject-Library\/TestProject-LibraryTests\/TestProject_LibraryTests.m","reason":"'a' should be equal to 'b' Strings aren't equal"},"totalDuration":0.002062976360321045,"output":"","event":"end-test"}
 {"event":"begin-test","test":"-[TestProject_LibraryTests testWillPass]"}
 {"succeeded":true,"test":"-[TestProject_LibraryTests testWillPass]","output":"","totalDuration":0.001831948757171631,"event":"end-test"}
-{"suite":"TestProject_LibraryTests","testCaseCount":5,"event":"end-test-suite","totalFailureCount":1,"totalDuration":1.018332004547119,"unexpectedExceptionCount":0,"testDuration":0.7618188858032227}
-{"suite":"\/Users\/fpotter\/Library\/Developer\/Xcode\/DerivedData\/TestProject-Library-fsljtldcjttttseqpqryyyihhqjz\/Build\/Products\/Debug-iphonesimulator\/TestProject-LibraryTests.octest(Tests)","testCaseCount":5,"event":"end-test-suite","totalFailureCount":1,"totalDuration":1.018408000469208,"unexpectedExceptionCount":0,"testDuration":0.7618188858032227}
-{"suite":"All tests","testCaseCount":5,"event":"end-test-suite","totalFailureCount":1,"totalDuration":1.018543004989624,"unexpectedExceptionCount":0,"testDuration":0.7618188858032227}
+{"suite":"Toplevel Test Suite","testCaseCount":5,"event":"end-test-suite","totalFailureCount":1,"totalDuration":1.018543004989624,"unexpectedExceptionCount":0,"testDuration":0.7618188858032227}
