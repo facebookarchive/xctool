@@ -71,10 +71,10 @@ while true; do
     -IDECustomBuildIntermediatesPath="$BUILD_OUTPUT_DIR/Intermediates" \
     XT_IOS_SDK_VERSION="$XT_IOS_SDK_VERSION" \
     XT_IOS_SDK_VERSION_EXPANDED="$XT_IOS_SDK_VERSION_EXPANDED" \
-    $@ 2>&1 | /usr/bin/tee "$BUILD_OUTPUT_PATH"
+    "$@" 2>&1 | /usr/bin/tee "$BUILD_OUTPUT_PATH"
   BUILD_RESULT=${PIPESTATUS[0]}
 
-  if ! grep -q -E 'BUILD (SUCCEEDED|FAILED)' "$BUILD_OUTPUT_PATH"; then
+  if ! grep -q -E '(BUILD|CLEAN) (SUCCEEDED|FAILED)' "$BUILD_OUTPUT_PATH"; then
     # Assume xcodebuild crashed since we didn't get the typical 'BUILD
     # SUCCEEDED' or 'BUILD FAILED' banner in the output.
 
