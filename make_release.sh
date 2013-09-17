@@ -53,13 +53,25 @@ xcodebuild \
   -IDECustomBuildIntermediatesPath="$BUILD_OUTPUT_DIR/Intermediates" \
   XT_IOS_SDK_VERSION="$XT_IOS_SDK_VERSION" \
   XT_IOS_SDK_VERSION_EXPANDED="$XT_IOS_SDK_VERSION_EXPANDED" \
-  XT_INSTALL_ROOT="$RELEASE_OUTPUT_DIR" \
-  TEST_AFTER_BUILD=YES
+  XT_INSTALL_ROOT="$RELEASE_OUTPUT_DIR"
 
 if [[ ! -x "$RELEASE_OUTPUT_DIR"/bin/xctool ]]; then
   echo "ERROR: xctool binary is missing."
   exit 1
 fi
+
+"$RELEASE_OUTPUT_DIR"/bin/xctool \
+  -workspace "$XCTOOL_DIR"/xctool.xcworkspace \
+  -scheme xctool \
+  -configuration Release \
+  -IDEBuildLocationStyle=Custom \
+  -IDECustomBuildLocationType=Absolute \
+  -IDECustomBuildProductsPath="$BUILD_OUTPUT_DIR/Products" \
+  -IDECustomBuildIntermediatesPath="$BUILD_OUTPUT_DIR/Intermediates" \
+  XT_IOS_SDK_VERSION="$XT_IOS_SDK_VERSION" \
+  XT_IOS_SDK_VERSION_EXPANDED="$XT_IOS_SDK_VERSION_EXPANDED" \
+  XT_INSTALL_ROOT="$RELEASE_OUTPUT_DIR" \
+  test
 
 XCTOOL_VERSION=$("$RELEASE_OUTPUT_DIR"/bin/xctool -version)
 ZIP_PATH="$OUTPUT_DIR"/xctool-v$XCTOOL_VERSION.zip
