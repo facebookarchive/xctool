@@ -90,7 +90,7 @@
     [task openWithStandardOutput:[NSFileHandle fileHandleWithNullDevice]
                    standardError:[NSFileHandle fileHandleWithNullDevice]
                            error:&openError];
-    NSAssert(openError == nil, @"Got error while opening reporter task: %@", openError);
+    NSAssert(openError == nil, @"Got error while opening reporter task for reporter '%@': %@", task.reporterPath, openError);
   }
 
   __block XcodeSubjectInfo *subjectInfo = nil;
