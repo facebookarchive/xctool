@@ -111,7 +111,9 @@ NSString *XCToolBasePath(void)
   if (IsRunningUnderTest()) {
     // The Xcode scheme is configured to set XT_INSTALL_ROOT when running
     // tests.
-    return [[NSProcessInfo processInfo] environment][@"XT_INSTALL_ROOT"];
+    NSString *installRoot = [[NSProcessInfo processInfo] environment][@"XT_INSTALL_ROOT"];
+    NSCAssert(installRoot, @"XT_INSTALL_ROOT is not set.");
+    return installRoot;
   } else {
     return [[AbsoluteExecutablePath() stringByDeletingLastPathComponent]
             stringByDeletingLastPathComponent];
