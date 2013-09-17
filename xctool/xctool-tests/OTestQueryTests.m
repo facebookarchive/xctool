@@ -14,9 +14,6 @@
 // limitations under the License.
 //
 
-#define ST_TESTCASE_CLASS_NAME @"SenTestCase"
-#define XCT_TESTCASE_CLASS_NAME @"XCTestCase"
-
 #import <SenTestingKit/SenTestingKit.h>
 
 #import "OTestQuery.h"
@@ -45,14 +42,15 @@
 - (void)testCanQueryXCTestClassesFromOSXBundle
 {
   NSString *error = nil;
-  NSArray *classes = OTestQueryTestCasesInOSXBundle(TEST_DATA @"otest-query-tests-osx-test-bundle/TestProject-Library-XCTest-OSXTests.xctest",
-                                                    AbsolutePathFromRelative(TEST_DATA @"otest-query-tests-osx-test-bundle"),
-                                                    YES,
-                                                    &error);
-  assertThat(classes,
-             equalTo(@[@"TestProject_Library_XCTest_OSXTests/testOutput",
-                       @"TestProject_Library_XCTest_OSXTests/testWillFail",
-                       @"TestProject_Library_XCTest_OSXTests/testWillPass"]));
+  NSString *bundlePath = TEST_DATA @"otest-query-tests-osx-test-bundle/TestProject-Library-XCTest-OSXTests.xctest";
+  NSString *builtProductsDir = AbsolutePathFromRelative(TEST_DATA @"otest-query-tests-osx-test-bundle");
+  if (OSXBundleClassLoadingIsSuccessful(bundlePath, builtProductsDir, YES, &error)){
+    NSArray *classes = OTestQueryTestCasesInOSXBundle(bundlePath, builtProductsDir, YES, &error);
+    assertThat(classes,
+               equalTo(@[@"TestProject_Library_XCTest_OSXTests/testOutput",
+                         @"TestProject_Library_XCTest_OSXTests/testWillFail",
+                         @"TestProject_Library_XCTest_OSXTests/testWillPass"]));
+  }
 }
 
 - (void)testCanQueryClassesFromIOSBundle

@@ -34,10 +34,10 @@ XT_IOS_SDK_VERSION_EXPANDED = $(XT_NEWEST_IOS_SDK_EXPANDED_$(XCODE_VERSION_MINOR
 SDKROOT = macosx
 
 // Xcode 5's bundled linker seems to be less forgiving with us trying to make it
-// build an iOS dylib.  Let's use a wrapper around 'ld' to make it strip out the
-// OSX specific flags.
-LD = ../Configurations/ld_dont_link_as_osx.py
-CC = $(SRCROOT)/../../xctool/Configurations/cc_dont_compile_as_osx.py
+// build an iOS dylib.  Let's use a wrapper around 'ld' and 'cc' to make it strip
+// out the OSX specific flags.
+LD = ../Configurations/dont_clang_as_osx.py
+CC = $(SRCROOT)/../../xctool/Configurations/dont_clang_as_osx.py
 
 ARCHS = i386
 VALID_ARCHS = i386

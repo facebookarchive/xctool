@@ -24,6 +24,7 @@ int main(int argc, const char * argv[])
   @autoreleasepool {
     NSString *bundlePath = nil;
     if (argc != 2) {
+      fprintf(stderr, "OTestQuery only takes one argument, which is the bundle path.");
       return -1;
     }
     bundlePath = [NSString stringWithUTF8String:argv[1]];

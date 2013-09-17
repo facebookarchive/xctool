@@ -20,6 +20,7 @@
 
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
+#import "TestingFramework.h"
 
 static NSString *SimulatorSDKRootPathWithVersion(NSString *version)
 {
@@ -53,6 +54,16 @@ static NSArray *RunTaskAndReturnResult(NSTask *task, NSString **error)
   }
 }
 
+static OTestExitCode RunTestAndReturnExitCode(NSTask *task, NSString **error)
+{
+  [task retain];
+  [task launch];
+  [task waitUntilExit];
+  OTestExitCode result = (OTestExitCode)[task terminationStatus];
+  [task release];
+  return result;
+}
+
 static BOOL SetErrorIfBundleDoesNotExist(NSString *bundlePath, NSString **error)
 {
   BOOL isDir = NO;
@@ -66,32 +77,27 @@ static BOOL SetErrorIfBundleDoesNotExist(NSString *bundlePath, NSString **error)
   }
 }
 
-NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk, NSString **error)
-{
-  return OTestQueryTestCasesInIOSBundleWithTestHost(bundlePath, nil, sdk, error);
-}
-
-NSArray *OTestQueryTestCasesInIOSBundleWithTestHost(NSString *bundlePath, NSString *testHostExecutablePath, NSString *sdk,
-                                                    NSString **error)
+NSTask *TaskForOTestQueryTestCasesInIOSBundleWithTestHost(NSString *bundlePath, NSString *testHostExecutablePath,
+                                                          NSString *sdk, NSString **error)
 {
   NSCAssert([sdk hasPrefix:@"iphonesimulator"], @"Only iphonesimulator SDKs are supported.");
-
+  
   if (SetErrorIfBundleDoesNotExist(bundlePath, error)) {
     return nil;
   }
-
+  
   if (testHostExecutablePath && ![[NSFileManager defaultManager] isExecutableFileAtPath:testHostExecutablePath]) {
     *error = [NSString stringWithFormat:@"The test host executable is missing: '%@'", testHostExecutablePath];
     return nil;
   }
-
+  
   NSString *version = [sdk stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
   NSString *simulatorHome = [NSString stringWithFormat:@"%@/Library/Application Support/iPhone Simulator/%@", NSHomeDirectory(), version];
   NSString *sdkRootPath = SimulatorSDKRootPathWithVersion(version);
-
+  
   NSTask *task = CreateTaskInSameProcessGroup();
   NSMutableDictionary *environment =
-  [[NSMutableDictionary alloc] initWithDictionary:
+  [NSMutableDictionary dictionaryWithDictionary:
    @{@"CFFIXED_USER_HOME" : simulatorHome,
      @"HOME" : simulatorHome,
      @"IPHONE_SHARED_RESOURCES_DIRECTORY" : simulatorHome,
@@ -108,35 +114,80 @@ NSArray *OTestQueryTestCasesInIOSBundleWithTestHost(NSString *bundlePath, NSStri
        // The test bundle that we want to query from.
        @"OtestQueryBundlePath" : bundlePath}];
   }
-
+  
   [task setEnvironment:[[environment copy] autorelease]];
-  [environment release];
   [task setLaunchPath:launchPath];
   [task setArguments:@[bundlePath]];
+  return [task autorelease];
+}
 
+BOOL IOSBundleWithTestHostClassLoadingIsSuccessful(NSString *bundlePath, NSString *testHostExecutablePath, NSString *sdk,
+                                                   NSString **error)
+{
+  NSTask *task = [TaskForOTestQueryTestCasesInIOSBundleWithTestHost(bundlePath, testHostExecutablePath, sdk, error) retain];
+  if (!task)
+    return NO;
+  [task retain];
+  OTestExitCode result = RunTestAndReturnExitCode(task, error);
+  [task release];
+  return result;
+}
+
+NSArray *OTestQueryTestCasesInIOSBundleWithTestHost(NSString *bundlePath, NSString *testHostExecutablePath, NSString *sdk,
+                                                    NSString **error)
+{
+  NSTask *task = TaskForOTestQueryTestCasesInIOSBundleWithTestHost(bundlePath, testHostExecutablePath, sdk, error);
+  if (!task)
+    return nil;
+  [task retain];
   NSArray *result = RunTaskAndReturnResult(task, error);
   [task release];
   return result;
 }
 
-NSArray *OTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtProductsDir, BOOL disableGC,
-                                        NSString **error)
+BOOL IOSBundleClassLoadingIsSuccessful(NSString *bundlePath, NSString *sdk, NSString **error)
+{
+  return IOSBundleWithTestHostClassLoadingIsSuccessful(bundlePath, nil, sdk, error);
+}
+
+NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk, NSString **error)
+{
+  return OTestQueryTestCasesInIOSBundleWithTestHost(bundlePath, nil, sdk, error);
+}
+
+NSTask *TaskForOTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtProductsDir, BOOL disableGC,
+                                              NSString **error)
 {
   if (SetErrorIfBundleDoesNotExist(bundlePath, error)) {
     return nil;
   }
-
+  
   NSTask *task = CreateTaskInSameProcessGroup();
   [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-osx"]];
   [task setArguments:@[bundlePath]];
   [task setEnvironment:@{
-   @"DYLD_FRAMEWORK_PATH" : builtProductsDir,
-   @"DYLD_LIBRARY_PATH" : builtProductsDir,
-   @"DYLD_FALLBACK_FRAMEWORK_PATH" : [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"],
-   @"NSUnbufferedIO" : @"YES",
-   @"OBJC_DISABLE_GC" : disableGC ? @"YES" : @"NO"
-   }];
- 
+                         @"DYLD_FRAMEWORK_PATH" : builtProductsDir,
+                         @"DYLD_LIBRARY_PATH" : builtProductsDir,
+                         @"DYLD_FALLBACK_FRAMEWORK_PATH" : [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"],
+                         @"NSUnbufferedIO" : @"YES",
+                         @"OBJC_DISABLE_GC" : disableGC ? @"YES" : @"NO"
+                         }];
+  return [task autorelease];
+}
+
+BOOL OSXBundleClassLoadingIsSuccessful(NSString *bundlePath, NSString *builtProductsDir, BOOL disableGC,
+                                   NSString **error)
+{
+  NSTask *task = [TaskForOTestQueryTestCasesInOSXBundle(bundlePath, builtProductsDir, disableGC, error) retain];
+  OTestExitCode result = RunTestAndReturnExitCode(task, error);
+  [task release];
+  return result != kClassLoadingError;
+}
+
+NSArray *OTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtProductsDir, BOOL disableGC,
+                                        NSString **error)
+{
+  NSTask *task = [TaskForOTestQueryTestCasesInOSXBundle(bundlePath, builtProductsDir, disableGC, error) retain];
   NSArray *result = RunTaskAndReturnResult(task, error);
   [task release];
   return result;

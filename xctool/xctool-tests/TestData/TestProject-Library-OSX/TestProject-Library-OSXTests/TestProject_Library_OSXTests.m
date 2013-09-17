@@ -37,7 +37,6 @@
 }
 
 - (void)testOutput {
-  NSLog(@"%@", [[NSProcessInfo processInfo] arguments]);
   // Generate output in all the different ways we know of...
   fprintf(stdout, "stdout\n");
   fprintf(stderr, "stderr\n");
