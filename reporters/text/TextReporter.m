@@ -388,10 +388,9 @@ static NSString *abbreviatePath(NSString *string) {
 
           [self.reportWriter disableIndent];
 
-          [self.reportWriter printLine:@"<faint>%@:%d: %@: %@:<reset>",
+          [self.reportWriter printLine:@"<faint>%@:%d: %@:<reset>",
            filePath,
            lineNumber,
-           exception[kReporter_EndTest_Exception_NameKey],
            exception[kReporter_EndTest_Exception_ReasonKey]];
 
           if ([[NSFileManager defaultManager] fileExistsAtPath:filePath isDirectory:nil]) {
@@ -712,10 +711,9 @@ static NSString *abbreviatePath(NSString *string) {
       NSString *filePath = exception[kReporter_EndTest_Exception_FilePathInProjectKey];
       int lineNumber = [exception[kReporter_EndTest_Exception_LineNumberKey] intValue];
 
-      [self.reportWriter printLine:@"<faint>%@:%d: %@: %@:<reset>",
+      [self.reportWriter printLine:@"<faint>%@:%d: %@:<reset>",
        filePath,
        lineNumber,
-       exception[kReporter_EndTest_Exception_NameKey],
        exception[kReporter_EndTest_Exception_ReasonKey]];
 
       if ([[NSFileManager defaultManager] fileExistsAtPath:filePath isDirectory:nil]) {

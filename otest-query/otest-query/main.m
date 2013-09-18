@@ -22,7 +22,13 @@
 int main(int argc, const char * argv[])
 {
   @autoreleasepool {
-    [OtestQuery queryTestBundlePath:[NSString stringWithUTF8String:argv[1]]];
+    NSString *bundlePath = nil;
+    if (argc != 2) {
+      fprintf(stderr, "otest-query only takes one argument, which is the bundle path.");
+      return -1;
+    }
+    bundlePath = [NSString stringWithUTF8String:argv[1]];
+    [OtestQuery queryTestBundlePath:bundlePath];
   }
   return 0;
 }

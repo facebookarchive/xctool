@@ -20,6 +20,7 @@
 
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
+#import "TestingFramework.h"
 
 static NSString *SimulatorSDKRootPathWithVersion(NSString *version)
 {
@@ -53,6 +54,15 @@ static NSArray *RunTaskAndReturnResult(NSTask *task, NSString **error)
   }
 }
 
+static OTestExitCode RunTestAndReturnExitCode(NSTask *task, NSString **error)
+{
+  [task retain];
+  LaunchTaskAndCaptureOutput(task);
+  OTestExitCode result = (OTestExitCode)[task terminationStatus];
+  [task release];
+  return result;
+}
+
 static BOOL SetErrorIfBundleDoesNotExist(NSString *bundlePath, NSString **error)
 {
   BOOL isDir = NO;
@@ -66,7 +76,8 @@ static BOOL SetErrorIfBundleDoesNotExist(NSString *bundlePath, NSString **error)
   }
 }
 
-NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk, NSString **error)
+NSArray *OTestQueryTestCasesInIOSBundleWithTestHost(NSString *bundlePath, NSString *testHostExecutablePath, NSString *sdk,
+                                                    NSString **error)
 {
   NSCAssert([sdk hasPrefix:@"iphonesimulator"], @"Only iphonesimulator SDKs are supported.");
 
@@ -74,35 +85,7 @@ NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk, NSS
     return nil;
   }
 
-  NSString *version = [sdk stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
-  NSString *simulatorHome = [NSString stringWithFormat:@"%@/Library/Application Support/iPhone Simulator/%@", NSHomeDirectory(), version];
-  NSString *sdkRootPath = SimulatorSDKRootPathWithVersion(version);
-
-  NSTask *task = CreateTaskInSameProcessGroup();
-  [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-ios"]];
-  [task setEnvironment:@{@"CFFIXED_USER_HOME" : simulatorHome,
-                         @"HOME" : simulatorHome,
-                         @"IPHONE_SHARED_RESOURCES_DIRECTORY" : simulatorHome,
-                         @"DYLD_ROOT_PATH" : sdkRootPath,
-                         @"IPHONE_SIMULATOR_ROOT" : sdkRootPath,
-                         @"IPHONE_SIMULATOR_VERSIONS" : @"iPhone Simulator (external launch) , iPhone OS 6.0 (unknown/10A403)",
-                         @"NSUnbufferedIO" : @"YES"}];
-  [task setArguments:@[bundlePath]];
-
-  NSArray *result = RunTaskAndReturnResult(task, error);
-  [task release];
-  return result;
-}
-
-NSArray *OTestQueryTestCasesInIOSBundleWithTestHost(NSString *bundlePath, NSString *testHostExecutablePath, NSString *sdk, NSString **error)
-{
-  NSCAssert([sdk hasPrefix:@"iphonesimulator"], @"Only iphonesimulator SDKs are supported.");
-
-  if (SetErrorIfBundleDoesNotExist(bundlePath, error)) {
-    return nil;
-  }
-
-  if (![[NSFileManager defaultManager] isExecutableFileAtPath:testHostExecutablePath]) {
+  if (testHostExecutablePath && ![[NSFileManager defaultManager] isExecutableFileAtPath:testHostExecutablePath]) {
     *error = [NSString stringWithFormat:@"The test host executable is missing: '%@'", testHostExecutablePath];
     return nil;
   }
@@ -112,28 +95,40 @@ NSArray *OTestQueryTestCasesInIOSBundleWithTestHost(NSString *bundlePath, NSStri
   NSString *sdkRootPath = SimulatorSDKRootPathWithVersion(version);
 
   NSTask *task = CreateTaskInSameProcessGroup();
-  [task setLaunchPath:testHostExecutablePath];
-  [task setEnvironment:@{
-   // Inserted this dylib, which will then load whatever is in `OtestQueryBundlePath`.
-   @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"otest-query-ios-dylib.dylib"],
-   // The test bundle that we want to query from.
-   @"OtestQueryBundlePath" : bundlePath,
+  NSMutableDictionary *environment =
+  [NSMutableDictionary dictionaryWithDictionary:
+   @{@"CFFIXED_USER_HOME" : simulatorHome,
+     @"HOME" : simulatorHome,
+     @"IPHONE_SHARED_RESOURCES_DIRECTORY" : simulatorHome,
+     @"DYLD_ROOT_PATH" : sdkRootPath,
+     @"IPHONE_SIMULATOR_ROOT" : sdkRootPath,
+     @"IPHONE_SIMULATOR_VERSIONS" : @"iPhone Simulator (external launch) , iPhone OS 6.0 (unknown/10A403)",
+     @"NSUnbufferedIO" : @"YES"}];
+  NSString *launchPath = [XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-ios"];
+  if (testHostExecutablePath) {
+    launchPath = testHostExecutablePath;
+    [environment addEntriesFromDictionary:
+     @{// Inserted this dylib, which will then load whatever is in `OtestQueryBundlePath`.
+       @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"otest-query-ios-dylib.dylib"],
+       // The test bundle that we want to query from.
+       @"OtestQueryBundlePath" : bundlePath}];
+  }
 
-   @"CFFIXED_USER_HOME" : simulatorHome,
-   @"HOME" : simulatorHome,
-   @"IPHONE_SHARED_RESOURCES_DIRECTORY" : simulatorHome,
-   @"DYLD_ROOT_PATH" : sdkRootPath,
-   @"IPHONE_SIMULATOR_ROOT" : sdkRootPath,
-   @"IPHONE_SIMULATOR_VERSIONS" : @"iPhone Simulator (external launch) , iPhone OS 6.0 (unknown/10A403)",
-   @"NSUnbufferedIO" : @"YES"}];
+  [task setEnvironment:[[environment copy] autorelease]];
+  [task setLaunchPath:launchPath];
   [task setArguments:@[bundlePath]];
-
   NSArray *result = RunTaskAndReturnResult(task, error);
   [task release];
   return result;
 }
 
-NSArray *OTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtProductsDir, BOOL disableGC, NSString **error)
+NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk, NSString **error)
+{
+  return OTestQueryTestCasesInIOSBundleWithTestHost(bundlePath, nil, sdk, error);
+}
+
+NSArray *OTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtProductsDir, BOOL disableGC,
+                                        NSString **error)
 {
   if (SetErrorIfBundleDoesNotExist(bundlePath, error)) {
     return nil;
@@ -143,13 +138,12 @@ NSArray *OTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtPro
   [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-osx"]];
   [task setArguments:@[bundlePath]];
   [task setEnvironment:@{
-   @"DYLD_FRAMEWORK_PATH" : builtProductsDir,
-   @"DYLD_LIBRARY_PATH" : builtProductsDir,
-   @"DYLD_FALLBACK_FRAMEWORK_PATH" : [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"],
-   @"NSUnbufferedIO" : @"YES",
-   @"OBJC_DISABLE_GC" : disableGC ? @"YES" : @"NO"
-   }];
-
+                         @"DYLD_FRAMEWORK_PATH" : builtProductsDir,
+                         @"DYLD_LIBRARY_PATH" : builtProductsDir,
+                         @"DYLD_FALLBACK_FRAMEWORK_PATH" : [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"],
+                         @"NSUnbufferedIO" : @"YES",
+                         @"OBJC_DISABLE_GC" : disableGC ? @"YES" : @"NO"
+                         }];
   NSArray *result = RunTaskAndReturnResult(task, error);
   [task release];
   return result;

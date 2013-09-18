@@ -39,6 +39,22 @@
                      ]));
 }
 
+- (void)testCanQueryXCTestClassesFromOSXBundle
+{
+  NSString *error = nil;
+  NSString *bundlePath = TEST_DATA @"otest-query-tests-osx-test-bundle/TestProject-Library-XCTest-OSXTests.xctest";
+  NSString *builtProductsDir = AbsolutePathFromRelative(TEST_DATA @"otest-query-tests-osx-test-bundle");
+  NSString *frameworkDirPath = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks/XCTest.framework"];
+
+  if ([[NSFileManager defaultManager] fileExistsAtPath:frameworkDirPath]){
+    NSArray *classes = OTestQueryTestCasesInOSXBundle(bundlePath, builtProductsDir, YES, &error);
+    assertThat(classes,
+               equalTo(@[@"TestProject_Library_XCTest_OSXTests/testOutput",
+                         @"TestProject_Library_XCTest_OSXTests/testWillFail",
+                         @"TestProject_Library_XCTest_OSXTests/testWillPass"]));
+  }
+}
+
 - (void)testCanQueryClassesFromIOSBundle
 {
   NSString *error = nil;
@@ -56,6 +72,29 @@
                      @"SomeTests/testWillFail",
                      @"SomeTests/testWillPass",
                      ]));
+}
+
+- (void)testCanQueryXCTestClassesFromIOSBundle
+{
+  NSString *error = nil;
+  NSString *latestSDK = GetAvailableSDKsAndAliases()[@"iphonesimulator"];
+  NSString *frameworkDirPath = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks/XCTest.framework"];
+
+  if ([[NSFileManager defaultManager] fileExistsAtPath:frameworkDirPath]){
+    NSArray *classes = OTestQueryTestCasesInIOSBundle(TEST_DATA @"otest-query-tests-ios-test-bundle/TestProject-Library-XCTest-iOSTests.xctest",
+                                                      latestSDK,
+                                                      &error);
+    assertThat(classes,
+               equalTo(@[
+                         @"OtherTests/testSomething",
+                         @"SomeTests/testBacktraceOutputIsCaptured",
+                         @"SomeTests/testOutputMerging",
+                         @"SomeTests/testPrintSDK",
+                         @"SomeTests/testStream",
+                         @"SomeTests/testWillFail",
+                         @"SomeTests/testWillPass",
+                         ]));
+  }
 }
 
 - (void)testQueryFailsWhenDYLDRejectsBundle_OSX

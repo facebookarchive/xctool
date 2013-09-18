@@ -20,6 +20,7 @@
 #import "OTestQuery.h"
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
+#import "TestingFramework.h"
 
 @implementation OCUnitIOSLogicTestRunner
 
@@ -57,8 +58,8 @@
   // handles testing for universal OS X binaries.
   [task setPreferredArchitectures:@[@(CPU_TYPE_I386)]];
 
-  [task setLaunchPath:[NSString stringWithFormat:@"%@/Developer/usr/bin/otest", _buildSettings[@"SDKROOT"]]];
-  [task setArguments:[[self otestArguments] arrayByAddingObject:testBundlePath]];
+  [task setLaunchPath:[NSString stringWithFormat:@"%@/Developer/%@", _buildSettings[@"SDKROOT"], _framework[kTestingFrameworkIOSTestrunnerName]]];
+  [task setArguments:[[self testArguments] arrayByAddingObject:testBundlePath]];
   NSMutableDictionary *env = [[self.environmentOverrides mutableCopy] autorelease];
   env[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"];
   [task setEnvironment:[self otestEnvironmentWithOverrides:env]];

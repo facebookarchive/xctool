@@ -20,6 +20,7 @@
 #import "OTestQuery.h"
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
+#import "TestingFramework.h"
 
 @implementation OCUnitOSXLogicTestRunner
 
@@ -36,9 +37,9 @@
 - (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath
 {
   NSTask *task = [[[NSTask alloc] init] autorelease];
-  [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Tools/otest"]];
+  [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:_framework[kTestingFrameworkOSXTestrunnerName]]];
   // When invoking otest directly, the last arg needs to be the the test bundle.
-  [task setArguments:[[self otestArguments] arrayByAddingObject:testBundlePath]];
+  [task setArguments:[[self testArguments] arrayByAddingObject:testBundlePath]];
   NSMutableDictionary *env = [[self.environmentOverrides mutableCopy] autorelease];
   env[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-osx.dylib"];
   [task setEnvironment:[self otestEnvironmentWithOverrides:env]];
