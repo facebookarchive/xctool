@@ -22,6 +22,7 @@
 
 #import <Foundation/Foundation.h>
 #import <SenTestingKit/SenTestingKit.h>
+#import "XCTest.h"
 
 #import "ReporterEvents.h"
 #import "Swizzle.h"
@@ -140,6 +141,12 @@ static void XCToolLog_testCaseDidFail(NSDictionary *exceptionInfo);
 
 #pragma mark - testSuiteDidStart
 
+static void XCTestLog_testSuiteDidStart(id self, SEL sel, XCTestSuiteRun *run)
+{
+  NSString *testDescription = [[run test] name];
+  XCToolLog_testSuiteDidStart(testDescription);
+}
+
 static void SenTestLog_testSuiteDidStart(id self, SEL sel, NSNotification *notification)
 {
   SenTestRun *run = [notification run];
@@ -161,6 +168,18 @@ static void XCToolLog_testSuiteDidStart(NSString *testDescription)
 }
 
 #pragma mark - testSuiteDidStop
+static void XCTestLog_testSuiteDidStop(id self, SEL sel, XCTestSuiteRun *run)
+{
+  XCToolLog_testSuiteDidStop(@{
+    @"event" : kReporter_Events_EndTestSuite,
+    kReporter_EndTestSuite_SuiteKey : kReporter_TestSuite_TopLevelSuiteName,
+    kReporter_EndTestSuite_TestCaseCountKey : @([run testCaseCount]),
+    kReporter_EndTestSuite_TotalFailureCountKey : @([run totalFailureCount]),
+    kReporter_EndTestSuite_UnexpectedExceptionCountKey : @([run unexpectedExceptionCount]),
+    kReporter_EndTestSuite_TestDurationKey: @([run testDuration]),
+    kReporter_EndTestSuite_TotalDurationKey : @([run totalDuration]),
+  });
+}
 
 static void SenTestLog_testSuiteDidStop(id self, SEL sel, NSNotification *notification)
 {
@@ -188,6 +207,12 @@ static void XCToolLog_testSuiteDidStop(NSDictionary *json)
 }
 
 #pragma mark - testCaseDidStart
+
+static void XCTestLog_testCaseDidStart(id self, SEL sel, XCTestCaseRun *run)
+{
+  NSString *fullTestName = [[run test] name];
+  XCToolLog_testCaseDidStart(fullTestName);
+}
 
 static void SenTestLog_testCaseDidStart(id self, SEL sel, NSNotification *notification)
 {
@@ -217,6 +242,12 @@ static void XCToolLog_testCaseDidStart(NSString *fullTestName)
 }
 
 #pragma mark - testCaseDidStop
+
+static void XCTestLog_testCaseDidStop(id self, SEL sel, XCTestCaseRun *run)
+{
+  NSString *fullTestName = [[run test] name];
+  XCToolLog_testCaseDidStop(fullTestName, @([run unexpectedExceptionCount]), @([run failureCount]), @([run totalDuration]));
+}
 
 static void SenTestLog_testCaseDidStop(id self, SEL sel, NSNotification *notification)
 {
@@ -267,6 +298,15 @@ static void XCToolLog_testCaseDidStop(NSString *fullTestName, NSNumber *unexpect
 }
 
 #pragma mark - testCaseDidFail
+
+static void XCTestLog_testCaseDidFail(id self, SEL sel, XCTestCaseRun *run, NSString *description, NSString *file, unsigned long long line)
+{
+  XCToolLog_testCaseDidFail(@{
+    kReporter_EndTest_Exception_FilePathInProjectKey : file,
+    kReporter_EndTest_Exception_LineNumberKey : @(line),
+    kReporter_EndTest_Exception_ReasonKey : description,
+  });
+}
 
 static void SenTestLog_testCaseDidFail(id self, SEL sel, NSNotification *notification)
 {
@@ -449,6 +489,24 @@ static const char *DyldImageStateChangeHandler(enum dyld_image_states state,
       XTSwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
                                         @selector(testCaseDidFail:),
                                         (IMP)SenTestLog_testCaseDidFail);
+    }
+    else if (strstr(info[i].imageFilePath, "XCTest.framework") != NULL) {
+      // Since the 'XCTestLog' class now exists, we can swizzle it!
+      XTSwizzleSelectorForFunction(NSClassFromString(@"XCTestLog"),
+                                   @selector(testSuiteDidStart:),
+                                   (IMP)XCTestLog_testSuiteDidStart);
+      XTSwizzleSelectorForFunction(NSClassFromString(@"XCTestLog"),
+                                   @selector(testSuiteDidStop:),
+                                   (IMP)XCTestLog_testSuiteDidStop);
+      XTSwizzleSelectorForFunction(NSClassFromString(@"XCTestLog"),
+                                   @selector(testCaseDidStart:),
+                                   (IMP)XCTestLog_testCaseDidStart);
+      XTSwizzleSelectorForFunction(NSClassFromString(@"XCTestLog"),
+                                   @selector(testCaseDidStop:),
+                                   (IMP)XCTestLog_testCaseDidStop);
+      XTSwizzleSelectorForFunction(NSClassFromString(@"XCTestLog"),
+                                   @selector(testCaseDidFail:withDescription:inFile:atLine:),
+                                   (IMP)XCTestLog_testCaseDidFail);
     }
   }
 

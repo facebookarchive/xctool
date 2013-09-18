@@ -8,6 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import <UIKit/UIKit.h>
+#import <execinfo.h>
 
 @interface SomeTests : XCTestCase
 

@@ -82,7 +82,6 @@
 #define kReporter_EndTest_Exception_FilePathInProjectKey @"filePathInProject"
 #define kReporter_EndTest_Exception_LineNumberKey @"lineNumber"
 #define kReporter_EndTest_Exception_ReasonKey @"reason"
-#define kReporter_EndTest_Exception_NameKey @"name"
 
 #define kReporter_TestOutput_OutputKey @"output"
 

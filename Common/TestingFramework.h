@@ -29,6 +29,10 @@ typedef enum {
 // Internally, it just becomes 'extern'.
 FOUNDATION_EXPORT NSString *const kTestingFrameworkClassName;
 FOUNDATION_EXPORT NSString *const kTestingFrameworkAllTestsSelectorName;
+FOUNDATION_EXPORT NSString *const kTestingFrameworkIOSTestrunnerName;
+FOUNDATION_EXPORT NSString *const kTestingFrameworkOSXTestrunnerName;
+FOUNDATION_EXPORT NSString *const kTestingFrameworkInvertScopeKey;
+FOUNDATION_EXPORT NSString *const kTestingFrameworkFilterTestArgsKey;
 
 NSDictionary *FrameworkInfoForExtension(NSString *extension);
 NSDictionary *FrameworkInfoForTestBundleAtPath (NSString *path);
