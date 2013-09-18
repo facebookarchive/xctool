@@ -55,15 +55,3 @@ NSArray *OTestQueryTestCasesInIOSBundleWithTestHost(NSString *bundlePath,
  * @param disableGC If YES, OBJC_DISABLE_GC will be set to YES.
  */
 NSArray *OTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtProductsDir, BOOL disableGC, NSString **error);
-
-BOOL IOSBundleWithTestHostClassLoadingIsSuccessful(NSString *bundlePath,
-                                                   NSString *testHostExecutablePath,
-                                                   NSString *sdk,
-                                                   NSString **error);
-BOOL IOSBundleClassLoadingIsSuccessful(NSString *bundlePath,
-                                       NSString *sdk,
-                                       NSString **error);
-BOOL OSXBundleClassLoadingIsSuccessful(NSString *bundlePath,
-                                       NSString *builtProductsDir,
-                                       BOOL disableGC,
-                                       NSString **error);

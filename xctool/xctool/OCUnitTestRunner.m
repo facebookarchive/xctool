@@ -90,7 +90,7 @@
     _freshInstall = freshInstall;
     _simulatorType = [simulatorType retain];
     _reporters = [reporters retain];
-    _framework = [TestingFramework frameworkForTestBundleAtPath:[self testBundlePath]];
+    _framework = FrameworkInfoForTestBundleAtPath([self testBundlePath]);
   }
   return self;
 }
@@ -178,11 +178,11 @@
            @"-ApplePersistenceIgnoreState", @"YES",
            // SenTest / XCTest is one of Self, All, None,
            // or TestClassName[/testCaseName][,TestClassName2]
-           _framework.filterTestsArgKey, [_senTestList componentsJoinedByString:@","],
+           _framework[kTestingFrameworkFilterTestArgsKey], [_senTestList componentsJoinedByString:@","],
            // SenTestInvertScope / XCTestInvertScope optionally inverts whatever
            // SenTest would normally select. We never invert, since we always
            // pass the exact list of test cases to be run.
-           _framework.invertScopeArgKey, @"NO",
+           _framework[kTestingFrameworkInvertScopeKey], @"NO",
            ]];
 
   // Add any argments that might have been specifed in the scheme.

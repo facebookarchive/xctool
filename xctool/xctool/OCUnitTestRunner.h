@@ -31,7 +31,7 @@
   NSString *_simulatorType;
   NSArray *_reporters;
   OCUnitCrashFilter *_testRunnerState;
-  TestingFramework *_framework;
+  NSDictionary *_framework;
 }
 
 /**

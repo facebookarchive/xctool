@@ -35,7 +35,7 @@
     exit(kBundleOpenError);
   }
 
-  TestingFramework *framework = [TestingFramework frameworkForTestBundleAtPath:testBundlePath];
+  NSDictionary *framework = FrameworkInfoForTestBundleAtPath(testBundlePath);
   if (!framework) {
     const char *bundleExtension = [[testBundlePath pathExtension] cStringUsingEncoding:NSASCIIStringEncoding];
     fprintf(stderr, "The bundle extension '%s' is not supported.", bundleExtension);
@@ -51,11 +51,11 @@
 
   [[NSBundle allFrameworks] makeObjectsPerformSelector:@selector(principalClass)];
   
-  Class testClass = NSClassFromString(framework.testClassName);
-  SEL allTestsSelector = NSSelectorFromString(framework.allTestSelectorName);
+  Class testClass = NSClassFromString([framework objectForKey:kTestingFrameworkClassName]);
+  SEL allTestsSelector = NSSelectorFromString([framework objectForKey:kTestingFrameworkAllTestsSelectorName]);
   if (testClass == nil) {
     fprintf(stderr, "The framework test class %s was not loaded, the framework is probably not installed on this system.\n",
-            [framework.testClassName cStringUsingEncoding:NSASCIIStringEncoding]);
+            [[framework objectForKey:kTestingFrameworkClassName] cStringUsingEncoding:NSASCIIStringEncoding]);
     exit(kClassLoadingError);
   }
   NSArray *testClasses = objc_msgSend(testClass, allTestsSelector);

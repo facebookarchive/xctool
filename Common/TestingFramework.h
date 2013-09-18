@@ -24,17 +24,15 @@ typedef enum {
   kClassLoadingError,
 } OTestExitCode;
 
-@interface TestingFramework : NSObject
+// Why FOUNDATION_EXPORT? Read here:
+// http://stackoverflow.com/questions/538996/constants-in-objective-c
+// Internally, it just becomes 'extern'.
+FOUNDATION_EXPORT NSString *const kTestingFrameworkClassName;
+FOUNDATION_EXPORT NSString *const kTestingFrameworkAllTestsSelectorName;
+FOUNDATION_EXPORT NSString *const kTestingFrameworkIOSTestrunnerName;
+FOUNDATION_EXPORT NSString *const kTestingFrameworkOSXTestrunnerName;
+FOUNDATION_EXPORT NSString *const kTestingFrameworkInvertScopeKey;
+FOUNDATION_EXPORT NSString *const kTestingFrameworkFilterTestArgsKey;
 
-@property (nonatomic, readonly) NSString *testClassName;
-@property (nonatomic, readonly) NSString *allTestSelectorName;
-@property (nonatomic, readonly) NSString *iosTestRunnerPath;
-@property (nonatomic, readonly) NSString *osxTestRunnerPath;
-@property (nonatomic, readonly) NSString *filterTestsArgKey;
-@property (nonatomic, readonly) NSString *invertScopeArgKey;
-
-+ (instancetype)XCTest;
-+ (instancetype)SenTestingKit;
-+ (instancetype)frameworkForTestBundleAtPath: (NSString *)path;
-
-@end
+NSDictionary *FrameworkInfoForExtension(NSString *extension);
+NSDictionary *FrameworkInfoForTestBundleAtPath (NSString *path);
