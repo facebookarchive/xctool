@@ -20,5 +20,15 @@ typedef enum {
   kSuccess = 0,
   kDLOpenError = 1,
   kBundleOpenError,
+  kUnsupportedFramework,
   kClassLoadingError,
 } OTestExitCode;
+
+// Why FOUNDATION_EXPORT? Read here:
+// http://stackoverflow.com/questions/538996/constants-in-objective-c
+// Internally, it just becomes 'extern'.
+FOUNDATION_EXPORT NSString *const kTestingFrameworkClassName;
+FOUNDATION_EXPORT NSString *const kTestingFrameworkAllTestsSelectorName;
+
+NSDictionary *FrameworkInfoForExtension(NSString *extension);
+NSDictionary *FrameworkInfoForTestBundleAtPath (NSString *path);

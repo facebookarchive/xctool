@@ -11,6 +11,9 @@
 		283758EA17CED7AF006E1544 /* OtestQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = CD9049131756C6C0006CF16D /* OtestQuery.m */; };
 		283758EB17CED83B006E1544 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283758DF17CED68F006E1544 /* Foundation.framework */; };
 		AA318BE417E9A8C000BF159E /* TestingFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = AA318BE317E9A8C000BF159E /* TestingFramework.h */; };
+		AA318BE617E9AA7400BF159E /* TestingFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = AA318BE517E9AA7400BF159E /* TestingFramework.m */; };
+		AA318BE717E9AA7400BF159E /* TestingFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = AA318BE517E9AA7400BF159E /* TestingFramework.m */; };
+		AA318BE817E9AA7400BF159E /* TestingFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = AA318BE517E9AA7400BF159E /* TestingFramework.m */; };
 		CD66612D175D1A890057DF4D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9049011756C5B1006CF16D /* Foundation.framework */; };
 		CD666139175D31BF0057DF4D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CD9049041756C5B1006CF16D /* main.m */; };
 		CD66613A175D31BF0057DF4D /* OtestQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = CD9049131756C6C0006CF16D /* OtestQuery.m */; };
@@ -49,6 +52,7 @@
 		283758E417CED68F006E1544 /* otest-query-ios-dylib.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "otest-query-ios-dylib.m"; sourceTree = "<group>"; };
 		283758E917CED6A7006E1544 /* otest-query-ios-dylib.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "otest-query-ios-dylib.xcconfig"; sourceTree = "<group>"; };
 		AA318BE317E9A8C000BF159E /* TestingFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestingFramework.h; path = ../Common/TestingFramework.h; sourceTree = "<group>"; };
+		AA318BE517E9AA7400BF159E /* TestingFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestingFramework.m; path = ../Common/TestingFramework.m; sourceTree = "<group>"; };
 		CD66612C175D1A890057DF4D /* otest-query-osx */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "otest-query-osx"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD666138175D1B090057DF4D /* otest-query-osx.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "otest-query-osx.xcconfig"; sourceTree = "<group>"; };
 		CD9048FE1756C5B1006CF16D /* otest-query-ios */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "otest-query-ios"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -111,6 +115,7 @@
 			isa = PBXGroup;
 			children = (
 				AA318BE317E9A8C000BF159E /* TestingFramework.h */,
+				AA318BE517E9AA7400BF159E /* TestingFramework.m */,
 			);
 			name = Common;
 			sourceTree = "<group>";
@@ -268,6 +273,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				283758EA17CED7AF006E1544 /* OtestQuery.m in Sources */,
+				AA318BE817E9AA7400BF159E /* TestingFramework.m in Sources */,
 				283758E517CED68F006E1544 /* otest-query-ios-dylib.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -277,6 +283,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CD666139175D31BF0057DF4D /* main.m in Sources */,
+				AA318BE717E9AA7400BF159E /* TestingFramework.m in Sources */,
 				CD66613A175D31BF0057DF4D /* OtestQuery.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -286,6 +293,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CD9049051756C5B1006CF16D /* main.m in Sources */,
+				AA318BE617E9AA7400BF159E /* TestingFramework.m in Sources */,
 				CD9049141756C6C0006CF16D /* OtestQuery.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
