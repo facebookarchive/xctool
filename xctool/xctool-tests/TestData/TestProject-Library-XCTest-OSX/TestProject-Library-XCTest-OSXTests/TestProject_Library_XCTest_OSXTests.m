@@ -1,0 +1,50 @@
+//
+//  TestProject_Library_XCTest_OSXTests.m
+//  TestProject-Library-XCTest-OSXTests
+//
+//  Created by Ryan Rhee on 9/11/13.
+//  Copyright (c) 2013 Facebook. All rights reserved.
+//
+
+#import <XCTest/XCTest.h>
+
+#import <execinfo.h>
+
+@interface TestProject_Library_XCTest_OSXTests : XCTestCase
+
+@end
+
+@implementation TestProject_Library_XCTest_OSXTests
+
+- (void)setUp
+{
+    [super setUp];
+    // Put setup code here. This method is called before the invocation of each test method in the class.
+}
+
+- (void)tearDown
+{
+    // Put teardown code here. This method is called after the invocation of each test method in the class.
+    [super tearDown];
+}
+
+- (void)testWillPass {
+  XCTAssertEqual(1, 1, @"Equal!");
+}
+
+- (void)testWillFail {
+  XCTAssertEqual(1, 2, @"Not Equal!");
+}
+
+- (void)testOutput {
+  // Generate output in all the different ways we know of...
+  fprintf(stdout, "stdout\n");
+  fprintf(stderr, "stderr\n");
+  NSLog(@"NSLog");
+  // We've seen backtrace_symbols_fd follow a different output path
+  void *exceptionSymbols[256];
+  int numSymbols = backtrace(exceptionSymbols, 256);
+  backtrace_symbols_fd(exceptionSymbols, numSymbols, STDERR_FILENO);
+}
+
+@end
