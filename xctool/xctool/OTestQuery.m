@@ -57,8 +57,7 @@ static NSArray *RunTaskAndReturnResult(NSTask *task, NSString **error)
 static OTestExitCode RunTestAndReturnExitCode(NSTask *task, NSString **error)
 {
   [task retain];
-  [task launch];
-  [task waitUntilExit];
+  LaunchTaskAndCaptureOutput(task);
   OTestExitCode result = (OTestExitCode)[task terminationStatus];
   [task release];
   return result;
@@ -130,7 +129,7 @@ BOOL IOSBundleWithTestHostClassLoadingIsSuccessful(NSString *bundlePath, NSStrin
   [task retain];
   OTestExitCode result = RunTestAndReturnExitCode(task, error);
   [task release];
-  return result;
+  return result == kSuccess;
 }
 
 NSArray *OTestQueryTestCasesInIOSBundleWithTestHost(NSString *bundlePath, NSString *testHostExecutablePath, NSString *sdk,
@@ -181,7 +180,7 @@ BOOL OSXBundleClassLoadingIsSuccessful(NSString *bundlePath, NSString *builtProd
   NSTask *task = [TaskForOTestQueryTestCasesInOSXBundle(bundlePath, builtProductsDir, disableGC, error) retain];
   OTestExitCode result = RunTestAndReturnExitCode(task, error);
   [task release];
-  return result != kClassLoadingError;
+  return result == kSuccess;
 }
 
 NSArray *OTestQueryTestCasesInOSXBundle(NSString *bundlePath, NSString *builtProductsDir, BOOL disableGC,
