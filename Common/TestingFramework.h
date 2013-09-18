@@ -14,21 +14,11 @@
 // limitations under the License.
 //
 
-
 #import <Foundation/Foundation.h>
 
-#import "OtestQuery.h"
-
-int main(int argc, const char * argv[])
-{
-  @autoreleasepool {
-    NSString *bundlePath = nil;
-    if (argc != 2) {
-      fprintf(stderr, "otest-query only takes one argument, which is the bundle path.\n");
-      return -1;
-    }
-    bundlePath = [NSString stringWithUTF8String:argv[1]];
-    [OtestQuery queryTestBundlePath:bundlePath];
-  }
-  return 0;
-}
+typedef enum {
+  kSuccess = 0,
+  kDLOpenError = 1,
+  kBundleOpenError,
+  kClassLoadingError,
+} OTestExitCode;

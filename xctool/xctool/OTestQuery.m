@@ -66,6 +66,26 @@ static BOOL SetErrorIfBundleDoesNotExist(NSString *bundlePath, NSString **error)
   }
 }
 
+NSDictionary *EnvForOTestQueryTestCasesInIOSBundle(NSString *sdk, NSDictionary *additionalEnv)
+{
+  NSString *version = [sdk stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
+  NSString *simulatorHome = [NSString stringWithFormat:@"%@/Library/Application Support/iPhone Simulator/%@", NSHomeDirectory(), version];
+  NSString *sdkRootPath = SimulatorSDKRootPathWithVersion(version);
+
+  NSMutableDictionary *env = [NSMutableDictionary dictionaryWithDictionary:@{
+    @"CFFIXED_USER_HOME" : simulatorHome,
+    @"HOME" : simulatorHome,
+    @"IPHONE_SHARED_RESOURCES_DIRECTORY" : simulatorHome,
+    @"DYLD_ROOT_PATH" : sdkRootPath,
+    @"IPHONE_SIMULATOR_ROOT" : sdkRootPath,
+    @"IPHONE_SIMULATOR_VERSIONS" : @"iPhone Simulator (external launch) , iPhone OS 6.0 (unknown/10A403)",
+    @"NSUnbufferedIO" : @"YES"
+  }];
+  if (additionalEnv)
+    [env addEntriesFromDictionary:additionalEnv];
+  return [[env copy] autorelease];
+}
+
 NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk, NSString **error)
 {
   NSCAssert([sdk hasPrefix:@"iphonesimulator"], @"Only iphonesimulator SDKs are supported.");
@@ -74,19 +94,9 @@ NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk, NSS
     return nil;
   }
 
-  NSString *version = [sdk stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
-  NSString *simulatorHome = [NSString stringWithFormat:@"%@/Library/Application Support/iPhone Simulator/%@", NSHomeDirectory(), version];
-  NSString *sdkRootPath = SimulatorSDKRootPathWithVersion(version);
-
   NSTask *task = CreateTaskInSameProcessGroup();
   [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-ios"]];
-  [task setEnvironment:@{@"CFFIXED_USER_HOME" : simulatorHome,
-                         @"HOME" : simulatorHome,
-                         @"IPHONE_SHARED_RESOURCES_DIRECTORY" : simulatorHome,
-                         @"DYLD_ROOT_PATH" : sdkRootPath,
-                         @"IPHONE_SIMULATOR_ROOT" : sdkRootPath,
-                         @"IPHONE_SIMULATOR_VERSIONS" : @"iPhone Simulator (external launch) , iPhone OS 6.0 (unknown/10A403)",
-                         @"NSUnbufferedIO" : @"YES"}];
+  [task setEnvironment:EnvForOTestQueryTestCasesInIOSBundle(sdk, nil)];
   [task setArguments:@[bundlePath]];
 
   NSArray *result = RunTaskAndReturnResult(task, error);
@@ -107,25 +117,14 @@ NSArray *OTestQueryTestCasesInIOSBundleWithTestHost(NSString *bundlePath, NSStri
     return nil;
   }
 
-  NSString *version = [sdk stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
-  NSString *simulatorHome = [NSString stringWithFormat:@"%@/Library/Application Support/iPhone Simulator/%@", NSHomeDirectory(), version];
-  NSString *sdkRootPath = SimulatorSDKRootPathWithVersion(version);
-
   NSTask *task = CreateTaskInSameProcessGroup();
   [task setLaunchPath:testHostExecutablePath];
-  [task setEnvironment:@{
-   // Inserted this dylib, which will then load whatever is in `OtestQueryBundlePath`.
-   @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"otest-query-ios-dylib.dylib"],
-   // The test bundle that we want to query from.
-   @"OtestQueryBundlePath" : bundlePath,
-
-   @"CFFIXED_USER_HOME" : simulatorHome,
-   @"HOME" : simulatorHome,
-   @"IPHONE_SHARED_RESOURCES_DIRECTORY" : simulatorHome,
-   @"DYLD_ROOT_PATH" : sdkRootPath,
-   @"IPHONE_SIMULATOR_ROOT" : sdkRootPath,
-   @"IPHONE_SIMULATOR_VERSIONS" : @"iPhone Simulator (external launch) , iPhone OS 6.0 (unknown/10A403)",
-   @"NSUnbufferedIO" : @"YES"}];
+  [task setEnvironment:EnvForOTestQueryTestCasesInIOSBundle(sdk, @{
+    // Inserted this dylib, which will then load whatever is in `OtestQueryBundlePath`.
+    @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"otest-query-ios-dylib.dylib"],
+    // The test bundle that we want to query from.
+    @"OtestQueryBundlePath" : bundlePath,
+  })];
   [task setArguments:@[bundlePath]];
 
   NSArray *result = RunTaskAndReturnResult(task, error);
