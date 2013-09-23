@@ -152,7 +152,7 @@
                      @{
                      @"name" : @"TestProject-Library: -[SomeTests testWillFail]",
                      @"result" : @"fail",
-                     @"userdata" : @"/Users/fpotter/xctool/xctool/xctool-tests/TestData/TestProject-Library/TestProject-LibraryTests/SomeTests.m:40: SenTestFailureException: 'a' should be equal to 'b' Strings aren't equal",
+                     @"userdata" : @"/Users/fpotter/xctool/xctool/xctool-tests/TestData/TestProject-Library/TestProject-LibraryTests/SomeTests.m:40: 'a' should be equal to 'b' Strings aren't equal",
                      @"coverage" : [NSNull null],
                      @"extra" :  [NSNull null],
                      @"link" : [NSNull null],

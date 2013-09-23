@@ -20,6 +20,7 @@
 #import "ReportStatus.h"
 #import "SimulatorLauncher.h"
 #import "TaskUtil.h"
+#import "TestingFramework.h"
 #import "XCToolUtil.h"
 
 @implementation OCUnitOSXAppTestRunner
@@ -51,7 +52,7 @@
 
   NSTask *task = CreateTaskInSameProcessGroup();
   [task setLaunchPath:testHostPath];
-  [task setArguments:[self otestArguments]];
+  [task setArguments:[self testArguments]];
   [task setEnvironment:[self otestEnvironmentWithOverrides:@{
                         @"DYLD_INSERT_LIBRARIES" : [libraries componentsJoinedByString:@":"],
                         @"DYLD_FRAMEWORK_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
