@@ -131,6 +131,43 @@
   }];
 }
 
+- (void)testRunTestsFailsWhenSDKIsIPHONEOS_XCTest
+{
+  NSString *frameworkDirPath = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks/XCTest.framework"];
+
+  if ([[NSFileManager defaultManager] fileExistsAtPath:frameworkDirPath]){
+    [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+      [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+        // Make sure -showBuildSettings returns some data
+        [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library-XCTest-iOS/TestProject-Library-XCTest-iOS.xcodeproj"
+                                                        scheme:@"TestProject-Library-XCTest-iOS"
+                                                  settingsPath:TEST_DATA @"TestProject-Library-XCTest-iOS-showBuildSettings.txt"],
+        // We're going to call -showBuildSettings on the test target.
+        [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library-XCTest-iOS/TestProject-Library-XCTest-iOS.xcodeproj"
+                                                        target:@"TestProject-Library-XCTest-iOSTests"
+                                                  settingsPath:TEST_DATA @"TestProject-Library-XCTest-iOS-TestProject-Library-XCTest-iOSTests-showBuildSettings-iphoneos.txt"
+                                                          hide:NO],
+        [LaunchHandlers handlerForOtestQueryReturningTestList:@[]],
+      ]];
+
+      XCTool *tool = [[[XCTool alloc] init] autorelease];
+      
+      tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library-XCTest-iOS/TestProject-Library-XCTest-iOS.xcodeproj",
+                         @"-scheme", @"TestProject-Library-XCTest-iOS",
+                         @"-configuration", @"Debug",
+                         @"run-tests"
+                         ];
+      
+      NSDictionary *output = [TestUtil runWithFakeStreams:tool];
+      
+      assertThatInt(tool.exitStatus, equalToInt(1));
+      assertThat(output[@"stdout"],
+                 containsString(@"Testing with the 'iphoneos' SDK is not yet supported.  "
+                                @"Instead, test with the simulator SDK by setting '-sdk iphonesimulator'.\n"));
+    }];
+  }
+}
+
 - (void)testRunTestsAction
 {
   NSArray *testList = @[@"TestProject_LibraryTests/testOutputMerging",

@@ -90,6 +90,7 @@
     _freshInstall = freshInstall;
     _simulatorType = [simulatorType retain];
     _reporters = [reporters retain];
+    _framework = [FrameworkInfoForTestBundleAtPath([self testBundlePath]) retain];
   }
   return self;
 }
@@ -102,6 +103,7 @@
   [_environment release];
   [_simulatorType release];
   [_reporters release];
+  [_framework release];
   [super dealloc];
 }
 
@@ -164,7 +166,7 @@
   return succeeded;
 }
 
-- (NSArray *)otestArguments
+- (NSArray *)testArguments
 {
   // These are the same arguments Xcode would use when invoking otest.  To capture these, we
   // just ran a test case from Xcode that dumped 'argv'.  It's a little tricky to do that outside
@@ -175,13 +177,13 @@
            @"-NSTreatUnknownArgumentsAsOpen", @"NO",
            // Not sure exactly what this does...
            @"-ApplePersistenceIgnoreState", @"YES",
-           // SenTest is one of Self, All, None,
+           // SenTest / XCTest is one of Self, All, None,
            // or TestClassName[/testCaseName][,TestClassName2]
-           @"-SenTest", [_senTestList componentsJoinedByString:@","],
-           // SenTestInvertScope optionally inverts whatever SenTest would normally select.
-           // We never invert, since we always pass the exact list of test cases
-           // to be run.
-           @"-SenTestInvertScope", @"NO",
+           _framework[kTestingFrameworkFilterTestArgsKey], [_senTestList componentsJoinedByString:@","],
+           // SenTestInvertScope / XCTestInvertScope optionally inverts whatever
+           // SenTest would normally select. We never invert, since we always
+           // pass the exact list of test cases to be run.
+           _framework[kTestingFrameworkInvertScopeKey], @"NO",
            ]];
 
   // Add any argments that might have been specifed in the scheme.
