@@ -41,7 +41,7 @@
     fprintf(stderr, "The bundle extension '%s' is not supported.\n", bundleExtension);
     exit(kUnsupportedFramework);
   }
-  
+
   // We use dlopen() instead of -[NSBundle loadAndReturnError] because, if
   // something goes wrong, dlerror() gives us a much more helpful error message.
   if (dlopen([[bundle executablePath] UTF8String], RTLD_NOW) == NULL) {
@@ -50,7 +50,7 @@
   }
 
   [[NSBundle allFrameworks] makeObjectsPerformSelector:@selector(principalClass)];
-  
+
   Class testClass = NSClassFromString([framework objectForKey:kTestingFrameworkClassName]);
   SEL allTestsSelector = NSSelectorFromString([framework objectForKey:kTestingFrameworkAllTestsSelectorName]);
   if (testClass == nil) {
@@ -66,8 +66,12 @@
     Method *methods = class_copyMethodList(testClass, &methodCount);
 
     for (int i = 0; i < methodCount; i++) {
-      NSString *methodName = [NSString stringWithUTF8String:sel_getName(method_getName(methods[i]))];
-      if ([methodName hasPrefix:@"test"]) {
+      Method method = methods[i];
+      NSString *methodName = [NSString stringWithUTF8String:sel_getName(method_getName(method))];
+      unsigned int argCount = method_getNumberOfArguments(method);
+      char returnType[256];
+      method_getReturnType(method, returnType, 256);
+      if ([methodName hasPrefix:@"test"] && argCount == 2 && strncmp(returnType, "v", 256) == 0) {
         [testNames addObject:[NSString stringWithFormat:@"%@/%@", testClass, methodName]];
       }
     }
