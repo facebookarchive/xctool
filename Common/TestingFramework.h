@@ -22,6 +22,7 @@ typedef enum {
   kBundleOpenError,
   kUnsupportedFramework,
   kClassLoadingError,
+  kMissingExecutable,
 } OTestExitCode;
 
 // Why FOUNDATION_EXPORT? Read here:
