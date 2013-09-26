@@ -193,7 +193,7 @@ NSDictionary *GetAvailableSDKsAndAliases()
     [task setArguments:@[
      @"-c",
      [[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"] stringByAppendingString:
-      @" -showsdks | /usr/bin/perl -ne '/-sdk (.*?)([\\d\\.]+)$/ && print \"$1 $2\n\"'; "
+      @" -showsdks | perl -ne '/-sdk (.*?)([\\d\\.]+)$/ && print \"$1 $2\n\"'; "
       // Exit with xcodebuild's return value.  This is getting ugly.
       @"exit ${PIPESTATUS[0]};"
       ],
