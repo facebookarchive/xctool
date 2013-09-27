@@ -42,6 +42,11 @@
     exit(kUnsupportedFramework);
   }
 
+  if (![bundle executablePath]) {
+    fprintf(stderr, "The bundle at %s does not contain an executable.\n", [testBundlePath UTF8String]);
+    exit(kMissingExecutable);
+  }
+
   // We use dlopen() instead of -[NSBundle loadAndReturnError] because, if
   // something goes wrong, dlerror() gives us a much more helpful error message.
   if (dlopen([[bundle executablePath] UTF8String], RTLD_NOW) == NULL) {
