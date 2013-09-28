@@ -121,7 +121,7 @@ __attribute__((constructor)) static void initialize()
               if ([[task launchPath] isEqualToString:@"/bin/bash"] &&
                   [[task arguments] isEqualToArray:@[
                    @"-c",
-                   @"/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild"
+                   @"'/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild'"
                    @" -showsdks | perl -ne '/-sdk (.*?)([\\d\\.]+)$/ && print \"$1 $2\n\"'; "
                    @"exit ${PIPESTATUS[0]};",
                    ]]) {
