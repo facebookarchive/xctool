@@ -163,6 +163,11 @@ NSString *XcodeDeveloperDirPath(void)
   }
 }
 
+NSString *QuotedXcodeDeveloperDirPath(void)
+{
+    return [NSString stringWithFormat:@"'%@'", XcodeDeveloperDirPath()];
+}
+
 NSString *MakeTempFileWithPrefix(NSString *prefix)
 {
   const char *template = [[TemporaryDirectoryForAction() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.XXXXXXX", prefix]] UTF8String];
@@ -192,7 +197,7 @@ NSDictionary *GetAvailableSDKsAndAliases()
     [task setLaunchPath:@"/bin/bash"];
     [task setArguments:@[
      @"-c",
-     [[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"] stringByAppendingString:
+     [[QuotedXcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"] stringByAppendingString:
       @" -showsdks | perl -ne '/-sdk (.*?)([\\d\\.]+)$/ && print \"$1 $2\n\"'; "
       // Exit with xcodebuild's return value.  This is getting ugly.
       @"exit ${PIPESTATUS[0]};"
