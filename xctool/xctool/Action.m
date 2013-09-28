@@ -140,6 +140,9 @@
   NSArray *options = [[self class] options];
 
   NSDictionary *(^namedOptionMatchingArgument)(NSString *) = ^(NSString *argument){
+    if ([argument hasPrefix:@"--"]) {
+      argument = [argument substringFromIndex:2];
+    }
     if ([argument hasPrefix:@"-"]) {
       argument = [argument substringFromIndex:1];
     }
