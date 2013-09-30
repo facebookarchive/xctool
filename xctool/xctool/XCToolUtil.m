@@ -189,10 +189,11 @@ NSDictionary *GetAvailableSDKsAndAliases()
     //
     // xcodebuild is nice enough to return them to us in ascending order.
     NSTask *task = CreateTaskInSameProcessGroup();
+    NSString *xcodebuild = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"];
     [task setLaunchPath:@"/bin/bash"];
     [task setArguments:@[
      @"-c",
-     [[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"] stringByAppendingString:
+     [[NSString stringWithFormat:@"'%@'", xcodebuild] stringByAppendingString:
       @" -showsdks | perl -ne '/-sdk (.*?)([\\d\\.]+)$/ && print \"$1 $2\n\"'; "
       // Exit with xcodebuild's return value.  This is getting ugly.
       @"exit ${PIPESTATUS[0]};"
