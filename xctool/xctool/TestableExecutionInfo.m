@@ -87,7 +87,7 @@
                                                                              [NSString stringWithFormat:@"OBJROOT=%@", objRoot],
                                                                              [NSString stringWithFormat:@"SYMROOT=%@", symRoot],
                                                                              [NSString stringWithFormat:@"SHARED_PRECOMPS_DIR=%@", sharedPrecompsDir],
-                                                                             @"-showBuildSettings",
+                                                                             @"-showBuildSettings", XcodeBuildActionForBuildSettings(),
                                                                              ]]];
 
   [settingsTask setEnvironment:@{

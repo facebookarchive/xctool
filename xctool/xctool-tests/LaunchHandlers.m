@@ -150,4 +150,15 @@ static BOOL ArrayContainsSubArray(NSArray *arr, NSArray *subArr)
   } copy] autorelease];
 }
 
++ (id)handlerForXcodeBuildVersionWithVersion:(NSString *)versionString
+{
+  return [[^(FakeTask *task){
+    if ([[task launchPath] hasSuffix:@"xcodebuild"] &&
+        [[task arguments] containsObject:@"-version"])
+    {
+      [task pretendTaskReturnsStandardOutput:[NSString stringWithFormat:@"Xcode %@\nBuild version xctool-tests\n", versionString]];
+    }
+  } copy] autorelease];
+}
+
 @end

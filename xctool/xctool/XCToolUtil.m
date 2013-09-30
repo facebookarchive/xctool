@@ -60,7 +60,8 @@ NSDictionary *BuildSettingsFromOutput(NSString *output)
     //
     // or, if there are spaces in the target name...
     // 'Build settings for action build and target "Some Target Name":'
-    if (![scanner scanString:@"Build settings for action build and target " intoString:NULL]) {
+    if (! ([scanner scanString:@"Build settings for action test and target " intoString:NULL] ||
+           [scanner scanString:@"Build settings for action build and target " intoString:NULL])) {
       break;
     }
 
@@ -470,4 +471,40 @@ NSString *SystemPaths()
   NSCAssert(error == nil, @"Failed to read from /etc/paths: %@", [error localizedFailureReason]);
 
   return [[pathLines componentsSeparatedByString:@"\n"] componentsJoinedByString:@":"];
+}
+
+NSString *XcodeBuildVersion(void)
+{
+  static NSString *versionString = nil;
+
+  if (! versionString) {
+    NSTask *task = CreateTaskInSameProcessGroup();
+    NSString *xcodebuild = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"];
+    [task setLaunchPath:xcodebuild];
+    [task setArguments:@[@"-version"]];
+
+    NSString *output = LaunchTaskAndCaptureOutput(task)[@"stdout"];
+    NSScanner *scanner = [NSScanner scannerWithString:output];
+    [scanner scanString:@"Xcode " intoString:NULL];
+    [scanner scanUpToString:@"\n" intoString:&versionString];
+  }
+  return versionString;
+}
+
+NSString *XcodeBuildActionForBuildSettings(void)
+{
+  static NSString *buildAction = nil;
+
+  if (! buildAction) {
+    NSString *versionString = XcodeBuildVersion();
+    NSComparisonResult versionComparison = [@"5.0.0" compare:versionString options:NSNumericSearch];
+    if (versionComparison == NSOrderedSame || versionComparison == NSOrderedAscending) {
+      // Xcode 5.x or greater
+      buildAction = [@"test" retain];
+    } else {
+      // pre-Xcode 5.0.0
+      buildAction = [@"build" retain];
+    }
+  }
+  return buildAction;
 }

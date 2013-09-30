@@ -757,7 +757,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
    [XcodeDeveloperDirPath() stringByAppendingPathComponent:
     @"usr/bin/xcodebuild"]];
   [task setArguments:
-   [self.subjectXcodeBuildArguments arrayByAddingObject:@"-showBuildSettings"]];
+   [self.subjectXcodeBuildArguments arrayByAddingObjectsFromArray:@[ XcodeBuildActionForBuildSettings(), @"-showBuildSettings" ]]];
   [task setEnvironment:@{
    @"DYLD_INSERT_LIBRARIES" :
      [XCToolLibPath() stringByAppendingPathComponent:
