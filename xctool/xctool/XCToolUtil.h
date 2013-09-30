@@ -41,6 +41,21 @@ NSString *GetProductVersionForSDKVersion(NSString *version);
 NSString *GetIPhoneSimulatorVersionsStringForSDKVersion(NSString *version);
 
 BOOL IsRunningUnderTest();
+NSString *XcodeBuildVersion(void);
+
+/**
+ Returns the appropriate action to use when invoking `-showBuildSettings` to 
+ introspect the test build environment.
+ 
+ Under Xcode 4.x, where xcodebuild does not directly support unit testing iOS
+ the `build` action must be used. Under Xcode 5.x, the `test` action must be 
+ used else the Scheme requires the test bundle being configured for Running
+ (as opposed to Testing only) else xctool will fail out with the dreaded:
+ ERROR: Expected to receive build settings for 1 target
+ 
+ See https://github.com/facebook/xctool/issues/187 for more details.
+ */
+NSString *XcodeBuildActionForBuildSettings(void);
 
 /**
  Launches a task that will invoke xcodebuild.  It will automatically feed
