@@ -143,6 +143,16 @@
   assertThatBool([[settings allKeys] count] > 0, equalToBool(YES));
 }
 
+- (void)testCanParseBuildSettingsWithConfigurationFile
+{
+  NSString *configOutput = [NSString stringWithContentsOfFile:TEST_DATA @"BuildSettingsWithConfigurationFile.txt"
+                                                     encoding:NSUTF8StringEncoding
+                                                        error:nil];
+  NSDictionary *settings = BuildSettingsFromOutput(configOutput);
+  NSAssert([settings count] == 1,
+           @"Should only have build settings for a single target.");
+}
+
 - (void)testCanParseTestablesFromScheme
 {
   NSArray *testables = [XcodeSubjectInfo testablesInSchemePath:
