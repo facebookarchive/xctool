@@ -50,6 +50,10 @@ NSDictionary *BuildSettingsFromOutput(NSString *output)
   if ([scanner scanString:@"Build settings from command line:\n" intoString:NULL]) {
     scanUntilEmptyLine();
   }
+  
+  if ([scanner scanString:@"Build settings from configuration file" intoString:NULL]) {
+    scanUntilEmptyLine(); 
+  }
 
   for (;;) {
     NSString *target = nil;
