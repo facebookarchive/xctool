@@ -37,7 +37,7 @@ SDKROOT = macosx
 // build an iOS dylib.  Let's use a wrapper around 'ld' and 'cc' to make it strip
 // out the OSX specific flags.
 LD = ../Configurations/dont_clang_as_osx.py
-CC = $(SRCROOT)/../../xctool/Configurations/dont_clang_as_osx.py
+CC = $(SRCROOT)/../Configurations/dont_clang_as_osx.py
 
 ARCHS = i386
 VALID_ARCHS = i386
