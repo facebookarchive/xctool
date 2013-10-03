@@ -8,6 +8,7 @@
 import os
 import sys
 
+print os.environ
 assert ('DEVELOPER_DIR' in os.environ), 'DEVELOPER_DIR should be set.'
 clang_path = '%s/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang' % (
     os.environ['DEVELOPER_DIR'])
