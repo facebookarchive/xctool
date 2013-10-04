@@ -143,6 +143,9 @@
     if ([argument hasPrefix:@"-"]) {
       argument = [argument substringFromIndex:1];
     }
+    if ([argument hasPrefix:@"--"]) {
+      argument = [argument substringFromIndex:2];
+    }
 
     for (NSDictionary *option in options) {
       if ([option[kActionOptionName] isEqualToString:argument]) {
