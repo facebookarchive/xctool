@@ -36,6 +36,7 @@
 @property (nonatomic, retain) NSString *configuration;
 @property (nonatomic, retain) NSString *sdk;
 @property (nonatomic, retain) NSString *arch;
+@property (nonatomic, retain) NSString *destination;
 @property (nonatomic, retain) NSString *toolchain;
 @property (nonatomic, retain) NSString *xcconfig;
 @property (nonatomic, retain) NSString *jobs;

@@ -90,6 +90,12 @@
                      description:@"configuration to use (e.g. Debug, Release)"
                        paramName:@"NAME"
                            mapTo:@selector(setConfiguration:)],
+    [Action actionOptionWithName:@"destination"
+                         aliases:nil
+                     description:@"use the destination described by DESTINATION (a comma-separated set of key=value "
+                                  "pairs describing the destination to use)"
+                       paramName:@"DESTINATION"
+                           mapTo:@selector(setDestination:)],
     [Action actionOptionWithName:@"jobs"
                          aliases:nil
                      description:@"number of concurrent build operations to run"
@@ -517,6 +523,10 @@
 
   if (self.arch != nil) {
     [arguments addObjectsFromArray:@[@"-arch", self.arch]];
+  }
+
+  if (self.destination != nil) {
+    [arguments addObjectsFromArray:@[@"-destination", self.destination]];
   }
 
   if (self.toolchain != nil) {
