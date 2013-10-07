@@ -71,6 +71,7 @@ NSDictionary *EnvForOTestQueryTestCasesInIOSBundle(NSString *sdk, NSDictionary *
   NSString *version = [sdk stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
   NSString *simulatorHome = [NSString stringWithFormat:@"%@/Library/Application Support/iPhone Simulator/%@", NSHomeDirectory(), version];
   NSString *sdkRootPath = SimulatorSDKRootPathWithVersion(version);
+  NSString *simVersions = GetSDKVersionString(version);
 
   NSMutableDictionary *env = [NSMutableDictionary dictionaryWithDictionary:@{
     @"CFFIXED_USER_HOME" : simulatorHome,
@@ -78,7 +79,7 @@ NSDictionary *EnvForOTestQueryTestCasesInIOSBundle(NSString *sdk, NSDictionary *
     @"IPHONE_SHARED_RESOURCES_DIRECTORY" : simulatorHome,
     @"DYLD_ROOT_PATH" : sdkRootPath,
     @"IPHONE_SIMULATOR_ROOT" : sdkRootPath,
-    @"IPHONE_SIMULATOR_VERSIONS" : @"iPhone Simulator (external launch) , iPhone OS 6.0 (unknown/10A403)",
+    @"IPHONE_SIMULATOR_VERSIONS" : simVersions,
     @"NSUnbufferedIO" : @"YES"
   }];
   if (additionalEnv)

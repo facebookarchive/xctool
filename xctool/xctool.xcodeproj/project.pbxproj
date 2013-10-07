@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		193DED3718035186003AB2E7 /* XCToolUtilTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 193DED3618035186003AB2E7 /* XCToolUtilTests.m */; };
 		2804514217C4106C00D16420 /* OTestQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 2804514117C4106C00D16420 /* OTestQuery.m */; };
 		2804514317C4106C00D16420 /* OTestQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 2804514117C4106C00D16420 /* OTestQuery.m */; };
 		2804514517C410F100D16420 /* OTestQueryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2804514417C410F100D16420 /* OTestQueryTests.m */; };
@@ -155,6 +156,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		193DED3618035186003AB2E7 /* XCToolUtilTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCToolUtilTests.m; sourceTree = "<group>"; };
 		2804514017C4106C00D16420 /* OTestQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTestQuery.h; sourceTree = "<group>"; };
 		2804514117C4106C00D16420 /* OTestQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTestQuery.m; sourceTree = "<group>"; };
 		2804514417C410F100D16420 /* OTestQueryTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTestQueryTests.m; sourceTree = "<group>"; };
@@ -517,6 +519,7 @@
 				CDEE9EA0176950DC0026D278 /* BuildStateParserTests.m */,
 				28869AFB178CEA7600DED56A /* SenTestListener.m */,
 				28E28FBF1797193F0072376C /* ReporterTaskTests.m */,
+				193DED3618035186003AB2E7 /* XCToolUtilTests.m */,
 			);
 			path = "xctool-tests";
 			sourceTree = "<group>";
@@ -741,6 +744,7 @@
 				28ACFC8416FBA888004BAF33 /* TaskUtil.m in Sources */,
 				283EAF161702BB0600CE0A0C /* OCUnitCrashFilterTests.m in Sources */,
 				288B9FB9171A50C1008F0BDF /* OCUnitOSXLogicTestRunner.m in Sources */,
+				193DED3718035186003AB2E7 /* XCToolUtilTests.m in Sources */,
 				288B9FBD171A5509008F0BDF /* OCUnitOSXAppTestRunner.m in Sources */,
 				324BB4C61725BDA20073A862 /* XcodeTargetMatch.m in Sources */,
 				32A90C551725F05800C2349E /* TestAction.m in Sources */,
