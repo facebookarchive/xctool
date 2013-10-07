@@ -36,6 +36,7 @@
 		283CCADB16C2F14C00F2E343 /* XCTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCAD516C2F10A00F2E343 /* XCTool.m */; };
 		28404ADF17C7E16F00CB436A /* Testable.m in Sources */ = {isa = PBXBuildFile; fileRef = 28404ADE17C7E16F00CB436A /* Testable.m */; };
 		28404AE017C7E16F00CB436A /* Testable.m in Sources */ = {isa = PBXBuildFile; fileRef = 28404ADE17C7E16F00CB436A /* Testable.m */; };
+		2862C1B6180DE7BA00E5F58B /* XCToolUtilTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2862C1B5180DE7BA00E5F58B /* XCToolUtilTests.m */; };
 		2864A3FA1734E52800BBF3B1 /* Version.m in Sources */ = {isa = PBXBuildFile; fileRef = 2864A3F91734E52800BBF3B1 /* Version.m */; };
 		2864A3FB1734E52800BBF3B1 /* Version.m in Sources */ = {isa = PBXBuildFile; fileRef = 2864A3F91734E52800BBF3B1 /* Version.m */; };
 		2869F3C517C82FB80078F078 /* TestableExecutionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 2869F3C417C82FB80078F078 /* TestableExecutionInfo.m */; };
@@ -195,6 +196,7 @@
 		283CCAD516C2F10A00F2E343 /* XCTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = XCTool.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		28404ADD17C7E16F00CB436A /* Testable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Testable.h; sourceTree = "<group>"; };
 		28404ADE17C7E16F00CB436A /* Testable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Testable.m; sourceTree = "<group>"; };
+		2862C1B5180DE7BA00E5F58B /* XCToolUtilTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCToolUtilTests.m; sourceTree = "<group>"; };
 		2864A3F81734E52800BBF3B1 /* Version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Version.h; sourceTree = "<group>"; };
 		2864A3F91734E52800BBF3B1 /* Version.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Version.m; sourceTree = "<group>"; };
 		2869F3C317C82FB80078F078 /* TestableExecutionInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestableExecutionInfo.h; sourceTree = "<group>"; };
@@ -477,6 +479,7 @@
 		283CCAC516C2EE9900F2E343 /* xctool-tests */ = {
 			isa = PBXGroup;
 			children = (
+				2862C1B5180DE7BA00E5F58B /* XCToolUtilTests.m */,
 				28046D2F16D76665000AA15C /* ActionTests.m */,
 				28302E1D175A8B6900C997B2 /* ArchiveActionTests.m */,
 				28ADB43A16E410F9006301ED /* BuildActionTests.m */,
@@ -724,6 +727,7 @@
 				28E9B9DC16C3275200A52E4D /* OCUnitTestRunner.m in Sources */,
 				287A37E216C711E000319E81 /* SimulatorLauncher.m in Sources */,
 				28046D2D16D7603B000AA15C /* Action.m in Sources */,
+				2862C1B6180DE7BA00E5F58B /* XCToolUtilTests.m in Sources */,
 				28046D3016D76665000AA15C /* ActionTests.m in Sources */,
 				28AC9E3016DB3478009E5B9A /* OptionsTests.m in Sources */,
 				EE37291217E2886200554867 /* Reporter.m in Sources */,

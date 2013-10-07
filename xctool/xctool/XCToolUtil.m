@@ -246,6 +246,26 @@ NSDictionary *GetAvailableSDKsAndAliases()
   }
 }
 
+NSString *GetSDKVersionString(NSString *version)
+{
+  NSArray *pathComponents = @[XcodeDeveloperDirPath(),
+                              @"Platforms/iPhoneSimulator.platform/Developer/SDKs",
+                              [NSString stringWithFormat:@"iPhoneSimulator%@.sdk", version],
+                              @"System/Library/CoreServices/SystemVersion.plist"
+                              ];
+  NSString *path = [NSString pathWithComponents:pathComponents];
+  NSDictionary *sdkProperties = [NSDictionary dictionaryWithContentsOfFile:path];
+  NSCAssert(sdkProperties != nil, @"Unable to find SystemVersion.plist for SDK version");
+  
+  NSString *buildVersion = sdkProperties[@"ProductBuildVersion"];
+  NSCAssert(buildVersion != nil, @"Unable to find ProductBuildVersion in SystemVersion.plist");
+
+  NSString *format = @"iPhone Simulator (external launch) , iPhone OS %@ (unknown/%@)";
+  NSString *simVersion = [NSString stringWithFormat:format, version, buildVersion];
+
+  return simVersion;
+}
+
 BOOL IsRunningUnderTest()
 {
   NSString *processName = [[NSProcessInfo processInfo] processName];
