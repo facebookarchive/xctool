@@ -49,6 +49,7 @@
   assertThat(([[Options optionsFrom:@[@"-toolchain", @"SomeToolChain"]] toolchain]), equalTo(@"SomeToolChain"));
   assertThat(([[Options optionsFrom:@[@"-xcconfig", @"something.xcconfig"]] xcconfig]), equalTo(@"something.xcconfig"));
   assertThat(([[Options optionsFrom:@[@"-jobs", @"10"]] jobs]), equalTo(@"10"));
+  assertThat(([[Options optionsFrom:@[@"-destination", @"platform=iOS Simulator"]] destination]), equalTo(@"platform=iOS Simulator"));
 }
 
 - (void)testReporterOptionsSetupReporters
@@ -262,6 +263,7 @@
   NSArray *arguments = @[@"-configuration", @"SomeConfig",
                          @"-sdk", @"SomeSDK",
                          @"-arch", @"SomeArch",
+                         @"-destination", @"platform=iOS",
                          @"-toolchain", @"path/to/some/toolchain",
                          @"-xcconfig", @"some.xcconfig",
                          @"-jobs", @"20",
