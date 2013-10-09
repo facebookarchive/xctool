@@ -1,0 +1,27 @@
+Build settings from command line:
+    PLATFORM_NAME = iphonesimulator
+    SDKROOT = iphonesimulator7.0
+
+Build settings for action build and target TestProject-Library:
+    ACTION = build
+    AD_HOC_CODE_SIGNING_ALLOWED = NO
+    ALTERNATE_GROUP = THEFACEBOOK\Domain Users
+    ALTERNATE_MODE = u+w,go-w,a+rX
+    ALTERNATE_OWNER = slowbro
+    ALWAYS_SEARCH_USER_PATHS = NO
+    ALWAYS_USE_SEPARATE_HEADERMAPS = YES
+    APPLE_INTERNAL_DEVELOPER_DIR = /AppleInternal/Developer
+    APPLE_INTERNAL_DIR = /AppleInternal
+    APPLE_INTERNAL_DOCUMENTATION_DIR = /AppleInternal/Documentation
+    APPLE_INTERNAL_LIBRARY_DIR = /AppleInternal/Library
+    APPLE_INTERNAL_TOOLS = /AppleInternal/Developer/Tools
+    APPLY_RULES_IN_COPY_FILES = NO
+    ARCHS = i386
+    ARCHS_STANDARD = i386
+    ARCHS_STANDARD_32_64_BIT = i386
+    ARCHS_STANDARD_32_BIT = i386
+    ARCHS_STANDARD_64_BIT = x86_64
+    ARCHS_STANDARD_INCLUDING_64_BIT = i386 x86_64
+    AVAILABLE_PLATFORMS = iphonesimulator macosx iphoneos
+    BUILD_COMPONENTS = headers build
+

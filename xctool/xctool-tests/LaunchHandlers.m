@@ -92,6 +92,33 @@ static BOOL ArrayContainsSubArray(NSArray *arr, NSArray *subArr)
   } copy] autorelease];
 }
 
++ (id)handlerForShowBuildSettingsErrorWithProject:(NSString *)project
+                                           target:(NSString *)target
+                                 errorMessagePath:(NSString *)errorMessagePath
+                                             hide:(BOOL)hide
+{
+  return [[^(FakeTask *task){
+    if ([[task launchPath] hasSuffix:@"xcodebuild"] &&
+        ArrayContainsSubArray([task arguments], @[
+                                                  @"-project",
+                                                  project,
+                                                  @"-target",
+                                                  target,
+                                                  ]) &&
+        [[task arguments] containsObject:@"-showBuildSettings"])
+    {
+      [task pretendTaskReturnsStandardError:
+       [NSString stringWithContentsOfFile:errorMessagePath
+                                 encoding:NSUTF8StringEncoding
+                                    error:nil]];
+      if (hide) {
+        // The tests don't care about this - just exclude from 'launchedTasks'
+        [[FakeTaskManager sharedManager] hideTaskFromLaunchedTasks:task];
+      }
+    }
+  } copy] autorelease];
+}
+
 + (id)handlerForShowBuildSettingsWithWorkspace:(NSString *)workspace
                                         scheme:(NSString *)scheme
                                   settingsPath:(NSString *)settingsPath

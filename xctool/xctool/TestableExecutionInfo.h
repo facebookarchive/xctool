@@ -37,6 +37,11 @@
 @property (nonatomic, retain) NSDictionary *buildSettings;
 
 /**
+ * Will contain an error message if retrieving build settings with xcodebuild have failed
+ */
+@property (nonatomic, retain) NSString *buildSettingsError;
+
+/**
  * A list of all test cases in the bundle, the form of:
  * ['SomeClass/testA', 'SomeClass/testB']
  *

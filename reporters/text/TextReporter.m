@@ -535,15 +535,26 @@ static NSString *abbreviatePath(NSString *string) {
 
 - (void)beginOcunit:(NSDictionary *)event
 {
-  NSArray *attributes = @[event[kReporter_BeginOCUnit_SDKNameKey],
-                          event[kReporter_BeginOCUnit_TestTypeKey],
-                          [NSString stringWithFormat:@"GC %@",
-                           [event[kReporter_BeginOCUnit_GCEnabledKey] boolValue] ? @"ON" : @"OFF"]];
-
-
-  [self.reportWriter printLine:@"<bold>run-test<reset> <underline>%@<reset> (%@)",
-   event[kReporter_BeginOCUnit_BundleNameKey],
-   [attributes componentsJoinedByString:@", "]];
+  NSString *titleString = nil;
+  if (event[kReporter_BeginOCUnit_BundleNameKey]) {
+    titleString = event[kReporter_BeginOCUnit_BundleNameKey];
+  } else {
+    titleString = [NSString stringWithFormat:@"Target: %@", event[kReporter_BeginOCUnit_TargetNameKey]];
+  }
+  NSString *parameterString = nil;
+  if (event[kReporter_BeginOCUnit_SDKNameKey]) {
+    NSArray *attributes = @[event[kReporter_BeginOCUnit_SDKNameKey],
+                            event[kReporter_BeginOCUnit_TestTypeKey],
+                            [NSString stringWithFormat:@"GC %@",
+                            [event[kReporter_BeginOCUnit_GCEnabledKey] boolValue] ? @"ON" : @"OFF"]
+    ];
+    parameterString = [NSString stringWithFormat:@"(%@)", [attributes componentsJoinedByString:@", "]];
+  } else {
+    // we can miss some keys if we failed to get the build settings
+    parameterString = @"";
+  }
+  
+  [self.reportWriter printLine:@"<bold>run-test<reset> <underline>%@<reset> %@", titleString, parameterString];
   self.currentBundle = event[kReporter_BeginOCUnit_BundleNameKey];
   [self.reportWriter increaseIndent];
 }
