@@ -25,7 +25,7 @@
   NSArray *_senTestList;
   NSArray *_arguments;
   NSDictionary *_environment;
-  BOOL _garbageCollection;
+  NSNumber *_garbageCollection;
   BOOL _freshSimulator;
   BOOL _freshInstall;
   NSString *_simulatorType;
@@ -50,7 +50,7 @@
                 senTestList:(NSArray *)senTestList
                   arguments:(NSArray *)arguments
                 environment:(NSDictionary *)environment
-          garbageCollection:(BOOL)garbageCollection
+          garbageCollection:(NSNumber *)garbageCollection
              freshSimulator:(BOOL)freshSimulator
                freshInstall:(BOOL)freshInstall
               simulatorType:(NSString *)simulatorType

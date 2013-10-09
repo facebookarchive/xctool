@@ -31,13 +31,23 @@
   TestableExecutionInfo *info = [[[TestableExecutionInfo alloc] init] autorelease];
   info.testable = testable;
 
-  info.buildSettings = [[self class] testableBuildSettingsForProject:testable.projectPath
+  NSString *buildSettingsError = nil;
+  NSDictionary *buildSettings = [[self class] testableBuildSettingsForProject:testable.projectPath
                                                               target:testable.target
                                                              objRoot:xcodeSubjectInfo.objRoot
                                                              symRoot:xcodeSubjectInfo.symRoot
                                                    sharedPrecompsDir:xcodeSubjectInfo.sharedPrecompsDir
                                                       xcodeArguments:xcodebuildArguments
-                                                             testSDK:testSDK];
+                                                             testSDK:testSDK
+                                                               error:&buildSettingsError];
+  
+  if (buildSettingsError) {
+    info.buildSettingsError = buildSettingsError;
+    info.buildSettings = buildSettings;
+    return info;
+  }
+
+  info.buildSettings = buildSettings;
 
   NSString *otestQueryError = nil;
   NSArray *testCases = [[self class] queryTestCasesWithBuildSettings:info.buildSettings
@@ -70,6 +80,7 @@
                                 sharedPrecompsDir:(NSString *)sharedPrecompsDir
                                    xcodeArguments:(NSArray *)xcodeArguments
                                           testSDK:(NSString *)testSDK
+                                            error:(NSString **)error
 {
   // Collect build settings for this test target.
   NSTask *settingsTask = CreateTaskInSameProcessGroup();
@@ -100,14 +111,23 @@
   settingsTask = nil;
 
   NSDictionary *allSettings = BuildSettingsFromOutput(result[@"stdout"]);
-  NSAssert([allSettings count] == 1,
+  NSAssert([allSettings count] <= 1,
            @"Should only have build settings for a single target.");
-
-  NSDictionary *testableBuildSettings = allSettings[target];
-  NSAssert(testableBuildSettings != nil,
-           @"Should have found build settings for target '%@'",
-           target);
-
+  
+  NSMutableDictionary *testableBuildSettings = nil;
+  if ([allSettings count] == 0) {
+    *error = [NSString stringWithFormat: @"Could not get build settings. Output of 'xcodebuid -showBuildSettings' was:\n (stdout): %@ \n (stderr): %@",
+              result[@"stdout"],
+              result[@"stderr"]];
+    testableBuildSettings = [NSMutableDictionary new];
+  } else {
+    NSAssert(allSettings[target] != nil,
+             @"Should have found build settings for target '%@'",
+             target);
+    testableBuildSettings = [allSettings[target] mutableCopy];
+  }
+  testableBuildSettings[@"TARGET_PARAMETER_VALUE"] = target;
+  
   return testableBuildSettings;
 }
 
