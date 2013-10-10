@@ -18,6 +18,7 @@
 
 #import "iPhoneSimulatorRemoteClient.h"
 
+#import "NSConcreteTask.h"
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
 
@@ -117,7 +118,17 @@ NSArray *OTestQueryTestCasesInIOSBundleWithTestHost(NSString *bundlePath, NSStri
     return nil;
   }
 
-  NSTask *task = CreateTaskInSameProcessGroup();
+  NSConcreteTask *task = (NSConcreteTask *)CreateTaskInSameProcessGroup();
+
+  // If the TEST_HOST happens to be a Universal binary, we want to use the i386
+  // flavor only.
+  //
+  // With ONLY_ACTIVE_ARCH=NO, you can trick xcodebuild and xctool into building
+  // Universal (i386 + x86_64) binaries for simulator apps (as of ~ Xcode 5 GM).
+  // If we don't force the i386 flavor here, the app will crash on start since
+  // otest-query-ios-dylib.dylib is i386-only.
+  [task setPreferredArchitectures:@[@(CPU_TYPE_I386)]];
+
   [task setLaunchPath:testHostExecutablePath];
   [task setEnvironment:EnvForOTestQueryTestCasesInIOSBundle(sdk, @{
     // Inserted this dylib, which will then load whatever is in `OtestQueryBundlePath`.
