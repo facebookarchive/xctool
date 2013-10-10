@@ -28,6 +28,7 @@
 {
   NSString *version = [_buildSettings[@"SDK_NAME"] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
   NSString *simulatorHome = [NSString stringWithFormat:@"%@/Library/Application Support/iPhone Simulator/%@", NSHomeDirectory(), version];
+  NSString *simVersions = GetSDKVersionString(version);
 
   return @{@"CFFIXED_USER_HOME" : simulatorHome,
            @"HOME" : simulatorHome,
@@ -37,7 +38,7 @@
            @"DYLD_LIBRARY_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
            @"DYLD_ROOT_PATH" : _buildSettings[@"SDKROOT"],
            @"IPHONE_SIMULATOR_ROOT" : _buildSettings[@"SDKROOT"],
-           @"IPHONE_SIMULATOR_VERSIONS" : @"iPhone Simulator (external launch) , iPhone OS 6.0 (unknown/10A403)",
+           @"IPHONE_SIMULATOR_VERSIONS" : simVersions,
            @"NSUnbufferedIO" : @"YES"};
 }
 

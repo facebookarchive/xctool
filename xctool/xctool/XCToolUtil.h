@@ -23,6 +23,15 @@ NSString *XCToolReportersPath(void);
 NSString *XcodeDeveloperDirPath(void);
 NSString *MakeTempFileWithPrefix(NSString *prefix);
 NSDictionary *GetAvailableSDKsAndAliases();
+
+/**
+ Returns an SDK version string for the given SDK version
+ 
+ @param version An SDK version (eg 7.0)
+ @return string A version string suitable for IPHONE_SIMULATOR_VERSIONS
+ */
+NSString *GetSDKVersionString(NSString *version);
+
 BOOL IsRunningUnderTest();
 
 /**
