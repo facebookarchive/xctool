@@ -41,9 +41,8 @@
                                                              testSDK:testSDK
                                                                error:&buildSettingsError];
   
-  if (buildSettingsError) {
+  if (!buildSettings) {
     info.buildSettingsError = buildSettingsError;
-    info.buildSettings = buildSettings;
     return info;
   }
 
@@ -111,24 +110,22 @@
   settingsTask = nil;
 
   NSDictionary *allSettings = BuildSettingsFromOutput(result[@"stdout"]);
-  NSAssert([allSettings count] <= 1,
-           @"Should only have build settings for a single target.");
-  
-  NSMutableDictionary *testableBuildSettings = nil;
+  if ([allSettings count] > 1) {
+    *error = @"Should only have build settings for a single target.";
+    return nil;
+  }
   if ([allSettings count] == 0) {
     *error = [NSString stringWithFormat: @"Could not get build settings. Output of 'xcodebuid -showBuildSettings' was:\n (stdout): %@ \n (stderr): %@",
               result[@"stdout"],
               result[@"stderr"]];
-    testableBuildSettings = [NSMutableDictionary new];
-  } else {
-    NSAssert(allSettings[target] != nil,
-             @"Should have found build settings for target '%@'",
-             target);
-    testableBuildSettings = [allSettings[target] mutableCopy];
+    return nil;
   }
-  testableBuildSettings[@"TARGET_PARAMETER_VALUE"] = target;
+  if (!allSettings[target]) {
+    *error = [NSString stringWithFormat: @"Should have found build settings for target '%@'", target];
+    return nil;
+  }
   
-  return testableBuildSettings;
+  return allSettings[target];
 }
 
 /**
