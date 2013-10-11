@@ -84,6 +84,24 @@
    ];
 }
 
+- (void)testWillComplainWhenTargetDependenciesAreBroken
+{
+  XCTool *tool = [[[XCTool alloc] init] autorelease];
+  
+  tool.arguments = @[
+                     @"-project", TEST_DATA @"TestProject-Library-BrokenDependencies/TestProject-Library.xcodeproj",
+                     @"-scheme", @"TestProject-Library",
+                     @"-sdk", @"iphonesimulator",
+                     @"test"
+                     ];
+  
+  NSDictionary *output = [TestUtil runWithFakeStreams:tool];
+  
+  assertThatInt(tool.exitStatus, equalToInt(1));
+  assertThat(output[@"stdout"],
+             containsString(@"Could not get build settings."));
+}
+
 - (void)testWithSDKsDefaultsToValueOfSDKIfNotSupplied
 {
   Options *options = [[Options optionsFrom:@[
