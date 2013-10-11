@@ -37,4 +37,15 @@
 
 + (id)handlerForOtestQueryReturningTestList:(NSArray *)testList;
 
+/**
+ * Returns a launch handler block that will fake out invocations of `xcodebuild -version`
+ * to return the specified Xcode version string.
+ *
+ * Standard output will be in the form of:
+ *  Xcode 5.0.1
+ *  Build version 5A2034a
+ */
++ (id)handlerForXcodeBuildVersionWithVersion:(NSString *)versionString
+                                        hide:(BOOL)hide;
+
 @end

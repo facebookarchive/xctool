@@ -4,6 +4,7 @@
 #import "FakeTask.h"
 #import "Swizzle.h"
 #import "XCToolUtil.h"
+#import "LaunchHandlers.h"
 
 static FakeTaskManager *__sharedManager = nil;
 
@@ -136,6 +137,7 @@ __attribute__((constructor)) static void initialize()
                 [[FakeTaskManager sharedManager] hideTaskFromLaunchedTasks:task];
               }
             },
+            [LaunchHandlers handlerForXcodeBuildVersionWithVersion:@"5.0.1" hide:YES],
            ];
 }
 
