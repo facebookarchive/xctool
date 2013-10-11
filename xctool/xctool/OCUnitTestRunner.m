@@ -85,7 +85,7 @@
     _senTestList = [senTestList retain];
     _arguments = [arguments retain];
     _environment = [environment retain];
-    _garbageCollection = garbageCollection;
+    _garbageCollection = [garbageCollection boolValue];
     _freshSimulator = freshSimulator;
     _freshInstall = freshInstall;
     _simulatorType = [simulatorType retain];
