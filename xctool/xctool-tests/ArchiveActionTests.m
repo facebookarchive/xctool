@@ -16,7 +16,6 @@
 {
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
-     [LaunchHandlers handlerForXcodeBuildVersionWithVersion:@"5.0.1"],
      // Make sure -showBuildSettings returns some data
      [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
                                                      scheme:@"TestProject-Library"
@@ -32,7 +31,7 @@
 
     [TestUtil runWithFakeStreams:tool];
 
-    assertThat([[[FakeTaskManager sharedManager] launchedTasks][1] arguments],
+    assertThat([[[FakeTaskManager sharedManager] launchedTasks][0] arguments],
                equalTo(@[
                        @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",

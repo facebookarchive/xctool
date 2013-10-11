@@ -45,6 +45,7 @@
  *  Xcode 5.0.1
  *  Build version 5A2034a
  */
-+ (id)handlerForXcodeBuildVersionWithVersion:(NSString *)versionString;
++ (id)handlerForXcodeBuildVersionWithVersion:(NSString *)versionString
+                                        hide:(BOOL)hide;
 
 @end

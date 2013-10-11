@@ -103,8 +103,8 @@ static BOOL ArrayContainsSubArray(NSArray *arr, NSArray *subArr)
 }
 
 + (id)handlerForShowBuildSettingsWithWorkspace:(NSString *)workspace
-                                              scheme:(NSString *)scheme
-                                        settingsPath:(NSString *)settingsPath
+                                        scheme:(NSString *)scheme
+                                  settingsPath:(NSString *)settingsPath
                                           hide:(BOOL)hide
 {
   return [[^(FakeTask *task){
@@ -151,12 +151,17 @@ static BOOL ArrayContainsSubArray(NSArray *arr, NSArray *subArr)
 }
 
 + (id)handlerForXcodeBuildVersionWithVersion:(NSString *)versionString
+                                        hide:(BOOL)hide
 {
   return [[^(FakeTask *task){
     if ([[task launchPath] hasSuffix:@"xcodebuild"] &&
         [[task arguments] containsObject:@"-version"])
     {
       [task pretendTaskReturnsStandardOutput:[NSString stringWithFormat:@"Xcode %@\nBuild version xctool-tests\n", versionString]];
+      if (hide) {
+        // The tests don't care about this - just exclude from 'launchedTasks'
+        [[FakeTaskManager sharedManager] hideTaskFromLaunchedTasks:task];
+      }
     }
   } copy] autorelease];
 }
