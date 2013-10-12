@@ -299,7 +299,7 @@ static void XCToolLog_testCaseDidStop(NSString *fullTestName, NSNumber *unexpect
 
 #pragma mark - testCaseDidFail
 
-static void XCTestLog_testCaseDidFail(id self, SEL sel, XCTestCaseRun *run, NSString *description, NSString *file, unsigned long long line)
+static void XCTestLog_testCaseDidFail(id self, SEL sel, XCTestCaseRun *run, NSString *description, NSString *file, NSUInteger line)
 {
   XCToolLog_testCaseDidFail(@{
     kReporter_EndTest_Exception_FilePathInProjectKey : file,
