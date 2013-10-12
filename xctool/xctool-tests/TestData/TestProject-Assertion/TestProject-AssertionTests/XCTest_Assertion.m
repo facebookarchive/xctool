@@ -33,7 +33,24 @@
 
 - (void)testAssertionFailure
 {
-  NSCAssert(NO, @"This assertion failed.");
+  NSCAssert(NO, @"[GOOD1] This assertion failed.");
+}
+
+- (void)testExpectedAssertionIsSilent
+{
+  void (^failAssertion)() = ^void() {
+    NSCAssert(NO, @"[BAD1] This assertion is expected and should not be visible.");
+  };
+  NSLog(@"[GOOD1] Regular logging should still be visible.");
+  XCTAssertThrows(failAssertion(), @"[BAD2] failAssertion() should have thrown an assertion.");
+}
+
+- (void)testExpectedAssertionMissingIsNotSilent
+{
+  void (^passAssertion)() = ^void() {
+    NSCAssert(YES, @"[BAD1] Asserting YES should never throw.");
+  };
+  XCTAssertThrows(passAssertion(), @"[GOOD1] passAssertion() didn't throw an assertion as expected.");
 }
 
 @end

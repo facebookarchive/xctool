@@ -16,7 +16,9 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
+#import "ContainsException.h"
 #import "OCUnitIOSLogicTestRunner.h"
+#import "ReporterEvents.h"
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
 
@@ -88,43 +90,44 @@ static NSArray *RunOtestAndParseResult(NSTask *task)
   return [resultBuilder autorelease];
 }
 
+static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
+{
+  static NSString *eventNameKey = @"event";
+  for (NSDictionary *event in events) {
+    if ([[event allKeys] containsObject:eventNameKey] &&
+        [event[eventNameKey] isEqualToString:eventType]) {
+      return event;
+    }
+  }
+  return nil;
+}
+
 @implementation OTestShimTests
 
-- (void)setUp
-{
-  [super setUp];
-  // Put setup code here. This method is called before the invocation of each test method in the class.
-
-  [self raiseAfterFailure];
-}
-
-- (void)tearDown
-{
-  // Put teardown code here. This method is called after the invocation of each test method in the class.
-  [super tearDown];
-}
-
-- (void)testSenTestingKitAssertionFailuresInIOSLogicTestsDontCrashOtest
+- (void)testSenTestingKitAssertionFailuresInIOSLogicTestsAreNotSilent
 {
   NSString *bundlePath = TEST_DATA @"tests-ios-test-bundle/SenTestingKit_Assertion.octest";
   NSString *targetName = @"SenTestingKit_Assertion";
   NSString *settingsPath = TEST_DATA @"TestProject-Assertion-SenTestingKit_Assertion-showBuildSettings.txt";
   NSArray *testList = @[ @"SenTestingKit_Assertion/testAssertionFailure" ];
+  NSString *methodName = @"-[SenTestingKit_Assertion testAssertionFailure]";
 
   NSTask *task = otestShimTask(settingsPath, targetName, bundlePath, testList);
   NSArray *events = RunOtestAndParseResult(task);
   assertThat(events, isNot(nilValue()));
-  assertThat(@([events count]), is(@5));
-  NSDictionary *testSuiteEndEvent = events[4];
-  assertThat(testSuiteEndEvent, hasKey(@"testCaseCount"));
-  assertThat(testSuiteEndEvent, hasKey(@"totalFailureCount"));
-  assertThat(testSuiteEndEvent, hasKey(@"unexpectedExceptionCount"));
-  assertThat(testSuiteEndEvent, hasEntry(@"testCaseCount", @1));
-  assertThat(testSuiteEndEvent, hasEntry(@"totalFailureCount", @1));
-  assertThat(testSuiteEndEvent, hasEntry(@"unexpectedExceptionCount", @1));
+  assertThat(@([events count]), is(@4));
+  NSDictionary *testEndEvent = ExtractEvent(events, kReporter_Events_EndTest);
+  assertThat(testEndEvent, hasKey(@"exceptions"));
+  NSArray *exceptions = testEndEvent[@"exceptions"];
+  assertThat(exceptions, hasCountOf(1));
+  NSDictionary *exception = exceptions[0];
+  assertThat(exception, hasKey(@"reason"));
+  NSString *reason = exception[@"reason"];
+  assertThat(reason, containsAssertionFailureFromMethod(methodName));
+  assertThat(reason, containsString(@"[GOOD1]"));
 }
 
-- (void)testXCTestAssertionFailuresInIOSLogicTestsDontCrashXCTest
+- (void)testXCTestAssertionFailuresInIOSLogicTestsAreNotSilent
 {
   // Only run if XCTest is available.
   NSString *frameworkDirPath = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks/XCTest.framework"];
@@ -135,18 +138,115 @@ static NSArray *RunOtestAndParseResult(NSTask *task)
   NSString *targetName = @"XCTest_Assertion";
   NSString *settingsPath = TEST_DATA @"TestProject-Assertion-XCTest_Assertion-showBuildSettings.txt";
   NSArray *testList = @[ @"XCTest_Assertion/testAssertionFailure" ];
+  NSString *methodName = @"-[XCTest_Assertion testAssertionFailure]";
+
+  NSTask *task = otestShimTask(settingsPath, targetName, bundlePath, testList);
+  NSArray *events = RunOtestAndParseResult(task);
+  assertThat(events, isNot(nilValue()));
+  assertThat(@([events count]), is(@4));
+  NSDictionary *testEndEvent = ExtractEvent(events, kReporter_Events_EndTest);
+  assertThat(testEndEvent, hasKey(@"exceptions"));
+  NSArray *exceptions = testEndEvent[@"exceptions"];
+  assertThat(exceptions, hasCountOf(1));
+  NSDictionary *exception = exceptions[0];
+  assertThat(exception, hasKey(@"reason"));
+  NSString *reason = exception[@"reason"];
+  assertThat(reason, containsAssertionFailureFromMethod(methodName));
+  assertThat(reason, containsString(@"[GOOD1]"));
+}
+
+- (void)testSenTestingKitExpectedAssertionFailuresInIOSLogicTestsAreSilent
+{
+  NSString *bundlePath = TEST_DATA @"tests-ios-test-bundle/SenTestingKit_Assertion.octest";
+  NSString *targetName = @"SenTestingKit_Assertion";
+  NSString *settingsPath = TEST_DATA @"TestProject-Assertion-SenTestingKit_Assertion-showBuildSettings.txt";
+  NSArray *testList = @[ @"SenTestingKit_Assertion/testExpectedAssertionIsSilent" ];
+  NSString *methodName = @"-[SenTestingKit_Assertion testExpectedAssertionIsSilent]";
 
   NSTask *task = otestShimTask(settingsPath, targetName, bundlePath, testList);
   NSArray *events = RunOtestAndParseResult(task);
   assertThat(events, isNot(nilValue()));
   assertThat(@([events count]), is(@5));
-  NSDictionary *testSuiteEndEvent = events[4];
-  assertThat(testSuiteEndEvent, hasKey(@"testCaseCount"));
-  assertThat(testSuiteEndEvent, hasKey(@"totalFailureCount"));
-  assertThat(testSuiteEndEvent, hasKey(@"unexpectedExceptionCount"));
-  assertThat(testSuiteEndEvent, hasEntry(@"testCaseCount", @1));
-  assertThat(testSuiteEndEvent, hasEntry(@"totalFailureCount", @1));
-  assertThat(testSuiteEndEvent, hasEntry(@"unexpectedExceptionCount", @1));
+  NSDictionary *testBeginEvent = ExtractEvent(events, kReporter_Events_BeginTest);
+  assertThat(testBeginEvent, hasKey(@"test"));
+  assertThat(testBeginEvent[@"test"], is(methodName));
+  NSDictionary *testOutputEvent = ExtractEvent(events, kReporter_Events_TestOuput);
+  assertThat(testOutputEvent, hasKey(@"output"));
+  assertThat(testOutputEvent[@"output"], isNot(containsAssertionFailureFromMethod(methodName)));
+  assertThat(testOutputEvent[@"output"], containsString(@"[GOOD1]"));
+}
+
+- (void)testXCTestExpectedAssertionFailuresInIOSLogicTestsAreSilent
+{
+  // Only run if XCTest is available.
+  NSString *frameworkDirPath = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks/XCTest.framework"];
+  if (![[NSFileManager defaultManager] fileExistsAtPath:frameworkDirPath])
+    return;
+
+  NSString *bundlePath = TEST_DATA @"tests-ios-test-bundle/XCTest_Assertion.xctest";
+  NSString *targetName = @"XCTest_Assertion";
+  NSString *settingsPath = TEST_DATA @"TestProject-Assertion-XCTest_Assertion-showBuildSettings.txt";
+  NSArray *testList = @[ @"XCTest_Assertion/testExpectedAssertionIsSilent" ];
+  NSString *methodName = @"-[XCTest_Assertion testExpectedAssertionIsSilent]";
+
+  NSTask *task = otestShimTask(settingsPath, targetName, bundlePath, testList);
+  NSArray *events = RunOtestAndParseResult(task);
+  assertThat(events, isNot(nilValue()));
+  assertThat(@([events count]), is(@5));
+  NSDictionary *testBeginEvent = ExtractEvent(events, kReporter_Events_BeginTest);
+  assertThat(testBeginEvent, hasKey(@"test"));
+  assertThat(testBeginEvent[@"test"], is(methodName));
+  NSDictionary *testOutputEvent = ExtractEvent(events, kReporter_Events_TestOuput);
+  assertThat(testOutputEvent, hasKey(@"output"));
+  assertThat(testOutputEvent[@"output"], isNot(containsAssertionFailureFromMethod(methodName)));
+  assertThat(testOutputEvent[@"output"], containsString(@"[GOOD1]"));
+}
+
+- (void)testSenTestingKitMissingExpectedAssertionsAreNotSilent
+{
+  NSString *bundlePath = TEST_DATA @"tests-ios-test-bundle/SenTestingKit_Assertion.octest";
+  NSString *targetName = @"SenTestingKit_Assertion";
+  NSString *settingsPath = TEST_DATA @"TestProject-Assertion-SenTestingKit_Assertion-showBuildSettings.txt";
+  NSArray *testList = @[ @"SenTestingKit_Assertion/testExpectedAssertionMissingIsNotSilent" ];
+
+  NSTask *task = otestShimTask(settingsPath, targetName, bundlePath, testList);
+  NSArray *events = RunOtestAndParseResult(task);
+  assertThat(events, isNot(nilValue()));
+  assertThat(@([events count]), is(@4));
+  NSDictionary *testEndEvent = ExtractEvent(events, kReporter_Events_EndTest);
+  assertThat(testEndEvent, hasKey(@"exceptions"));
+  NSArray *exceptions = testEndEvent[@"exceptions"];
+  assertThat(exceptions, hasCountOf(1));
+  NSDictionary *exception = exceptions[0];
+  assertThat(exception, hasKey(@"reason"));
+  NSString *reason = exception[@"reason"];
+  assertThat(reason, containsString(@"[GOOD1]"));
+}
+
+- (void)testXCTestMissingExpectedAssertionsAreNotSilent
+{
+  // Only run if XCTest is available.
+  NSString *frameworkDirPath = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks/XCTest.framework"];
+  if (![[NSFileManager defaultManager] fileExistsAtPath:frameworkDirPath])
+    return;
+
+  NSString *bundlePath = TEST_DATA @"tests-ios-test-bundle/XCTest_Assertion.xctest";
+  NSString *targetName = @"XCTest_Assertion";
+  NSString *settingsPath = TEST_DATA @"TestProject-Assertion-XCTest_Assertion-showBuildSettings.txt";
+  NSArray *testList = @[ @"XCTest_Assertion/testExpectedAssertionMissingIsNotSilent" ];
+
+  NSTask *task = otestShimTask(settingsPath, targetName, bundlePath, testList);
+  NSArray *events = RunOtestAndParseResult(task);
+  assertThat(events, isNot(nilValue()));
+  assertThat(@([events count]), is(@4));
+  NSDictionary *testEndEvent = ExtractEvent(events, kReporter_Events_EndTest);
+  assertThat(testEndEvent, hasKey(@"exceptions"));
+  NSArray *exceptions = testEndEvent[@"exceptions"];
+  assertThat(exceptions, hasCountOf(1));
+  NSDictionary *exception = exceptions[0];
+  assertThat(exception, hasKey(@"reason"));
+  NSString *reason = exception[@"reason"];
+  assertThat(reason, containsString(@"[GOOD1]"));
 }
 
 @end

@@ -30,6 +30,28 @@
 #import "dyld-interposing.h"
 #import "dyld_priv.h"
 
+@interface XCToolAssertionHandler : NSAssertionHandler
+@end
+
+@implementation XCToolAssertionHandler
+
+- (void)handleFailureInFunction:(NSString *)functionName
+                           file:(NSString *)fileName
+                     lineNumber:(NSInteger)line
+                    description:(NSString *)format, ...
+{
+  // Format message
+  va_list vl;
+  va_start(vl, format);
+  NSString *msg = [[[NSString alloc] initWithFormat:format arguments:vl] autorelease];
+  va_end(vl);
+
+  // Raise exception
+  [NSException raise:NSInternalInconsistencyException format:@"*** Assertion failure in %@, %@:%lld: %@", functionName, fileName, (long long)line, msg];
+}
+
+@end
+
 static int __stdoutHandle;
 static FILE *__stdout;
 static int __stderrHandle;
@@ -326,6 +348,48 @@ static void XCToolLog_testCaseDidFail(NSDictionary *exceptionInfo)
   });
 }
 
+#pragma mark - XCToolTestCase function declarations
+
+static void XCSuppressExpectedAssertionFailures();
+static void XCUnsuppressExpectedAssertionFailures();
+
+#pragma mark - performTest
+
+static void XCUnsuppressExpectedAssertionFailures()
+{
+  NSAssertionHandler *handler = (NSAssertionHandler *)[[[NSThread currentThread] threadDictionary] valueForKey:NSAssertionHandlerKey];
+  [handler release];
+  [[[NSThread currentThread] threadDictionary] setValue:nil
+                                                 forKey:NSAssertionHandlerKey];
+}
+
+static void XCPerformTestWithSuppressedExpectedAssertionFailures(id self, SEL origSel, id arg1)
+{
+  NSAssertionHandler *handler = [[XCToolAssertionHandler alloc] init];
+  NSThread *currentThread = [NSThread currentThread];
+  NSMutableDictionary *currentThreadDict = [currentThread threadDictionary];
+  [currentThreadDict setObject:handler forKey:NSAssertionHandlerKey];
+
+  // Call through original implementation
+  objc_msgSend(self, origSel, arg1);
+
+  // The assertion handler hasn't been touched for our test, so we can safely remove it.
+  [currentThreadDict removeObjectForKey:NSAssertionHandlerKey];
+  [handler release];
+}
+
+static void SenTestCase_performTest(id self, SEL sel, id arg1)
+{
+  SEL originalSelector = @selector(__SenTestCase_performTest:);
+  XCPerformTestWithSuppressedExpectedAssertionFailures(self, originalSelector, arg1);
+}
+
+static void XCTestCase_performTest(id self, SEL sel, id arg1)
+{
+  SEL originalSelector = @selector(__XCTestCase_performTest:);
+  XCPerformTestWithSuppressedExpectedAssertionFailures(self, originalSelector, arg1);
+}
+
 #pragma mark -
 
 static void SaveExitMode(NSDictionary *exitMode)
@@ -489,6 +553,9 @@ static const char *DyldImageStateChangeHandler(enum dyld_image_states state,
       XTSwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
                                         @selector(testCaseDidFail:),
                                         (IMP)SenTestLog_testCaseDidFail);
+      XTSwizzleSelectorForFunction(NSClassFromString(@"SenTestCase"),
+                                   @selector(performTest:),
+                                   (IMP)SenTestCase_performTest);
     }
     else if (strstr(info[i].imageFilePath, "XCTest.framework") != NULL) {
       // Since the 'XCTestLog' class now exists, we can swizzle it!
@@ -507,6 +574,9 @@ static const char *DyldImageStateChangeHandler(enum dyld_image_states state,
       XTSwizzleSelectorForFunction(NSClassFromString(@"XCTestLog"),
                                    @selector(testCaseDidFail:withDescription:inFile:atLine:),
                                    (IMP)XCTestLog_testCaseDidFail);
+      XTSwizzleSelectorForFunction(NSClassFromString(@"XCTestCase"),
+                                   @selector(performTest:),
+                                   (IMP)XCTestCase_performTest);
     }
   }
 
