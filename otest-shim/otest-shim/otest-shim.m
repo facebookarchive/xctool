@@ -302,7 +302,7 @@ static void XCToolLog_testCaseDidStop(NSString *fullTestName, NSNumber *unexpect
 static void XCTestLog_testCaseDidFail(id self, SEL sel, XCTestCaseRun *run, NSString *description, NSString *file, NSUInteger line)
 {
   XCToolLog_testCaseDidFail(@{
-    kReporter_EndTest_Exception_FilePathInProjectKey : file,
+    kReporter_EndTest_Exception_FilePathInProjectKey : file ?: @"Unknown File",
     kReporter_EndTest_Exception_LineNumberKey : @(line),
     kReporter_EndTest_Exception_ReasonKey : description,
   });
