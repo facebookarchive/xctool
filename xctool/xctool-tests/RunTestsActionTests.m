@@ -84,12 +84,12 @@
    ];
 }
 
-- (void)testWillComplainWhenTargetDependenciesAreBroken
+- (void)testWillComplainWhenSchemeReferencesNonExistentTestTarget
 {
   XCTool *tool = [[[XCTool alloc] init] autorelease];
   
   tool.arguments = @[
-                     @"-project", TEST_DATA @"TestProject-Library-BrokenDependencies/TestProject-Library.xcodeproj",
+                     @"-project", TEST_DATA @"TestProjectWithSchemeThatReferencesNonExistentTestTarget/TestProject-Library.xcodeproj",
                      @"-scheme", @"TestProject-Library",
                      @"-sdk", @"iphonesimulator",
                      @"test"
