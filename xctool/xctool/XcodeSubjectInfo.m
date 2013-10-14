@@ -765,7 +765,8 @@ containsFilesModifiedSince:(NSDate *)sinceDate
    @"SHOW_ONLY_BUILD_SETTINGS_FOR_FIRST_BUILDABLE" : @"YES"
    }];
 
-  NSDictionary *result = LaunchTaskAndCaptureOutput(task);
+  NSDictionary *result = LaunchTaskAndCaptureOutput(task,
+                                                    @"querying build settings for first buildable");
   [task release];
 
   NSDictionary *settings = BuildSettingsFromOutput(result[@"stdout"]);

@@ -20,12 +20,12 @@
  * Launchs a task, waits for exit, and returns a dictionary like
  * { @"stdout": "...", @"stderr": "..." }
  */
-NSDictionary *LaunchTaskAndCaptureOutput(NSTask *task);
+NSDictionary *LaunchTaskAndCaptureOutput(NSTask *task, NSString *description);
 
 /**
  * Launchs a task, waits for exit, and feeds lines from standard out to a block.
  */
-void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, void (^block)(NSString *));
+void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, void (^block)(NSString *));
 
 /**
  * Returns an NSTask that is configured NOT to start a new process group.  This
@@ -35,3 +35,14 @@ void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, void (^block)(NSString *))
  * @return Task with a retain count of 1.
  */
 NSTask *CreateTaskInSameProcessGroup();
+
+/**
+ * Launches task.  Optionally, if the '-showTasks' argument was passed on
+ * the command-line, the command-line equivalent for the given task is logged
+ * to STDERR.
+ *
+ * @param task Task to launch.
+ * @param description A short description of the task's purpose.
+ */
+void LaunchTaskAndMaybeLogCommand(NSTask *task, NSString *description);
+

@@ -66,7 +66,9 @@
   // For OSX test bundles only, Xcode will chdir to the project's directory.
   [task setCurrentDirectoryPath:_buildSettings[@"PROJECT_DIR"]];
 
-  LaunchTaskAndFeedOuputLinesToBlock(task, outputLineBlock);
+  LaunchTaskAndFeedOuputLinesToBlock(task,
+                                     @"running otest/xctest on test bundle",
+                                     outputLineBlock);
 
   *gotUncaughtSignal = task.terminationReason == NSTaskTerminationReasonUncaughtSignal;
   int terminationStatus = task.terminationStatus;

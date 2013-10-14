@@ -95,7 +95,8 @@
                                  @"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET" : target,
                                  }];
 
-  NSDictionary *result = LaunchTaskAndCaptureOutput(settingsTask);
+  NSDictionary *result = LaunchTaskAndCaptureOutput(settingsTask,
+                                                    [NSString stringWithFormat:@"running xcodebuild -showBuildSettings for '%@' target", target]);
   [settingsTask release];
   settingsTask = nil;
 

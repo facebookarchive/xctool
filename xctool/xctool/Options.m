@@ -125,6 +125,10 @@
                          aliases:nil
                      description:@"display a list of build settings and values"
                          setFlag:@selector(setShowBuildSettings:)],
+    [Action actionOptionWithName:@"showTasks"
+                         aliases:nil
+                     description:@"show all tasks being spawned by xctool"
+                         setFlag:@selector(setShowTasks:)],
     [Action actionOptionWithName:@"version"
                          aliases:@[@"v"]
                      description:@"print version and exit"

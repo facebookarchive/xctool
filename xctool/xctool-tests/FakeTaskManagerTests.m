@@ -20,7 +20,8 @@
   [task setLaunchPath:@"/bin/echo"];
   [task setArguments:@[@"hello"]];
 
-  NSDictionary *output = LaunchTaskAndCaptureOutput(task);
+  NSDictionary *output = LaunchTaskAndCaptureOutput(task,
+                                                    @"some description");
   assertThat(output[@"stdout"], equalTo(@"hello\n"));
 }
 
@@ -38,7 +39,7 @@
   NSTask *task = [[[NSTask alloc] init] autorelease];
   [task setLaunchPath:@"/bin/something"];
   [(FakeTask *)task pretendTaskReturnsStandardOutput:@"some stdout string"];
-  assertThat(LaunchTaskAndCaptureOutput(task)[@"stdout"],
+  assertThat(LaunchTaskAndCaptureOutput(task, @"some description")[@"stdout"],
              equalTo(@"some stdout string"));
   [[FakeTaskManager sharedManager] disableFakeTasks];
 }
@@ -49,7 +50,7 @@
   NSTask *task = [[[NSTask alloc] init] autorelease];
   [task setLaunchPath:@"/bin/something"];
   [(FakeTask *)task pretendTaskReturnsStandardError:@"some stderr string"];
-  assertThat(LaunchTaskAndCaptureOutput(task)[@"stderr"],
+  assertThat(LaunchTaskAndCaptureOutput(task, @"some description")[@"stderr"],
              equalTo(@"some stderr string"));
   [[FakeTaskManager sharedManager] disableFakeTasks];
 }
@@ -141,7 +142,7 @@
     [task launch];
     [task waitUntilExit];
 
-    assertThat(LaunchTaskAndCaptureOutput(task)[@"stdout"],
+    assertThat(LaunchTaskAndCaptureOutput(task, @"some description")[@"stdout"],
                equalTo(@"some stdout!"));
   }];
 }
