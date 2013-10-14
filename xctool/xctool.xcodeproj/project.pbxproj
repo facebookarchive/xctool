@@ -99,6 +99,7 @@
 		32A90C551725F05800C2349E /* TestAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 32A90C521725F05800C2349E /* TestAction.m */; };
 		AA318BEF17E9BA3500BF159E /* TestingFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = AA318BEE17E9BA3500BF159E /* TestingFramework.m */; };
 		AA318BF017E9BA3500BF159E /* TestingFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = AA318BEE17E9BA3500BF159E /* TestingFramework.m */; };
+		AA6C88F71808C2C5006A3581 /* OTestShimTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AA6C88F61808C2C5006A3581 /* OTestShimTests.m */; };
 		AAF334481806A46F00928A00 /* LaunchHandlers.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF334461806A46F00928A00 /* LaunchHandlers.m */; };
 		AAF334501806A48A00928A00 /* OCUnitCrashFilterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF3344D1806A48A00928A00 /* OCUnitCrashFilterTests.m */; };
 		AAF334521806A48A00928A00 /* OCUnitTestRunnerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF3344E1806A48A00928A00 /* OCUnitTestRunnerTests.m */; };
@@ -265,6 +266,7 @@
 		AA318BEC17E9B7CA00BF159E /* XCTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XCTest.h; sourceTree = "<group>"; };
 		AA318BED17E9BA3500BF159E /* TestingFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestingFramework.h; sourceTree = "<group>"; };
 		AA318BEE17E9BA3500BF159E /* TestingFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestingFramework.m; sourceTree = "<group>"; };
+		AA6C88F61808C2C5006A3581 /* OTestShimTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTestShimTests.m; sourceTree = "<group>"; };
 		AAF334451806A46F00928A00 /* LaunchHandlers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LaunchHandlers.h; sourceTree = "<group>"; };
 		AAF334461806A46F00928A00 /* LaunchHandlers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LaunchHandlers.m; sourceTree = "<group>"; };
 		AAF334491806A47E00928A00 /* Options+Testing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Options+Testing.h"; sourceTree = "<group>"; };
@@ -510,6 +512,7 @@
 				283479B816E3EBE5003C3B77 /* TestUtil.m */,
 				287BF04C16F1A6EB00590E06 /* XcodeSubjectInfoTests.m */,
 				283CCACC16C2EE9900F2E343 /* XCToolTests.m */,
+				AA6C88F61808C2C5006A3581 /* OTestShimTests.m */,
 			);
 			path = "xctool-tests";
 			sourceTree = "<group>";
@@ -704,6 +707,7 @@
 				AAF334531806A4A400928A00 /* Options+Testing.m in Sources */,
 				EEB31CF517C6A23E00CFB0E1 /* OCTestEventState.m in Sources */,
 				EEB31CEE17C6904500CFB0E1 /* OCEventState.m in Sources */,
+				AA6C88F71808C2C5006A3581 /* OTestShimTests.m in Sources */,
 				AAF334501806A48A00928A00 /* OCUnitCrashFilterTests.m in Sources */,
 				28E28FB91796934B0072376C /* ReportStatus.m in Sources */,
 				28B714561760769E00BB016A /* OCUnitIOSDeviceTestRunner.m in Sources */,
