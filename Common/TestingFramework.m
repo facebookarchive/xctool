@@ -49,7 +49,7 @@ NSDictionary *FrameworkInfoForExtension(NSString *extension)
     [frameworks retain];
   });
   if (![[frameworks allKeys] containsObject:extension]) {
-    NSLog(@"The bundle extension %@ is not supported. The supported extensions are: %@.",
+    NSLog(@"The bundle extension '%@' is not supported. The supported extensions are: %@.",
           extension, [frameworks allKeys]);
     return nil;
   }

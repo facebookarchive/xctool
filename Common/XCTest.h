@@ -16,7 +16,7 @@ struct __va_list_tag {
 + (void)setUpTestObservers;
 + (void)removeTestObserverClass:(Class)arg1;
 + (void)addTestObserverClass:(Class)arg1;
-- (void)testCaseDidFail:(id)arg1 withDescription:(id)arg2 inFile:(id)arg3 atLine:(unsigned long long)arg4;
+- (void)testCaseDidFail:(id)arg1 withDescription:(id)arg2 inFile:(id)arg3 atLine:(NSUInteger)arg4;
 - (void)testCaseDidStop:(id)arg1;
 - (void)testCaseDidStart:(id)arg1;
 - (void)testSuiteDidStop:(id)arg1;
@@ -41,7 +41,7 @@ struct __va_list_tag {
 - (void)performTest:(id)arg1;
 - (id)name;
 - (Class)testRunClass;
-- (unsigned long long)testCaseCount;
+- (NSUInteger)testCaseCount;
 - (BOOL)isEmpty;
 - (void)removeTestsWithNames:(id)arg1;
 
@@ -57,10 +57,10 @@ struct __va_list_tag {
 + (id)testRunWithTest:(id)arg1;
 - (id)description;
 - (BOOL)hasSucceeded;
-- (unsigned long long)testCaseCount;
-- (unsigned long long)unexpectedExceptionCount;
-- (unsigned long long)failureCount;
-- (unsigned long long)totalFailureCount;
+- (NSUInteger)testCaseCount;
+- (NSUInteger)unexpectedExceptionCount;
+- (NSUInteger)failureCount;
+- (NSUInteger)totalFailureCount;
 - (void)stop;
 - (void)start;
 - (id)stopDate;
@@ -75,13 +75,13 @@ struct __va_list_tag {
 
 @interface XCTestCaseRun : XCTestRun
 {
-  unsigned long long failureCount;
-  unsigned long long unexpectedExceptionCount;
+  NSUInteger failureCount;
+  NSUInteger unexpectedExceptionCount;
 }
 
-- (void)recordFailureInTest:(id)arg1 withDescription:(id)arg2 inFile:(id)arg3 atLine:(unsigned long long)arg4 expected:(BOOL)arg5;
-- (unsigned long long)unexpectedExceptionCount;
-- (unsigned long long)failureCount;
+- (void)recordFailureInTest:(id)arg1 withDescription:(id)arg2 inFile:(id)arg3 atLine:(NSUInteger)arg4 expected:(BOOL)arg5;
+- (NSUInteger)unexpectedExceptionCount;
+- (NSUInteger)failureCount;
 - (void)stop;
 - (void)start;
 
@@ -106,7 +106,7 @@ struct __va_list_tag {
 + (id)testSuiteWithName:(id)arg1;
 - (void)performTest:(id)arg1;
 - (Class)testRunClass;
-- (unsigned long long)testCaseCount;
+- (NSUInteger)testCaseCount;
 - (id)tests;
 - (void)addTestsEnumeratedBy:(id)arg1;
 - (void)addTest:(id)arg1;
@@ -150,22 +150,22 @@ struct __va_list_tag {
 + (id)xct_allSubclasses;
 @property BOOL continueAfterFailure; // @synthesize continueAfterFailure=_continueAfterFailure;
 @property(retain) XCTestCaseRun *testCaseRun; // @synthesize testCaseRun=_testCaseRun;
-- (unsigned long long)numberOfTestIterationsForTestWithSelector:(SEL)arg1;
-- (void)afterTestIteration:(unsigned long long)arg1 selector:(SEL)arg2;
-- (void)beforeTestIteration:(unsigned long long)arg1 selector:(SEL)arg2;
+- (NSUInteger)numberOfTestIterationsForTestWithSelector:(SEL)arg1;
+- (void)afterTestIteration:(NSUInteger)arg1 selector:(SEL)arg2;
+- (void)beforeTestIteration:(NSUInteger)arg1 selector:(SEL)arg2;
 - (void)tearDownTestWithSelector:(SEL)arg1;
 - (void)setUpTestWithSelector:(SEL)arg1;
 - (void)performTest:(id)arg1;
 - (void)invokeTest;
 - (Class)testRunClass;
 - (void)_recordUnexpectedFailureWithDescription:(id)arg1 exception:(id)arg2;
-- (void)recordFailureWithDescription:(id)arg1 inFile:(id)arg2 atLine:(unsigned long long)arg3 expected:(BOOL)arg4;
+- (void)recordFailureWithDescription:(id)arg1 inFile:(id)arg2 atLine:(NSUInteger)arg3 expected:(BOOL)arg4;
 - (void)setInvocation:(id)arg1;
 - (id)invocation;
 - (void)dealloc;
 - (id)description;
 - (id)name;
-- (unsigned long long)testCaseCount;
+- (NSUInteger)testCaseCount;
 - (SEL)selector;
 - (id)initWithSelector:(SEL)arg1;
 - (id)initWithInvocation:(id)arg1;
@@ -177,7 +177,7 @@ struct __va_list_tag {
 {
 }
 
-- (void)testCaseDidFail:(id)arg1 withDescription:(id)arg2 inFile:(id)arg3 atLine:(unsigned long long)arg4;
+- (void)testCaseDidFail:(id)arg1 withDescription:(id)arg2 inFile:(id)arg3 atLine:(NSUInteger)arg4;
 - (void)testSuiteDidStop:(id)arg1;
 - (void)testSuiteDidStart:(id)arg1;
 - (void)testCaseDidStop:(id)arg1;
@@ -194,8 +194,8 @@ struct __va_list_tag {
 }
 
 - (double)testDuration;
-- (unsigned long long)unexpectedExceptionCount;
-- (unsigned long long)failureCount;
+- (NSUInteger)unexpectedExceptionCount;
+- (NSUInteger)failureCount;
 - (void)addTestRun:(id)arg1;
 - (id)testRuns;
 - (void)stop;
