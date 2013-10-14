@@ -30,7 +30,8 @@ static NSString *SimulatorSDKRootPathWithVersion(NSString *version)
 
 static NSArray *RunTaskAndReturnResult(NSTask *task, NSString **error)
 {
-  NSDictionary *output = LaunchTaskAndCaptureOutput(task);
+  NSDictionary *output = LaunchTaskAndCaptureOutput(task,
+                                                    @"running otest-query");
 
   if ([task terminationStatus] != 0) {
     *error = output[@"stderr"];

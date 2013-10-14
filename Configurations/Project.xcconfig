@@ -15,6 +15,7 @@
 //
 
 GCC_TREAT_WARNINGS_AS_ERRORS = YES
+GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES
 
 // Disabling precompiled headers - they're behaving differently in Xcode5 and
 // we're not sure why yet.  We keep seeing --

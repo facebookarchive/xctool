@@ -142,7 +142,9 @@ NSString *XcodeDeveloperDirPath(void)
     [task setLaunchPath:@"/usr/bin/xcode-select"];
     [task setArguments:@[@"--print-path"]];
 
-    NSString *path = LaunchTaskAndCaptureOutput(task)[@"stdout"];
+    NSDictionary *output = LaunchTaskAndCaptureOutput(task,
+                                                      @"finding Xcode path via xcode-select --print-path");
+    NSString *path = output[@"stdout"];
     path = [path stringByTrimmingCharactersInSet:
             [NSCharacterSet newlineCharacterSet]];
 
@@ -201,7 +203,8 @@ NSDictionary *GetAvailableSDKsAndAliases()
      ]];
     [task setEnvironment:@{@"PATH": SystemPaths()}];
 
-    NSDictionary *output = LaunchTaskAndCaptureOutput(task);
+    NSDictionary *output = LaunchTaskAndCaptureOutput(task,
+                                                      @"querying available SDKs");
     NSCAssert([task terminationStatus] == 0,
               @"xcodebuild failed to run with error: %@", output[@"stderr"]);
 
@@ -255,7 +258,9 @@ BOOL LaunchXcodebuildTaskAndFeedEventsToReporters(NSTask *task,
   __block long long errorCode = LONG_LONG_MIN;
   __block BOOL hadFailingBuildCommand = NO;
 
-  LaunchTaskAndFeedOuputLinesToBlock(task, ^(NSString *line){
+  LaunchTaskAndFeedOuputLinesToBlock(task,
+                                     @"running xcodebuild",
+                                     ^(NSString *line){
     NSError *error = nil;
     NSDictionary *event = [NSJSONSerialization JSONObjectWithData:[line dataUsingEncoding:NSUTF8StringEncoding]
                                                           options:0

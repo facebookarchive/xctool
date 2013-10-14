@@ -149,7 +149,7 @@
                         arrayByAddingObject:@"-showBuildSettings"]];
     [task setStandardOutput:_standardOutput];
     [task setStandardError:_standardError];
-    [task launch];
+    LaunchTaskAndMaybeLogCommand(task, @"spawning xcodebuild to do -showBuildSettings");
     [task waitUntilExit];
     _exitStatus = [task terminationStatus];
     [task release];

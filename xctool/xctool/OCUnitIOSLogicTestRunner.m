@@ -84,7 +84,9 @@
   if (bundleExists) {
     @autoreleasepool {
       NSTask *task = [self otestTaskWithTestBundle:testBundlePath];
-      LaunchTaskAndFeedOuputLinesToBlock(task, outputLineBlock);
+      LaunchTaskAndFeedOuputLinesToBlock(task,
+                                         @"running otest/xctest on test bundle",
+                                         outputLineBlock);
       *gotUncaughtSignal = task.terminationReason == NSTaskTerminationReasonUncaughtSignal;
 
       return [task terminationStatus] == 0 ? YES : NO;

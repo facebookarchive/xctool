@@ -123,7 +123,7 @@
   [_task setStandardOutput:outputHandle];
 
   @try {
-    [_task launch];
+    LaunchTaskAndMaybeLogCommand(_task, @"spawning reporter task");
   } @catch (NSException *ex) {
     // Launch will fail if process doesn't exist.
     *error = [NSString stringWithFormat:@"Failed to launch reporter process: %@",

@@ -19,6 +19,7 @@
 #import <poll.h>
 
 #import "NSConcreteTask.h"
+#import "Swizzle.h"
 
 static void readOutputs(NSString **outputs, int *fildes, int sz) {
   struct pollfd fds[sz];
@@ -93,7 +94,7 @@ static void readOutputs(NSString **outputs, int *fildes, int sz) {
   }
 }
 
-NSDictionary *LaunchTaskAndCaptureOutput(NSTask *task)
+NSDictionary *LaunchTaskAndCaptureOutput(NSTask *task, NSString *description)
 {
   NSPipe *stdoutPipe = [NSPipe pipe];
   NSFileHandle *stdoutHandle = [stdoutPipe fileHandleForReading];
@@ -103,7 +104,7 @@ NSDictionary *LaunchTaskAndCaptureOutput(NSTask *task)
 
   [task setStandardOutput:stdoutPipe];
   [task setStandardError:stderrPipe];
-  [task launch];
+  LaunchTaskAndMaybeLogCommand(task, description);
 
   NSString *outputs[2] = {nil, nil};
   int fides[2] = {stdoutHandle.fileDescriptor, stderrHandle.fileDescriptor};
@@ -123,7 +124,7 @@ NSDictionary *LaunchTaskAndCaptureOutput(NSTask *task)
   return output;
 }
 
-void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, void (^block)(NSString *))
+void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, void (^block)(NSString *))
 {
   NSPipe *stdoutPipe = [NSPipe pipe];
   int stdoutReadFD = [[stdoutPipe fileHandleForReading] fileDescriptor];
@@ -189,7 +190,7 @@ void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, void (^block)(NSString *))
   // handle that with the `[task isRunning]` check below.)
   [task setStandardOutput:stdoutPipe];
 
-  [task launch];
+  LaunchTaskAndMaybeLogCommand(task, description);
 
   uint8_t readBuffer[32768] = {0};
   BOOL keepPolling = YES;
@@ -233,4 +234,113 @@ NSTask *CreateTaskInSameProcessGroup()
   NSConcreteTask *task = (NSConcreteTask *)[[NSTask alloc] init];
   [task setStartsNewProcessGroup:NO];
   return task;
+}
+
+static NSString *QuotedStringIfNeeded(NSString *str) {
+  if ([str rangeOfString:@" "].length > 0) {
+    return (NSString *)[NSString stringWithFormat:@"\"%@\"", str];
+  } else {
+    return str;
+  }
+}
+
+static NSString *CommandLineEquivalentForTaskArchSpecificTask(NSConcreteTask *task, int cpuType)
+{
+  NSMutableString *buffer = [NSMutableString string];
+
+  NSString *archString = nil;
+
+  if (cpuType == CPU_TYPE_I386) {
+    archString = @"i386";
+  } else if (cpuType == CPU_TYPE_I386) {
+    archString = @"x86_64";
+  } else {
+    NSCAssert(NO, @"Unexepcted cpu type %d", cpuType);
+  }
+
+  [buffer appendFormat:@"/usr/bin/arch -arch %@ \\\n", archString];
+
+  [[task environment] enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *val, BOOL *stop){
+    [buffer appendFormat:@"  -e %@=%@ \\\n", key, QuotedStringIfNeeded(val)];
+  }];
+
+  [buffer appendFormat:@"  %@", QuotedStringIfNeeded(task.launchPath)];
+
+  if (task.arguments.count > 0) {
+    [buffer appendFormat:@" \\\n"];
+
+    for (NSUInteger i = 0; i < task.arguments.count; i++) {
+      if (i == (task.arguments.count - 1)) {
+        [buffer appendFormat:@"    %@", QuotedStringIfNeeded(task.arguments[i])];
+      } else {
+        [buffer appendFormat:@"    %@ \\\n", QuotedStringIfNeeded(task.arguments[i])];
+      }
+    }
+  }
+
+  return buffer;
+}
+
+static NSString *CommandLineEquivalentForTaskArchGenericTask(NSConcreteTask *task) {
+  NSMutableString *buffer = [NSMutableString string];
+
+  [[task environment] enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *val, BOOL *stop){
+    [buffer appendFormat:@"  %@=%@ \\\n", key, QuotedStringIfNeeded(val)];
+  }];
+
+  NSCAssert(task.launchPath != nil, @"Should have a launchPath");
+  [buffer appendFormat:@"  %@", QuotedStringIfNeeded(task.launchPath)];
+
+  if (task.arguments.count > 0) {
+    [buffer appendFormat:@" \\\n"];
+
+    for (NSUInteger i = 0; i < task.arguments.count; i++) {
+      if (i == (task.arguments.count - 1)) {
+        [buffer appendFormat:@"    %@", QuotedStringIfNeeded(task.arguments[i])];
+      } else {
+        [buffer appendFormat:@"    %@ \\\n", QuotedStringIfNeeded(task.arguments[i])];
+      }
+    }
+  }
+
+  return buffer;
+}
+
+/**
+ * Returns a command-line expression which includes the environment, launch
+ * path, and args to reproduce a given task.
+ */
+NSString *CommandLineEquivalentForTask(NSConcreteTask *task)
+{
+  NSCAssert(task.launchPath != nil, @"Should have a launchPath");
+
+  NSArray *preferredArchs = [task preferredArchitectures];
+  if (preferredArchs != nil && preferredArchs.count > 0) {
+    return CommandLineEquivalentForTaskArchSpecificTask(task, [preferredArchs[0] intValue]);
+  } else {
+    return CommandLineEquivalentForTaskArchGenericTask(task);
+  }
+}
+
+void LaunchTaskAndMaybeLogCommand(NSTask *task, NSString *description)
+{
+  NSArray *arguments = [[NSProcessInfo processInfo] arguments];
+
+  // Instead of using `-[Options showCommands]`, we look directly at the process
+  // arguments.  This has two advantages: 1) we can start logging commands even
+  // before Options gets parsed/initialized, and 2) we don't have to add extra
+  // plumbing so that the `Options` instance gets passed into this function.
+  if ([arguments containsObject:@"-showTasks"] ||
+      [arguments containsObject:@"--showTasks"]) {
+
+    NSMutableString *buffer = [NSMutableString string];
+    [buffer appendFormat:@"\n================================================================================\n"];
+    [buffer appendFormat:@"LAUNCHING TASK (%@):\n\n", description];
+    [buffer appendFormat:@"%@\n", CommandLineEquivalentForTask((NSConcreteTask *)task)];
+    [buffer appendFormat:@"================================================================================\n"];
+    fprintf(stderr, "%s", [buffer UTF8String]);
+    fflush(stderr);
+  }
+
+  [task launch];
 }

@@ -45,6 +45,7 @@
 @property (nonatomic, retain) NSArray *findTargetExcludePaths;
 
 @property (nonatomic, assign) BOOL showBuildSettings;
+@property (nonatomic, assign) BOOL showTasks;
 
 @property (nonatomic, retain) NSMutableDictionary *buildSettings;
 @property (nonatomic, retain) NSMutableDictionary *userDefaults;
