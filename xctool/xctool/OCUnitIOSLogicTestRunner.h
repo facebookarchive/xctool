@@ -21,4 +21,6 @@
 @interface OCUnitIOSLogicTestRunner : OCUnitTestRunner {
 }
 
+- (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath;
+
 @end

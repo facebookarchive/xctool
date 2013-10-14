@@ -27,8 +27,8 @@
 - (void)testCanQueryClassesFromOSXBundle
 {
   NSString *error = nil;
-  NSArray *classes = OTestQueryTestCasesInOSXBundle(TEST_DATA @"otest-query-tests-osx-test-bundle/TestProject-Library-OSXTests.octest",
-                                                    AbsolutePathFromRelative(TEST_DATA @"otest-query-tests-osx-test-bundle"),
+  NSArray *classes = OTestQueryTestCasesInOSXBundle(TEST_DATA @"tests-osx-test-bundle/TestProject-Library-OSXTests.octest",
+                                                    AbsolutePathFromRelative(TEST_DATA @"tests-osx-test-bundle"),
                                                     YES,
                                                     &error);
   assertThat(classes,
@@ -42,8 +42,8 @@
 - (void)testCanQueryXCTestClassesFromOSXBundle
 {
   NSString *error = nil;
-  NSString *bundlePath = TEST_DATA @"otest-query-tests-osx-test-bundle/TestProject-Library-XCTest-OSXTests.xctest";
-  NSString *builtProductsDir = AbsolutePathFromRelative(TEST_DATA @"otest-query-tests-osx-test-bundle");
+  NSString *bundlePath = TEST_DATA @"tests-osx-test-bundle/TestProject-Library-XCTest-OSXTests.xctest";
+  NSString *builtProductsDir = AbsolutePathFromRelative(TEST_DATA @"tests-osx-test-bundle");
   NSString *frameworkDirPath = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks/XCTest.framework"];
 
   if ([[NSFileManager defaultManager] fileExistsAtPath:frameworkDirPath]){
@@ -59,7 +59,7 @@
 {
   NSString *error = nil;
   NSString *latestSDK = GetAvailableSDKsAndAliases()[@"iphonesimulator"];
-  NSArray *classes = OTestQueryTestCasesInIOSBundle(TEST_DATA @"otest-query-tests-ios-test-bundle/TestProject-LibraryTests.octest",
+  NSArray *classes = OTestQueryTestCasesInIOSBundle(TEST_DATA @"tests-ios-test-bundle/TestProject-LibraryTests.octest",
                                                     latestSDK,
                                                     &error);
   assertThat(classes,
@@ -81,7 +81,7 @@
   NSString *frameworkDirPath = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks/XCTest.framework"];
 
   if ([[NSFileManager defaultManager] fileExistsAtPath:frameworkDirPath]){
-    NSArray *classes = OTestQueryTestCasesInIOSBundle(TEST_DATA @"otest-query-tests-ios-test-bundle/TestProject-Library-XCTest-iOSTests.xctest",
+    NSArray *classes = OTestQueryTestCasesInIOSBundle(TEST_DATA @"tests-ios-test-bundle/TestProject-Library-XCTest-iOSTests.xctest",
                                                       latestSDK,
                                                       &error);
     assertThat(classes,
@@ -102,8 +102,8 @@
   NSString *error = nil;
   // This is going to fail, because we're trying to load an iOS test bundle using
   // the OS X version of otest.
-  NSArray *classes = OTestQueryTestCasesInOSXBundle(TEST_DATA @"otest-query-tests-ios-test-bundle/TestProject-LibraryTests.octest",
-                                                    AbsolutePathFromRelative(TEST_DATA @"otest-query-tests-osx-test-bundle"),
+  NSArray *classes = OTestQueryTestCasesInOSXBundle(TEST_DATA @"tests-ios-test-bundle/TestProject-LibraryTests.octest",
+                                                    AbsolutePathFromRelative(TEST_DATA @"tests-osx-test-bundle"),
                                                     YES,
                                                     &error);
   assertThat(classes, equalTo(nil));
@@ -116,7 +116,7 @@
   // This is going to fail, because we're trying to load an OS X test bundle
   // using the iOS version of otest.
   NSString *latestSDK = GetAvailableSDKsAndAliases()[@"iphonesimulator"];
-  NSArray *classes = OTestQueryTestCasesInIOSBundle(TEST_DATA @"otest-query-tests-osx-test-bundle/TestProject-Library-OSXTests.octest",
+  NSArray *classes = OTestQueryTestCasesInIOSBundle(TEST_DATA @"tests-osx-test-bundle/TestProject-Library-OSXTests.octest",
                                                     latestSDK,
                                                     &error);
   assertThat(classes, equalTo(nil));
@@ -127,7 +127,7 @@
 {
   NSString *error = nil;
   NSString *latestSDK = GetAvailableSDKsAndAliases()[@"iphonesimulator"];
-  NSArray *classes = OTestQueryTestCasesInIOSBundleWithTestHost(TEST_DATA @"otest-query-tests-ios-test-bundle/TestProject-LibraryTests.octest",
+  NSArray *classes = OTestQueryTestCasesInIOSBundleWithTestHost(TEST_DATA @"tests-ios-test-bundle/TestProject-LibraryTests.octest",
                                                                 @"/path/to/executable/that/does/not/exist",
                                                                 latestSDK,
                                                                 &error);
