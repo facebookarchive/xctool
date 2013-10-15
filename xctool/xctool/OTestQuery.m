@@ -16,7 +16,7 @@
 
 #import "OTestQuery.h"
 
-#import "iPhoneSimulatorRemoteClient.h"
+#import "DVTiPhoneSimulatorRemoteClient.h"
 
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
