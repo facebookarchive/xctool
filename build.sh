@@ -36,14 +36,33 @@ fi
 # most compatible. e.g. if otest-shim targeted iOS 6.1 but a test bundle (or
 # test host) targetted 5.0, you'd see errors.  We don't go older than 5.0 since
 # we depend on some iOS 5+ APIs.
-XT_IOS_SDK_VERSION=$(xcodebuild -showsdks | grep iphonesimulator | \
+#
+# We need to build universal binaries for otest-query, but iOS versions below
+# 7.0 don't have any 64-bit frameworks. To make this work, we're going to figure
+# out the lowest possible SDK version that supports 64-bit separately from the
+# lowest possible SDK version that supports 32-bit.
+#
+# 32-bit is minimum iOS 5.0
+_XT_IOS_SDK_32=$(xcodebuild -showsdks | grep iphonesimulator | \
   perl -ne '/iphonesimulator(.*?)$/ && $1 >= 5.0 && print' | \
-  head -n 1 | \
+  head -n 1)
+XT_IOS_SDK_VERSION_32=$(echo $_XT_IOS_SDK_32 | \
   perl -ne '/iphonesimulator(.*?)$/ && print $1')
-XT_IOS_SDK_VERSION_EXPANDED=$(xcodebuild -showsdks | grep iphonesimulator | \
-  perl -ne '/iphonesimulator(\d)\.(\d)$/ && $1 >= 5 && print' | \
-  head -n 1 | \
+XT_IOS_SDK_VERSION_EXPANDED_32=$(echo $_XT_IOS_SDK_32 | \
   perl -ne '/iphonesimulator(\d)\.(\d)$/ && print "${1}${2}000"')
+# 64-bit is minimum iOS 7.0
+_XT_IOS_SDK_64=$(xcodebuild -showsdks | grep iphonesimulator | \
+  perl -ne '/iphonesimulator(.*?)$/ && $1 >= 7.0 && print' | \
+  head -n 1)
+if [[ $_XT_IOS_SDK_64 ]]; then
+  XT_IOS_SDK_VERSION_64=$(echo $_XT_IOS_SDK_64 | \
+    perl -ne '/iphonesimulator(.*?)$/ && print $1')
+  XT_IOS_SDK_VERSION_EXPANDED_64=$(echo $_XT_IOS_SDK_64 | \
+    perl -ne '/iphonesimulator(\d)\.(\d)$/ && print "${1}${2}000"')
+else
+  XT_IOS_SDK_VERSION_64=UNSUPPORTED
+  XT_IOS_SDK_VERSION_EXPANDED_64=UNSUPPORTED
+fi
 
 # xcodebuild intermittently crashes while building xctool.
 #
@@ -69,8 +88,10 @@ while true; do
     -IDECustomBuildLocationType=Absolute \
     -IDECustomBuildProductsPath="$BUILD_OUTPUT_DIR/Products" \
     -IDECustomBuildIntermediatesPath="$BUILD_OUTPUT_DIR/Intermediates" \
-    XT_IOS_SDK_VERSION="$XT_IOS_SDK_VERSION" \
-    XT_IOS_SDK_VERSION_EXPANDED="$XT_IOS_SDK_VERSION_EXPANDED" \
+    XT_IOS_SDK_VERSION_32="$XT_IOS_SDK_VERSION_32" \
+    XT_IOS_SDK_VERSION_EXPANDED_32="$XT_IOS_SDK_VERSION_EXPANDED_32" \
+    XT_IOS_SDK_VERSION_64="$XT_IOS_SDK_VERSION_64" \
+    XT_IOS_SDK_VERSION_EXPANDED_64="$XT_IOS_SDK_VERSION_EXPANDED_64" \
     "$@" 2>&1 | /usr/bin/tee "$BUILD_OUTPUT_PATH"
   BUILD_RESULT=${PIPESTATUS[0]}
 

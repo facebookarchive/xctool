@@ -37,6 +37,15 @@ void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, voi
 NSTask *CreateTaskInSameProcessGroup();
 
 /**
+ * Call CreateTaskInSameProcessGroup() and set the task's preferred architecture.
+ *
+ * @param arch The preferred architecture for the task returned.
+ *
+ * @return Task with a retain count of 1 and architecture of CPU_TYPE_I386.
+ */
+NSTask *CreateTaskInSameProcessGroupWithArch(cpu_type_t arch);
+
+/**
  * Launches task.  Optionally, if the '-showTasks' argument was passed on
  * the command-line, the command-line equivalent for the given task is logged
  * to STDERR.
@@ -45,4 +54,3 @@ NSTask *CreateTaskInSameProcessGroup();
  * @param description A short description of the task's purpose.
  */
 void LaunchTaskAndMaybeLogCommand(NSTask *task, NSString *description);
-

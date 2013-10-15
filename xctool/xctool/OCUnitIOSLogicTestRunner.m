@@ -43,8 +43,6 @@
 
 - (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath
 {
-  NSConcreteTask *task = (NSConcreteTask *)[[[NSTask alloc] init] autorelease];
-
   // As of the Xcode 5 GM, the iPhoneSimulator version of 'otest' is now a
   // universal binary.  By default, the x86_64 version will be run. That's a
   // problem because 1) Xcode doesn't build iPhoneSimulator tests as x86_64 by
@@ -56,7 +54,7 @@
   // apps.  When that happens, we'll need to make otest-shim-ios a fat binary
   // and run tests twice - once against i386 and x86_64 - which is how Xcode
   // handles testing for universal OS X binaries.
-  [task setPreferredArchitectures:@[@(CPU_TYPE_I386)]];
+  NSConcreteTask *task = (NSConcreteTask *)[CreateTaskInSameProcessGroupWithArch(CPU_TYPE_I386) autorelease];
 
   [task setLaunchPath:[NSString stringWithFormat:@"%@/Developer/%@", _buildSettings[@"SDKROOT"], _framework[kTestingFrameworkIOSTestrunnerName]]];
   [task setArguments:[[self testArguments] arrayByAddingObject:testBundlePath]];

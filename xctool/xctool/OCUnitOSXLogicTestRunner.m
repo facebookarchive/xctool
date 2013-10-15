@@ -36,7 +36,7 @@
 
 - (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath
 {
-  NSTask *task = [[[NSTask alloc] init] autorelease];
+  NSTask *task = [CreateTaskInSameProcessGroup() autorelease];
   [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:_framework[kTestingFrameworkOSXTestrunnerName]]];
   // When invoking otest directly, the last arg needs to be the the test bundle.
   [task setArguments:[[self testArguments] arrayByAddingObject:testBundlePath]];
