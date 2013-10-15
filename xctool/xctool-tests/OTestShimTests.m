@@ -62,7 +62,9 @@ static NSArray *RunOtestAndParseResult(NSTask *task)
 {
   NSMutableArray *resultBuilder = [[NSMutableArray alloc] init];
 
-  LaunchTaskAndFeedOuputLinesToBlock(task, ^void (NSString *line) {
+  LaunchTaskAndFeedOuputLinesToBlock(task,
+                                     @"running otest/xctest",
+                                     ^void (NSString *line) {
     NSError *error = nil;
 
     if (([line isEqualToString:@""])) {
