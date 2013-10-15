@@ -79,7 +79,6 @@ NSDictionary *EnvForOTestQueryTestCasesInIOSBundle(NSString *sdk, NSDictionary *
     @"IPHONE_SHARED_RESOURCES_DIRECTORY" : simulatorHome,
     @"DYLD_ROOT_PATH" : sdkRootPath,
     @"IPHONE_SIMULATOR_ROOT" : sdkRootPath,
-    @"IPHONE_SIMULATOR_VERSIONS" : @"iPhone Simulator (external launch) , iPhone OS 6.0 (unknown/10A403)",
     @"NSUnbufferedIO" : @"YES"
   }];
   if (additionalEnv)
