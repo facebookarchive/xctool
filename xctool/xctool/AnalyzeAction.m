@@ -159,35 +159,37 @@
 
   BuildStateParser *buildState = [[[BuildStateParser alloc] initWithPath:buildStatePath] autorelease];
   for (NSString *path in buildState.nodes) {
-    NSTextCheckingResult *result = [analyzerPlistPathRegex
-                                    firstMatchInString:path
-                                    options:0
-                                    range:NSMakeRange(0, path.length)];
-    if (result.range.location == NSNotFound) {
-      continue;
-    }
+    @autoreleasepool {
+      NSTextCheckingResult *result = [analyzerPlistPathRegex
+                                      firstMatchInString:path
+                                      options:0
+                                      range:NSMakeRange(0, path.length)];
+      if (result.range.location == NSNotFound) {
+        continue;
+      }
 
-    NSDictionary *diags = [NSDictionary dictionaryWithContentsOfFile:path];
-    for (NSDictionary *diag in diags[@"diagnostics"]) {
-      haveFoundWarnings = YES;
-      NSString *file = diags[@"files"][[diag[@"location"][@"file"] intValue]];
-      file = file.stringByStandardizingPath;
-      NSNumber *line = diag[@"location"][@"line"];
-      NSNumber *col = diag[@"location"][@"col"];
-      NSString *desc = diag[@"description"];
-      NSArray *context = [self.class contextFromDiagPath:diag[@"path"]
-                                                 fileMap:diags[@"files"]];
+      NSDictionary *diags = [NSDictionary dictionaryWithContentsOfFile:path];
+      for (NSDictionary *diag in diags[@"diagnostics"]) {
+        haveFoundWarnings = YES;
+        NSString *file = diags[@"files"][[diag[@"location"][@"file"] intValue]];
+        file = file.stringByStandardizingPath;
+        NSNumber *line = diag[@"location"][@"line"];
+        NSNumber *col = diag[@"location"][@"col"];
+        NSString *desc = diag[@"description"];
+        NSArray *context = [self.class contextFromDiagPath:diag[@"path"]
+                                                   fileMap:diags[@"files"]];
 
-      PublishEventToReporters(reporters, @{
-       @"event": kReporter_Events_AnalyzerResult,
-        kReporter_AnalyzerResult_ProjectKey: projectName,
-         kReporter_AnalyzerResult_TargetKey: targetName,
-           kReporter_AnalyzerResult_FileKey: file,
-           kReporter_AnalyzerResult_LineKey: line,
-         kReporter_AnalyzerResult_ColumnKey: col,
-    kReporter_AnalyzerResult_DescriptionKey: desc,
-        kReporter_AnalyzerResult_ContextKey: context,
-       });
+        PublishEventToReporters(reporters, @{
+                                             @"event": kReporter_Events_AnalyzerResult,
+                                             kReporter_AnalyzerResult_ProjectKey: projectName,
+                                             kReporter_AnalyzerResult_TargetKey: targetName,
+                                             kReporter_AnalyzerResult_FileKey: file,
+                                             kReporter_AnalyzerResult_LineKey: line,
+                                             kReporter_AnalyzerResult_ColumnKey: col,
+                                             kReporter_AnalyzerResult_DescriptionKey: desc,
+                                             kReporter_AnalyzerResult_ContextKey: context,
+                                             });
+      }
     }
   }
 
