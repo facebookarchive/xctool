@@ -229,9 +229,18 @@ void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, voi
   [buffer release];
 }
 
+NSTask *CreateTaskInSameProcessGroupWithArch(cpu_type_t arch)
+{
+  NSCAssert(arch == CPU_TYPE_I386 || arch == CPU_TYPE_X86_64, @"CPU type should either be i386 or x86_64.");
+  NSConcreteTask *task = (NSConcreteTask *)CreateTaskInSameProcessGroup();
+  [task setPreferredArchitectures:@[ @(arch) ]];
+  return task;
+}
+
 NSTask *CreateTaskInSameProcessGroup()
 {
   NSConcreteTask *task = (NSConcreteTask *)[[NSTask alloc] init];
+  NSCAssert([task respondsToSelector:@selector(setStartsNewProcessGroup:)], @"The created task doesn't respond to the -setStartsNewProcessGroup:, which means it probably isn't a NSConcreteTask instance.");
   [task setStartsNewProcessGroup:NO];
   return task;
 }
