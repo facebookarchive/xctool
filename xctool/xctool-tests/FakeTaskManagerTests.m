@@ -16,7 +16,7 @@
 
 - (void)testCanRunRealTasks
 {
-  NSTask *task = [[[NSTask alloc] init] autorelease];
+  NSTask *task = [CreateTaskInSameProcessGroup() autorelease];
   [task setLaunchPath:@"/bin/echo"];
   [task setArguments:@[@"hello"]];
 
@@ -28,7 +28,7 @@
 - (void)testCanMakeAllTasksFake
 {
   [[FakeTaskManager sharedManager] enableFakeTasks];
-  NSTask *task = [[[NSTask alloc] init] autorelease];
+  NSTask *task = [CreateTaskInSameProcessGroup() autorelease];
   assertThat([[task class] description], equalTo(@"FakeTask"));
   [[FakeTaskManager sharedManager] disableFakeTasks];
 }
@@ -36,7 +36,7 @@
 - (void)testCanGetPretendStandardOutput
 {
   [[FakeTaskManager sharedManager] enableFakeTasks];
-  NSTask *task = [[[NSTask alloc] init] autorelease];
+  NSTask *task = [CreateTaskInSameProcessGroup() autorelease];
   [task setLaunchPath:@"/bin/something"];
   [(FakeTask *)task pretendTaskReturnsStandardOutput:@"some stdout string"];
   assertThat(LaunchTaskAndCaptureOutput(task, @"some description")[@"stdout"],
@@ -47,7 +47,7 @@
 - (void)testCanGetPretendStandardError
 {
   [[FakeTaskManager sharedManager] enableFakeTasks];
-  NSTask *task = [[[NSTask alloc] init] autorelease];
+  NSTask *task = [CreateTaskInSameProcessGroup() autorelease];
   [task setLaunchPath:@"/bin/something"];
   [(FakeTask *)task pretendTaskReturnsStandardError:@"some stderr string"];
   assertThat(LaunchTaskAndCaptureOutput(task, @"some description")[@"stderr"],
@@ -58,7 +58,7 @@
 - (void)testCanGetPretendExitStatus
 {
   [[FakeTaskManager sharedManager] enableFakeTasks];
-  NSTask *task = [[[NSTask alloc] init] autorelease];
+  NSTask *task = [CreateTaskInSameProcessGroup() autorelease];
   [task setLaunchPath:@"/bin/something"];
   [(FakeTask *)task pretendExitStatusOf:5];
   [task launch];
@@ -70,13 +70,13 @@
 - (void)testLaunchedTasksAreRecorded
 {
   [[FakeTaskManager sharedManager] enableFakeTasks];
-  NSTask *task1 = [[[NSTask alloc] init] autorelease];
+  NSTask *task1 = [CreateTaskInSameProcessGroup() autorelease];
   [task1 setLaunchPath:@"/bin/echo"];
   [task1 setArguments:@[@"task1"]];
   [task1 launch];
   [task1 waitUntilExit];
 
-  NSTask *task2 = [[[NSTask alloc] init] autorelease];
+  NSTask *task2 = [CreateTaskInSameProcessGroup() autorelease];
   [task2 setLaunchPath:@"/bin/echo"];
   [task2 setArguments:@[@"task2"]];
   [task2 launch];
@@ -93,7 +93,7 @@
 - (void)testRunBlockWithFakeTasksWorks
 {
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
-    NSTask *task1 = [[[NSTask alloc] init] autorelease];
+    NSTask *task1 = [CreateTaskInSameProcessGroup() autorelease];
     [task1 setLaunchPath:@"/bin/echo"];
     [task1 setArguments:@[@"task1"]];
     [task1 launch];
@@ -136,7 +136,7 @@
     },
      ]];
 
-    NSTask *task = [[[NSTask alloc] init] autorelease];
+    NSTask *task = [CreateTaskInSameProcessGroup() autorelease];
     [task setLaunchPath:@"/bin/echo"];
     [task setArguments:@[@"task1"]];
     [task launch];

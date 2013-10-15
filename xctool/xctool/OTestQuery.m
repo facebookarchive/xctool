@@ -95,7 +95,7 @@ NSArray *OTestQueryTestCasesInIOSBundle(NSString *bundlePath, NSString *sdk, NSS
     return nil;
   }
 
-  NSTask *task = CreateTaskInSameProcessGroup();
+  NSTask *task = CreateTaskInSameProcessGroupWithArch(CPU_TYPE_I386);
   [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-ios"]];
   [task setEnvironment:EnvForOTestQueryTestCasesInIOSBundle(sdk, nil)];
   [task setArguments:@[bundlePath]];
