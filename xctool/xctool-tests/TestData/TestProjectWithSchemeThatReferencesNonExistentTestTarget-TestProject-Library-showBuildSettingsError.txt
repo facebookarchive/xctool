@@ -1,0 +1,2 @@
+The project 'xctool/xctool-tests/TestData/TestProjectWithSchemeThatReferencesNonExistentTestTarget/TestProject-Library.xcodeproj' does not contain a target named 'TestProject-LibraryTests'.
+

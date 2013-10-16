@@ -33,13 +33,13 @@
 
   NSString *buildSettingsError = nil;
   NSDictionary *buildSettings = [[self class] testableBuildSettingsForProject:testable.projectPath
-                                                              target:testable.target
-                                                             objRoot:xcodeSubjectInfo.objRoot
-                                                             symRoot:xcodeSubjectInfo.symRoot
-                                                   sharedPrecompsDir:xcodeSubjectInfo.sharedPrecompsDir
-                                                      xcodeArguments:xcodebuildArguments
-                                                             testSDK:testSDK
-                                                               error:&buildSettingsError];
+                                                                       target:testable.target
+                                                                      objRoot:xcodeSubjectInfo.objRoot
+                                                                      symRoot:xcodeSubjectInfo.symRoot
+                                                            sharedPrecompsDir:xcodeSubjectInfo.sharedPrecompsDir
+                                                               xcodeArguments:xcodebuildArguments
+                                                                      testSDK:testSDK
+                                                                        error:&buildSettingsError];
   
   if (!buildSettings) {
     info.buildSettingsError = buildSettingsError;

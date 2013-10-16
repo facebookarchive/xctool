@@ -16,10 +16,16 @@
                                 settingsPath:(NSString *)settingsPath
                                         hide:(BOOL)hide;
 
+
 + (id)handlerForShowBuildSettingsWithProject:(NSString *)project
                                       target:(NSString *)target
                                 settingsPath:(NSString *)settingsPath
                                         hide:(BOOL)hide;
+
++ (id)handlerForShowBuildSettingsErrorWithProject:(NSString *)project
+                                           target:(NSString *)target
+                                 errorMessagePath:(NSString *)errorMessagePath
+                                             hide:(BOOL)hide;
 
 
 /**

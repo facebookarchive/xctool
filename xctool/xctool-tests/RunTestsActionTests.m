@@ -86,20 +86,35 @@
 
 - (void)testWillComplainWhenSchemeReferencesNonExistentTestTarget
 {
-  XCTool *tool = [[[XCTool alloc] init] autorelease];
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+      // Make sure -showBuildSettings returns some data
+      [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProjectWithSchemeThatReferencesNonExistentTestTarget/TestProject-Library.xcodeproj"
+                                                      scheme:@"TestProject-Library"
+                                                 settingsPath:TEST_DATA @"TestProjectWithSchemeThatReferencesNonExistentTestTarget-showBuildSettings.txt"],
+      // We're going to call -showBuildSettings on the test target.
+      [LaunchHandlers handlerForShowBuildSettingsErrorWithProject:TEST_DATA @"TestProjectWithSchemeThatReferencesNonExistentTestTarget/TestProject-Library.xcodeproj"
+                                                      target:@"TestProject-Library"
+                                            errorMessagePath:TEST_DATA @"TestProjectWithSchemeThatReferencesNonExistentTestTarget-TestProject-Library-showBuildSettingsError.txt"
+                                                        hide:NO],
+      [LaunchHandlers handlerForOtestQueryReturningTestList:@[]],
+      ]];
   
-  tool.arguments = @[
-                     @"-project", TEST_DATA @"TestProjectWithSchemeThatReferencesNonExistentTestTarget/TestProject-Library.xcodeproj",
-                     @"-scheme", @"TestProject-Library",
-                     @"-sdk", @"iphonesimulator",
-                     @"test"
-                     ];
-  
-  NSDictionary *output = [TestUtil runWithFakeStreams:tool];
-  
-  assertThatInt(tool.exitStatus, equalToInt(1));
-  assertThat(output[@"stdout"],
-             containsString(@"Could not get build settings."));
+    XCTool *tool = [[[XCTool alloc] init] autorelease];
+    
+    tool.arguments = @[
+                       @"-project", TEST_DATA @"TestProjectWithSchemeThatReferencesNonExistentTestTarget/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-sdk", @"iphonesimulator",
+                       @"test"
+                       ];
+    
+    NSDictionary *output = [TestUtil runWithFakeStreams:tool];
+    
+    assertThatInt(tool.exitStatus, equalToInt(1));
+    assertThat(output[@"stdout"],
+               containsString(@"Could not get build settings."));
+  }];
 }
 
 - (void)testWithSDKsDefaultsToValueOfSDKIfNotSupplied
