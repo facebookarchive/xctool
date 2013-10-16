@@ -1,7 +1,7 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
-#import "iPhoneSimulatorRemoteClient.h"
+#import "DVTiPhoneSimulatorRemoteClient.h"
 
 #import "FakeTask.h"
 #import "FakeTaskManager.h"

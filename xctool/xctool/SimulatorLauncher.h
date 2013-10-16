@@ -16,7 +16,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "iPhoneSimulatorRemoteClient.h"
+#import "DVTiPhoneSimulatorRemoteClient.h"
 
 @interface SimulatorLauncher : NSObject <DTiPhoneSimulatorSessionDelegate>
 {
