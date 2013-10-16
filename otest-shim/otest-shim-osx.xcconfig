@@ -29,3 +29,16 @@ OTHER_CFLAGS = -F"$(DEVELOPER_FRAMEWORKS_DIR)"
 // 'supported', we're able to suppress Xcode's "Target Integrity" warning about GC being deprecated.
 GCC_ENABLE_OBJC_GC = unsupported
 GCC_ENABLE_OBJC_GC[arch=x86_64] = supported
+
+// When running Xcode 4.6 on 10.9, the otest-shim-osx build will fail while
+// trying to lipo the two binaries for i386 + x86_64 together.  For that combo
+// only, disable Universal binaries.  This will let us keep debugging 4.6 issues
+// while living on 10.9.
+//
+// To be removed when we drop Xcode 4 support.
+ONLY_ACTIVE_ARCH_0400_1080 = NO
+ONLY_ACTIVE_ARCH_0400_1090 = YES
+ONLY_ACTIVE_ARCH_0500_1080 = NO
+ONLY_ACTIVE_ARCH_0500_1090 = NO
+
+ONLY_ACTIVE_ARCH = $(ONLY_ACTIVE_ARCH_$(XCODE_VERSION_MAJOR)_$(MAC_OS_X_VERSION_MAJOR))
