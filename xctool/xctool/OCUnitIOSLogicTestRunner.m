@@ -44,17 +44,21 @@
 - (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath
 {
   // As of the Xcode 5 GM, the iPhoneSimulator version of 'otest' is now a
-  // universal binary.  By default, the x86_64 version will be run. That's a
-  // problem because 1) Xcode doesn't build iPhoneSimulator tests as x86_64 by
-  // default (yet), and 2) otest-shim + otest-query are still i386 only.
+  // universal binary. By default, the x86_64 version will be run. That's a
+  // problem because *most* .octest / .xctest bundles are 32-bit only.
   //
-  // Let's force otest to start as i386 for now.
+  // The only time we should run for 64-bit is when the test is built for
+  // the iPhone (4-inch 64-bit) simulator. (Also, this is limited to iOS 7.)
   //
-  // At some point Apple may introduce universal binaries for iOS simulator
-  // apps.  When that happens, we'll need to make otest-shim-ios a fat binary
-  // and run tests twice - once against i386 and x86_64 - which is how Xcode
-  // handles testing for universal OS X binaries.
-  NSConcreteTask *task = (NSConcreteTask *)[CreateTaskInSameProcessGroupWithArch(CPU_TYPE_I386) autorelease];
+  // When a `-destination` is supplied with the 'name' key set, xctool parses
+  // through the argument to figure out which simulator is being targetted.
+  // From there, it looks at certain plists in the system to determine the arch
+  // for the simulator being targetted. Here, we just have to use the already-
+  // populated architecture value and create the correct NSTask.
+  if ([self cpuType] == CPU_TYPE_ANY) {
+    [self setCpuType:CPU_TYPE_I386];
+  }
+  NSConcreteTask *task = (NSConcreteTask *)[CreateTaskInSameProcessGroupWithArch([self cpuType]) autorelease];
 
   [task setLaunchPath:[NSString stringWithFormat:@"%@/Developer/%@", _buildSettings[@"SDKROOT"], _framework[kTestingFrameworkIOSTestrunnerName]]];
   [task setArguments:[[self testArguments] arrayByAddingObject:testBundlePath]];

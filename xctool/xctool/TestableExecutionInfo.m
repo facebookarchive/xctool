@@ -29,6 +29,7 @@
                xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
             xcodebuildArguments:(NSArray *)xcodebuildArguments
                         testSDK:(NSString *)testSDK
+                        cpuType:(cpu_type_t)cpuType
 {
   TestableExecutionInfo *info = [[[TestableExecutionInfo alloc] init] autorelease];
   info.testable = testable;
@@ -52,6 +53,7 @@
 
   NSString *otestQueryError = nil;
   NSArray *testCases = [[self class] queryTestCasesWithBuildSettings:info.buildSettings
+                                                             cpuType:cpuType
                                                                error:&otestQueryError];
   if (testCases) {
     info.testCases = testCases;
@@ -141,6 +143,7 @@
  * test bundle.
  */
 + (NSArray *)queryTestCasesWithBuildSettings:(NSDictionary *)testableBuildSettings
+                                     cpuType:(cpu_type_t)cpuType
                                        error:(NSString **)error
 {
   NSString *sdkName = testableBuildSettings[@"SDK_NAME"];
@@ -162,7 +165,8 @@
     NSAssert(NO, @"Unexpected SDK: %@", sdkName);
     abort();
   }
-  OCUnitTestQueryRunner *runner = [[[runnerClass alloc] initWithBuildSettings:testableBuildSettings] autorelease];
+  OCUnitTestQueryRunner *runner = [[[runnerClass alloc] initWithBuildSettings:testableBuildSettings
+                                                                  withCpuType:cpuType] autorelease];
   return [runner runQueryWithError:error];
 }
 

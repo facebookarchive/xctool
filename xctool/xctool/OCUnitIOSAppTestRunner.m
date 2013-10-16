@@ -174,7 +174,8 @@ static void KillSimulatorJobs()
   [sessionConfig setSimulatedApplicationLaunchArgs:arguments];
   [sessionConfig setSimulatedApplicationLaunchEnvironment:@{}];
 
-  SimulatorLauncher *launcher = [[[SimulatorLauncher alloc] initWithSessionConfig:sessionConfig] autorelease];
+  SimulatorLauncher *launcher = [[[SimulatorLauncher alloc] initWithSessionConfig:sessionConfig
+                                                                       deviceName:_deviceName] autorelease];
 
   return [launcher launchAndWaitForExit];
 }
@@ -219,7 +220,8 @@ static void KillSimulatorJobs()
   [sessionConfig setSimulatedApplicationStdOutPath:outputPath];
   [sessionConfig setSimulatedApplicationStdErrPath:outputPath];
 
-  SimulatorLauncher *launcher = [[[SimulatorLauncher alloc] initWithSessionConfig:sessionConfig] autorelease];
+  SimulatorLauncher *launcher = [[[SimulatorLauncher alloc] initWithSessionConfig:sessionConfig
+                                                                       deviceName:_deviceName] autorelease];
 
   [reader startReading];
 

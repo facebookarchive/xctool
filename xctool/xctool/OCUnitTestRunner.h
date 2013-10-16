@@ -35,6 +35,8 @@
   NSDictionary *_framework;
 }
 
+@property (nonatomic, assign) cpu_type_t cpuType;
+
 /**
  * Filters a list of test class names to only those that match the
  * senTestList and senTestInvertScope constraints.

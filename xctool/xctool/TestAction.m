@@ -108,6 +108,11 @@
   [super dealloc];
 }
 
+- (void)setDeviceName:(NSString *)deviceName
+{
+  [_runTestsAction setDeviceName:deviceName];
+}
+
 - (void)setTestSDK:(NSString *)testSDK
 {
   _runTestsAction.testSDK = testSDK;

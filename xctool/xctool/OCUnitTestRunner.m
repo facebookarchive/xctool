@@ -93,6 +93,7 @@
     _simulatorType = [simulatorType retain];
     _reporters = [reporters retain];
     _framework = [FrameworkInfoForTestBundleAtPath([self testBundlePath]) retain];
+    _cpuType = CPU_TYPE_ANY;
   }
   return self;
 }

@@ -33,11 +33,13 @@ static NSArray *AllTestCasesInIOSTestBundle(NSString *bundlePath)
   NSString *latestSDK = GetAvailableSDKsAndAliases()[@"iphonesimulator"];
   NSString *builtProductsDir = [bundlePath stringByDeletingLastPathComponent];
   NSString *fullProductName = [bundlePath lastPathComponent];
-  OCUnitIOSLogicTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:@{
+  NSDictionary *buildSettings = @{
     kBuiltProductsDir : builtProductsDir,
     kFullProductName : fullProductName,
     kSdkName : latestSDK,
-  }];
+  };
+  OCUnitIOSLogicTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
+                                                                                           withCpuType:CPU_TYPE_ANY];
   NSArray *allTests = [runner runQueryWithError:&error];
   NSCAssert(error == nil, @"Error while querying test cases: %@", error);
 

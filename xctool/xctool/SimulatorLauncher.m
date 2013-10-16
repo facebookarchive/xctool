@@ -19,8 +19,15 @@
 @implementation SimulatorLauncher
 
 - (id)initWithSessionConfig:(DTiPhoneSimulatorSessionConfig *)sessionConfig
+                 deviceName:(NSString *)deviceName
 {
   if (self = [super init]) {
+    // Set the device type if supplied
+    if (deviceName) {
+      CFPreferencesSetAppValue((CFStringRef)@"SimulateDevice", (CFPropertyListRef)deviceName, (CFStringRef)@"com.apple.iphonesimulator");
+      CFPreferencesAppSynchronize((CFStringRef)@"com.apple.iphonesimulator");
+    }
+
     _session = [[DTiPhoneSimulatorSession alloc] init];
     [_session setSessionConfig:sessionConfig];
     [_session setDelegate:self];
