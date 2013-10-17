@@ -18,6 +18,7 @@
 
 #import "OCTestEventState.h"
 #import "ReporterEvents.h"
+#import "EventJSONGenerator.h"
 #import "TestUtil.h"
 
 @interface OCTestEventStateTests : SenTestCase
@@ -81,12 +82,11 @@
                                        }];
 
   assertThatInteger([events count], equalToInteger(2));
-  assertThat(events[0], equalTo(@{
-                                @"event":kReporter_Events_BeginTest,
-                                kReporter_EndTest_TestKey:@"-[ATestClass aTestMethod]",
-                                kReporter_EndTest_ClassNameKey:@"ATestClass",
-                                kReporter_EndTest_MethodNameKey:@"aTestMethod",
-                                }));
+  assertThat(events[0], equalTo(EventDictionaryWithNameAndContent(kReporter_Events_BeginTest,
+                                                                  @{kReporter_EndTest_TestKey:@"-[ATestClass aTestMethod]",
+                                                                    kReporter_EndTest_ClassNameKey:@"ATestClass",
+                                                                    kReporter_EndTest_MethodNameKey:@"aTestMethod",
+                                                                    })));
   assertThat(events[1][@"event"], is(kReporter_Events_EndTest));
   assertThat(events[1][kReporter_EndTest_SucceededKey], is(@NO));
   assertThat(events[1][kReporter_EndTest_ResultKey], is(@"error"));
@@ -167,10 +167,8 @@
                                        }];
 
   assertThatInteger([events count], equalToInteger(1));
-  assertThat(events[0], equalTo(@{
-                                @"event":kReporter_Events_TestOuput,
-                                kReporter_TestOutput_OutputKey:@"output from us\n"
-                                }));
+  assertThat(events[0], equalTo(EventDictionaryWithNameAndContent(kReporter_Events_TestOuput,
+                                                                  @{kReporter_TestOutput_OutputKey:@"output from us\n"})));
 }
 
 - (void)testAppendOutput
@@ -188,10 +186,8 @@
                                        }];
 
   assertThatInteger([events count], equalToInteger(2));
-  assertThat(events[0], equalTo(@{
-                                @"event":kReporter_Events_TestOuput,
-                                kReporter_TestOutput_OutputKey:@"output from us\n"
-                                }));
+  assertThat(events[0], equalTo(EventDictionaryWithNameAndContent(kReporter_Events_TestOuput,
+                                                                  @{kReporter_TestOutput_OutputKey:@"output from us\n"})));
   assertThat(events[1][@"event"], is(kReporter_Events_EndTest));
   assertThat(events[1][kReporter_EndTest_OutputKey], is(@"some output\nmore output\noutput from us\n"));
 }

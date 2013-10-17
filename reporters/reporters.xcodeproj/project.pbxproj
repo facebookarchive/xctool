@@ -46,6 +46,13 @@
 		28F48A4D17974FEB00068E00 /* JSONCompilationDatabaseReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F48A4C17974FEB00068E00 /* JSONCompilationDatabaseReporterTests.m */; };
 		28F48A54179750A600068E00 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2893A96A17960D2000EFBD28 /* Foundation.framework */; };
 		28F48A57179750A600068E00 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F48A56179750A600068E00 /* main.m */; };
+		3892D7451811DBE200E68652 /* EventJSONGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D7441811DBE200E68652 /* EventJSONGenerator.m */; };
+		3892D7461811DBEE00E68652 /* EventJSONGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D7441811DBE200E68652 /* EventJSONGenerator.m */; };
+		3892D7471811DBEE00E68652 /* EventJSONGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D7441811DBE200E68652 /* EventJSONGenerator.m */; };
+		3892D7481811DBEF00E68652 /* EventJSONGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D7441811DBE200E68652 /* EventJSONGenerator.m */; };
+		3892D74B1811DBF100E68652 /* EventJSONGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D7441811DBE200E68652 /* EventJSONGenerator.m */; };
+		3892D74C1811DBF100E68652 /* EventJSONGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D7441811DBE200E68652 /* EventJSONGenerator.m */; };
+		3892D74D1811DBF100E68652 /* EventJSONGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D7441811DBE200E68652 /* EventJSONGenerator.m */; };
 		EE61734717E284DD00F02C91 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE61734617E284DD00F02C91 /* Reporter.m */; };
 		EE61734817E284DD00F02C91 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE61734617E284DD00F02C91 /* Reporter.m */; };
 		EE61734917E284DD00F02C91 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE61734617E284DD00F02C91 /* Reporter.m */; };
@@ -170,6 +177,8 @@
 		28F48A4E1797500300068E00 /* JSONCompilationDatabaseReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONCompilationDatabaseReporter.h; sourceTree = "<group>"; };
 		28F48A53179750A600068E00 /* json-stream */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "json-stream"; sourceTree = BUILT_PRODUCTS_DIR; };
 		28F48A56179750A600068E00 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		3892D7431811DBE200E68652 /* EventJSONGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventJSONGenerator.h; path = ../Common/EventJSONGenerator.h; sourceTree = "<group>"; };
+		3892D7441811DBE200E68652 /* EventJSONGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EventJSONGenerator.m; path = ../Common/EventJSONGenerator.m; sourceTree = "<group>"; };
 		EE61734517E2785F00F02C91 /* Reporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reporter.h; path = ../Common/Reporter.h; sourceTree = "<group>"; };
 		EE61734617E284DD00F02C91 /* Reporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reporter.m; path = ../Common/Reporter.m; sourceTree = "<group>"; };
 		EE9E73E117A7323B008A5ED2 /* TestResultCounter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestResultCounter.h; sourceTree = "<group>"; };
@@ -318,6 +327,8 @@
 		2893A97E179614D400EFBD28 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				3892D7431811DBE200E68652 /* EventJSONGenerator.h */,
+				3892D7441811DBE200E68652 /* EventJSONGenerator.m */,
 				EE61734617E284DD00F02C91 /* Reporter.m */,
 				EE61734517E2785F00F02C91 /* Reporter.h */,
 				28F489F417973B7100068E00 /* NSFileHandle+Print.h */,
@@ -586,6 +597,7 @@
 				28F48A3217974E3900068E00 /* JUnitReporter.m in Sources */,
 				28F48A3517974EA000068E00 /* JUnitReporterTests.m in Sources */,
 				EE61734717E284DD00F02C91 /* Reporter.m in Sources */,
+				3892D7451811DBE200E68652 /* EventJSONGenerator.m in Sources */,
 				28F48A4A17974F3F00068E00 /* JSONCompilationDatabaseReporter.m in Sources */,
 				28F48A4D17974FEB00068E00 /* JSONCompilationDatabaseReporterTests.m in Sources */,
 				EE9E73E317A7323B008A5ED2 /* TestResultCounter.m in Sources */,
@@ -597,6 +609,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EE61734817E284DD00F02C91 /* Reporter.m in Sources */,
+				3892D7461811DBEE00E68652 /* EventJSONGenerator.m in Sources */,
 				EE9E73E417A732F0008A5ED2 /* TestResultCounter.m in Sources */,
 				28F489D6179735B700068E00 /* main.m in Sources */,
 				28F489D8179735B700068E00 /* TextReporter.m in Sources */,
@@ -608,6 +621,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EE61734917E284DD00F02C91 /* Reporter.m in Sources */,
+				3892D7471811DBEE00E68652 /* EventJSONGenerator.m in Sources */,
 				EE9E73E517A73308008A5ED2 /* TestResultCounter.m in Sources */,
 				28F489E31797362400068E00 /* main.m in Sources */,
 				28F489E41797362400068E00 /* TextReporter.m in Sources */,
@@ -619,6 +633,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EE61734A17E284DD00F02C91 /* Reporter.m in Sources */,
+				3892D7481811DBEF00E68652 /* EventJSONGenerator.m in Sources */,
 				28F48A191797447200068E00 /* NSFileHandle+Print.m in Sources */,
 				28F48A0D179743AE00068E00 /* main.m in Sources */,
 				28F48A18179743C600068E00 /* PhabricatorReporter.m in Sources */,
@@ -630,6 +645,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EE61734B17E284DD00F02C91 /* Reporter.m in Sources */,
+				3892D74D1811DBF100E68652 /* EventJSONGenerator.m in Sources */,
 				28F48A2E17974D5400068E00 /* NSFileHandle+Print.m in Sources */,
 				28F48A2617974D4100068E00 /* main.m in Sources */,
 				28F48A3317974E3900068E00 /* JUnitReporter.m in Sources */,
@@ -641,6 +657,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EE61734C17E284DD00F02C91 /* Reporter.m in Sources */,
+				3892D74C1811DBF100E68652 /* EventJSONGenerator.m in Sources */,
 				28F48A4717974F1000068E00 /* NSFileHandle+Print.m in Sources */,
 				28F48A3F17974EF600068E00 /* main.m in Sources */,
 				28F48A4B17974F3F00068E00 /* JSONCompilationDatabaseReporter.m in Sources */,
@@ -653,6 +670,7 @@
 			files = (
 				EE61734D17E284DD00F02C91 /* Reporter.m in Sources */,
 				28F48A57179750A600068E00 /* main.m in Sources */,
+				3892D74B1811DBF100E68652 /* EventJSONGenerator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

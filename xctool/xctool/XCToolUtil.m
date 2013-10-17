@@ -22,6 +22,7 @@
 #import "NSFileHandle+Print.h"
 #import "Options.h"
 #import "ReporterEvents.h"
+#import "EventJSONGenerator.h"
 #import "ReporterTask.h"
 #import "TaskUtil.h"
 #import "XcodeSubjectInfo.h"
@@ -357,10 +358,9 @@ BOOL RunXcodebuildAndFeedEventsToReporters(NSArray *arguments,
    }];
   [task setEnvironment:environment];
 
-  NSDictionary *beginEvent = @{@"event": kReporter_Events_BeginXcodebuild,
-                               kReporter_BeginXcodebuild_CommandKey: command,
-                               kReporter_BeginXcodebuild_TitleKey: title,
-                               };
+  NSDictionary *beginEvent = EventDictionaryWithNameAndContent(kReporter_Events_BeginXcodebuild,
+                                                               @{kReporter_BeginXcodebuild_CommandKey: command,
+                                                                 kReporter_BeginXcodebuild_TitleKey: title});
   PublishEventToReporters(reporters, beginEvent);
 
   NSString *xcodebuildErrorMessage = nil;
@@ -370,13 +370,11 @@ BOOL RunXcodebuildAndFeedEventsToReporters(NSArray *arguments,
                                                                 &xcodebuildErrorMessage,
                                                                 &xcodebuildErrorCode);
 
-  NSMutableDictionary *endEvent = [NSMutableDictionary dictionary];
-  [endEvent addEntriesFromDictionary:@{
-   @"event": kReporter_Events_EndXcodebuild,
-   kReporter_EndXcodebuild_CommandKey: command,
-   kReporter_EndXcodebuild_TitleKey: title,
-   kReporter_EndXcodebuild_SucceededKey : @(succeeded),
-   }];
+  NSMutableDictionary *endEvent = EventDictionaryWithNameAndContent(kReporter_Events_EndXcodebuild,
+                                                                    @{kReporter_EndXcodebuild_CommandKey: command,
+                                                                      kReporter_EndXcodebuild_TitleKey: title,
+                                                                      kReporter_EndXcodebuild_SucceededKey : @(succeeded),
+                                                                      });
 
   id errorMessage = [NSNull null];
   id errorCode = [NSNull null];
