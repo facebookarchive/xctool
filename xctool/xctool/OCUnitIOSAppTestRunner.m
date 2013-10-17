@@ -247,74 +247,62 @@ static void KillSimulatorJobs()
 
 - (BOOL)uninstallTestHostBundleID:(NSString *)testHostBundleID withError:(NSString **)error
 {
-  for (NSInteger attempts = 1; attempts <= kMaxInstallOrUninstallAttempts; attempts++) {
-    ReportStatusMessageBegin(_reporters,
-                             REPORTER_MESSAGE_INFO,
-                             @"Uninstalling '%@' to get a fresh install ...",
-                             testHostBundleID);
-    BOOL uninstalled = [self runMobileInstallationHelperWithArguments:@[
-                        @"uninstall",
-                        testHostBundleID,
-                        ]];
-    if (uninstalled) {
-      ReportStatusMessageEnd(_reporters,
-                             REPORTER_MESSAGE_INFO,
-                             @"Uninstalling '%@' to get a fresh install ...",
-                             testHostBundleID);
-      return YES;
-    } else {
-      ReportStatusMessageEnd(_reporters,
-                             REPORTER_MESSAGE_WARNING,
-                             @"Tried to uninstall the test host app '%@' but failed; "
-                             @"will retry %ld more time%@.",
-                             testHostBundleID,
-                             kMaxInstallOrUninstallAttempts - attempts,
-                             (kMaxInstallOrUninstallAttempts - attempts) == 1 ? @"" : @"s"
-                             );
-    }
+  ReportStatusMessageBegin(_reporters,
+                           REPORTER_MESSAGE_INFO,
+                           @"Uninstalling '%@' to get a fresh install ...",
+                           testHostBundleID);
+  BOOL uninstalled = [self runMobileInstallationHelperWithArguments:@[
+                      @"uninstall",
+                      testHostBundleID,
+                      ]];
+  if (uninstalled) {
+    ReportStatusMessageEnd(_reporters,
+                           REPORTER_MESSAGE_INFO,
+                           @"Uninstalled '%@' to get a fresh install.",
+                           testHostBundleID);
+    return YES;
+  } else {
+    ReportStatusMessageEnd(_reporters,
+                           REPORTER_MESSAGE_WARNING,
+                           @"Tried to uninstall the test host app '%@' but failed.",
+                           testHostBundleID);
+    *error = [NSString stringWithFormat:
+              @"Failed to uninstall the test host app '%@' "
+              @"before running tests.",
+              testHostBundleID];
+    return NO;
   }
-
-  *error = [NSString stringWithFormat:
-            @"Failed to uninstall the test host app '%@' "
-            @"before running tests.",
-            testHostBundleID];
-  return NO;
 }
 
 - (BOOL)installTestHostBundleID:(NSString *)testHostBundleID
                  fromBundlePath:(NSString *)testHostBundlePath
                           error:(NSString **)error
 {
-  for (NSInteger attempts = 1; attempts <= kMaxInstallOrUninstallAttempts; attempts++) {
-    ReportStatusMessageBegin(_reporters,
-                             REPORTER_MESSAGE_INFO,
-                             @"Installing '%@' ...",
-                             testHostBundleID);
-    BOOL installed = [self runMobileInstallationHelperWithArguments:@[
-                      @"install",
-                      testHostBundlePath,
-                      ]];
-    if (installed) {
-      ReportStatusMessageEnd(_reporters,
-                             REPORTER_MESSAGE_INFO,
-                             @"Installing '%@' ...",
-                             testHostBundleID);
-      return YES;
-    } else {
-      ReportStatusMessageEnd(_reporters,
-                             REPORTER_MESSAGE_WARNING,
-                             @"Tried to install the test host app '%@' but failed; "
-                             @"will retry %ld more time%@.",
-                             testHostBundleID,
-                             kMaxInstallOrUninstallAttempts - attempts,
-                             (kMaxInstallOrUninstallAttempts - attempts) == 1 ? @"" : @"s");
-    }
-  }
+  ReportStatusMessageBegin(_reporters,
+                           REPORTER_MESSAGE_INFO,
+                           @"Installing '%@' ...",
+                           testHostBundleID);
+  BOOL installed = [self runMobileInstallationHelperWithArguments:@[
+                    @"install",
+                    testHostBundlePath,
+                    ]];
+  if (installed) {
+    ReportStatusMessageEnd(_reporters,
+                           REPORTER_MESSAGE_INFO,
+                           @"Installed '%@'.",
+                           testHostBundleID);
+    return YES;
+  } else {
+    ReportStatusMessageEnd(_reporters,
+                           REPORTER_MESSAGE_WARNING,
+                           @"Tried to install the test host app '%@' but failed.",
+                           testHostBundleID);
+    *error = [NSString stringWithFormat:
+              @"Failed to install the test host app '%@'.",
+              testHostBundleID];
 
-  *error = [NSString stringWithFormat:
-            @"Failed to install the test host app '%@'.",
-            testHostBundleID];
-  return NO;
+    return NO;
+  }
 }
 
 - (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
@@ -349,38 +337,70 @@ static void KillSimulatorJobs()
   NSString *testHostBundleID = testHostInfoPlist[@"CFBundleIdentifier"];
   NSAssert(testHostBundleID != nil, @"Missing 'CFBundleIdentifier' in Info.plist");
 
-  if (_freshSimulator) {
-    ReportStatusMessageBegin(_reporters,
+  BOOL (^prepTestEnv)() = ^BOOL() {
+    if (_freshSimulator) {
+      ReportStatusMessageBegin(_reporters,
+                               REPORTER_MESSAGE_INFO,
+                               @"Stopping any existing iOS simulator jobs to get a "
+                               @"fresh simulator ...");
+      KillSimulatorJobs();
+      ReportStatusMessageEnd(_reporters,
                              REPORTER_MESSAGE_INFO,
-                             @"Stopping any existing iOS simulator jobs to get a "
-                             @"fresh simulator ...");
-    KillSimulatorJobs();
-    ReportStatusMessageEnd(_reporters,
-                             REPORTER_MESSAGE_INFO,
-                            @"Stopping any existing iOS simulator jobs to get a "
-                            @"fresh simulator ...");
-  }
+                             @"Stopped any existing iOS simulator jobs to get a "
+                             @"fresh simulator.");
+    }
 
-  if (_freshInstall) {
-    if (![self uninstallTestHostBundleID:testHostBundleID withError:error]) {
+    if (_freshInstall) {
+      if (![self uninstallTestHostBundleID:testHostBundleID withError:error]) {
+        return NO;
+      }
+    }
+
+    // Always install the app before running it.  We've observed that
+    // DTiPhoneSimulatorSession does not reliably set the application launch
+    // environment.  If the app is not already installed on the simulator and you
+    // set the launch environment via (setSimulatedApplicationLaunchEnvironment:),
+    // then _sometimes_ the environment gets set right and sometimes not.  This
+    // would make test sometimes not run, since the test runner depends on
+    // DYLD_INSERT_LIBARIES getting passed to the test host app.
+    //
+    // By making sure the app is already installed, we guarantee the environment
+    // is always set correctly.
+    if (![self installTestHostBundleID:testHostBundleID
+                        fromBundlePath:testHostAppPath
+                                 error:error]) {
       return NO;
     }
-  }
+    return YES;
+  };
 
-  // Always install the app before running it.  We've observed that
-  // DTiPhoneSimulatorSession does not reliably set the application launch
-  // environment.  If the app is not already installed on the simulator and you
-  // set the launch environment via (setSimulatedApplicationLaunchEnvironment:),
-  // then _sometimes_ the environment gets set right and sometimes not.  This
-  // would make test sometimes not run, since the test runner depends on
-  // DYLD_INSERT_LIBARIES getting passed to the test host app.
-  //
-  // By making sure the app is already installed, we guarantee the environment
-  // is always set correctly.
-  if (![self installTestHostBundleID:testHostBundleID
-                      fromBundlePath:testHostAppPath
-                               error:error]) {
-    return NO;
+  // Sometimes test host app installation fails, and all subsequent installation attempts fail as well.
+  // Instead of retrying the installation after failure, we'll kill and relaunch the simulator before
+  // the install, and also wait a short amount of time before each attempt.
+  for (NSInteger remainingAttempts = kMaxInstallOrUninstallAttempts - 1; remainingAttempts >= 0; --remainingAttempts) {
+    if (prepTestEnv(error)) {
+      break;
+    } else {
+      NSCAssert(error, @"If preparing the test env failed, there should be a description of what failed.");
+      if (remainingAttempts > 0) {
+        ReportStatusMessage(_reporters,
+                            REPORTER_MESSAGE_INFO,
+                            @"Preparing test environment failed; "
+                            @"will retry %ld more time%@",
+                            (long)remainingAttempts,
+                            remainingAttempts == 1 ? @"" : @"s");
+        // Sometimes, the test host app installation retries are starting and
+        // finishing in < 10 ms. That's way too fast for anything real to be
+        // happening. To remedy this, we pause for a second between retries.
+        [NSThread sleepForTimeInterval:1];
+      }
+      else {
+        ReportStatusMessage(_reporters,
+                            REPORTER_MESSAGE_INFO,
+                            @"Preparing test environment failed.");
+        return NO;
+      }
+    }
   }
 
   ReportStatusMessage(_reporters,
