@@ -297,7 +297,7 @@ BOOL LaunchXcodebuildTaskAndFeedEventsToReporters(NSTask *task,
                                      @"running xcodebuild",
                                      ^(NSString *line){
     NSError *error = nil;
-    NSDictionary *event = [NSJSONSerialization JSONObjectWithData:[line dataUsingEncoding:NSUTF8StringEncoding]
+    NSMutableDictionary *event = [NSJSONSerialization JSONObjectWithData:[line dataUsingEncoding:NSUTF8StringEncoding]
                                                           options:0
                                                             error:&error];
     NSCAssert(error == nil,
@@ -357,10 +357,12 @@ BOOL RunXcodebuildAndFeedEventsToReporters(NSArray *arguments,
    }];
   [task setEnvironment:environment];
 
-  NSDictionary *beginEvent = @{@"event": kReporter_Events_BeginXcodebuild,
-                               kReporter_BeginXcodebuild_CommandKey: command,
-                               kReporter_BeginXcodebuild_TitleKey: title,
-                               };
+  NSMutableDictionary *beginEvent = [NSMutableDictionary dictionary];
+  [beginEvent addEntriesFromDictionary:@{
+   @"event": kReporter_Events_BeginXcodebuild,
+   kReporter_BeginXcodebuild_CommandKey: command,
+   kReporter_BeginXcodebuild_TitleKey: title,
+   }];
   PublishEventToReporters(reporters, beginEvent);
 
   NSString *xcodebuildErrorMessage = nil;
@@ -470,9 +472,11 @@ void CleanupTemporaryDirectoryForAction()
   }
 }
 
-void PublishEventToReporters(NSArray *reporters, NSDictionary *event)
+void PublishEventToReporters(NSArray *reporters, NSMutableDictionary *event)
 {
   NSError *error = nil;
+  printf(event);
+  [event setObject:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]] forKey:@"timestamp"];
   NSData *jsonData = [NSJSONSerialization dataWithJSONObject:event options:0 error:&error];
   NSCAssert(jsonData != nil, @"Error while encoding event into JSON: %@", [error localizedFailureReason]);
 

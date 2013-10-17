@@ -178,7 +178,7 @@
       NSArray *context = [self.class contextFromDiagPath:diag[@"path"]
                                                  fileMap:diags[@"files"]];
 
-      PublishEventToReporters(reporters, @{
+      PublishEventToReporters(reporters, [NSMutableDictionary dictionaryWithDictionary:@{
        @"event": kReporter_Events_AnalyzerResult,
         kReporter_AnalyzerResult_ProjectKey: projectName,
          kReporter_AnalyzerResult_TargetKey: targetName,
@@ -187,7 +187,7 @@
          kReporter_AnalyzerResult_ColumnKey: col,
     kReporter_AnalyzerResult_DescriptionKey: desc,
         kReporter_AnalyzerResult_ContextKey: context,
-       });
+       }]);
     }
   }
 

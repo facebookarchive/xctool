@@ -37,7 +37,8 @@
                                      error:&error];
   assertThatBool(opened, equalToBool(YES));
 
-  PublishEventToReporters(@[rt], @{@"event":@"some-fake-event"});
+  PublishEventToReporters(@[rt], [NSMutableDictionary dictionaryWithDictionary:@{
+    @"event":@"some-fake-event"}]);
 
   [rt close];
 
@@ -60,7 +61,8 @@
                                      error:&error];
   assertThatBool(opened, equalToBool(YES));
 
-  PublishEventToReporters(@[rt], @{@"event":@"some-fake-event"});
+  PublishEventToReporters(@[rt], [NSMutableDictionary dictionaryWithDictionary:@{
+    @"event":@"some-fake-event"}]);
 
   [rt close];
 

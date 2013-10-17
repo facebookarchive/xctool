@@ -187,19 +187,19 @@
 
     for (Action *action in options.actions) {
       CFTimeInterval startTime = CACurrentMediaTime();
-      PublishEventToReporters(options.reporters, @{
+      PublishEventToReporters(options.reporters, [NSMutableDictionary dictionaryWithDictionary:@{
        @"event": kReporter_Events_BeginAction,
        kReporter_BeginAction_NameKey: [[action class] name],
        kReporter_BeginAction_WorkspaceKey: options.workspace ?: [NSNull null],
        kReporter_BeginAction_ProjectKey: options.project ?: [NSNull null],
        kReporter_BeginAction_SchemeKey: options.scheme,
-       });
+       }]);
 
       BOOL succeeded = [action performActionWithOptions:options xcodeSubjectInfo:xcodeSubjectInfo];
 
       CFTimeInterval stopTime = CACurrentMediaTime();
 
-      PublishEventToReporters(options.reporters, @{
+      PublishEventToReporters(options.reporters, [NSMutableDictionary dictionaryWithDictionary:@{
        @"event": kReporter_Events_EndAction,
        kReporter_EndAction_NameKey: [[action class] name],
        kReporter_EndAction_WorkspaceKey: options.workspace ?: [NSNull null],
@@ -207,7 +207,7 @@
        kReporter_EndAction_SchemeKey: options.scheme,
        kReporter_EndAction_SucceededKey: @(succeeded),
        kReporter_EndAction_DurationKey: @(stopTime - startTime),
-       });
+       }]);
 
       CleanupTemporaryDirectoryForAction();
 
