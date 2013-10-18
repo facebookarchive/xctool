@@ -3,6 +3,7 @@
 
 #import "iPhoneSimulatorRemoteClient.h"
 
+#import "ContainsArray.h"
 #import "FakeTask.h"
 #import "FakeTaskManager.h"
 #import "OCUnitTestRunner.h"
@@ -75,18 +76,9 @@
 
   assertThat(config, notNilValue());
   assertThat([config simulatedApplicationLaunchArgs],
-             equalTo(@[
-                     @"-NSTreatUnknownArgumentsAsOpen",
-                     @"NO",
-                     @"-ApplePersistenceIgnoreState",
-                     @"YES",
-                     @"-SenTest",
-                     @"",
-                     @"-SenTestInvertScope",
-                     @"NO",
-                     @"-SomeArg",
-                     @"SomeVal",
-                     ]));
+             containsArray(@[@"-SomeArg",
+                             @"SomeVal",
+                             ]));
   assertThat([config simulatedApplicationLaunchEnvironment][@"SomeEnvKey"],
              equalTo(@"SomeEnvValue"));
 
@@ -146,19 +138,9 @@
     assertThatInteger([launchedTasks count], equalToInteger(1));
 
     assertThat([launchedTasks[0] arguments],
-               equalTo(@[
-                       @"-NSTreatUnknownArgumentsAsOpen",
-                       @"NO",
-                       @"-ApplePersistenceIgnoreState",
-                       @"YES",
-                       @"-SenTest",
-                       @"",
-                       @"-SenTestInvertScope",
-                       @"NO",
-                       @"-SomeArg",
-                       @"SomeVal",
-                       @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-gqcuxcsyguaqwugnnwmftlazxbyg/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest"
-                       ]));
+               containsArray(@[@"-SomeArg",
+                               @"SomeVal",
+                               ]));
     assertThat([launchedTasks[0] environment][@"SomeEnvKey"],
                equalTo(@"SomeEnvValue"));
   }];
@@ -214,18 +196,9 @@
 
   assertThatInteger([launchedTasks count], equalToInteger(1));
   assertThat([launchedTasks[0] arguments],
-             equalTo(@[
-                     @"-NSTreatUnknownArgumentsAsOpen",
-                     @"NO",
-                     @"-ApplePersistenceIgnoreState",
-                     @"YES",
-                     @"-SenTest",
-                     @"",
-                     @"-SenTestInvertScope",
-                     @"NO",
-                     @"-SomeArg",
-                     @"SomeVal",
-                     ]));
+             containsArray(@[@"-SomeArg",
+                             @"SomeVal",
+                             ]));
   assertThat([launchedTasks[0] environment][@"SomeEnvKey"],
              equalTo(@"SomeEnvValue"));
 }
@@ -282,22 +255,40 @@
     assertThatInteger([launchedTasks count], equalToInteger(1));
 
     assertThat([launchedTasks[0] arguments],
-               equalTo(@[
-                       @"-NSTreatUnknownArgumentsAsOpen",
-                       @"NO",
-                       @"-ApplePersistenceIgnoreState",
-                       @"YES",
-                       @"-SenTest",
-                       @"",
-                       @"-SenTestInvertScope",
-                       @"NO",
-                       @"-SomeArg",
-                       @"SomeVal",
-                       @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-OSX-aodfaypehmaltxamnygangxbvudj/Build/Products/Debug/TestProject-Library-OSXTests.octest"
-                       ]));
+               containsArray(@[@"-SomeArg",
+                               @"SomeVal",
+                               ]));
     assertThat([launchedTasks[0] environment][@"SomeEnvKey"],
                equalTo(@"SomeEnvValue"));
   }];
+}
+
+- (void)testTestArgumentsAlwaysIncludesCommonItems
+{
+  NSDictionary *allSettings =
+  BuildSettingsFromOutput([NSString stringWithContentsOfFile:TEST_DATA @"OSX-Logic-Test-showBuildSettings.txt"
+                                                    encoding:NSUTF8StringEncoding
+                                                       error:nil]);
+  NSDictionary *testSettings = allSettings[@"TestProject-Library-OSXTests"];
+
+  OCUnitTestRunner *runner =
+  [[[OCUnitTestRunner alloc] initWithBuildSettings:testSettings
+                                       senTestList:@[]
+                                         arguments:@[]
+                                       environment:@{}
+                                 garbageCollection:NO
+                                    freshSimulator:NO
+                                      freshInstall:NO
+                                     simulatorType:nil
+                                         reporters:@[]] autorelease];
+
+  // Xcode.app always passes these...
+  assertThat([runner testArguments],
+             containsArray(@[@"-NSTreatUnknownArgumentsAsOpen",
+                               @"NO",
+                               @"-ApplePersistenceIgnoreState",
+                               @"YES",
+                               ]));
 }
 
 #pragma mark misc.
