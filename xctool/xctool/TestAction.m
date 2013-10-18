@@ -66,6 +66,10 @@
                          aliases:nil
                      description:@"Parallelize execution of tests"
                          setFlag:@selector(setParallelize:)],
+    [Action actionOptionWithName:@"failOnEmptyTestBundles"
+                        aliases:nil
+                     description:@"Fail when no tests were run"
+                         setFlag:@selector(setFailOnEmptyTestBundles:)],
     [Action actionOptionWithName:@"logicTestBucketSize"
                          aliases:nil
                      description:@"Break logic test bundles in buckets of N test cases."
@@ -147,6 +151,11 @@
 - (void)setSkipDependencies:(BOOL)skipDependencies
 {
   _buildTestsAction.skipDependencies = skipDependencies;
+}
+
+- (void)setFailOnEmptyTestBundles:(BOOL)failOnEmptyTestBundles
+{
+  [_runTestsAction setFailOnEmptyTestBundles:failOnEmptyTestBundles];
 }
 
 - (void)addOnly:(NSString *)argument

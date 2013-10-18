@@ -485,6 +485,8 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
   ReportStatusMessageEnd(options.reporters, REPORTER_MESSAGE_INFO,
                          @"Collecting info for testables...");
 
+  int numTestCases = 0;
+
   for (TestableExecutionInfo *info in testableExecutionInfos) {
     if (info.buildSettingsError) {
       TestableBlock block = [self blockToAdvertiseError:info.buildSettingsError
@@ -502,6 +504,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
     NSArray *testCases = [OCUnitTestRunner filterTestCases:info.testCases
                                            withSenTestList:info.testable.senTestList
                                         senTestInvertScope:info.testable.senTestInvertScope];
+    numTestCases += [testCases count];
 
     int bucketSize = isApplicationTest ? _appTestBucketSize : _logicTestBucketSize;
     NSArray *testChunks;
@@ -559,7 +562,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
     }
   }
 
-  __block BOOL succeeded = YES;
+  __block BOOL succeeded = !_failOnEmptyTestBundles || numTestCases > 0;
   __block NSMutableArray *bundlesInProgress = [NSMutableArray array];
 
   void (^runTestableBlockAndSaveSuccess)(TestableBlock, NSString *) = ^(TestableBlock block, NSString *blockAnnotation) {
