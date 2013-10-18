@@ -86,31 +86,25 @@ static NSString *StripAnsi(NSString *inputString)
   return outputString;
 }
 
-static NSArray *CreateParseTestName(NSString *fullTestName)
+void ParseClassAndMethodFromTestName(NSString **className, NSString **methodName, NSString *testName)
 {
-  id className = [NSNull null];
-  id methodName = [NSNull null];
-  if (fullTestName && [fullTestName length] > 6) {
-    NSRegularExpression *testNameRegex =
-      [NSRegularExpression regularExpressionWithPattern:@"^-\\[(\\w+) (\\w+)\\]$"
-                                                options:0
-                                                  error:nil];
-    NSTextCheckingResult *match =
-      [testNameRegex firstMatchInString:fullTestName
-                                options:0
-                                  range:NSMakeRange(0, [fullTestName length])];
-    if (match && [match numberOfRanges] == 3) {
-      NSRange groupRange = [match rangeAtIndex:1];
-      if (groupRange.location != NSNotFound) {
-        className = [fullTestName substringWithRange:groupRange];
-      }
-      groupRange = [match rangeAtIndex:2];
-      if (groupRange.location != NSNotFound) {
-        methodName = [fullTestName substringWithRange:groupRange];
-      }
-    }
-  }
-  return [[NSArray alloc] initWithObjects:className, methodName, nil];
+  NSCAssert(className, @"className should be non-nil");
+  NSCAssert(methodName, @"methodName should be non-nil");
+  NSCAssert(testName, @"testName should be non-nil");
+
+  NSRegularExpression *testNameRegex =
+    [NSRegularExpression regularExpressionWithPattern:@"^-\\[(\\w+) (\\w+)\\]$"
+                                              options:0
+                                                error:nil];
+  NSTextCheckingResult *match =
+    [testNameRegex firstMatchInString:testName
+                              options:0
+                                range:NSMakeRange(0, [testName length])];
+  NSCAssert(match && [match numberOfRanges] == 3,
+            @"Test name seems to be malformed: %@", testName);
+
+  *className = [testName substringWithRange:[match rangeAtIndex:1]];
+  *methodName = [testName substringWithRange:[match rangeAtIndex:2]];
 }
 
 static void PrintJSON(id JSONObject)
@@ -224,16 +218,17 @@ static void SenTestLog_testCaseDidStart(id self, SEL sel, NSNotification *notifi
 static void XCToolLog_testCaseDidStart(NSString *fullTestName)
 {
   dispatch_sync(EventQueue(), ^{
-    NSArray *classAndMethodNames = CreateParseTestName(fullTestName);
+    NSString *className = nil;
+    NSString *methodName = nil;
+    ParseClassAndMethodFromTestName(&className, &methodName, fullTestName);
+
     PrintJSON(@{
       @"event" : kReporter_Events_BeginTest,
       kReporter_BeginTest_TestKey : fullTestName,
-      kReporter_BeginTest_ClassNameKey : [classAndMethodNames objectAtIndex:0],
-      kReporter_BeginTest_MethodNameKey : [classAndMethodNames objectAtIndex:1],
+      kReporter_BeginTest_ClassNameKey : className,
+      kReporter_BeginTest_MethodNameKey : methodName,
     });
     
-    [classAndMethodNames release];
-    classAndMethodNames = nil;
     [__testExceptions release];
     __testExceptions = [[NSMutableArray alloc] init];
     __testIsRunning = YES;
@@ -259,7 +254,10 @@ static void SenTestLog_testCaseDidStop(id self, SEL sel, NSNotification *notific
 static void XCToolLog_testCaseDidStop(NSString *fullTestName, NSNumber *unexpectedExceptionCount, NSNumber *failureCount, NSNumber *totalDuration)
 {
   dispatch_sync(EventQueue(), ^{
-    NSArray *classAndMethodNames = CreateParseTestName(fullTestName);
+    NSString *className = nil;
+    NSString *methodName = nil;
+    ParseClassAndMethodFromTestName(&className, &methodName, fullTestName);
+
     BOOL errored = [unexpectedExceptionCount integerValue] > 0;
     BOOL failed = [failureCount integerValue] > 0;
     BOOL succeeded = NO;
@@ -277,8 +275,8 @@ static void XCToolLog_testCaseDidStop(NSString *fullTestName, NSNumber *unexpect
     NSMutableDictionary *json = [NSMutableDictionary dictionaryWithDictionary:@{
       @"event" : kReporter_Events_EndTest,
       kReporter_EndTest_TestKey : fullTestName,
-      kReporter_EndTest_ClassNameKey : [classAndMethodNames objectAtIndex:0],
-      kReporter_EndTest_MethodNameKey : [classAndMethodNames objectAtIndex:1],
+      kReporter_EndTest_ClassNameKey : className,
+      kReporter_EndTest_MethodNameKey : methodName,
       kReporter_EndTest_SucceededKey: @(succeeded),
       kReporter_EndTest_ResultKey : result,
       kReporter_EndTest_TotalDurationKey : totalDuration,
@@ -289,8 +287,6 @@ static void XCToolLog_testCaseDidStop(NSString *fullTestName, NSNumber *unexpect
     
     PrintJSON(json);
     
-    [classAndMethodNames release];
-    classAndMethodNames = nil;
     __testIsRunning = NO;
     [__testOutput release];
     __testOutput = nil;
