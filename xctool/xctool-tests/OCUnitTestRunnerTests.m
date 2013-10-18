@@ -291,6 +291,52 @@
                                ]));
 }
 
+- (void)testCorrectTestSpecifierArgumentsAreUsedForSenTestingKit
+{
+  NSDictionary *allSettings =
+  BuildSettingsFromOutput([NSString stringWithContentsOfFile:TEST_DATA @"OSX-Logic-Test-showBuildSettings.txt"
+                                                    encoding:NSUTF8StringEncoding
+                                                       error:nil]);
+  NSDictionary *testSettings = allSettings[@"TestProject-Library-OSXTests"];
+
+  OCUnitTestRunner *runner =
+  [[[OCUnitTestRunner alloc] initWithBuildSettings:testSettings
+                                       senTestList:@[]
+                                         arguments:@[]
+                                       environment:@{}
+                                 garbageCollection:NO
+                                    freshSimulator:NO
+                                      freshInstall:NO
+                                     simulatorType:nil
+                                         reporters:@[]] autorelease];
+
+  assertThat([runner testArguments], containsArray(@[@"-SenTest"]));
+  assertThat([runner testArguments], containsArray(@[@"-SenTestInvertScope"]));
+}
+
+- (void)testCorrectTestSpecifierArgumentsAreUsedForXCTest
+{
+  NSDictionary *allSettings =
+  BuildSettingsFromOutput([NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-XCTest-OSX-showBuildSettings.txt"
+                                                    encoding:NSUTF8StringEncoding
+                                                       error:nil]);
+  NSDictionary *testSettings = allSettings[@"TestProject-Library-XCTest-OSXTests"];
+
+  OCUnitTestRunner *runner =
+  [[[OCUnitTestRunner alloc] initWithBuildSettings:testSettings
+                                       senTestList:@[]
+                                         arguments:@[]
+                                       environment:@{}
+                                 garbageCollection:NO
+                                    freshSimulator:NO
+                                      freshInstall:NO
+                                     simulatorType:nil
+                                         reporters:@[]] autorelease];
+
+  assertThat([runner testArguments], containsArray(@[@"-XCTest"]));
+  assertThat([runner testArguments], containsArray(@[@"-XCTestInvertScope"]));
+}
+
 #pragma mark misc.
 
 /// otest-query returns a list of all classes. This tests the post-filtering of
