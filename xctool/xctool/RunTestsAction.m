@@ -391,7 +391,8 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
 }
 
 - (TestableBlock)blockForTestable:(Testable *)testable
-                      senTestList:(NSArray *)senTestList
+                 focusedTestCases:(NSArray *)focusedTestCases
+                     allTestCases:(NSArray *)allTestCases
             testableBuildSettings:(NSDictionary *)testableBuildSettings
                    testableTarget:(NSString *)testableTarget
                 isApplicationTest:(BOOL)isApplicationTest
@@ -403,7 +404,8 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
   return [[^(NSArray *reporters) {
     OCUnitTestRunner *testRunner = [[[testRunnerClass alloc]
                                      initWithBuildSettings:testableBuildSettings
-                                     senTestList:senTestList
+                                     focusedTestCases:focusedTestCases
+                                     allTestCases:allTestCases
                                      arguments:arguments
                                      environment:environment
                                      garbageCollection:garbageCollectionEnabled
@@ -514,7 +516,8 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
           blockAnnotation = @"";
         } else {
           block = [self blockForTestable:info.testable
-                             senTestList:senTestListChunk
+                        focusedTestCases:senTestListChunk
+                            allTestCases:info.testCases
                    testableBuildSettings:info.buildSettings
                           testableTarget:info.testable.target
                        isApplicationTest:isApplicationTest

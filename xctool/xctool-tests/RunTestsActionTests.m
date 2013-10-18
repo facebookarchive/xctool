@@ -230,7 +230,7 @@
                equalTo(@[
                        @"-NSTreatUnknownArgumentsAsOpen", @"NO",
                        @"-ApplePersistenceIgnoreState", @"YES",
-                       @"-SenTest", [testList componentsJoinedByString:@","],
+                       @"-SenTest", @"Self",
                        @"-SenTestInvertScope", @"NO",
                        @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
                        ]));
@@ -302,7 +302,7 @@
                equalTo(@[
                        @"-NSTreatUnknownArgumentsAsOpen", @"NO",
                        @"-ApplePersistenceIgnoreState", @"YES",
-                       @"-SenTest", [testList componentsJoinedByString:@","],
+                       @"-SenTest", @"Self",
                        @"-SenTestInvertScope", @"NO",
                        @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
                        ]));
@@ -365,17 +365,33 @@
                            @"-NSTreatUnknownArgumentsAsOpen", @"NO",
                            @"-ApplePersistenceIgnoreState", @"YES",
                            @"-SenTest", expectedSenTest,
-                           @"-SenTestInvertScope", @"NO",
+                           @"-SenTestInvertScope", @"YES",
                            @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
                            ]));
     }];
   };
 
-  runWithOnlyArgumentAndExpectSenTestToBe(@"TestProject-LibraryTests:SomeTests/testOutputMerging", @"SomeTests/testOutputMerging");
-  runWithOnlyArgumentAndExpectSenTestToBe(@"TestProject-LibraryTests:SomeTests/testWillPass", @"SomeTests/testWillPass");
+  runWithOnlyArgumentAndExpectSenTestToBe(@"TestProject-LibraryTests:SomeTests/testOutputMerging",
+                                          @"OtherTests/testSomething,"
+                                          @"SomeTests/testBacktraceOutputIsCaptured,"
+                                          @"SomeTests/testPrintSDK,"
+                                          @"SomeTests/testStream,"
+                                          @"SomeTests/testWillFail,"
+                                          @"SomeTests/testWillPass");
+  runWithOnlyArgumentAndExpectSenTestToBe(@"TestProject-LibraryTests:SomeTests/testWillPass",
+                                          @"OtherTests/testSomething,"
+                                          @"SomeTests/testBacktraceOutputIsCaptured,"
+                                          @"SomeTests/testOutputMerging,"
+                                          @"SomeTests/testPrintSDK,"
+                                          @"SomeTests/testStream,"
+                                          @"SomeTests/testWillFail");
   runWithOnlyArgumentAndExpectSenTestToBe(@"TestProject-LibraryTests:SomeTests/testWillPass,OtherTests/testSomething",
                                           // The ordering will be alphabetized.
-                                          @"OtherTests/testSomething,SomeTests/testWillPass");
+                                          @"SomeTests/testBacktraceOutputIsCaptured,"
+                                          @"SomeTests/testOutputMerging,"
+                                          @"SomeTests/testPrintSDK,"
+                                          @"SomeTests/testStream,"
+                                          @"SomeTests/testWillFail");
 }
 
 /**

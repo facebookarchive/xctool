@@ -41,7 +41,8 @@
    ^{
      OCUnitIOSAppTestRunner *runner =
       [[[OCUnitIOSAppTestRunner alloc] initWithBuildSettings:testSettings
-                                                 senTestList:@[]
+                                            focusedTestCases:@[]
+                                                allTestCases:@[]
                                                    arguments:
        @[
        @"-SomeArg", @"SomeVal",
@@ -117,7 +118,8 @@
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
      OCUnitIOSLogicTestRunner *runner =
      [[[OCUnitIOSLogicTestRunner alloc] initWithBuildSettings:testSettings
-                                                  senTestList:@[]
+                                             focusedTestCases:@[]
+                                                 allTestCases:@[]
                                                     arguments:
       @[
       @"-SomeArg", @"SomeVal",
@@ -158,7 +160,8 @@
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     OCUnitOSXAppTestRunner *runner =
     [[[OCUnitOSXAppTestRunner alloc] initWithBuildSettings:testSettings
-                                               senTestList:@[]
+                                          focusedTestCases:@[]
+                                              allTestCases:@[]
                                                  arguments:
      @[
      @"-SomeArg", @"SomeVal",
@@ -234,7 +237,8 @@
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     OCUnitOSXLogicTestRunner *runner =
     [[[OCUnitOSXLogicTestRunner alloc] initWithBuildSettings:testSettings
-                                                 senTestList:@[]
+                                            focusedTestCases:@[]
+                                                allTestCases:@[]
                                                    arguments:
       @[
       @"-SomeArg", @"SomeVal",
@@ -273,7 +277,8 @@
 
   OCUnitTestRunner *runner =
   [[[OCUnitTestRunner alloc] initWithBuildSettings:testSettings
-                                       senTestList:@[]
+                                  focusedTestCases:@[]
+                                      allTestCases:@[]
                                          arguments:@[]
                                        environment:@{}
                                  garbageCollection:NO
@@ -301,7 +306,8 @@
 
   OCUnitTestRunner *runner =
   [[[OCUnitTestRunner alloc] initWithBuildSettings:testSettings
-                                       senTestList:@[]
+                                  focusedTestCases:@[]
+                                      allTestCases:@[]
                                          arguments:@[]
                                        environment:@{}
                                  garbageCollection:NO
@@ -324,7 +330,8 @@
 
   OCUnitTestRunner *runner =
   [[[OCUnitTestRunner alloc] initWithBuildSettings:testSettings
-                                       senTestList:@[]
+                                  focusedTestCases:@[]
+                                      allTestCases:@[]
                                          arguments:@[]
                                        environment:@{}
                                  garbageCollection:NO
@@ -335,6 +342,62 @@
 
   assertThat([runner testArguments], containsArray(@[@"-XCTest"]));
   assertThat([runner testArguments], containsArray(@[@"-XCTestInvertScope"]));
+}
+
+- (void)testTestSpecifierIsSelfWhenRunningAllTests
+{
+  NSDictionary *allSettings =
+  BuildSettingsFromOutput([NSString stringWithContentsOfFile:TEST_DATA @"OSX-Logic-Test-showBuildSettings.txt"
+                                                    encoding:NSUTF8StringEncoding
+                                                       error:nil]);
+  NSDictionary *testSettings = allSettings[@"TestProject-Library-OSXTests"];
+
+  OCUnitTestRunner *runner =
+  [[[OCUnitTestRunner alloc] initWithBuildSettings:testSettings
+                                  focusedTestCases:@[@"Cls1/testA", @"Cls2/testB"]
+                                      allTestCases:@[@"Cls1/testA", @"Cls2/testB"]
+                                         arguments:@[]
+                                       environment:@{}
+                                 garbageCollection:NO
+                                    freshSimulator:NO
+                                      freshInstall:NO
+                                     simulatorType:nil
+                                         reporters:@[]] autorelease];
+
+  assertThat([runner testArguments],
+             containsArray(@[@"-SenTest",
+                             @"Self",
+                             @"-SenTestInvertScope",
+                             @"NO",
+                             ]));
+}
+
+- (void)testTestSpecifierIsInvertedTestListWhenRunningSpecificTests
+{
+  NSDictionary *allSettings =
+  BuildSettingsFromOutput([NSString stringWithContentsOfFile:TEST_DATA @"OSX-Logic-Test-showBuildSettings.txt"
+                                                    encoding:NSUTF8StringEncoding
+                                                       error:nil]);
+  NSDictionary *testSettings = allSettings[@"TestProject-Library-OSXTests"];
+
+  OCUnitTestRunner *runner =
+  [[[OCUnitTestRunner alloc] initWithBuildSettings:testSettings
+                                  focusedTestCases:@[@"Cls1/testA"]
+                                      allTestCases:@[@"Cls1/testA", @"Cls2/testB"]
+                                         arguments:@[]
+                                       environment:@{}
+                                 garbageCollection:NO
+                                    freshSimulator:NO
+                                      freshInstall:NO
+                                     simulatorType:nil
+                                         reporters:@[]] autorelease];
+
+  assertThat([runner testArguments],
+             containsArray(@[@"-SenTest",
+                             @"Cls2/testB",
+                             @"-SenTestInvertScope",
+                             @"YES",
+                             ]));
 }
 
 #pragma mark misc.

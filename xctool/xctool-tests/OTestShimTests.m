@@ -18,6 +18,7 @@
 
 #import "ContainsException.h"
 #import "OCUnitIOSLogicTestRunner.h"
+#import "OTestQuery.h"
 #import "ReporterEvents.h"
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
@@ -26,7 +27,18 @@
 
 @end
 
-static NSTask *otestShimTask(NSString *settingsPath, NSString *targetName, NSString *bundlePath, NSArray *testList)
+static NSArray *AllTestCasesInIOSTestBundle(NSString *bundlePath)
+{
+  NSString *error = nil;
+  NSArray *allTests = OTestQueryTestCasesInIOSBundle(bundlePath,
+                                                     GetAvailableSDKsAndAliases()[@"iphonesimulator"],
+                                                     &error);
+  NSCAssert(error == nil, @"Error while querying test cases: %@", error);
+
+  return allTests;
+}
+
+static NSTask *otestShimTask(NSString *settingsPath, NSString *targetName, NSString *bundlePath, NSArray *focusedTests, NSArray *allTests)
 {
   // Make sure supplied files actually exist at their supposed paths.
   NSCAssert([[NSFileManager defaultManager] fileExistsAtPath:bundlePath], @"Bundle does not exist at '%@'", bundlePath);
@@ -40,7 +52,8 @@ static NSTask *otestShimTask(NSString *settingsPath, NSString *targetName, NSStr
 
   // set up an OCUnitIOSLogicTestRunner
   OCUnitIOSLogicTestRunner *runner = [[OCUnitIOSLogicTestRunner alloc] initWithBuildSettings:allSettings[targetName]
-                                                                                 senTestList:testList
+                                                                            focusedTestCases:focusedTests
+                                                                                allTestCases:allTests
                                                                                    arguments:@[]
                                                                                  environment:@{}
                                                                            garbageCollection:NO
@@ -112,7 +125,8 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
   NSArray *testList = @[ @"SenTestingKit_Assertion/testAssertionFailure" ];
   NSString *methodName = @"-[SenTestingKit_Assertion testAssertionFailure]";
 
-  NSTask *task = otestShimTask(settingsPath, targetName, bundlePath, testList);
+  NSArray *allTests = AllTestCasesInIOSTestBundle(bundlePath);
+  NSTask *task = otestShimTask(settingsPath, targetName, bundlePath, testList, allTests);
   NSArray *events = RunOtestAndParseResult(task);
   assertThat(events, isNot(nilValue()));
   assertThat(@([events count]), is(@4));
@@ -140,7 +154,8 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
   NSArray *testList = @[ @"XCTest_Assertion/testAssertionFailure" ];
   NSString *methodName = @"-[XCTest_Assertion testAssertionFailure]";
 
-  NSTask *task = otestShimTask(settingsPath, targetName, bundlePath, testList);
+  NSArray *allTests = AllTestCasesInIOSTestBundle(bundlePath);
+  NSTask *task = otestShimTask(settingsPath, targetName, bundlePath, testList, allTests);
   NSArray *events = RunOtestAndParseResult(task);
   assertThat(events, isNot(nilValue()));
   assertThat(@([events count]), is(@4));
@@ -163,7 +178,8 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
   NSArray *testList = @[ @"SenTestingKit_Assertion/testExpectedAssertionIsSilent" ];
   NSString *methodName = @"-[SenTestingKit_Assertion testExpectedAssertionIsSilent]";
 
-  NSTask *task = otestShimTask(settingsPath, targetName, bundlePath, testList);
+  NSArray *allTests = AllTestCasesInIOSTestBundle(bundlePath);
+  NSTask *task = otestShimTask(settingsPath, targetName, bundlePath, testList, allTests);
   NSArray *events = RunOtestAndParseResult(task);
   assertThat(events, isNot(nilValue()));
   assertThat(@([events count]), is(@5));
@@ -189,7 +205,8 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
   NSArray *testList = @[ @"XCTest_Assertion/testExpectedAssertionIsSilent" ];
   NSString *methodName = @"-[XCTest_Assertion testExpectedAssertionIsSilent]";
 
-  NSTask *task = otestShimTask(settingsPath, targetName, bundlePath, testList);
+  NSArray *allTests = AllTestCasesInIOSTestBundle(bundlePath);
+  NSTask *task = otestShimTask(settingsPath, targetName, bundlePath, testList, allTests);
   NSArray *events = RunOtestAndParseResult(task);
   assertThat(events, isNot(nilValue()));
   assertThat(@([events count]), is(@5));
@@ -209,7 +226,8 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
   NSString *settingsPath = TEST_DATA @"TestProject-Assertion-SenTestingKit_Assertion-showBuildSettings.txt";
   NSArray *testList = @[ @"SenTestingKit_Assertion/testExpectedAssertionMissingIsNotSilent" ];
 
-  NSTask *task = otestShimTask(settingsPath, targetName, bundlePath, testList);
+  NSArray *allTests = AllTestCasesInIOSTestBundle(bundlePath);
+  NSTask *task = otestShimTask(settingsPath, targetName, bundlePath, testList, allTests);
   NSArray *events = RunOtestAndParseResult(task);
   assertThat(events, isNot(nilValue()));
   assertThat(@([events count]), is(@4));
@@ -235,7 +253,8 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
   NSString *settingsPath = TEST_DATA @"TestProject-Assertion-XCTest_Assertion-showBuildSettings.txt";
   NSArray *testList = @[ @"XCTest_Assertion/testExpectedAssertionMissingIsNotSilent" ];
 
-  NSTask *task = otestShimTask(settingsPath, targetName, bundlePath, testList);
+  NSArray *allTests = AllTestCasesInIOSTestBundle(bundlePath);
+  NSTask *task = otestShimTask(settingsPath, targetName, bundlePath, testList, allTests);
   NSArray *events = RunOtestAndParseResult(task);
   assertThat(events, isNot(nilValue()));
   assertThat(@([events count]), is(@4));
