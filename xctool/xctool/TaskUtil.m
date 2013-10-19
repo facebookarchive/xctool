@@ -261,7 +261,7 @@ static NSString *CommandLineEquivalentForTaskArchSpecificTask(NSConcreteTask *ta
 
   if (cpuType == CPU_TYPE_I386) {
     archString = @"i386";
-  } else if (cpuType == CPU_TYPE_I386) {
+  } else if (cpuType == CPU_TYPE_X86_64) {
     archString = @"x86_64";
   } else {
     NSCAssert(NO, @"Unexepcted cpu type %d", cpuType);
