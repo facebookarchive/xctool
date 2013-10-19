@@ -231,9 +231,11 @@ void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, voi
 
 NSTask *CreateTaskInSameProcessGroupWithArch(cpu_type_t arch)
 {
-  NSCAssert(arch == CPU_TYPE_I386 || arch == CPU_TYPE_X86_64, @"CPU type should either be i386 or x86_64.");
   NSConcreteTask *task = (NSConcreteTask *)CreateTaskInSameProcessGroup();
-  [task setPreferredArchitectures:@[ @(arch) ]];
+  if (arch != CPU_TYPE_ANY) {
+    NSCAssert(arch == CPU_TYPE_I386 || arch == CPU_TYPE_X86_64, @"CPU type should either be i386 or x86_64.");
+    [task setPreferredArchitectures:@[ @(arch) ]];
+  }
   return task;
 }
 
@@ -253,7 +255,7 @@ static NSString *QuotedStringIfNeeded(NSString *str) {
   }
 }
 
-static NSString *CommandLineEquivalentForTaskArchSpecificTask(NSConcreteTask *task, int cpuType)
+static NSString *CommandLineEquivalentForTaskArchSpecificTask(NSConcreteTask *task, cpu_type_t cpuType)
 {
   NSMutableString *buffer = [NSMutableString string];
 

@@ -17,7 +17,6 @@
 #import "OCUnitIOSLogicTestRunner.h"
 
 #import "NSConcreteTask.h"
-#import "OTestQuery.h"
 #import "TaskUtil.h"
 #import "TestingFramework.h"
 #import "XCToolUtil.h"

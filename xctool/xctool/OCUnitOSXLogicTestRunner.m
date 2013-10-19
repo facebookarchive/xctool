@@ -17,7 +17,6 @@
 
 #import "OCUnitOSXLogicTestRunner.h"
 
-#import "OTestQuery.h"
 #import "TaskUtil.h"
 #import "TestingFramework.h"
 #import "XCToolUtil.h"
