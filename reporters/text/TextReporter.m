@@ -536,25 +536,41 @@ static NSString *abbreviatePath(NSString *string) {
 - (void)beginOcunit:(NSDictionary *)event
 {
   NSString *titleString = nil;
+
   if (event[kReporter_BeginOCUnit_BundleNameKey]) {
     titleString = event[kReporter_BeginOCUnit_BundleNameKey];
   } else {
-    titleString = [NSString stringWithFormat:@"Target: %@", event[kReporter_BeginOCUnit_TargetNameKey]];
+    // The bundle name won't be available if we fail to load the build settings
+    // for this test target.  Fall back to just target name.
+    titleString = event[kReporter_BeginOCUnit_TargetNameKey];
   }
-  NSString *parameterString = nil;
+
+  // Some attributes may be unset if we're unable to query build settings for
+  // the test bundle.
+  NSMutableArray *attributes = [NSMutableArray array];
+
   if (event[kReporter_BeginOCUnit_SDKNameKey]) {
-    NSArray *attributes = @[event[kReporter_BeginOCUnit_SDKNameKey],
-                            event[kReporter_BeginOCUnit_TestTypeKey],
-                            [NSString stringWithFormat:@"GC %@",
-                            [event[kReporter_BeginOCUnit_GCEnabledKey] boolValue] ? @"ON" : @"OFF"]
-    ];
-    parameterString = [NSString stringWithFormat:@"(%@)", [attributes componentsJoinedByString:@", "]];
+    [attributes addObject:event[kReporter_BeginOCUnit_SDKNameKey]];
+  }
+
+  if (event[kReporter_BeginOCUnit_TestTypeKey]) {
+    [attributes addObject:event[kReporter_BeginOCUnit_TestTypeKey]];
+  }
+
+  if (event[kReporter_BeginOCUnit_GCEnabledKey]) {
+    [attributes addObject:[NSString stringWithFormat:@"GC %@",
+                           [event[kReporter_BeginOCUnit_GCEnabledKey] boolValue] ? @"ON" : @"OFF"]];
+  }
+
+  NSString *attributesString = nil;
+
+  if ([attributes count] > 0) {
+    attributesString = [NSString stringWithFormat:@"(%@)", [attributes componentsJoinedByString:@", "]];
   } else {
-    // we can miss some keys if we failed to get the build settings
-    parameterString = @"";
+    attributesString = @"";
   }
   
-  [self.reportWriter printLine:@"<bold>run-test<reset> <underline>%@<reset> %@", titleString, parameterString];
+  [self.reportWriter printLine:@"<bold>run-test<reset> <underline>%@<reset> %@", titleString, attributesString];
   self.currentBundle = event[kReporter_BeginOCUnit_BundleNameKey];
   [self.reportWriter increaseIndent];
 }
