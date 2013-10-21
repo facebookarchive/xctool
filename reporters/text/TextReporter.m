@@ -239,6 +239,14 @@ static NSString *abbreviatePath(NSString *string) {
   ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
   int width = w.ws_col > 0 ? w.ws_col : 80;
 
+  // Travis will claim its terminal width is 80 chars, but unless your browser
+  // window is really large, you don't generally see an 80-char-width terminal.
+  // This ends up making the divider lines wrap and look really ugly.  Let's cap
+  // at 60.
+  if ([[[NSProcessInfo processInfo] environment][@"TRAVIS"] isEqualToString:@"true"]) {
+    width = MIN(width, 60);
+  }
+
   NSString *dashStr = nil;
   NSString *indicatorStr = nil;
 
