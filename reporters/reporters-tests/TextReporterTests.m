@@ -18,6 +18,7 @@
 
 #import "FakeFileHandle.h"
 #import "ReporterEvents.h"
+#import "EventJSONGenerator.h"
 #import "Reporter+Testing.h"
 #import "TextReporter.h"
 
@@ -51,18 +52,17 @@
 
 - (void)testStatusMessageShowsOneLineWithNoDuration
 {
-  NSArray *events = @[
-                      @{@"event": kReporter_Events_BeginStatus,
-                        kReporter_BeginStatus_MessageKey: @"Some message...",
-                        kReporter_BeginStatus_TimestampKey: @(1),
-                        kReporter_BeginStatus_LevelKey: @"Info",
-                        },
-                      @{@"event": kReporter_Events_EndStatus,
-                        kReporter_EndStatus_MessageKey: @"Some message...",
-                        kReporter_EndStatus_TimestampKey: @(1),
-                        kReporter_EndStatus_LevelKey: @"Info",
-                        },
-                      ];
+    NSArray *events = @[EventDictionaryWithNameAndContent(kReporter_Events_BeginStatus,
+                                                          @{kReporter_BeginStatus_MessageKey: @"Some message...",
+                                                            kReporter_BeginStatus_TimestampKey: @(1),
+                                                            kReporter_BeginStatus_LevelKey: @"Info",
+                                                            }),
+                        EventDictionaryWithNameAndContent(kReporter_Events_EndStatus,
+                                                          @{kReporter_EndStatus_MessageKey: @"Some message...",
+                                                            kReporter_EndStatus_TimestampKey: @(1),
+                                                            kReporter_EndStatus_LevelKey: @"Info",
+                                                            }),
+                        ];
 
   assertThat([PrettyTextReporter outputStringWithEvents:events],
              equalTo(// the first line, from beginStatusMessage:
@@ -75,19 +75,16 @@
 
 - (void)testStatusMessageWithBeginAndEndIncludesDuration
 {
-  NSArray *events = @[
-                      // begin at T+0 seconds.
-                      @{@"event": kReporter_Events_BeginStatus,
-                        kReporter_BeginStatus_MessageKey: @"Some message...",
-                        kReporter_BeginStatus_TimestampKey: @(1),
-                        kReporter_BeginStatus_LevelKey: @"Info",
-                        },
-                      // begin at T+1 seconds.
-                      @{@"event": kReporter_Events_EndStatus,
-                        kReporter_EndStatus_MessageKey: @"Some message.",
-                        kReporter_EndStatus_TimestampKey: @(2),
-                        kReporter_EndStatus_LevelKey: @"Info",
-                        },
+    NSArray *events = @[EventDictionaryWithNameAndContent(kReporter_Events_BeginStatus,
+                                                          @{kReporter_BeginStatus_MessageKey: @"Some message...",
+                                                            kReporter_BeginStatus_TimestampKey: @(1),
+                                                            kReporter_BeginStatus_LevelKey: @"Info",
+                                                            }),
+                        EventDictionaryWithNameAndContent(kReporter_Events_EndStatus,
+                                                          @{kReporter_EndStatus_MessageKey: @"Some message...",
+                                                            kReporter_EndStatus_TimestampKey: @(2),
+                                                            kReporter_EndStatus_LevelKey: @"Info",
+                                                            }),
                       ];
 
   assertThat([PrettyTextReporter outputStringWithEvents:events],

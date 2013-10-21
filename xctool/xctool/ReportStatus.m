@@ -17,6 +17,7 @@
 #import "ReportStatus.h"
 
 #import "ReporterEvents.h"
+#import "EventJSONGenerator.h"
 #import "XCToolUtil.h"
 
 NSString *ReporterMessageLevelToString(ReporterMessageLevel level) {
@@ -35,20 +36,20 @@ NSString *ReporterMessageLevelToString(ReporterMessageLevel level) {
 }
 
 static void ReportStatusMessageBeginWithTimestamp(NSArray *reporters, double timestamp, ReporterMessageLevel level, NSString *message) {
-  NSDictionary *event = @{@"event": kReporter_Events_BeginStatus,
-                          kReporter_BeginStatus_MessageKey: message,
-                          kReporter_BeginStatus_TimestampKey: @(timestamp),
-                          kReporter_BeginStatus_LevelKey: ReporterMessageLevelToString(level),
-                          };
+  NSDictionary *event = EventDictionaryWithNameAndContent(kReporter_Events_BeginStatus,
+                                                          @{kReporter_BeginStatus_MessageKey: message,
+                                                            kReporter_BeginStatus_TimestampKey: @(timestamp),
+                                                            kReporter_BeginStatus_LevelKey: ReporterMessageLevelToString(level),
+                                                            });
   PublishEventToReporters(reporters, event);
 }
 
 static void ReportStatusMessageEndWithTimestamp(NSArray *reporters, double timestamp, ReporterMessageLevel level, NSString *message) {
-  NSDictionary *event = @{@"event": kReporter_Events_EndStatus,
-                          kReporter_EndStatus_MessageKey: message,
-                          kReporter_EndStatus_TimestampKey: @(timestamp),
-                          kReporter_EndStatus_LevelKey: ReporterMessageLevelToString(level),
-                          };
+  NSDictionary *event = EventDictionaryWithNameAndContent(kReporter_Events_EndStatus,
+                                                          @{kReporter_EndStatus_MessageKey: message,
+                                                            kReporter_EndStatus_TimestampKey: @(timestamp),
+                                                            kReporter_EndStatus_LevelKey: ReporterMessageLevelToString(level),
+                                                            });
   PublishEventToReporters(reporters, event);
 }
 

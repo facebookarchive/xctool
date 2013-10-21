@@ -18,6 +18,7 @@
 
 #import "OCTestSuiteEventState.h"
 #import "ReporterEvents.h"
+#import "EventJSONGenerator.h"
 #import "OCTestEventState.h"
 #import "TestUtil.h"
 
@@ -56,13 +57,12 @@
   assertThatBool(state.isStarted, equalToBool(YES));
   assertThatBool(state.isFinished, equalToBool(NO));
 
-  NSDictionary *endEvent = @{
-                          @"event":kReporter_Events_EndTestSuite,
-                          kReporter_EndTestSuite_SuiteKey:@"ATestSuite",
-                          kReporter_EndTestSuite_TotalDurationKey:@(state.duration),
-                          kReporter_EndTestSuite_TestCaseCountKey:@0,
-                          kReporter_EndTestSuite_TotalFailureCountKey:@0,
-                          };
+  NSDictionary *endEvent = EventDictionaryWithNameAndContent(kReporter_Events_EndTestSuite,
+                                                             @{kReporter_EndTestSuite_SuiteKey:@"ATestSuite",
+                                                               kReporter_EndTestSuite_TotalDurationKey:@(state.duration),
+                                                               kReporter_EndTestSuite_TestCaseCountKey:@0,
+                                                               kReporter_EndTestSuite_TotalFailureCountKey:@0,
+                                                               });
 
   NSArray *events = [TestUtil getEventsForStates:@[state] withBlock:^{
     [state publishEvents];
@@ -76,10 +76,8 @@
 
 - (void)testPublishFromNotStarted
 {
-  NSDictionary *beginEvent = @{
-                               @"event":kReporter_Events_BeginTestSuite,
-                               kReporter_BeginTestSuite_SuiteKey:@"ATestSuite",
-                               };
+  NSDictionary *beginEvent = EventDictionaryWithNameAndContent(kReporter_Events_BeginTestSuite,
+                                                               @{kReporter_BeginTestSuite_SuiteKey:@"ATestSuite"});
   OCTestSuiteEventState *state =
     [[[OCTestSuiteEventState alloc] initWithName:@"ATestSuite"] autorelease];
 
@@ -91,13 +89,12 @@
                                          [state publishEvents];
                                        }];
 
-  NSDictionary *endEvent = @{
-                             @"event":kReporter_Events_EndTestSuite,
-                             kReporter_EndTestSuite_SuiteKey:@"ATestSuite",
-                             kReporter_EndTestSuite_TotalDurationKey:@(state.duration),
-                             kReporter_EndTestSuite_TestCaseCountKey:@0,
-                             kReporter_EndTestSuite_TotalFailureCountKey:@0,
-                             };
+  NSDictionary *endEvent = EventDictionaryWithNameAndContent(kReporter_Events_EndTestSuite,
+                                                             @{kReporter_EndTestSuite_SuiteKey:@"ATestSuite",
+                                                               kReporter_EndTestSuite_TotalDurationKey:@(state.duration),
+                                                               kReporter_EndTestSuite_TestCaseCountKey:@0,
+                                                               kReporter_EndTestSuite_TotalFailureCountKey:@0,
+                                                               });
 
 
   assertThatInteger([events count], equalToInteger(2));

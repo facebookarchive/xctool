@@ -18,6 +18,7 @@
 
 #import "OCTestEventState.h"
 #import "ReporterEvents.h"
+#import "EventJSONGenerator.h"
 
 @implementation OCTestEventState
 
@@ -108,10 +109,8 @@
 {
   NSAssert(_isStarted, @"Can't publish output if test hasn't started");
   if (_outputToPublish) {
-    [self publishWithEvent:@{
-     @"event":kReporter_Events_TestOuput,
-     kReporter_TestOutput_OutputKey:_outputToPublish
-    }];
+    [self publishWithEvent: EventDictionaryWithNameAndContent(kReporter_Events_TestOuput,
+                                                              @{kReporter_TestOutput_OutputKey:_outputToPublish})];
     [self stateTestOutput:_outputToPublish];
     [_outputToPublish release];
     _outputToPublish = nil;
@@ -122,26 +121,24 @@
 {
   if (![self isStarted]) {
     [self stateBeginTest];
-    [self publishWithEvent:@{
-      @"event":kReporter_Events_BeginTest,
-      kReporter_EndTest_TestKey:self.testName,
-      kReporter_EndTest_ClassNameKey:_className,
-      kReporter_EndTest_MethodNameKey:_methodName,
-     }];
+    [self publishWithEvent: EventDictionaryWithNameAndContent(kReporter_Events_BeginTest,
+                                                              @{kReporter_EndTest_TestKey:self.testName,
+                                                                kReporter_EndTest_ClassNameKey:_className,
+                                                                kReporter_EndTest_MethodNameKey:_methodName,
+                                                                })];
   }
   if (![self isFinished]) {
     [self publishOutput];
     [self stateEndTest:NO result:@"error"];
-    [self publishWithEvent:@{
-      @"event":kReporter_Events_EndTest,
-      kReporter_EndTest_TestKey:self.testName,
-      kReporter_EndTest_ClassNameKey:_className,
-      kReporter_EndTest_MethodNameKey:_methodName,
-      kReporter_EndTest_SucceededKey:@(_isSuccessful),
-      kReporter_EndTest_ResultKey:_result,
-      kReporter_EndTest_TotalDurationKey:@(_duration),
-      kReporter_EndTest_OutputKey:_outputAlreadyPublished,
-    }];
+    [self publishWithEvent: EventDictionaryWithNameAndContent(kReporter_Events_EndTest,
+                                                              @{kReporter_EndTest_TestKey:self.testName,
+                                                                kReporter_EndTest_ClassNameKey:_className,
+                                                                kReporter_EndTest_MethodNameKey:_methodName,
+                                                                kReporter_EndTest_SucceededKey:@(_isSuccessful),
+                                                                kReporter_EndTest_ResultKey:_result,
+                                                                kReporter_EndTest_TotalDurationKey:@(_duration),
+                                                                kReporter_EndTest_OutputKey:_outputAlreadyPublished,
+                                                                })];
   }
 }
 
