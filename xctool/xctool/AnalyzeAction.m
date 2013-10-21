@@ -155,6 +155,13 @@
                     objroot:xcodeSubjectInfo.objRoot];
   NSString *buildStatePath = [path stringByAppendingPathComponent:@"build-state.dat"];
 
+  if (![[NSFileManager defaultManager] fileExistsAtPath:buildStatePath]) {
+    NSLog(@"No build-state.dat for project/target: %@/%@, skipping...\n"
+          "  it may be overriding CONFIGURATION_TEMP_DIR and emitting intermediate \n"
+          "  files in a non-standard location", projectName, targetName);
+    return;
+  }
+
   BOOL haveFoundWarnings = NO;
 
   BuildStateParser *buildState = [[[BuildStateParser alloc] initWithPath:buildStatePath] autorelease];
