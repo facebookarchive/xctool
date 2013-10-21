@@ -344,7 +344,7 @@
   assertThat([runner testArguments], containsArray(@[@"-XCTestInvertScope"]));
 }
 
-- (void)testTestSpecifierIsSelfWhenRunningAllTests
+- (void)testTestSpecifierIsSelfWhenRunningAllTestsInLogicTestBundle
 {
   NSDictionary *allSettings =
   BuildSettingsFromOutput([NSString stringWithContentsOfFile:TEST_DATA @"OSX-Logic-Test-showBuildSettings.txt"
@@ -367,6 +367,34 @@
   assertThat([runner testArguments],
              containsArray(@[@"-SenTest",
                              @"Self",
+                             @"-SenTestInvertScope",
+                             @"NO",
+                             ]));
+}
+
+- (void)testTestSpecifierIsAllWhenRunningAllTestsInApplicationTestBundle
+{
+  NSDictionary *allSettings =
+  BuildSettingsFromOutput([NSString stringWithContentsOfFile:TEST_DATA @"OSX-Application-Test-showBuildSettings.txt"
+                                                    encoding:NSUTF8StringEncoding
+                                                       error:nil]);
+  NSDictionary *testSettings = allSettings[@"TestProject-App-OSXTests"];
+
+  OCUnitTestRunner *runner =
+  [[[OCUnitTestRunner alloc] initWithBuildSettings:testSettings
+                                  focusedTestCases:@[@"Cls1/testA", @"Cls2/testB"]
+                                      allTestCases:@[@"Cls1/testA", @"Cls2/testB"]
+                                         arguments:@[]
+                                       environment:@{}
+                                 garbageCollection:NO
+                                    freshSimulator:NO
+                                      freshInstall:NO
+                                     simulatorType:nil
+                                         reporters:@[]] autorelease];
+
+  assertThat([runner testArguments],
+             containsArray(@[@"-SenTest",
+                             @"All",
                              @"-SenTestInvertScope",
                              @"NO",
                              ]));

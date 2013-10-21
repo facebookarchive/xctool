@@ -178,8 +178,17 @@
   BOOL invertScope = NO;
 
   if ([focusedSet isEqualToSet:allSet]) {
-    // Xcode.app will always pass 'Self' when running all tests in a bundle.
-    testSpecifier = @"Self";
+
+    if (_buildSettings[@"TEST_HOST"] != nil) {
+      // Xcode.app will always pass 'All' when running all tests in an
+      // application test bundle.
+      testSpecifier = @"All";
+    } else {
+      // Xcode.app will always pass 'Self' when running all tests in an
+      // logic test bundle.
+      testSpecifier = @"Self";
+    }
+
     invertScope = NO;
   } else {
     // When running a specific subset of tests, Xcode.app will always pass the
