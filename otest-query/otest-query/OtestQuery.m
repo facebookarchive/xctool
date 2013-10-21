@@ -22,9 +22,43 @@
 #import <objc/runtime.h>
 #import <stdio.h>
 
+#import "ParseTestName.h"
 #import "TestingFramework.h"
 
 @implementation OtestQuery
+
+/**
+ Crawls through the test suite hierarchy and returns a list of all test case
+ names in the format of ...
+
+   @[@"-[SomeClass someMethod]",
+     @"-[SomeClass otherMethod]"]
+ */
++ (NSArray *)testNamesFromSuite:(id)testSuite testSuiteClass:(Class)testSuiteClass
+{
+  NSMutableArray *names = [NSMutableArray array];
+  NSMutableArray *queue = [NSMutableArray array];
+  [queue addObject:testSuite];
+
+  while ([queue count] > 0) {
+    id test = [queue objectAtIndex:0];
+    [queue removeObjectAtIndex:0];
+
+    if ([test isKindOfClass:testSuiteClass]) {
+      // Both SenTestSuite and XCTestSuite keep a list of tests in an ivar
+      // called 'tests'.
+      id testsInSuite = [test valueForKey:@"tests"];
+      NSAssert(testsInSuite != nil, @"Can't get tests for suite: %@", testSuite);
+      [queue addObjectsFromArray:testsInSuite];
+    } else {
+      NSString *name = [test performSelector:@selector(name)];
+      NSAssert(name != nil, @"Can't get name for test: %@", test);
+      [names addObject:name];
+    }
+  }
+
+  return names;
+}
 
 + (void)queryTestBundlePath:(NSString *)testBundlePath
 {
@@ -56,32 +90,25 @@
 
   [[NSBundle allFrameworks] makeObjectsPerformSelector:@selector(principalClass)];
 
-  Class testClass = NSClassFromString([framework objectForKey:kTestingFrameworkClassName]);
-  SEL allTestsSelector = NSSelectorFromString([framework objectForKey:kTestingFrameworkAllTestsSelectorName]);
-  if (testClass == nil) {
-    fprintf(stderr, "The framework test class '%s' was not loaded, the framework is probably not installed on this system.\n",
-            [[framework objectForKey:kTestingFrameworkClassName] UTF8String]);
-    exit(kClassLoadingError);
-  }
-  NSArray *testClasses = objc_msgSend(testClass, allTestsSelector);
+  Class suiteClass = NSClassFromString([framework objectForKey:kTestingFrameworkTestSuiteClassName]);
+  NSAssert(suiteClass, @"Expected suite class wasn't present: %@", [framework objectForKey:kTestingFrameworkTestSuiteClassName]);
+  NSAssert([suiteClass respondsToSelector:@selector(defaultTestSuite)],
+           @"Suite class should respond to 'defaultTestSuite'");
 
+  id testSuite = [suiteClass performSelector:@selector(defaultTestSuite)];
+  NSAssert(testSuite, @"defaultTestSuite should return something.");
+
+  NSArray *fullTestNames = [self testNamesFromSuite:testSuite testSuiteClass:suiteClass];
   NSMutableArray *testNames = [NSMutableArray array];
-  for (Class testClass in testClasses) {
-    unsigned int methodCount = 0;
-    Method *methods = class_copyMethodList(testClass, &methodCount);
 
-    for (int i = 0; i < methodCount; i++) {
-      Method method = methods[i];
-      NSString *methodName = [NSString stringWithUTF8String:sel_getName(method_getName(method))];
-      unsigned int argCount = method_getNumberOfArguments(method);
-      char returnType[256];
-      method_getReturnType(method, returnType, 256);
-      if ([methodName hasPrefix:@"test"] && argCount == 2 && strncmp(returnType, "v", 256) == 0) {
-        [testNames addObject:[NSString stringWithFormat:@"%@/%@", testClass, methodName]];
-      }
-    }
+  for (NSString *fullTestName in fullTestNames) {
+    NSString *className = nil;
+    NSString *methodName = nil;
+    ParseClassAndMethodFromTestName(&className, &methodName, fullTestName);
+
+    [testNames addObject:[NSString stringWithFormat:@"%@/%@", className, methodName]];
   }
-
+  
   [testNames sortUsingSelector:@selector(compare:)];
 
   NSData *json = [NSJSONSerialization dataWithJSONObject:testNames options:0 error:nil];

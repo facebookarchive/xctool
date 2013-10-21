@@ -68,6 +68,7 @@
 		28B714561760769E00BB016A /* OCUnitIOSDeviceTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 28B714541760767D00BB016A /* OCUnitIOSDeviceTestRunner.m */; };
 		28BB043D17C7FF43004F6C13 /* Buildable.m in Sources */ = {isa = PBXBuildFile; fileRef = 28BB043C17C7FF43004F6C13 /* Buildable.m */; };
 		28BB043E17C7FF43004F6C13 /* Buildable.m in Sources */ = {isa = PBXBuildFile; fileRef = 28BB043C17C7FF43004F6C13 /* Buildable.m */; };
+		28BB33011811B61A006F699B /* ContainsArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 28BB33001811B61A006F699B /* ContainsArray.m */; };
 		28C81A63175562050072DDB8 /* ReportStatusTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28C81A62175562050072DDB8 /* ReportStatusTests.m */; };
 		28E28FB81796926A0072376C /* ReportStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E28FB71796926A0072376C /* ReportStatus.m */; };
 		28E28FB91796934B0072376C /* ReportStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E28FB71796926A0072376C /* ReportStatus.m */; };
@@ -231,6 +232,8 @@
 		28B714541760767D00BB016A /* OCUnitIOSDeviceTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitIOSDeviceTestRunner.m; sourceTree = "<group>"; };
 		28BB043B17C7FF43004F6C13 /* Buildable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Buildable.h; sourceTree = "<group>"; };
 		28BB043C17C7FF43004F6C13 /* Buildable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Buildable.m; sourceTree = "<group>"; };
+		28BB32FF1811B61A006F699B /* ContainsArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainsArray.h; sourceTree = "<group>"; };
+		28BB33001811B61A006F699B /* ContainsArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContainsArray.m; sourceTree = "<group>"; };
 		28C81A62175562050072DDB8 /* ReportStatusTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReportStatusTests.m; sourceTree = "<group>"; };
 		28E28FB217968EAC0072376C /* ReporterEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReporterEvents.h; sourceTree = "<group>"; };
 		28E28FB61796926A0072376C /* ReportStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReportStatus.h; sourceTree = "<group>"; };
@@ -516,6 +519,8 @@
 				287BF04C16F1A6EB00590E06 /* XcodeSubjectInfoTests.m */,
 				283CCACC16C2EE9900F2E343 /* XCToolTests.m */,
 				AA6C88F61808C2C5006A3581 /* OTestShimTests.m */,
+				28BB32FF1811B61A006F699B /* ContainsArray.h */,
+				28BB33001811B61A006F699B /* ContainsArray.m */,
 			);
 			path = "xctool-tests";
 			sourceTree = "<group>";
@@ -735,6 +740,7 @@
 				2869F3C617C82FB80078F078 /* TestableExecutionInfo.m in Sources */,
 				283479AE16E2A736003C3B77 /* BuildTestsAction.m in Sources */,
 				283479B616E2B39C003C3B77 /* RunTestsAction.m in Sources */,
+				28BB33011811B61A006F699B /* ContainsArray.m in Sources */,
 				283479B916E3EBE5003C3B77 /* TestUtil.m in Sources */,
 				283479BC16E3FC0F003C3B77 /* BuildTestsActionTests.m in Sources */,
 				28ADB43816E4107F006301ED /* CleanActionTests.m in Sources */,

@@ -22,7 +22,8 @@
 @interface OCUnitTestRunner : NSObject {
 @public
   NSDictionary *_buildSettings;
-  NSArray *_senTestList;
+  NSArray *_focusedTestCases;
+  NSArray *_allTestCases;
   NSArray *_arguments;
   NSDictionary *_environment;
   BOOL _garbageCollection;
@@ -47,7 +48,8 @@
           senTestInvertScope:(BOOL)senTestInvertScope;
 
 - (id)initWithBuildSettings:(NSDictionary *)buildSettings
-                senTestList:(NSArray *)senTestList
+           focusedTestCases:(NSArray *)focusedTestCases
+               allTestCases:(NSArray *)allTestCases
                   arguments:(NSArray *)arguments
                 environment:(NSDictionary *)environment
           garbageCollection:(BOOL)garbageCollection

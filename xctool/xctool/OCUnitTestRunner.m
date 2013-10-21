@@ -71,7 +71,8 @@
 }
 
 - (id)initWithBuildSettings:(NSDictionary *)buildSettings
-                senTestList:(NSArray *)senTestList
+           focusedTestCases:(NSArray *)focusedTestCases
+               allTestCases:(NSArray *)allTestCases
                   arguments:(NSArray *)arguments
                 environment:(NSDictionary *)environment
           garbageCollection:(BOOL)garbageCollection
@@ -82,7 +83,8 @@
 {
   if (self = [super init]) {
     _buildSettings = [buildSettings retain];
-    _senTestList = [senTestList retain];
+    _focusedTestCases = [focusedTestCases retain];
+    _allTestCases = [allTestCases retain];
     _arguments = [arguments retain];
     _environment = [environment retain];
     _garbageCollection = garbageCollection;
@@ -98,7 +100,8 @@
 - (void)dealloc
 {
   [_buildSettings release];
-  [_senTestList release];
+  [_focusedTestCases release];
+  [_allTestCases release];
   [_arguments release];
   [_environment release];
   [_simulatorType release];
@@ -118,7 +121,7 @@
 - (BOOL)runTestsWithError:(NSString **)error {
   __block BOOL didReceiveTestEvents = NO;
 
-  _testRunnerState = [[OCUnitCrashFilter alloc] initWithTests:_senTestList reporters:_reporters];
+  _testRunnerState = [[OCUnitCrashFilter alloc] initWithTests:_focusedTestCases reporters:_reporters];
 
   void (^feedOutputToBlock)(NSString *) = ^(NSString *line) {
     NSData *lineData = [line dataUsingEncoding:NSUTF8StringEncoding];
@@ -168,6 +171,49 @@
 
 - (NSArray *)testArguments
 {
+  NSSet *focusedSet = [NSSet setWithArray:_focusedTestCases];
+  NSSet *allSet = [NSSet setWithArray:_allTestCases];
+
+  NSString *testSpecifier = nil;
+  BOOL invertScope = NO;
+
+  if ([focusedSet isEqualToSet:allSet]) {
+
+    if (_buildSettings[@"TEST_HOST"] != nil) {
+      // Xcode.app will always pass 'All' when running all tests in an
+      // application test bundle.
+      testSpecifier = @"All";
+    } else {
+      // Xcode.app will always pass 'Self' when running all tests in an
+      // logic test bundle.
+      testSpecifier = @"Self";
+    }
+
+    invertScope = NO;
+  } else {
+    // When running a specific subset of tests, Xcode.app will always pass the
+    // the list of excluded tests and enable the InvertScope option.
+    //
+    // There are two ways to make SenTestingKit or XCTest run a specific test.
+    // Suppose you have a test bundle with 2 tests: 'Cls1/testA', 'Cls2/testB'.
+    //
+    // If you only wanted to run 'Cls1/testA', you could express that in 2 ways:
+    //
+    //   1) otest ... -SenTest Cls1/testA -SenTestInvertScope NO
+    //   2) otest ... -SenTest Cls1/testB -SenTestInvertScope YES
+    //
+    // Xcode itself always uses #2.  And, for some reason, when using the Kiwi
+    // testing framework, option #2 is the _ONLY_ way to run specific tests.
+    //
+    NSMutableSet *invertedSet = [NSMutableSet setWithSet:allSet];
+    [invertedSet minusSet:focusedSet];
+
+    NSArray *invertedTestCases = [[invertedSet allObjects] sortedArrayUsingSelector:@selector(compare:)];
+    testSpecifier = [invertedTestCases componentsJoinedByString:@","];
+
+    invertScope = YES;
+  }
+
   // These are the same arguments Xcode would use when invoking otest.  To capture these, we
   // just ran a test case from Xcode that dumped 'argv'.  It's a little tricky to do that outside
   // of the 'main' function, but you can use _NSGetArgc and _NSGetArgv.  See --
@@ -179,11 +225,11 @@
            @"-ApplePersistenceIgnoreState", @"YES",
            // SenTest / XCTest is one of Self, All, None,
            // or TestClassName[/testCaseName][,TestClassName2]
-           _framework[kTestingFrameworkFilterTestArgsKey], [_senTestList componentsJoinedByString:@","],
+           _framework[kTestingFrameworkFilterTestArgsKey], testSpecifier,
            // SenTestInvertScope / XCTestInvertScope optionally inverts whatever
            // SenTest would normally select. We never invert, since we always
            // pass the exact list of test cases to be run.
-           _framework[kTestingFrameworkInvertScopeKey], @"NO",
+           _framework[kTestingFrameworkInvertScopeKey], invertScope ? @"YES" : @"NO",
            ]];
 
   // Add any argments that might have been specifed in the scheme.
