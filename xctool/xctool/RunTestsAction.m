@@ -324,16 +324,17 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
 + (NSDictionary *)commonOCUnitEventInfoFromTestableExecutionInfo:(TestableExecutionInfo *)testableExecutionInfo
                                         garbageCollectionEnabled:(BOOL)garbageCollectionEnabled
 {
-  NSDictionary *testableBuildSettings = testableExecutionInfo.buildSettings;
-  BOOL isApplicationTest = testableBuildSettings[@"TEST_HOST"] != nil;
-  
   NSMutableDictionary *result = [NSMutableDictionary dictionary];
+
   if (testableExecutionInfo.buildSettings) {
+    BOOL isApplicationTest = testableExecutionInfo.buildSettings[@"TEST_HOST"] != nil;
+
     result[kReporter_BeginOCUnit_TestTypeKey] = isApplicationTest ? @"application-test" : @"logic-test";
     result[kReporter_BeginOCUnit_GCEnabledKey] = @(garbageCollectionEnabled);
-    result[kReporter_BeginOCUnit_SDKNameKey] = testableBuildSettings[@"SDK_NAME"];
-    result[kReporter_BeginOCUnit_BundleNameKey] = testableBuildSettings[@"FULL_PRODUCT_NAME"];
+    result[kReporter_BeginOCUnit_SDKNameKey] = testableExecutionInfo.buildSettings[@"SDK_NAME"];
+    result[kReporter_BeginOCUnit_BundleNameKey] = testableExecutionInfo.buildSettings[@"FULL_PRODUCT_NAME"];
   }
+
   result[kReporter_BeginOCUnit_TargetNameKey] = testableExecutionInfo.testable.target;
   
   return result;
