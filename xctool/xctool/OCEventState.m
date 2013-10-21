@@ -34,7 +34,7 @@
   [super dealloc];
 }
 
-- (void)publishWithEvent:(NSMutableDictionary *)event
+- (void)publishWithEvent:(NSDictionary *)event
 {
   PublishEventToReporters(_reporters, event);
 }

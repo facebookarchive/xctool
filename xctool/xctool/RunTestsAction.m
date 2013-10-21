@@ -333,7 +333,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
            };
 }
 
-+ (NSMutableDictionary *)eventForBeginOCUnitFromBuildSettings:(NSDictionary *)testableBuildSettings
++ (NSDictionary *)eventForBeginOCUnitFromBuildSettings:(NSDictionary *)testableBuildSettings
                               garbageCollectionEnabled:(BOOL)garbageCollectionEnabled
 {
   NSMutableDictionary *event =
@@ -343,7 +343,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
   return event;
 }
 
-+ (NSMutableDictionary *)eventForEndOCUnitFromBuildSettings:(NSDictionary *)testableBuildSettings
++ (NSDictionary *)eventForEndOCUnitFromBuildSettings:(NSDictionary *)testableBuildSettings
                             garbageCollectionEnabled:(BOOL)garbageCollectionEnabled
                                            succeeded:(BOOL)succeeded
                                        failureReason:(NSString *)failureReason

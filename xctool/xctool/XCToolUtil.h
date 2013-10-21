@@ -84,7 +84,7 @@ void CleanupTemporaryDirectoryForAction();
  @param array Array of reporters.
  @param dict Event dictionary.
  */
-void PublishEventToReporters(NSArray *reporters, NSMutableDictionary *event);
+void PublishEventToReporters(NSArray *reporters, NSDictionary *event);
 
 /**
  @return array A list of available reporter executables in the reporters
