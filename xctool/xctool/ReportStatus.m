@@ -16,6 +16,7 @@
 
 #import "ReportStatus.h"
 
+#import "EventGenerator.h"
 #import "ReporterEvents.h"
 #import "XCToolUtil.h"
 
@@ -34,21 +35,21 @@ NSString *ReporterMessageLevelToString(ReporterMessageLevel level) {
   }
 }
 
-static void ReportStatusMessageBeginWithTimestamp(NSArray *reporters, double timestamp, ReporterMessageLevel level, NSString *message) {
-  NSDictionary *event = @{@"event": kReporter_Events_BeginStatus,
-                          kReporter_BeginStatus_MessageKey: message,
-                          kReporter_BeginStatus_TimestampKey: @(timestamp),
-                          kReporter_BeginStatus_LevelKey: ReporterMessageLevelToString(level),
-                          };
+static void ReportStatusMessageBeginWithTimestamp(NSArray *reporters, ReporterMessageLevel level, NSString *message) {
+  NSDictionary *event = EventDictionaryWithNameAndContent(
+    kReporter_Events_BeginStatus, @{
+      kReporter_BeginStatus_MessageKey: message,
+      kReporter_BeginStatus_LevelKey: ReporterMessageLevelToString(level),
+      });
   PublishEventToReporters(reporters, event);
 }
 
-static void ReportStatusMessageEndWithTimestamp(NSArray *reporters, double timestamp, ReporterMessageLevel level, NSString *message) {
-  NSDictionary *event = @{@"event": kReporter_Events_EndStatus,
-                          kReporter_EndStatus_MessageKey: message,
-                          kReporter_EndStatus_TimestampKey: @(timestamp),
-                          kReporter_EndStatus_LevelKey: ReporterMessageLevelToString(level),
-                          };
+static void ReportStatusMessageEndWithTimestamp(NSArray *reporters, ReporterMessageLevel level, NSString *message) {
+  NSDictionary *event = EventDictionaryWithNameAndContent(
+    kReporter_Events_EndStatus, @{
+      kReporter_EndStatus_MessageKey: message,
+      kReporter_EndStatus_LevelKey: ReporterMessageLevelToString(level),
+      });
   PublishEventToReporters(reporters, event);
 }
 
@@ -60,9 +61,8 @@ void ReportStatusMessage(NSArray *reporters, ReporterMessageLevel level, NSStrin
 
   // This is a one-shot status message that has no begin/end, so we send the
   // same timestamp for both.
-  double now = [[NSDate date] timeIntervalSince1970];
-  ReportStatusMessageBeginWithTimestamp(reporters, now, level, message);
-  ReportStatusMessageEndWithTimestamp(reporters, now, level, message);
+  ReportStatusMessageBeginWithTimestamp(reporters, level, message);
+  ReportStatusMessageEndWithTimestamp(reporters, level, message);
 }
 
 void ReportStatusMessageBegin(NSArray *reporters, ReporterMessageLevel level, NSString *format, ...) {
@@ -71,7 +71,7 @@ void ReportStatusMessageBegin(NSArray *reporters, ReporterMessageLevel level, NS
   NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
   va_end(args);
 
-  ReportStatusMessageBeginWithTimestamp(reporters, [[NSDate date] timeIntervalSince1970], level, message);
+  ReportStatusMessageBeginWithTimestamp(reporters, level, message);
 }
 
 void ReportStatusMessageEnd(NSArray *reporters, ReporterMessageLevel level, NSString *format, ...) {
@@ -80,5 +80,5 @@ void ReportStatusMessageEnd(NSArray *reporters, ReporterMessageLevel level, NSSt
   NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
   va_end(args);
 
-  ReportStatusMessageEndWithTimestamp(reporters, [[NSDate date] timeIntervalSince1970], level, message);
+  ReportStatusMessageEndWithTimestamp(reporters, level, message);
 }

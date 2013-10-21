@@ -16,6 +16,7 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
+#import "EventGenerator.h"
 #import "OCTestEventState.h"
 #import "ReporterEvents.h"
 #import "TestUtil.h"
@@ -81,12 +82,12 @@
                                        }];
 
   assertThatInteger([events count], equalToInteger(2));
-  assertThat(events[0], equalTo(@{
-                                @"event":kReporter_Events_BeginTest,
-                                kReporter_EndTest_TestKey:@"-[ATestClass aTestMethod]",
-                                kReporter_EndTest_ClassNameKey:@"ATestClass",
-                                kReporter_EndTest_MethodNameKey:@"aTestMethod",
-                                }));
+
+  assertThat(events[0][@"event"], is(kReporter_Events_BeginTest));
+  assertThat(events[0][kReporter_EndTest_TestKey], is(@"-[ATestClass aTestMethod]"));
+  assertThat(events[0][kReporter_EndTest_ClassNameKey], is(@"ATestClass"));
+  assertThat(events[0][kReporter_EndTest_MethodNameKey], is(@"aTestMethod"));
+
   assertThat(events[1][@"event"], is(kReporter_Events_EndTest));
   assertThat(events[1][kReporter_EndTest_SucceededKey], is(@NO));
   assertThat(events[1][kReporter_EndTest_ResultKey], is(@"error"));
@@ -167,10 +168,8 @@
                                        }];
 
   assertThatInteger([events count], equalToInteger(1));
-  assertThat(events[0], equalTo(@{
-                                @"event":kReporter_Events_TestOuput,
-                                kReporter_TestOutput_OutputKey:@"output from us\n"
-                                }));
+  assertThat(events[0][@"event"], is(kReporter_Events_TestOuput));
+  assertThat(events[0][kReporter_TestOutput_OutputKey], is(@"output from us\n"));
 }
 
 - (void)testAppendOutput
@@ -188,10 +187,8 @@
                                        }];
 
   assertThatInteger([events count], equalToInteger(2));
-  assertThat(events[0], equalTo(@{
-                                @"event":kReporter_Events_TestOuput,
-                                kReporter_TestOutput_OutputKey:@"output from us\n"
-                                }));
+  assertThat(events[0][@"event"], is(kReporter_Events_TestOuput));
+  assertThat(events[0][kReporter_TestOutput_OutputKey], is(@"output from us\n"));
   assertThat(events[1][@"event"], is(kReporter_Events_EndTest));
   assertThat(events[1][kReporter_EndTest_OutputKey], is(@"some output\nmore output\noutput from us\n"));
 }

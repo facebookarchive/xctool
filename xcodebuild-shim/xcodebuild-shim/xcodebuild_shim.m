@@ -19,6 +19,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import "EventGenerator.h"
 #import "ReporterEvents.h"
 
 static int __stdoutHandle;
@@ -142,22 +143,22 @@ static void AnnounceBeginSection(IDEActivityLogSection *section)
   NSString *sectionTypeString = [section.domainType description];
 
   if ([sectionTypeString isEqualToString:kDomainTypeBuildItem]) {
-    PrintJSON(@{
-              @"event" : kReporter_Events_BeginBuildCommand,
-              kReporter_BeginBuildCommand_TitleKey : section.title,
-              kReporter_BeginBuildCommand_CommandKey : section.commandDetailDescription,
-              });
+    PrintJSON(EventDictionaryWithNameAndContent(
+      kReporter_Events_BeginBuildCommand, @{
+        kReporter_BeginBuildCommand_TitleKey : section.title,
+        kReporter_BeginBuildCommand_CommandKey : section.commandDetailDescription,
+      }));
   } else if ([sectionTypeString hasPrefix:kDomainTypeProductItemPrefix]) {
     NSString *project = nil;
     NSString *target = nil;
     NSString *configuration = nil;
     GetProjectTargetConfigurationFromHeader(section.title, &project, &target, &configuration);
-    PrintJSON(@{
-              @"event" : kReporter_Events_BeginBuildTarget,
-              kReporter_BeginBuildTarget_ProjectKey : project,
-              kReporter_BeginBuildTarget_TargetKey : target,
-              kReporter_BeginBuildTarget_ConfigurationKey : configuration,
-              });
+    PrintJSON(EventDictionaryWithNameAndContent(
+      kReporter_Events_BeginBuildTarget, @{
+        kReporter_BeginBuildTarget_ProjectKey : project,
+        kReporter_BeginBuildTarget_TargetKey : target,
+        kReporter_BeginBuildTarget_ConfigurationKey : configuration,
+      }));
   }
 }
 
@@ -166,27 +167,27 @@ static void AnnounceEndSection(IDEActivityLogSection *section)
   NSString *sectionTypeString = [section.domainType description];
 
   if ([sectionTypeString isEqualToString:kDomainTypeBuildItem]) {
-    PrintJSON(@{
-              @"event" : kReporter_Events_EndBuildCommand,
-              kReporter_EndBuildCommand_TitleKey : section.title,
-              kReporter_EndBuildCommand_SucceededKey : (section.resultCode == 0) ? @YES : @NO,
-              // Sometimes things will fail and 'emittedOutputText' will be nil.  We've seen this
-              // happen when Xcode's Copy command fails.  In this case, just send an empty string
-              // so Reporters don't have to worry about this sometimes being [NSNull null].
-              kReporter_EndBuildCommand_EmittedOutputTextKey : section.emittedOutputText ?: @"",
-              kReporter_EndBuildCommand_DurationKey : @(section.timeStoppedRecording - section.timeStartedRecording),
-              });
+    PrintJSON(EventDictionaryWithNameAndContent(
+      kReporter_Events_EndBuildCommand, @{
+        kReporter_EndBuildCommand_TitleKey : section.title,
+        kReporter_EndBuildCommand_SucceededKey : (section.resultCode == 0) ? @YES : @NO,
+        // Sometimes things will fail and 'emittedOutputText' will be nil.  We've seen this
+        // happen when Xcode's Copy command fails.  In this case, just send an empty string
+        // so Reporters don't have to worry about this sometimes being [NSNull null].
+        kReporter_EndBuildCommand_EmittedOutputTextKey : section.emittedOutputText ?: @"",
+        kReporter_EndBuildCommand_DurationKey : @(section.timeStoppedRecording - section.timeStartedRecording),
+      }));
   } else if ([sectionTypeString hasPrefix:kDomainTypeProductItemPrefix]) {
     NSString *project = nil;
     NSString *target = nil;
     NSString *configuration = nil;
     GetProjectTargetConfigurationFromHeader(section.title, &project, &target, &configuration);
-    PrintJSON(@{
-              @"event" : kReporter_Events_EndBuildTarget,
-              kReporter_EndBuildTarget_ProjectKey : project,
-              kReporter_EndBuildTarget_TargetKey : target,
-              kReporter_EndBuildTarget_ConfigurationKey : configuration,
-              });
+    PrintJSON(EventDictionaryWithNameAndContent(
+      kReporter_Events_EndBuildTarget, @{
+        kReporter_EndBuildTarget_ProjectKey : project,
+        kReporter_EndBuildTarget_TargetKey : target,
+        kReporter_EndBuildTarget_ConfigurationKey : configuration,
+      }));
   }
 }
 

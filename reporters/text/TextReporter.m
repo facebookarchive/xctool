@@ -675,8 +675,8 @@ static NSString *abbreviatePath(NSString *string) {
   NSAssert(_currentStatusEvent != nil,
            @"an end-status event must be preceded by a begin-status event.");
 
-  double duration = ([event[kReporter_EndStatus_TimestampKey] doubleValue] -
-                     [_currentStatusEvent[kReporter_BeginStatus_TimestampKey] doubleValue]);
+  double duration = ([event[kReporter_Timestamp_Key] doubleValue] -
+                     [_currentStatusEvent[kReporter_Timestamp_Key] doubleValue]);
 
   NSMutableString *line = [NSMutableString string];
   [line appendFormat:@"[%@] ", event[kReporter_EndStatus_LevelKey]];
