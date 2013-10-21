@@ -490,7 +490,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
       TestableBlock block = [self blockToAdvertiseError:info.buildSettingsError
                                forTestableExecutionInfo:info
                                               gcEnabled:NO];
-      NSArray *annotatedBlock = @[block, [NSString stringWithFormat:@"target: %@", info.testable.target]];
+      NSArray *annotatedBlock = @[block, info.testable.target];
       [blocksToRunOnDispatchQueue addObject:annotatedBlock];
       continue;
     }
@@ -529,7 +529,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                                                @"Failed to query the list of test cases in the test bundle: %@", info.testCasesQueryError]
                      forTestableExecutionInfo:info
                                     gcEnabled:garbageCollectionEnabled];
-          blockAnnotation = @"";
+          blockAnnotation = info.buildSettings[@"FULL_PRODUCT_NAME"];
         } else {
           block = [self blockForTestable:info.testable
                         focusedTestCases:senTestListChunk
