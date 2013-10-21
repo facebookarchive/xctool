@@ -19,6 +19,10 @@
 		28E28FB417968EC50072376C /* ReporterEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 28E28FB317968EC50072376C /* ReporterEvents.h */; };
 		28E28FB517968EC50072376C /* ReporterEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 28E28FB317968EC50072376C /* ReporterEvents.h */; };
 		28E9B9DF16C32E9A00A52E4D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283CCA9416C2EE4C00F2E343 /* Foundation.framework */; };
+		3892D7591815ACE200E68652 /* EventGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 3892D7571815ACE200E68652 /* EventGenerator.h */; };
+		3892D75A1815ACE200E68652 /* EventGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 3892D7571815ACE200E68652 /* EventGenerator.h */; };
+		3892D75B1815ACE200E68652 /* EventGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D7581815ACE200E68652 /* EventGenerator.m */; };
+		3892D75C1815ACE200E68652 /* EventGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D7581815ACE200E68652 /* EventGenerator.m */; };
 		AA318BEA17E9B43000BF159E /* XCTest.h in Headers */ = {isa = PBXBuildFile; fileRef = AA318BE917E9B43000BF159E /* XCTest.h */; };
 		AA318BEB17E9B43000BF159E /* XCTest.h in Headers */ = {isa = PBXBuildFile; fileRef = AA318BE917E9B43000BF159E /* XCTest.h */; };
 /* End PBXBuildFile section */
@@ -41,6 +45,8 @@
 		28A094B31731DA3500838CDD /* dyld_priv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dyld_priv.h; sourceTree = "<group>"; };
 		28E28FB317968EC50072376C /* ReporterEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReporterEvents.h; sourceTree = "<group>"; };
 		28E9B98216C2F2D400A52E4D /* otest-shim-ios.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "otest-shim-ios.xcconfig"; sourceTree = "<group>"; };
+		3892D7571815ACE200E68652 /* EventGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventGenerator.h; sourceTree = "<group>"; };
+		3892D7581815ACE200E68652 /* EventGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventGenerator.m; sourceTree = "<group>"; };
 		AA318BE917E9B43000BF159E /* XCTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCTest.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -128,6 +134,8 @@
 		28897FC6173E50F9004BA024 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				3892D7571815ACE200E68652 /* EventGenerator.h */,
+				3892D7581815ACE200E68652 /* EventGenerator.m */,
 				AA318BE917E9B43000BF159E /* XCTest.h */,
 				28E28FB317968EC50072376C /* ReporterEvents.h */,
 				28897FC7173E50F9004BA024 /* Swizzle.h */,
@@ -145,6 +153,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA318BEB17E9B43000BF159E /* XCTest.h in Headers */,
+				3892D75A1815ACE200E68652 /* EventGenerator.h in Headers */,
 				28897FCA173E50F9004BA024 /* Swizzle.h in Headers */,
 				28E28FB517968EC50072376C /* ReporterEvents.h in Headers */,
 			);
@@ -155,6 +164,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				287A37E916C7776E00319E81 /* dyld-interposing.h in Headers */,
+				3892D7591815ACE200E68652 /* EventGenerator.h in Headers */,
 				28A094B41731DA3500838CDD /* dyld_priv.h in Headers */,
 				28897FC9173E50F9004BA024 /* Swizzle.h in Headers */,
 				28E28FB417968EC50072376C /* ReporterEvents.h in Headers */,
@@ -231,6 +241,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3892D75C1815ACE200E68652 /* EventGenerator.m in Sources */,
 				282BFE2B1716044C0022F9FF /* otest-shim.m in Sources */,
 				28897FCC173E50F9004BA024 /* Swizzle.m in Sources */,
 			);
@@ -240,6 +251,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3892D75B1815ACE200E68652 /* EventGenerator.m in Sources */,
 				283CCA9A16C2EE4C00F2E343 /* otest-shim.m in Sources */,
 				28897FCB173E50F9004BA024 /* Swizzle.m in Sources */,
 			);
