@@ -32,6 +32,9 @@
 - (void)loadFromPath:(NSString *)path
 {
   std::ifstream input(path.UTF8String);
+  if (!input.is_open()) {
+    return;
+  }
 
   std::unique_ptr<char[]> buf(new char[1024*1024*10]);
 
