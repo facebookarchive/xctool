@@ -14,6 +14,7 @@
 // limitations under the License.
 //
 
+#import "EventGenerator.h"
 #import "OCTestSuiteEventState.h"
 #import "ReporterEvents.h"
 
@@ -67,23 +68,23 @@
 - (void)publishEvents
 {
   if (!_isStarted) {
-    [self publishWithEvent:@{
-       @"event":kReporter_Events_BeginTestSuite,
-       kReporter_BeginTestSuite_SuiteKey:self.testName,
-    }];
+    [self publishWithEvent:
+      EventDictionaryWithNameAndContent(kReporter_Events_BeginTestSuite,
+        @{kReporter_BeginTestSuite_SuiteKey:self.testName})
+    ];
     [self beginTestSuite];
   }
 
   [_tests makeObjectsPerformSelector:@selector(publishEvents)];
 
   if (!_isFinished) {
-    [self publishWithEvent:@{
-      @"event":kReporter_Events_EndTestSuite,
-      kReporter_EndTestSuite_SuiteKey:self.testName,
-      kReporter_EndTestSuite_TotalDurationKey:@(self.duration),
-      kReporter_EndTestSuite_TestCaseCountKey:@(self.testCount),
-      kReporter_EndTestSuite_TotalFailureCountKey:@(self.totalFailures)
-    }];
+    [self publishWithEvent:
+      EventDictionaryWithNameAndContent(kReporter_Events_EndTestSuite, @{
+        kReporter_EndTestSuite_SuiteKey:self.testName,
+        kReporter_EndTestSuite_TotalDurationKey:@(self.duration),
+        kReporter_EndTestSuite_TestCaseCountKey:@(self.testCount),
+        kReporter_EndTestSuite_TotalFailureCountKey:@(self.totalFailures)
+    })];
     [self endTestSuite];
   }
 }

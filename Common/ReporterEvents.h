@@ -13,6 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
+#define kReporter_TimestampKey @"timestamp"
 
 #define kReporter_Events_BeginAction @"begin-action"
 #define kReporter_Events_EndAction @"end-action"
@@ -112,11 +113,9 @@
 #define kReporter_EndXcodebuild_ErrorCodeKey @"errorCode"
 
 #define kReporter_BeginStatus_MessageKey @"message"
-#define kReporter_BeginStatus_TimestampKey @"timestamp"
 #define kReporter_BeginStatus_LevelKey @"level"
 
 #define kReporter_EndStatus_MessageKey @"message"
-#define kReporter_EndStatus_TimestampKey @"timestamp"
 #define kReporter_EndStatus_LevelKey @"level"
 
 #define kReporter_AnalyzerResult_ProjectKey @"project"

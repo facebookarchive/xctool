@@ -17,6 +17,7 @@
 #import "RunTestsAction.h"
 
 #import "EventBuffer.h"
+#import "EventGenerator.h"
 #import "OCUnitIOSAppTestRunner.h"
 #import "OCUnitIOSDeviceTestRunner.h"
 #import "OCUnitIOSLogicTestRunner.h"
@@ -344,11 +345,9 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
 + (NSDictionary *)eventForBeginOCUnitFromTestableExecutionInfo:(TestableExecutionInfo *)testableExecutionInfo
                                       garbageCollectionEnabled:(BOOL)garbageCollectionEnabled
 {
-  NSMutableDictionary *event =
-  [NSMutableDictionary dictionaryWithDictionary:@{@"event": kReporter_Events_BeginOCUnit}];
-  [event addEntriesFromDictionary:[self commonOCUnitEventInfoFromTestableExecutionInfo:testableExecutionInfo
-                                                              garbageCollectionEnabled:garbageCollectionEnabled]];
-  return event;
+  return EventDictionaryWithNameAndContent(kReporter_Events_BeginOCUnit,
+                                           [self commonOCUnitEventInfoFromTestableExecutionInfo:testableExecutionInfo
+                                                                       garbageCollectionEnabled:garbageCollectionEnabled]);
 }
 
 + (NSDictionary *)eventForEndOCUnitFromTestableExecutionInfo:(TestableExecutionInfo *)testableExecutionInfo
@@ -357,10 +356,10 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
                                                failureReason:(NSString *)failureReason
 {
   NSMutableDictionary *event =
-  [NSMutableDictionary dictionaryWithDictionary:@{@"event": kReporter_Events_EndOCUnit,
-                                                  kReporter_EndOCUnit_SucceededKey: @(succeeded),
-                                                  kReporter_EndOCUnit_FailureReasonKey: (failureReason ?: [NSNull null]),
-   }];
+  [NSMutableDictionary dictionaryWithDictionary:
+   EventDictionaryWithNameAndContent(kReporter_Events_EndOCUnit,
+  @{kReporter_EndOCUnit_SucceededKey: @(succeeded),
+    kReporter_EndOCUnit_FailureReasonKey: (failureReason ?: [NSNull null])})];
   [event addEntriesFromDictionary:[self commonOCUnitEventInfoFromTestableExecutionInfo:testableExecutionInfo
                                                               garbageCollectionEnabled:garbageCollectionEnabled]];
   return event;
