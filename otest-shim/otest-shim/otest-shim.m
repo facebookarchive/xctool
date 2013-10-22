@@ -24,6 +24,7 @@
 #import <SenTestingKit/SenTestingKit.h>
 #import "XCTest.h"
 
+#import "EventGenerator.h"
 #import "ReporterEvents.h"
 #import "Swizzle.h"
 
@@ -158,10 +159,10 @@ static void XCToolLog_testSuiteDidStart(NSString *testDescription)
 {
   if (__testSuiteDepth == 0) {
     dispatch_sync(EventQueue(), ^{
-      PrintJSON(@{
-        @"event" : kReporter_Events_BeginTestSuite,
-        kReporter_BeginTestSuite_SuiteKey : kReporter_TestSuite_TopLevelSuiteName,
-      });
+      PrintJSON(EventDictionaryWithNameAndContent(
+        kReporter_Events_BeginTestSuite,
+        @{kReporter_BeginTestSuite_SuiteKey : kReporter_TestSuite_TopLevelSuiteName}
+      ));
     });
   }
   __testSuiteDepth++;
@@ -170,29 +171,29 @@ static void XCToolLog_testSuiteDidStart(NSString *testDescription)
 #pragma mark - testSuiteDidStop
 static void XCTestLog_testSuiteDidStop(id self, SEL sel, XCTestSuiteRun *run)
 {
-  XCToolLog_testSuiteDidStop(@{
-    @"event" : kReporter_Events_EndTestSuite,
-    kReporter_EndTestSuite_SuiteKey : kReporter_TestSuite_TopLevelSuiteName,
-    kReporter_EndTestSuite_TestCaseCountKey : @([run testCaseCount]),
-    kReporter_EndTestSuite_TotalFailureCountKey : @([run totalFailureCount]),
-    kReporter_EndTestSuite_UnexpectedExceptionCountKey : @([run unexpectedExceptionCount]),
-    kReporter_EndTestSuite_TestDurationKey: @([run testDuration]),
-    kReporter_EndTestSuite_TotalDurationKey : @([run totalDuration]),
-  });
+  XCToolLog_testSuiteDidStop(EventDictionaryWithNameAndContent(
+    kReporter_Events_EndTestSuite, @{
+      kReporter_EndTestSuite_SuiteKey : kReporter_TestSuite_TopLevelSuiteName,
+      kReporter_EndTestSuite_TestCaseCountKey : @([run testCaseCount]),
+      kReporter_EndTestSuite_TotalFailureCountKey : @([run totalFailureCount]),
+      kReporter_EndTestSuite_UnexpectedExceptionCountKey : @([run unexpectedExceptionCount]),
+      kReporter_EndTestSuite_TestDurationKey: @([run testDuration]),
+      kReporter_EndTestSuite_TotalDurationKey : @([run totalDuration]),
+  }));
 }
 
 static void SenTestLog_testSuiteDidStop(id self, SEL sel, NSNotification *notification)
 {
   SenTestRun *run = [notification run];
-  XCToolLog_testSuiteDidStop(@{
-    @"event" : kReporter_Events_EndTestSuite,
-    kReporter_EndTestSuite_SuiteKey : kReporter_TestSuite_TopLevelSuiteName,
-    kReporter_EndTestSuite_TestCaseCountKey : @([run testCaseCount]),
-    kReporter_EndTestSuite_TotalFailureCountKey : @([run totalFailureCount]),
-    kReporter_EndTestSuite_UnexpectedExceptionCountKey : @([run unexpectedExceptionCount]),
-    kReporter_EndTestSuite_TestDurationKey: @([run testDuration]),
-    kReporter_EndTestSuite_TotalDurationKey : @([run totalDuration]),
-  });
+  XCToolLog_testSuiteDidStop(EventDictionaryWithNameAndContent(
+    kReporter_Events_EndTestSuite, @{
+      kReporter_EndTestSuite_SuiteKey : kReporter_TestSuite_TopLevelSuiteName,
+      kReporter_EndTestSuite_TestCaseCountKey : @([run testCaseCount]),
+      kReporter_EndTestSuite_TotalFailureCountKey : @([run totalFailureCount]),
+      kReporter_EndTestSuite_UnexpectedExceptionCountKey : @([run unexpectedExceptionCount]),
+      kReporter_EndTestSuite_TestDurationKey: @([run testDuration]),
+      kReporter_EndTestSuite_TotalDurationKey : @([run totalDuration]),
+  }));
 }
 
 static void XCToolLog_testSuiteDidStop(NSDictionary *json)
@@ -225,12 +226,12 @@ static void XCToolLog_testCaseDidStart(NSString *fullTestName)
 {
   dispatch_sync(EventQueue(), ^{
     NSArray *classAndMethodNames = CreateParseTestName(fullTestName);
-    PrintJSON(@{
-      @"event" : kReporter_Events_BeginTest,
-      kReporter_BeginTest_TestKey : fullTestName,
-      kReporter_BeginTest_ClassNameKey : [classAndMethodNames objectAtIndex:0],
-      kReporter_BeginTest_MethodNameKey : [classAndMethodNames objectAtIndex:1],
-    });
+    PrintJSON(EventDictionaryWithNameAndContent(
+      kReporter_Events_BeginTest, @{
+        kReporter_BeginTest_TestKey : fullTestName,
+        kReporter_BeginTest_ClassNameKey : [classAndMethodNames objectAtIndex:0],
+        kReporter_BeginTest_MethodNameKey : [classAndMethodNames objectAtIndex:1],
+    }));
     
     [classAndMethodNames release];
     classAndMethodNames = nil;
@@ -274,17 +275,17 @@ static void XCToolLog_testCaseDidStop(NSString *fullTestName, NSNumber *unexpect
     }
     
     NSArray *retExceptions = [__testExceptions copy];
-    NSMutableDictionary *json = [NSMutableDictionary dictionaryWithDictionary:@{
-      @"event" : kReporter_Events_EndTest,
-      kReporter_EndTest_TestKey : fullTestName,
-      kReporter_EndTest_ClassNameKey : [classAndMethodNames objectAtIndex:0],
-      kReporter_EndTest_MethodNameKey : [classAndMethodNames objectAtIndex:1],
-      kReporter_EndTest_SucceededKey: @(succeeded),
-      kReporter_EndTest_ResultKey : result,
-      kReporter_EndTest_TotalDurationKey : totalDuration,
-      kReporter_EndTest_OutputKey : StripAnsi(__testOutput),
-      kReporter_EndTest_ExceptionsKey : retExceptions,
-    }];
+    NSMutableDictionary *json = EventDictionaryWithNameAndContent(
+      kReporter_Events_EndTest, @{
+        kReporter_EndTest_TestKey : fullTestName,
+        kReporter_EndTest_ClassNameKey : [classAndMethodNames objectAtIndex:0],
+        kReporter_EndTest_MethodNameKey : [classAndMethodNames objectAtIndex:1],
+        kReporter_EndTest_SucceededKey: @(succeeded),
+        kReporter_EndTest_ResultKey : result,
+        kReporter_EndTest_TotalDurationKey : totalDuration,
+        kReporter_EndTest_OutputKey : StripAnsi(__testOutput),
+        kReporter_EndTest_ExceptionsKey : retExceptions,
+    });
     [retExceptions release];
     
     PrintJSON(json);
@@ -361,7 +362,10 @@ static ssize_t ___write_nocancel(int fildes, const void *buf, size_t nbyte)
     dispatch_sync(EventQueue(), ^{
       if (__testIsRunning && nbyte > 0) {
         NSString *output = [[NSString alloc] initWithBytes:buf length:nbyte encoding:NSUTF8StringEncoding];
-        PrintJSON(@{@"event": kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey: StripAnsi(output)});
+        PrintJSON(EventDictionaryWithNameAndContent(
+          kReporter_Events_TestOuput,
+          @{kReporter_TestOutput_OutputKey: StripAnsi(output)}
+        ));
         [__testOutput appendString:output];
         [output release];
       }
@@ -380,7 +384,10 @@ static ssize_t __write(int fildes, const void *buf, size_t nbyte)
     dispatch_sync(EventQueue(), ^{
       if (__testIsRunning && nbyte > 0) {
         NSString *output = [[NSString alloc] initWithBytes:buf length:nbyte encoding:NSUTF8StringEncoding];
-        PrintJSON(@{@"event": kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey: StripAnsi(output)});
+        PrintJSON(EventDictionaryWithNameAndContent(
+          kReporter_Events_TestOuput,
+          @{kReporter_TestOutput_OutputKey: StripAnsi(output)}
+        ));
         [__testOutput appendString:output];
         [output release];
       }
@@ -431,7 +438,10 @@ static ssize_t ___writev_nocancel(int fildes, const struct iovec *iov, int iovcn
     dispatch_sync(EventQueue(), ^{
       if (__testIsRunning && iovcnt > 0) {
         NSString *buffer = CreateStringFromIOV(iov, iovcnt);
-        PrintJSON(@{@"event": kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey: StripAnsi(buffer)});
+        PrintJSON(EventDictionaryWithNameAndContent(
+          kReporter_Events_TestOuput,
+          @{kReporter_TestOutput_OutputKey: StripAnsi(buffer)}
+        ));
         [__testOutput appendString:buffer];
         [buffer release];
       }
@@ -450,7 +460,10 @@ static ssize_t __writev(int fildes, const struct iovec *iov, int iovcnt)
     dispatch_sync(EventQueue(), ^{
       if (__testIsRunning && iovcnt > 0) {
         NSString *buffer = CreateStringFromIOV(iov, iovcnt);
-        PrintJSON(@{@"event": kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey: StripAnsi(buffer)});
+        PrintJSON(EventDictionaryWithNameAndContent(
+          kReporter_Events_TestOuput,
+          @{kReporter_TestOutput_OutputKey: StripAnsi(buffer)}
+        ));
         [__testOutput appendString:buffer];
         [buffer release];
       }

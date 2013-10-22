@@ -17,6 +17,7 @@
 #import "RunTestsAction.h"
 
 #import "EventBuffer.h"
+#import "EventGenerator.h"
 #import "OCUnitIOSAppTestRunner.h"
 #import "OCUnitIOSDeviceTestRunner.h"
 #import "OCUnitIOSLogicTestRunner.h"
@@ -336,10 +337,10 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
 + (NSDictionary *)eventForBeginOCUnitFromBuildSettings:(NSDictionary *)testableBuildSettings
                               garbageCollectionEnabled:(BOOL)garbageCollectionEnabled
 {
-  NSMutableDictionary *event =
-  [NSMutableDictionary dictionaryWithDictionary:@{@"event": kReporter_Events_BeginOCUnit}];
-  [event addEntriesFromDictionary:[self commonOCUnitEventInfoFromBuildSettings:testableBuildSettings
-                                                      garbageCollectionEnabled:garbageCollectionEnabled]];
+  NSMutableDictionary *event = EventDictionaryWithNameAndContent(
+    kReporter_Events_BeginOCUnit,
+    [self commonOCUnitEventInfoFromBuildSettings:testableBuildSettings
+                        garbageCollectionEnabled:garbageCollectionEnabled]);
   return event;
 }
 
@@ -348,11 +349,11 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
                                            succeeded:(BOOL)succeeded
                                        failureReason:(NSString *)failureReason
 {
-  NSMutableDictionary *event =
-  [NSMutableDictionary dictionaryWithDictionary:@{@"event": kReporter_Events_EndOCUnit,
-                                                  kReporter_EndOCUnit_SucceededKey: @(succeeded),
-                                                  kReporter_EndOCUnit_FailureReasonKey: (failureReason ?: [NSNull null]),
-   }];
+  NSMutableDictionary *event = EventDictionaryWithNameAndContent(
+    kReporter_Events_EndOCUnit, @{
+      kReporter_EndOCUnit_SucceededKey: @(succeeded),
+      kReporter_EndOCUnit_FailureReasonKey: (failureReason ?: [NSNull null])
+    });
   [event addEntriesFromDictionary:[self commonOCUnitEventInfoFromBuildSettings:testableBuildSettings
                                                       garbageCollectionEnabled:garbageCollectionEnabled]];
   return event;

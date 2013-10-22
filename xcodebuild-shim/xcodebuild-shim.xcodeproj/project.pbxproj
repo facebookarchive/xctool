@@ -18,6 +18,10 @@
 		28897FC5173E50C5004BA024 /* Swizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 28897FC1173E50C5004BA024 /* Swizzle.m */; };
 		28E28FB017968E9C0072376C /* ReporterEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 28E28FAF17968E9C0072376C /* ReporterEvents.h */; };
 		28E28FB117968E9C0072376C /* ReporterEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 28E28FAF17968E9C0072376C /* ReporterEvents.h */; };
+		3892D75F1815AD6F00E68652 /* EventGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 3892D75D1815AD6F00E68652 /* EventGenerator.h */; };
+		3892D7601815AD6F00E68652 /* EventGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D75E1815AD6F00E68652 /* EventGenerator.m */; };
+		3892D7611815AD7600E68652 /* EventGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 3892D75D1815AD6F00E68652 /* EventGenerator.h */; };
+		3892D7621815AD7900E68652 /* EventGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D75E1815AD6F00E68652 /* EventGenerator.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +39,8 @@
 		28897FC0173E50C5004BA024 /* Swizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Swizzle.h; sourceTree = "<group>"; };
 		28897FC1173E50C5004BA024 /* Swizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Swizzle.m; sourceTree = "<group>"; };
 		28E28FAF17968E9C0072376C /* ReporterEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReporterEvents.h; sourceTree = "<group>"; };
+		3892D75D1815AD6F00E68652 /* EventGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventGenerator.h; sourceTree = "<group>"; };
+		3892D75E1815AD6F00E68652 /* EventGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventGenerator.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +140,8 @@
 		28897FBF173E50C5004BA024 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				3892D75D1815AD6F00E68652 /* EventGenerator.h */,
+				3892D75E1815AD6F00E68652 /* EventGenerator.m */,
 				28E28FAF17968E9C0072376C /* ReporterEvents.h */,
 				28897FC0173E50C5004BA024 /* Swizzle.h */,
 				28897FC1173E50C5004BA024 /* Swizzle.m */,
@@ -151,6 +159,7 @@
 			files = (
 				28897FC2173E50C5004BA024 /* Swizzle.h in Headers */,
 				28E28FB017968E9C0072376C /* ReporterEvents.h in Headers */,
+				3892D75F1815AD6F00E68652 /* EventGenerator.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -159,6 +168,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				285F6F74171FD297001295EC /* xcodebuild-fastsettings-shim-Prefix.pch in Headers */,
+				3892D7611815AD7600E68652 /* EventGenerator.h in Headers */,
 				28897FC3173E50C5004BA024 /* Swizzle.h in Headers */,
 				28E28FB117968E9C0072376C /* ReporterEvents.h in Headers */,
 			);
@@ -233,6 +243,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3892D7601815AD6F00E68652 /* EventGenerator.m in Sources */,
 				283CCAB716C2EE7200F2E343 /* xcodebuild_shim.m in Sources */,
 				28897FC4173E50C5004BA024 /* Swizzle.m in Sources */,
 			);
@@ -242,6 +253,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3892D7621815AD7900E68652 /* EventGenerator.m in Sources */,
 				287A381516C876A800319E81 /* xcodebuild_fastsettings_shim.m in Sources */,
 				28897FC5173E50C5004BA024 /* Swizzle.m in Sources */,
 			);
