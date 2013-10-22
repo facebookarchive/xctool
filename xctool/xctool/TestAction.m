@@ -68,7 +68,7 @@
                          setFlag:@selector(setParallelize:)],
     [Action actionOptionWithName:@"failOnEmptyTestBundles"
                         aliases:nil
-                     description:@"Fail when no tests were run"
+                     description:@"Fail when an empty test bundle was run."
                          setFlag:@selector(setFailOnEmptyTestBundles:)],
     [Action actionOptionWithName:@"logicTestBucketSize"
                          aliases:nil

@@ -338,7 +338,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
   }
 
   result[kReporter_BeginOCUnit_TargetNameKey] = testableExecutionInfo.testable.target;
-  
+
   return result;
 }
 
@@ -353,6 +353,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
 + (NSDictionary *)eventForEndOCUnitFromTestableExecutionInfo:(TestableExecutionInfo *)testableExecutionInfo
                                     garbageCollectionEnabled:(BOOL)garbageCollectionEnabled
                                                    succeeded:(BOOL)succeeded
+                                                     warning:(BOOL)warning
                                                failureReason:(NSString *)failureReason
 {
   NSMutableDictionary *event =
@@ -381,19 +382,20 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
 - (TestableBlock)blockToAdvertiseError:(NSString *)error
               forTestableExecutionInfo:(TestableExecutionInfo *)testableExecutionInfo
                              gcEnabled:(BOOL)garbageCollectionEnabled
+                               warning:(BOOL)warning
 {
   return [[^(NSArray *reporters){
     PublishEventToReporters(reporters,
                             [[self class] eventForBeginOCUnitFromTestableExecutionInfo:testableExecutionInfo
                                                               garbageCollectionEnabled:garbageCollectionEnabled]);
 
-    PublishEventToReporters(reporters,
+    PublishEventToReporters(reporters,x
                             [[self class] eventForEndOCUnitFromTestableExecutionInfo:testableExecutionInfo
                                                             garbageCollectionEnabled:garbageCollectionEnabled
                                                                            succeeded:NO
+                                                                             warning:warning
                                                                        failureReason:error]);
-
-    return NO;
+    return warning;
   } copy] autorelease];
 }
 
@@ -432,6 +434,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                             [[self class] eventForEndOCUnitFromTestableExecutionInfo:testableExecutionInfo
                                                     garbageCollectionEnabled:garbageCollectionEnabled
                                                                    succeeded:succeeded
+                                                                     warning:NO
                                                                failureReason:error]);
 
     return succeeded;
@@ -485,8 +488,6 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
   ReportStatusMessageEnd(options.reporters, REPORTER_MESSAGE_INFO,
                          @"Collecting info for testables...");
 
-  int numTestCases = 0;
-
   for (TestableExecutionInfo *info in testableExecutionInfos) {
     if (info.buildSettingsError) {
       TestableBlock block = [self blockToAdvertiseError:info.buildSettingsError
@@ -496,7 +497,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
       [blocksToRunOnDispatchQueue addObject:annotatedBlock];
       continue;
     }
-    
+
     // array of [class, (bool) GC Enabled]
     NSArray *testConfigurations = [self testConfigurationsForBuildSettings:info.buildSettings];
     BOOL isApplicationTest = info.buildSettings[@"TEST_HOST"] != nil;
@@ -504,7 +505,6 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
     NSArray *testCases = [OCUnitTestRunner filterTestCases:info.testCases
                                            withSenTestList:info.testable.senTestList
                                         senTestInvertScope:info.testable.senTestInvertScope];
-    numTestCases += [testCases count];
 
     int bucketSize = isApplicationTest ? _appTestBucketSize : _logicTestBucketSize;
     NSArray *testChunks;
@@ -531,8 +531,25 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
           block = [self blockToAdvertiseError:[NSString stringWithFormat:
                                                @"Failed to query the list of test cases in the test bundle: %@", info.testCasesQueryError]
                      forTestableExecutionInfo:info
-                                    gcEnabled:garbageCollectionEnabled];
+                                    gcEnabled:garbageCollectionEnabled
+                                      warning:NO];
           blockAnnotation = info.buildSettings[@"FULL_PRODUCT_NAME"];
+        }
+        else if (info.testCases.count == 0) {
+          if (_failOnEmptyTestBundles) {
+            block = [self blockToAdvertiseError:@"This test bundle contained no tests. Treating as a failure since -failOnEmpyTestBundles is enabled.\n"
+                       forTestableExecutionInfo:info
+                                      gcEnabled:garbageCollectionEnabled
+                                        warning:NO];
+            blockAnnotation = info.buildSettings[@"FULL_PRODUCT_NAME"];
+          }
+          else {
+            block = [self blockToAdvertiseError:@"skipping: This test bundle contained no tests.\n"
+                       forTestableExecutionInfo:info
+                                      gcEnabled:garbageCollectionEnabled
+                                        warning:YES];
+            blockAnnotation = info.buildSettings[@"FULL_PRODUCT_NAME"];
+          }
         } else {
           block = [self blockForTestable:info.testable
                         focusedTestCases:senTestListChunk
@@ -562,7 +579,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
     }
   }
 
-  __block BOOL succeeded = !_failOnEmptyTestBundles || numTestCases > 0;
+  __block BOOL succeeded = YES;
   __block NSMutableArray *bundlesInProgress = [NSMutableArray array];
 
   void (^runTestableBlockAndSaveSuccess)(TestableBlock, NSString *) = ^(TestableBlock block, NSString *blockAnnotation) {

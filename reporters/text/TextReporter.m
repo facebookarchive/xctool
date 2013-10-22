@@ -587,7 +587,11 @@ static NSString *abbreviatePath(NSString *string) {
 {
   [self.reportWriter decreaseIndent];
 
-  if (![event[kReporter_EndOCUnit_SucceededKey] boolValue] &&
+  if ([event[kReporter_EndOCUnit_WarningKey] boolValue] &&
+      ![event[kReporter_EndOCUnit_FailureReasonKey] isEqual:[NSNull null]]) {
+    [self.reportWriter printLine:@"%@", event[kReporter_EndOCUnit_FailureReasonKey]];
+  }
+  else if (![event[kReporter_EndOCUnit_SucceededKey] boolValue] &&
       ![event[kReporter_EndOCUnit_FailureReasonKey] isEqual:[NSNull null]]) {
     [self.reportWriter printLine:@"<bold>failed<reset>: %@", event[kReporter_EndOCUnit_FailureReasonKey]];
   }
