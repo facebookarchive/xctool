@@ -16,7 +16,9 @@
 
 #import "TestableExecutionInfo.h"
 
-#import "OTestQuery.h"
+#import "OCUnitIOSAppTestQueryRunner.h"
+#import "OCUnitIOSLogicTestQueryRunner.h"
+#import "OCUnitOSXTestQueryRunner.h"
 #import "TaskUtil.h"
 #import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
@@ -142,35 +144,16 @@
                                        error:(NSString **)error
 {
   NSString *sdkName = testableBuildSettings[@"SDK_NAME"];
-  NSString *testBundlePath = [NSString stringWithFormat:@"%@/%@",
-                              testableBuildSettings[@"BUILT_PRODUCTS_DIR"],
-                              testableBuildSettings[@"FULL_PRODUCT_NAME"]];
-
-  // TEST_HOST will sometimes be wrapped in "quotes".
-  NSString *testHostExecutablePath = [testableBuildSettings[@"TEST_HOST"]
-                                      stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
-
+  BOOL hasTestHost = (testableBuildSettings[@"TEST_HOST"] != nil);
+  Class runnerClass = {0};
   if ([sdkName hasPrefix:@"iphonesimulator"]) {
-    if (testHostExecutablePath) {
-      return OTestQueryTestCasesInIOSBundleWithTestHost(testBundlePath, testHostExecutablePath, sdkName, error);
+    if (hasTestHost) {
+      runnerClass = [OCUnitIOSAppTestQueryRunner class];
     } else {
-      return OTestQueryTestCasesInIOSBundle(testBundlePath, sdkName, error);
+      runnerClass = [OCUnitIOSLogicTestQueryRunner class];
     }
   } else if ([sdkName hasPrefix:@"macosx"]) {
-    BOOL disableGC;
-
-    NSString *gccEnableObjcGC = testableBuildSettings[@"GCC_ENABLE_OBJC_GC"];
-    if ([gccEnableObjcGC isEqualToString:@"required"] ||
-        [gccEnableObjcGC isEqualToString:@"supported"]) {
-      disableGC = NO;
-    } else {
-      disableGC = YES;
-    }
-
-    return OTestQueryTestCasesInOSXBundle(testBundlePath,
-                                          testableBuildSettings[@"BUILT_PRODUCTS_DIR"],
-                                          disableGC,
-                                          error);
+    runnerClass = [OCUnitOSXTestQueryRunner class];
   } else if ([sdkName hasPrefix:@"iphoneos"]) {
     // We can't run tests on device yet, but we must return a test list here or
     // we'll never get far enough to run OCUnitIOSDeviceTestRunner.
@@ -179,6 +162,8 @@
     NSAssert(NO, @"Unexpected SDK: %@", sdkName);
     abort();
   }
+  OCUnitTestQueryRunner *runner = [[[runnerClass alloc] initWithBuildSettings:testableBuildSettings] autorelease];
+  return [runner runQueryWithError:error];
 }
 
 + (NSString *)stringWithMacrosExpanded:(NSString *)str

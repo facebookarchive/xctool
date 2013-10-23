@@ -16,7 +16,9 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
-#import "OTestQuery.h"
+#import "OCUnitIOSAppTestQueryRunner.h"
+#import "OCUnitIOSLogicTestQueryRunner.h"
+#import "OCUnitOSXTestQueryRunner.h"
 #import "XCToolUtil.h"
 
 @interface OTestQueryTests : SenTestCase
@@ -27,10 +29,12 @@
 - (void)testCanQueryClassesFromOSXBundle
 {
   NSString *error = nil;
-  NSArray *classes = OTestQueryTestCasesInOSXBundle(TEST_DATA @"tests-osx-test-bundle/TestProject-Library-OSXTests.octest",
-                                                    AbsolutePathFromRelative(TEST_DATA @"tests-osx-test-bundle"),
-                                                    YES,
-                                                    &error);
+  OCUnitOSXTestQueryRunner *runner = [[OCUnitOSXTestQueryRunner alloc] initWithBuildSettings:@{
+    kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"tests-osx-test-bundle"),
+    kFullProductName : @"TestProject-Library-OSXTests.octest",
+  }];
+  NSArray *classes = [runner runQueryWithError:&error];
+  assertThat(error, is(nilValue()));
   assertThat(classes,
              equalTo(@[
                      @"TestProject_Library_OSXTests/testOutput",
@@ -42,12 +46,15 @@
 - (void)testCanQueryXCTestClassesFromOSXBundle
 {
   NSString *error = nil;
-  NSString *bundlePath = TEST_DATA @"tests-osx-test-bundle/TestProject-Library-XCTest-OSXTests.xctest";
-  NSString *builtProductsDir = AbsolutePathFromRelative(TEST_DATA @"tests-osx-test-bundle");
   NSString *frameworkDirPath = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks/XCTest.framework"];
 
   if ([[NSFileManager defaultManager] fileExistsAtPath:frameworkDirPath]){
-    NSArray *classes = OTestQueryTestCasesInOSXBundle(bundlePath, builtProductsDir, YES, &error);
+    OCUnitOSXTestQueryRunner *runner = [[OCUnitOSXTestQueryRunner alloc] initWithBuildSettings:@{
+      kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"tests-osx-test-bundle"),
+      kFullProductName : @"TestProject-Library-XCTest-OSXTests.xctest",
+    }];
+    NSArray *classes = [runner runQueryWithError:&error];
+    assertThat(error, is(nilValue()));
     assertThat(classes,
                equalTo(@[@"TestProject_Library_XCTest_OSXTests/testOutput",
                          @"TestProject_Library_XCTest_OSXTests/testWillFail",
@@ -59,9 +66,14 @@
 {
   NSString *error = nil;
   NSString *latestSDK = GetAvailableSDKsAndAliases()[@"iphonesimulator"];
-  NSArray *classes = OTestQueryTestCasesInIOSBundle(TEST_DATA @"tests-ios-test-bundle/TestProject-LibraryTests.octest",
-                                                    latestSDK,
-                                                    &error);
+  OCUnitIOSLogicTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:@{
+    kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"tests-ios-test-bundle"),
+    kFullProductName : @"TestProject-LibraryTests.octest",
+    kSdkName : latestSDK,
+  }];
+  NSArray *classes = [runner runQueryWithError:&error];
+
+  assertThat(error, is(nilValue()));
   assertThat(classes,
              equalTo(@[
                      @"OtherTests/testSomething",
@@ -81,9 +93,15 @@
   NSString *frameworkDirPath = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks/XCTest.framework"];
 
   if ([[NSFileManager defaultManager] fileExistsAtPath:frameworkDirPath]){
-    NSArray *classes = OTestQueryTestCasesInIOSBundle(TEST_DATA @"tests-ios-test-bundle/TestProject-Library-XCTest-iOSTests.xctest",
-                                                      latestSDK,
-                                                      &error);
+    OCUnitIOSLogicTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:@{
+      kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"tests-ios-test-bundle"),
+      kFullProductName : @"TestProject-Library-XCTest-iOSTests.xctest",
+      kSdkName : latestSDK,
+    }];
+
+    NSArray *classes = [runner runQueryWithError:&error];
+
+    assertThat(error, is(nilValue()));
     assertThat(classes,
                equalTo(@[
                          @"OtherTests/testSomething",
@@ -102,10 +120,11 @@
   NSString *error = nil;
   // This is going to fail, because we're trying to load an iOS test bundle using
   // the OS X version of otest.
-  NSArray *classes = OTestQueryTestCasesInOSXBundle(TEST_DATA @"tests-ios-test-bundle/TestProject-LibraryTests.octest",
-                                                    AbsolutePathFromRelative(TEST_DATA @"tests-osx-test-bundle"),
-                                                    YES,
-                                                    &error);
+  OCUnitOSXTestQueryRunner *runner = [[OCUnitOSXTestQueryRunner alloc] initWithBuildSettings:@{
+    kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"tests-ios-test-bundle"),
+    kFullProductName : @"TestProject-LibraryTests.octest",
+  }];
+  NSArray *classes = [runner runQueryWithError:&error];
   assertThat(classes, equalTo(nil));
   assertThat(error, containsString(@"no suitable image found."));
 }
@@ -116,9 +135,13 @@
   // This is going to fail, because we're trying to load an OS X test bundle
   // using the iOS version of otest.
   NSString *latestSDK = GetAvailableSDKsAndAliases()[@"iphonesimulator"];
-  NSArray *classes = OTestQueryTestCasesInIOSBundle(TEST_DATA @"tests-osx-test-bundle/TestProject-Library-OSXTests.octest",
-                                                    latestSDK,
-                                                    &error);
+  OCUnitIOSLogicTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:@{
+    kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"tests-osx-test-bundle"),
+    kFullProductName : @"TestProject-Library-OSXTests.octest",
+    kSdkName : latestSDK,
+  }];
+  NSArray *classes = [runner runQueryWithError:&error];
+
   assertThat(classes, equalTo(nil));
   assertThat(error, containsString(@"no suitable image found."));
 }
@@ -127,10 +150,13 @@
 {
   NSString *error = nil;
   NSString *latestSDK = GetAvailableSDKsAndAliases()[@"iphonesimulator"];
-  NSArray *classes = OTestQueryTestCasesInIOSBundleWithTestHost(TEST_DATA @"tests-ios-test-bundle/TestProject-LibraryTests.octest",
-                                                                @"/path/to/executable/that/does/not/exist",
-                                                                latestSDK,
-                                                                &error);
+  OCUnitIOSAppTestQueryRunner *runner = [[OCUnitIOSAppTestQueryRunner alloc] initWithBuildSettings:@{
+    kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"tests-ios-test-bundle"),
+    kFullProductName : @"TestProject-LibraryTests.octest",
+    kSdkName : latestSDK,
+    kTestHost : @"/path/to/executable/that/does/not/exist",
+  }];
+  NSArray *classes = [runner runQueryWithError:&error];
   assertThat(classes, equalTo(nil));
   assertThat(error, containsString(@"The test host executable is missing: '/path/to/executable/that/does/not/exist'"));
 }

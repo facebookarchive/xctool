@@ -18,7 +18,7 @@
 
 #import "ContainsException.h"
 #import "OCUnitIOSLogicTestRunner.h"
-#import "OTestQuery.h"
+#import "OCUnitIOSLogicTestQueryRunner.h"
 #import "ReporterEvents.h"
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
@@ -30,9 +30,15 @@
 static NSArray *AllTestCasesInIOSTestBundle(NSString *bundlePath)
 {
   NSString *error = nil;
-  NSArray *allTests = OTestQueryTestCasesInIOSBundle(bundlePath,
-                                                     GetAvailableSDKsAndAliases()[@"iphonesimulator"],
-                                                     &error);
+  NSString *latestSDK = GetAvailableSDKsAndAliases()[@"iphonesimulator"];
+  NSString *builtProductsDir = [bundlePath stringByDeletingLastPathComponent];
+  NSString *fullProductName = [bundlePath lastPathComponent];
+  OCUnitIOSLogicTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:@{
+    kBuiltProductsDir : builtProductsDir,
+    kFullProductName : fullProductName,
+    kSdkName : latestSDK,
+  }];
+  NSArray *allTests = [runner runQueryWithError:&error];
   NSCAssert(error == nil, @"Error while querying test cases: %@", error);
 
   return allTests;
