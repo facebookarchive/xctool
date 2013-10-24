@@ -146,6 +146,10 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
                      description:@"Set simulator type (either iphone or ipad)"
                        paramName:@"SIMULATOR"
                            mapTo:@selector(setSimulatorType:)],
+    [Action actionOptionWithName:@"failOnEmptyTestBundles"
+                        aliases:nil
+                     description:@"Fail when an empty test bundle was run."
+                         setFlag:@selector(setFailOnEmptyTestBundles:)],
     ];
 }
 
@@ -379,7 +383,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
  * like to publish the usual begin-ocunit / end-ocunit events so that we have
  * a place to advertise errors.
  */
-- (TestableBlock)blockToAdvertiseError:(NSString *)error
+- (TestableBlock)blockToAdvertiseMessage:(NSString *)error
               forTestableExecutionInfo:(TestableExecutionInfo *)testableExecutionInfo
                              gcEnabled:(BOOL)garbageCollectionEnabled
                                warning:(BOOL)warning
@@ -389,7 +393,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                             [[self class] eventForBeginOCUnitFromTestableExecutionInfo:testableExecutionInfo
                                                               garbageCollectionEnabled:garbageCollectionEnabled]);
 
-    PublishEventToReporters(reporters,x
+    PublishEventToReporters(reporters,
                             [[self class] eventForEndOCUnitFromTestableExecutionInfo:testableExecutionInfo
                                                             garbageCollectionEnabled:garbageCollectionEnabled
                                                                            succeeded:NO
@@ -490,9 +494,10 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
 
   for (TestableExecutionInfo *info in testableExecutionInfos) {
     if (info.buildSettingsError) {
-      TestableBlock block = [self blockToAdvertiseError:info.buildSettingsError
-                               forTestableExecutionInfo:info
-                                              gcEnabled:NO];
+      TestableBlock block = [self blockToAdvertiseMessage:info.buildSettingsError
+                                 forTestableExecutionInfo:info
+                                                gcEnabled:NO
+                                                  warning:NO];
       NSArray *annotatedBlock = @[block, info.testable.target];
       [blocksToRunOnDispatchQueue addObject:annotatedBlock];
       continue;
@@ -528,26 +533,25 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
         NSString *blockAnnotation;
 
         if (info.testCasesQueryError != nil) {
-          block = [self blockToAdvertiseError:[NSString stringWithFormat:
+          block = [self blockToAdvertiseMessage:[NSString stringWithFormat:
                                                @"Failed to query the list of test cases in the test bundle: %@", info.testCasesQueryError]
-                     forTestableExecutionInfo:info
-                                    gcEnabled:garbageCollectionEnabled
-                                      warning:NO];
-          blockAnnotation = info.buildSettings[@"FULL_PRODUCT_NAME"];
-        }
-        else if (info.testCases.count == 0) {
-          if (_failOnEmptyTestBundles) {
-            block = [self blockToAdvertiseError:@"This test bundle contained no tests. Treating as a failure since -failOnEmpyTestBundles is enabled.\n"
                        forTestableExecutionInfo:info
                                       gcEnabled:garbageCollectionEnabled
                                         warning:NO];
+          blockAnnotation = info.buildSettings[@"FULL_PRODUCT_NAME"];
+        } else if (info.testCases.count == 0) {
+          if (_failOnEmptyTestBundles) {
+            block = [self blockToAdvertiseMessage:@"This test bundle contained no tests. Treating as a failure since -failOnEmpyTestBundles is enabled.\n"
+                         forTestableExecutionInfo:info
+                                        gcEnabled:garbageCollectionEnabled
+                                          warning:NO];
             blockAnnotation = info.buildSettings[@"FULL_PRODUCT_NAME"];
           }
           else {
-            block = [self blockToAdvertiseError:@"skipping: This test bundle contained no tests.\n"
-                       forTestableExecutionInfo:info
-                                      gcEnabled:garbageCollectionEnabled
-                                        warning:YES];
+            block = [self blockToAdvertiseMessage:@"skipping: This test bundle contained no tests.\n"
+                         forTestableExecutionInfo:info
+                                        gcEnabled:garbageCollectionEnabled
+                                          warning:YES];
             blockAnnotation = info.buildSettings[@"FULL_PRODUCT_NAME"];
           }
         } else {
