@@ -58,6 +58,7 @@ typedef enum {
 @property (nonatomic, assign) BOOL freshSimulator;
 @property (nonatomic, assign) BOOL freshInstall;
 @property (nonatomic, assign) BOOL parallelize;
+@property (nonatomic, assign) BOOL failOnEmptyTestBundles;
 @property (nonatomic, retain) NSString *simulatorType;
 @property (nonatomic, retain) NSString *testSDK;
 @property (nonatomic, retain) NSMutableArray *onlyList;
