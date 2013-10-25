@@ -56,7 +56,6 @@
 #define kReporter_EndOCUnit_SDKNameKey @"sdkName"
 #define kReporter_EndOCUnit_TestTypeKey @"testType"
 #define kReporter_EndOCUnit_SucceededKey @"succeeded"
-#define kReporter_EndOCUnit_WarningKey @"warning"
 #define kReporter_EndOCUnit_MessageKey @"message"
 
 #define kReporter_TestSuite_TopLevelSuiteName @"Toplevel Test Suite"
