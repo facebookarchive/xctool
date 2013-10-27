@@ -715,7 +715,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TestProject-TestHost/TestProject-TestHost-Prefix.pch";
 				INFOPLIST_FILE = "TestProject-TestHost/TestProject-TestHost-Info.plist";
-				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

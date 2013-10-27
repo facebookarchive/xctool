@@ -23,10 +23,11 @@
 
 // Designated initializer.
 - (instancetype)initWithBuildSettings:(NSDictionary *)buildSettings
+                          withCpuType:(cpu_type_t)cpuType
 {
   if (self = [super init]) {
     _buildSettings = [buildSettings retain];
-    _cpuType = CPU_TYPE_ANY;
+    _cpuType = cpuType;
   }
   return self;
 }

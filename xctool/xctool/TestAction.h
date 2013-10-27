@@ -18,4 +18,6 @@
 
 @interface TestAction : Action
 
+- (void)setDeviceName:(NSString *)deviceName;
+
 @end

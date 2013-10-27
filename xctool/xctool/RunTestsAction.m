@@ -34,6 +34,109 @@
 #import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
 
+static NSDictionary *ParseDestinationString(NSString *destinationString, NSString **errorMessage)
+{
+  NSMutableDictionary *resultBuilder = [[NSMutableDictionary alloc] init];
+
+  // Might need to do this well later on. Right now though, just blindly split on the comma.
+  NSArray *components = [destinationString componentsSeparatedByString:@","];
+  for (NSString *component in components) {
+    NSError *error = nil;
+    NSString *pattern = @"^\\s*([^=]*)=([^=]*)\\s*$";
+    NSRegularExpression *re = [[[NSRegularExpression alloc] initWithPattern:pattern options:0 error:&error] autorelease];
+    if (error) {
+      *errorMessage = [NSString stringWithFormat:@"Error while creating regex with pattern '%@'. Reason: '%@'.", pattern, [error localizedFailureReason]];
+      return nil;
+    }
+    NSArray *matches = [re matchesInString:component options:0 range:NSMakeRange(0, [component length])];
+    NSCAssert(matches, @"Apple's documentation states that the above call will never return nil.");
+    if ([matches count] != 1) {
+      *errorMessage = [NSString stringWithFormat:@"The string '%@' is formatted badly. It should be KEY=VALUE. "
+                       @"The number of matches with regex '%@' was %llu.",
+                       component, pattern, (long long unsigned)[matches count]];
+      return nil;
+    }
+    NSTextCheckingResult *match = matches[0];
+    if ([match numberOfRanges] != 3) {
+      *errorMessage = [NSString stringWithFormat:@"The string '%@' is formatted badly. It should be KEY=VALUE. "
+                       @"The number of ranges with regex '%@' was %llu.",
+                       component, pattern, (long long unsigned)[match numberOfRanges]];
+      return nil;
+    }
+    NSString *lhs = [component substringWithRange:[match rangeAtIndex:1]];
+    NSString *rhs = [component substringWithRange:[match rangeAtIndex:2]];
+    resultBuilder[lhs] = rhs;
+  }
+  return [resultBuilder autorelease];
+}
+
+/**
+ * Takes a device name and checks whether it's a valid device name.
+ * Also as a bonus, tells you whether the device is 32-bit or 64-bit.
+ *
+ * @param deviceName Name of the device to check for
+ * @param errorMessage Returns the error message
+ * @param cpuType Returns the cpu type (CPU_TYPE_I386 or CPU_TYPE_X86_64), wrapped
+ *   in an NSNumber.
+ * @return YES if the device name is valid, NO otherwise.
+ */
+static BOOL IsValidDeviceName(NSString *deviceName, NSString **errorMessage, cpu_type_t *cpuType)
+{
+  NSFileManager *fm = [NSFileManager defaultManager];
+
+  NSError *error = nil;
+  NSString *devicesDirPath = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks/SimulatorHost.framework/Versions/A/Resources/Devices"];
+
+  NSArray *deviceinfoFiles = [fm contentsOfDirectoryAtPath:devicesDirPath
+                                                     error:&error];
+  if (error) {
+    *errorMessage = [NSString stringWithFormat:@"Failed while getting directory listing for '%@': '%@'.", devicesDirPath, [error localizedFailureReason]];
+    return NO;
+  }
+
+  if ([deviceinfoFiles count] == 0) {
+    *errorMessage = [NSString stringWithFormat:@"The directory containing devices, '%@', is empty.", devicesDirPath];
+    return NO;
+  }
+
+  NSMutableArray *devices = [[[NSMutableArray alloc] initWithCapacity:[deviceinfoFiles count]] autorelease];
+  for (NSString *fileName in deviceinfoFiles) {
+    if ([fileName hasSuffix:@".deviceinfo"]) {
+      NSString *deviceinfoPath = [devicesDirPath stringByAppendingPathComponent:fileName];
+      NSString *plistFilePath = [deviceinfoPath stringByAppendingPathComponent:@"Info.plist"];
+      if (![fm fileExistsAtPath:plistFilePath]) {
+        *errorMessage = [NSString stringWithFormat:@"The plist file '%@' does not exist.", plistFilePath];
+        break;
+      }
+      NSDictionary *deviceInfo = [[[NSDictionary alloc] initWithContentsOfFile:plistFilePath] autorelease];
+      if (!deviceInfo) {
+        *errorMessage = [NSString stringWithFormat:@"Encountered an error parsing the plist file '%@'.", plistFilePath];
+        break;
+      }
+      if (![[deviceInfo allKeys] containsObject:@"displayName"]) {
+        *errorMessage = [NSString stringWithFormat:@"The file '%@' didn't contain the key 'displayName'.", plistFilePath];
+        break;
+      }
+      NSString *listedDeviceName = deviceInfo[@"displayName"];
+
+      if (![deviceName isEqualToString:listedDeviceName]) {
+        continue;
+      }
+      if ([deviceInfo[@"wordSize"] isEqualToString:@"64"]) {
+        *cpuType = CPU_TYPE_X86_64;
+      }
+      else {
+        *cpuType = CPU_TYPE_I386;
+      }
+      return YES;
+    }
+  }
+  *errorMessage = [NSString stringWithFormat:
+                   @"'%@' isn't a valid device name. The valid device names are: %@.",
+                   deviceName, devices];
+  return NO;
+}
+
 /// Break up an array into chunks of specified size
 static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
   if (array.count == 0) {
@@ -160,6 +263,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
     _logicTestBucketSize = 0;
     _appTestBucketSize = 0;
     _bucketBy = BucketByTestCase;
+    _cpuType = CPU_TYPE_ANY;
   }
   return self;
 }
@@ -227,6 +331,28 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
   if ([self testSDK] == nil && [options sdk] != nil) {
     // If specified test SDKs aren't provided, use whatever we got via -sdk.
     [self setTestSDK:[options sdk]];
+  }
+
+  if ([options destination]) {
+
+    // If the destination was supplied, pull out the device name
+    NSString *destStr = [options destination];
+    NSDictionary *destInfo = ParseDestinationString(destStr, errorMessage);
+
+    // Make sure the destination string is formatted well.
+    if (!destInfo) {
+      return NO;
+    }
+
+    if (destInfo[@"name"] != nil) {
+      NSString *deviceName = destInfo[@"name"];
+      cpu_type_t cpuType = CPU_TYPE_ANY;
+      if (!IsValidDeviceName(deviceName, errorMessage, &cpuType)) {
+        return NO;
+      }
+      _cpuType = cpuType;
+      [self setDeviceName:deviceName];
+    }
   }
 
   for (NSDictionary *only in [self onlyListAsTargetsAndSenTestList]) {
@@ -424,6 +550,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                                      freshInstall:self.freshInstall
                                      simulatorType:self.simulatorType
                                      reporters:reporters] autorelease];
+    [testRunner setCpuType:_cpuType];
 
     PublishEventToReporters(reporters,
                             [[self class] eventForBeginOCUnitFromTestableExecutionInfo:testableExecutionInfo
@@ -471,11 +598,12 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
   for (Testable *testable in testables) {
     dispatch_group_async(group, q, ^{
       dispatch_semaphore_wait(jobLimiter, DISPATCH_TIME_FOREVER);
-
+      
       TestableExecutionInfo *info = [TestableExecutionInfo infoForTestable:testable
                                                           xcodeSubjectInfo:xcodeSubjectInfo
                                                        xcodebuildArguments:xcodebuildArguments
-                                                                   testSDK:_testSDK];
+                                                                   testSDK:_testSDK
+                                                                   cpuType:_cpuType];
 
       @synchronized (self) {
         [testableExecutionInfos addObject:info];

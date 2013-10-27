@@ -70,6 +70,6 @@
 + (instancetype)infoForTestable:(Testable *)testable
                xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
             xcodebuildArguments:(NSArray *)xcodebuildArguments
-                        testSDK:(NSString *)testSDK;
-
+                        testSDK:(NSString *)testSDK
+                        cpuType:(cpu_type_t)cpuType;
 @end

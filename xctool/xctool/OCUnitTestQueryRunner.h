@@ -27,7 +27,8 @@
 
 @property (nonatomic, assign) cpu_type_t cpuType;
 
-- (instancetype)initWithBuildSettings:(NSDictionary *)buildSettings;
+- (instancetype)initWithBuildSettings:(NSDictionary *)buildSettings
+                          withCpuType:(cpu_type_t)cpuType;
 - (NSTask *)createTaskForQuery;
 - (NSArray *)runQueryWithError:(NSString **)error;
 - (NSString *)bundlePath;
