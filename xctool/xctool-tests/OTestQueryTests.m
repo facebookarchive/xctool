@@ -124,6 +124,44 @@
                        ]));
 }
 
+- (void)testCanQueryTestCasesForIOSKiwiBundle_OCUnit
+{
+  NSString *error = nil;
+  NSDictionary *buildSettings = @{
+                                  kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"KiwiTests/Build/Products/Debug-iphonesimulator"),
+                                  kFullProductName : @"KiwiTests-OCUnit.octest",
+                                  kSdkName : GetAvailableSDKsAndAliases()[@"iphonesimulator"],
+                                  };
+  OCUnitTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
+                                                                                   withCpuType:CPU_TYPE_ANY];
+  NSArray *cases = [runner runQueryWithError:&error];
+  assertThat(cases, equalTo(@[
+                              @"KiwiTests_OCUnit/SomeDescription_ItAnotherthing",
+                              @"KiwiTests_OCUnit/SomeDescription_ItSomething",
+                              ]));
+}
+
+- (void)testCanQueryTestCasesForIOSKiwiBundle_XCTest
+{
+  if (!HasXCTestFramework()) {
+    return;
+  }
+
+  NSString *error = nil;
+  NSDictionary *buildSettings = @{
+                                  kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"KiwiTests/Build/Products/Debug-iphonesimulator"),
+                                  kFullProductName : @"KiwiTests-XCTest.xctest",
+                                  kSdkName : GetAvailableSDKsAndAliases()[@"iphonesimulator"],
+                                  };
+  OCUnitTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
+                                                                                   withCpuType:CPU_TYPE_ANY];
+  NSArray *cases = [runner runQueryWithError:&error];
+  assertThat(cases, equalTo(@[
+                              @"KiwiTests_XCTest/SomeDescription_ItAnotherthing",
+                              @"KiwiTests_XCTest/SomeDescription_ItSomething",
+                              ]));
+}
+
 - (void)testQueryFailsWhenDYLDRejectsBundle_OSX
 {
   NSString *error = nil;

@@ -1,0 +1,576 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2887CC01181DB28000B0D049 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2887CC00181DB28000B0D049 /* XCTest.framework */; };
+		2887CC07181DB28000B0D049 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2887CC05181DB28000B0D049 /* InfoPlist.strings */; };
+		2887CC09181DB28000B0D049 /* KiwiTests_XCTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2887CC08181DB28000B0D049 /* KiwiTests_XCTest.m */; };
+		2887CC18181DBA4B00B0D049 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2887CC17181DBA4B00B0D049 /* SenTestingKit.framework */; };
+		2887CC1A181DBA4B00B0D049 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2887CC19181DBA4B00B0D049 /* Foundation.framework */; };
+		2887CC1C181DBA4B00B0D049 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2887CC1B181DBA4B00B0D049 /* UIKit.framework */; };
+		2887CC22181DBA4B00B0D049 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2887CC20181DBA4B00B0D049 /* InfoPlist.strings */; };
+		2887CC24181DBA4B00B0D049 /* KiwiTests_OCUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = 2887CC23181DBA4B00B0D049 /* KiwiTests_OCUnit.m */; };
+		609F4A85F6DB42BCBC084E83 /* libPods-KiwiTests-XCTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7504B804530D434B84FB3EC4 /* libPods-KiwiTests-XCTest.a */; };
+		D545930A37A241AA8A3460B9 /* libPods-KiwiTests-OCUnit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 07E23A8F6BBD45A48C02D689 /* libPods-KiwiTests-OCUnit.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2887CC26181DBA4B00B0D049 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2887CBF3181DB26000B0D049 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2887CBFC181DB28000B0D049;
+			remoteInfo = "KiwiTests-XCTest";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		07E23A8F6BBD45A48C02D689 /* libPods-KiwiTests-OCUnit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KiwiTests-OCUnit.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0F23DA7489C54E3D9832C025 /* Pods-KiwiTests-XCTest.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KiwiTests-XCTest.xcconfig"; path = "Pods/Pods-KiwiTests-XCTest.xcconfig"; sourceTree = "<group>"; };
+		2887CBFD181DB28000B0D049 /* KiwiTests-XCTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "KiwiTests-XCTest.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2887CC00181DB28000B0D049 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		2887CC04181DB28000B0D049 /* KiwiTests-XCTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KiwiTests-XCTest-Info.plist"; sourceTree = "<group>"; };
+		2887CC06181DB28000B0D049 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		2887CC08181DB28000B0D049 /* KiwiTests_XCTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KiwiTests_XCTest.m; sourceTree = "<group>"; };
+		2887CC0A181DB28000B0D049 /* KiwiTests-XCTest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KiwiTests-XCTest-Prefix.pch"; sourceTree = "<group>"; };
+		2887CC16181DBA4B00B0D049 /* KiwiTests-OCUnit.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "KiwiTests-OCUnit.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2887CC17181DBA4B00B0D049 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		2887CC19181DBA4B00B0D049 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		2887CC1B181DBA4B00B0D049 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		2887CC1F181DBA4B00B0D049 /* KiwiTests-OCUnit-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KiwiTests-OCUnit-Info.plist"; sourceTree = "<group>"; };
+		2887CC21181DBA4B00B0D049 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		2887CC23181DBA4B00B0D049 /* KiwiTests_OCUnit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KiwiTests_OCUnit.m; sourceTree = "<group>"; };
+		2887CC25181DBA4B00B0D049 /* KiwiTests-OCUnit-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KiwiTests-OCUnit-Prefix.pch"; sourceTree = "<group>"; };
+		7504B804530D434B84FB3EC4 /* libPods-KiwiTests-XCTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KiwiTests-XCTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FFA68D299E53474DBB9CEB30 /* Pods-KiwiTests-OCUnit.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KiwiTests-OCUnit.xcconfig"; path = "Pods/Pods-KiwiTests-OCUnit.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2887CBFA181DB28000B0D049 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2887CC01181DB28000B0D049 /* XCTest.framework in Frameworks */,
+				609F4A85F6DB42BCBC084E83 /* libPods-KiwiTests-XCTest.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2887CC13181DBA4B00B0D049 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2887CC18181DBA4B00B0D049 /* SenTestingKit.framework in Frameworks */,
+				2887CC1C181DBA4B00B0D049 /* UIKit.framework in Frameworks */,
+				2887CC1A181DBA4B00B0D049 /* Foundation.framework in Frameworks */,
+				D545930A37A241AA8A3460B9 /* libPods-KiwiTests-OCUnit.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2887CBF2181DB26000B0D049 = {
+			isa = PBXGroup;
+			children = (
+				2887CC02181DB28000B0D049 /* KiwiTests-XCTest */,
+				2887CC1D181DBA4B00B0D049 /* KiwiTests-OCUnit */,
+				2887CBFF181DB28000B0D049 /* Frameworks */,
+				2887CBFE181DB28000B0D049 /* Products */,
+				0F23DA7489C54E3D9832C025 /* Pods-KiwiTests-XCTest.xcconfig */,
+				FFA68D299E53474DBB9CEB30 /* Pods-KiwiTests-OCUnit.xcconfig */,
+			);
+			sourceTree = "<group>";
+		};
+		2887CBFE181DB28000B0D049 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2887CBFD181DB28000B0D049 /* KiwiTests-XCTest.xctest */,
+				2887CC16181DBA4B00B0D049 /* KiwiTests-OCUnit.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2887CBFF181DB28000B0D049 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2887CC00181DB28000B0D049 /* XCTest.framework */,
+				7504B804530D434B84FB3EC4 /* libPods-KiwiTests-XCTest.a */,
+				2887CC17181DBA4B00B0D049 /* SenTestingKit.framework */,
+				2887CC19181DBA4B00B0D049 /* Foundation.framework */,
+				2887CC1B181DBA4B00B0D049 /* UIKit.framework */,
+				07E23A8F6BBD45A48C02D689 /* libPods-KiwiTests-OCUnit.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2887CC02181DB28000B0D049 /* KiwiTests-XCTest */ = {
+			isa = PBXGroup;
+			children = (
+				2887CC08181DB28000B0D049 /* KiwiTests_XCTest.m */,
+				2887CC03181DB28000B0D049 /* Supporting Files */,
+			);
+			path = "KiwiTests-XCTest";
+			sourceTree = "<group>";
+		};
+		2887CC03181DB28000B0D049 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				2887CC04181DB28000B0D049 /* KiwiTests-XCTest-Info.plist */,
+				2887CC05181DB28000B0D049 /* InfoPlist.strings */,
+				2887CC0A181DB28000B0D049 /* KiwiTests-XCTest-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		2887CC1D181DBA4B00B0D049 /* KiwiTests-OCUnit */ = {
+			isa = PBXGroup;
+			children = (
+				2887CC23181DBA4B00B0D049 /* KiwiTests_OCUnit.m */,
+				2887CC1E181DBA4B00B0D049 /* Supporting Files */,
+			);
+			path = "KiwiTests-OCUnit";
+			sourceTree = "<group>";
+		};
+		2887CC1E181DBA4B00B0D049 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				2887CC1F181DBA4B00B0D049 /* KiwiTests-OCUnit-Info.plist */,
+				2887CC20181DBA4B00B0D049 /* InfoPlist.strings */,
+				2887CC25181DBA4B00B0D049 /* KiwiTests-OCUnit-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2887CBFC181DB28000B0D049 /* KiwiTests-XCTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2887CC0B181DB28000B0D049 /* Build configuration list for PBXNativeTarget "KiwiTests-XCTest" */;
+			buildPhases = (
+				D10A4BA7FAF14DF2A07EE3DF /* Check Pods Manifest.lock */,
+				2887CBF9181DB28000B0D049 /* Sources */,
+				2887CBFA181DB28000B0D049 /* Frameworks */,
+				2887CBFB181DB28000B0D049 /* Resources */,
+				121F10675FCC4C3C8364A3A6 /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "KiwiTests-XCTest";
+			productName = "KiwiTests-XCTest";
+			productReference = 2887CBFD181DB28000B0D049 /* KiwiTests-XCTest.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		2887CC15181DBA4B00B0D049 /* KiwiTests-OCUnit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2887CC28181DBA4B00B0D049 /* Build configuration list for PBXNativeTarget "KiwiTests-OCUnit" */;
+			buildPhases = (
+				31C83836B2F842CA9CEB55A8 /* Check Pods Manifest.lock */,
+				2887CC12181DBA4B00B0D049 /* Sources */,
+				2887CC13181DBA4B00B0D049 /* Frameworks */,
+				2887CC14181DBA4B00B0D049 /* Resources */,
+				AD325BECE10A401D91237A43 /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2887CC27181DBA4B00B0D049 /* PBXTargetDependency */,
+			);
+			name = "KiwiTests-OCUnit";
+			productName = "KiwiTests-OCUnit";
+			productReference = 2887CC16181DBA4B00B0D049 /* KiwiTests-OCUnit.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2887CBF3181DB26000B0D049 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0500;
+				TargetAttributes = {
+					2887CC15181DBA4B00B0D049 = {
+						TestTargetID = 2887CBFC181DB28000B0D049;
+					};
+				};
+			};
+			buildConfigurationList = 2887CBF6181DB26000B0D049 /* Build configuration list for PBXProject "KiwiTests" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 2887CBF2181DB26000B0D049;
+			productRefGroup = 2887CBFE181DB28000B0D049 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2887CBFC181DB28000B0D049 /* KiwiTests-XCTest */,
+				2887CC15181DBA4B00B0D049 /* KiwiTests-OCUnit */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2887CBFB181DB28000B0D049 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2887CC07181DB28000B0D049 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2887CC14181DBA4B00B0D049 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2887CC22181DBA4B00B0D049 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		121F10675FCC4C3C8364A3A6 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-KiwiTests-XCTest-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		31C83836B2F842CA9CEB55A8 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		AD325BECE10A401D91237A43 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-KiwiTests-OCUnit-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D10A4BA7FAF14DF2A07EE3DF /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2887CBF9181DB28000B0D049 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2887CC09181DB28000B0D049 /* KiwiTests_XCTest.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2887CC12181DBA4B00B0D049 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2887CC24181DBA4B00B0D049 /* KiwiTests_OCUnit.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2887CC27181DBA4B00B0D049 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2887CBFC181DB28000B0D049 /* KiwiTests-XCTest */;
+			targetProxy = 2887CC26181DBA4B00B0D049 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		2887CC05181DB28000B0D049 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2887CC06181DB28000B0D049 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		2887CC20181DBA4B00B0D049 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2887CC21181DBA4B00B0D049 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		2887CBF7181DB26000B0D049 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		2887CBF8181DB26000B0D049 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		2887CC0C181DB28000B0D049 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0F23DA7489C54E3D9832C025 /* Pods-KiwiTests-XCTest.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"$(inherited)",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "KiwiTests-XCTest/KiwiTests-XCTest-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "KiwiTests-XCTest/KiwiTests-XCTest-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		2887CC0D181DB28000B0D049 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0F23DA7489C54E3D9832C025 /* Pods-KiwiTests-XCTest.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"$(inherited)",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "KiwiTests-XCTest/KiwiTests-XCTest-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "KiwiTests-XCTest/KiwiTests-XCTest-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+		2887CC29181DBA4B00B0D049 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FFA68D299E53474DBB9CEB30 /* Pods-KiwiTests-OCUnit.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "KiwiTests-OCUnit/KiwiTests-OCUnit-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "KiwiTests-OCUnit/KiwiTests-OCUnit-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		2887CC2A181DBA4B00B0D049 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FFA68D299E53474DBB9CEB30 /* Pods-KiwiTests-OCUnit.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "KiwiTests-OCUnit/KiwiTests-OCUnit-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "KiwiTests-OCUnit/KiwiTests-OCUnit-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2887CBF6181DB26000B0D049 /* Build configuration list for PBXProject "KiwiTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2887CBF7181DB26000B0D049 /* Debug */,
+				2887CBF8181DB26000B0D049 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2887CC0B181DB28000B0D049 /* Build configuration list for PBXNativeTarget "KiwiTests-XCTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2887CC0C181DB28000B0D049 /* Debug */,
+				2887CC0D181DB28000B0D049 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2887CC28181DBA4B00B0D049 /* Build configuration list for PBXNativeTarget "KiwiTests-OCUnit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2887CC29181DBA4B00B0D049 /* Debug */,
+				2887CC2A181DBA4B00B0D049 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2887CBF3181DB26000B0D049 /* Project object */;
+}
