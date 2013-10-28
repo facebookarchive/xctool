@@ -20,11 +20,7 @@
 #import "ParseTestName.h"
 #import "Swizzle.h"
 
-/**
- Crawls the (Sen|XC)TestSuite hierarchy and returns a list of (Sen|XC)TestCase
- objects in the order that they were found.
- */
-static NSArray *TestsFromSuite(id testSuite)
+NSArray *TestsFromSuite(id testSuite)
 {
   NSMutableArray *tests = [NSMutableArray array];
   NSMutableArray *queue = [NSMutableArray array];

@@ -38,24 +38,11 @@
 + (NSArray *)testNamesFromSuite:(id)testSuite
 {
   NSMutableArray *names = [NSMutableArray array];
-  NSMutableArray *queue = [NSMutableArray array];
-  [queue addObject:testSuite];
 
-  while ([queue count] > 0) {
-    id test = [queue objectAtIndex:0];
-    [queue removeObjectAtIndex:0];
-
-    if ([test isKindOfClass:[testSuite class]]) {
-      // Both SenTestSuite and XCTestSuite keep a list of tests in an ivar
-      // called 'tests'.
-      id testsInSuite = [test valueForKey:@"tests"];
-      NSAssert(testsInSuite != nil, @"Can't get tests for suite: %@", testSuite);
-      [queue addObjectsFromArray:testsInSuite];
-    } else {
-      NSString *name = [test performSelector:@selector(name)];
-      NSAssert(name != nil, @"Can't get name for test: %@", test);
-      [names addObject:name];
-    }
+  for (id test in TestsFromSuite(testSuite)) {
+    NSString *name = [test performSelector:@selector(name)];
+    NSAssert(name != nil, @"Can't get name for test: %@", test);
+    [names addObject:name];
   }
 
   return names;

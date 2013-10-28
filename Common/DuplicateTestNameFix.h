@@ -45,3 +45,9 @@
  https://github.com/allending/Kiwi/issues/402
  */
 void ApplyDuplicateTestNameFix(NSString *testProbeClassName);
+
+/**
+ Crawls the (Sen|XC)TestSuite hierarchy and returns a list of (Sen|XC)TestCase
+ objects in the order that they were found.
+ */
+NSArray *TestsFromSuite(id testSuite);
