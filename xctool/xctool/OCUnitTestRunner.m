@@ -226,11 +226,11 @@
            @"-ApplePersistenceIgnoreState", @"YES",
            // SenTest / XCTest is one of Self, All, None,
            // or TestClassName[/testCaseName][,TestClassName2]
-           _framework[kTestingFrameworkFilterTestArgsKey], testSpecifier,
+           [@"-" stringByAppendingString:_framework[kTestingFrameworkFilterTestArgsKey]], testSpecifier,
            // SenTestInvertScope / XCTestInvertScope optionally inverts whatever
            // SenTest would normally select. We never invert, since we always
            // pass the exact list of test cases to be run.
-           _framework[kTestingFrameworkInvertScopeKey], invertScope ? @"YES" : @"NO",
+           [@"-" stringByAppendingString:_framework[kTestingFrameworkInvertScopeKey]], invertScope ? @"YES" : @"NO",
            ]];
 
   // Add any argments that might have been specifed in the scheme.

@@ -32,15 +32,15 @@ NSDictionary *FrameworkInfoForExtension(NSString *extension)
         kTestingFrameworkTestSuiteClassName: @"SenTestSuite",
         kTestingFrameworkOSXTestrunnerName: @"Tools/otest",
         kTestingFrameworkIOSTestrunnerName: @"usr/bin/otest",
-        kTestingFrameworkFilterTestArgsKey: @"-SenTest",
-        kTestingFrameworkInvertScopeKey: @"-SenTestInvertScope"
+        kTestingFrameworkFilterTestArgsKey: @"SenTest",
+        kTestingFrameworkInvertScopeKey: @"SenTestInvertScope"
       },
       @"xctest": @{
         kTestingFrameworkTestSuiteClassName: @"XCTestSuite",
         kTestingFrameworkIOSTestrunnerName: @"usr/bin/xctest",
         kTestingFrameworkOSXTestrunnerName: @"usr/bin/xctest",
-        kTestingFrameworkFilterTestArgsKey: @"-XCTest",
-        kTestingFrameworkInvertScopeKey: @"-XCTestInvertScope"
+        kTestingFrameworkFilterTestArgsKey: @"XCTest",
+        kTestingFrameworkInvertScopeKey: @"XCTestInvertScope"
       }
     };
     [frameworks retain];
