@@ -136,6 +136,8 @@
                                                                                    withCpuType:CPU_TYPE_ANY];
   NSArray *cases = [runner runQueryWithError:&error];
   assertThat(cases, equalTo(@[
+                              @"KiwiTests_OCUnit/SomeDescription_ADuplicateName",
+                              @"KiwiTests_OCUnit/SomeDescription_ADuplicateName_2",
                               @"KiwiTests_OCUnit/SomeDescription_ItAnotherthing",
                               @"KiwiTests_OCUnit/SomeDescription_ItSomething",
                               ]));
@@ -157,6 +159,8 @@
                                                                                    withCpuType:CPU_TYPE_ANY];
   NSArray *cases = [runner runQueryWithError:&error];
   assertThat(cases, equalTo(@[
+                              @"KiwiTests_XCTest/SomeDescription_ADuplicateName",
+                              @"KiwiTests_XCTest/SomeDescription_ADuplicateName_2",
                               @"KiwiTests_XCTest/SomeDescription_ItAnotherthing",
                               @"KiwiTests_XCTest/SomeDescription_ItSomething",
                               ]));

@@ -11,6 +11,14 @@
 		282BFE2B1716044C0022F9FF /* otest-shim.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCA9916C2EE4C00F2E343 /* otest-shim.m */; };
 		283CCA9A16C2EE4C00F2E343 /* otest-shim.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCA9916C2EE4C00F2E343 /* otest-shim.m */; };
 		287A37E916C7776E00319E81 /* dyld-interposing.h in Headers */ = {isa = PBXBuildFile; fileRef = 287A37E816C7776E00319E81 /* dyld-interposing.h */; };
+		2887CC41181E0D9200B0D049 /* DuplicateTestNameFix.h in Headers */ = {isa = PBXBuildFile; fileRef = 2887CC3F181E0D9200B0D049 /* DuplicateTestNameFix.h */; };
+		2887CC42181E0D9200B0D049 /* DuplicateTestNameFix.h in Headers */ = {isa = PBXBuildFile; fileRef = 2887CC3F181E0D9200B0D049 /* DuplicateTestNameFix.h */; };
+		2887CC43181E0D9200B0D049 /* DuplicateTestNameFix.m in Sources */ = {isa = PBXBuildFile; fileRef = 2887CC40181E0D9200B0D049 /* DuplicateTestNameFix.m */; };
+		2887CC44181E0D9200B0D049 /* DuplicateTestNameFix.m in Sources */ = {isa = PBXBuildFile; fileRef = 2887CC40181E0D9200B0D049 /* DuplicateTestNameFix.m */; };
+		2887CC47181E145D00B0D049 /* TestingFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2887CC45181E145D00B0D049 /* TestingFramework.h */; };
+		2887CC48181E145D00B0D049 /* TestingFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2887CC45181E145D00B0D049 /* TestingFramework.h */; };
+		2887CC49181E145D00B0D049 /* TestingFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2887CC46181E145D00B0D049 /* TestingFramework.m */; };
+		2887CC4A181E145D00B0D049 /* TestingFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = 2887CC46181E145D00B0D049 /* TestingFramework.m */; };
 		28897FC9173E50F9004BA024 /* Swizzle.h in Headers */ = {isa = PBXBuildFile; fileRef = 28897FC7173E50F9004BA024 /* Swizzle.h */; };
 		28897FCA173E50F9004BA024 /* Swizzle.h in Headers */ = {isa = PBXBuildFile; fileRef = 28897FC7173E50F9004BA024 /* Swizzle.h */; };
 		28897FCB173E50F9004BA024 /* Swizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 28897FC8173E50F9004BA024 /* Swizzle.m */; };
@@ -44,6 +52,10 @@
 		283CCA9716C2EE4C00F2E343 /* otest-shim-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "otest-shim-Prefix.pch"; sourceTree = "<group>"; };
 		283CCA9916C2EE4C00F2E343 /* otest-shim.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "otest-shim.m"; sourceTree = "<group>"; };
 		287A37E816C7776E00319E81 /* dyld-interposing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dyld-interposing.h"; sourceTree = "<group>"; };
+		2887CC3F181E0D9200B0D049 /* DuplicateTestNameFix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DuplicateTestNameFix.h; sourceTree = "<group>"; };
+		2887CC40181E0D9200B0D049 /* DuplicateTestNameFix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DuplicateTestNameFix.m; sourceTree = "<group>"; };
+		2887CC45181E145D00B0D049 /* TestingFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestingFramework.h; sourceTree = "<group>"; };
+		2887CC46181E145D00B0D049 /* TestingFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestingFramework.m; sourceTree = "<group>"; };
 		28897FC7173E50F9004BA024 /* Swizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Swizzle.h; sourceTree = "<group>"; };
 		28897FC8173E50F9004BA024 /* Swizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Swizzle.m; sourceTree = "<group>"; };
 		28A094B31731DA3500838CDD /* dyld_priv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dyld_priv.h; sourceTree = "<group>"; };
@@ -140,6 +152,10 @@
 		28897FC6173E50F9004BA024 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				2887CC45181E145D00B0D049 /* TestingFramework.h */,
+				2887CC46181E145D00B0D049 /* TestingFramework.m */,
+				2887CC3F181E0D9200B0D049 /* DuplicateTestNameFix.h */,
+				2887CC40181E0D9200B0D049 /* DuplicateTestNameFix.m */,
 				28E44D501811024F00211BD5 /* ParseTestName.h */,
 				28E44D511811024F00211BD5 /* ParseTestName.m */,
 				3892D7571815ACE200E68652 /* EventGenerator.h */,
@@ -162,9 +178,11 @@
 			files = (
 				AA318BEB17E9B43000BF159E /* XCTest.h in Headers */,
 				28E44D531811024F00211BD5 /* ParseTestName.h in Headers */,
+				2887CC48181E145D00B0D049 /* TestingFramework.h in Headers */,
 				3892D75A1815ACE200E68652 /* EventGenerator.h in Headers */,
 				28897FCA173E50F9004BA024 /* Swizzle.h in Headers */,
 				28E28FB517968EC50072376C /* ReporterEvents.h in Headers */,
+				2887CC42181E0D9200B0D049 /* DuplicateTestNameFix.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -175,10 +193,12 @@
 				287A37E916C7776E00319E81 /* dyld-interposing.h in Headers */,
 				28E44D521811024F00211BD5 /* ParseTestName.h in Headers */,
 				3892D7591815ACE200E68652 /* EventGenerator.h in Headers */,
+				2887CC47181E145D00B0D049 /* TestingFramework.h in Headers */,
 				28A094B41731DA3500838CDD /* dyld_priv.h in Headers */,
 				28897FC9173E50F9004BA024 /* Swizzle.h in Headers */,
 				28E28FB417968EC50072376C /* ReporterEvents.h in Headers */,
 				AA318BEA17E9B43000BF159E /* XCTest.h in Headers */,
+				2887CC41181E0D9200B0D049 /* DuplicateTestNameFix.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -251,6 +271,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2887CC44181E0D9200B0D049 /* DuplicateTestNameFix.m in Sources */,
+				2887CC4A181E145D00B0D049 /* TestingFramework.m in Sources */,
 				3892D75C1815ACE200E68652 /* EventGenerator.m in Sources */,
 				282BFE2B1716044C0022F9FF /* otest-shim.m in Sources */,
 				28E44D551811024F00211BD5 /* ParseTestName.m in Sources */,
@@ -262,6 +284,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2887CC43181E0D9200B0D049 /* DuplicateTestNameFix.m in Sources */,
+				2887CC49181E145D00B0D049 /* TestingFramework.m in Sources */,
 				3892D75B1815ACE200E68652 /* EventGenerator.m in Sources */,
 				283CCA9A16C2EE4C00F2E343 /* otest-shim.m in Sources */,
 				28E44D541811024F00211BD5 /* ParseTestName.m in Sources */,

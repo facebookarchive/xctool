@@ -6,4 +6,12 @@ describe(@"Some Description", ^{
 
   it(@"it anotherthing", ^{
   });
+
+  it(@"a duplicate name", ^{
+    NSLog(@"Test will be named '-[KiwiTests_* SomeDescription_ADuplicateName]'");
+  });
+
+  it(@"a duplicate name", ^{
+    NSLog(@"Test will be named '-[KiwiTests_* SomeDescription_ADuplicateName_2]'");
+  });
 });
