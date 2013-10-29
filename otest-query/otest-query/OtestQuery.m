@@ -22,6 +22,7 @@
 #import <objc/runtime.h>
 #import <stdio.h>
 
+#import "DuplicateTestNameFix.h"
 #import "ParseTestName.h"
 #import "TestingFramework.h"
 
@@ -34,27 +35,14 @@
    @[@"-[SomeClass someMethod]",
      @"-[SomeClass otherMethod]"]
  */
-+ (NSArray *)testNamesFromSuite:(id)testSuite testSuiteClass:(Class)testSuiteClass
++ (NSArray *)testNamesFromSuite:(id)testSuite
 {
   NSMutableArray *names = [NSMutableArray array];
-  NSMutableArray *queue = [NSMutableArray array];
-  [queue addObject:testSuite];
 
-  while ([queue count] > 0) {
-    id test = [queue objectAtIndex:0];
-    [queue removeObjectAtIndex:0];
-
-    if ([test isKindOfClass:testSuiteClass]) {
-      // Both SenTestSuite and XCTestSuite keep a list of tests in an ivar
-      // called 'tests'.
-      id testsInSuite = [test valueForKey:@"tests"];
-      NSAssert(testsInSuite != nil, @"Can't get tests for suite: %@", testSuite);
-      [queue addObjectsFromArray:testsInSuite];
-    } else {
-      NSString *name = [test performSelector:@selector(name)];
-      NSAssert(name != nil, @"Can't get name for test: %@", test);
-      [names addObject:name];
-    }
+  for (id test in TestsFromSuite(testSuite)) {
+    NSString *name = [test performSelector:@selector(name)];
+    NSAssert(name != nil, @"Can't get name for test: %@", test);
+    [names addObject:name];
   }
 
   return names;
@@ -90,15 +78,20 @@
 
   [[NSBundle allFrameworks] makeObjectsPerformSelector:@selector(principalClass)];
 
-  Class suiteClass = NSClassFromString([framework objectForKey:kTestingFrameworkTestSuiteClassName]);
-  NSAssert(suiteClass, @"Expected suite class wasn't present: %@", [framework objectForKey:kTestingFrameworkTestSuiteClassName]);
-  NSAssert([suiteClass respondsToSelector:@selector(defaultTestSuite)],
-           @"Suite class should respond to 'defaultTestSuite'");
+  ApplyDuplicateTestNameFix([framework objectForKey:kTestingFrameworkTestProbeClassName]);
 
-  id testSuite = [suiteClass performSelector:@selector(defaultTestSuite)];
-  NSAssert(testSuite, @"defaultTestSuite should return something.");
+  Class testProbeClass = NSClassFromString([framework objectForKey:kTestingFrameworkTestProbeClassName]);
+  NSCAssert(testProbeClass, @"Should have *TestProbe class");
 
-  NSArray *fullTestNames = [self testNamesFromSuite:testSuite testSuiteClass:suiteClass];
+  // By setting `-(XC|Sen)Test All`, we'll make `-[(XC|Sen)TestProbe specifiedTestSuite]`
+  // return all tests.
+  [[NSUserDefaults standardUserDefaults] setObject:@"All"
+                                            forKey:[framework objectForKey:kTestingFrameworkFilterTestArgsKey]];
+  id specifiedTestSuite = [testProbeClass performSelector:@selector(specifiedTestSuite)];
+  NSCAssert(specifiedTestSuite, @"Should have gotten a test suite from specifiedTestSuite");
+
+
+  NSArray *fullTestNames = [self testNamesFromSuite:specifiedTestSuite];
   NSMutableArray *testNames = [NSMutableArray array];
 
   for (NSString *fullTestName in fullTestNames) {

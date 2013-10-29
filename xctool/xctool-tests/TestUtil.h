@@ -25,3 +25,8 @@
                       withBlock:(void (^)(void))block;
 
 @end
+
+/**
+ Returns YES if XCTest.framework is available.
+ */
+BOOL HasXCTestFramework();

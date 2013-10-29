@@ -10,6 +10,14 @@
 		283758E517CED68F006E1544 /* otest-query-ios-dylib.m in Sources */ = {isa = PBXBuildFile; fileRef = 283758E417CED68F006E1544 /* otest-query-ios-dylib.m */; };
 		283758EA17CED7AF006E1544 /* OtestQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = CD9049131756C6C0006CF16D /* OtestQuery.m */; };
 		283758EB17CED83B006E1544 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283758DF17CED68F006E1544 /* Foundation.framework */; };
+		2887CC35181DDB5F00B0D049 /* Swizzle.h in Headers */ = {isa = PBXBuildFile; fileRef = 2887CC33181DDB5F00B0D049 /* Swizzle.h */; };
+		2887CC36181DDB5F00B0D049 /* Swizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2887CC34181DDB5F00B0D049 /* Swizzle.m */; };
+		2887CC37181DDB5F00B0D049 /* Swizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2887CC34181DDB5F00B0D049 /* Swizzle.m */; };
+		2887CC38181DDB5F00B0D049 /* Swizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2887CC34181DDB5F00B0D049 /* Swizzle.m */; };
+		2887CC3B181E0D8600B0D049 /* DuplicateTestNameFix.h in Headers */ = {isa = PBXBuildFile; fileRef = 2887CC39181E0D8600B0D049 /* DuplicateTestNameFix.h */; };
+		2887CC3C181E0D8600B0D049 /* DuplicateTestNameFix.m in Sources */ = {isa = PBXBuildFile; fileRef = 2887CC3A181E0D8600B0D049 /* DuplicateTestNameFix.m */; };
+		2887CC3D181E0D8600B0D049 /* DuplicateTestNameFix.m in Sources */ = {isa = PBXBuildFile; fileRef = 2887CC3A181E0D8600B0D049 /* DuplicateTestNameFix.m */; };
+		2887CC3E181E0D8600B0D049 /* DuplicateTestNameFix.m in Sources */ = {isa = PBXBuildFile; fileRef = 2887CC3A181E0D8600B0D049 /* DuplicateTestNameFix.m */; };
 		28E44D4D1810FA5300211BD5 /* ParseTestName.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E44D4C1810FA5300211BD5 /* ParseTestName.m */; };
 		28E44D4E1810FBE100211BD5 /* ParseTestName.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E44D4C1810FA5300211BD5 /* ParseTestName.m */; };
 		28E44D4F1810FBE500211BD5 /* ParseTestName.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E44D4C1810FA5300211BD5 /* ParseTestName.m */; };
@@ -54,6 +62,10 @@
 		283758DF17CED68F006E1544 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		283758E417CED68F006E1544 /* otest-query-ios-dylib.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "otest-query-ios-dylib.m"; sourceTree = "<group>"; };
 		283758E917CED6A7006E1544 /* otest-query-ios-dylib.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "otest-query-ios-dylib.xcconfig"; sourceTree = "<group>"; };
+		2887CC33181DDB5F00B0D049 /* Swizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Swizzle.h; path = ../Common/Swizzle.h; sourceTree = "<group>"; };
+		2887CC34181DDB5F00B0D049 /* Swizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Swizzle.m; path = ../Common/Swizzle.m; sourceTree = "<group>"; };
+		2887CC39181E0D8600B0D049 /* DuplicateTestNameFix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DuplicateTestNameFix.h; path = ../Common/DuplicateTestNameFix.h; sourceTree = "<group>"; };
+		2887CC3A181E0D8600B0D049 /* DuplicateTestNameFix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DuplicateTestNameFix.m; path = ../Common/DuplicateTestNameFix.m; sourceTree = "<group>"; };
 		28E44D4B1810FA5300211BD5 /* ParseTestName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParseTestName.h; path = ../Common/ParseTestName.h; sourceTree = "<group>"; };
 		28E44D4C1810FA5300211BD5 /* ParseTestName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ParseTestName.m; path = ../Common/ParseTestName.m; sourceTree = "<group>"; };
 		AA318BE317E9A8C000BF159E /* TestingFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestingFramework.h; path = ../Common/TestingFramework.h; sourceTree = "<group>"; };
@@ -119,6 +131,10 @@
 		AA318BE217E9A8B000BF159E /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				2887CC39181E0D8600B0D049 /* DuplicateTestNameFix.h */,
+				2887CC3A181E0D8600B0D049 /* DuplicateTestNameFix.m */,
+				2887CC33181DDB5F00B0D049 /* Swizzle.h */,
+				2887CC34181DDB5F00B0D049 /* Swizzle.m */,
 				AA318BE317E9A8C000BF159E /* TestingFramework.h */,
 				AA318BE517E9AA7400BF159E /* TestingFramework.m */,
 				28E44D4B1810FA5300211BD5 /* ParseTestName.h */,
@@ -189,6 +205,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA318BE417E9A8C000BF159E /* TestingFramework.h in Headers */,
+				2887CC35181DDB5F00B0D049 /* Swizzle.h in Headers */,
+				2887CC3B181E0D8600B0D049 /* DuplicateTestNameFix.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -279,7 +297,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2887CC3E181E0D8600B0D049 /* DuplicateTestNameFix.m in Sources */,
 				28E44D4F1810FBE500211BD5 /* ParseTestName.m in Sources */,
+				2887CC38181DDB5F00B0D049 /* Swizzle.m in Sources */,
 				283758EA17CED7AF006E1544 /* OtestQuery.m in Sources */,
 				AA318BE817E9AA7400BF159E /* TestingFramework.m in Sources */,
 				283758E517CED68F006E1544 /* otest-query-ios-dylib.m in Sources */,
@@ -290,7 +310,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2887CC3D181E0D8600B0D049 /* DuplicateTestNameFix.m in Sources */,
 				28E44D4E1810FBE100211BD5 /* ParseTestName.m in Sources */,
+				2887CC37181DDB5F00B0D049 /* Swizzle.m in Sources */,
 				CD666139175D31BF0057DF4D /* main.m in Sources */,
 				AA318BE717E9AA7400BF159E /* TestingFramework.m in Sources */,
 				CD66613A175D31BF0057DF4D /* OtestQuery.m in Sources */,
@@ -301,7 +323,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2887CC3C181E0D8600B0D049 /* DuplicateTestNameFix.m in Sources */,
 				CD9049051756C5B1006CF16D /* main.m in Sources */,
+				2887CC36181DDB5F00B0D049 /* Swizzle.m in Sources */,
 				28E44D4D1810FA5300211BD5 /* ParseTestName.m in Sources */,
 				AA318BE617E9AA7400BF159E /* TestingFramework.m in Sources */,
 				CD9049141756C6C0006CF16D /* OtestQuery.m in Sources */,

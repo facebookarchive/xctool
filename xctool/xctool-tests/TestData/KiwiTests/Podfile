@@ -1,0 +1,12 @@
+# Podfile
+
+platform :ios, '7.0'
+xcodeproj 'KiwiTests.xcodeproj'
+
+target 'KiwiTests-XCTest', :exclusive => true do
+    pod 'Kiwi/XCTest'
+end
+
+target 'KiwiTests-OCUnit', :exclusive => true do
+    pod 'Kiwi'
+end

@@ -16,7 +16,7 @@
 
 #import "TestingFramework.h"
 
-NSString *const kTestingFrameworkTestSuiteClassName = @"kTestingFrameworkSuiteClassName";
+NSString *const kTestingFrameworkTestProbeClassName = @"kTestingFrameworkTestProbeClassName";
 NSString *const kTestingFrameworkIOSTestrunnerName = @"ios_executable";
 NSString *const kTestingFrameworkOSXTestrunnerName = @"osx_executable";
 NSString *const kTestingFrameworkInvertScopeKey = @"invertScope";
@@ -29,18 +29,18 @@ NSDictionary *FrameworkInfoForExtension(NSString *extension)
   dispatch_once(&onceToken, ^{
     frameworks = @{
       @"octest": @{
-        kTestingFrameworkTestSuiteClassName: @"SenTestSuite",
+        kTestingFrameworkTestProbeClassName: @"SenTestProbe",
         kTestingFrameworkOSXTestrunnerName: @"Tools/otest",
         kTestingFrameworkIOSTestrunnerName: @"usr/bin/otest",
-        kTestingFrameworkFilterTestArgsKey: @"-SenTest",
-        kTestingFrameworkInvertScopeKey: @"-SenTestInvertScope"
+        kTestingFrameworkFilterTestArgsKey: @"SenTest",
+        kTestingFrameworkInvertScopeKey: @"SenTestInvertScope"
       },
       @"xctest": @{
-        kTestingFrameworkTestSuiteClassName: @"XCTestSuite",
+        kTestingFrameworkTestProbeClassName: @"XCTestProbe",
         kTestingFrameworkIOSTestrunnerName: @"usr/bin/xctest",
         kTestingFrameworkOSXTestrunnerName: @"usr/bin/xctest",
-        kTestingFrameworkFilterTestArgsKey: @"-XCTest",
-        kTestingFrameworkInvertScopeKey: @"-XCTestInvertScope"
+        kTestingFrameworkFilterTestArgsKey: @"XCTest",
+        kTestingFrameworkInvertScopeKey: @"XCTestInvertScope"
       }
     };
     [frameworks retain];

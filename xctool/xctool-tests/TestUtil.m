@@ -120,3 +120,9 @@
 }
 
 @end
+
+BOOL HasXCTestFramework()
+{
+  NSString *frameworkDirPath = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks/XCTest.framework"];
+  return [[NSFileManager defaultManager] fileExistsAtPath:frameworkDirPath];
+}

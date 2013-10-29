@@ -21,6 +21,7 @@
 #import "OCUnitIOSLogicTestQueryRunner.h"
 #import "ReporterEvents.h"
 #import "TaskUtil.h"
+#import "TestUtil.h"
 #import "XCToolUtil.h"
 
 @interface OTestShimTests : SenTestCase
@@ -151,10 +152,9 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
 
 - (void)testXCTestAssertionFailuresInIOSLogicTestsAreNotSilent
 {
-  // Only run if XCTest is available.
-  NSString *frameworkDirPath = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks/XCTest.framework"];
-  if (![[NSFileManager defaultManager] fileExistsAtPath:frameworkDirPath])
+  if (!HasXCTestFramework()) {
     return;
+  }
 
   NSString *bundlePath = TEST_DATA @"tests-ios-test-bundle/XCTest_Assertion.xctest";
   NSString *targetName = @"XCTest_Assertion";
@@ -202,10 +202,9 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
 
 - (void)testXCTestExpectedAssertionFailuresInIOSLogicTestsAreSilent
 {
-  // Only run if XCTest is available.
-  NSString *frameworkDirPath = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks/XCTest.framework"];
-  if (![[NSFileManager defaultManager] fileExistsAtPath:frameworkDirPath])
+  if (!HasXCTestFramework()) {
     return;
+  }
 
   NSString *bundlePath = TEST_DATA @"tests-ios-test-bundle/XCTest_Assertion.xctest";
   NSString *targetName = @"XCTest_Assertion";
@@ -251,10 +250,9 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
 
 - (void)testXCTestMissingExpectedAssertionsAreNotSilent
 {
-  // Only run if XCTest is available.
-  NSString *frameworkDirPath = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks/XCTest.framework"];
-  if (![[NSFileManager defaultManager] fileExistsAtPath:frameworkDirPath])
+  if (!HasXCTestFramework()) {
     return;
+  }
 
   NSString *bundlePath = TEST_DATA @"tests-ios-test-bundle/XCTest_Assertion.xctest";
   NSString *targetName = @"XCTest_Assertion";

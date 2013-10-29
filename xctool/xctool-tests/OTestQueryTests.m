@@ -19,6 +19,7 @@
 #import "OCUnitIOSAppTestQueryRunner.h"
 #import "OCUnitIOSLogicTestQueryRunner.h"
 #import "OCUnitOSXTestQueryRunner.h"
+#import "TestUtil.h"
 #import "XCToolUtil.h"
 
 @interface OTestQueryTests : SenTestCase
@@ -47,23 +48,23 @@
 
 - (void)testCanQueryXCTestClassesFromOSXBundle
 {
-  NSString *error = nil;
-  NSString *frameworkDirPath = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks/XCTest.framework"];
-
-  if ([[NSFileManager defaultManager] fileExistsAtPath:frameworkDirPath]){
-    NSDictionary *buildSettings = @{
-      kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"tests-osx-test-bundle"),
-      kFullProductName : @"TestProject-Library-XCTest-OSXTests.xctest",
-    };
-    OCUnitOSXTestQueryRunner *runner = [[OCUnitOSXTestQueryRunner alloc] initWithBuildSettings:buildSettings
-                                                                                   withCpuType:CPU_TYPE_ANY];
-    NSArray *classes = [runner runQueryWithError:&error];
-    assertThat(error, is(nilValue()));
-    assertThat(classes,
-               equalTo(@[@"TestProject_Library_XCTest_OSXTests/testOutput",
-                         @"TestProject_Library_XCTest_OSXTests/testWillFail",
-                         @"TestProject_Library_XCTest_OSXTests/testWillPass"]));
+  if (!HasXCTestFramework()) {
+    return;
   }
+
+  NSString *error = nil;
+  NSDictionary *buildSettings = @{
+    kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"tests-osx-test-bundle"),
+    kFullProductName : @"TestProject-Library-XCTest-OSXTests.xctest",
+  };
+  OCUnitOSXTestQueryRunner *runner = [[OCUnitOSXTestQueryRunner alloc] initWithBuildSettings:buildSettings
+                                                                                 withCpuType:CPU_TYPE_ANY];
+  NSArray *classes = [runner runQueryWithError:&error];
+  assertThat(error, is(nilValue()));
+  assertThat(classes,
+             equalTo(@[@"TestProject_Library_XCTest_OSXTests/testOutput",
+                       @"TestProject_Library_XCTest_OSXTests/testWillFail",
+                       @"TestProject_Library_XCTest_OSXTests/testWillPass"]));
 }
 
 - (void)testCanQueryClassesFromIOSBundle
@@ -94,33 +95,75 @@
 
 - (void)testCanQueryXCTestClassesFromIOSBundle
 {
+  if (!HasXCTestFramework()) {
+    return;
+  }
+
   NSString *error = nil;
   NSString *latestSDK = GetAvailableSDKsAndAliases()[@"iphonesimulator"];
-  NSString *frameworkDirPath = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks/XCTest.framework"];
+  NSDictionary *buildSettings = @{
+    kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"tests-ios-test-bundle"),
+    kFullProductName : @"TestProject-Library-XCTest-iOSTests.xctest",
+    kSdkName : latestSDK,
+    };
+  OCUnitIOSLogicTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
+                                                                                           withCpuType:CPU_TYPE_ANY];
 
-  if ([[NSFileManager defaultManager] fileExistsAtPath:frameworkDirPath]){
-    NSDictionary *buildSettings = @{
-      kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"tests-ios-test-bundle"),
-      kFullProductName : @"TestProject-Library-XCTest-iOSTests.xctest",
-      kSdkName : latestSDK,
-      };
-    OCUnitIOSLogicTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
-                                                                                             withCpuType:CPU_TYPE_ANY];
+  NSArray *classes = [runner runQueryWithError:&error];
 
-    NSArray *classes = [runner runQueryWithError:&error];
+  assertThat(error, is(nilValue()));
+  assertThat(classes,
+             equalTo(@[
+                       @"OtherTests/testSomething",
+                       @"SomeTests/testBacktraceOutputIsCaptured",
+                       @"SomeTests/testOutputMerging",
+                       @"SomeTests/testPrintSDK",
+                       @"SomeTests/testStream",
+                       @"SomeTests/testWillFail",
+                       @"SomeTests/testWillPass",
+                       ]));
+}
 
-    assertThat(error, is(nilValue()));
-    assertThat(classes,
-               equalTo(@[
-                         @"OtherTests/testSomething",
-                         @"SomeTests/testBacktraceOutputIsCaptured",
-                         @"SomeTests/testOutputMerging",
-                         @"SomeTests/testPrintSDK",
-                         @"SomeTests/testStream",
-                         @"SomeTests/testWillFail",
-                         @"SomeTests/testWillPass",
-                         ]));
+- (void)testCanQueryTestCasesForIOSKiwiBundle_OCUnit
+{
+  NSString *error = nil;
+  NSDictionary *buildSettings = @{
+                                  kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"KiwiTests/Build/Products/Debug-iphonesimulator"),
+                                  kFullProductName : @"KiwiTests-OCUnit.octest",
+                                  kSdkName : GetAvailableSDKsAndAliases()[@"iphonesimulator"],
+                                  };
+  OCUnitTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
+                                                                                   withCpuType:CPU_TYPE_ANY];
+  NSArray *cases = [runner runQueryWithError:&error];
+  assertThat(cases, equalTo(@[
+                              @"KiwiTests_OCUnit/SomeDescription_ADuplicateName",
+                              @"KiwiTests_OCUnit/SomeDescription_ADuplicateName_2",
+                              @"KiwiTests_OCUnit/SomeDescription_ItAnotherthing",
+                              @"KiwiTests_OCUnit/SomeDescription_ItSomething",
+                              ]));
+}
+
+- (void)testCanQueryTestCasesForIOSKiwiBundle_XCTest
+{
+  if (!HasXCTestFramework()) {
+    return;
   }
+
+  NSString *error = nil;
+  NSDictionary *buildSettings = @{
+                                  kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"KiwiTests/Build/Products/Debug-iphonesimulator"),
+                                  kFullProductName : @"KiwiTests-XCTest.xctest",
+                                  kSdkName : GetAvailableSDKsAndAliases()[@"iphonesimulator"],
+                                  };
+  OCUnitTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
+                                                                                   withCpuType:CPU_TYPE_ANY];
+  NSArray *cases = [runner runQueryWithError:&error];
+  assertThat(cases, equalTo(@[
+                              @"KiwiTests_XCTest/SomeDescription_ADuplicateName",
+                              @"KiwiTests_XCTest/SomeDescription_ADuplicateName_2",
+                              @"KiwiTests_XCTest/SomeDescription_ItAnotherthing",
+                              @"KiwiTests_XCTest/SomeDescription_ItSomething",
+                              ]));
 }
 
 - (void)testQueryFailsWhenDYLDRejectsBundle_OSX
