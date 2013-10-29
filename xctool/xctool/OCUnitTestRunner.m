@@ -165,7 +165,7 @@
     succeeded = YES;
   }
 
-  [_testRunnerState finishedRun:didTerminateWithUncaughtSignal];
+  [_testRunnerState finishedRun:didTerminateWithUncaughtSignal error:*error];
 
   return succeeded;
 }
