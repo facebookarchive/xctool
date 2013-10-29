@@ -77,9 +77,11 @@
 
   NSTask *task = [self createTaskForQuery];
   NSDictionary *output = LaunchTaskAndCaptureOutput(task, @"running otest-query");
+  int terminationStatus = [task terminationStatus];
   [task release];
+  task = nil;
 
-  if ([task terminationStatus] != 0) {
+  if (terminationStatus != 0) {
     *error = output[@"stderr"];
     return nil;
   } else {
