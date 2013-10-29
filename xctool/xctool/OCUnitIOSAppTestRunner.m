@@ -114,7 +114,7 @@ static void KillSimulatorJobs()
   NSString *testHostAppPath = [testHostPath stringByDeletingLastPathComponent];
 
   NSString *sdkVersion = [_buildSettings[@"SDK_NAME"] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
-  NSString *productVersion = GetProductVersion(sdkVersion);
+  NSString *productVersion = GetProductVersionForSDKVersion(sdkVersion);
   NSString *appSupportDir = [NSString stringWithFormat:@"%@/Library/Application Support/iPhone Simulator/%@",
                              NSHomeDirectory(), productVersion];
   NSString *ideBundleInjectionLibPath = @"/../../Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection";

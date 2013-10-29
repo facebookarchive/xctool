@@ -39,7 +39,7 @@ NSString *SimulatorSDKRootPathWithVersion(NSString *version)
 - (NSDictionary *)envForQueryInIOSBundleWithAdditionalEnv:(NSDictionary *)additionalEnv
 {
   NSString *version = [[self sdk] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
-  NSString *productVersion = GetProductVersion(version);
+  NSString *productVersion = GetProductVersionForSDKVersion(version);
   NSString *simulatorHome = [NSString stringWithFormat:@"%@/Library/Application Support/iPhone Simulator/%@", NSHomeDirectory(), productVersion];
   NSString *sdkRootPath = SimulatorSDKRootPathWithVersion(version);
 

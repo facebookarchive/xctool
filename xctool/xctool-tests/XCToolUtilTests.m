@@ -35,7 +35,7 @@
    }
                           runBlock:
    ^{
-     assertThat(GetProductVersion(@"6.0"), equalTo(@"6.0"));
+     assertThat(GetProductVersionForSDKVersion(@"6.0"), equalTo(@"6.0"));
    }];
 
   [Swizzler whileSwizzlingSelector:@selector(dictionaryWithContentsOfFile:)
@@ -46,14 +46,14 @@
    }
                           runBlock:
    ^{
-     assertThat(GetProductVersion(@"7.0"), equalTo(@"7.0.3"));
+     assertThat(GetProductVersionForSDKVersion(@"7.0"), equalTo(@"7.0.3"));
    }];
 
   // If we try to get the SDK version for an SDK that's not installed, we should
   // just get UNKNOWN.  In practice, this only happens inside of tests that are
   // written against old SDK versions (like iphonesimulator5.0, which most people
   // don't have installed.
-  assertThat(GetProductVersion(@"2.0"), equalTo(@"UNKNOWN"));
+  assertThat(GetProductVersionForSDKVersion(@"2.0"), equalTo(@"UNKNOWN"));
 }
 
 - (void)testGetSDKVersionString
@@ -66,7 +66,7 @@
    }
                           runBlock:
    ^{
-     assertThat(GetSDKVersionString(@"6.0"), equalTo(@"iPhone Simulator (external launch) , iPhone OS 6.0 (unknown/10A403)"));
+     assertThat(GetIPhoneSimulatorVersionsStringForSDKVersion(@"6.0"), equalTo(@"iPhone Simulator (external launch) , iPhone OS 6.0 (unknown/10A403)"));
    }];
 
   [Swizzler whileSwizzlingSelector:@selector(dictionaryWithContentsOfFile:)
@@ -77,14 +77,14 @@
    }
                           runBlock:
    ^{
-     assertThat(GetSDKVersionString(@"6.1"), equalTo(@"iPhone Simulator (external launch) , iPhone OS 6.1 (unknown/10B141)"));
+     assertThat(GetIPhoneSimulatorVersionsStringForSDKVersion(@"6.1"), equalTo(@"iPhone Simulator (external launch) , iPhone OS 6.1 (unknown/10B141)"));
   }];
 
   // If we try to get the SDK version for an SDK that's not installed, we should
   // just get UNKNOWN.  In practice, this only happens inside of tests that are
   // written against old SDK versions (like iphonesimulator5.0, which most people
   // don't have installed.
-  assertThat(GetSDKVersionString(@"2.0"), equalTo(@"iPhone Simulator (external launch) , iPhone OS 2.0 (unknown/UNKNOWN)"));
+  assertThat(GetIPhoneSimulatorVersionsStringForSDKVersion(@"2.0"), equalTo(@"iPhone Simulator (external launch) , iPhone OS 2.0 (unknown/UNKNOWN)"));
 }
   
 @end

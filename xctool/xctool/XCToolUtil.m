@@ -248,7 +248,7 @@ NSDictionary *GetAvailableSDKsAndAliases()
   }
 }
 
-NSDictionary *GetSDKProperties(NSString *version)
+NSDictionary *GetSystemVersionPropertiesForSDKVersion(NSString *version)
 {
   NSArray *pathComponents = @[XcodeDeveloperDirPath(),
                               @"Platforms/iPhoneSimulator.platform/Developer/SDKs",
@@ -267,9 +267,9 @@ NSDictionary *GetSDKProperties(NSString *version)
 }
 
 // Returns 'UNKNOWN' under tests if we try to access SDK which is not installed.
-NSString *GetSDKProperty(NSString *version, NSString *property)
+NSString *GetSystemVersionPropertyForSDKVersion(NSString *version, NSString *property)
 {
-  NSDictionary *sdkProperties = GetSDKProperties(version);
+  NSDictionary *sdkProperties = GetSystemVersionPropertiesForSDKVersion(version);
 
   NSString *value = nil;
 
@@ -286,14 +286,14 @@ NSString *GetSDKProperty(NSString *version, NSString *property)
   return value;
 }
 
-NSString *GetProductVersion(NSString *version)
+NSString *GetProductVersionForSDKVersion(NSString *version)
 {
-  return GetSDKProperty(version, @"ProductVersion");
+  return GetSystemVersionPropertyForSDKVersion(version, @"ProductVersion");
 }
 
-NSString *GetSDKVersionString(NSString *version)
+NSString *GetIPhoneSimulatorVersionsStringForSDKVersion(NSString *version)
 {
-  NSString *buildVersion = GetSDKProperty(version, @"ProductBuildVersion");
+  NSString *buildVersion = GetSystemVersionPropertyForSDKVersion(version, @"ProductBuildVersion");
 
   NSString *format = @"iPhone Simulator (external launch) , iPhone OS %@ (unknown/%@)";
   NSString *simVersion = [NSString stringWithFormat:format, version, buildVersion];

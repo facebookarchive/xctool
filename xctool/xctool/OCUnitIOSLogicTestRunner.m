@@ -26,9 +26,9 @@
 - (NSDictionary *)environmentOverrides
 {
   NSString *version = [_buildSettings[@"SDK_NAME"] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
-  NSString *productVersion = GetProductVersion(version);
+  NSString *productVersion = GetProductVersionForSDKVersion(version);
   NSString *simulatorHome = [NSString stringWithFormat:@"%@/Library/Application Support/iPhone Simulator/%@", NSHomeDirectory(), productVersion];
-  NSString *simVersions = GetSDKVersionString(version);
+  NSString *simVersions = GetIPhoneSimulatorVersionsStringForSDKVersion(version);
 
   return @{@"CFFIXED_USER_HOME" : simulatorHome,
            @"HOME" : simulatorHome,

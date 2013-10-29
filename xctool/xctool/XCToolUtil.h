@@ -30,7 +30,7 @@ NSDictionary *GetAvailableSDKsAndAliases();
  @param version An SDK version (eg 7.0)
  @return string A product version string (e.g. 7.0.3)
  */
-NSString *GetProductVersion(NSString *version);
+NSString *GetProductVersionForSDKVersion(NSString *version);
 
 /**
  Returns an SDK version string for the given SDK version
@@ -38,7 +38,7 @@ NSString *GetProductVersion(NSString *version);
  @param version An SDK version (eg 7.0)
  @return string A version string suitable for IPHONE_SIMULATOR_VERSIONS
  */
-NSString *GetSDKVersionString(NSString *version);
+NSString *GetIPhoneSimulatorVersionsStringForSDKVersion(NSString *version);
 
 BOOL IsRunningUnderTest();
 
