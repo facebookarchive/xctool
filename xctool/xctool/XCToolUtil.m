@@ -248,7 +248,7 @@ NSDictionary *GetAvailableSDKsAndAliases()
   }
 }
 
-NSString *GetSDKVersionString(NSString *version)
+NSDictionary *GetSDKProperties(NSString *version)
 {
   NSArray *pathComponents = @[XcodeDeveloperDirPath(),
                               @"Platforms/iPhoneSimulator.platform/Developer/SDKs",
@@ -258,19 +258,42 @@ NSString *GetSDKVersionString(NSString *version)
   NSString *path = [NSString pathWithComponents:pathComponents];
   NSDictionary *sdkProperties = [NSDictionary dictionaryWithContentsOfFile:path];
 
-  NSString *buildVersion = nil;
+  if (sdkProperties == nil && IsRunningUnderTest() == NO) {
+    // We are ok to return nil under test.
+    NSCAssert(sdkProperties != nil, @"Unable to find SystemVersion.plist for SDK version: %@", version);
+  }
 
-  if (sdkProperties == nil && IsRunningUnderTest()) {
+  return sdkProperties;
+}
+
+// Returns 'UNKNOWN' under tests if we try to access SDK which is not installed.
+NSString *GetSDKProperty(NSString *version, NSString *property)
+{
+  NSDictionary *sdkProperties = GetSDKProperties(version);
+
+  NSString *value = nil;
+
+  if (sdkProperties) {
+    value = sdkProperties[property];
+    NSCAssert(value != nil, @"Unable to find %@ in SystemVersion.plist", property);
+  } else if (IsRunningUnderTest()) {
     // If we're running under test, and a test is trying to get the SDK version
     // for an SDK that's not installed (e.g. something old like 5.0), then it's
     // fine to just return a bogus value here.
-    buildVersion = @"UNKNOWN";
-  } else {
-    NSCAssert(sdkProperties != nil, @"Unable to find SystemVersion.plist for SDK version: %@", version);
-
-    buildVersion = sdkProperties[@"ProductBuildVersion"];
-    NSCAssert(buildVersion != nil, @"Unable to find ProductBuildVersion in SystemVersion.plist");
+    value = @"UNKNOWN";
   }
+
+  return value;
+}
+
+NSString *GetProductVersion(NSString *version)
+{
+  return GetSDKProperty(version, @"ProductVersion");
+}
+
+NSString *GetSDKVersionString(NSString *version)
+{
+  NSString *buildVersion = GetSDKProperty(version, @"ProductBuildVersion");
 
   NSString *format = @"iPhone Simulator (external launch) , iPhone OS %@ (unknown/%@)";
   NSString *simVersion = [NSString stringWithFormat:format, version, buildVersion];
