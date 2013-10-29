@@ -25,6 +25,37 @@
 
 @implementation XCToolUtilTests
 
+- (void)testGetProductVersion
+{
+  [Swizzler whileSwizzlingSelector:@selector(dictionaryWithContentsOfFile:)
+                          forClass:[NSDictionary class]
+                         withBlock:
+   ^(id self, SEL cmd, NSString *path) {
+     return @{@"ProductVersion" : @"6.0"};
+   }
+                          runBlock:
+   ^{
+     assertThat(GetProductVersion(@"6.0"), equalTo(@"6.0"));
+   }];
+
+  [Swizzler whileSwizzlingSelector:@selector(dictionaryWithContentsOfFile:)
+                          forClass:[NSDictionary class]
+                         withBlock:
+   ^(id self, SEL cmd, NSString *path) {
+     return @{@"ProductVersion" : @"7.0.3"};
+   }
+                          runBlock:
+   ^{
+     assertThat(GetProductVersion(@"7.0"), equalTo(@"7.0.3"));
+   }];
+
+  // If we try to get the SDK version for an SDK that's not installed, we should
+  // just get UNKNOWN.  In practice, this only happens inside of tests that are
+  // written against old SDK versions (like iphonesimulator5.0, which most people
+  // don't have installed.
+  assertThat(GetProductVersion(@"2.0"), equalTo(@"UNKNOWN"));
+}
+
 - (void)testGetSDKVersionString
 {
   [Swizzler whileSwizzlingSelector:@selector(dictionaryWithContentsOfFile:)
