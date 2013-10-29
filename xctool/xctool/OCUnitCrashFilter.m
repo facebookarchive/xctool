@@ -56,9 +56,10 @@
 }
 
 - (void)finishedRun:(BOOL)unexpectedTermination
+              error:(NSString *)error
 {
   if (unexpectedTermination) {
-    [self handleEarlyTermination:_crashReportsAtStart];
+    [self handleEarlyTermination:_crashReportsAtStart error: error];
   }
 }
 
@@ -111,6 +112,7 @@
 }
 
 - (void)handleEarlyTermination:(NSSet *)crashReportsAtStart
+                         error:(NSString *)error
 {
   NSString *summaryTestOutput = @"";
   NSString *extendedTestOutput = [NSString stringWithFormat:
@@ -118,9 +120,11 @@
                                   @"%@",
                                   [self collectCrashReports:crashReportsAtStart]];
 
-
-  // Create a summary based on the inferred reason for the crash
-  if (![_testSuiteState isStarted]) {
+  // If provided, use the specified error message.
+  // Otherwise, create a summary based on the inferred reason for the crash
+  if (error) {
+    summaryTestOutput = error;
+  } else if (![_testSuiteState isStarted]) {
     summaryTestOutput = @"The test binary crashed before starting a test-suite\n";
   } else if ([_testSuiteState isFinished]) {
     // We have no way to output this, so just print a warning and move on with life

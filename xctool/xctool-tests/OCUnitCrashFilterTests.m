@@ -109,7 +109,7 @@
                                          [state prepareToRun];
                                          [self sendEventsFromFile:TEST_DATA @"JSONStreamReporter-runtests.txt"
                                                        toReporter:state];
-                                         [state finishedRun:NO];
+                                         [state finishedRun:NO error:nil];
                                        }];
   assertThat(events, hasCountOf(0));
 }
@@ -121,7 +121,7 @@
                                              [_state prepareToRun];
                                              [self sendEvents:@[]
                                                    toReporter:_state];
-                                             [_state finishedRun:YES];
+                                             [_state finishedRun:YES error:nil];
                                        }];
 
   [self assertEvents:fakeEvents containsEvents:
@@ -144,7 +144,7 @@
                                              [_state prepareToRun];
                                              [self sendEvents:[_events subarrayWithRange:NSMakeRange(0, 1)]
                                                    toReporter:_state];
-                                             [_state finishedRun:YES];
+                                             [_state finishedRun:YES error:nil];
                                            }];
   [self assertEvents:fakeEvents containsEvents:
    @[kReporter_Events_BeginTest,
@@ -166,7 +166,7 @@
                                              [_state prepareToRun];
                                              [self sendEvents:[_events subarrayWithRange:NSMakeRange(0, 2)]
                                                    toReporter:_state];
-                                             [_state finishedRun:YES];
+                                             [_state finishedRun:YES error:nil];
                                            }];
   [self assertEvents:fakeEvents containsEvents:
    @[kReporter_Events_TestOuput,
@@ -186,7 +186,7 @@
                                              [_state prepareToRun];
                                              [self sendEvents:[_events subarrayWithRange:NSMakeRange(0, 4)]
                                                    toReporter:_state];
-                                             [_state finishedRun:YES];
+                                             [_state finishedRun:YES error:nil];
                                            }];
   [self assertEvents:fakeEvents containsEvents:
    @[kReporter_Events_BeginTest,
@@ -197,6 +197,24 @@
   assertThat(fakeEvents[1][@"output"], containsString(@"crashed immediately after running"));
 }
 
+- (void)testErrorMessagePropogatesToTestOutput
+{
+  NSArray *fakeEvents = [TestUtil getEventsForStates:@[_state]
+                                           withBlock:^{
+                                             [_state prepareToRun];
+                                             [self sendEvents:[_events subarrayWithRange:NSMakeRange(0, 4)]
+                                                   toReporter:_state];
+                                             [_state finishedRun:YES error:@"cupcakes candy donuts cookies"];
+                                           }];
+  [self assertEvents:fakeEvents containsEvents:
+   @[kReporter_Events_BeginTest,
+     kReporter_Events_TestOuput,
+     kReporter_Events_EndTest,
+     kReporter_Events_EndTestSuite]];
+  
+  assertThat(fakeEvents[1][@"output"], containsString(@"cupcakes candy donuts cookies"));
+}
+
 - (void)testCrashedAfterLastTestFinishes
 {
   NSArray *fakeEvents = [TestUtil getEventsForStates:@[_state]
@@ -204,7 +222,7 @@
                                              [_state prepareToRun];
                                              [self sendEvents:[_events subarrayWithRange:NSMakeRange(0, 6)]
                                                    toReporter:_state];
-                                             [_state finishedRun:YES];
+                                             [_state finishedRun:YES error:nil];
                                            }];
   // In this case there are no tests left with which to report the error, so we have to create a fake one
   [self assertEvents:fakeEvents containsEvents:
@@ -224,7 +242,7 @@
                                              [_state prepareToRun];
                                              [self sendEvents:_events
                                                    toReporter:_state];
-                                             [_state finishedRun:YES];
+                                             [_state finishedRun:YES  error:nil];
                                            }];
 
   // Not much we can do here, make sure no events are shipped out
@@ -238,7 +256,7 @@
                                              [_state prepareToRun];
                                              [self sendEvents:@[]
                                                    toReporter:_state];
-                                             [_state finishedRun:YES];
+                                             [_state finishedRun:YES error:nil];
                                            }];
 
   [self assertEvents:fakeEvents containsEvents:
