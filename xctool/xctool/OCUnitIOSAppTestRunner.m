@@ -311,8 +311,6 @@ static void KillSimulatorJobs()
               gotUncaughtSignal:(BOOL *)gotUncaughtSignal
                           error:(NSString **)error
 {
-  *gotUncaughtSignal = NO; // no equivalent for simulator
-
   NSString *sdkName = _buildSettings[@"SDK_NAME"];
   NSAssert([sdkName hasPrefix:@"iphonesimulator"], @"Unexpected SDK: %@", sdkName);
 
@@ -324,6 +322,7 @@ static void KillSimulatorJobs()
   if (![[NSFileManager defaultManager] isExecutableFileAtPath:testHostPath]) {
     ReportStatusMessage(_reporters, REPORTER_MESSAGE_ERROR,
                         @"Your TEST_HOST '%@' does not appear to be an executable.", testHostPath);
+    *gotUncaughtSignal = YES;
     *error = @"TEST_HOST not executable.";
     return NO;
   }
@@ -332,6 +331,7 @@ static void KillSimulatorJobs()
   if (!testHostInfoPlist) {
     ReportStatusMessage(_reporters, REPORTER_MESSAGE_ERROR,
                         @"Info.plist for TEST_HOST missing or malformatted.");
+    *gotUncaughtSignal = YES;
     *error = @"Bad Info.plist for TEST_HOST";
     return NO;
   }
@@ -400,6 +400,7 @@ static void KillSimulatorJobs()
         ReportStatusMessage(_reporters,
                             REPORTER_MESSAGE_INFO,
                             @"Preparing test environment failed.");
+        *gotUncaughtSignal = YES;
         return NO;
       }
     }
@@ -416,6 +417,8 @@ static void KillSimulatorJobs()
              testsSucceeded:&testsSucceeded
              infraSucceeded:&infraSucceeded];
 
+  *gotUncaughtSignal = !infraSucceeded;
+  
   if (!infraSucceeded) {
     *error = @"The simulator failed to start, or the TEST_HOST application failed to run.";
     return NO;
