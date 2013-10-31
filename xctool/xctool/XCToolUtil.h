@@ -41,7 +41,16 @@ NSString *GetProductVersionForSDKVersion(NSString *version);
 NSString *GetIPhoneSimulatorVersionsStringForSDKVersion(NSString *version);
 
 BOOL IsRunningUnderTest();
-NSString *XcodeBuildVersion(void);
+
+/**
+ Returns the Xcode version, as read from DTXCode in:
+ /Applications/Xcode.app/Contents/Info.plist
+ 
+ Version will be 500 for Xcode 5.0, 501 for Xcode 5.0.1, or 460 for Xcode 4.6.
+ 
+ @return int Xcode version
+ */
+int XcodebuildVersion();
 
 /**
  Returns the appropriate action to use when invoking `-showBuildSettings` to 

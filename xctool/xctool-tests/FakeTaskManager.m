@@ -137,7 +137,6 @@ __attribute__((constructor)) static void initialize()
                 [[FakeTaskManager sharedManager] hideTaskFromLaunchedTasks:task];
               }
             },
-            [LaunchHandlers handlerForXcodeBuildVersionWithVersion:@"5.0.1" hide:YES],
            ];
 }
 

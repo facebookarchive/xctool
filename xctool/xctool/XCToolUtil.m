@@ -538,30 +538,21 @@ NSString *SystemPaths()
   return [[pathLines componentsSeparatedByString:@"\n"] componentsJoinedByString:@":"];
 }
 
-NSString *XcodeBuildVersion(void)
+int XcodebuildVersion()
 {
-  static NSString *versionString = nil;
+  NSString *xcodePlistPath = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"../Info.plist"];
+  NSCAssert([[NSFileManager defaultManager] fileExistsAtPath:xcodePlistPath isDirectory:NULL],
+            @"Cannot find Xcode's plist at: %@", xcodePlistPath);
 
-  if (! versionString) {
-    NSTask *task = CreateTaskInSameProcessGroup();
-    NSString *xcodebuild = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"];
-    [task setLaunchPath:xcodebuild];
-    [task setArguments:@[@"-version"]];
+  NSDictionary *infoDict = [NSDictionary dictionaryWithContentsOfFile:xcodePlistPath];
+  NSCAssert(infoDict[@"DTXcode"], @"Cannot find the 'DTXcode' key in Xcode's Info.plist.");
 
-    NSString *output = LaunchTaskAndCaptureOutput(task, @"getting xcodebuild version.")[@"stdout"];
-    NSScanner *scanner = [NSScanner scannerWithString:output];
-    [scanner scanString:@"Xcode " intoString:NULL];
-    [scanner scanUpToString:@"\n" intoString:&versionString];
-    [versionString retain];
-  }
-  return versionString;
+  return [infoDict[@"DTXcode"] intValue];
 }
 
 NSString *XcodeBuildActionForBuildSettings(void)
 {
-  NSString *versionString = XcodeBuildVersion();
-  NSComparisonResult versionComparison = [@"5.0.0" compare:versionString options:NSNumericSearch];
-  if (versionComparison == NSOrderedSame || versionComparison == NSOrderedAscending) {
+  if (XcodebuildVersion() >= 500) {
     // Xcode 5.x or greater
     return @"test";
   } else {
