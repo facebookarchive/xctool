@@ -750,40 +750,66 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   return buildables;
 }
 
-- (NSDictionary *)buildSettingsForFirstBuildable
+/**
+ Returns build settings for some target in the scheme.  We don't actually care
+ which target's settings are returned, since we only need a few specific values:
+ OBJROOT, SYMROOT, SHARED_PRECOMPS_DIR, and EFFECTIVE_PLATFORM_NAME.
+ 
+ If we knew more about Xcode internals, we could probably find a way to query
+ these values without calling -showBuildSettings.
+ */
+- (NSDictionary *)buildSettingsForATarget
 {
-  NSTask *task = CreateTaskInSameProcessGroup();
-  [task setLaunchPath:
-   [XcodeDeveloperDirPath() stringByAppendingPathComponent:
-    @"usr/bin/xcodebuild"]];
-  [task setArguments:
-   [self.subjectXcodeBuildArguments arrayByAddingObjectsFromArray:@[XcodeBuildActionForBuildSettings(), @"-showBuildSettings"]]];
-  [task setEnvironment:@{
-   @"DYLD_INSERT_LIBRARIES" :
-     [XCToolLibPath() stringByAppendingPathComponent:
-      @"xcodebuild-fastsettings-shim.dylib"],
-   @"SHOW_ONLY_BUILD_SETTINGS_FOR_FIRST_BUILDABLE" : @"YES"
-   }];
+  NSDictionary *(^buildSettingsWithAction)(NSString *) = ^(NSString *action) {
+    NSTask *task = CreateTaskInSameProcessGroup();
+    [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
+    [task setArguments:
+     [self.subjectXcodeBuildArguments arrayByAddingObjectsFromArray:@[action, @"-showBuildSettings"]]];
+    [task setEnvironment:@{
+                           @"DYLD_INSERT_LIBRARIES" :
+                             [XCToolLibPath() stringByAppendingPathComponent:
+                              @"xcodebuild-fastsettings-shim.dylib"],
+                           @"SHOW_ONLY_BUILD_SETTINGS_FOR_FIRST_BUILDABLE" : @"YES"
+                           }];
 
-  NSDictionary *result = LaunchTaskAndCaptureOutput(task,
-                                                    @"querying build settings for first buildable");
-  [task release];
+    NSDictionary *result = LaunchTaskAndCaptureOutput(task, @"gathering build settings for a target");
+    [task release];
+    
+    return BuildSettingsFromOutput(result[@"stdout"]);
+  };
 
-  NSDictionary *settings = BuildSettingsFromOutput(result[@"stdout"]);
-  if (settings.count != 1) {
-    NSLog(@"ERROR: Expected to receive build settings for 1 target, but instead got:\n"
-          @"%@\n"
-          @"Standard Output from xcodebuild:\n"
-          @"%@\n"
-          @"Standard Error from xcodebuild:\n"
-          @"%@\n",
-          settings,
-          result[@"stdout"],
-          result[@"stderr"]);
-    abort();
+  // Starting with Xcode 5+, -showBuildSettings is action-dependent.  If you run
+  // `build -showBuildSettings`, it returns build settings for targets in the scheme
+  // that are marked buildForRunning=YES.  If you run `test -showBuildSettings`,
+  // it returns build settings for targets that are marked buildForTesting=YES.
+  //
+  // This can cause a problem.  Suppose you had a scheme with only 1 target, and
+  // that target was a test bundle.  (i.e. no targets are marked as
+  // buildForRunning=YES).  If you were to run `build -showBuildSettings` on this
+  // scheme, xcodebuild would give you nothing since no targets are marked as
+  // build for running.
+  //
+  // As a workaround for this, we're going to call `-showBuildSettings` with
+  // a few different actions until we get one that works.  For our limited purposes,
+  // it doesn't really matter which one works.
+  NSArray *actionsToTry;
+  if (ToolchainIsXcode5OrBetter()) {
+    actionsToTry = @[@"build", @"test", @"analyze"];
+  } else {
+    actionsToTry = @[@"build"];
   }
 
-  return settings;
+  for (NSString *action in actionsToTry) {
+    NSDictionary *settings = buildSettingsWithAction(action);
+
+    if (settings.count == 1) {
+      return settings;
+    }
+  }
+
+  NSAssert(NO, @"Failed while trying to gather build settings for your scheme; "
+               @"tried with actions: %@", [actionsToTry componentsJoinedByString:@", "]);
+  return nil;
 }
 
 - (NSString *)matchingSchemePathForWorkspace
@@ -891,14 +917,14 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   assert(self.subjectWorkspace != nil || self.subjectProject != nil);
 
   // First we need to know the OBJROOT and SYMROOT settings for the project we're testing.
-  NSDictionary *settings = [self buildSettingsForFirstBuildable];
-  NSDictionary *firstBuildable = [settings allValues][0];
+  NSDictionary *settings = [self buildSettingsForATarget];
+  NSDictionary *targetSettings = [settings allValues][0];
   // The following control where our build output goes - we need to make sure we build the tests
   // in the same places as we built the original products - this is what Xcode does.
-  self.objRoot = firstBuildable[@"OBJROOT"];
-  self.symRoot = firstBuildable[@"SYMROOT"];
-  self.sharedPrecompsDir = firstBuildable[@"SHARED_PRECOMPS_DIR"];
-  self.effectivePlatformName = firstBuildable[@"EFFECTIVE_PLATFORM_NAME"];
+  self.objRoot = targetSettings[@"OBJROOT"];
+  self.symRoot = targetSettings[@"SYMROOT"];
+  self.sharedPrecompsDir = targetSettings[@"SHARED_PRECOMPS_DIR"];
+  self.effectivePlatformName = targetSettings[@"EFFECTIVE_PLATFORM_NAME"];
 
   NSString *matchingSchemePath = nil;
 

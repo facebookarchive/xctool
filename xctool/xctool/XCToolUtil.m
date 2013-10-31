@@ -550,13 +550,7 @@ int XcodebuildVersion()
   return [infoDict[@"DTXcode"] intValue];
 }
 
-NSString *XcodeBuildActionForBuildSettings(void)
+BOOL ToolchainIsXcode5OrBetter(void)
 {
-  if (XcodebuildVersion() >= 500) {
-    // Xcode 5.x or greater
-    return @"test";
-  } else {
-    // pre-Xcode 5.0.0
-     return @"build";
-  }
+  return (XcodebuildVersion() >= 0500);
 }

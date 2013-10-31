@@ -16,6 +16,11 @@
                                 settingsPath:(NSString *)settingsPath
                                         hide:(BOOL)hide;
 
++ (id)handlerForShowBuildSettingsWithAction:(NSString *)action
+                                    project:(NSString *)project
+                                     scheme:(NSString *)scheme
+                               settingsPath:(NSString *)settingsPath
+                                       hide:(BOOL)hide;
 
 + (id)handlerForShowBuildSettingsWithProject:(NSString *)project
                                       target:(NSString *)target

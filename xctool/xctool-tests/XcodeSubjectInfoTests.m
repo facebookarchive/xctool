@@ -18,6 +18,7 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
+#import "ContainsArray.h"
 #import "FakeTask.h"
 #import "FakeTaskManager.h"
 #import "LaunchHandlers.h"
@@ -319,6 +320,50 @@
 
   assertThatBool(subjectInfo.parallelizeBuildables, equalToBool(YES));
   assertThatBool(subjectInfo.buildImplicitDependencies, equalToBool(YES));
+}
+
+- (void)testShouldTryToFetchBuildSettingsFromMultipleActionsOnXcode5
+{
+  if (!ToolchainIsXcode5OrBetter()) {
+    return;
+  }
+
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    NSArray *handlers = @[[LaunchHandlers handlerForShowBuildSettingsWithAction:@"build"
+                                                                        project:TEST_DATA @"ProjectWithOnlyATestTarget/ProjectWithOnlyATestTarget.xcodeproj"
+                                                                         scheme:@"ProjectWithOnlyATestTarget"
+                                                                   settingsPath:TEST_DATA @"ProjectWithOnlyATestTarget-showBuildSettings-build.txt"
+                                                                           hide:NO],
+                          [LaunchHandlers handlerForShowBuildSettingsWithAction:@"test"
+                                                                        project:TEST_DATA @"ProjectWithOnlyATestTarget/ProjectWithOnlyATestTarget.xcodeproj"
+                                                                         scheme:@"ProjectWithOnlyATestTarget"
+                                                                   settingsPath:TEST_DATA @"ProjectWithOnlyATestTarget-showBuildSettings-test.txt"
+                                                                           hide:NO],
+                          ];
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:handlers];
+
+    Options *options = [Options optionsFrom:@[@"-project", TEST_DATA @"ProjectWithOnlyATestTarget/ProjectWithOnlyATestTarget.xcodeproj",
+                                              @"-scheme", @"ProjectWithOnlyATestTarget",
+                                              ]];
+    
+    XcodeSubjectInfo *subjectInfo = [[XcodeSubjectInfo alloc] init];
+    [subjectInfo setSubjectProject:[options project]];
+    [subjectInfo setSubjectScheme:[options scheme]];
+    [subjectInfo setSubjectXcodeBuildArguments:[options xcodeBuildArgumentsForSubject]];
+    
+    [subjectInfo loadSubjectInfo];
+
+    NSArray *launchedTasks = [[FakeTaskManager sharedManager] launchedTasks];
+
+    // Should have called xcodebuild with -showBuildSettings twice!
+    assertThatInteger(launchedTasks.count, equalToInteger(2));
+    // First with the 'build' action, but that should fail.
+    assertThat([launchedTasks[0] arguments],
+               containsArray(@[@"build", @"-showBuildSettings"]));
+    // Second with the 'test' action, and this should work.
+    assertThat([launchedTasks[1] arguments],
+               containsArray(@[@"test", @"-showBuildSettings"]));
+  }];
 }
 
 @end

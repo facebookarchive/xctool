@@ -95,14 +95,19 @@
     xcodeArguments = ArgumentListByOverriding(xcodeArguments, @"-sdk", testSDK);
   }
 
+  // For Xcode 5, we can pass `test -showBuildSettings` to xcodebuild and get
+  // build settings that are specific to the `test` action.  In previous versions,
+  // there was only the `build` action.
+  NSString *action = ToolchainIsXcode5OrBetter() ? @"test" : @"build";
+
   [settingsTask setArguments:[xcodeArguments arrayByAddingObjectsFromArray:@[
                                                                              @"-project", projectPath,
                                                                              @"-target", target,
                                                                              [NSString stringWithFormat:@"OBJROOT=%@", objRoot],
                                                                              [NSString stringWithFormat:@"SYMROOT=%@", symRoot],
                                                                              [NSString stringWithFormat:@"SHARED_PRECOMPS_DIR=%@", sharedPrecompsDir],
+                                                                             action,
                                                                              @"-showBuildSettings",
-                                                                             XcodeBuildActionForBuildSettings(),
                                                                              ]]];
 
   [settingsTask setEnvironment:@{

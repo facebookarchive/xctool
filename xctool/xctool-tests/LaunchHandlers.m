@@ -11,10 +11,11 @@
                                       scheme:(NSString *)scheme
                                 settingsPath:(NSString *)settingsPath
 {
-  return [self handlerForShowBuildSettingsWithProject:project
-                                               scheme:scheme
-                                         settingsPath:settingsPath
-                                                 hide:YES];
+  return [self handlerForShowBuildSettingsWithAction:nil
+                                             project:project
+                                              scheme:scheme
+                                        settingsPath:settingsPath
+                                                hide:YES];
 }
 
 + (id)handlerForShowBuildSettingsWithProject:(NSString *)project
@@ -22,15 +23,34 @@
                                 settingsPath:(NSString *)settingsPath
                                         hide:(BOOL)hide
 {
+  return [self handlerForShowBuildSettingsWithAction:nil
+                                             project:project
+                                              scheme:scheme
+                                        settingsPath:settingsPath
+                                                hide:hide];
+}
+
++ (id)handlerForShowBuildSettingsWithAction:(NSString *)action
+                                    project:(NSString *)project
+                                     scheme:(NSString *)scheme
+                               settingsPath:(NSString *)settingsPath
+                                       hide:(BOOL)hide
+{
   return [[^(FakeTask *task){
-    if ([[task launchPath] hasSuffix:@"xcodebuild"] &&
-        ArrayContainsSubsequence([task arguments], @[@"-project",
-                                                     project,
-                                                     @"-scheme",
-                                                     scheme,
-                                                     ]) &&
-        [[task arguments] containsObject:@"-showBuildSettings"])
-    {
+    BOOL match = YES;
+    match = [[task launchPath] hasSuffix:@"xcodebuild"];
+    match &= ArrayContainsSubsequence([task arguments], @[@"-project",
+                                                          project,
+                                                          @"-scheme",
+                                                          scheme,
+                                                          ]);
+    if (action) {
+      match &= ArrayContainsSubsequence([task arguments], @[action, @"-showBuildSettings"]);
+    } else {
+      match &= [[task arguments] containsObject:@"-showBuildSettings"];
+    }
+
+    if (match) {
       [task pretendTaskReturnsStandardOutput:
        [NSString stringWithContentsOfFile:settingsPath
                                  encoding:NSUTF8StringEncoding

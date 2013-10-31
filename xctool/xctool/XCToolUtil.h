@@ -53,18 +53,9 @@ BOOL IsRunningUnderTest();
 int XcodebuildVersion();
 
 /**
- Returns the appropriate action to use when invoking `-showBuildSettings` to 
- introspect the test build environment.
- 
- Under Xcode 4.x, where xcodebuild does not directly support unit testing iOS
- the `build` action must be used. Under Xcode 5.x, the `test` action must be 
- used else the Scheme requires the test bundle being configured for Running
- (as opposed to Testing only) else xctool will fail out with the dreaded:
- ERROR: Expected to receive build settings for 1 target
- 
- See https://github.com/facebook/xctool/issues/187 for more details.
+ Returns YES if we're running with Xcode 5 or better.
  */
-NSString *XcodeBuildActionForBuildSettings(void);
+BOOL ToolchainIsXcode5OrBetter(void);
 
 /**
  Launches a task that will invoke xcodebuild.  It will automatically feed
