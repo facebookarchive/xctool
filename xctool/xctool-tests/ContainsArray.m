@@ -18,6 +18,8 @@
 
 #import <OCHamcrest/HCDescription.h>
 
+#import "TestUtil.h"
+
 @implementation ContainsArray
 
 - (instancetype)initWithArray:(NSArray *)array
@@ -40,22 +42,7 @@
     return NO;
   }
 
-  for (NSUInteger i = 0; (i < [otherArray count]) && ((i + [_array count]) <= [otherArray count]); i++) {
-    BOOL matches = YES;
-
-    for (NSUInteger j = 0; j < [_array count]; j++) {
-      if (![otherArray[i + j] isEqualTo:_array[j]]) {
-        matches = NO;
-        break;
-      }
-    }
-
-    if (matches) {
-      return YES;
-    }
-  }
-
-  return NO;
+  return ArrayContainsSubsequence(otherArray, _array);
 }
 
 // Describe the matcher.

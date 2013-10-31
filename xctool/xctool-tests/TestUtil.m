@@ -126,3 +126,23 @@ BOOL HasXCTestFramework()
   NSString *frameworkDirPath = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks/XCTest.framework"];
   return [[NSFileManager defaultManager] fileExistsAtPath:frameworkDirPath];
 }
+
+BOOL ArrayContainsSubsequence(NSArray *anArray, NSArray *subArray)
+{
+  for (NSUInteger i = 0; (i + [subArray count]) <= [anArray count]; i++) {
+    BOOL matches = YES;
+
+    for (NSUInteger j = 0; j < [subArray count]; j++) {
+      if (![anArray[i + j] isEqualTo:subArray[j]]) {
+        matches = NO;
+        break;
+      }
+    }
+
+    if (matches) {
+      return YES;
+    }
+  }
+
+  return NO;
+}

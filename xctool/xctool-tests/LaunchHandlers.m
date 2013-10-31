@@ -3,28 +3,7 @@
 
 #import "FakeTask.h"
 #import "FakeTaskManager.h"
-
-static BOOL ArrayContainsSubArray(NSArray *arr, NSArray *subArr)
-{
-  NSUInteger arrCount = [arr count];
-  NSUInteger subArrCount = [subArr count];
-
-  for (int i = 0; (i < arrCount) && (i + subArrCount < arrCount); i++) {
-    BOOL matches = YES;
-    for (int j = 0; j < [subArr count]; j++) {
-      if (![arr[i + j] isEqualTo:subArr[j]]) {
-        matches = NO;
-        break;
-      }
-    }
-
-    if (matches) {
-      return YES;
-    }
-  }
-
-  return NO;
-}
+#import "TestUtil.h"
 
 @implementation LaunchHandlers
 
@@ -45,12 +24,11 @@ static BOOL ArrayContainsSubArray(NSArray *arr, NSArray *subArr)
 {
   return [[^(FakeTask *task){
     if ([[task launchPath] hasSuffix:@"xcodebuild"] &&
-        ArrayContainsSubArray([task arguments], @[
-                              @"-project",
-                              project,
-                              @"-scheme",
-                              scheme,
-                              ]) &&
+        ArrayContainsSubsequence([task arguments], @[@"-project",
+                                                     project,
+                                                     @"-scheme",
+                                                     scheme,
+                                                     ]) &&
         [[task arguments] containsObject:@"-showBuildSettings"])
     {
       [task pretendTaskReturnsStandardOutput:
@@ -72,12 +50,12 @@ static BOOL ArrayContainsSubArray(NSArray *arr, NSArray *subArr)
 {
   return [[^(FakeTask *task){
     if ([[task launchPath] hasSuffix:@"xcodebuild"] &&
-        ArrayContainsSubArray([task arguments], @[
-                              @"-project",
-                              project,
-                              @"-target",
-                              target,
-                              ]) &&
+        ArrayContainsSubsequence([task arguments], @[
+                                                     @"-project",
+                                                     project,
+                                                     @"-target",
+                                                     target,
+                                                     ]) &&
         [[task arguments] containsObject:@"-showBuildSettings"])
     {
       [task pretendTaskReturnsStandardOutput:
@@ -99,12 +77,11 @@ static BOOL ArrayContainsSubArray(NSArray *arr, NSArray *subArr)
 {
   return [[^(FakeTask *task){
     if ([[task launchPath] hasSuffix:@"xcodebuild"] &&
-        ArrayContainsSubArray([task arguments], @[
-                                                  @"-project",
-                                                  project,
-                                                  @"-target",
-                                                  target,
-                                                  ]) &&
+        ArrayContainsSubsequence([task arguments], @[@"-project",
+                                                     project,
+                                                     @"-target",
+                                                     target,
+                                                     ]) &&
         [[task arguments] containsObject:@"-showBuildSettings"])
     {
       [task pretendTaskReturnsStandardError:
@@ -136,12 +113,11 @@ static BOOL ArrayContainsSubArray(NSArray *arr, NSArray *subArr)
 {
   return [[^(FakeTask *task){
     if ([[task launchPath] hasSuffix:@"xcodebuild"] &&
-        ArrayContainsSubArray([task arguments], @[
-                              @"-workspace",
-                              workspace,
-                              @"-scheme",
-                              scheme,
-                              ]) &&
+        ArrayContainsSubsequence([task arguments], @[@"-workspace",
+                                                     workspace,
+                                                     @"-scheme",
+                                                     scheme,
+                                                     ]) &&
         [[task arguments] containsObject:@"-showBuildSettings"])
     {
       [task pretendTaskReturnsStandardOutput:
