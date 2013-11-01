@@ -193,67 +193,129 @@ NSString *MakeTempFileWithPrefix(NSString *prefix)
   return [NSString stringWithFormat:@"%s", tempPath];
 }
 
+/**
+ Helper function that takes the SDK dictionary, the file scanner and the SDK
+ version and will scan all the SDK values into a newly created NSDictionary,
+ then map the SDK version and its family to that new dictionary.
+ */
+static void AddSDKToDictionary(NSMutableDictionary *dict,
+                               NSScanner *scanner,
+                               NSString *sdk)
+{
+  
+  NSMutableDictionary *versionDict = [NSMutableDictionary dictionary];
+  NSString *line = nil;
+  NSString *key = nil;
+  NSString *value = nil;
+  NSString *nlBuffer = nil;
+  
+  // This isn't present in the output, but adding the mapping here in order
+  // to assist with looking up the SDK value quickly
+  versionDict[@"SDK"] = sdk;
+  
+  while (![scanner isAtEnd]) {
+    // Consume the newline chars into a string; we'll need this to
+    // determine if we're at the end of an SDK block (which we'll know if we
+    // consume more than one newline char)
+    [scanner scanCharactersFromSet:[NSCharacterSet newlineCharacterSet]
+                        intoString:&nlBuffer];
+    if ([nlBuffer length] >= 2) {
+      break;
+    }
+    
+    // Read the current line and set it into the scanner
+    [scanner scanUpToCharactersFromSet:[NSCharacterSet newlineCharacterSet]
+                            intoString:&line];
+    NSScanner *lineScanner = [NSScanner scannerWithString:line];
+    
+    // Parse the label/value pair from the line and add it to the dictionary
+    [lineScanner scanUpToString:@": " intoString:&key];
+    [lineScanner scanString:@": " intoString:nil];
+    [lineScanner scanUpToCharactersFromSet:[NSCharacterSet newlineCharacterSet]
+                                intoString:&value];
+    versionDict[key] = value;
+  }
+
+  // Map [name] -> [name][version]. i.e. 'iphoneos' -> 'iphoneos6.1'.  Since
+  // SDKs are listed in ascending order by version number, this will always
+  // leave us with 'iphoneos' mapped to the newest 'iphoneos' SDK.
+  NSScanner *versionScanner = [NSScanner scannerWithString:sdk];
+  NSString *sdkWithoutVersion = nil;
+  [versionScanner scanCharactersFromSet:[NSCharacterSet letterCharacterSet]
+                             intoString:&sdkWithoutVersion];
+  dict[sdkWithoutVersion] = versionDict;
+  dict[sdk] = versionDict;
+}
+
+NSDictionary *GetAvailableSDKsInfo()
+{
+  NSTask *task = CreateTaskInSameProcessGroup();
+  [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
+  [task setArguments:@[@"-sdk", @"-version"]];
+  
+  NSDictionary *output = LaunchTaskAndCaptureOutput(task,
+                                                    @"querying available SDKs");
+  NSString *sdkContents = output[@"stdout"];
+  [task release];
+  
+  NSScanner *scanner = [NSScanner scannerWithString:sdkContents];
+  
+  // We're choosing not to skip characters since we need to know when we
+  // encounter newline characters to determine when we've consumed an SDK
+  // "block"
+  [scanner setCharactersToBeSkipped:nil];
+  
+  // Regex to pull out SDK value; matching lines with ".sdk" and "([\w.]+)"
+  // (capturing group around what's inside of the parentheses).
+  NSRegularExpression *sdkVersionRegex =
+    [NSRegularExpression
+     regularExpressionWithPattern:@"^[\\w.]+.sdk[\\s\\w-.]+\\(([\\w.]+)\\)$"
+                          options:0
+                            error:nil];
+  
+  NSMutableDictionary *versionsAvaialble = [NSMutableDictionary dictionary];
+  
+  while (![scanner isAtEnd]) {
+    NSString *str = nil;
+
+    // Read current line
+    [scanner scanUpToCharactersFromSet:[NSCharacterSet newlineCharacterSet]
+                            intoString:&str];
+    
+    // Attempt to match the regex
+    NSArray *match = [sdkVersionRegex matchesInString:str
+                                              options:0
+                                                range:NSMakeRange(0, str.length)];
+    
+    // If we don't find a match, we are done with the SDK parsing
+    if (match.count == 0) {
+      break;
+    }
+    
+    // Pull the SDK value from our capturing group
+    NSString *sdkVersion = [str substringWithRange:[match[0] rangeAtIndex:1]];
+    
+    AddSDKToDictionary(versionsAvaialble, scanner, sdkVersion);
+  }
+  
+  return versionsAvaialble;
+}
+
 NSDictionary *GetAvailableSDKsAndAliases()
 {
-  NSMutableDictionary *(^getSdksAndAliases)(void) = ^{
-    NSMutableDictionary *result = [[NSMutableDictionary alloc] init];
-    // Get a list of available SDKs in the form of:
-    //   "macosx 10.7"
-    //   "macosx 10.8"
-    //   "iphoneos 6.1"
-    //   "iphonesimulator 5.0"
-    //
-    // xcodebuild is nice enough to return them to us in ascending order.
-    NSTask *task = CreateTaskInSameProcessGroup();
-    NSString *xcodebuild = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"];
-    [task setLaunchPath:@"/bin/bash"];
-    [task setArguments:@[
-     @"-c",
-     [[NSString stringWithFormat:@"'%@'", xcodebuild] stringByAppendingString:
-      @" -showsdks | perl -ne '/-sdk (.*?)([\\d\\.]+)$/ && print \"$1 $2\n\"'; "
-      // Exit with xcodebuild's return value.  This is getting ugly.
-      @"exit ${PIPESTATUS[0]};"
-      ],
-     ]];
-    [task setEnvironment:@{@"PATH": SystemPaths()}];
-
-    NSDictionary *output = LaunchTaskAndCaptureOutput(task,
-                                                      @"querying available SDKs");
-    NSCAssert([task terminationStatus] == 0,
-              @"xcodebuild failed to run with error: %@", output[@"stderr"]);
-
-    NSArray *lines = [output[@"stdout"] componentsSeparatedByString:@"\n"];
-    lines = [lines subarrayWithRange:NSMakeRange(0, lines.count - 1)];
-
-    for (NSString *line in lines) {
-      NSArray *parts = [line componentsSeparatedByString:@" "];
-      NSString *sdkName = parts[0];
-      NSString *sdkVersion = parts[1];
-
-      NSString *sdk = [NSString stringWithFormat:@"%@%@", sdkName, sdkVersion];
-      result[sdk] = sdk;
-
-      // Map [name] -> [name][version]. i.e. 'iphoneos' -> 'iphoneos6.1'.  Since SDKs are listed
-      // in ascending order by version number, this will always leave us with 'iphoneos' mapped
-      // to the newest 'iphoneos' SDK.
-      result[sdkName] = sdk;
-    }
-
-    [task release];
-    return result;
-  };
-
-  static NSMutableDictionary *savedResult = nil;
-
-  if (IsRunningUnderTest()) {
-    // Under test, we'd like to always invoke the task so it can be tested.
-    return getSdksAndAliases();
-  } else {
-    if (savedResult == nil) {
-      savedResult = [getSdksAndAliases() retain];
-    }
-    return savedResult;
+  NSMutableDictionary *versionsAvailable = [NSMutableDictionary dictionary];
+  
+  // GetAvailableSDKsInfo already does the hard work for us; we just need to
+  //  iterate through its result to pull out the values cooresponding to the
+  // "SDK" field for each of the SDK entries.
+  NSDictionary *sdkInfo = GetAvailableSDKsInfo();
+  NSArray *keys = [sdkInfo allKeys];
+  
+  for (NSString *key in keys) {
+    versionsAvailable[key] = sdkInfo[key][@"SDK"];
   }
+  
+  return versionsAvailable;
 }
 
 BOOL IsRunningUnderTest()

@@ -35,6 +35,47 @@ NSString *XcodeDeveloperDirPath(void);
 NSString *XcodeDeveloperDirPathViaForcedConcreteTask(BOOL forceConcreteTask);
 
 NSString *MakeTempFileWithPrefix(NSString *prefix);
+
+/**
+ Returns a NSDictionary with a NSString to NSDictionary mapping of information
+ to values for all available SDK types. Here is an example of what the output
+ might look like:
+ 
+ @{@"macosx10.8" : @{
+                     @"SDK": "macosx10.8"
+                     @"SDKVersion" : @"10.8",
+                     @"ProductBuildVersion" : @"12F37",
+                    },
+   @"macosx"     : @{
+                     @SDK": "macosx10.9"
+                     @"SDKVersion" : @"10.9",
+                     @"ProductBuildVersion" : @"12347",
+                   }
+  };
+ 
+ @return NSDictionary mapping a NSString of the particular SDK to an
+ NSDictionary containing label/value mappings that xcodebuild -sdk -version
+ returned for that environment (e.g. "SDKVersion", "Path",
+ "ProductBuildVersion"); also adds a mapping of "SDK" to the sdk version
+ (e.g. "macosx10.9") for lookup purposes.
+ */
+NSDictionary *GetAvailableSDKsInfo();
+
+/**
+ Returns a NSDictionary with a NSString to NSString mapping of what SDKs are
+ available for a particular environment as reported by xcodebuild -sdk -version.
+ In addition to mapping the version for a specific SDK (e.g. "macosx10.8" =>
+ "macosx10.8"), it also maps the latest version of an SDK family that's
+ available (e.g. if macosx10.8 and macosx10.9 are both available, "macosx" will
+ map to "macos10.9" since it is the most recent version).
+ 
+ @return NSDictionary mapping a NSString of either a specific SDK or an
+ SDK family to an NSString representing the appropriate SDK. Note that this
+ mapping is the same as if we we grabbed the appropriate dictionary from the
+ GetAvailableSDKsInfo return value and looked at the "SDK" mapping
+ (i.e. GetAvailableSDKsInfo()[whichSDK][@"SDK"] ==
+       GetAvailableSDKsAndAliases()[whichSDK])
+ */
 NSDictionary *GetAvailableSDKsAndAliases();
 
 BOOL IsRunningUnderTest();
