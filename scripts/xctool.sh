@@ -5,12 +5,12 @@
 
 set -e
 
-XCTOOL_DIR=$(cd $(dirname $0); pwd)
+XCTOOL_DIR=$(cd $(dirname $0)/..; pwd)
 
 TEMP_PATH=$(/usr/bin/mktemp -t xctool-build)
 trap "rm -f $TEMP_PATH" EXIT
 
-BUILD_NEEDED_TOOL_PATH="$XCTOOL_DIR"/build_needed.sh
+BUILD_NEEDED_TOOL_PATH="$XCTOOL_DIR"/scripts/build_needed.sh
 BUILD_NEEDED=$($BUILD_NEEDED_TOOL_PATH $*)
 
 COLOR_BRIGHT_WHITE="\033[1;97m"
@@ -22,11 +22,11 @@ CHECK_MARK="\xe2\x9c\x93"
 if [ "$BUILD_NEEDED" -eq 1 ]; then
   echo -e "${COLOR_BRIGHT_WHITE}=== BUILDING XCTOOL ===${COLOR_NORMAL}"
   echo
-  echo -e "  $XCTOOL_DIR/build.sh"
+  echo -e "  $XCTOOL_DIR/scripts/build.sh"
 
   # Alas, date on Mac OS X has no %N, so we can't get milliseconds here.
   BUILD_TIME_START=$SECONDS
-  if ! "$XCTOOL_DIR"/build.sh > $TEMP_PATH 2>&1; then
+  if ! "$XCTOOL_DIR"/scripts/build.sh > $TEMP_PATH 2>&1; then
     echo
     echo -e "${COLOR_BOLD_RED}ERROR${COLOR_NORMAL}: Failed to build xctool:"
     cat $TEMP_PATH

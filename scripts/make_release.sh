@@ -19,7 +19,7 @@
 
 set -e
 
-XCTOOL_DIR=$(cd $(dirname $0); pwd)
+XCTOOL_DIR=$(cd $(dirname $0)/..; pwd)
 
 OUTPUT_DIR=$(mktemp -d -t xctool-release)
 BUILD_OUTPUT_DIR="$OUTPUT_DIR"/build
