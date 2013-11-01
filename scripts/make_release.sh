@@ -25,23 +25,7 @@ OUTPUT_DIR=$(mktemp -d -t xctool-release)
 BUILD_OUTPUT_DIR="$OUTPUT_DIR"/build
 RELEASE_OUTPUT_DIR="$OUTPUT_DIR"/release
 
-# We're using a hack to trick otest-shim into building as a dylib for the iOS
-# simulator.  Part of that hack requires us to specify paths to the SDK dirs
-# ourselves and so we need to know the version numbers for the installed SDK.
-# Configurations/iOS-Simulator-Dylib.xcconfig has more info.
-#
-# We choose the oldest available SDK that's >= 5.0 - this way otest-shim is
-# most compatible. e.g. if otest-shim targeted iOS 6.1 but a test bundle (or
-# test host) targetted 5.0, you'd see errors.  We don't go older than 5.0 since
-# we depend on some iOS 5+ APIs.
-XT_IOS_SDK_VERSION=$(xcodebuild -showsdks | grep iphonesimulator | \
-  perl -ne '/iphonesimulator(.*?)$/ && $1 >= 5.0 && print' | \
-  head -n 1 | \
-  perl -ne '/iphonesimulator(.*?)$/ && print $1')
-XT_IOS_SDK_VERSION_EXPANDED=$(xcodebuild -showsdks | grep iphonesimulator | \
-  perl -ne '/iphonesimulator(\d)\.(\d)$/ && $1 >= 5 && print' | \
-  head -n 1 | \
-  perl -ne '/iphonesimulator(\d)\.(\d)$/ && print "${1}${2}000"')
+source "${XCTOOL_DIR}"/scripts/build_settings.include
 
 xcodebuild \
   -workspace "$XCTOOL_DIR"/xctool.xcworkspace \
@@ -51,8 +35,7 @@ xcodebuild \
   -IDECustomBuildLocationType=Absolute \
   -IDECustomBuildProductsPath="$BUILD_OUTPUT_DIR/Products" \
   -IDECustomBuildIntermediatesPath="$BUILD_OUTPUT_DIR/Intermediates" \
-  XT_IOS_SDK_VERSION="$XT_IOS_SDK_VERSION" \
-  XT_IOS_SDK_VERSION_EXPANDED="$XT_IOS_SDK_VERSION_EXPANDED" \
+  ${XT_BUILD_SETTINGS_ARRAY[@]} \
   XT_INSTALL_ROOT="$RELEASE_OUTPUT_DIR"
 
 if [[ ! -x "$RELEASE_OUTPUT_DIR"/bin/xctool ]]; then
@@ -68,8 +51,7 @@ fi
   -IDECustomBuildLocationType=Absolute \
   -IDECustomBuildProductsPath="$BUILD_OUTPUT_DIR/Products" \
   -IDECustomBuildIntermediatesPath="$BUILD_OUTPUT_DIR/Intermediates" \
-  XT_IOS_SDK_VERSION="$XT_IOS_SDK_VERSION" \
-  XT_IOS_SDK_VERSION_EXPANDED="$XT_IOS_SDK_VERSION_EXPANDED" \
+  ${XT_BUILD_SETTINGS_ARRAY[@]} \
   XT_INSTALL_ROOT="$RELEASE_OUTPUT_DIR" \
   test
 
