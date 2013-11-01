@@ -119,21 +119,18 @@ __attribute__((constructor)) static void initialize()
            },
             // GetAvailableSDKsAndAliases()
             ^(FakeTask *task){
-              if ([[task launchPath] isEqualToString:@"/bin/bash"] &&
-                  [[task arguments] isEqualToArray:@[
-                   @"-c",
-                   @"'/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild'"
-                   @" -showsdks | perl -ne '/-sdk (.*?)([\\d\\.]+)$/ && print \"$1 $2\n\"'; "
-                   @"exit ${PIPESTATUS[0]};",
+              if ([[task launchPath] hasSuffix:@"usr/bin/xcodebuild"] &&
+                  [[task arguments] isEqualToArray:@[@"-sdk", @"-version"
                    ]]) {
                 [task pretendTaskReturnsStandardOutput:
-                 @"macosx 10.7\n"
-                 @"macosx 10.8\n"
-                 @"iphoneos 6.1\n"
-                 @"iphonesimulator 5.0\n"
-                 @"iphonesimulator 5.1\n"
-                 @"iphonesimulator 6.0\n"
-                 @"iphonesimulator 6.1\n"];
+                 @"MacOSX10.7.sdk - OS X 10.7 (macosx10.7)\n\n"
+                 @"MacOSX10.8.sdk - OS X 10.8 (macosx10.8)\n\n"
+                 @"iPhoneOS6.1.sdk - iOS 6.1 (iphoneos6.1)\n\n"
+                 @"iPhoneSimulator5.0.sdk - Simulator - iOS 5.0 (iphonesimulator5.0)\n\n"
+                 @"iPhoneSimulator5.1.sdk - Simulator - iOS 5.1 (iphonesimulator5.1)\n\n"
+                 @"iPhoneSimulator6.0.sdk - Simulator - iOS 6.0 (iphonesimulator6.0)\n\n"
+                 @"iPhoneSimulator6.1.sdk - Simulator - iOS 6.1 (iphonesimulator6.1)\n\n"
+                 @"Xcode 5.0.2\nBuild version 5A3005"];
                 [[FakeTaskManager sharedManager] hideTaskFromLaunchedTasks:task];
               }
             },
@@ -144,7 +141,9 @@ __attribute__((constructor)) static void initialize()
     withDefaultLaunchHandlers:(BOOL)withDefaultLaunchHandlers
 {
   [self enableFakeTasks];
-  [self addLaunchHandlerBlocks:[self defaultLaunchHandlers]];
+  if (withDefaultLaunchHandlers) {
+    [self addLaunchHandlerBlocks:[self defaultLaunchHandlers]];
+  }
 
   @try {
     runBlock();
