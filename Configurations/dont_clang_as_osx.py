@@ -6,11 +6,34 @@
 # and we really need to strip out the OSX-specific flags to make this work.
 
 import os
+import subprocess
 import sys
 
-assert ('DEVELOPER_DIR' in os.environ), 'DEVELOPER_DIR should be set.'
+developer_dir = None
+
+if 'DEVELOPER_DIR' in os.environ:
+    developer_dir = os.environ['DEVELOPER_DIR']
+else:
+    # Before building, Xcode runs clang in a special mode that dumps a bunch
+    # of the internal macros that are set. e.g. --
+    #
+    # /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang \
+    #   -v -E -dM -arch i386 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk \
+    #   -x objective-c -c /dev/null 2>&1
+    #
+    # At this point, it's not yet setting DEVELOPER_DIR in the environment, but
+    # it is prepending '/Applications/Xcode.app/Contents/Developer/usr/bin' to
+    # the path.  We can deduce DEVELOPER_DIR from that.
+
+    # This should give us a path that's inside the developer dir, given how
+    # Xcode has set our path. e.g. --
+    # /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild
+    xcodebuild_path = subprocess.check_output(['which', 'xcodebuild']).strip()
+    usr_bin_path = os.path.dirname(xcodebuild_path)
+    developer_dir = os.path.normpath(os.path.join(usr_bin_path, '..', '..'))
+
 clang_path = '%s/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang' % (
-    os.environ['DEVELOPER_DIR'])
+    developer_dir)
 
 new_argv = []
 i = 1
