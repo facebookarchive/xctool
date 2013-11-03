@@ -197,7 +197,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0460;
-				ORGANIZATIONNAME = "Fred Potter";
+				ORGANIZATIONNAME = "Facebook, Inc.";
 			};
 			buildConfigurationList = 282BFDE41715E8520022F9FF /* Build configuration list for PBXProject "TestProject-Library-OSX" */;
 			compatibilityVersion = "Xcode 3.2";
