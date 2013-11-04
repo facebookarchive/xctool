@@ -319,7 +319,7 @@
 		28FFB00816FFC494000CCE2A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Facebook, Inc.";
 			};
 			buildConfigurationList = 28FFB00B16FFC494000CCE2A /* Build configuration list for PBXProject "TestsThatCrash" */;
