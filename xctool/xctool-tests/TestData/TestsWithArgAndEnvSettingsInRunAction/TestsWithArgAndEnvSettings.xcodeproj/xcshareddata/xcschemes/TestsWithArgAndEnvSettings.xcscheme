@@ -59,6 +59,14 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "-RunArg2 \&quot;RunArgValue2\&quot;"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-RunArg3 &quot;Run Arg Value 3&quot; -RunArg4 RunArgValue4"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "DisabledArg"
             isEnabled = "NO">
          </CommandLineArgument>

@@ -473,7 +473,7 @@
 
        assertThat(runner, notNilValue());
        assertThat(runner->_arguments,
-                  equalTo(@[@"-RunArg", @"RunArgValue"]));
+                  equalTo(@[@"-RunArg", @"RunArgValue", @"-RunArg2", @"\"RunArgValue2\"", @"-RunArg3", @"Run Arg Value 3", @"-RunArg4", @"RunArgValue4"]));
        assertThat(runner->_environment,
                   equalTo(@{@"RunEnvKey" : @"RunEnvValue"}));
      }];
@@ -526,7 +526,7 @@
 
        assertThat(runner, notNilValue());
        assertThat(runner->_arguments,
-                  equalTo(@[@"-TestArg", @"TestArgValue"]));
+                  equalTo(@[@"-TestArg", @"TestArgValue", @"-TestArg2", @"\"TestArgValue2\"", @"-TestArg3", @"Test Arg Value 3", @"-TestArg4", @"TestArgValue4"]));
        assertThat(runner->_environment,
                   equalTo(@{@"TestEnvKey" : @"TestEnvValue"}));
      }];
