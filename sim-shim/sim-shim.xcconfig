@@ -14,13 +14,14 @@
 // limitations under the License.
 //
 
-#import "OCUnitTestQueryRunner.h"
+#include "../Configurations/Project.xcconfig"
 
-NSString *SimulatorSDKRootPathWithVersion(NSString *version);
+#include "../Configurations/Install.xcconfig"
+XT_INSTALL_DIR = lib
 
-@interface OCUnitIOSTestQueryRunner : OCUnitTestQueryRunner
+MACOSX_DEPLOYMENT_TARGET = 10.7
 
-- (NSDictionary *)envForQueryInIOSBundleWithAdditionalEnv:(NSDictionary *)additionalEnv;
-- (NSString *)sdk;
-
-@end
+// In Xcode 4, .../iPhoneSimulator.platform/usr/bin/sim is only 32-bit.
+VALID_ARCHS_0400 = i386
+VALID_ARCHS_0500 = i386 x86_64
+VALID_ARCHS = $(VALID_ARCHS_$(XCODE_VERSION_MAJOR))

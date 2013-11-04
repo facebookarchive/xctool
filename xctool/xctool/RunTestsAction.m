@@ -21,7 +21,6 @@
 #import "OCUnitIOSAppTestRunner.h"
 #import "OCUnitIOSDeviceTestRunner.h"
 #import "OCUnitIOSLogicTestRunner.h"
-#import "OCUnitIOSTestQueryRunner.h"
 #import "OCUnitOSXAppTestRunner.h"
 #import "OCUnitOSXLogicTestRunner.h"
 #import "OCUnitOSXTestQueryRunner.h"

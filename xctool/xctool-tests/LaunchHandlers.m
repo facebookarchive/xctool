@@ -158,8 +158,15 @@
 
     BOOL isOtestQuery = NO;
 
-    if ([[task launchPath] hasSuffix:@"otest-query-osx"] ||
-        [[task launchPath] hasSuffix:@"otest-query-ios"]) {
+    if ([[task launchPath] hasSuffix:@"usr/bin/sim"]) {
+      // iOS tests get queried through the 'sim' launcher.
+      for (NSString *arg in [task arguments]) {
+        if ([arg hasSuffix:@"otest-query-ios"]) {
+          isOtestQuery = YES;
+          break;
+        }
+      }
+    } else if ([[task launchPath] hasSuffix:@"otest-query-osx"]) {
       isOtestQuery = YES;
     }
 
