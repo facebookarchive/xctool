@@ -14,25 +14,13 @@
 // limitations under the License.
 //
 
-#import <Foundation/Foundation.h>
-
-#import <OCHamcrest/HCBaseMatcher.h>
-#import <objc/objc-api.h>
-
-@interface ContainsAssertionFailure : HCBaseMatcher {
-  NSString *_method;
-}
-
-+ (instancetype)containsAssertionFailureFromMethod:(NSString *)method;
-- (instancetype)initWithMethod:(NSString *)method;
-
-@end
+#import "ContainsAssertionFailure.h"
 
 @implementation ContainsAssertionFailure
 
 + (instancetype)containsAssertionFailureFromMethod:(NSString *)method
 {
-  return [[self alloc] initWithMethod:method];
+  return [[[self alloc] initWithMethod:method] autorelease];
 }
 
 - (instancetype)initWithMethod:(NSString *)method
@@ -49,11 +37,12 @@
   [_method release];
 }
 
-- (BOOL)matches: (id)item
+- (BOOL)matches:(id)item
 {
   // We only care about strings
-  if (![item isKindOfClass:[NSString class]])
+  if (![item isKindOfClass:[NSString class]]) {
     return NO;
+  }
 
   NSString *string = (NSString *)item;
 
@@ -86,10 +75,8 @@
   [[[description appendText:@"assertion failure in method '"] appendText:_method] appendText:@"' not found."];
 }
 
-
 @end
 
-OBJC_EXPORT id <HCMatcher> containsAssertionFailureFromMethod(NSString *method);
 id <HCMatcher> containsAssertionFailureFromMethod(NSString *method)
 {
   return [ContainsAssertionFailure containsAssertionFailureFromMethod:method];

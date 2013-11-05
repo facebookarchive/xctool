@@ -16,7 +16,7 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
-#import "ContainsException.h"
+#import "ContainsAssertionFailure.h"
 #import "OCUnitIOSLogicTestRunner.h"
 #import "OCUnitIOSLogicTestQueryRunner.h"
 #import "ReporterEvents.h"
@@ -39,8 +39,8 @@ static NSArray *AllTestCasesInIOSTestBundle(NSString *bundlePath)
     kFullProductName : fullProductName,
     kSdkName : latestSDK,
   };
-  OCUnitIOSLogicTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
-                                                                                           withCpuType:CPU_TYPE_ANY];
+  OCUnitTestQueryRunner *runner = [[[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
+                                                                                    withCpuType:CPU_TYPE_ANY] autorelease];
   NSArray *allTests = [runner runQueryWithError:&error];
   NSCAssert(error == nil, @"Error while querying test cases: %@", error);
 
@@ -84,7 +84,7 @@ static NSTask *otestShimTask(NSString *settingsPath, NSString *targetName, NSStr
 // returns nil when an error is encountered
 static NSArray *RunOtestAndParseResult(NSTask *task)
 {
-  NSMutableArray *resultBuilder = [[NSMutableArray alloc] init];
+  NSMutableArray *resultBuilder = [NSMutableArray array];
 
   LaunchTaskAndFeedOuputLinesToBlock(task,
                                      @"running otest/xctest",
@@ -109,7 +109,7 @@ static NSArray *RunOtestAndParseResult(NSTask *task)
     return nil;
   }
 
-  return [resultBuilder autorelease];
+  return resultBuilder;
 }
 
 static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)

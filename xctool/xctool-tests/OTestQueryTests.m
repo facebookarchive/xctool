@@ -34,8 +34,8 @@
     kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"tests-osx-test-bundle"),
     kFullProductName : @"TestProject-Library-OSXTests.octest",
   };
-  OCUnitOSXTestQueryRunner *runner = [[OCUnitOSXTestQueryRunner alloc] initWithBuildSettings:buildSettings
-                                                                                 withCpuType:CPU_TYPE_ANY];
+  OCUnitTestQueryRunner *runner = [[[OCUnitOSXTestQueryRunner alloc] initWithBuildSettings:buildSettings
+                                                                               withCpuType:CPU_TYPE_ANY] autorelease];
   NSArray *classes = [runner runQueryWithError:&error];
   assertThat(error, is(nilValue()));
   assertThat(classes,
@@ -57,8 +57,8 @@
     kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"tests-osx-test-bundle"),
     kFullProductName : @"TestProject-Library-XCTest-OSXTests.xctest",
   };
-  OCUnitOSXTestQueryRunner *runner = [[OCUnitOSXTestQueryRunner alloc] initWithBuildSettings:buildSettings
-                                                                                 withCpuType:CPU_TYPE_ANY];
+  OCUnitTestQueryRunner *runner = [[[OCUnitOSXTestQueryRunner alloc] initWithBuildSettings:buildSettings
+                                                                               withCpuType:CPU_TYPE_ANY] autorelease];
   NSArray *classes = [runner runQueryWithError:&error];
   assertThat(error, is(nilValue()));
   assertThat(classes,
@@ -76,8 +76,9 @@
     kFullProductName : @"TestProject-LibraryTests.octest",
     kSdkName : latestSDK,
   };
-  OCUnitIOSLogicTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
-                                                                                           withCpuType:CPU_TYPE_ANY];
+
+  OCUnitTestQueryRunner *runner = [[[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
+                                                                                    withCpuType:CPU_TYPE_ANY] autorelease];
   NSArray *classes = [runner runQueryWithError:&error];
 
   assertThat(error, is(nilValue()));
@@ -106,9 +107,8 @@
     kFullProductName : @"TestProject-Library-XCTest-iOSTests.xctest",
     kSdkName : latestSDK,
     };
-  OCUnitIOSLogicTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
-                                                                                           withCpuType:CPU_TYPE_ANY];
-
+  OCUnitTestQueryRunner *runner = [[[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
+                                                                                    withCpuType:CPU_TYPE_ANY] autorelease];
   NSArray *classes = [runner runQueryWithError:&error];
 
   assertThat(error, is(nilValue()));
@@ -132,8 +132,8 @@
                                   kFullProductName : @"KiwiTests-OCUnit.octest",
                                   kSdkName : GetAvailableSDKsAndAliases()[@"iphonesimulator"],
                                   };
-  OCUnitTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
-                                                                                   withCpuType:CPU_TYPE_ANY];
+  OCUnitTestQueryRunner *runner = [[[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
+                                                                                    withCpuType:CPU_TYPE_ANY] autorelease];
   NSArray *cases = [runner runQueryWithError:&error];
   assertThat(cases, equalTo(@[
                               @"KiwiTests_OCUnit/SomeDescription_ADuplicateName",
@@ -155,8 +155,8 @@
                                   kFullProductName : @"KiwiTests-XCTest.xctest",
                                   kSdkName : GetAvailableSDKsAndAliases()[@"iphonesimulator"],
                                   };
-  OCUnitTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
-                                                                                   withCpuType:CPU_TYPE_ANY];
+  OCUnitTestQueryRunner *runner = [[[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
+                                                                                    withCpuType:CPU_TYPE_ANY] autorelease];
   NSArray *cases = [runner runQueryWithError:&error];
   assertThat(cases, equalTo(@[
                               @"KiwiTests_XCTest/SomeDescription_ADuplicateName",
@@ -175,8 +175,8 @@
     kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"tests-ios-test-bundle"),
     kFullProductName : @"TestProject-LibraryTests.octest",
   };
-  OCUnitOSXTestQueryRunner *runner = [[OCUnitOSXTestQueryRunner alloc] initWithBuildSettings:buildSettings
-                                                                                 withCpuType:CPU_TYPE_ANY];
+  OCUnitTestQueryRunner *runner = [[[OCUnitOSXTestQueryRunner alloc] initWithBuildSettings:buildSettings
+                                                                               withCpuType:CPU_TYPE_ANY] autorelease];
   NSArray *classes = [runner runQueryWithError:&error];
   assertThat(classes, equalTo(nil));
   assertThat(error, containsString(@"no suitable image found."));
@@ -193,8 +193,8 @@
     kFullProductName : @"TestProject-Library-OSXTests.octest",
     kSdkName : latestSDK,
   };
-  OCUnitIOSLogicTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
-                                                                                           withCpuType:CPU_TYPE_ANY];
+  OCUnitTestQueryRunner *runner = [[[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
+                                                                                    withCpuType:CPU_TYPE_ANY] autorelease];
   NSArray *classes = [runner runQueryWithError:&error];
 
   assertThat(classes, equalTo(nil));
@@ -211,8 +211,8 @@
     kSdkName : latestSDK,
     kTestHost : @"/path/to/executable/that/does/not/exist",
   };
-  OCUnitIOSAppTestQueryRunner *runner = [[OCUnitIOSAppTestQueryRunner alloc] initWithBuildSettings:buildSettings
-                                                                                       withCpuType:CPU_TYPE_ANY];
+  OCUnitTestQueryRunner *runner = [[[OCUnitIOSAppTestQueryRunner alloc] initWithBuildSettings:buildSettings
+                                                                                  withCpuType:CPU_TYPE_ANY] autorelease];
   NSArray *classes = [runner runQueryWithError:&error];
   assertThat(classes, equalTo(nil));
   assertThat(error, containsString(@"The test host executable is missing: '/path/to/executable/that/does/not/exist'"));

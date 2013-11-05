@@ -16,22 +16,15 @@
 
 #import <Foundation/Foundation.h>
 
-#define kBuiltProductsDir @"BUILT_PRODUCTS_DIR"
-#define kFullProductName @"FULL_PRODUCT_NAME"
-#define kSdkName @"SDK_NAME"
-#define kTestHost @"TEST_HOST"
+#import <OCHamcrest/HCBaseMatcher.h>
 
-@interface OCUnitTestQueryRunner : NSObject {
-  NSDictionary *_buildSettings;
+@interface ContainsAssertionFailure : HCBaseMatcher {
+  NSString *_method;
 }
 
-@property (nonatomic, assign) cpu_type_t cpuType;
-
-- (instancetype)initWithBuildSettings:(NSDictionary *)buildSettings
-                          withCpuType:(cpu_type_t)cpuType;
-- (NSTask *)createTaskForQuery NS_RETURNS_RETAINED;
-- (NSArray *)runQueryWithError:(NSString **)error;
-- (NSString *)bundlePath;
-- (NSString *)testHostPath;
++ (instancetype)containsAssertionFailureFromMethod:(NSString *)method;
+- (instancetype)initWithMethod:(NSString *)method;
 
 @end
+
+OBJC_EXPORT id <HCMatcher> containsAssertionFailureFromMethod(NSString *method);

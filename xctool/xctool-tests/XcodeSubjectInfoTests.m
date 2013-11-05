@@ -346,7 +346,7 @@
                                               @"-scheme", @"ProjectWithOnlyATestTarget",
                                               ]];
     
-    XcodeSubjectInfo *subjectInfo = [[XcodeSubjectInfo alloc] init];
+    XcodeSubjectInfo *subjectInfo = [[[XcodeSubjectInfo alloc] init] autorelease];
     [subjectInfo setSubjectProject:[options project]];
     [subjectInfo setSubjectScheme:[options scheme]];
     [subjectInfo setSubjectXcodeBuildArguments:[options xcodeBuildArgumentsForSubject]];
