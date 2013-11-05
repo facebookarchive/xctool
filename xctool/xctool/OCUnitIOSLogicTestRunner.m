@@ -70,7 +70,7 @@
 }
 
 - (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
-              gotUncaughtSignal:(BOOL *)gotUncaughtSignal
+                       gotError:(BOOL *)gotError
                           error:(NSString **)error
 {
   NSString *sdkName = _buildSettings[@"SDK_NAME"];
@@ -90,13 +90,13 @@
       LaunchTaskAndFeedOuputLinesToBlock(task,
                                          @"running otest/xctest on test bundle",
                                          outputLineBlock);
-      *gotUncaughtSignal = task.terminationReason == NSTaskTerminationReasonUncaughtSignal;
+      *gotError = task.terminationReason == NSTaskTerminationReasonUncaughtSignal;
 
       return [task terminationStatus] == 0 ? YES : NO;
     }
   } else {
     *error = [NSString stringWithFormat:@"Test bundle not found at: %@", testBundlePath];
-    *gotUncaughtSignal = NO;
+    *gotError = NO;
     return NO;
   }
 }
