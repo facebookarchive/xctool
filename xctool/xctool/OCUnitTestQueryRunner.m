@@ -54,7 +54,7 @@
   return testHost;
 }
 
-- (NSTask *)createTaskForQuery
+- (NSTask *)createTaskForQuery NS_RETURNS_RETAINED
 {
   return nil;
 }
