@@ -46,7 +46,7 @@
 }
 
 - (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
-              gotUncaughtSignal:(BOOL*)gotUncaughtSignal
+                       gotError:(BOOL*)gotError
                           error:(NSString **)error
 {
   NSAssert([_buildSettings[@"SDK_NAME"] hasPrefix:@"macosx"], @"Should be a macosx SDK.");
@@ -69,12 +69,12 @@
                                          @"running otest/xctest on test bundle",
                                          outputLineBlock);
 
-      *gotUncaughtSignal = task.terminationReason == NSTaskTerminationReasonUncaughtSignal;
+      *gotError = task.terminationReason == NSTaskTerminationReasonUncaughtSignal;
       return [task terminationStatus] == 0 ? YES : NO;
     }
   } else {
     *error = [NSString stringWithFormat:@"Test bundle not found at: %@", testBundlePath];
-    *gotUncaughtSignal = NO;
+    *gotError = NO;
     return NO;
   }
 }

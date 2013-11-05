@@ -112,7 +112,7 @@
 }
 
 - (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
-              gotUncaughtSignal:(BOOL *)gotUncaughtSignal
+                       gotError:(BOOL *)gotError
                           error:(NSString **)error
 {
   // Subclasses will override this method.
@@ -134,13 +134,13 @@
   };
 
   NSString *runTestsError = nil;
-  BOOL didTerminateWithUncaughtSignal = NO;
+  BOOL gotError = NO;
 
   [_testRunnerState prepareToRun];
 
   BOOL succeeded = [self runTestsAndFeedOutputTo:feedOutputToBlock
-                                 gotUncaughtSignal:&didTerminateWithUncaughtSignal
-                                             error:&runTestsError];
+                               gotError:&gotError
+                                           error:&runTestsError];
   if (runTestsError) {
     *error = runTestsError;
   }
@@ -165,7 +165,7 @@
     succeeded = YES;
   }
 
-  [_testRunnerState finishedRun:didTerminateWithUncaughtSignal error:*error];
+  [_testRunnerState finishedRun:gotError error:*error];
 
   return succeeded;
 }
