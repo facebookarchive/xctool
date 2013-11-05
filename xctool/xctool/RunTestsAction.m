@@ -36,7 +36,7 @@
 
 static NSDictionary *ParseDestinationString(NSString *destinationString, NSString **errorMessage)
 {
-  NSMutableDictionary *resultBuilder = [[NSMutableDictionary alloc] init];
+  NSMutableDictionary *resultBuilder = [[[NSMutableDictionary alloc] init] autorelease];
 
   // Might need to do this well later on. Right now though, just blindly split on the comma.
   NSArray *components = [destinationString componentsSeparatedByString:@","];
@@ -67,7 +67,8 @@ static NSDictionary *ParseDestinationString(NSString *destinationString, NSStrin
     NSString *rhs = [component substringWithRange:[match rangeAtIndex:2]];
     resultBuilder[lhs] = rhs;
   }
-  return [resultBuilder autorelease];
+
+  return resultBuilder;
 }
 
 /**
