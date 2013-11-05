@@ -26,8 +26,9 @@
 - (id)init
 {
   if (self = [super init]) {
-    _formatter = [[NSDateFormatter alloc] init];
+    self.formatter = [[[NSDateFormatter alloc] init] autorelease];
     [_formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];
+
     self.testSuites = [NSMutableArray array];
     self.totalTests = 0;
     self.totalFailures = 0;
@@ -73,7 +74,7 @@
 
 - (void)didFinishReporting
 {
-  NSXMLElement *testsuites = [[NSXMLElement alloc] initWithName:@"testsuites"];
+  NSXMLElement *testsuites = [NSXMLElement elementWithName:@"testsuites"];
   [testsuites setAttributes:@[[NSXMLNode attributeWithName:@"name" stringValue:@"AllTestUnits"],
                               [NSXMLNode attributeWithName:@"tests" stringValue:[NSString stringWithFormat:@"%d", self.totalTests]],
                               [NSXMLNode attributeWithName:@"failures" stringValue:[NSString stringWithFormat:@"%d", self.totalFailures]],
@@ -81,14 +82,15 @@
                               [NSXMLNode attributeWithName:@"time" stringValue:[NSString stringWithFormat:@"%f", self.totalTime]]]];
 
   // Make a dictionary of names already encountered to decide to merge nodes or not
-  NSMutableDictionary *nameToTestSuiteDictionary = [[NSMutableDictionary alloc] init];
+  NSMutableDictionary *nameToTestSuiteDictionary = [NSMutableDictionary dictionary];
+
   // testSuite has two elements in it, NSDictionary testSuite and NSArray suiteResults
   for (NSDictionary *testSuite in self.testSuites) {
     NSDictionary *suiteEvent = testSuite[kJUnitReporter_Suite_Event];
     NSArray *suiteResults = testSuite[kJUnitReporter_Suite_Results];
 
     // This is the NSXMLElement being added to NSXMLElement testsuites
-    NSXMLElement *testsuite = [[NSXMLElement alloc] initWithName:@"testsuite"];
+    NSXMLElement *testsuite = nil;
 
     NSString *name = suiteEvent[kReporter_EndTestSuite_SuiteKey];
     NSXMLElement *existingTestSuite = [nameToTestSuiteDictionary objectForKey:name];
@@ -106,10 +108,7 @@
                               [NSXMLNode attributeWithName:@"timestamp" stringValue:[self.formatter stringFromDate:[NSDate date]]],
                               [NSXMLNode attributeWithName:@"name" stringValue:suiteEvent[kReporter_EndTestSuite_SuiteKey]]];
       [existingTestSuite setAttributes:attributes];
-
-      NSXMLElement *ptr = testsuite;
       testsuite = existingTestSuite;
-      [ptr release];
     } else { // else, create new attributes to add to testsuite then update dictionary
       NSArray *attributes = @[[NSXMLNode attributeWithName:@"tests" stringValue:[NSString stringWithFormat:@"%d", [suiteEvent[kReporter_EndTestSuite_TestCaseCountKey] intValue]]],
                               [NSXMLNode attributeWithName:@"failures" stringValue:[NSString stringWithFormat:@"%d",[suiteEvent[kReporter_EndTestSuite_TotalFailureCountKey] intValue]]],
@@ -117,44 +116,40 @@
                               [NSXMLNode attributeWithName:@"time" stringValue:[NSString stringWithFormat:@"%f", [suiteEvent[kReporter_EndTestSuite_TotalDurationKey] floatValue]]],
                               [NSXMLNode attributeWithName:@"timestamp" stringValue:[self.formatter stringFromDate:[NSDate date]]],
                               [NSXMLNode attributeWithName:@"name" stringValue:suiteEvent[kReporter_EndTestSuite_SuiteKey]]];
+      testsuite = [NSXMLElement elementWithName:@"testsuite"];
       [testsuite setAttributes:attributes];
     }
 
     for (NSDictionary *testResult in suiteResults) {
       // Creating a proper NSXMLElement testcase with attributes
-      NSXMLElement *testcase = [[NSXMLElement alloc] initWithName:@"testcase"];
-      NSMutableDictionary *attributes = [[NSMutableDictionary alloc] initWithCapacity:3];
+      NSXMLElement *testcase = [NSXMLElement elementWithName:@"testcase"];
       [testcase setAttributes:@[[NSXMLNode attributeWithName:@"classname" stringValue:testResult[kReporter_EndTest_ClassNameKey]],
                                 [NSXMLNode attributeWithName:@"name" stringValue:testResult[kReporter_EndTest_MethodNameKey]],
                                 [NSXMLNode attributeWithName:@"time" stringValue:[NSString stringWithFormat:@"%f", [testResult[kReporter_EndTest_TotalDurationKey] floatValue]]]]];
-      [attributes release];
 
       if (![testResult[kReporter_EndTest_SucceededKey] boolValue]) {
         NSArray *exceptions = testResult[kReporter_EndTest_ExceptionsKey];
         if ([exceptions count] > 0) {
           NSDictionary *exception = exceptions[0];
 
-          NSString *failureValue = [[NSString alloc] initWithFormat:@"%@:%d", exception[kReporter_EndTest_Exception_FilePathInProjectKey],
+          NSString *failureValue = [NSString stringWithFormat:@"%@:%d",
+                                    exception[kReporter_EndTest_Exception_FilePathInProjectKey],
                                     [exception[kReporter_EndTest_Exception_LineNumberKey] intValue]];
-          NSXMLElement *failure = [[NSXMLElement alloc] initWithName:@"failure" stringValue:failureValue];
+          NSXMLElement *failure = [NSXMLElement elementWithName:@"failure" stringValue:failureValue];
           [failure setAttributes:@[[NSXMLNode attributeWithName:@"type" stringValue:@"Failure"],
                                    [NSXMLNode attributeWithName:@"message" stringValue:exception[kReporter_EndTest_Exception_ReasonKey]]]];
           [testcase addChild:failure];
-          [failureValue release];
-          [failure release];
         }
       }
 
       NSString *output = testResult[kReporter_EndTest_OutputKey];
       if (output && output.length > 0) {
-        NSXMLElement *systemOutput = [[NSXMLElement alloc] initWithName:@"system-out" stringValue:output];
+        NSXMLElement *systemOutput = [NSXMLElement elementWithName:@"system-out" stringValue:output];
         [testcase addChild:systemOutput];
-        [systemOutput release];
       }
 
       // Adding NSXMLElement testcase to NSXMLElement testsuite
       [testsuite addChild:testcase];
-      [testcase release];
     }
 
     // After updating properties and adding test cases, add testsuite back into dictionary
@@ -166,16 +161,12 @@
     NSXMLElement *lastTestSuite = [nameToTestSuiteDictionary objectForKey:key];
     [testsuites addChild:lastTestSuite];
   }
-  [nameToTestSuiteDictionary release];
 
-  NSXMLDocument *doc = [[NSXMLDocument alloc] initWithRootElement:testsuites];
-  doc.version = @"1.0";
+  NSXMLDocument *doc = [NSXMLDocument documentWithRootElement:testsuites];
+  [doc setVersion:@"1.0"];
   [doc setStandalone:YES];
-  doc.characterEncoding = @"UTF-8";
+  [doc setCharacterEncoding:@"UTF-8"];
   [_outputHandle writeData:[doc XMLDataWithOptions:NSXMLNodePrettyPrint]];
-
-  [testsuites release];
-  [doc release];
 
   self.testSuites = nil;
 }
