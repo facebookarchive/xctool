@@ -328,20 +328,7 @@ static void XCToolLog_testCaseDidFail(NSDictionary *exceptionInfo)
   });
 }
 
-#pragma mark - XCToolTestCase function declarations
-
-static void XCSuppressExpectedAssertionFailures();
-static void XCUnsuppressExpectedAssertionFailures();
-
 #pragma mark - performTest
-
-static void XCUnsuppressExpectedAssertionFailures()
-{
-  NSAssertionHandler *handler = (NSAssertionHandler *)[[[NSThread currentThread] threadDictionary] valueForKey:NSAssertionHandlerKey];
-  [handler release];
-  [[[NSThread currentThread] threadDictionary] setValue:nil
-                                                 forKey:NSAssertionHandlerKey];
-}
 
 static void XCPerformTestWithSuppressedExpectedAssertionFailures(id self, SEL origSel, id arg1)
 {
