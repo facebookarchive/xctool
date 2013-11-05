@@ -194,7 +194,7 @@
 
   assertThatInteger(testables.count, equalToInteger(1));
   Testable *testable = testables[0];
-  assertThat(testable.arguments, equalTo(@[@"-RunArg", @"RunArgValue", @"-RunArg2", @"\"RunArgValue2\"", @"-RunArg3", @"Run Arg Value 3", @"-RunArg4", @"RunArgValue4"]));
+  assertThat(testable.arguments, equalTo(@[@"-RunArg", @"RunArgValue"]));
   assertThat(testable.environment, equalTo(@{@"RunEnvKey" : @"RunEnvValue"}));
   assertThat(testable.macroExpansionProjectPath, equalTo(nil));
   assertThat(testable.macroExpansionTarget, equalTo(nil));
@@ -224,7 +224,7 @@
 
   assertThatInteger(testables.count, equalToInteger(1));
   Testable *testable = testables[0];
-  assertThat(testable.arguments, equalTo(@[@"-TestArg", @"TestArgValue", @"-TestArg2", @"\"TestArgValue2\"", @"-TestArg3", @"Test Arg Value 3", @"-TestArg4", @"TestArgValue4"]));
+  assertThat(testable.arguments, equalTo(@[@"-TestArg", @"TestArgValue"]));
   assertThat(testable.environment, equalTo(@{@"TestEnvKey" : @"TestEnvValue"}));
   assertThat(testable.macroExpansionProjectPath, equalTo(nil));
   assertThat(testable.macroExpansionTarget, equalTo(nil));

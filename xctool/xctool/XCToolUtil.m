@@ -450,6 +450,98 @@ NSArray *ArgumentListByOverriding(NSArray *arguments,
   return result;
 }
 
+
+/**
+ Removes simple quotes and replaces escaped quotes with simple quotes.
+ */
+static NSString *StringByReplacingQuotesInArgumentString(NSString *string)
+{
+  NSCParameterAssert(string);
+  NSCParameterAssert(![string hasPrefix:@" "]);
+  NSCParameterAssert(![string hasSuffix:@" "]);
+
+  static NSString *quote = @"\"";
+  static NSString *escapedQuote = @"\\\"";
+  static NSString *escapedQuoteMarker = @"\uE000";  // temporary marker from unicode private-use zone
+  NSCParameterAssert([string rangeOfString:escapedQuoteMarker].location == NSNotFound);
+  string = [string stringByReplacingOccurrencesOfString:escapedQuote withString:escapedQuoteMarker];
+  string = [string stringByReplacingOccurrencesOfString:quote withString:@""];
+  return [string stringByReplacingOccurrencesOfString:escapedQuoteMarker withString:quote];
+}
+
+/**
+ Returns an array of unsigned integer NSNumbers which denote the indexes at which
+ the specified argument string has to be split into separate arguments.
+ It splits at spaces which are not contained within unescaped quotes.
+ */
+static NSArray *IndexesForSplittingArgumentString(NSString *string)
+{
+  NSMutableArray *splitIndexes = [NSMutableArray array];
+  NSUInteger length = string.length;
+  unichar prevChar;
+  BOOL isInsideQuotedArgument = NO;
+  for (NSUInteger index=0; index<length; index++) {
+    unichar iChar = [string characterAtIndex:index];
+    // If we encounter an unescaped quote, we enter or leave
+    // a quoted argument. Quoted arguments are left as a whole
+    // and are not subdivided at spaces.
+    if (iChar == '"' && (index == 0 || prevChar != '\\')) {
+      isInsideQuotedArgument = !isInsideQuotedArgument;
+    }
+    else if (iChar == ' ' && !isInsideQuotedArgument) {
+      [splitIndexes addObject:@(index)];
+    }
+    prevChar = iChar;
+  }
+  return splitIndexes;
+}
+
+
+static void EnumerateArgumentRangesInStringUsingBlock(NSString *string, void (^block)(NSRange iRange))
+{
+  NSCParameterAssert(block);
+
+  NSUInteger length = string.length;
+  NSUInteger prevIndex = 0;
+  for (NSNumber* iSplitIndex in IndexesForSplittingArgumentString(string)) {
+    NSUInteger index = iSplitIndex.unsignedIntegerValue;
+    NSCAssert(index >= prevIndex, nil);
+    NSCAssert(index < string.length, nil);
+    NSRange range = NSMakeRange(prevIndex, index-prevIndex);
+    if (range.length > 0) {
+      block(range);
+    }
+    // skip the separator space as it should not be contained in the parsed argument
+    prevIndex = index+1;
+  }
+  if (prevIndex < length - 1) {
+    block(NSMakeRange(prevIndex, length - prevIndex));
+  }
+}
+
+/**
+ Every line of arguments defined in an Xcode scheme may provide multiple command line arguments
+ which get passed to the testable. This method returns the command line arguments contained in one
+ argument line string. It splits the string into arguments at spaces which are not contained
+ in unescaped quotes
+ It treats quotes and escaped quotes like Xcode does when it runs
+ a test executable. (The escape character is the backslash.)
+ */
+NSArray *ParseArgumentsFromArgumentString(NSString *string)
+{
+  NSCParameterAssert(string);
+
+  NSMutableArray* arguments = [NSMutableArray array];
+  EnumerateArgumentRangesInStringUsingBlock(string, ^(NSRange iRange) {
+    NSString *argumentString = [string substringWithRange:iRange];
+    NSString *argument = StringByReplacingQuotesInArgumentString(argumentString);
+    if (argument.length > 0) {
+      [arguments addObject:argument];
+    }
+  });
+  return arguments;
+}
+
 NSString *TemporaryDirectoryForAction()
 {
   if (__tempDirectoryForAction == nil) {

@@ -555,18 +555,20 @@ containsFilesModifiedSince:(NSDate *)sinceDate
                  error:&error];
   NSAssert(error == nil, @"Failed to get nodes: %@", [error localizedFailureReason]);
 
-  NSMutableArray *arguments = [NSMutableArray array];
-  NSMutableDictionary *environment = [NSMutableDictionary dictionary];
 
+  NSMutableString* combinedArgumentsString = [NSMutableString string];
   for (NSXMLElement *node in commandLineArgumentNodes) {
     NSString *argumentString = [[node attributeForName:@"argument"] stringValue];
     BOOL isEnabled = [[[node attributeForName:@"isEnabled"] stringValue] isEqualToString:@"YES"];
-
     if (isEnabled) {
-      [arguments addObjectsFromArray:[self argumentsFromString:argumentString]];
+      if(combinedArgumentsString.length > 0)
+        [combinedArgumentsString appendString:@" "];
+      [combinedArgumentsString appendString:argumentString];
     }
   }
+  NSArray* arguments = ParseArgumentsFromArgumentString(combinedArgumentsString);
 
+  NSMutableDictionary *environment = [NSMutableDictionary dictionary];
   for (NSXMLElement *node in environmentVariableNodes) {
     NSString *key = [[node attributeForName:@"key"] stringValue];
     NSString *value = [[node attributeForName:@"value"] stringValue];
@@ -619,94 +621,6 @@ containsFilesModifiedSince:(NSDate *)sinceDate
            @"macroExpansionProjectPath" : macroExpansionProjectPath ?: [NSNull null],
            @"macroExpansionTarget" : macroExpansionTarget ?: [NSNull null],
            };
-}
-
-/**
- Every line of arguments defined in an Xcode scheme may provide multiple command line arguments
- which get passed to the testable. This method returns the command line arguments contained in one
- argument line string. It splits the string into arguments at spaces which are not contained
- in unescaped quotes
- It treats quotes and escaped quotes like Xcode does when it runs
- a test executable. (The escape character is the backslash.)
- */
-+ (NSArray*)argumentsFromString:(NSString*)string
-{
-  NSMutableArray* arguments = [NSMutableArray array];
-  [self enumerateArgumentRangesInString:string
-                             usingBlock:^(NSRange iRange)
-   {
-     NSString* argumentString = [string substringWithRange:iRange];
-     NSString* argument = [self stringByReplacingQuotesInArgumentString:argumentString];
-     if(argument.length > 0)
-       [arguments addObject:argument];
-   }];
-  return arguments;
-}
-
-+ (void)enumerateArgumentRangesInString:(NSString*)string
-                             usingBlock:(void (^)(NSRange iRange))block
-{
-  NSParameterAssert(block);
-
-  NSUInteger length = string.length;
-  NSUInteger prevIndex = 0;
-  for(NSNumber* iSplitIndex in [self indexesForSplittingArgumentString:string])
-  {
-    NSUInteger index = iSplitIndex.unsignedIntegerValue;
-    NSAssert(index >= prevIndex, nil);
-    NSAssert(index < string.length, nil);
-    NSRange range = NSMakeRange(prevIndex, index-prevIndex);
-    if(range.length > 0)
-      block(range);
-    // skip the separator space as it should not be contained in the parsed argument
-    prevIndex = index+1;
-  }
-  if(prevIndex < length - 1)
-    block(NSMakeRange(prevIndex, length - prevIndex));
-}
-
-/**
- Trims simple quotes at the and edges and replaces escaped quotes with simple quotes.
- */
-+ (NSString*)stringByReplacingQuotesInArgumentString:(NSString*)string
-{
-  NSParameterAssert(string);
-  NSParameterAssert(![string hasPrefix:@" "]);
-  NSParameterAssert(![string hasSuffix:@" "]);
-
-  static NSString* quote = @"\"";
-  static NSString* escapedQuote = @"\\\"";
-  if([string hasPrefix:quote])
-    string = [string substringFromIndex:1];
-  if([string hasSuffix:quote] && ![string hasSuffix:escapedQuote])
-    string = [string substringToIndex:string.length-1];
-  return [string stringByReplacingOccurrencesOfString:escapedQuote withString:quote];
-}
-
-/**
- Returns an array of unsigned integer NSNumbers which denote the indexes at which
- the specified argument string has to be split into separate arguments.
- It splits at spaces which are not contained within unescaped quotes.
- */
-+ (NSArray*)indexesForSplittingArgumentString:(NSString*)string
-{
-  NSMutableArray* splitIndexes = [NSMutableArray array];
-  NSUInteger length = string.length;
-  unichar prevChar;
-  BOOL isInsideQuotedArgument = NO;
-  for(NSUInteger index=0; index<length; index++)
-  {
-    unichar iChar = [string characterAtIndex:index];
-    // If we encounter an unescaped quote, we enter or leave
-    // a quoted argument. Quoted arguments are left as a whole
-    // and are not subdivided at spaces.
-    if(iChar == '"' && (index == 0 || prevChar != '\\'))
-      isInsideQuotedArgument = !isInsideQuotedArgument;
-    else if(iChar == ' ' && !isInsideQuotedArgument)
-      [splitIndexes addObject:@(index)];
-    prevChar = iChar;
-  }
-  return splitIndexes;
 }
 
 + (NSArray *)testablesInSchemePath:(NSString *)schemePath basePath:(NSString *)basePath
