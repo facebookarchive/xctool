@@ -143,7 +143,7 @@
                containsArray(@[@"-SomeArg",
                                @"SomeVal",
                                ]));
-    assertThat([launchedTasks[0] environment][@"SomeEnvKey"],
+    assertThat([launchedTasks[0] environment][@"SIMSHIM_SomeEnvKey"],
                equalTo(@"SomeEnvValue"));
   }];
 }

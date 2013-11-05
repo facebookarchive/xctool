@@ -20,6 +20,7 @@
 
 #import "NSConcreteTask.h"
 #import "Swizzle.h"
+#import "XCToolUtil.h"
 
 static void readOutputs(NSString **outputs, int *fildes, int sz) {
   struct pollfd fds[sz];
@@ -355,3 +356,37 @@ void LaunchTaskAndMaybeLogCommand(NSTask *task, NSString *description)
 
   [task launch];
 }
+
+NSTask *CreateTaskForSimulatorExecutable(cpu_type_t cpuType,
+                                         NSString *sdkVersion,
+                                         NSString *launchPath,
+                                         NSArray *arguments,
+                                         NSDictionary *environment)
+{
+  NSMutableArray *taskArgs = [NSMutableArray array];
+  [taskArgs addObjectsFromArray:@[[@"--arch=" stringByAppendingString:(cpuType == CPU_TYPE_X86_64) ? @"64" : @"32"],
+                                  [@"--sdk=" stringByAppendingString:sdkVersion],
+                                  @"--environment=merge",
+                                  ]];
+  [taskArgs addObject:launchPath];
+  [taskArgs addObjectsFromArray:arguments];
+
+  NSMutableDictionary *taskEnv = [NSMutableDictionary dictionary];
+  taskEnv[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"sim-shim.dylib"];
+
+  [environment enumerateKeysAndObjectsUsingBlock:^(id key, id val, BOOL *stop){
+    // sim-shim.dylib will look for all vars prefixed with SIMSHIM_ and add them
+    // to the spawned process's environment (with the prefix removed).
+    NSString *newKey = [@"SIMSHIM_" stringByAppendingString:key];
+    taskEnv[newKey] = val;
+  }];
+
+  NSTask *task = CreateTaskInSameProcessGroup();
+
+  [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/usr/bin/sim"]];
+  [task setArguments:taskArgs];
+  [task setEnvironment:taskEnv];
+
+  return task;
+}
+

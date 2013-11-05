@@ -25,15 +25,11 @@
 {
   NSString *version = [_buildSettings[@"SDK_NAME"] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
 
-  NSTask *task = CreateTaskInSameProcessGroup();
-  [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/usr/bin/sim"]];
-  [task setArguments:@[[@"--arch=" stringByAppendingString:([self cpuType] == CPU_TYPE_X86_64) ? @"64" : @"32"],
-                       [@"--sdk=" stringByAppendingString:version],
-                       @"--environment=merge",
-                       [XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-ios"],
-                       [self bundlePath],
-                       ]];
-  return task;
+  return CreateTaskForSimulatorExecutable([self cpuType],
+                                          version,
+                                          [XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-ios"],
+                                          @[[self bundlePath]],
+                                          @{});
 }
 
 @end

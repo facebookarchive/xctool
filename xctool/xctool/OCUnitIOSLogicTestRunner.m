@@ -27,31 +27,23 @@
 {
   NSString *version = [_buildSettings[@"SDK_NAME"] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
 
-  NSTask *task = [CreateTaskInSameProcessGroup() autorelease];
-  [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/usr/bin/sim"]];
+  NSString *launchPath = [NSString stringWithFormat:@"%@/Developer/%@",
+                          _buildSettings[@"SDKROOT"],
+                          _framework[kTestingFrameworkIOSTestrunnerName]];
+  NSArray *args = [[self testArguments] arrayByAddingObject:testBundlePath];
+  NSDictionary *env = [self otestEnvironmentWithOverrides:
+                       @{
+                         @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"],
+                         @"DYLD_FRAMEWORK_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
+                         @"DYLD_LIBRARY_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
+                         @"NSUnbufferedIO" : @"YES",
+                         }];
 
-  NSMutableArray *args = [NSMutableArray array];
-  [args addObjectsFromArray:@[[@"--arch=" stringByAppendingString:([self cpuType] == CPU_TYPE_X86_64) ? @"64" : @"32"],
-                              [@"--sdk=" stringByAppendingString:version],
-                              @"--environment=merge",
-                              [NSString stringWithFormat:@"%@/Developer/%@", _buildSettings[@"SDKROOT"], _framework[kTestingFrameworkIOSTestrunnerName]],
-                              ]];
-  [args addObjectsFromArray:[self testArguments]];
-  [args addObject:testBundlePath];
-  
-  [task setArguments:args];
-  [task setEnvironment:[self otestEnvironmentWithOverrides:
-                        @{
-                          // sim-shim.dylib let's us insert extra environment variables into the launched
-                          // process (via the SIMSHIM_*) vars.
-                          @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"sim-shim.dylib"],
-                          // Insert into the process launched by sim.
-                          @"SIMSHIM_DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"],
-                          @"SIMSHIM_DYLD_FRAMEWORK_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
-                          @"SIMSHIM_DYLD_LIBRARY_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
-                          @"NSUnbufferedIO" : @"YES",
-                          }]];
-  return task;
+  return [CreateTaskForSimulatorExecutable([self cpuType],
+                                           version,
+                                           launchPath,
+                                           args,
+                                           env) autorelease];
 }
 
 - (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock

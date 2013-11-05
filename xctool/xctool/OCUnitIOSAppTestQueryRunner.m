@@ -25,22 +25,14 @@
 {
   NSString *version = [_buildSettings[@"SDK_NAME"] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
 
-  NSTask *task = CreateTaskInSameProcessGroup();
-  [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/usr/bin/sim"]];
-  [task setArguments:@[[@"--arch=" stringByAppendingString:([self cpuType] == CPU_TYPE_X86_64) ? @"64" : @"32"],
-                       [@"--sdk=" stringByAppendingString:version],
-                       @"--environment=merge",
-                       [self testHostPath],
-                       ]];
-  [task setEnvironment:@{// We insert a shim into the 'sim' process so that we can
-                         // add some extra environment variables to otest-query-ios as it's launched.
-                         @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"sim-shim.dylib"],
-                         // sim-sim will launched the spawned process with this value for DYLD_INSERT_LIBRARIES.
-                         @"SIMSHIM_DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"otest-query-ios-dylib.dylib"],
-                         // The test bundle that we want to query from, as loaded by otest-query-ios-dylib.
-                         @"OtestQueryBundlePath" : [self bundlePath],
-                         }];
-  return task;
+  return CreateTaskForSimulatorExecutable([self cpuType],
+                                          version,
+                                          [self testHostPath],
+                                          @[],
+                                          @{@"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"otest-query-ios-dylib.dylib"],
+                                            // The test bundle that we want to query from, as loaded by otest-query-ios-dylib.
+                                            @"OtestQueryBundlePath" : [self bundlePath],
+                                            });
 }
 
 @end
