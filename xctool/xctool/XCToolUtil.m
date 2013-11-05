@@ -249,59 +249,6 @@ NSDictionary *GetAvailableSDKsAndAliases()
   }
 }
 
-NSDictionary *GetSystemVersionPropertiesForSDKVersion(NSString *version)
-{
-  NSArray *pathComponents = @[XcodeDeveloperDirPath(),
-                              @"Platforms/iPhoneSimulator.platform/Developer/SDKs",
-                              [NSString stringWithFormat:@"iPhoneSimulator%@.sdk", version],
-                              @"System/Library/CoreServices/SystemVersion.plist"
-                              ];
-  NSString *path = [NSString pathWithComponents:pathComponents];
-  NSDictionary *sdkProperties = [NSDictionary dictionaryWithContentsOfFile:path];
-
-  if (sdkProperties == nil && IsRunningUnderTest() == NO) {
-    // We are ok to return nil under test.
-    NSCAssert(sdkProperties != nil, @"Unable to find SystemVersion.plist for SDK version: %@", version);
-  }
-
-  return sdkProperties;
-}
-
-// Returns 'UNKNOWN' under tests if we try to access SDK which is not installed.
-NSString *GetSystemVersionPropertyForSDKVersion(NSString *version, NSString *property)
-{
-  NSDictionary *sdkProperties = GetSystemVersionPropertiesForSDKVersion(version);
-
-  NSString *value = nil;
-
-  if (sdkProperties) {
-    value = sdkProperties[property];
-    NSCAssert(value != nil, @"Unable to find %@ in SystemVersion.plist", property);
-  } else if (IsRunningUnderTest()) {
-    // If we're running under test, and a test is trying to get the SDK version
-    // for an SDK that's not installed (e.g. something old like 5.0), then it's
-    // fine to just return a bogus value here.
-    value = @"UNKNOWN";
-  }
-
-  return value;
-}
-
-NSString *GetProductVersionForSDKVersion(NSString *version)
-{
-  return GetSystemVersionPropertyForSDKVersion(version, @"ProductVersion");
-}
-
-NSString *GetIPhoneSimulatorVersionsStringForSDKVersion(NSString *version)
-{
-  NSString *buildVersion = GetSystemVersionPropertyForSDKVersion(version, @"ProductBuildVersion");
-
-  NSString *format = @"iPhone Simulator (external launch) , iPhone OS %@ (unknown/%@)";
-  NSString *simVersion = [NSString stringWithFormat:format, version, buildVersion];
-
-  return simVersion;
-}
-
 BOOL IsRunningUnderTest()
 {
   NSString *processName = [[NSProcessInfo processInfo] processName];

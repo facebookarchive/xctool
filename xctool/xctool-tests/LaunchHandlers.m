@@ -5,6 +5,22 @@
 #import "FakeTaskManager.h"
 #import "TestUtil.h"
 
+BOOL IsOtestTask(NSTask *task)
+{
+  if ([[[task launchPath] lastPathComponent] isEqualToString:@"otest"]) {
+    return YES;
+  } else if ([[[task launchPath] lastPathComponent] isEqualToString:@"sim"]) {
+    // For iOS, launched via the 'sim' wrapper.
+    for (NSString *arg in [task arguments]) {
+      if ([[arg lastPathComponent] isEqualToString:@"otest"]) {
+        return YES;
+      }
+    }
+  }
+
+  return NO;
+}
+
 @implementation LaunchHandlers
 
 + (id)handlerForShowBuildSettingsWithProject:(NSString *)project

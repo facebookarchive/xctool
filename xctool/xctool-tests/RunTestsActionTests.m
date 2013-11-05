@@ -17,6 +17,7 @@
 #import <SenTestingKit/SenTestingKit.h>
 
 #import "Action.h"
+#import "ContainsArray.h"
 #import "FakeTask.h"
 #import "FakeTaskManager.h"
 #import "LaunchHandlers.h"
@@ -222,7 +223,7 @@
                                                        hide:NO],
      [LaunchHandlers handlerForOtestQueryReturningTestList:testList],
      [[^(FakeTask *task){
-      if ([[task launchPath] hasSuffix:@"otest"]) {
+      if (IsOtestTask(task)) {
         // Pretend the tests fail, which should make xctool return an overall
         // status of 1.
         [task pretendExitStatusOf:1];
@@ -261,13 +262,13 @@
                        @"-showBuildSettings",
                        ]));
     assertThat([launchedTasks[1] arguments],
-               equalTo(@[
-                       @"-NSTreatUnknownArgumentsAsOpen", @"NO",
-                       @"-ApplePersistenceIgnoreState", @"YES",
-                       @"-SenTest", @"Self",
-                       @"-SenTestInvertScope", @"NO",
-                       @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
-                       ]));
+               containsArray(@[
+                               @"-NSTreatUnknownArgumentsAsOpen", @"NO",
+                               @"-ApplePersistenceIgnoreState", @"YES",
+                               @"-SenTest", @"Self",
+                               @"-SenTestInvertScope", @"NO",
+                               @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
+                               ]));
     assertThatInt(tool.exitStatus, equalToInt(1));
   }];
 }
@@ -294,7 +295,7 @@
                                                        hide:NO],
      [LaunchHandlers handlerForOtestQueryReturningTestList:testList],
      [[^(FakeTask *task){
-      if ([[task launchPath] hasSuffix:@"otest"]) {
+      if (IsOtestTask(task)) {
         // Pretend the tests fail, which should make xctool return an overall
         // status of 1.
         [task pretendExitStatusOf:1];
@@ -334,16 +335,13 @@
                        @"-showBuildSettings",
                        ]));
     assertThat([launchedTasks[1] arguments],
-               equalTo(@[
-                       @"-NSTreatUnknownArgumentsAsOpen", @"NO",
-                       @"-ApplePersistenceIgnoreState", @"YES",
-                       @"-SenTest", @"Self",
-                       @"-SenTestInvertScope", @"NO",
-                       @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
-                       ]));
-    // Since we're targetting the 5.0, the environment should be different.
-    assertThat([launchedTasks[1] environment][@"DYLD_ROOT_PATH"],
-               equalTo(@"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.0.sdk"));
+               containsArray(@[
+                               @"-NSTreatUnknownArgumentsAsOpen", @"NO",
+                               @"-ApplePersistenceIgnoreState", @"YES",
+                               @"-SenTest", @"Self",
+                               @"-SenTestInvertScope", @"NO",
+                               @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
+                               ]));
     assertThatInt(tool.exitStatus, equalToInt(1));
   }];
 }
@@ -372,7 +370,7 @@
                                                                                                                   hide:NO],
                                                                 [LaunchHandlers handlerForOtestQueryReturningTestList:testList],
                                                                 [[^(FakeTask *task){
-        if ([[task launchPath] hasSuffix:@"otest"]) {
+        if (IsOtestTask(task)) {
           [task pretendTaskReturnsStandardOutput:
            [NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results-notests.txt"
                                      encoding:NSUTF8StringEncoding
@@ -396,13 +394,13 @@
       NSArray *launchedTasks = [[FakeTaskManager sharedManager] launchedTasks];
       assertThatInteger([launchedTasks count], equalToInteger(2));
       assertThat([launchedTasks[1] arguments],
-                 equalTo(@[
-                           @"-NSTreatUnknownArgumentsAsOpen", @"NO",
-                           @"-ApplePersistenceIgnoreState", @"YES",
-                           @"-SenTest", expectedSenTest,
-                           @"-SenTestInvertScope", @"YES",
-                           @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
-                           ]));
+                 containsArray(@[
+                                 @"-NSTreatUnknownArgumentsAsOpen", @"NO",
+                                 @"-ApplePersistenceIgnoreState", @"YES",
+                                 @"-SenTest", expectedSenTest,
+                                 @"-SenTestInvertScope", @"YES",
+                                 @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
+                                 ]));
     }];
   };
 

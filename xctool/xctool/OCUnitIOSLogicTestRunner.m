@@ -23,49 +23,34 @@
 
 @implementation OCUnitIOSLogicTestRunner
 
-- (NSDictionary *)environmentOverrides
-{
-  NSString *version = [_buildSettings[@"SDK_NAME"] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
-  NSString *productVersion = GetProductVersionForSDKVersion(version);
-  NSString *simulatorHome = [NSString stringWithFormat:@"%@/Library/Application Support/iPhone Simulator/%@", NSHomeDirectory(), productVersion];
-  NSString *simVersions = GetIPhoneSimulatorVersionsStringForSDKVersion(version);
-
-  return @{@"CFFIXED_USER_HOME" : simulatorHome,
-           @"HOME" : simulatorHome,
-           @"IPHONE_SHARED_RESOURCES_DIRECTORY" : simulatorHome,
-           @"DYLD_FALLBACK_FRAMEWORK_PATH" : @"/Developer/Library/Frameworks",
-           @"DYLD_FRAMEWORK_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
-           @"DYLD_LIBRARY_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
-           @"DYLD_ROOT_PATH" : _buildSettings[@"SDKROOT"],
-           @"IPHONE_SIMULATOR_ROOT" : _buildSettings[@"SDKROOT"],
-           @"IPHONE_SIMULATOR_VERSIONS" : simVersions,
-           @"NSUnbufferedIO" : @"YES"};
-}
-
 - (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath
 {
-  // As of the Xcode 5 GM, the iPhoneSimulator version of 'otest' is now a
-  // universal binary. By default, the x86_64 version will be run. That's a
-  // problem because *most* .octest / .xctest bundles are 32-bit only.
-  //
-  // The only time we should run for 64-bit is when the test is built for
-  // the iPhone (4-inch 64-bit) simulator. (Also, this is limited to iOS 7.)
-  //
-  // When a `-destination` is supplied with the 'name' key set, xctool parses
-  // through the argument to figure out which simulator is being targetted.
-  // From there, it looks at certain plists in the system to determine the arch
-  // for the simulator being targetted. Here, we just have to use the already-
-  // populated architecture value and create the correct NSTask.
-  if ([self cpuType] == CPU_TYPE_ANY) {
-    [self setCpuType:CPU_TYPE_I386];
-  }
-  NSConcreteTask *task = (NSConcreteTask *)[CreateTaskInSameProcessGroupWithArch([self cpuType]) autorelease];
+  NSString *version = [_buildSettings[@"SDK_NAME"] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
 
-  [task setLaunchPath:[NSString stringWithFormat:@"%@/Developer/%@", _buildSettings[@"SDKROOT"], _framework[kTestingFrameworkIOSTestrunnerName]]];
-  [task setArguments:[[self testArguments] arrayByAddingObject:testBundlePath]];
-  NSMutableDictionary *env = [[self.environmentOverrides mutableCopy] autorelease];
-  env[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"];
-  [task setEnvironment:[self otestEnvironmentWithOverrides:env]];
+  NSTask *task = [CreateTaskInSameProcessGroup() autorelease];
+  [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/usr/bin/sim"]];
+
+  NSMutableArray *args = [NSMutableArray array];
+  [args addObjectsFromArray:@[[@"--arch=" stringByAppendingString:([self cpuType] == CPU_TYPE_X86_64) ? @"64" : @"32"],
+                              [@"--sdk=" stringByAppendingString:version],
+                              @"--environment=merge",
+                              [NSString stringWithFormat:@"%@/Developer/%@", _buildSettings[@"SDKROOT"], _framework[kTestingFrameworkIOSTestrunnerName]],
+                              ]];
+  [args addObjectsFromArray:[self testArguments]];
+  [args addObject:testBundlePath];
+  
+  [task setArguments:args];
+  [task setEnvironment:[self otestEnvironmentWithOverrides:
+                        @{
+                          // sim-shim.dylib let's us insert extra environment variables into the launched
+                          // process (via the SIMSHIM_*) vars.
+                          @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"sim-shim.dylib"],
+                          // Insert into the process launched by sim.
+                          @"SIMSHIM_DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"],
+                          @"SIMSHIM_DYLD_FRAMEWORK_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
+                          @"SIMSHIM_DYLD_LIBRARY_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
+                          @"NSUnbufferedIO" : @"YES",
+                          }]];
   return task;
 }
 
@@ -87,6 +72,12 @@
   if (bundleExists) {
     @autoreleasepool {
       NSTask *task = [self otestTaskWithTestBundle:testBundlePath];
+
+      // Don't let STDERR pass through.  This silences the warning message that
+      // comes from the 'sim' launcher when the iOS Simulator isn't running:
+      // "Simulator does not seem to be running, or may be running an old SDK."
+      [task setStandardError:[NSFileHandle fileHandleWithNullDevice]];
+
       LaunchTaskAndFeedOuputLinesToBlock(task,
                                          @"running otest/xctest on test bundle",
                                          outputLineBlock);
