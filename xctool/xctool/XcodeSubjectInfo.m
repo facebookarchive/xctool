@@ -555,14 +555,14 @@ containsFilesModifiedSince:(NSDate *)sinceDate
                  error:&error];
   NSAssert(error == nil, @"Failed to get nodes: %@", [error localizedFailureReason]);
 
-
   NSMutableString* combinedArgumentsString = [NSMutableString string];
   for (NSXMLElement *node in commandLineArgumentNodes) {
     NSString *argumentString = [[node attributeForName:@"argument"] stringValue];
     BOOL isEnabled = [[[node attributeForName:@"isEnabled"] stringValue] isEqualToString:@"YES"];
     if (isEnabled) {
-      if(combinedArgumentsString.length > 0)
+      if (combinedArgumentsString.length > 0) {
         [combinedArgumentsString appendString:@" "];
+      }
       [combinedArgumentsString appendString:argumentString];
     }
   }
