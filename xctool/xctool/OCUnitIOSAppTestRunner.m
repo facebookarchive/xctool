@@ -353,7 +353,7 @@ static void KillSimulatorJobs()
                              @"fresh simulator.");
     }
 
-    if (YES || _freshInstall) {
+    if (_freshInstall) {
       if (![self uninstallTestHostBundleID:testHostBundleID withError:error]) {
         return NO;
       }
