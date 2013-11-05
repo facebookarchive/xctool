@@ -86,5 +86,32 @@
   // don't have installed.
   assertThat(GetIPhoneSimulatorVersionsStringForSDKVersion(@"2.0"), equalTo(@"iPhone Simulator (external launch) , iPhone OS 2.0 (unknown/UNKNOWN)"));
 }
-  
+
+- (void)testParseArgumentsFromArgumentString
+{
+  assertThat(ParseArgumentsFromArgumentString(@""), equalTo(@[]));
+  assertThat(ParseArgumentsFromArgumentString(@"Arg"), equalTo(@[@"Arg"]));
+  assertThat(ParseArgumentsFromArgumentString(@"Arg1 Arg2"), equalTo(@[@"Arg1", @"Arg2"]));
+  assertThat(ParseArgumentsFromArgumentString(@"\"Arg1\" Arg2"), equalTo(@[@"Arg1", @"Arg2"]));
+  assertThat(ParseArgumentsFromArgumentString(@"\"Arg1\"     Arg2"), equalTo(@[@"Arg1", @"Arg2"]));
+  assertThat(ParseArgumentsFromArgumentString(@"Arg1 \"Arg 2\""), equalTo(@[@"Arg1", @"Arg 2"]));
+  assertThat(ParseArgumentsFromArgumentString(@"Arg1 \"Arg 2\" Arg3"), equalTo(@[@"Arg1", @"Arg 2", @"Arg3"]));
+  assertThat(ParseArgumentsFromArgumentString(@"Arg1 \\\"Arg 2\\\""), equalTo(@[@"Arg1", @"\"Arg", @"2\""]));
+  assertThat(ParseArgumentsFromArgumentString(@"\"Arg\""), equalTo(@[@"Arg"]));
+  assertThat(ParseArgumentsFromArgumentString(@"\"Arg"), equalTo(@[@"Arg"]));
+  assertThat(ParseArgumentsFromArgumentString(@"Arg\""), equalTo(@[@"Arg"]));
+  assertThat(ParseArgumentsFromArgumentString(@"Arg\"\""), equalTo(@[@"Arg"]));
+  assertThat(ParseArgumentsFromArgumentString(@"\"Arg"), equalTo(@[@"Arg"]));
+  assertThat(ParseArgumentsFromArgumentString(@"Arg1 \"Arg2"), equalTo(@[@"Arg1", @"Arg2"]));
+  assertThat(ParseArgumentsFromArgumentString(@"\"\"Arg"), equalTo(@[@"Arg"]));
+  assertThat(ParseArgumentsFromArgumentString(@"\\\\Arg"), equalTo(@[@"\\Arg"]));
+  assertThat(ParseArgumentsFromArgumentString(@"'Arg'"), equalTo(@[@"Arg"]));
+  assertThat(ParseArgumentsFromArgumentString(@"'Arg"), equalTo(@[@"Arg"]));
+  assertThat(ParseArgumentsFromArgumentString(@"Arg'"), equalTo(@[@"Arg"]));
+  assertThat(ParseArgumentsFromArgumentString(@"'Arg1' Arg2"), equalTo(@[@"Arg1", @"Arg2"]));
+  assertThat(ParseArgumentsFromArgumentString(@"'Arg1' Arg2"), equalTo(@[@"Arg1", @"Arg2"]));
+  assertThat(ParseArgumentsFromArgumentString(@"'\"Arg\"'"), equalTo(@[@"\"Arg\""]));
+  assertThat(ParseArgumentsFromArgumentString(@"\"'Arg'\""), equalTo(@[@"'Arg'"]));
+  assertThat(ParseArgumentsFromArgumentString(@"Arg1 \\'Arg 2\\'"), equalTo(@[@"Arg1", @"'Arg", @"2'"]));
+}
 @end
