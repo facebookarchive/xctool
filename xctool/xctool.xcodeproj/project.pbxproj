@@ -68,6 +68,7 @@
 		28BB043E17C7FF43004F6C13 /* Buildable.m in Sources */ = {isa = PBXBuildFile; fileRef = 28BB043C17C7FF43004F6C13 /* Buildable.m */; };
 		28BB33011811B61A006F699B /* ContainsArray.m in Sources */ = {isa = PBXBuildFile; fileRef = 28BB33001811B61A006F699B /* ContainsArray.m */; };
 		28C81A63175562050072DDB8 /* ReportStatusTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28C81A62175562050072DDB8 /* ReportStatusTests.m */; };
+		28D9C5B11828D5CA0032FEA8 /* ContainsException.m in Sources */ = {isa = PBXBuildFile; fileRef = 28D9C5B01828D5CA0032FEA8 /* ContainsException.m */; };
 		28E28FB81796926A0072376C /* ReportStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E28FB71796926A0072376C /* ReportStatus.m */; };
 		28E28FB91796934B0072376C /* ReportStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E28FB71796926A0072376C /* ReportStatus.m */; };
 		28E28FBC1797099E0072376C /* ReporterTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E28FBB1797099E0072376C /* ReporterTask.m */; };
@@ -243,6 +244,7 @@
 		28BB32FF1811B61A006F699B /* ContainsArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainsArray.h; sourceTree = "<group>"; };
 		28BB33001811B61A006F699B /* ContainsArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContainsArray.m; sourceTree = "<group>"; };
 		28C81A62175562050072DDB8 /* ReportStatusTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReportStatusTests.m; sourceTree = "<group>"; };
+		28D9C5B01828D5CA0032FEA8 /* ContainsException.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContainsException.m; sourceTree = "<group>"; };
 		28E28FB217968EAC0072376C /* ReporterEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReporterEvents.h; sourceTree = "<group>"; };
 		28E28FB61796926A0072376C /* ReportStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReportStatus.h; sourceTree = "<group>"; };
 		28E28FB71796926A0072376C /* ReportStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReportStatus.m; sourceTree = "<group>"; };
@@ -276,9 +278,9 @@
 		32707EE31725FE9500AF2F53 /* TestActionInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestActionInternal.h; sourceTree = "<group>"; };
 		32A90C521725F05800C2349E /* TestAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestAction.m; sourceTree = "<group>"; };
 		32A90C531725F05800C2349E /* TestAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestAction.h; sourceTree = "<group>"; };
-		AA194FD118091AE700F56AFC /* ContainsException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainsException.h; sourceTree = "<group>"; };
 		3892D73F1811A5CC00E68652 /* EventGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventGenerator.h; sourceTree = "<group>"; };
 		3892D7401811A5CC00E68652 /* EventGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventGenerator.m; sourceTree = "<group>"; };
+		AA194FD118091AE700F56AFC /* ContainsException.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainsException.h; sourceTree = "<group>"; };
 		AA318BEC17E9B7CA00BF159E /* XCTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XCTest.h; sourceTree = "<group>"; };
 		AA318BED17E9BA3500BF159E /* TestingFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestingFramework.h; sourceTree = "<group>"; };
 		AA318BEE17E9BA3500BF159E /* TestingFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestingFramework.m; sourceTree = "<group>"; };
@@ -529,6 +531,7 @@
 				283CCACC16C2EE9900F2E343 /* XCToolTests.m */,
 				AA6C88F61808C2C5006A3581 /* OTestShimTests.m */,
 				AA194FD118091AE700F56AFC /* ContainsException.h */,
+				28D9C5B01828D5CA0032FEA8 /* ContainsException.m */,
 				28BB32FF1811B61A006F699B /* ContainsArray.h */,
 				28BB33001811B61A006F699B /* ContainsArray.m */,
 			);
@@ -795,6 +798,7 @@
 				32707EE21725FE7F00AF2F53 /* TestActionTests.m in Sources */,
 				2864A3FB1734E52800BBF3B1 /* Version.m in Sources */,
 				C9D5B98A1733CC2500011C1F /* ArchiveAction.m in Sources */,
+				28D9C5B11828D5CA0032FEA8 /* ContainsException.m in Sources */,
 				28897FBD173E4C74004BA024 /* FakeTaskManagerTests.m in Sources */,
 				28897FD0173E6215004BA024 /* Swizzle.m in Sources */,
 				288980601742B675004BA024 /* FakeTaskManager.m in Sources */,
