@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#import "ContainsException.h"
+#import "ContainsAssertionFailure.h"
 
 @implementation ContainsAssertionFailure
 

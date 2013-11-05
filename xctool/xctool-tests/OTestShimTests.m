@@ -16,7 +16,7 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
-#import "ContainsException.h"
+#import "ContainsAssertionFailure.h"
 #import "OCUnitIOSLogicTestRunner.h"
 #import "OCUnitIOSLogicTestQueryRunner.h"
 #import "ReporterEvents.h"
