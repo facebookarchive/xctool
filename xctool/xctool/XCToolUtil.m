@@ -450,75 +450,6 @@ NSArray *ArgumentListByOverriding(NSArray *arguments,
   return result;
 }
 
-
-/**
- Removes simple quotes and replaces escaped quotes with simple quotes.
- */
-static NSString *StringByReplacingQuotesInArgumentString(NSString *string)
-{
-  NSCParameterAssert(string);
-  NSCParameterAssert(![string hasPrefix:@" "]);
-  NSCParameterAssert(![string hasSuffix:@" "]);
-
-  static NSString *quote = @"\"";
-  static NSString *escapedQuote = @"\\\"";
-  static NSString *escapedQuoteMarker = @"\uE000";  // temporary marker from unicode private-use zone
-  NSCParameterAssert([string rangeOfString:escapedQuoteMarker].location == NSNotFound);
-  string = [string stringByReplacingOccurrencesOfString:escapedQuote withString:escapedQuoteMarker];
-  string = [string stringByReplacingOccurrencesOfString:quote withString:@""];
-  return [string stringByReplacingOccurrencesOfString:escapedQuoteMarker withString:quote];
-}
-
-/**
- Returns an array of unsigned integer NSNumbers which denote the indexes at which
- the specified argument string has to be split into separate arguments.
- It splits at spaces which are not contained within unescaped quotes.
- */
-static NSArray *IndexesForSplittingArgumentString(NSString *string)
-{
-  NSMutableArray *splitIndexes = [NSMutableArray array];
-  NSUInteger length = string.length;
-  unichar prevChar;
-  BOOL isInsideQuotedArgument = NO;
-  for (NSUInteger index=0; index<length; index++) {
-    unichar iChar = [string characterAtIndex:index];
-    // If we encounter an unescaped quote, we enter or leave
-    // a quoted argument. Quoted arguments are left as a whole
-    // and are not subdivided at spaces.
-    if (iChar == '"' && (index == 0 || prevChar != '\\')) {
-      isInsideQuotedArgument = !isInsideQuotedArgument;
-    }
-    else if (iChar == ' ' && !isInsideQuotedArgument) {
-      [splitIndexes addObject:@(index)];
-    }
-    prevChar = iChar;
-  }
-  return splitIndexes;
-}
-
-
-static void EnumerateArgumentRangesInStringUsingBlock(NSString *string, void (^block)(NSRange iRange))
-{
-  NSCParameterAssert(block);
-
-  NSUInteger length = string.length;
-  NSUInteger prevIndex = 0;
-  for (NSNumber* iSplitIndex in IndexesForSplittingArgumentString(string)) {
-    NSUInteger index = iSplitIndex.unsignedIntegerValue;
-    NSCAssert(index >= prevIndex, nil);
-    NSCAssert(index < string.length, nil);
-    NSRange range = NSMakeRange(prevIndex, index-prevIndex);
-    if (range.length > 0) {
-      block(range);
-    }
-    // skip the separator space as it should not be contained in the parsed argument
-    prevIndex = index+1;
-  }
-  if (prevIndex < length - 1) {
-    block(NSMakeRange(prevIndex, length - prevIndex));
-  }
-}
-
 /**
  Every line of arguments defined in an Xcode scheme may provide multiple command line arguments
  which get passed to the testable. This method returns the command line arguments contained in one
@@ -531,14 +462,73 @@ NSArray *ParseArgumentsFromArgumentString(NSString *string)
 {
   NSCParameterAssert(string);
 
-  NSMutableArray* arguments = [NSMutableArray array];
-  EnumerateArgumentRangesInStringUsingBlock(string, ^(NSRange iRange) {
-    NSString *argumentString = [string substringWithRange:iRange];
-    NSString *argument = StringByReplacingQuotesInArgumentString(argumentString);
-    if (argument.length > 0) {
-      [arguments addObject:argument];
+  enum ParsingState {
+    OutsideOfArgument,
+    InsideArgument,
+    BetweenQuotes,
+  };
+
+  enum ParsingState state = OutsideOfArgument;
+  NSUInteger escapeIndex = NSNotFound;  // points to the index following the last single backslash
+  unichar openingQuoteCharacter;
+
+  NSMutableArray *arguments = [NSMutableArray array];
+  NSMutableString *currentArgument = nil;
+  NSUInteger length = string.length;
+  for (NSUInteger index = 0; index < length; index++) {
+    unichar iChar = [string characterAtIndex:index];
+
+    if(iChar == '\\') {
+      if(escapeIndex == index) {
+        escapeIndex = NSNotFound;
+      } else {
+        escapeIndex = index + 1;
+        continue;
+      }
     }
-  });
+
+    if(iChar == ' ') {
+      if(state == OutsideOfArgument) {
+        continue;
+      } else if(state == InsideArgument) {
+        state = OutsideOfArgument;
+      }
+    }
+    else if((iChar == '\'' || iChar == '"') && (index != escapeIndex)) {
+      if(state == BetweenQuotes) {
+        if(iChar == openingQuoteCharacter) {
+          state = InsideArgument;
+          continue;
+        }
+      } else {
+        openingQuoteCharacter = iChar;
+        state = BetweenQuotes;
+        continue;
+      }
+    }
+    else if(state == OutsideOfArgument) {
+      state = InsideArgument;
+    }
+
+    if(state == OutsideOfArgument) {
+      if(currentArgument.length > 0) {
+        [arguments addObject:currentArgument];
+        currentArgument = nil;
+      }
+    } else {
+      if(!currentArgument) {
+        currentArgument = [NSMutableString string];
+      }
+      // As of Mac OS 10.9/iOS 7.0 there still is no Objective-C method for appending single
+      // characters to strings therefore we have to fall back to using a CF function.
+      CFStringAppendCharacters((CFMutableStringRef)currentArgument, &iChar, 1);
+    }
+  }
+
+  if(currentArgument.length > 0) {
+    [arguments addObject:currentArgument];
+  }
+
   return arguments;
 }
 
