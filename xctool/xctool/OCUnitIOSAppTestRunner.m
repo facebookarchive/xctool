@@ -309,7 +309,7 @@ static void KillSimulatorJobs()
 }
 
 - (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
-                       gotError:(BOOL *)gotError
+       testsNotStartedOrErrored:(BOOL *)testsNotStartedOrErrored
                           error:(NSString **)error
 {
   NSString *sdkName = _buildSettings[@"SDK_NAME"];
@@ -323,7 +323,7 @@ static void KillSimulatorJobs()
   if (![[NSFileManager defaultManager] isExecutableFileAtPath:testHostPath]) {
     ReportStatusMessage(_reporters, REPORTER_MESSAGE_ERROR,
                         @"Your TEST_HOST '%@' does not appear to be an executable.", testHostPath);
-    *gotError = YES;
+    *testsNotStartedOrErrored = YES;
     *error = @"Tests did not run. TEST_HOST not executable.";
     return NO;
   }
@@ -332,7 +332,7 @@ static void KillSimulatorJobs()
   if (!testHostInfoPlist) {
     ReportStatusMessage(_reporters, REPORTER_MESSAGE_ERROR,
                         @"Info.plist for TEST_HOST missing or malformatted.");
-    *gotError = YES;
+    *testsNotStartedOrErrored = YES;
     *error = @"Tests did not run. Bad Info.plist for TEST_HOST";
     return NO;
   }
@@ -401,7 +401,7 @@ static void KillSimulatorJobs()
         ReportStatusMessage(_reporters,
                             REPORTER_MESSAGE_INFO,
                             @"Preparing test environment failed.");
-        *gotError = YES;
+        *testsNotStartedOrErrored = YES;
         return NO;
       }
     }
@@ -418,7 +418,7 @@ static void KillSimulatorJobs()
              testsSucceeded:&testsSucceeded
              infraSucceeded:&infraSucceeded];
 
-  *gotError = !infraSucceeded;
+  *testsNotStartedOrErrored = !infraSucceeded;
   
   if (!infraSucceeded) {
     *error = @"Tests did not run. The simulator failed to start, or the TEST_HOST application failed to run.";

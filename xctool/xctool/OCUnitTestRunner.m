@@ -112,7 +112,7 @@
 }
 
 - (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
-                       gotError:(BOOL *)gotError
+       testsNotStartedOrErrored:(BOOL *)testsNotStartedOrErrored
                           error:(NSString **)error
 {
   // Subclasses will override this method.
@@ -134,12 +134,12 @@
   };
 
   NSString *runTestsError = nil;
-  BOOL gotError = NO;
+  BOOL testsNotStartedOrErrored = NO;
 
   [_testRunnerState prepareToRun];
 
   BOOL succeeded = [self runTestsAndFeedOutputTo:feedOutputToBlock
-                               gotError:&gotError
+                        testsNotStartedOrErrored:&testsNotStartedOrErrored
                                            error:&runTestsError];
   if (runTestsError) {
     *error = runTestsError;
@@ -165,7 +165,7 @@
     succeeded = YES;
   }
 
-  [_testRunnerState finishedRun:gotError error:*error];
+  [_testRunnerState finishedRun:testsNotStartedOrErrored error:*error];
 
   return succeeded;
 }

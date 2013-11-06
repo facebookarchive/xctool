@@ -20,7 +20,7 @@
 @implementation OCUnitIOSDeviceTestRunner
 
 - (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
-                       gotError:(BOOL *)gotError
+       testsNotStartedOrErrored:(BOOL *)testsNotStartedOrErrored
                           error:(NSString **)error
 {
   // Just a place holder.  The plumbing for 'run-tests' expects each SDK to have

@@ -26,7 +26,7 @@
 @implementation OCUnitOSXAppTestRunner
 
 - (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
-                       gotError:(BOOL *)gotError
+       testsNotStartedOrErrored:(BOOL *)testsNotStartedOrErrored
                           error:(NSString **)error
 {
   NSString *sdkName = _buildSettings[@"SDK_NAME"];
@@ -70,7 +70,7 @@
                                      @"running otest/xctest on test bundle",
                                      outputLineBlock);
 
-  *gotError = task.terminationReason == NSTaskTerminationReasonUncaughtSignal;
+  *testsNotStartedOrErrored = task.terminationReason == NSTaskTerminationReasonUncaughtSignal;
   int terminationStatus = task.terminationStatus;
   [task release];
   return terminationStatus == 0;
