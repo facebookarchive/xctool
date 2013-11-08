@@ -138,7 +138,7 @@
     } else {
       *error = [NSString stringWithFormat:@"Error while parsing JSON: %@: %@",
                 [parseError localizedFailureReason],
-                jsonOutput];
+                output];
       return nil;
     }
   }
