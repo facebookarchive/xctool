@@ -166,6 +166,50 @@
                               ]));
 }
 
+- (void)testCanQueryTestCasesForIOSKiwiBundle_XCTest_AppTests
+{
+  if (!HasXCTestFramework()) {
+    return;
+  }
+
+  NSString *error = nil;
+  NSDictionary *buildSettings = @{
+                                  kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"KiwiTests/Build/Products/Debug-iphonesimulator"),
+                                  kFullProductName : @"KiwiTests-XCTest-AppTests.xctest",
+                                  kSdkName : GetAvailableSDKsAndAliases()[@"iphonesimulator"],
+                                  kTestHost : AbsolutePathFromRelative(TEST_DATA @"KiwiTests/Build/Products/Debug-iphonesimulator/KiwiTests-TestHost.app/KiwiTests-TestHost"),
+                                  };
+  OCUnitTestQueryRunner *runner = [[[OCUnitIOSAppTestQueryRunner alloc] initWithBuildSettings:buildSettings
+                                                                                  withCpuType:CPU_TYPE_ANY] autorelease];
+  NSArray *cases = [runner runQueryWithError:&error];
+  assertThat(cases, equalTo(@[
+                              @"KiwiTests_XCTest_AppTests/SomeDescription_ADuplicateName",
+                              @"KiwiTests_XCTest_AppTests/SomeDescription_ADuplicateName_2",
+                              @"KiwiTests_XCTest_AppTests/SomeDescription_ItAnotherthing",
+                              @"KiwiTests_XCTest_AppTests/SomeDescription_ItSomething",
+                              ]));
+}
+
+- (void)testCanQueryTestCasesForIOSKiwiBundle_OCUnit_AppTests
+{
+  NSString *error = nil;
+  NSDictionary *buildSettings = @{
+                                  kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"KiwiTests/Build/Products/Debug-iphonesimulator"),
+                                  kFullProductName : @"KiwiTests-OCUnit-AppTests.octest",
+                                  kSdkName : GetAvailableSDKsAndAliases()[@"iphonesimulator"],
+                                  kTestHost : AbsolutePathFromRelative(TEST_DATA @"KiwiTests/Build/Products/Debug-iphonesimulator/KiwiTests-TestHost.app/KiwiTests-TestHost"),
+                                  };
+  OCUnitTestQueryRunner *runner = [[[OCUnitIOSAppTestQueryRunner alloc] initWithBuildSettings:buildSettings
+                                                                                  withCpuType:CPU_TYPE_ANY] autorelease];
+  NSArray *cases = [runner runQueryWithError:&error];
+  assertThat(cases, equalTo(@[
+                              @"KiwiTests_OCUnit_AppTests/SomeDescription_ADuplicateName",
+                              @"KiwiTests_OCUnit_AppTests/SomeDescription_ADuplicateName_2",
+                              @"KiwiTests_OCUnit_AppTests/SomeDescription_ItAnotherthing",
+                              @"KiwiTests_OCUnit_AppTests/SomeDescription_ItSomething",
+                              ]));
+}
+
 - (void)testQueryFailsWhenDYLDRejectsBundle_OSX
 {
   NSString *error = nil;

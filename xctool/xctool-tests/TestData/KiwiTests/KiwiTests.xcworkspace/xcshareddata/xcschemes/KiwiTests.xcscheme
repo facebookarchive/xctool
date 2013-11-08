@@ -3,7 +3,7 @@
    LastUpgradeVersion = "0500"
    version = "1.3">
    <BuildAction
-      parallelizeBuildables = "YES"
+      parallelizeBuildables = "NO"
       buildImplicitDependencies = "YES">
       <BuildActionEntries>
          <BuildActionEntry
@@ -34,11 +34,53 @@
                ReferencedContainer = "container:KiwiTests.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "289AAB2C182D93C400EA47C4"
+               BuildableName = "KiwiTests-XCTest-AppTests.xctest"
+               BlueprintName = "KiwiTests-XCTest-AppTests"
+               ReferencedContainer = "container:KiwiTests.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "289AAB42182D99D100EA47C4"
+               BuildableName = "KiwiTests-OCUnit-AppTests.octest"
+               BlueprintName = "KiwiTests-OCUnit-AppTests"
+               ReferencedContainer = "container:KiwiTests.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "289AAAFD182D93A400EA47C4"
+               BuildableName = "KiwiTests-TestHost.app"
+               BlueprintName = "KiwiTests-TestHost"
+               ReferencedContainer = "container:KiwiTests.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
-      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
-      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      selectedDebuggerIdentifier = ""
+      selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
       <Testables>
@@ -59,6 +101,26 @@
                BlueprintIdentifier = "2887CC15181DBA4B00B0D049"
                BuildableName = "KiwiTests-OCUnit.octest"
                BlueprintName = "KiwiTests-OCUnit"
+               ReferencedContainer = "container:KiwiTests.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "289AAB2C182D93C400EA47C4"
+               BuildableName = "KiwiTests-XCTest-AppTests.xctest"
+               BlueprintName = "KiwiTests-XCTest-AppTests"
+               ReferencedContainer = "container:KiwiTests.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "289AAB42182D99D100EA47C4"
+               BuildableName = "KiwiTests-OCUnit-AppTests.octest"
+               BlueprintName = "KiwiTests-OCUnit-AppTests"
                ReferencedContainer = "container:KiwiTests.xcodeproj">
             </BuildableReference>
          </TestableReference>

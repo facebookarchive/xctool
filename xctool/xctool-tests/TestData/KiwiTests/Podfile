@@ -7,6 +7,14 @@ target 'KiwiTests-XCTest', :exclusive => true do
     pod 'Kiwi/XCTest'
 end
 
+target 'KiwiTests-XCTest-AppTests', :exclusive => true do
+    pod 'Kiwi/XCTest'
+end
+
 target 'KiwiTests-OCUnit', :exclusive => true do
+    pod 'Kiwi'
+end
+
+target 'KiwiTests-OCUnit-AppTests', :exclusive => true do
     pod 'Kiwi'
 end
