@@ -45,11 +45,13 @@
 
 - (void)beginTestSuite
 {
+  NSAssert(!_isStarted, @"Test should not have started yet.");
   _isStarted = true;
 }
 
 - (void)endTestSuite
 {
+  NSAssert(_isStarted, @"Test must have already started.");
   _isFinished = true;
 }
 

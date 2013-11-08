@@ -74,6 +74,7 @@
 
 - (void)stateBeginTest
 {
+  NSAssert(!_isStarted, @"Test should not have started yet.");
   _isStarted = true;
   _beginTime = CACurrentMediaTime();
 }
@@ -93,6 +94,7 @@
 
 - (void)stateTestOutput:(NSString *)output
 {
+  NSAssert([self isRunning], @"Test is running.");
   [_outputAlreadyPublished appendString:output];
 }
 
