@@ -23,11 +23,13 @@
 
 - (NSTask *)createTaskForQuery
 {
-  NSTask *task = CreateTaskInSameProcessGroupWithArch([self cpuType]);
-  [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-ios"]];
-  [task setEnvironment:[self envForQueryInIOSBundleWithAdditionalEnv:nil]];
-  [task setArguments:@[ [self bundlePath] ]];
-  return task;
+  NSString *version = [_buildSettings[@"SDK_NAME"] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
+
+  return CreateTaskForSimulatorExecutable([self cpuType],
+                                          version,
+                                          [XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-ios"],
+                                          @[[self bundlePath]],
+                                          @{});
 }
 
 @end

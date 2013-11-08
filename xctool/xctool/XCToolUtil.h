@@ -20,25 +20,22 @@ NSDictionary *BuildSettingsFromOutput(NSString *output);
 NSString *XCToolLibPath(void);
 NSString *XCToolLibExecPath(void);
 NSString *XCToolReportersPath(void);
+
+/**
+ Returns the path to XCODE_APP/Contents/Developer, as returned by
+ xcode-select --print-path.
+ */
 NSString *XcodeDeveloperDirPath(void);
+
+/**
+ Like XcodeDeveloperDirPath(), but can optionally force a concrete task to
+ be used.  This is useful if FakeTaskManager is active and swizzling
+ all NSTasks.
+ */
+NSString *XcodeDeveloperDirPathViaForcedConcreteTask(BOOL forceConcreteTask);
+
 NSString *MakeTempFileWithPrefix(NSString *prefix);
 NSDictionary *GetAvailableSDKsAndAliases();
-
-/**
- Returns a Product version string for the given SDK version
- 
- @param version An SDK version (eg 7.0)
- @return string A product version string (e.g. 7.0.3)
- */
-NSString *GetProductVersionForSDKVersion(NSString *version);
-
-/**
- Returns an SDK version string for the given SDK version
-
- @param version An SDK version (eg 7.0)
- @return string A version string suitable for IPHONE_SIMULATOR_VERSIONS
- */
-NSString *GetIPhoneSimulatorVersionsStringForSDKVersion(NSString *version);
 
 BOOL IsRunningUnderTest();
 
@@ -129,3 +126,9 @@ NSString *AbsoluteExecutablePath();
  * Returns the contents of `/etc/paths` in the form of `path1:path2:path3`.
  */
 NSString *SystemPaths();
+
+/**
+ * Creates a temporary directory under NSTemporaryDirectory() using mkdtemp,
+ * and returns the path.
+ */
+NSString *MakeTemporaryDirectory(NSString *nameTemplate);

@@ -106,16 +106,11 @@
   NSAssert(fcntl([[_pipe fileHandleForWriting] fileDescriptor], F_SETNOSIGPIPE, 1) != -1,
            @"fcntl() failed: %s", strerror(errno));
 
-  if (IsRunningUnderTest()) {
-    // Make sure we get a REAL task when running under test!  If FakeTaskManager
-    // is enabled, then we'd normally get a `FakeTask` instance when we call
-    // `+[NSTask alloc]`.
-    _task = [objc_msgSend([NSTask class],
-                          @selector(__NSTask_allocWithZone:),
-                          NSDefaultMallocZone()) init];
-  } else {
-    _task = CreateTaskInSameProcessGroup();
-  }
+
+  // Make sure we get a REAL task when running under test!  If FakeTaskManager
+  // is enabled, then we'd normally get a `FakeTask` instance when we call
+  // `+[NSTask alloc]`.
+  _task = CreateConcreteTaskInSameProcessGroup();
 
   [_task setLaunchPath:_reporterPath];
   [_task setArguments:@[]];

@@ -5,6 +5,22 @@
 #import "FakeTaskManager.h"
 #import "TestUtil.h"
 
+BOOL IsOtestTask(NSTask *task)
+{
+  if ([[[task launchPath] lastPathComponent] isEqualToString:@"otest"]) {
+    return YES;
+  } else if ([[[task launchPath] lastPathComponent] isEqualToString:@"sim"]) {
+    // For iOS, launched via the 'sim' wrapper.
+    for (NSString *arg in [task arguments]) {
+      if ([[arg lastPathComponent] isEqualToString:@"otest"]) {
+        return YES;
+      }
+    }
+  }
+
+  return NO;
+}
+
 @implementation LaunchHandlers
 
 + (id)handlerForShowBuildSettingsWithProject:(NSString *)project
@@ -158,8 +174,15 @@
 
     BOOL isOtestQuery = NO;
 
-    if ([[task launchPath] hasSuffix:@"otest-query-osx"] ||
-        [[task launchPath] hasSuffix:@"otest-query-ios"]) {
+    if ([[task launchPath] hasSuffix:@"usr/bin/sim"]) {
+      // iOS tests get queried through the 'sim' launcher.
+      for (NSString *arg in [task arguments]) {
+        if ([arg hasSuffix:@"otest-query-ios"]) {
+          isOtestQuery = YES;
+          break;
+        }
+      }
+    } else if ([[task launchPath] hasSuffix:@"otest-query-osx"]) {
       isOtestQuery = YES;
     }
 

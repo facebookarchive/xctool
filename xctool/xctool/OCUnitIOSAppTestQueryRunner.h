@@ -14,8 +14,8 @@
 // limitations under the License.
 //
 
-#import "OCUnitIOSTestQueryRunner.h"
+#import "OCUnitTestQueryRunner.h"
 
-@interface OCUnitIOSAppTestQueryRunner : OCUnitIOSTestQueryRunner
+@interface OCUnitIOSAppTestQueryRunner : OCUnitTestQueryRunner
 
 @end

@@ -114,9 +114,6 @@ static void KillSimulatorJobs()
   NSString *testHostAppPath = [testHostPath stringByDeletingLastPathComponent];
 
   NSString *sdkVersion = [_buildSettings[@"SDK_NAME"] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
-  NSString *productVersion = GetProductVersionForSDKVersion(sdkVersion);
-  NSString *appSupportDir = [NSString stringWithFormat:@"%@/Library/Application Support/iPhone Simulator/%@",
-                             NSHomeDirectory(), productVersion];
   NSString *ideBundleInjectionLibPath = @"/../../Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection";
   NSString *testBundlePath = [NSString stringWithFormat:@"%@/%@", _buildSettings[@"BUILT_PRODUCTS_DIR"], _buildSettings[@"FULL_PRODUCT_NAME"]];
 
@@ -135,15 +132,12 @@ static void KillSimulatorJobs()
   NSMutableDictionary *launchEnvironment = [NSMutableDictionary dictionary];
   [launchEnvironment addEntriesFromDictionary:environment];
   [launchEnvironment addEntriesFromDictionary:@{
-   @"CFFIXED_USER_HOME" : appSupportDir,
    @"DYLD_FRAMEWORK_PATH" : _buildSettings[@"TARGET_BUILD_DIR"],
    @"DYLD_LIBRARY_PATH" : _buildSettings[@"TARGET_BUILD_DIR"],
    @"DYLD_INSERT_LIBRARIES" : [@[
                                  [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"],
                                ideBundleInjectionLibPath,
                                ] componentsJoinedByString:@":"],
-   @"DYLD_ROOT_PATH" : _buildSettings[@"SDKROOT"],
-   @"IPHONE_SIMULATOR_ROOT" : _buildSettings[@"SDKROOT"],
    @"NSUnbufferedIO" : @"YES",
    @"XCInjectBundle" : testBundlePath,
    @"XCInjectBundleInto" : testHostPath,

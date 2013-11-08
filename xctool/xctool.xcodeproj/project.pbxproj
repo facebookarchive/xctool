@@ -107,8 +107,6 @@
 		AAC1E0B21811F5C3005A4FD5 /* OCUnitTestQueryRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC1E0B01811F5C3005A4FD5 /* OCUnitTestQueryRunner.m */; };
 		AAC1E0B51811F5E3005A4FD5 /* OCUnitOSXTestQueryRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC1E0B41811F5E3005A4FD5 /* OCUnitOSXTestQueryRunner.m */; };
 		AAC1E0B61811F5E3005A4FD5 /* OCUnitOSXTestQueryRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC1E0B41811F5E3005A4FD5 /* OCUnitOSXTestQueryRunner.m */; };
-		AAC1E0B91811F5F0005A4FD5 /* OCUnitIOSTestQueryRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC1E0B81811F5F0005A4FD5 /* OCUnitIOSTestQueryRunner.m */; };
-		AAC1E0BA1811F5F0005A4FD5 /* OCUnitIOSTestQueryRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC1E0B81811F5F0005A4FD5 /* OCUnitIOSTestQueryRunner.m */; };
 		AAC1E0BD18121071005A4FD5 /* OCUnitIOSLogicTestQueryRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC1E0BC18121071005A4FD5 /* OCUnitIOSLogicTestQueryRunner.m */; };
 		AAC1E0BE18121071005A4FD5 /* OCUnitIOSLogicTestQueryRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC1E0BC18121071005A4FD5 /* OCUnitIOSLogicTestQueryRunner.m */; };
 		AAC1E0C118121AC6005A4FD5 /* OCUnitIOSAppTestQueryRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC1E0C018121AC6005A4FD5 /* OCUnitIOSAppTestQueryRunner.m */; };
@@ -289,8 +287,6 @@
 		AAC1E0B01811F5C3005A4FD5 /* OCUnitTestQueryRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitTestQueryRunner.m; sourceTree = "<group>"; };
 		AAC1E0B31811F5E3005A4FD5 /* OCUnitOSXTestQueryRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUnitOSXTestQueryRunner.h; sourceTree = "<group>"; };
 		AAC1E0B41811F5E3005A4FD5 /* OCUnitOSXTestQueryRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitOSXTestQueryRunner.m; sourceTree = "<group>"; };
-		AAC1E0B71811F5F0005A4FD5 /* OCUnitIOSTestQueryRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUnitIOSTestQueryRunner.h; sourceTree = "<group>"; };
-		AAC1E0B81811F5F0005A4FD5 /* OCUnitIOSTestQueryRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitIOSTestQueryRunner.m; sourceTree = "<group>"; };
 		AAC1E0BB18121071005A4FD5 /* OCUnitIOSLogicTestQueryRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUnitIOSLogicTestQueryRunner.h; sourceTree = "<group>"; };
 		AAC1E0BC18121071005A4FD5 /* OCUnitIOSLogicTestQueryRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitIOSLogicTestQueryRunner.m; sourceTree = "<group>"; };
 		AAC1E0BF18121AC6005A4FD5 /* OCUnitIOSAppTestQueryRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUnitIOSAppTestQueryRunner.h; sourceTree = "<group>"; };
@@ -604,8 +600,6 @@
 				AAC1E0B01811F5C3005A4FD5 /* OCUnitTestQueryRunner.m */,
 				AAC1E0B31811F5E3005A4FD5 /* OCUnitOSXTestQueryRunner.h */,
 				AAC1E0B41811F5E3005A4FD5 /* OCUnitOSXTestQueryRunner.m */,
-				AAC1E0B71811F5F0005A4FD5 /* OCUnitIOSTestQueryRunner.h */,
-				AAC1E0B81811F5F0005A4FD5 /* OCUnitIOSTestQueryRunner.m */,
 				AAC1E0BB18121071005A4FD5 /* OCUnitIOSLogicTestQueryRunner.h */,
 				AAC1E0BC18121071005A4FD5 /* OCUnitIOSLogicTestQueryRunner.m */,
 				AAC1E0BF18121AC6005A4FD5 /* OCUnitIOSAppTestQueryRunner.h */,
@@ -741,7 +735,6 @@
 				EEB31CEA17C685E500CFB0E1 /* OCEventState.m in Sources */,
 				EEB31CF117C6A1EF00CFB0E1 /* OCTestEventState.m in Sources */,
 				AAC1E0BD18121071005A4FD5 /* OCUnitIOSLogicTestQueryRunner.m in Sources */,
-				AAC1E0B91811F5F0005A4FD5 /* OCUnitIOSTestQueryRunner.m in Sources */,
 				EEB31CF917C6D57B00CFB0E1 /* OCTestSuiteEventState.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -778,7 +771,6 @@
 				28AC9E3016DB3478009E5B9A /* OptionsTests.m in Sources */,
 				EE37291217E2886200554867 /* Reporter.m in Sources */,
 				283479A616E1B242003C3B77 /* RunTestsActionTests.m in Sources */,
-				AAC1E0BA1811F5F0005A4FD5 /* OCUnitIOSTestQueryRunner.m in Sources */,
 				2869F3C617C82FB80078F078 /* TestableExecutionInfo.m in Sources */,
 				283479AE16E2A736003C3B77 /* BuildTestsAction.m in Sources */,
 				AAC1E0B21811F5C3005A4FD5 /* OCUnitTestQueryRunner.m in Sources */,

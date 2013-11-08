@@ -23,21 +23,16 @@
 
 - (NSTask *)createTaskForQuery
 {
-  NSTask *task;
-  task = CreateTaskInSameProcessGroupWithArch([self cpuType]);
-  NSString *bundlePath = [self bundlePath];
-  NSString *testHostPath = [self testHostPath];
+  NSString *version = [_buildSettings[@"SDK_NAME"] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
 
-  [task setLaunchPath:testHostPath];
-  [task setArguments:@[ bundlePath ]];
-
-  [task setEnvironment:[self envForQueryInIOSBundleWithAdditionalEnv:@{
-    // Inserted this dylib, which will then load whatever is in `OtestQueryBundlePath`.
-    @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"otest-query-ios-dylib.dylib"],
-    // The test bundle that we want to query from.
-    @"OtestQueryBundlePath" : bundlePath,
-  }]];
-  return task;
+  return CreateTaskForSimulatorExecutable([self cpuType],
+                                          version,
+                                          [self testHostPath],
+                                          @[],
+                                          @{@"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"otest-query-ios-dylib.dylib"],
+                                            // The test bundle that we want to query from, as loaded by otest-query-ios-dylib.
+                                            @"OtestQueryBundlePath" : [self bundlePath],
+                                            });
 }
 
 @end
