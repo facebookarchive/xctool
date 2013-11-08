@@ -144,8 +144,15 @@ NSString *XCToolReportersPath(void)
 
 NSString *XcodeDeveloperDirPath(void)
 {
+  return XcodeDeveloperDirPathViaForcedConcreteTask(NO);
+}
+
+NSString *XcodeDeveloperDirPathViaForcedConcreteTask(BOOL forceConcreteTask)
+{
   NSString *(^getPath)() = ^{
-    NSTask *task = CreateTaskInSameProcessGroup();
+    NSTask *task = (forceConcreteTask ?
+                    CreateConcreteTaskInSameProcessGroup() :
+                    CreateTaskInSameProcessGroup());
     [task setLaunchPath:@"/usr/bin/xcode-select"];
     [task setArguments:@[@"--print-path"]];
 
@@ -477,7 +484,8 @@ NSString *SystemPaths()
 
 int XcodebuildVersion()
 {
-  NSString *xcodePlistPath = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"../Info.plist"];
+  NSString *xcodePlistPath = [XcodeDeveloperDirPathViaForcedConcreteTask(YES)
+                              stringByAppendingPathComponent:@"../Info.plist"];
   NSCAssert([[NSFileManager defaultManager] fileExistsAtPath:xcodePlistPath isDirectory:NULL],
             @"Cannot find Xcode's plist at: %@", xcodePlistPath);
 

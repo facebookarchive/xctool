@@ -58,9 +58,19 @@ static NSTask *otestShimTask(NSString *settingsPath, NSString *targetName, NSStr
                                                encoding:NSUTF8StringEncoding
                                                   error:nil];
   NSDictionary *allSettings = BuildSettingsFromOutput(output);
+  NSMutableDictionary *targetSettings = [NSMutableDictionary
+                                         dictionaryWithDictionary:allSettings[targetName]];
+
+  // The faked build settings we use for tests may include paths to Xcode.app
+  // that aren't valid on the current machine.  So, we rewrite the SDKROOT
+  // so we can be sure it points to a valid directory based off the true Xcode
+  // install location.
+  targetSettings[@"SDKROOT"] = [XcodeDeveloperDirPathViaForcedConcreteTask(YES) stringByAppendingPathComponent:
+                                [@"Platforms/iPhoneSimulator.platform/Developer/SDKs" stringByAppendingPathComponent:
+                                 [targetSettings[@"SDKROOT"] lastPathComponent]]];
 
   // set up an OCUnitIOSLogicTestRunner
-  OCUnitIOSLogicTestRunner *runner = [[OCUnitIOSLogicTestRunner alloc] initWithBuildSettings:allSettings[targetName]
+  OCUnitIOSLogicTestRunner *runner = [[OCUnitIOSLogicTestRunner alloc] initWithBuildSettings:targetSettings
                                                                             focusedTestCases:focusedTests
                                                                                 allTestCases:allTests
                                                                                    arguments:@[]

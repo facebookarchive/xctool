@@ -20,7 +20,20 @@ NSDictionary *BuildSettingsFromOutput(NSString *output);
 NSString *XCToolLibPath(void);
 NSString *XCToolLibExecPath(void);
 NSString *XCToolReportersPath(void);
+
+/**
+ Returns the path to XCODE_APP/Contents/Developer, as returned by
+ xcode-select --print-path.
+ */
 NSString *XcodeDeveloperDirPath(void);
+
+/**
+ Like XcodeDeveloperDirPath(), but can optionally force a concrete task to
+ be used.  This is useful if FakeTaskManager is active and swizzling
+ all NSTasks.
+ */
+NSString *XcodeDeveloperDirPathViaForcedConcreteTask(BOOL forceConcreteTask);
+
 NSString *MakeTempFileWithPrefix(NSString *prefix);
 NSDictionary *GetAvailableSDKsAndAliases();
 
