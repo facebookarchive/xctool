@@ -86,6 +86,10 @@ static NSArray *RunOtestAndParseResult(NSTask *task)
 {
   NSMutableArray *resultBuilder = [NSMutableArray array];
 
+  // Set to the null device we don't get the 'Simulator does not seem to be
+  // running, or may be running an old SDK.' from the 'sim' launcher.
+  [task setStandardError:[NSFileHandle fileHandleWithNullDevice]];
+
   LaunchTaskAndFeedOuputLinesToBlock(task,
                                      @"running otest/xctest",
                                      ^void (NSString *line) {
