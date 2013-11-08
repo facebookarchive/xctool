@@ -410,17 +410,7 @@ NSString *TemporaryDirectoryForAction()
       nameTemplate = @"xctool_temp_XXXXXX";
     }
 
-    NSMutableData *template =
-    [[[[NSTemporaryDirectory() stringByAppendingPathComponent:nameTemplate]
-       dataUsingEncoding:NSUTF8StringEncoding] mutableCopy] autorelease];
-    [template appendBytes:"\0" length:1];
-
-    if (!mkdtemp(template.mutableBytes) && !IsRunningUnderTest()) {
-      NSLog(@"Failed to create temporary directory: %s", strerror(errno));
-      abort();
-    }
-
-    __tempDirectoryForAction = [[NSString alloc] initWithUTF8String:template.bytes];
+    __tempDirectoryForAction = [MakeTemporaryDirectory(nameTemplate) retain];
   }
 
   return __tempDirectoryForAction;
@@ -500,4 +490,18 @@ int XcodebuildVersion()
 BOOL ToolchainIsXcode5OrBetter(void)
 {
   return (XcodebuildVersion() >= 0500);
+}
+
+NSString *MakeTemporaryDirectory(NSString *nameTemplate)
+{
+  NSMutableData *template = [[[[NSTemporaryDirectory() stringByAppendingPathComponent:nameTemplate]
+                               dataUsingEncoding:NSUTF8StringEncoding] mutableCopy] autorelease];
+  [template appendBytes:"\0" length:1];
+
+  if (!mkdtemp(template.mutableBytes)) {
+    NSLog(@"Failed to create temporary directory: %s", strerror(errno));
+    abort();
+  }
+
+  return [NSString stringWithUTF8String:template.bytes];
 }

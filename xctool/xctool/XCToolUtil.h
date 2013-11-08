@@ -113,3 +113,9 @@ NSString *AbsoluteExecutablePath();
  * Returns the contents of `/etc/paths` in the form of `path1:path2:path3`.
  */
 NSString *SystemPaths();
+
+/**
+ * Creates a temporary directory under NSTemporaryDirectory() using mkdtemp,
+ * and returns the path.
+ */
+NSString *MakeTemporaryDirectory(NSString *nameTemplate);
