@@ -45,13 +45,13 @@ NSArray *TestsFromSuite(id testSuite)
 }
 
 // Key used by objc_setAssociatedObject
-static int TestNameKey;
+static int TestDescriptionKey;
 
-static NSString *TestCase_nameOrDescription(id self, SEL cmd)
+static NSString *TestCase_description(id self, SEL cmd)
 {
-  id name = objc_getAssociatedObject(self, &TestNameKey);
-  NSCAssert(name != nil, @"Value for `TestNameKey` wasn't set.");
-  return name;
+  id description = objc_getAssociatedObject(self, &TestDescriptionKey);
+  NSCAssert(description != nil, @"Value for `TestNameKey` wasn't set.");
+  return description;
 }
 
 static NSString *TestNameWithCount(NSString *name, NSUInteger count) {
@@ -75,39 +75,29 @@ static id TestProbe_specifiedTestSuite(Class cls, SEL cmd)
   NSMutableSet *classesToSwizzle = [NSMutableSet set];
 
   for (id test in TestsFromSuite(testSuite)) {
-    NSString *name = [test performSelector:@selector(name)];
-    [seenCounts addObject:name];
+    NSString *description = [test performSelector:@selector(description)];
+    [seenCounts addObject:description];
 
-    NSUInteger seenCount = [seenCounts countForObject:name];
+    NSUInteger seenCount = [seenCounts countForObject:description];
 
-    NSString *newName = nil;
+    NSString *newDescription = nil;
 
     if (seenCount > 1) {
       // It's a duplicate - we need to override the name.
-      newName = TestNameWithCount(name, seenCount);
+      newDescription = TestNameWithCount(description, seenCount);
     } else {
-      newName = name;
+      newDescription = description;
     }
 
     objc_setAssociatedObject(test,
-                             &TestNameKey,
-                             newName,
+                             &TestDescriptionKey,
+                             newDescription,
                              OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [classesToSwizzle addObject:[test class]];
   }
 
-  SEL selToSwizzle;
-
-  if (NSClassFromString(@"XCTestCase") != NULL) {
-    // In XCTest, 'name' is used for the test name.
-    selToSwizzle = @selector(name);
-  } else {
-    // In SenTestingKit, 'description' is used for the test name.
-    selToSwizzle = @selector(description);
-  }
-
   for (Class cls in classesToSwizzle) {
-    class_replaceMethod(cls, selToSwizzle, (IMP)TestCase_nameOrDescription, "@@:");
+    class_replaceMethod(cls, @selector(description), (IMP)TestCase_description, "@@:");
   }
 
   return testSuite;

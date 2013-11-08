@@ -40,7 +40,7 @@
   NSMutableArray *names = [NSMutableArray array];
 
   for (id test in TestsFromSuite(testSuite)) {
-    NSString *name = [test performSelector:@selector(name)];
+    NSString *name = [test performSelector:@selector(description)];
     NSAssert(name != nil, @"Can't get name for test: %@", test);
     [names addObject:name];
   }
