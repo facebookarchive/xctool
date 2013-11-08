@@ -180,6 +180,7 @@ static NSString *abbreviatePath(NSString *string) {
   if (self = [super init]) {
     _analyzerWarnings = [[NSMutableArray alloc] init];
     _resultCounter = [[TestResultCounter alloc] init];
+    _failedBuildEvents = [[NSMutableArray alloc] init];
   }
   return self;
 }
@@ -193,6 +194,7 @@ static NSString *abbreviatePath(NSString *string) {
   [_currentBundle release];
   [_analyzerWarnings release];
   [_resultCounter release];
+  [_failedBuildEvents release];
   [super dealloc];
 }
 
@@ -418,6 +420,23 @@ static NSString *abbreviatePath(NSString *string) {
     }
   } else if ([name isEqual:@"analyze"]) {
     [self printAnalyzerSummary];
+  } else if (self.failedBuildEvents.count > 0) {
+    [self.reportWriter printLine:@"<bold>Failures:<reset>"];
+    [self.reportWriter printNewline];
+    [self.reportWriter increaseIndent];
+
+    int i = 0;
+    for (NSDictionary *d in self.failedBuildEvents) {
+      [self.reportWriter printLine:@"%d) %@", i, d[@"title"]];
+      [self printDivider];
+      [self.reportWriter disableIndent];
+      [self.reportWriter printString:@"<faint>%@<reset>", d[@"body"]];
+      [self.reportWriter enableIndent];
+      [self printDivider];
+      [self.reportWriter printNewline];
+      i++;
+    }
+    [self.reportWriter decreaseIndent];
   }
 
   NSString *color = succeeded ? @"<green>" : @"<red>";
@@ -536,6 +555,13 @@ static NSString *abbreviatePath(NSString *string) {
 
     [self.reportWriter enableIndent];
     [self printDivider];
+  }
+
+  if (!succeeded) {
+    NSString *body = [NSString stringWithFormat:@"%@\n%@",
+                      self.currentBuildCommandEvent[kReporter_BeginBuildCommand_CommandKey], outputText];
+    
+    [self.failedBuildEvents addObject:@{@"title":event[kReporter_EndBuildCommand_TitleKey], @"body":body}];
   }
 
   self.currentBuildCommandEvent = event;
