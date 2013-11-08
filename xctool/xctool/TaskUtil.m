@@ -248,6 +248,21 @@ NSTask *CreateTaskInSameProcessGroup()
   return task;
 }
 
+NSTask *CreateConcreteTaskInSameProcessGroup()
+{
+  NSConcreteTask *task = nil;
+
+  if (IsRunningUnderTest()) {
+    task = [objc_msgSend([NSTask class],
+                         @selector(__NSTask_allocWithZone:),
+                         NSDefaultMallocZone()) init];
+    [task setStartsNewProcessGroup:NO];
+    return task;
+  } else {
+    return CreateTaskInSameProcessGroup();
+  }
+}
+
 static NSString *QuotedStringIfNeeded(NSString *str) {
   if ([str rangeOfString:@" "].length > 0) {
     return (NSString *)[NSString stringWithFormat:@"\"%@\"", str];

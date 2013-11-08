@@ -36,6 +36,8 @@ void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, voi
  */
 NSTask *CreateTaskInSameProcessGroup();
 
+NSTask *CreateConcreteTaskInSameProcessGroup();
+
 /**
  * Call CreateTaskInSameProcessGroup() and set the task's preferred architecture.
  *
