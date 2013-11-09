@@ -16,6 +16,7 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
+#import "EventBuffer.h"
 #import "EventGenerator.h"
 #import "OCTestSuiteEventState.h"
 #import "OCTestEventState.h"
@@ -46,8 +47,9 @@
 
 - (void)testPublishFromStarted
 {
+  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
   OCTestSuiteEventState *state =
-    [[[OCTestSuiteEventState alloc] initWithName:@"ATestSuite"] autorelease];
+  [[[OCTestSuiteEventState alloc] initWithName:@"ATestSuite" reporters:@[eventBuffer]] autorelease];
 
   assertThatBool(state.isStarted, equalToBool(NO));
   assertThatBool(state.isFinished, equalToBool(NO));
@@ -57,9 +59,9 @@
   assertThatBool(state.isStarted, equalToBool(YES));
   assertThatBool(state.isFinished, equalToBool(NO));
 
-  NSArray *events = [TestUtil getEventsForStates:@[state] withBlock:^{
-    [state publishEvents];
-  }];
+  [state publishEvents];
+  NSArray *events = eventBuffer.events;
+
   assertThatInteger([events count], equalToInteger(1));
   assertThat(events[0][@"event"], is(kReporter_Events_EndTestSuite));
   assertThat(events[0][kReporter_EndTestSuite_SuiteKey], is(@"ATestSuite"));
@@ -73,16 +75,15 @@
 
 - (void)testPublishFromNotStarted
 {
+  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
   OCTestSuiteEventState *state =
-    [[[OCTestSuiteEventState alloc] initWithName:@"ATestSuite"] autorelease];
+    [[[OCTestSuiteEventState alloc] initWithName:@"ATestSuite" reporters:@[eventBuffer]] autorelease];
 
   assertThatBool(state.isStarted, equalToBool(NO));
   assertThatBool(state.isFinished, equalToBool(NO));
 
-  NSArray *events = [TestUtil getEventsForStates:@[state]
-                                       withBlock:^{
-                                         [state publishEvents];
-                                       }];
+  [state publishEvents];
+  NSArray *events = eventBuffer.events;
 
   assertThatInteger([events count], equalToInteger(2));
   assertThat(events[0][@"event"], is(kReporter_Events_BeginTestSuite));
@@ -99,6 +100,7 @@
 
 - (void)testFromFinished
 {
+  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
   OCTestSuiteEventState *state =
     [[[OCTestSuiteEventState alloc] initWithName:@"ATestSuite"] autorelease];
 
@@ -108,10 +110,8 @@
   [state beginTestSuite];
   [state endTestSuite];
 
-  NSArray *events = [TestUtil getEventsForStates:@[state]
-                                       withBlock:^{
-                                         [state publishEvents];
-                                       }];
+  [state publishEvents];
+  NSArray *events = eventBuffer.events;
 
   assertThatInteger([events count], equalToInteger(0));
 }
@@ -142,8 +142,10 @@
 
 - (void)testAddTests
 {
+  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
   OCTestSuiteEventState *state =
-    [[[OCTestSuiteEventState alloc] initWithName:@"ATestSuite"] autorelease];
+    [[[OCTestSuiteEventState alloc] initWithName:@"ATestSuite" reporters:@[eventBuffer]] autorelease];
+
   OCTestEventState *testAState =
     [[[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod"] autorelease];
   OCTestEventState *testBState =
@@ -161,17 +163,14 @@
   assertThatInteger(state.testCount, equalToInteger(2));
   assertThatInteger(state.totalFailures, equalToInteger(1));
 
-  NSArray *events = [TestUtil getEventsForStates:@[state]
-                                       withBlock:^{
-                                         [state publishEvents];
-                                       }];
+  [state publishEvents];
+  NSArray *events = eventBuffer.events;
 
   assertThatInteger([events count], equalToInteger(1));
   assertThat(events[0][kReporter_EndTestSuite_TestCaseCountKey], equalToInt(2));
   assertThat(events[0][kReporter_EndTestSuite_TotalFailureCountKey], equalToInt(1));
   assertThat(events[0][kReporter_EndTestSuite_TotalDurationKey],
              closeTo([testAState duration] + [testBState duration], 0.1f));
-
 }
 
 - (void)testAddTestsFromString
@@ -208,8 +207,10 @@
 
 - (void)testFinishTests
 {
+  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
+
   OCTestSuiteEventState *state =
-    [[[OCTestSuiteEventState alloc] initWithName:@"ATestSuite"] autorelease];
+    [[[OCTestSuiteEventState alloc] initWithName:@"ATestSuite" reporters:@[eventBuffer]] autorelease];
   OCTestEventState *testAState =
   [[[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod"] autorelease];
   OCTestEventState *testBState =
@@ -226,10 +227,8 @@
   assertThatInteger(state.testCount, equalToInteger(2));
   assertThatInteger(state.totalFailures, equalToInteger(1));
 
-  NSArray *events = [TestUtil getEventsForStates:@[state,testAState,testBState]
-                                       withBlock:^{
-                                         [state publishEvents];
-                                       }];
+  [state publishEvents];
+  NSArray *events = eventBuffer.events;
 
   assertThatInteger([events count], equalToInteger(2));
   NSDictionary *testEvent = events[0];
@@ -242,7 +241,6 @@
 
   assertThat(testEvent[kReporter_EndTest_SucceededKey], equalToBool(NO));
   assertThat(testEvent[kReporter_EndTest_ResultKey], is(@"error"));
-
 }
 
 - (void)testRunningTest

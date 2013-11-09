@@ -82,43 +82,6 @@
   return @{@"stdout" : standardOutput, @"stderr" : standardError};
 }
 
-+ (NSArray *)getEventsForStates:(NSArray *)states
-                      withBlock:(void (^)(void))block
-{
-  NSString *fakeStandardOutputPath = MakeTempFileWithPrefix(@"fake-stdout");
-  NSString *fakeStandardErrorPath = MakeTempFileWithPrefix(@"fake-stderr");
-
-  ReporterTask *rt = [[[ReporterTask alloc] initWithReporterPath:@"/bin/cat"
-                                                      outputPath:@"-"] autorelease];
-  NSString *error = nil;
-  BOOL opened = [rt openWithStandardOutput:[NSFileHandle fileHandleForWritingAtPath:fakeStandardOutputPath]
-                             standardError:[NSFileHandle fileHandleForWritingAtPath:fakeStandardErrorPath]
-                                     error:&error];
-  assertThatBool(opened, equalToBool(YES));
-
-  [states makeObjectsPerformSelector:@selector(setReporters:) withObject:@[rt]];
-
-  block();
-
-  [rt close];
-
-  NSString *fakeStandardOutput = [NSString stringWithContentsOfFile:fakeStandardOutputPath
-                                                           encoding:NSUTF8StringEncoding
-                                                              error:nil];
-
-  NSMutableArray *events = [[[NSMutableArray alloc] init] autorelease];
-  NSMutableArray *lines = [[fakeStandardOutput componentsSeparatedByString:@"\n"] mutableCopy];;
-  [lines removeObjectAtIndex:[lines count] - 1];
-  [lines enumerateObjectsUsingBlock:^(NSString *line, NSUInteger idx, BOOL *stop) {
-    NSData *data = [line dataUsingEncoding:NSUTF8StringEncoding];
-    [events addObject: [NSJSONSerialization JSONObjectWithData:data
-                                                       options:0
-                                                         error:nil]];
-  }];
-
-  return events;
-}
-
 @end
 
 BOOL HasXCTestFramework()

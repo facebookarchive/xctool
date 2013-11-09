@@ -16,6 +16,8 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
+#import "EventBuffer.h"
+#import "EventSink.h"
 #import "EventGenerator.h"
 #import "OCTestEventState.h"
 #import "ReporterEvents.h"
@@ -44,21 +46,21 @@
 
 - (void)testPublishFromStarted
 {
-  OCTestEventState *state =
-   [[[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod"] autorelease];
+  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
+  OCTestEventState *state = [[[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod"
+                                                               reporters:@[eventBuffer]] autorelease];
 
-   assertThatBool(state.isStarted, equalToBool(NO));
-   assertThatBool(state.isFinished, equalToBool(NO));
+  assertThatBool(state.isStarted, equalToBool(NO));
+  assertThatBool(state.isFinished, equalToBool(NO));
 
   [state stateBeginTest];
 
   assertThatBool(state.isStarted, equalToBool(YES));
   assertThatBool(state.isFinished, equalToBool(NO));
 
-  NSArray *events = [TestUtil getEventsForStates:@[state]
-                                       withBlock:^{
-                                         [state publishEvents];
-                                       }];
+  [state publishEvents];
+  NSArray *events = eventBuffer.events;
+
   assertThatInteger([events count], equalToInteger(1));
   assertThat(events[0][@"event"], is(kReporter_Events_EndTest));
   assertThat(events[0][kReporter_EndTest_SucceededKey], is(@NO));
@@ -70,16 +72,16 @@
 
 - (void)testPublishFromNotStarted
 {
+  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
   OCTestEventState *state =
-  [[[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod"] autorelease];
+  [[[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod"
+                                     reporters:@[eventBuffer]] autorelease];
 
   assertThatBool(state.isStarted, equalToBool(NO));
   assertThatBool(state.isFinished, equalToBool(NO));
 
-  NSArray *events = [TestUtil getEventsForStates:@[state]
-                                       withBlock:^{
-                                         [state publishEvents];
-                                       }];
+  [state publishEvents];
+  NSArray *events = eventBuffer.events;
 
   assertThatInteger([events count], equalToInteger(2));
 
@@ -132,21 +134,20 @@
   assertThatBool(state.isSuccessful, equalToBool(NO));
   assertThatBool([state isRunning], equalToBool(NO));
   assertThat(state.result, is(@"failure"));
-
 }
 
 - (void)testOutput
 {
+  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
   OCTestEventState *state =
-  [[[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod"] autorelease];
+  [[[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod" reporters:@[eventBuffer]] autorelease];
 
   [state stateBeginTest];
   [state stateTestOutput:@"some output\n"];
   [state stateTestOutput:@"more output\n"];
-  NSArray *events = [TestUtil getEventsForStates:@[state]
-                                       withBlock:^{
-                                         [state publishEvents];
-                                       }];
+
+  [state publishEvents];
+  NSArray *events = eventBuffer.events;
 
   assertThatInteger([events count], equalToInteger(1));
   assertThat(events[0][@"event"], is(kReporter_Events_EndTest));
@@ -155,17 +156,17 @@
 
 - (void)testPublishOutput
 {
+  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
   OCTestEventState *state =
-  [[[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod"] autorelease];
+  [[[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod" reporters:@[eventBuffer]] autorelease];
 
   [state stateBeginTest];
   [state stateTestOutput:@"some output\n"];
   [state stateTestOutput:@"more output\n"];
   [state appendOutput:@"output from us\n"];
-  NSArray *events = [TestUtil getEventsForStates:@[state]
-                                       withBlock:^{
-                                         [state publishOutput];
-                                       }];
+
+  [state publishOutput];
+  NSArray *events = eventBuffer.events;
 
   assertThatInteger([events count], equalToInteger(1));
   assertThat(events[0][@"event"], is(kReporter_Events_TestOuput));
@@ -174,17 +175,17 @@
 
 - (void)testAppendOutput
 {
+  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
   OCTestEventState *state =
-  [[[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod"] autorelease];
+  [[[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod" reporters:@[eventBuffer]] autorelease];
 
   [state stateBeginTest];
   [state stateTestOutput:@"some output\n"];
   [state stateTestOutput:@"more output\n"];
   [state appendOutput:@"output from us\n"];
-  NSArray *events = [TestUtil getEventsForStates:@[state]
-                                       withBlock:^{
-                                         [state publishEvents];
-                                       }];
+
+  [state publishEvents];
+  NSArray *events = eventBuffer.events;
 
   assertThatInteger([events count], equalToInteger(2));
   assertThat(events[0][@"event"], is(kReporter_Events_TestOuput));
@@ -195,14 +196,14 @@
 
 - (void)testDuration
 {
+  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
   OCTestEventState *state =
-  [[[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod"] autorelease];
+  [[[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod" reporters:@[eventBuffer]] autorelease];
 
   [state stateBeginTest];
-  NSArray *events = [TestUtil getEventsForStates:@[state]
-                                       withBlock:^{
-                                         [state publishEvents];
-                                       }];
+
+  [state publishEvents];
+  NSArray *events = eventBuffer.events;
 
   assertThatInteger([events count], equalToInteger(1));
   assertThatFloat(state.duration, greaterThan(@0.0));

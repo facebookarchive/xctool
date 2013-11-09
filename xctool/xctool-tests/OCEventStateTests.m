@@ -16,6 +16,8 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
+#import "EventBuffer.h"
+#import "EventSink.h"
 #import "OCEventState.h"
 #import "ReporterEvents.h"
 #import "TestUtil.h"
@@ -29,19 +31,18 @@
 {
   OCEventState *state = [[[OCEventState alloc] initWithReporters: @[]] autorelease];
   STAssertEqualObjects([state reporters], @[], @"Reporters are not equal");
-
 }
 
 - (void)testPublishWithEvent
 {
+  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
+  OCEventState *state = [[[OCEventState alloc] initWithReporters:@[eventBuffer]] autorelease];
+
   NSDictionary *event = @{@"ilove": @"jello"};
-  OCEventState *state = [[[OCEventState alloc] initWithReporters:@[]] autorelease];
-  NSArray *events = [TestUtil getEventsForStates:@[state]
-                                       withBlock:^{
-                                         [state publishWithEvent:event];
-                                       }];
-  assertThatInteger([events count], equalToInteger(1));
-  assertThat(events[0], equalTo(event));
+  [state publishWithEvent:event];
+
+  assertThatInteger([eventBuffer.events count], equalToInteger(1));
+  assertThat(eventBuffer.events[0], equalTo(event));
 }
 
 @end
