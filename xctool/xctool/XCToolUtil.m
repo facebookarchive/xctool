@@ -506,7 +506,7 @@ NSString *MakeTemporaryDirectory(NSString *nameTemplate)
                                dataUsingEncoding:NSUTF8StringEncoding] mutableCopy] autorelease];
   [template appendBytes:"\0" length:1];
 
-  if (!mkdtemp(template.mutableBytes)) {
+  if (!mkdtemp(template.mutableBytes) && !IsRunningUnderTest()) {
     NSLog(@"Failed to create temporary directory: %s", strerror(errno));
     abort();
   }
