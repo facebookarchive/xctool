@@ -437,6 +437,23 @@ static NSString *abbreviatePath(NSString *string) {
     }
   } else if ([name isEqual:@"analyze"]) {
     [self printAnalyzerSummary];
+  } else if (self.failedBuildEvents.count > 0) {
+    [self.reportWriter printLine:@"<bold>Failures:<reset>"];
+    [self.reportWriter printNewline];
+    [self.reportWriter increaseIndent];
+
+    int i = 0;
+    for (NSDictionary *d in self.failedBuildEvents) {
+      [self.reportWriter printLine:@"%d) %@", i, d[@"title"]];
+      [self printDivider];
+      [self.reportWriter disableIndent];
+      [self.reportWriter printString:@"<faint>%@<reset>", d[@"body"]];
+      [self.reportWriter enableIndent];
+      [self printDivider];
+      [self.reportWriter printNewline];
+      i++;
+    }
+    [self.reportWriter decreaseIndent];
   }
 
   NSString *color = succeeded ? @"<green>" : @"<red>";
