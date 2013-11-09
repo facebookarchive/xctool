@@ -20,33 +20,32 @@
 #import "ReporterEvents.h"
 #import "TestUtil.h"
 
+static NSArray *EventsForFullRun()
+{
+  return @[
+    @{@"event" : @"begin-test-suite", @"suite" : kReporter_TestSuite_TopLevelSuiteName},
+    @{@"event" : @"begin-test", @"test" : @"-[OtherTests testSomething]"},
+    @{@"event" : @"test-output", @"output" : @"puppies!\n"},
+    @{@"event" : @"end-test", @"test" : @"-[OtherTests testSomething]", @"succeeded" : @NO, @"output" : @"puppies!\n", @"totalDuration" : @1.0},
+    @{@"event" : @"begin-test", @"test" : @"-[OtherTests testAnother]"},
+    @{@"event" : @"end-test", @"test" : @"-[OtherTests testAnother]", @"succeeded" : @YES, @"output" : @"", @"totalDuration" : @1.0},
+    @{@"event" : @"end-test-suite", @"suite" : @"OtherTests", @"testCaseCount" : @2, @"totalFailureCount" : @1, @"totalDuration" : @1.0, @"testDuration" : @1.0, @"unexpectedExceptionCount" : @1},
+    ];
+}
+
+static OCUnitCrashFilter *CrashFilter()
+{
+  OCUnitCrashFilter *crashFilter = [[[OCUnitCrashFilter alloc] initWithTests:@[@"OtherTests/testSomething", @"OtherTests/testAnother"]
+                                                                   reporters:@[]] autorelease];
+  crashFilter.crashReportCollectionTime = 0.25;
+  return crashFilter;
+}
+
 @interface OCUnitCrashFilterTests : SenTestCase {
-  NSArray *_events;
-  NSArray *_testList;
-  OCUnitCrashFilter *_state;
 }
 @end
 
 @implementation OCUnitCrashFilterTests
-
-- (void)setUp
-{
-  _events = @[
-    @{@"event" : @"begin-test-suite", @"suite" : kReporter_TestSuite_TopLevelSuiteName},
-      @{@"event" : @"begin-test", @"test" : @"-[OtherTests testSomething]"},
-      @{@"event" : @"test-output", @"output" : @"puppies!\n"},
-      @{@"event" : @"end-test", @"test" : @"-[OtherTests testSomething]", @"succeeded" : @NO, @"output" : @"puppies!\n", @"totalDuration" : @1.0},
-      @{@"event" : @"begin-test", @"test" : @"-[OtherTests testAnother]"},
-      @{@"event" : @"end-test", @"test" : @"-[OtherTests testAnother]", @"succeeded" : @YES, @"output" : @"", @"totalDuration" : @1.0},
-    @{@"event" : @"end-test-suite", @"suite" : @"OtherTests", @"testCaseCount" : @2, @"totalFailureCount" : @1, @"totalDuration" : @1.0, @"testDuration" : @1.0, @"unexpectedExceptionCount" : @1},
-  ];
-
-  _testList = @[@"OtherTests/testSomething", @"OtherTests/testAnother"];
-
-  _state = [[[OCUnitCrashFilter alloc] initWithTests:_testList
-                                           reporters:@[]] autorelease];
-  _state.crashReportCollectionTime = 0.25;
-}
 
 - (void)assertEvents:(NSArray *)events containsEvents:(NSArray *)eventKeys
 {
@@ -116,12 +115,12 @@
 
 - (void)testCrashedBeforeTestSuiteStart
 {
-  NSArray *fakeEvents = [TestUtil getEventsForStates:@[_state]
+  OCUnitCrashFilter *state = CrashFilter();
+  NSArray *fakeEvents = [TestUtil getEventsForStates:@[state]
                                            withBlock:^{
-                                             [_state prepareToRun];
-                                             [self sendEvents:@[]
-                                                   toReporter:_state];
-                                             [_state finishedRun:YES error:nil];
+                                             [state prepareToRun];
+                                             [self sendEvents:@[] toReporter:state];
+                                             [state finishedRun:YES error:nil];
                                        }];
 
   [self assertEvents:fakeEvents containsEvents:
@@ -139,12 +138,13 @@
 
 - (void)testCrashedAfterTestSuiteStartBeforeTests
 {
-  NSArray *fakeEvents = [TestUtil getEventsForStates:@[_state]
+  OCUnitCrashFilter *state = CrashFilter();
+  NSArray *fakeEvents = [TestUtil getEventsForStates:@[state]
                                            withBlock:^{
-                                             [_state prepareToRun];
-                                             [self sendEvents:[_events subarrayWithRange:NSMakeRange(0, 1)]
-                                                   toReporter:_state];
-                                             [_state finishedRun:YES error:nil];
+                                             [state prepareToRun];
+                                             [self sendEvents:[EventsForFullRun() subarrayWithRange:NSMakeRange(0, 1)]
+                                                   toReporter:state];
+                                             [state finishedRun:YES error:nil];
                                            }];
   [self assertEvents:fakeEvents containsEvents:
    @[kReporter_Events_BeginTest,
@@ -161,12 +161,13 @@
 
 - (void)testCrashedAfterFirstTestStarts
 {
-  NSArray *fakeEvents = [TestUtil getEventsForStates:@[_state]
+  OCUnitCrashFilter *state = CrashFilter();
+  NSArray *fakeEvents = [TestUtil getEventsForStates:@[state]
                                            withBlock:^{
-                                             [_state prepareToRun];
-                                             [self sendEvents:[_events subarrayWithRange:NSMakeRange(0, 2)]
-                                                   toReporter:_state];
-                                             [_state finishedRun:YES error:nil];
+                                             [state prepareToRun];
+                                             [self sendEvents:[EventsForFullRun() subarrayWithRange:NSMakeRange(0, 2)]
+                                                   toReporter:state];
+                                             [state finishedRun:YES error:nil];
                                            }];
   [self assertEvents:fakeEvents containsEvents:
    @[kReporter_Events_TestOuput,
@@ -181,12 +182,13 @@
 
 - (void)testCrashedAfterFirstTestFinishes
 {
-  NSArray *fakeEvents = [TestUtil getEventsForStates:@[_state]
+  OCUnitCrashFilter *state = CrashFilter();
+  NSArray *fakeEvents = [TestUtil getEventsForStates:@[state]
                                            withBlock:^{
-                                             [_state prepareToRun];
-                                             [self sendEvents:[_events subarrayWithRange:NSMakeRange(0, 4)]
-                                                   toReporter:_state];
-                                             [_state finishedRun:YES error:nil];
+                                             [state prepareToRun];
+                                             [self sendEvents:[EventsForFullRun() subarrayWithRange:NSMakeRange(0, 4)]
+                                                   toReporter:state];
+                                             [state finishedRun:YES error:nil];
                                            }];
   [self assertEvents:fakeEvents containsEvents:
    @[kReporter_Events_BeginTest,
@@ -199,12 +201,13 @@
 
 - (void)testErrorMessagePropogatesToTestOutput
 {
-  NSArray *fakeEvents = [TestUtil getEventsForStates:@[_state]
+  OCUnitCrashFilter *state = CrashFilter();
+  NSArray *fakeEvents = [TestUtil getEventsForStates:@[state]
                                            withBlock:^{
-                                             [_state prepareToRun];
-                                             [self sendEvents:[_events subarrayWithRange:NSMakeRange(0, 4)]
-                                                   toReporter:_state];
-                                             [_state finishedRun:YES error:@"cupcakes candy donuts cookies"];
+                                             [state prepareToRun];
+                                             [self sendEvents:[EventsForFullRun() subarrayWithRange:NSMakeRange(0, 4)]
+                                                   toReporter:state];
+                                             [state finishedRun:YES error:@"cupcakes candy donuts cookies"];
                                            }];
   [self assertEvents:fakeEvents containsEvents:
    @[kReporter_Events_BeginTest,
@@ -217,12 +220,13 @@
 
 - (void)testCrashedAfterLastTestFinishes
 {
-  NSArray *fakeEvents = [TestUtil getEventsForStates:@[_state]
+  OCUnitCrashFilter *state = CrashFilter();
+  NSArray *fakeEvents = [TestUtil getEventsForStates:@[state]
                                            withBlock:^{
-                                             [_state prepareToRun];
-                                             [self sendEvents:[_events subarrayWithRange:NSMakeRange(0, 6)]
-                                                   toReporter:_state];
-                                             [_state finishedRun:YES error:nil];
+                                             [state prepareToRun];
+                                             [self sendEvents:[EventsForFullRun() subarrayWithRange:NSMakeRange(0, 6)]
+                                                   toReporter:state];
+                                             [state finishedRun:YES error:nil];
                                            }];
   // In this case there are no tests left with which to report the error, so we have to create a fake one
   [self assertEvents:fakeEvents containsEvents:
@@ -237,12 +241,13 @@
 
 - (void)testCrashedAfterTestSuiteFinishes
 {
-  NSArray *fakeEvents = [TestUtil getEventsForStates:@[_state]
+  OCUnitCrashFilter *state = CrashFilter();
+  NSArray *fakeEvents = [TestUtil getEventsForStates:@[state]
                                            withBlock:^{
-                                             [_state prepareToRun];
-                                             [self sendEvents:_events
-                                                   toReporter:_state];
-                                             [_state finishedRun:YES  error:nil];
+                                             [state prepareToRun];
+                                             [self sendEvents:EventsForFullRun()
+                                                   toReporter:state];
+                                             [state finishedRun:YES  error:nil];
                                            }];
 
   // Not much we can do here, make sure no events are shipped out
@@ -251,12 +256,13 @@
 
 - (void)testExtendedInfo
 {
-  NSArray *fakeEvents = [TestUtil getEventsForStates:@[_state]
+  OCUnitCrashFilter *state = CrashFilter();
+  NSArray *fakeEvents = [TestUtil getEventsForStates:@[state]
                                            withBlock:^{
-                                             [_state prepareToRun];
+                                             [state prepareToRun];
                                              [self sendEvents:@[]
-                                                   toReporter:_state];
-                                             [_state finishedRun:YES error:nil];
+                                                   toReporter:state];
+                                             [state finishedRun:YES error:nil];
                                            }];
 
   [self assertEvents:fakeEvents containsEvents:
