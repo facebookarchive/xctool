@@ -347,6 +347,7 @@ static NSString *abbreviatePath(NSString *string) {
 - (void)endAction:(NSDictionary *)event
 {
   [self.reportWriter decreaseIndent];
+  [self.reportWriter printNewline];
 
   NSString *name = event[kReporter_BeginAction_NameKey];
   BOOL succeeded = [event[kReporter_EndAction_SucceededKey] boolValue];
