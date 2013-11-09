@@ -382,6 +382,7 @@ NSTask *CreateTaskForSimulatorExecutable(cpu_type_t cpuType,
   [taskArgs addObjectsFromArray:@[[@"--arch=" stringByAppendingString:(cpuType == CPU_TYPE_X86_64) ? @"64" : @"32"],
                                   [@"--sdk=" stringByAppendingString:sdkVersion],
                                   @"--environment=merge",
+                                  @"--adopt-pid",
                                   ]];
   [taskArgs addObject:launchPath];
   [taskArgs addObjectsFromArray:arguments];
