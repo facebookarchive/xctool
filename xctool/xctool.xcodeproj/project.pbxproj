@@ -417,18 +417,32 @@
 		283CCA4716C2EA3800F2E343 /* xctool */ = {
 			isa = PBXGroup;
 			children = (
-				CDD81F4F174EAFDC00F42111 /* EventBuffer.h */,
-				CDD81F50174EAFDC00F42111 /* EventBuffer.m */,
 				2834799516E199A9003C3B77 /* Actions */,
+				28BB043B17C7FF43004F6C13 /* Buildable.h */,
+				28BB043C17C7FF43004F6C13 /* Buildable.m */,
 				CD56770D1766782C003B727C /* BuildStateParser.h */,
 				CD56770E1766782C003B727C /* BuildStateParser.mm */,
+				CDD81F4F174EAFDC00F42111 /* EventBuffer.h */,
+				CDD81F50174EAFDC00F42111 /* EventBuffer.m */,
+				28F48A841799D81400068E00 /* EventSink.h */,
 				287A37DC16C711AE00319E81 /* LineReader.h */,
 				287A37DD16C711AE00319E81 /* LineReader.m */,
 				283CCA4816C2EA3800F2E343 /* main.m */,
-				AA3E57F91812261B008B9644 /* OCUnitTestRunner */,
+				28EAB46017E29647005EB9CF /* NSConcreteTask.h */,
+				EEB31CE817C685E500CFB0E1 /* OCEventState.h */,
+				EEB31CE917C685E500CFB0E1 /* OCEventState.m */,
+				EEB31CEF17C6A1EF00CFB0E1 /* OCTestEventState.h */,
+				EEB31CF017C6A1EF00CFB0E1 /* OCTestEventState.m */,
+				EEB31CF717C6D57B00CFB0E1 /* OCTestSuiteEventState.h */,
+				EEB31CF817C6D57B00CFB0E1 /* OCTestSuiteEventState.m */,
 				EE30658D17DEA92F00733D72 /* OCUnitCrashFilter.h */,
 				EE30658E17DEA92F00733D72 /* OCUnitCrashFilter.m */,
 				AA3E57FA1812262B008B9644 /* OCUnitTestQueryRunner */,
+				AA3E57F91812261B008B9644 /* OCUnitTestRunner */,
+				28E28FBA1797099E0072376C /* ReporterTask.h */,
+				28E28FBB1797099E0072376C /* ReporterTask.m */,
+				28E28FB61796926A0072376C /* ReportStatus.h */,
+				28E28FB71796926A0072376C /* ReportStatus.m */,
 				CD522EC017471D6300048AF9 /* SchemeGenerator.h */,
 				CD522EC117471D6300048AF9 /* SchemeGenerator.m */,
 				287A37DF16C711E000319E81 /* SimulatorLauncher.h */,
@@ -436,6 +450,10 @@
 				283CCA4A16C2EA3800F2E343 /* Supporting Files */,
 				28ACFC8116FBA888004BAF33 /* TaskUtil.h */,
 				28ACFC8216FBA888004BAF33 /* TaskUtil.m */,
+				28404ADD17C7E16F00CB436A /* Testable.h */,
+				28404ADE17C7E16F00CB436A /* Testable.m */,
+				2869F3C317C82FB80078F078 /* TestableExecutionInfo.h */,
+				2869F3C417C82FB80078F078 /* TestableExecutionInfo.m */,
 				2864A3F81734E52800BBF3B1 /* Version.h */,
 				2864A3F91734E52800BBF3B1 /* Version.m */,
 				287BF08216F1A97900590E06 /* XcodeSubjectInfo.h */,
@@ -446,24 +464,6 @@
 				283CCAD516C2F10A00F2E343 /* XCTool.m */,
 				28E9B97D16C2F1C600A52E4D /* XCToolUtil.h */,
 				28E9B97E16C2F1C600A52E4D /* XCToolUtil.m */,
-				28E28FB61796926A0072376C /* ReportStatus.h */,
-				28E28FB71796926A0072376C /* ReportStatus.m */,
-				28E28FBA1797099E0072376C /* ReporterTask.h */,
-				28E28FBB1797099E0072376C /* ReporterTask.m */,
-				28F48A841799D81400068E00 /* EventSink.h */,
-				28404ADD17C7E16F00CB436A /* Testable.h */,
-				28404ADE17C7E16F00CB436A /* Testable.m */,
-				28BB043B17C7FF43004F6C13 /* Buildable.h */,
-				28BB043C17C7FF43004F6C13 /* Buildable.m */,
-				2869F3C317C82FB80078F078 /* TestableExecutionInfo.h */,
-				2869F3C417C82FB80078F078 /* TestableExecutionInfo.m */,
-				28EAB46017E29647005EB9CF /* NSConcreteTask.h */,
-				EEB31CE817C685E500CFB0E1 /* OCEventState.h */,
-				EEB31CE917C685E500CFB0E1 /* OCEventState.m */,
-				EEB31CEF17C6A1EF00CFB0E1 /* OCTestEventState.h */,
-				EEB31CF017C6A1EF00CFB0E1 /* OCTestEventState.m */,
-				EEB31CF717C6D57B00CFB0E1 /* OCTestSuiteEventState.h */,
-				EEB31CF817C6D57B00CFB0E1 /* OCTestSuiteEventState.m */,
 			);
 			path = xctool;
 			sourceTree = "<group>";
@@ -489,13 +489,16 @@
 		283CCAC516C2EE9900F2E343 /* xctool-tests */ = {
 			isa = PBXGroup;
 			children = (
-				2862C1B5180DE7BA00E5F58B /* XCToolUtilTests.m */,
 				28046D2F16D76665000AA15C /* ActionTests.m */,
 				28302E1D175A8B6900C997B2 /* ArchiveActionTests.m */,
 				28ADB43A16E410F9006301ED /* BuildActionTests.m */,
 				CDEE9EA0176950DC0026D278 /* BuildStateParserTests.m */,
 				283479BB16E3FC0E003C3B77 /* BuildTestsActionTests.m */,
 				28ADB43716E4107F006301ED /* CleanActionTests.m */,
+				28BB32FF1811B61A006F699B /* ContainsArray.h */,
+				28BB33001811B61A006F699B /* ContainsArray.m */,
+				AA194FD118091AE700F56AFC /* ContainsAssertionFailure.h */,
+				28D9C5B01828D5CA0032FEA8 /* ContainsAssertionFailure.m */,
 				28E9B99016C3037E00A52E4D /* FakeTask.h */,
 				28E9B99116C3037E00A52E4D /* FakeTask.m */,
 				2889805E1742B675004BA024 /* FakeTaskManager.h */,
@@ -512,6 +515,7 @@
 				AAF3344A1806A47E00928A00 /* Options+Testing.m */,
 				28AC9E2F16DB3478009E5B9A /* OptionsTests.m */,
 				2804514417C410F100D16420 /* OTestQueryTests.m */,
+				AA6C88F61808C2C5006A3581 /* OTestShimTests.m */,
 				28E28FBF1797193F0072376C /* ReporterTaskTests.m */,
 				28C81A62175562050072DDB8 /* ReportStatusTests.m */,
 				283479A416E1B242003C3B77 /* RunTestsActionTests.m */,
@@ -525,11 +529,7 @@
 				283479B816E3EBE5003C3B77 /* TestUtil.m */,
 				287BF04C16F1A6EB00590E06 /* XcodeSubjectInfoTests.m */,
 				283CCACC16C2EE9900F2E343 /* XCToolTests.m */,
-				AA6C88F61808C2C5006A3581 /* OTestShimTests.m */,
-				AA194FD118091AE700F56AFC /* ContainsAssertionFailure.h */,
-				28D9C5B01828D5CA0032FEA8 /* ContainsAssertionFailure.m */,
-				28BB32FF1811B61A006F699B /* ContainsArray.h */,
-				28BB33001811B61A006F699B /* ContainsArray.m */,
+				2862C1B5180DE7BA00E5F58B /* XCToolUtilTests.m */,
 			);
 			path = "xctool-tests";
 			sourceTree = "<group>";
@@ -549,18 +549,18 @@
 			children = (
 				3892D73F1811A5CC00E68652 /* EventGenerator.h */,
 				3892D7401811A5CC00E68652 /* EventGenerator.m */,
-				AA318BEC17E9B7CA00BF159E /* XCTest.h */,
-				AA318BED17E9BA3500BF159E /* TestingFramework.h */,
-				AA318BEE17E9BA3500BF159E /* TestingFramework.m */,
-				EE37291017E2886200554867 /* Reporter.m */,
-				EE37290F17E2871700554867 /* Reporter.h */,
-				28F489FA17973BF900068E00 /* NSFileHandle+Print.h */,
-				28F489FB17973BF900068E00 /* NSFileHandle+Print.m */,
 				28F489F117973B6100068E00 /* FakeFileHandle.h */,
 				28F489F217973B6100068E00 /* FakeFileHandle.m */,
+				28F489FA17973BF900068E00 /* NSFileHandle+Print.h */,
+				28F489FB17973BF900068E00 /* NSFileHandle+Print.m */,
+				EE37290F17E2871700554867 /* Reporter.h */,
+				EE37291017E2886200554867 /* Reporter.m */,
 				28E28FB217968EAC0072376C /* ReporterEvents.h */,
 				28897FCE173E6215004BA024 /* Swizzle.h */,
 				28897FCF173E6215004BA024 /* Swizzle.m */,
+				AA318BED17E9BA3500BF159E /* TestingFramework.h */,
+				AA318BEE17E9BA3500BF159E /* TestingFramework.m */,
+				AA318BEC17E9B7CA00BF159E /* XCTest.h */,
 			);
 			name = Common;
 			path = ../Common;
@@ -577,18 +577,18 @@
 		AA3E57F91812261B008B9644 /* OCUnitTestRunner */ = {
 			isa = PBXGroup;
 			children = (
-				28E9B9D516C3275200A52E4D /* OCUnitTestRunner.h */,
-				28E9B9D616C3275200A52E4D /* OCUnitTestRunner.m */,
 				28E9B9D116C3275200A52E4D /* OCUnitIOSAppTestRunner.h */,
 				28E9B9D216C3275200A52E4D /* OCUnitIOSAppTestRunner.m */,
+				28B714531760767D00BB016A /* OCUnitIOSDeviceTestRunner.h */,
+				28B714541760767D00BB016A /* OCUnitIOSDeviceTestRunner.m */,
 				28E9B9D316C3275200A52E4D /* OCUnitIOSLogicTestRunner.h */,
 				28E9B9D416C3275200A52E4D /* OCUnitIOSLogicTestRunner.m */,
 				288B9FBA171A5509008F0BDF /* OCUnitOSXAppTestRunner.h */,
 				288B9FBB171A5509008F0BDF /* OCUnitOSXAppTestRunner.m */,
 				288B9FB6171A50C1008F0BDF /* OCUnitOSXLogicTestRunner.h */,
 				288B9FB7171A50C1008F0BDF /* OCUnitOSXLogicTestRunner.m */,
-				28B714531760767D00BB016A /* OCUnitIOSDeviceTestRunner.h */,
-				28B714541760767D00BB016A /* OCUnitIOSDeviceTestRunner.m */,
+				28E9B9D516C3275200A52E4D /* OCUnitTestRunner.h */,
+				28E9B9D616C3275200A52E4D /* OCUnitTestRunner.m */,
 			);
 			name = OCUnitTestRunner;
 			sourceTree = "<group>";
@@ -596,14 +596,14 @@
 		AA3E57FA1812262B008B9644 /* OCUnitTestQueryRunner */ = {
 			isa = PBXGroup;
 			children = (
-				AAC1E0AF1811F5C3005A4FD5 /* OCUnitTestQueryRunner.h */,
-				AAC1E0B01811F5C3005A4FD5 /* OCUnitTestQueryRunner.m */,
-				AAC1E0B31811F5E3005A4FD5 /* OCUnitOSXTestQueryRunner.h */,
-				AAC1E0B41811F5E3005A4FD5 /* OCUnitOSXTestQueryRunner.m */,
-				AAC1E0BB18121071005A4FD5 /* OCUnitIOSLogicTestQueryRunner.h */,
-				AAC1E0BC18121071005A4FD5 /* OCUnitIOSLogicTestQueryRunner.m */,
 				AAC1E0BF18121AC6005A4FD5 /* OCUnitIOSAppTestQueryRunner.h */,
 				AAC1E0C018121AC6005A4FD5 /* OCUnitIOSAppTestQueryRunner.m */,
+				AAC1E0BB18121071005A4FD5 /* OCUnitIOSLogicTestQueryRunner.h */,
+				AAC1E0BC18121071005A4FD5 /* OCUnitIOSLogicTestQueryRunner.m */,
+				AAC1E0B31811F5E3005A4FD5 /* OCUnitOSXTestQueryRunner.h */,
+				AAC1E0B41811F5E3005A4FD5 /* OCUnitOSXTestQueryRunner.m */,
+				AAC1E0AF1811F5C3005A4FD5 /* OCUnitTestQueryRunner.h */,
+				AAC1E0B01811F5C3005A4FD5 /* OCUnitTestQueryRunner.m */,
 			);
 			name = OCUnitTestQueryRunner;
 			sourceTree = "<group>";

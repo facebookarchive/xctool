@@ -26,10 +26,13 @@
       location = "group:Common"
       name = "Common">
       <FileRef
+         location = "group:Reporter.h">
+      </FileRef>
+      <FileRef
          location = "group:Reporter.m">
       </FileRef>
       <FileRef
-         location = "group:Reporter.h">
+         location = "group:ReporterEvents.h">
       </FileRef>
       <FileRef
          location = "group:Swizzle.h">
@@ -37,21 +40,18 @@
       <FileRef
          location = "group:Swizzle.m">
       </FileRef>
-      <FileRef
-         location = "group:ReporterEvents.h">
-      </FileRef>
    </Group>
    <Group
       location = "group:xcodebuild-lib/../Configurations"
       name = "Configurations">
       <FileRef
+         location = "group:Install.xcconfig">
+      </FileRef>
+      <FileRef
          location = "group:iOS-Simulator-Dylib.xcconfig">
       </FileRef>
       <FileRef
          location = "group:Project.xcconfig">
-      </FileRef>
-      <FileRef
-         location = "group:Install.xcconfig">
       </FileRef>
    </Group>
 </Workspace>

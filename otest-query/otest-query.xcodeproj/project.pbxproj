@@ -133,12 +133,12 @@
 			children = (
 				2887CC39181E0D8600B0D049 /* DuplicateTestNameFix.h */,
 				2887CC3A181E0D8600B0D049 /* DuplicateTestNameFix.m */,
+				28E44D4B1810FA5300211BD5 /* ParseTestName.h */,
+				28E44D4C1810FA5300211BD5 /* ParseTestName.m */,
 				2887CC33181DDB5F00B0D049 /* Swizzle.h */,
 				2887CC34181DDB5F00B0D049 /* Swizzle.m */,
 				AA318BE317E9A8C000BF159E /* TestingFramework.h */,
 				AA318BE517E9AA7400BF159E /* TestingFramework.m */,
-				28E44D4B1810FA5300211BD5 /* ParseTestName.h */,
-				28E44D4C1810FA5300211BD5 /* ParseTestName.m */,
 			);
 			name = Common;
 			sourceTree = "<group>";
@@ -181,10 +181,10 @@
 		CD9049031756C5B1006CF16D /* otest-query */ = {
 			isa = PBXGroup;
 			children = (
-				CD9049061756C5B1006CF16D /* Supporting Files */,
 				CD9049041756C5B1006CF16D /* main.m */,
 				CD9049121756C6C0006CF16D /* OtestQuery.h */,
 				CD9049131756C6C0006CF16D /* OtestQuery.m */,
+				CD9049061756C5B1006CF16D /* Supporting Files */,
 			);
 			path = "otest-query";
 			sourceTree = "<group>";

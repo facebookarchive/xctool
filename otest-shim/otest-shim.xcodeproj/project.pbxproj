@@ -133,8 +133,8 @@
 		283CCA9516C2EE4C00F2E343 /* otest-shim */ = {
 			isa = PBXGroup;
 			children = (
-				28A094B31731DA3500838CDD /* dyld_priv.h */,
 				287A37E816C7776E00319E81 /* dyld-interposing.h */,
+				28A094B31731DA3500838CDD /* dyld_priv.h */,
 				283CCA9916C2EE4C00F2E343 /* otest-shim.m */,
 				283CCA9616C2EE4C00F2E343 /* Supporting Files */,
 			);
@@ -152,18 +152,18 @@
 		28897FC6173E50F9004BA024 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				2887CC45181E145D00B0D049 /* TestingFramework.h */,
-				2887CC46181E145D00B0D049 /* TestingFramework.m */,
 				2887CC3F181E0D9200B0D049 /* DuplicateTestNameFix.h */,
 				2887CC40181E0D9200B0D049 /* DuplicateTestNameFix.m */,
-				28E44D501811024F00211BD5 /* ParseTestName.h */,
-				28E44D511811024F00211BD5 /* ParseTestName.m */,
 				3892D7571815ACE200E68652 /* EventGenerator.h */,
 				3892D7581815ACE200E68652 /* EventGenerator.m */,
-				AA318BE917E9B43000BF159E /* XCTest.h */,
+				28E44D501811024F00211BD5 /* ParseTestName.h */,
+				28E44D511811024F00211BD5 /* ParseTestName.m */,
 				28E28FB317968EC50072376C /* ReporterEvents.h */,
 				28897FC7173E50F9004BA024 /* Swizzle.h */,
 				28897FC8173E50F9004BA024 /* Swizzle.m */,
+				2887CC45181E145D00B0D049 /* TestingFramework.h */,
+				2887CC46181E145D00B0D049 /* TestingFramework.m */,
+				AA318BE917E9B43000BF159E /* XCTest.h */,
 			);
 			name = Common;
 			path = ../Common;
