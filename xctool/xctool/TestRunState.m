@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#import "OCUnitCrashFilter.h"
+#import "TestRunState.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -22,7 +22,7 @@
 #import "OCTestSuiteEventState.h"
 #import "OCTestEventState.h"
 
-@implementation OCUnitCrashFilter
+@implementation TestRunState
 
 - (instancetype)initWithTests:(NSArray *)testList
                     reporters:(NSArray *)reporters

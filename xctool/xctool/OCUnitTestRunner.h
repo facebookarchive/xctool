@@ -17,7 +17,7 @@
 #import <Foundation/Foundation.h>
 #import "TestingFramework.h"
 
-#import "OCUnitCrashFilter.h"
+#import "TestRunState.h"
 
 @interface OCUnitTestRunner : NSObject {
 @public
@@ -31,7 +31,7 @@
   BOOL _freshInstall;
   NSString *_simulatorType;
   NSArray *_reporters;
-  OCUnitCrashFilter *_testRunnerState;
+  TestRunState *_testRunnerState;
   NSDictionary *_framework;
 }
 

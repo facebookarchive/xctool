@@ -112,7 +112,7 @@
 		AAC1E0C118121AC6005A4FD5 /* OCUnitIOSAppTestQueryRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC1E0C018121AC6005A4FD5 /* OCUnitIOSAppTestQueryRunner.m */; };
 		AAC1E0C218121AC6005A4FD5 /* OCUnitIOSAppTestQueryRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC1E0C018121AC6005A4FD5 /* OCUnitIOSAppTestQueryRunner.m */; };
 		AAF334481806A46F00928A00 /* LaunchHandlers.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF334461806A46F00928A00 /* LaunchHandlers.m */; };
-		AAF334501806A48A00928A00 /* OCUnitCrashFilterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF3344D1806A48A00928A00 /* OCUnitCrashFilterTests.m */; };
+		AAF334501806A48A00928A00 /* TestRunStateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF3344D1806A48A00928A00 /* TestRunStateTests.m */; };
 		AAF334521806A48A00928A00 /* OCUnitTestRunnerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF3344E1806A48A00928A00 /* OCUnitTestRunnerTests.m */; };
 		AAF334531806A4A400928A00 /* Options+Testing.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF3344A1806A47E00928A00 /* Options+Testing.m */; };
 		C9D5B9891733CC2100011C1F /* ArchiveAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D5B9881733CC2100011C1F /* ArchiveAction.m */; };
@@ -129,9 +129,9 @@
 		EE30659B17DEBE6600733D72 /* FakeFileHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F489F217973B6100068E00 /* FakeFileHandle.m */; };
 		EE37291217E2886200554867 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE37291017E2886200554867 /* Reporter.m */; };
 		EE37291317E288AD00554867 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCA4816C2EA3800F2E343 /* main.m */; };
-		EE37291417E2898200554867 /* OCUnitCrashFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE30658E17DEA92F00733D72 /* OCUnitCrashFilter.m */; };
+		EE37291417E2898200554867 /* TestRunState.m in Sources */ = {isa = PBXBuildFile; fileRef = EE30658E17DEA92F00733D72 /* TestRunState.m */; };
 		EE37291517E289A900554867 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE37291017E2886200554867 /* Reporter.m */; };
-		EE37291617E28A3000554867 /* OCUnitCrashFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE30658E17DEA92F00733D72 /* OCUnitCrashFilter.m */; };
+		EE37291617E28A3000554867 /* TestRunState.m in Sources */ = {isa = PBXBuildFile; fileRef = EE30658E17DEA92F00733D72 /* TestRunState.m */; };
 		EEB31CEA17C685E500CFB0E1 /* OCEventState.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB31CE917C685E500CFB0E1 /* OCEventState.m */; };
 		EEB31CED17C6867300CFB0E1 /* OCEventStateTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB31CEC17C6867300CFB0E1 /* OCEventStateTests.m */; };
 		EEB31CEE17C6904500CFB0E1 /* OCEventState.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB31CE917C685E500CFB0E1 /* OCEventState.m */; };
@@ -295,7 +295,7 @@
 		AAF334461806A46F00928A00 /* LaunchHandlers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LaunchHandlers.m; sourceTree = "<group>"; };
 		AAF334491806A47E00928A00 /* Options+Testing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Options+Testing.h"; sourceTree = "<group>"; };
 		AAF3344A1806A47E00928A00 /* Options+Testing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Options+Testing.m"; sourceTree = "<group>"; };
-		AAF3344D1806A48A00928A00 /* OCUnitCrashFilterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitCrashFilterTests.m; sourceTree = "<group>"; };
+		AAF3344D1806A48A00928A00 /* TestRunStateTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestRunStateTests.m; sourceTree = "<group>"; };
 		AAF3344E1806A48A00928A00 /* OCUnitTestRunnerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitTestRunnerTests.m; sourceTree = "<group>"; };
 		C9D5B9871733CC2100011C1F /* ArchiveAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArchiveAction.h; sourceTree = "<group>"; };
 		C9D5B9881733CC2100011C1F /* ArchiveAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArchiveAction.m; sourceTree = "<group>"; };
@@ -308,8 +308,8 @@
 		CDD81F4F174EAFDC00F42111 /* EventBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventBuffer.h; sourceTree = "<group>"; };
 		CDD81F50174EAFDC00F42111 /* EventBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventBuffer.m; sourceTree = "<group>"; };
 		CDEE9EA0176950DC0026D278 /* BuildStateParserTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuildStateParserTests.m; sourceTree = "<group>"; };
-		EE30658D17DEA92F00733D72 /* OCUnitCrashFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUnitCrashFilter.h; sourceTree = "<group>"; };
-		EE30658E17DEA92F00733D72 /* OCUnitCrashFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitCrashFilter.m; sourceTree = "<group>"; };
+		EE30658D17DEA92F00733D72 /* TestRunState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestRunState.h; sourceTree = "<group>"; };
+		EE30658E17DEA92F00733D72 /* TestRunState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestRunState.m; sourceTree = "<group>"; };
 		EE37290F17E2871700554867 /* Reporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reporter.h; sourceTree = "<group>"; };
 		EE37291017E2886200554867 /* Reporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reporter.m; sourceTree = "<group>"; };
 		EEB31CE817C685E500CFB0E1 /* OCEventState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCEventState.h; sourceTree = "<group>"; };
@@ -435,8 +435,6 @@
 				EEB31CF017C6A1EF00CFB0E1 /* OCTestEventState.m */,
 				EEB31CF717C6D57B00CFB0E1 /* OCTestSuiteEventState.h */,
 				EEB31CF817C6D57B00CFB0E1 /* OCTestSuiteEventState.m */,
-				EE30658D17DEA92F00733D72 /* OCUnitCrashFilter.h */,
-				EE30658E17DEA92F00733D72 /* OCUnitCrashFilter.m */,
 				AA3E57FA1812262B008B9644 /* OCUnitTestQueryRunner */,
 				AA3E57F91812261B008B9644 /* OCUnitTestRunner */,
 				28E28FBA1797099E0072376C /* ReporterTask.h */,
@@ -454,6 +452,8 @@
 				28404ADE17C7E16F00CB436A /* Testable.m */,
 				2869F3C317C82FB80078F078 /* TestableExecutionInfo.h */,
 				2869F3C417C82FB80078F078 /* TestableExecutionInfo.m */,
+				EE30658D17DEA92F00733D72 /* TestRunState.h */,
+				EE30658E17DEA92F00733D72 /* TestRunState.m */,
 				2864A3F81734E52800BBF3B1 /* Version.h */,
 				2864A3F91734E52800BBF3B1 /* Version.m */,
 				287BF08216F1A97900590E06 /* XcodeSubjectInfo.h */,
@@ -509,7 +509,6 @@
 				EEB31CEC17C6867300CFB0E1 /* OCEventStateTests.m */,
 				EEB31CF317C6A21400CFB0E1 /* OCTestEventStateTests.m */,
 				EEB31CFC17C6D5AB00CFB0E1 /* OCTestSuiteEventStateTests.m */,
-				AAF3344D1806A48A00928A00 /* OCUnitCrashFilterTests.m */,
 				AAF3344E1806A48A00928A00 /* OCUnitTestRunnerTests.m */,
 				AAF334491806A47E00928A00 /* Options+Testing.h */,
 				AAF3344A1806A47E00928A00 /* Options+Testing.m */,
@@ -525,6 +524,7 @@
 				28A5A8EC1746D2AA001733A9 /* Swizzler.m */,
 				28A5A8EF1746D2B9001733A9 /* SwizzlerTests.m */,
 				32707EE11725FE7F00AF2F53 /* TestActionTests.m */,
+				AAF3344D1806A48A00928A00 /* TestRunStateTests.m */,
 				283479B716E3EBE5003C3B77 /* TestUtil.h */,
 				283479B816E3EBE5003C3B77 /* TestUtil.m */,
 				287BF04C16F1A6EB00590E06 /* XcodeSubjectInfoTests.m */,
@@ -692,7 +692,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EE37291517E289A900554867 /* Reporter.m in Sources */,
-				EE37291417E2898200554867 /* OCUnitCrashFilter.m in Sources */,
+				EE37291417E2898200554867 /* TestRunState.m in Sources */,
 				EE37291317E288AD00554867 /* main.m in Sources */,
 				EE30659B17DEBE6600733D72 /* FakeFileHandle.m in Sources */,
 				283CCAD616C2F10A00F2E343 /* XCTool.m in Sources */,
@@ -743,13 +743,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EE37291617E28A3000554867 /* OCUnitCrashFilter.m in Sources */,
+				EE37291617E28A3000554867 /* TestRunState.m in Sources */,
 				AAF334531806A4A400928A00 /* Options+Testing.m in Sources */,
 				3892D7421811A5CC00E68652 /* EventGenerator.m in Sources */,
 				EEB31CF517C6A23E00CFB0E1 /* OCTestEventState.m in Sources */,
 				EEB31CEE17C6904500CFB0E1 /* OCEventState.m in Sources */,
 				AA6C88F71808C2C5006A3581 /* OTestShimTests.m in Sources */,
-				AAF334501806A48A00928A00 /* OCUnitCrashFilterTests.m in Sources */,
+				AAF334501806A48A00928A00 /* TestRunStateTests.m in Sources */,
 				28E28FB91796934B0072376C /* ReportStatus.m in Sources */,
 				28B714561760769E00BB016A /* OCUnitIOSDeviceTestRunner.m in Sources */,
 				283479A216E1A164003C3B77 /* CleanAction.m in Sources */,

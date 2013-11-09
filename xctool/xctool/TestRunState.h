@@ -20,7 +20,7 @@
 #import "OCTestSuiteEventState.h"
 #import "OCTestEventState.h"
 
-@interface OCUnitCrashFilter : Reporter {
+@interface TestRunState : Reporter {
   OCTestSuiteEventState *_testSuiteState;
   OCTestEventState *_previousTestState;
   NSSet *_crashReportsAtStart;

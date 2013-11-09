@@ -18,11 +18,11 @@
 
 #import "EventSink.h"
 #import "EventBuffer.h"
-#import "OCUnitCrashFilter.h"
+#import "TestRunState.h"
 #import "ReporterEvents.h"
 #import "TestUtil.h"
 
-static NSArray *EventsForFullRun()
+static NSArray *EventsForFakeRun()
 {
   return @[
     @{@"event" : @"begin-test-suite", @"suite" : kReporter_TestSuite_TopLevelSuiteName},
@@ -35,19 +35,19 @@ static NSArray *EventsForFullRun()
     ];
 }
 
-static OCUnitCrashFilter *CrashFilterWithEventSink(id<EventSink> sink)
+static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
 {
-  OCUnitCrashFilter *crashFilter = [[[OCUnitCrashFilter alloc] initWithTests:@[@"OtherTests/testSomething", @"OtherTests/testAnother"]
+  TestRunState *testRunState = [[[TestRunState alloc] initWithTests:@[@"OtherTests/testSomething", @"OtherTests/testAnother"]
                                                                    reporters:@[sink]] autorelease];
-  crashFilter.crashReportCollectionTime = 0.25;
-  return crashFilter;
+  testRunState.crashReportCollectionTime = 0.25;
+  return testRunState;
 }
 
-@interface OCUnitCrashFilterTests : SenTestCase {
+@interface TestRunStateTests : SenTestCase {
 }
 @end
 
-@implementation OCUnitCrashFilterTests
+@implementation TestRunStateTests
 
 - (void)assertEvents:(NSArray *)events containsEvents:(NSArray *)eventKeys
 {
@@ -102,8 +102,8 @@ static OCUnitCrashFilter *CrashFilterWithEventSink(id<EventSink> sink)
                         @"SomeTests/testWillPass"];
 
   EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
-  OCUnitCrashFilter *state =
-    [[[OCUnitCrashFilter alloc] initWithTests:testList
+  TestRunState *state =
+    [[[TestRunState alloc] initWithTests:testList
                                     reporters:@[eventBuffer]] autorelease];
   [state prepareToRun];
   [self sendEventsFromFile:TEST_DATA @"JSONStreamReporter-runtests.txt"
@@ -116,7 +116,7 @@ static OCUnitCrashFilter *CrashFilterWithEventSink(id<EventSink> sink)
 - (void)testCrashedBeforeTestSuiteStart
 {
   EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
-  OCUnitCrashFilter *state = CrashFilterWithEventSink(eventBuffer);
+  TestRunState *state = TestRunStateForFakeRun(eventBuffer);
 
   [state prepareToRun];
   [self sendEvents:@[] toReporter:state];
@@ -138,10 +138,10 @@ static OCUnitCrashFilter *CrashFilterWithEventSink(id<EventSink> sink)
 - (void)testCrashedAfterTestSuiteStartBeforeTests
 {
   EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
-  OCUnitCrashFilter *state = CrashFilterWithEventSink(eventBuffer);
+  TestRunState *state = TestRunStateForFakeRun(eventBuffer);
 
   [state prepareToRun];
-  [self sendEvents:[EventsForFullRun() subarrayWithRange:NSMakeRange(0, 1)]
+  [self sendEvents:[EventsForFakeRun() subarrayWithRange:NSMakeRange(0, 1)]
         toReporter:state];
   [state finishedRun:YES error:nil];
 
@@ -161,10 +161,10 @@ static OCUnitCrashFilter *CrashFilterWithEventSink(id<EventSink> sink)
 - (void)testCrashedAfterFirstTestStarts
 {
   EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
-  OCUnitCrashFilter *state = CrashFilterWithEventSink(eventBuffer);
+  TestRunState *state = TestRunStateForFakeRun(eventBuffer);
 
   [state prepareToRun];
-  [self sendEvents:[EventsForFullRun() subarrayWithRange:NSMakeRange(0, 2)]
+  [self sendEvents:[EventsForFakeRun() subarrayWithRange:NSMakeRange(0, 2)]
           toReporter:state];
   [state finishedRun:YES error:nil];
 
@@ -182,10 +182,10 @@ static OCUnitCrashFilter *CrashFilterWithEventSink(id<EventSink> sink)
 - (void)testCrashedAfterFirstTestFinishes
 {
   EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
-  OCUnitCrashFilter *state = CrashFilterWithEventSink(eventBuffer);
+  TestRunState *state = TestRunStateForFakeRun(eventBuffer);
 
   [state prepareToRun];
-  [self sendEvents:[EventsForFullRun() subarrayWithRange:NSMakeRange(0, 4)]
+  [self sendEvents:[EventsForFakeRun() subarrayWithRange:NSMakeRange(0, 4)]
         toReporter:state];
   [state finishedRun:YES error:nil];
 
@@ -201,10 +201,10 @@ static OCUnitCrashFilter *CrashFilterWithEventSink(id<EventSink> sink)
 - (void)testErrorMessagePropogatesToTestOutput
 {
   EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
-  OCUnitCrashFilter *state = CrashFilterWithEventSink(eventBuffer);
+  TestRunState *state = TestRunStateForFakeRun(eventBuffer);
 
   [state prepareToRun];
-  [self sendEvents:[EventsForFullRun() subarrayWithRange:NSMakeRange(0, 4)]
+  [self sendEvents:[EventsForFakeRun() subarrayWithRange:NSMakeRange(0, 4)]
         toReporter:state];
   [state finishedRun:YES error:@"cupcakes candy donuts cookies"];
 
@@ -220,10 +220,10 @@ static OCUnitCrashFilter *CrashFilterWithEventSink(id<EventSink> sink)
 - (void)testCrashedAfterLastTestFinishes
 {
   EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
-  OCUnitCrashFilter *state = CrashFilterWithEventSink(eventBuffer);
+  TestRunState *state = TestRunStateForFakeRun(eventBuffer);
 
   [state prepareToRun];
-  [self sendEvents:[EventsForFullRun() subarrayWithRange:NSMakeRange(0, 6)]
+  [self sendEvents:[EventsForFakeRun() subarrayWithRange:NSMakeRange(0, 6)]
         toReporter:state];
   [state finishedRun:YES error:nil];
 
@@ -241,10 +241,10 @@ static OCUnitCrashFilter *CrashFilterWithEventSink(id<EventSink> sink)
 - (void)testCrashedAfterTestSuiteFinishes
 {
   EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
-  OCUnitCrashFilter *state = CrashFilterWithEventSink(eventBuffer);
+  TestRunState *state = TestRunStateForFakeRun(eventBuffer);
 
   [state prepareToRun];
-  [self sendEvents:EventsForFullRun()
+  [self sendEvents:EventsForFakeRun()
         toReporter:state];
   [state finishedRun:YES  error:nil];
 
@@ -255,7 +255,7 @@ static OCUnitCrashFilter *CrashFilterWithEventSink(id<EventSink> sink)
 - (void)testExtendedInfo
 {
   EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
-  OCUnitCrashFilter *state = CrashFilterWithEventSink(eventBuffer);
+  TestRunState *state = TestRunStateForFakeRun(eventBuffer);
 
   [state prepareToRun];
   [self sendEvents:@[] toReporter:state];

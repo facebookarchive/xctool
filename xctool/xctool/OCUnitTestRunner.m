@@ -18,8 +18,8 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-#import "OCUnitCrashFilter.h"
 #import "ReportStatus.h"
+#import "TestRunState.h"
 
 @implementation OCUnitTestRunner
 
@@ -122,7 +122,7 @@
 - (BOOL)runTestsWithError:(NSString **)error {
   __block BOOL didReceiveTestEvents = NO;
 
-  _testRunnerState = [[OCUnitCrashFilter alloc] initWithTests:_focusedTestCases reporters:_reporters];
+  _testRunnerState = [[TestRunState alloc] initWithTests:_focusedTestCases reporters:_reporters];
 
   void (^feedOutputToBlock)(NSString *) = ^(NSString *line) {
     NSData *lineData = [line dataUsingEncoding:NSUTF8StringEncoding];
