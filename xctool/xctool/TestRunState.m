@@ -41,6 +41,8 @@
 - (void)dealloc
 {
   [_testSuiteState release];
+  [_previousTestState release];
+  [_crashReportsAtStart release];
   [super dealloc];
 }
 
@@ -51,7 +53,8 @@
 
 - (void)prepareToRun
 {
-  _crashReportsAtStart = [NSSet setWithArray:[self collectCrashReportPaths]];
+  NSAssert(_crashReportsAtStart == nil, @"Should not have set yet.");
+  _crashReportsAtStart = [[NSSet setWithArray:[self collectCrashReportPaths]] retain];
 }
 
 - (void)finishedRun:(BOOL)unexpectedTermination
@@ -154,11 +157,6 @@
   }
 
   [self publishTestOutputWithSummary:summaryTestOutput extended:extendedTestOutput];
-
-  if (_previousTestState) {
-    [_previousTestState release];
-    _previousTestState = nil;
-  }
 }
 
 - (void)publishTestOutputWithSummary:(NSString *)summary extended:(NSString *)extended
