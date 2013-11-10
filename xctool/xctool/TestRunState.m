@@ -40,8 +40,7 @@
 
 - (void)dealloc
 {
-  [_testSuiteState dealloc];
-
+  [_testSuiteState release];
   [super dealloc];
 }
 
@@ -94,6 +93,7 @@
 
   if (_previousTestState) {
     [_previousTestState release];
+    _previousTestState = nil;
   }
   _previousTestState = [state retain];
 }
@@ -101,7 +101,6 @@
 - (void)endTestSuite:(NSDictionary *)event
 {
   [_testSuiteState endTestSuite];
-  _testSuiteState = nil;
 }
 
 - (void)testOutput:(NSDictionary *)event
@@ -114,6 +113,14 @@
 - (void)handleEarlyTermination:(NSSet *)crashReportsAtStart
                          error:(NSString *)error
 {
+  if ([_testSuiteState isFinished]) {
+    // Normally we'd insert a failing test to advertise the crash, but the test
+    // suite has already finished so there's no active suite that we can insert
+    // the failure into.
+    NSLog(@"WARNING: Test suite crashed after finishing, strange indeed");
+    return;
+  }
+
   NSString *summaryTestOutput = @"";
   NSString *extendedTestOutput = [NSString stringWithFormat:
                                   @"\n"
@@ -126,9 +133,6 @@
     summaryTestOutput = error;
   } else if (![_testSuiteState isStarted]) {
     summaryTestOutput = @"The test binary crashed before starting a test-suite\n";
-  } else if ([_testSuiteState isFinished]) {
-    // We have no way to output this, so just print a warning and move on with life
-    NSLog(@"WARNING: Test suite crashed after finishing, strange indeed");
   } else if ([_testSuiteState runningTest]) {
     summaryTestOutput = [NSString stringWithFormat:
                          @"Test `%@` crashed binary while running\n", [[_testSuiteState runningTest] testName]];
@@ -153,16 +157,17 @@
 
   if (_previousTestState) {
     [_previousTestState release];
+    _previousTestState = nil;
   }
 }
 
 - (void)publishTestOutputWithSummary:(NSString *)summary extended:(NSString *)extended
 {
   NSMutableArray *unfinishedTests =
-  [[[_testSuiteState tests] filteredArrayUsingPredicate:
+  [[[[_testSuiteState tests] filteredArrayUsingPredicate:
     [NSPredicate predicateWithBlock:^BOOL(OCTestEventState *test, NSDictionary *bindings) {
     return ![test isFinished];
-  }]] mutableCopy];
+  }]] mutableCopy] autorelease];
 
   if ([unfinishedTests count] > 0) {
     // The next test to run gets the full debug output
@@ -189,19 +194,17 @@
   }
 
   [_testSuiteState publishEvents];
-  [unfinishedTests release];
 }
 
 - (void)emitFakeTestWithName:(NSString *)testName andOutput:(NSString *)testOutput
 {
   OCTestEventState *fakeTest =
-  [[OCTestEventState alloc] initWithInputName:testName];
+  [[[OCTestEventState alloc] initWithInputName:testName] autorelease];
 
   [_testSuiteState addTest:fakeTest];
   [fakeTest appendOutput:testOutput];
 
   [fakeTest publishEvents];
-  [fakeTest release];
 }
 
 - (NSArray *)collectCrashReportPaths
