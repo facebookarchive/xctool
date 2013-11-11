@@ -43,22 +43,29 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
   return testRunState;
 }
 
+static NSArray *SelectEventFields(NSArray *events, NSString *eventName, NSString *fieldName)
+{
+  NSMutableArray *result = [NSMutableArray array];
+
+  for (NSDictionary *event in events) {
+    if (eventName == nil || [event[@"event"] isEqual:eventName]) {
+      NSCAssert(event[fieldName],
+                @"Should have value for field '%@' in event '%@': %@",
+                fieldName,
+                eventName,
+                event);
+      [result addObject:event[fieldName]];
+    }
+  }
+
+  return result;
+}
+
 @interface TestRunStateTests : SenTestCase {
 }
 @end
 
 @implementation TestRunStateTests
-
-- (void)assertEvents:(NSArray *)events containsEvents:(NSArray *)eventKeys
-{
-  NSAssert([events count] == [eventKeys count],
-           @"Expected event keys '%@' but got events: %@", eventKeys, [events valueForKey:@"event"]);
-
-  [eventKeys enumerateObjectsUsingBlock:^(NSString *eventKey, NSUInteger idx, BOOL *stop) {
-    NSAssert([eventKey isEqualToString:events[idx][@"event"]],
-             @"Expected event key '%@' but got event key '%@'", eventKey, events[idx][@"event"]);
-  }];
-}
 
 - (void)sendEvents:(NSArray *)events toReporter:(Reporter *)reporter
 {
@@ -122,15 +129,15 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
   [self sendEvents:@[] toReporter:state];
   [state finishedRun:YES error:nil];
 
-  [self assertEvents:eventBuffer.events containsEvents:
-    @[kReporter_Events_BeginTestSuite,
-      kReporter_Events_BeginTest,
-      kReporter_Events_TestOuput,
-      kReporter_Events_EndTest,
-      kReporter_Events_BeginTest,
-      kReporter_Events_TestOuput,
-      kReporter_Events_EndTest,
-      kReporter_Events_EndTestSuite]];
+  assertThat(SelectEventFields(eventBuffer.events, nil, @"event"),
+             equalTo(@[kReporter_Events_BeginTestSuite,
+                       kReporter_Events_BeginTest,
+                       kReporter_Events_TestOuput,
+                       kReporter_Events_EndTest,
+                       kReporter_Events_BeginTest,
+                       kReporter_Events_TestOuput,
+                       kReporter_Events_EndTest,
+                       kReporter_Events_EndTestSuite]));
 
   assertThat(eventBuffer.events[2][@"output"], containsString(@"crashed before starting a test-suite"));
 }
@@ -145,14 +152,14 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
         toReporter:state];
   [state finishedRun:YES error:nil];
 
-  [self assertEvents:eventBuffer.events containsEvents:
-   @[kReporter_Events_BeginTest,
-     kReporter_Events_TestOuput,
-     kReporter_Events_EndTest,
-     kReporter_Events_BeginTest,
-     kReporter_Events_TestOuput,
-     kReporter_Events_EndTest,
-     kReporter_Events_EndTestSuite]];
+  assertThat(SelectEventFields(eventBuffer.events, nil, @"event"),
+             equalTo(@[kReporter_Events_BeginTest,
+                       kReporter_Events_TestOuput,
+                       kReporter_Events_EndTest,
+                       kReporter_Events_BeginTest,
+                       kReporter_Events_TestOuput,
+                       kReporter_Events_EndTest,
+                       kReporter_Events_EndTestSuite]));
 
   assertThat(eventBuffer.events[1][@"output"],
              containsString(@"after starting a test-suite but before starting a test\n\n"));
@@ -168,13 +175,13 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
           toReporter:state];
   [state finishedRun:YES error:nil];
 
-  [self assertEvents:eventBuffer.events containsEvents:
-   @[kReporter_Events_TestOuput,
-     kReporter_Events_EndTest,
-     kReporter_Events_BeginTest,
-     kReporter_Events_TestOuput,
-     kReporter_Events_EndTest,
-     kReporter_Events_EndTestSuite]];
+  assertThat(SelectEventFields(eventBuffer.events, nil, @"event"),
+             equalTo(@[kReporter_Events_TestOuput,
+                       kReporter_Events_EndTest,
+                       kReporter_Events_BeginTest,
+                       kReporter_Events_TestOuput,
+                       kReporter_Events_EndTest,
+                       kReporter_Events_EndTestSuite]));
 
   assertThat(eventBuffer.events[0][@"output"], containsString(@"crashed binary while running\n"));
 }
@@ -189,11 +196,11 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
         toReporter:state];
   [state finishedRun:YES error:nil];
 
-  [self assertEvents:eventBuffer.events containsEvents:
-   @[kReporter_Events_BeginTest,
-     kReporter_Events_TestOuput,
-     kReporter_Events_EndTest,
-     kReporter_Events_EndTestSuite]];
+  assertThat(SelectEventFields(eventBuffer.events, nil, @"event"),
+             equalTo(@[kReporter_Events_BeginTest,
+                       kReporter_Events_TestOuput,
+                       kReporter_Events_EndTest,
+                       kReporter_Events_EndTestSuite]));
 
   assertThat(eventBuffer.events[1][@"output"], containsString(@"crashed immediately after running"));
 }
@@ -208,12 +215,12 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
         toReporter:state];
   [state finishedRun:YES error:@"cupcakes candy donuts cookies"];
 
-  [self assertEvents:eventBuffer.events containsEvents:
-   @[kReporter_Events_BeginTest,
-     kReporter_Events_TestOuput,
-     kReporter_Events_EndTest,
-     kReporter_Events_EndTestSuite]];
-  
+  assertThat(SelectEventFields(eventBuffer.events, nil, @"event"),
+             equalTo(@[kReporter_Events_BeginTest,
+                       kReporter_Events_TestOuput,
+                       kReporter_Events_EndTest,
+                       kReporter_Events_EndTestSuite]));
+
   assertThat(eventBuffer.events[1][@"output"], containsString(@"cupcakes candy donuts cookies"));
 }
 
@@ -227,12 +234,13 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
         toReporter:state];
   [state finishedRun:YES error:nil];
 
-  // In this case there are no tests left with which to report the error, so we have to create a fake one
-  [self assertEvents:eventBuffer.events containsEvents:
-   @[kReporter_Events_BeginTest,
-     kReporter_Events_TestOuput,
-     kReporter_Events_EndTest,
-     kReporter_Events_EndTestSuite]];
+  // In this case there are no tests left with which to report the error, so we
+  // create a fake one just so we have a place to advertise the error.
+  assertThat(SelectEventFields(eventBuffer.events, nil, @"event"),
+             equalTo(@[kReporter_Events_BeginTest,
+                       kReporter_Events_TestOuput,
+                       kReporter_Events_EndTest,
+                       kReporter_Events_EndTestSuite]));
 
   assertThat(eventBuffer.events[0][@"test"], containsString(@"_MAYBE_CRASHED"));
   assertThat(eventBuffer.events[1][@"output"], containsString(@"crashed immediately after running"));
@@ -249,7 +257,7 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
   [state finishedRun:YES  error:nil];
 
   // Not much we can do here, make sure no events are shipped out
-  [self assertEvents:eventBuffer.events containsEvents:@[]];
+  assertThatInteger(eventBuffer.events.count, equalToInteger(0));
 }
 
 - (void)testExtendedInfo
@@ -261,15 +269,15 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
   [self sendEvents:@[] toReporter:state];
   [state finishedRun:YES error:nil];
 
-  [self assertEvents:eventBuffer.events containsEvents:
-   @[kReporter_Events_BeginTestSuite,
-     kReporter_Events_BeginTest,
-     kReporter_Events_TestOuput,
-     kReporter_Events_EndTest,
-     kReporter_Events_BeginTest,
-     kReporter_Events_TestOuput,
-     kReporter_Events_EndTest,
-     kReporter_Events_EndTestSuite]];
+  assertThat(SelectEventFields(eventBuffer.events, nil, @"event"),
+             equalTo(@[kReporter_Events_BeginTestSuite,
+                       kReporter_Events_BeginTest,
+                       kReporter_Events_TestOuput,
+                       kReporter_Events_EndTest,
+                       kReporter_Events_BeginTest,
+                       kReporter_Events_TestOuput,
+                       kReporter_Events_EndTest,
+                       kReporter_Events_EndTestSuite]));
 
   // Normally the extended info has the crash report, but since we're just testing here we'll instead just look
   // for the double newline that comes before the crash report
