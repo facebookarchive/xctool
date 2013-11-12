@@ -113,7 +113,7 @@ static NSArray *SelectEventFields(NSArray *events, NSString *eventName, NSString
   [state prepareToRun];
   [self sendEventsFromFile:TEST_DATA @"JSONStreamReporter-runtests.txt"
                 toReporter:state];
-  [state finishedRun:NO error:nil];
+  [state didFinishRunWithStartupError:nil];
 
   assertThat(eventBuffer.events, hasCountOf(0));
 }
@@ -127,7 +127,7 @@ static NSArray *SelectEventFields(NSArray *events, NSString *eventName, NSString
 
     [state prepareToRun];
     [self sendEvents:events toReporter:state];
-    [state finishedRun:YES error:nil];
+    [state didFinishRunWithStartupError:nil];
 
     assertThat(SelectEventFields(eventBuffer.events, nil, @"event"),
                equalTo(expectedEvents));
@@ -179,7 +179,7 @@ static NSArray *SelectEventFields(NSArray *events, NSString *eventName, NSString
   [state prepareToRun];
   [self sendEvents:[EventsForFakeRun() subarrayWithRange:NSMakeRange(0, 2)]
           toReporter:state];
-  [state finishedRun:YES error:nil];
+  [state didFinishRunWithStartupError:nil];
 
   assertThat(SelectEventFields(eventBuffer.events, nil, @"event"),
              equalTo(@[kReporter_Events_TestOuput,
@@ -206,7 +206,7 @@ static NSArray *SelectEventFields(NSArray *events, NSString *eventName, NSString
   [state prepareToRun];
   [self sendEvents:[EventsForFakeRun() subarrayWithRange:NSMakeRange(0, 4)]
         toReporter:state];
-  [state finishedRun:YES error:nil];
+  [state didFinishRunWithStartupError:nil];
 
   assertThat(SelectEventFields(eventBuffer.events, nil, @"event"),
              equalTo(@[kReporter_Events_BeginTest,
@@ -237,7 +237,7 @@ static NSArray *SelectEventFields(NSArray *events, NSString *eventName, NSString
   [state prepareToRun];
   [self sendEvents:@[]
         toReporter:state];
-  [state finishedRun:YES error:@"cupcakes candy donuts cookies"];
+  [state didFinishRunWithStartupError:@"cupcakes candy donuts cookies"];
 
   assertThat(SelectEventFields(eventBuffer.events, nil, @"event"),
              equalTo(@[kReporter_Events_BeginTestSuite,
@@ -262,7 +262,7 @@ static NSArray *SelectEventFields(NSArray *events, NSString *eventName, NSString
   [state prepareToRun];
   [self sendEvents:[EventsForFakeRun() subarrayWithRange:NSMakeRange(0, 6)]
         toReporter:state];
-  [state finishedRun:YES error:nil];
+  [state didFinishRunWithStartupError:nil];
 
   // In this case there are no tests left with which to report the error, so we
   // create a fake one just so we have a place to advertise the error.
@@ -290,7 +290,7 @@ static NSArray *SelectEventFields(NSArray *events, NSString *eventName, NSString
   [state prepareToRun];
   [self sendEvents:EventsForFakeRun()
         toReporter:state];
-  [state finishedRun:YES  error:nil];
+  [state didFinishRunWithStartupError:nil];
 
   // Not much we can do here, make sure no events are shipped out
   assertThatInteger(eventBuffer.events.count, equalToInteger(0));

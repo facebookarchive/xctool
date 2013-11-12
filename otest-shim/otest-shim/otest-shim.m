@@ -359,30 +359,6 @@ static void XCTestCase_performTest(id self, SEL sel, id arg1)
 
 #pragma mark -
 
-static void SaveExitMode(NSDictionary *exitMode)
-{
-  NSDictionary *env = [[NSProcessInfo processInfo] environment];
-  NSString *saveExitModeTo = [env objectForKey:@"SAVE_EXIT_MODE_TO"];
-
-  if (saveExitModeTo) {
-    assert([exitMode writeToFile:saveExitModeTo atomically:YES] == YES);
-  }
-}
-
-static void __exit(int status)
-{
-  SaveExitMode(@{@"via" : @"exit", @"status" : @(status) });
-  exit(status);
-}
-DYLD_INTERPOSE(__exit, exit);
-
-static void __abort()
-{
-  SaveExitMode(@{@"via" : @"abort"});
-  abort();
-}
-DYLD_INTERPOSE(__abort, abort);
-
 // From /usr/lib/system/libsystem_kernel.dylib - output from printf/fprintf/fwrite will flow to
 // __write_nonancel just before it does the system call.
 ssize_t __write_nocancel(int fildes, const void *buf, size_t nbyte);

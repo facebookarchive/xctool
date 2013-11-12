@@ -19,15 +19,13 @@
 
 @implementation OCUnitIOSDeviceTestRunner
 
-- (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
-       testsNotStartedOrErrored:(BOOL *)testsNotStartedOrErrored
-                          error:(NSString **)error
+- (void)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
+                   startupError:(NSString **)startupError
 {
   // Just a place holder.  The plumbing for 'run-tests' expects each SDK to have
   // an associated test runner.
-  *error = @"Testing with the 'iphoneos' SDK is not yet supported.  Instead, "
-           @"test with the simulator SDK by setting '-sdk iphonesimulator'.";
-  return NO;
+  *startupError = @"Testing with the 'iphoneos' SDK is not yet supported.  Instead, "
+                  @"test with the simulator SDK by setting '-sdk iphonesimulator'.";
 }
 
 @end

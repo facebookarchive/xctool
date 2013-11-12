@@ -51,16 +51,23 @@
   _testSuiteState.reporters = reporters;
 }
 
+- (BOOL)allTestsPassed
+{
+  unsigned int numPassed = 0;
+  for (int i = 0; i < [_testSuiteState.tests count]; i++) {
+    OCTestEventState *testState = _testSuiteState.tests[i];
+    if (testState.isSuccessful) {
+      numPassed++;
+    }
+  }
+
+  return (numPassed == [_testSuiteState testCount]) && _testSuiteState.isFinished;
+}
+
 - (void)prepareToRun
 {
   NSAssert(_crashReportsAtStart == nil, @"Should not have set yet.");
   _crashReportsAtStart = [[NSSet setWithArray:[self collectCrashReportPaths]] retain];
-}
-
-- (void)finishedRun:(BOOL)unexpectedTermination
-              error:(NSString *)error
-{
-  [self didFinishRunWithStartupError:error];
 }
 
 - (void)beginTestSuite:(NSDictionary *)event

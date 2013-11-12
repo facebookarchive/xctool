@@ -25,9 +25,8 @@
 
 @implementation OCUnitOSXAppTestRunner
 
-- (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
-       testsNotStartedOrErrored:(BOOL *)testsNotStartedOrErrored
-                          error:(NSString **)error
+- (void)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
+                   startupError:(NSString **)startupError
 {
   NSString *sdkName = _buildSettings[@"SDK_NAME"];
   NSAssert([sdkName hasPrefix:@"macosx"], @"Unexpected SDK: %@", sdkName);
@@ -42,8 +41,8 @@
     // incredibly odd configs.
     ReportStatusMessage(_reporters, REPORTER_MESSAGE_ERROR,
                         @"Your TEST_HOST '%@' does not appear to be an executable.", testHostPath);
-    *error = @"TEST_HOST not executable.";
-    return NO;
+    *startupError = @"TEST_HOST not executable.";
+    return;
   }
 
   NSArray *libraries = @[[XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-osx.dylib"],
@@ -69,11 +68,7 @@
   LaunchTaskAndFeedOuputLinesToBlock(task,
                                      @"running otest/xctest on test bundle",
                                      outputLineBlock);
-
-  *testsNotStartedOrErrored = task.terminationReason == NSTaskTerminationReasonUncaughtSignal;
-  int terminationStatus = task.terminationStatus;
   [task release];
-  return terminationStatus == 0;
 }
 
 @end

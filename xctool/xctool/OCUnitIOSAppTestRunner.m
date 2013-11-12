@@ -189,27 +189,16 @@ static void KillSimulatorJobs()
  */
 - (void)runTestsInSimulator:(NSString *)testHostAppPath
           feedOutputToBlock:(void (^)(NSString *))feedOutputToBlock
-             testsSucceeded:(BOOL *)testsSucceeded
              infraSucceeded:(BOOL *)infraSucceeded
 {
-  NSString *exitModePath = MakeTempFileWithPrefix(@"exit-mode");
   NSString *outputPath = MakeTempFileWithPrefix(@"output");
   NSFileHandle *outputHandle = [NSFileHandle fileHandleForReadingAtPath:outputPath];
 
   LineReader *reader = [[[LineReader alloc] initWithFileHandle:outputHandle] autorelease];
   reader.didReadLineBlock = feedOutputToBlock;
 
-  // otest-shim will be inserted into the process and will interpose the exit()
-  // and abort() functions, and write the exit status of the app to whatever
-  // is specified in SAVE_EXIT_MODE_TO.
-  //
-  // We only do this because the simulator API gives us no easy way to get the
-  // exit status of the app we launch, and we use the exit status to tell if
-  // all tests in a given test bundle ran successfully.
   DTiPhoneSimulatorSessionConfig *sessionConfig =
-    [self sessionConfigForRunningTestsWithEnvironment:@{
-     @"SAVE_EXIT_MODE_TO" : exitModePath,
-     }
+    [self sessionConfigForRunningTestsWithEnvironment:@{}
                                            outputPath:outputPath];
 
   [sessionConfig setSimulatedApplicationStdOutPath:outputPath];
@@ -225,19 +214,9 @@ static void KillSimulatorJobs()
   [reader stopReading];
   [reader finishReadingToEndOfFile];
 
-  BOOL exitStatusWasWritten = [[NSFileManager defaultManager] fileExistsAtPath:exitModePath
-                                                                   isDirectory:NULL];
-
-  if (simStartedSuccessfully && exitStatusWasWritten) {
-    NSDictionary *exitMode = [NSDictionary dictionaryWithContentsOfFile:exitModePath];
-
-    [[NSFileManager defaultManager] removeItemAtPath:outputPath error:nil];
-    [[NSFileManager defaultManager] removeItemAtPath:exitModePath error:nil];
-
-    *testsSucceeded = [exitMode[@"via"] isEqualToString:@"exit"] && ([exitMode[@"status"] intValue] == 0);
+  if (simStartedSuccessfully) {
     *infraSucceeded = YES;
   } else {
-    *testsSucceeded = NO;
     *infraSucceeded = NO;
   }
 }
@@ -302,9 +281,8 @@ static void KillSimulatorJobs()
   }
 }
 
-- (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
-       testsNotStartedOrErrored:(BOOL *)testsNotStartedOrErrored
-                          error:(NSString **)error
+- (void)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
+                   startupError:(NSString **)startupError
 {
   NSString *sdkName = _buildSettings[@"SDK_NAME"];
   NSAssert([sdkName hasPrefix:@"iphonesimulator"], @"Unexpected SDK: %@", sdkName);
@@ -317,18 +295,16 @@ static void KillSimulatorJobs()
   if (![[NSFileManager defaultManager] isExecutableFileAtPath:testHostPath]) {
     ReportStatusMessage(_reporters, REPORTER_MESSAGE_ERROR,
                         @"Your TEST_HOST '%@' does not appear to be an executable.", testHostPath);
-    *testsNotStartedOrErrored = YES;
-    *error = @"TEST_HOST not executable.";
-    return NO;
+    *startupError = @"TEST_HOST not executable.";
+    return;
   }
 
   NSDictionary *testHostInfoPlist = [NSDictionary dictionaryWithContentsOfFile:testHostPlistPath];
   if (!testHostInfoPlist) {
     ReportStatusMessage(_reporters, REPORTER_MESSAGE_ERROR,
                         @"Info.plist for TEST_HOST missing or malformatted.");
-    *testsNotStartedOrErrored = YES;
-    *error = @"Bad Info.plist for TEST_HOST";
-    return NO;
+    *startupError = @"Bad Info.plist for TEST_HOST";
+    return;
   }
 
   NSString *testHostBundleID = testHostInfoPlist[@"CFBundleIdentifier"];
@@ -348,7 +324,7 @@ static void KillSimulatorJobs()
     }
 
     if (_freshInstall) {
-      if (![self uninstallTestHostBundleID:testHostBundleID withError:error]) {
+      if (![self uninstallTestHostBundleID:testHostBundleID withError:startupError]) {
         return NO;
       }
     }
@@ -365,7 +341,7 @@ static void KillSimulatorJobs()
     // is always set correctly.
     if (![self installTestHostBundleID:testHostBundleID
                         fromBundlePath:testHostAppPath
-                                 error:error]) {
+                                 error:startupError]) {
       return NO;
     }
     return YES;
@@ -375,10 +351,10 @@ static void KillSimulatorJobs()
   // Instead of retrying the installation after failure, we'll kill and relaunch the simulator before
   // the install, and also wait a short amount of time before each attempt.
   for (NSInteger remainingAttempts = kMaxInstallOrUninstallAttempts - 1; remainingAttempts >= 0; --remainingAttempts) {
-    if (prepTestEnv(error)) {
+    if (prepTestEnv(startupError)) {
       break;
     } else {
-      NSCAssert(error, @"If preparing the test env failed, there should be a description of what failed.");
+      NSCAssert(startupError, @"If preparing the test env failed, there should be a description of what failed.");
       if (remainingAttempts > 0) {
         ReportStatusMessage(_reporters,
                             REPORTER_MESSAGE_INFO,
@@ -395,8 +371,7 @@ static void KillSimulatorJobs()
         ReportStatusMessage(_reporters,
                             REPORTER_MESSAGE_INFO,
                             @"Preparing test environment failed.");
-        *testsNotStartedOrErrored = YES;
-        return NO;
+        return;
       }
     }
   }
@@ -405,20 +380,13 @@ static void KillSimulatorJobs()
                       REPORTER_MESSAGE_INFO,
                       @"Launching test host and running tests ...");
 
-  BOOL testsSucceeded = NO;
   BOOL infraSucceeded = NO;
   [self runTestsInSimulator:testHostAppPath
           feedOutputToBlock:outputLineBlock
-             testsSucceeded:&testsSucceeded
              infraSucceeded:&infraSucceeded];
 
-  *testsNotStartedOrErrored = !infraSucceeded;
-  
   if (!infraSucceeded) {
-    *error = @"The simulator failed to start, or the TEST_HOST application failed to run.";
-    return NO;
-  } else {
-    return testsSucceeded;
+    *startupError = @"The simulator failed to start, or the TEST_HOST application failed to run.";
   }
 }
 

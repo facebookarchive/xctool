@@ -46,9 +46,8 @@
                                            env) autorelease];
 }
 
-- (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
-       testsNotStartedOrErrored:(BOOL *)testsNotStartedOrErrored
-                          error:(NSString **)error
+- (void)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
+                   startupError:(NSString **)startupError
 {
   NSString *sdkName = _buildSettings[@"SDK_NAME"];
   NSAssert([sdkName hasPrefix:@"iphonesimulator"], @"Unexpected SDK name: %@", sdkName);
@@ -73,14 +72,9 @@
       LaunchTaskAndFeedOuputLinesToBlock(task,
                                          @"running otest/xctest on test bundle",
                                          outputLineBlock);
-      *testsNotStartedOrErrored = task.terminationReason == NSTaskTerminationReasonUncaughtSignal;
-
-      return [task terminationStatus] == 0 ? YES : NO;
     }
   } else {
-    *error = [NSString stringWithFormat:@"Test bundle not found at: %@", testBundlePath];
-    *testsNotStartedOrErrored = NO;
-    return NO;
+    *startupError = [NSString stringWithFormat:@"Test bundle not found at: %@", testBundlePath];
   }
 }
 

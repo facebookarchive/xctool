@@ -29,9 +29,8 @@
 - (instancetype)initWithTests:(NSArray *)testList
                     reporters:(NSArray *)reporters;
 
+- (BOOL)allTestsPassed;
 - (void)prepareToRun;
 - (void)didFinishRunWithStartupError:(NSString *)startupError;
-- (void)finishedRun:(BOOL)unexpectedTermination
-              error:(NSString *)error;
 
 @end
