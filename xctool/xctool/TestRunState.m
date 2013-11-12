@@ -21,6 +21,7 @@
 #import "ReporterEvents.h"
 #import "OCTestSuiteEventState.h"
 #import "OCTestEventState.h"
+#import "XCToolUtil.h"
 
 @implementation TestRunState
 
@@ -33,7 +34,6 @@
       [[OCTestSuiteEventState alloc] initWithName:kReporter_TestSuite_TopLevelSuiteName
                                         reporters:reporters];
     [_testSuiteState addTestsFromArray:testList];
-    _crashReportCollectionTime = 10.0;
   }
   return self;
 }
@@ -257,8 +257,9 @@
   NSSet *crashReportsAtEnd = [NSSet setWithArray:[self collectCrashReportPaths]];
   CFTimeInterval start = CACurrentMediaTime();
 
-  while ([crashReportsAtEnd isEqualToSet:crashReportsAtStart] &&
-         (CACurrentMediaTime() - start < _crashReportCollectionTime)) {
+  while (!IsRunningUnderTest() &&
+         [crashReportsAtEnd isEqualToSet:crashReportsAtStart] &&
+         (CACurrentMediaTime() - start < 10.0)) {
     [NSThread sleepForTimeInterval:0.25];
     crashReportsAtEnd = [NSSet setWithArray:[self collectCrashReportPaths]];
   }

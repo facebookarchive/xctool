@@ -26,8 +26,6 @@
   NSSet *_crashReportsAtStart;
 }
 
-@property (nonatomic, assign) double crashReportCollectionTime;
-
 - (instancetype)initWithTests:(NSArray *)testList
                     reporters:(NSArray *)reporters;
 

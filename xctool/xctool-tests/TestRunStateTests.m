@@ -37,10 +37,8 @@ static NSArray *EventsForFakeRun()
 
 static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
 {
-  TestRunState *testRunState = [[[TestRunState alloc] initWithTests:@[@"OtherTests/testSomething", @"OtherTests/testAnother"]
-                                                                   reporters:@[sink]] autorelease];
-  testRunState.crashReportCollectionTime = 0.25;
-  return testRunState;
+  return [[[TestRunState alloc] initWithTests:@[@"OtherTests/testSomething", @"OtherTests/testAnother"]
+                                    reporters:@[sink]] autorelease];
 }
 
 static NSArray *SelectEventFields(NSArray *events, NSString *eventName, NSString *fieldName)
