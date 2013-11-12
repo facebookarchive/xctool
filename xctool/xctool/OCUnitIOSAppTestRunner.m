@@ -264,7 +264,7 @@ static void KillSimulatorJobs()
                            @"Tried to uninstall the test host app '%@' but failed.",
                            testHostBundleID);
     *error = [NSString stringWithFormat:
-              @"Tests did not run. Failed to uninstall the test host app '%@' "
+              @"Failed to uninstall the test host app '%@' "
               @"before running tests.",
               testHostBundleID];
     return NO;
@@ -295,7 +295,7 @@ static void KillSimulatorJobs()
                            @"Tried to install the test host app '%@' but failed.",
                            testHostBundleID);
     *error = [NSString stringWithFormat:
-              @"Tests did not run. Failed to install the test host app '%@'.",
+              @"Failed to install the test host app '%@'.",
               testHostBundleID];
 
     return NO;
@@ -318,7 +318,7 @@ static void KillSimulatorJobs()
     ReportStatusMessage(_reporters, REPORTER_MESSAGE_ERROR,
                         @"Your TEST_HOST '%@' does not appear to be an executable.", testHostPath);
     *testsNotStartedOrErrored = YES;
-    *error = @"Tests did not run. TEST_HOST not executable.";
+    *error = @"TEST_HOST not executable.";
     return NO;
   }
 
@@ -327,7 +327,7 @@ static void KillSimulatorJobs()
     ReportStatusMessage(_reporters, REPORTER_MESSAGE_ERROR,
                         @"Info.plist for TEST_HOST missing or malformatted.");
     *testsNotStartedOrErrored = YES;
-    *error = @"Tests did not run. Bad Info.plist for TEST_HOST";
+    *error = @"Bad Info.plist for TEST_HOST";
     return NO;
   }
 
@@ -415,7 +415,7 @@ static void KillSimulatorJobs()
   *testsNotStartedOrErrored = !infraSucceeded;
   
   if (!infraSucceeded) {
-    *error = @"Tests did not run. The simulator failed to start, or the TEST_HOST application failed to run.";
+    *error = @"The simulator failed to start, or the TEST_HOST application failed to run.";
     return NO;
   } else {
     return testsSucceeded;
