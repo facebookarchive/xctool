@@ -405,7 +405,13 @@ static NSString *abbreviatePath(NSString *string) {
         }
 
         [self.reportWriter disableIndent];
-        [self.reportWriter printString:@"<faint>%@<reset>", testEvent[kReporter_EndTest_OutputKey]];
+
+        NSString *testOutput = testEvent[kReporter_EndTest_OutputKey];
+        [self.reportWriter printString:@"<faint>%@<reset>", testOutput];
+        if (![testOutput hasSuffix:@"\n"]) {
+          [self.reportWriter printNewline];
+        }
+
         [self.reportWriter enableIndent];
 
         // Show first exception, if any.
@@ -764,6 +770,12 @@ static NSString *abbreviatePath(NSString *string) {
     }
 
     [self.reportWriter disableIndent];
+
+    // Make sure the exception or the divider aren't drawn on the same line
+    // as the previous output.
+    if (self.testHadOutput && !self.testOutputEndsInNewline) {
+      [self.reportWriter printNewline];
+    }
 
     // Show first exception, if any.
     NSArray *exceptions = event[kReporter_EndTest_ExceptionsKey];
