@@ -31,7 +31,6 @@
   BOOL _freshInstall;
   NSString *_simulatorType;
   NSArray *_reporters;
-  TestRunState *_testRunnerState;
   NSDictionary *_framework;
 }
 

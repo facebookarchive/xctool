@@ -120,19 +120,19 @@
 }
 
 - (BOOL)runTestsWithError:(NSString **)error {
-  _testRunnerState = [[TestRunState alloc] initWithTests:_focusedTestCases reporters:_reporters];
+  TestRunState *testRunState = [[[TestRunState alloc] initWithTests:_focusedTestCases reporters:_reporters] autorelease];
 
   void (^feedOutputToBlock)(NSString *) = ^(NSString *line) {
     NSData *lineData = [line dataUsingEncoding:NSUTF8StringEncoding];
 
-    [_testRunnerState parseAndHandleEvent:line];
+    [testRunState parseAndHandleEvent:line];
     [_reporters makeObjectsPerformSelector:@selector(publishDataForEvent:) withObject:lineData];
   };
 
   NSString *runTestsError = nil;
   BOOL testsNotStartedOrErrored = NO;
 
-  [_testRunnerState prepareToRun];
+  [testRunState prepareToRun];
 
   BOOL succeeded = [self runTestsAndFeedOutputTo:feedOutputToBlock
                         testsNotStartedOrErrored:&testsNotStartedOrErrored
@@ -141,7 +141,7 @@
     *error = runTestsError;
   }
 
-  [_testRunnerState finishedRun:testsNotStartedOrErrored error:*error];
+  [testRunState finishedRun:testsNotStartedOrErrored error:*error];
 
   return succeeded;
 }
