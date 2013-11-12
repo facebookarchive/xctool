@@ -118,49 +118,57 @@ static NSArray *SelectEventFields(NSArray *events, NSString *eventName, NSString
   assertThat(eventBuffer.events, hasCountOf(0));
 }
 
-- (void)testCrashedBeforeTestSuiteStart
+- (void)testCrashBeforeTestsRan
 {
-  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
-  TestRunState *state = TestRunStateForFakeRun(eventBuffer);
+  void (^testCrashBeforeTestsRan)(NSArray *, NSArray *expectedEvents) =
+  ^(NSArray *events, NSArray *expectedEvents){
+    EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
+    TestRunState *state = TestRunStateForFakeRun(eventBuffer);
 
-  [state prepareToRun];
-  [self sendEvents:@[] toReporter:state];
-  [state finishedRun:YES error:nil];
+    [state prepareToRun];
+    [self sendEvents:events toReporter:state];
+    [state finishedRun:YES error:nil];
 
-  assertThat(SelectEventFields(eventBuffer.events, nil, @"event"),
-             equalTo(@[kReporter_Events_BeginTestSuite,
-                       kReporter_Events_BeginTest,
-                       kReporter_Events_TestOuput,
-                       kReporter_Events_EndTest,
-                       kReporter_Events_BeginTest,
-                       kReporter_Events_TestOuput,
-                       kReporter_Events_EndTest,
-                       kReporter_Events_EndTestSuite]));
+    assertThat(SelectEventFields(eventBuffer.events, nil, @"event"),
+               equalTo(expectedEvents));
 
-  assertThat(eventBuffer.events[2][@"output"], containsString(@"crashed before starting a test-suite"));
-}
+    // A "fake" test gets inserted at the top to indicate the bundle crashed.
+    assertThat(SelectEventFields(eventBuffer.events, kReporter_Events_EndTest, kReporter_EndTest_TestKey),
+               equalTo(@[@"-[FAILED_BEFORE TESTS_RAN]",
+                         @"-[OtherTests testSomething]",
+                         @"-[OtherTests testAnother]"]));
 
-- (void)testCrashedAfterTestSuiteStartBeforeTests
-{
-  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
-  TestRunState *state = TestRunStateForFakeRun(eventBuffer);
+    NSArray *output = SelectEventFields(eventBuffer.events, kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey);
+    assertThat(output[0], equalTo(@"Test did not run: the test bundle stopped running or crashed before the test suite started.\n"
+                                  @"\n"
+                                  @"The crash was triggered before any test code ran.  You might look at Obj-C class 'initialize' or 'load' methods, or C-style constructor functions as possible causes."));
+    assertThat(output[1], equalTo(@"Test did not run: the test bundle stopped running or crashed before the test suite started."));
+    assertThat(output[2], equalTo(@"Test did not run: the test bundle stopped running or crashed before the test suite started."));
+  };
 
-  [state prepareToRun];
-  [self sendEvents:[EventsForFakeRun() subarrayWithRange:NSMakeRange(0, 1)]
-        toReporter:state];
-  [state finishedRun:YES error:nil];
-
-  assertThat(SelectEventFields(eventBuffer.events, nil, @"event"),
-             equalTo(@[kReporter_Events_BeginTest,
-                       kReporter_Events_TestOuput,
-                       kReporter_Events_EndTest,
-                       kReporter_Events_BeginTest,
-                       kReporter_Events_TestOuput,
-                       kReporter_Events_EndTest,
-                       kReporter_Events_EndTestSuite]));
-
-  assertThat(eventBuffer.events[1][@"output"],
-             containsString(@"after starting a test-suite but before starting a test\n\n"));
+  testCrashBeforeTestsRan(@[],
+                          @[kReporter_Events_BeginTestSuite,
+                            kReporter_Events_BeginTest,
+                            kReporter_Events_TestOuput,
+                            kReporter_Events_EndTest,
+                            kReporter_Events_BeginTest,
+                            kReporter_Events_TestOuput,
+                            kReporter_Events_EndTest,
+                            kReporter_Events_BeginTest,
+                            kReporter_Events_TestOuput,
+                            kReporter_Events_EndTest,
+                            kReporter_Events_EndTestSuite]);
+  testCrashBeforeTestsRan([EventsForFakeRun() subarrayWithRange:NSMakeRange(0, 1)],
+                          @[kReporter_Events_BeginTest,
+                            kReporter_Events_TestOuput,
+                            kReporter_Events_EndTest,
+                            kReporter_Events_BeginTest,
+                            kReporter_Events_TestOuput,
+                            kReporter_Events_EndTest,
+                            kReporter_Events_BeginTest,
+                            kReporter_Events_TestOuput,
+                            kReporter_Events_EndTest,
+                            kReporter_Events_EndTestSuite]);
 }
 
 - (void)testCrashedAfterFirstTestStarts
@@ -181,7 +189,13 @@ static NSArray *SelectEventFields(NSArray *events, NSString *eventName, NSString
                        kReporter_Events_EndTest,
                        kReporter_Events_EndTestSuite]));
 
-  assertThat(eventBuffer.events[0][@"output"], containsString(@"crashed binary while running\n"));
+  assertThat(SelectEventFields(eventBuffer.events, kReporter_Events_EndTest, kReporter_EndTest_TestKey),
+             equalTo(@[@"-[OtherTests testSomething]",
+                       @"-[OtherTests testAnother]"]));
+
+  NSArray *output = SelectEventFields(eventBuffer.events, kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey);
+  assertThat(output[0], equalTo(@"Test crashed while running."));
+  assertThat(output[1], equalTo(@"Test did not run: the test bundle stopped running or crashed in '-[OtherTests testSomething]'."));
 }
 
 - (void)testCrashedAfterFirstTestFinishes
@@ -198,28 +212,46 @@ static NSArray *SelectEventFields(NSArray *events, NSString *eventName, NSString
              equalTo(@[kReporter_Events_BeginTest,
                        kReporter_Events_TestOuput,
                        kReporter_Events_EndTest,
+                       kReporter_Events_BeginTest,
+                       kReporter_Events_TestOuput,
+                       kReporter_Events_EndTest,
                        kReporter_Events_EndTestSuite]));
 
-  assertThat(eventBuffer.events[1][@"output"], containsString(@"crashed immediately after running"));
+  // A "fake" test gets inserted to advertise the failure.
+  assertThat(SelectEventFields(eventBuffer.events, kReporter_Events_EndTest, kReporter_EndTest_TestKey),
+             equalTo(@[@"-[OtherTests testSomething_MAYBE_CRASHED]",
+                       @"-[OtherTests testAnother]"]));
+
+  NSArray *output = SelectEventFields(eventBuffer.events, kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey);
+  assertThat(output[0],
+             equalTo(@"The test bundle stopped running or crashed immediately after running '-[OtherTests testSomething]'.  "
+                     @"Even though that test finished, it's likely responsible for the crash."));
+  assertThat(output[1], equalTo(@"Test did not run: the test bundle stopped running or crashed after running '-[OtherTests testSomething]'."));
 }
 
-- (void)testErrorMessagePropogatesToTestOutput
+- (void)testTestsNeverRanBecauseOfStartupError
 {
   EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
   TestRunState *state = TestRunStateForFakeRun(eventBuffer);
 
   [state prepareToRun];
-  [self sendEvents:[EventsForFakeRun() subarrayWithRange:NSMakeRange(0, 4)]
+  [self sendEvents:@[]
         toReporter:state];
   [state finishedRun:YES error:@"cupcakes candy donuts cookies"];
 
   assertThat(SelectEventFields(eventBuffer.events, nil, @"event"),
-             equalTo(@[kReporter_Events_BeginTest,
+             equalTo(@[kReporter_Events_BeginTestSuite,
+                       kReporter_Events_BeginTest,
+                       kReporter_Events_TestOuput,
+                       kReporter_Events_EndTest,
+                       kReporter_Events_BeginTest,
                        kReporter_Events_TestOuput,
                        kReporter_Events_EndTest,
                        kReporter_Events_EndTestSuite]));
 
-  assertThat(eventBuffer.events[1][@"output"], containsString(@"cupcakes candy donuts cookies"));
+  NSArray *output = SelectEventFields(eventBuffer.events, kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey);
+  assertThat(output[0], equalTo(@"Test did not run: cupcakes candy donuts cookies"));
+  assertThat(output[1], equalTo(@"Test did not run: cupcakes candy donuts cookies"));
 }
 
 - (void)testCrashedAfterLastTestFinishes
@@ -240,8 +272,14 @@ static NSArray *SelectEventFields(NSArray *events, NSString *eventName, NSString
                        kReporter_Events_EndTest,
                        kReporter_Events_EndTestSuite]));
 
-  assertThat(eventBuffer.events[0][@"test"], containsString(@"_MAYBE_CRASHED"));
-  assertThat(eventBuffer.events[1][@"output"], containsString(@"crashed immediately after running"));
+  // A "fake" test gets inserted to advertise the failure.
+  assertThat(SelectEventFields(eventBuffer.events, kReporter_Events_EndTest, kReporter_EndTest_TestKey),
+             equalTo(@[@"-[OtherTests testAnother_MAYBE_CRASHED]"]));
+
+  NSArray *output = SelectEventFields(eventBuffer.events, kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey);
+  assertThat(output[0],
+             equalTo(@"The test bundle stopped running or crashed immediately after running '-[OtherTests testAnother]'.  "
+                     @"Even though that test finished, it's likely responsible for the crash."));
 }
 
 - (void)testCrashedAfterTestSuiteFinishes
@@ -256,31 +294,6 @@ static NSArray *SelectEventFields(NSArray *events, NSString *eventName, NSString
 
   // Not much we can do here, make sure no events are shipped out
   assertThatInteger(eventBuffer.events.count, equalToInteger(0));
-}
-
-- (void)testExtendedInfo
-{
-  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
-  TestRunState *state = TestRunStateForFakeRun(eventBuffer);
-
-  [state prepareToRun];
-  [self sendEvents:@[] toReporter:state];
-  [state finishedRun:YES error:nil];
-
-  assertThat(SelectEventFields(eventBuffer.events, nil, @"event"),
-             equalTo(@[kReporter_Events_BeginTestSuite,
-                       kReporter_Events_BeginTest,
-                       kReporter_Events_TestOuput,
-                       kReporter_Events_EndTest,
-                       kReporter_Events_BeginTest,
-                       kReporter_Events_TestOuput,
-                       kReporter_Events_EndTest,
-                       kReporter_Events_EndTestSuite]));
-
-  // Normally the extended info has the crash report, but since we're just testing here we'll instead just look
-  // for the double newline that comes before the crash report
-  assertThat(eventBuffer.events[2][@"output"], containsString(@"crashed before starting a test-suite\n\n"));
-  assertThat(eventBuffer.events[5][@"output"], endsWith(@"crashed before starting a test-suite\n"));
 }
 
 @end

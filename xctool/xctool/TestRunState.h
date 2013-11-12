@@ -30,6 +30,7 @@
                     reporters:(NSArray *)reporters;
 
 - (void)prepareToRun;
+- (void)didFinishRunWithStartupError:(NSString *)startupError;
 - (void)finishedRun:(BOOL)unexpectedTermination
               error:(NSString *)error;
 

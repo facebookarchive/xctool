@@ -97,6 +97,12 @@
   [_tests makeObjectsPerformSelector:@selector(setReporters:) withObject:reporters];
 }
 
+- (void)insertTest:(OCTestEventState *)test atIndex:(NSUInteger)index
+{
+  test.reporters = self.reporters;
+  [_tests insertObject:test atIndex:index];
+}
+
 - (void)addTest:(OCTestEventState *)test
 {
   test.reporters = self.reporters;
@@ -123,6 +129,13 @@
   } else {
     return _tests[idx];
   }
+}
+
+- (NSArray *)unstartedTests
+{
+  return [_tests filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL (OCTestEventState *test, NSDictionary *bindings) {
+    return ![test isStarted];
+  }]];
 }
 
 - (OCTestEventState *)getTestWithTestName:(NSString *)name

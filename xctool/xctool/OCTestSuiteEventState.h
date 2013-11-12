@@ -31,9 +31,11 @@
 - (void)beginTestSuite;
 - (void)endTestSuite;
 - (double)duration;
+- (void)insertTest:(OCTestEventState *)test atIndex:(NSUInteger)index;
 - (void)addTest:(OCTestEventState *)test;
 - (void)addTestsFromArray:(NSArray *)tests;
 - (OCTestEventState *)runningTest;
+- (NSArray *)unstartedTests;
 - (OCTestEventState *)getTestWithTestName:(NSString *)name;
 - (unsigned int)testCount;
 - (unsigned int)totalFailures;

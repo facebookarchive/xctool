@@ -60,9 +60,7 @@
 - (void)finishedRun:(BOOL)unexpectedTermination
               error:(NSString *)error
 {
-  if (unexpectedTermination) {
-    [self handleEarlyTermination:_crashReportsAtStart error: error];
-  }
+  [self didFinishRunWithStartupError:error];
 }
 
 - (void)beginTestSuite:(NSDictionary *)event
@@ -113,96 +111,97 @@
   [test stateTestOutput:event[kReporter_TestOutput_OutputKey]];
 }
 
-- (void)handleEarlyTermination:(NSSet *)crashReportsAtStart
-                         error:(NSString *)error
+- (void)handleStartupError:(NSString *)startupError
 {
-  if ([_testSuiteState isFinished]) {
-    // Normally we'd insert a failing test to advertise the crash, but the test
-    // suite has already finished so there's no active suite that we can insert
-    // the failure into.
-    NSLog(@"WARNING: Test suite crashed after finishing, strange indeed");
-    return;
-  }
-
-  NSString *summaryTestOutput = @"";
-  NSString *extendedTestOutput = [NSString stringWithFormat:
-                                  @"\n"
-                                  @"%@",
-                                  [self collectCrashReports:crashReportsAtStart]];
-
-  // If provided, use the specified error message.
-  // Otherwise, create a summary based on the inferred reason for the crash
-  if (error) {
-    summaryTestOutput = error;
-  } else if (![_testSuiteState isStarted]) {
-    summaryTestOutput = @"The test binary crashed before starting a test-suite\n";
-  } else if ([_testSuiteState runningTest]) {
-    summaryTestOutput = [NSString stringWithFormat:
-                         @"Test `%@` crashed binary while running\n", [[_testSuiteState runningTest] testName]];
-  } else if (_previousTestState) {
-    summaryTestOutput = [NSString stringWithFormat:
-                         @"The tests crashed immediately after running '%@'.  Even though that test finished, it's "
-                         @"likely responsible for the crash.\n",
-                         [_previousTestState testName]];
-    extendedTestOutput = [NSString stringWithFormat:
-                          @"\nTip: Consider re-running this test in Xcode with NSZombieEnabled=YES.  A common cause for "
-                          @"these kinds of crashes is over-released objects.  OCUnit creates a NSAutoreleasePool "
-                          @"before starting your test and drains it at the end of your test.  If an object has been "
-                          @"over-released, it'll trigger an EXC_BAD_ACCESS crash when draining the pool.\n"
-                          @"\n"
-                          @"%@",
-                          [self collectCrashReports:crashReportsAtStart]];
-  } else {
-    summaryTestOutput = @"The test binary crashed after starting a test-suite but before starting a test\n";
-  }
-
-  [self publishTestOutputWithSummary:summaryTestOutput extended:extendedTestOutput];
+  [[_testSuiteState unstartedTests] makeObjectsPerformSelector:@selector(appendOutput:)
+                                                    withObject:[NSString stringWithFormat:@"Test did not run: %@", startupError]];
 }
 
-- (void)publishTestOutputWithSummary:(NSString *)summary extended:(NSString *)extended
+- (void)handleCrashBeforeAnyTestsRan
 {
-  NSMutableArray *unfinishedTests =
-  [[[[_testSuiteState tests] filteredArrayUsingPredicate:
-    [NSPredicate predicateWithBlock:^BOOL(OCTestEventState *test, NSDictionary *bindings) {
-    return ![test isFinished];
-  }]] mutableCopy] autorelease];
+  // The test runner crashed before any tests ran.
+  OCTestEventState *fakeTest = [[[OCTestEventState alloc] initWithInputName:@"FAILED_BEFORE/TESTS_RAN"] autorelease];
+  [_testSuiteState insertTest:fakeTest atIndex:0];
 
-  if ([unfinishedTests count] > 0) {
-    // The next test to run gets the full debug output
-    OCTestEventState *nextTest = unfinishedTests[0];
-    [unfinishedTests removeObjectAtIndex:0];
-    [nextTest appendOutput:[summary stringByAppendingString:extended]];
+  // All tests should include this message.
+  [_testSuiteState.tests makeObjectsPerformSelector:@selector(appendOutput:)
+                                         withObject:@"Test did not run: the test bundle stopped running or crashed before the test suite started."];
 
-    // The rest just get a summary
-    [unfinishedTests enumerateObjectsUsingBlock:^(OCTestEventState *testState, NSUInteger idx, BOOL *stop) {
-      [testState appendOutput:summary];
-    }];
-  } else {
-    // No tests left to attach the output to, we'll emit a fake one :(
-    NSString *fakeTestName;
-    if (_previousTestState) {
-      fakeTestName = [NSString stringWithFormat:@"%@/%@_MAYBE_CRASHED",
-                      [_previousTestState className],
-                      [_previousTestState methodName]];
-    } else {
-      fakeTestName = [NSString stringWithFormat:@"FAILED_AFTER/TESTS_RAN"];
-    }
-    [self emitFakeTestWithName:fakeTestName
-                     andOutput:[summary stringByAppendingString:extended]];
+  // And, our "place holder" test should have a more detailed message about
+  // what we think went wrong.
+  NSString *fakeTestOutput = [NSString stringWithFormat:
+                              @"The crash was triggered before any test code ran.  You might look at "
+                              @"Obj-C class 'initialize' or 'load' methods, or C-style constructor functions "
+                              @"as possible causes.\n"
+                              @"%@",
+                              [self collectCrashReports:_crashReportsAtStart]];
+  fakeTestOutput = [fakeTestOutput stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+  [fakeTest appendOutput:[@"\n\n" stringByAppendingString:fakeTestOutput]];
+}
+
+- (void)handleCrashDuringTest
+{
+  // The test runner crashed while running a particular test.
+  NSString *outputForCrashingTest = [NSString stringWithFormat:
+                                     @"Test crashed while running.\n\n%@",
+                                     [self collectCrashReports:_crashReportsAtStart]];
+  outputForCrashingTest = [outputForCrashingTest stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+  NSString *outputForOtherTests = [NSString stringWithFormat:
+                                   @"Test did not run: the test bundle stopped running or crashed in '%@'.",
+                                   [[_testSuiteState runningTest] testName]];
+
+  [[_testSuiteState runningTest] appendOutput:outputForCrashingTest];
+  [[_testSuiteState unstartedTests] makeObjectsPerformSelector:@selector(appendOutput:) withObject:outputForOtherTests];
+}
+
+- (void)handleCrashAfterTest
+{
+  // The test runner crashed after a previous test completed but before the
+  // next test begain.  This usually means the last test over-released
+  // something, but it could be a lot of things.
+  NSAssert(_previousTestState != nil, @"We should have some info on the last test that ran.");
+  NSUInteger previousTestStateIndex = [[_testSuiteState tests] indexOfObject:_previousTestState];
+
+  // We should annotate all tests that never ran.
+  [[_testSuiteState unstartedTests] makeObjectsPerformSelector:@selector(appendOutput:)
+                                                    withObject:[NSString stringWithFormat:
+                                                                @"Test did not run: the test bundle stopped running or crashed after running '%@'.",
+                                                                [_previousTestState testName]]];
+
+  // Insert a place-holder test to hold information on the crash.
+  NSString *fakeTestName = [NSString stringWithFormat:@"%@/%@_MAYBE_CRASHED",
+                            [_previousTestState className],
+                            [_previousTestState methodName]];
+  NSString *fakeTestOutput = [NSString stringWithFormat:
+                              @"The test bundle stopped running or crashed immediately after running '%@'.  Even though that test finished, it's "
+                              @"likely responsible for the crash.\n"
+                              @"\n"
+                              @"%@",
+                              [_previousTestState testName],
+                              [self collectCrashReports:_crashReportsAtStart]];
+  fakeTestOutput = [fakeTestOutput stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+
+  OCTestEventState *fakeTest = [[[OCTestEventState alloc] initWithInputName:fakeTestName] autorelease];
+  [fakeTest appendOutput:fakeTestOutput];
+
+  [_testSuiteState insertTest:fakeTest atIndex:previousTestStateIndex + 1];
+}
+
+- (void)didFinishRunWithStartupError:(NSString *)startupError
+{
+  if (![_testSuiteState isStarted] && startupError != nil) {
+    [self handleStartupError:startupError];
+  } else if ((![_testSuiteState isStarted] && startupError == nil) ||
+             ([_testSuiteState isStarted] && [_testSuiteState unstartedTests].count == [_testSuiteState testCount])) {
+    [self handleCrashBeforeAnyTestsRan];
+  } else if (![_testSuiteState isFinished] && [_testSuiteState runningTest] != nil) {
+    [self handleCrashDuringTest];
+  } else if (![_testSuiteState isFinished] &&
+             [_testSuiteState runningTest] == nil) {
+    [self handleCrashAfterTest];
   }
 
   [_testSuiteState publishEvents];
-}
-
-- (void)emitFakeTestWithName:(NSString *)testName andOutput:(NSString *)testOutput
-{
-  OCTestEventState *fakeTest =
-  [[[OCTestEventState alloc] initWithInputName:testName] autorelease];
-
-  [_testSuiteState addTest:fakeTest];
-  [fakeTest appendOutput:testOutput];
-
-  [fakeTest publishEvents];
 }
 
 - (NSArray *)collectCrashReportPaths
