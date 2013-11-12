@@ -120,8 +120,6 @@
 }
 
 - (BOOL)runTestsWithError:(NSString **)error {
-  __block BOOL didReceiveTestEvents = NO;
-
   _testRunnerState = [[TestRunState alloc] initWithTests:_focusedTestCases reporters:_reporters];
 
   void (^feedOutputToBlock)(NSString *) = ^(NSString *line) {
@@ -129,8 +127,6 @@
 
     [_testRunnerState parseAndHandleEvent:line];
     [_reporters makeObjectsPerformSelector:@selector(publishDataForEvent:) withObject:lineData];
-
-    didReceiveTestEvents = YES;
   };
 
   NSString *runTestsError = nil;
@@ -143,26 +139,6 @@
                                            error:&runTestsError];
   if (runTestsError) {
     *error = runTestsError;
-  }
-
-  if (!succeeded && runTestsError == nil && !didReceiveTestEvents) {
-    // otest failed but clearly no tests ran.  We've seen this when a test target had no
-    // source files.  In that case, xcodebuild generated the test bundle, but didn't build the
-    // actual mach-o bundle/binary (because of no source files!)
-    //
-    // e.g., Xcode would generate...
-    //   DerivedData/Something-ejutnghaswljrqdalvadkusmnhdc/Build/Products/Debug-iphonesimulator/SomeTests.octest
-    //
-    // but, you would not have...
-    //   DerivedData/Something-ejutnghaswljrqdalvadkusmnhdc/Build/Products/Debug-iphonesimulator/SomeTests.octest/SomeTests
-    //
-    // otest would then exit immediately with...
-    //   The executable for the test bundle at /path/to/Something/Facebook-ejutnghaswljrqdalvadkusmnhdc/Build/Products/
-    //     Debug-iphonesimulator/SomeTests.octest could not be found.
-    //
-    // Xcode (via Cmd-U) just counts this as a pass even though the exit code from otest was non-zero.
-    // That seems a little wrong, but we'll do the same.
-    succeeded = YES;
   }
 
   [_testRunnerState finishedRun:testsNotStartedOrErrored error:*error];
