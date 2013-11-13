@@ -35,6 +35,7 @@
 }
 
 @property (nonatomic, assign) cpu_type_t cpuType;
+@property (nonatomic, readonly) NSArray *reporters;
 
 /**
  * Filters a list of test class names to only those that match the
@@ -59,7 +60,7 @@
               simulatorType:(NSString *)simulatorType
                   reporters:(NSArray *)reporters;
 
-- (BOOL)runTestsWithError:(NSString **)error;
+- (BOOL)runTests;
 
 - (NSArray *)testArguments;
 - (NSDictionary *)otestEnvironmentWithOverrides:(NSDictionary *)overrides;

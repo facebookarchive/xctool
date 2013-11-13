@@ -4,6 +4,7 @@
 #import "iPhoneSimulatorRemoteClient.h"
 
 #import "ContainsArray.h"
+#import "EventBuffer.h"
 #import "FakeTask.h"
 #import "FakeTaskManager.h"
 #import "OCUnitTestRunner.h"
@@ -11,14 +12,18 @@
 #import "OCUnitOSXLogicTestRunner.h"
 #import "OCUnitIOSAppTestRunner.h"
 #import "OCUnitIOSLogicTestRunner.h"
+#import "ReporterEvents.h"
 #import "SimulatorLauncher.h"
 #import "Swizzler.h"
+#import "TestUtil.h"
 #import "XCToolUtil.h"
 
 static OCUnitTestRunner *TestRunnerWithTestLists(Class cls, NSDictionary *settings, NSArray *focusedTestCases, NSArray *allTestCases)
 {
   NSArray *arguments = @[@"-SomeArg", @"SomeVal"];
   NSDictionary *environment = @{@"SomeEnvKey" : @"SomeEnvValue"};
+
+  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
 
   return [[[cls alloc] initWithBuildSettings:settings
                             focusedTestCases:focusedTestCases
@@ -29,7 +34,7 @@ static OCUnitTestRunner *TestRunnerWithTestLists(Class cls, NSDictionary *settin
                               freshSimulator:NO
                                 freshInstall:NO
                                simulatorType:nil
-                                   reporters:@[]] autorelease];
+                                   reporters:@[eventBuffer]] autorelease];
 }
 
 static OCUnitTestRunner *TestRunnerWithTestList(Class cls, NSDictionary *settings, NSArray *testList)
@@ -51,8 +56,7 @@ static OCUnitTestRunner *TestRunner(Class cls, NSDictionary *settings)
 #pragma mark iOS Tests
 
 - (void)runTestsForRunner:(OCUnitTestRunner *)runner
-           andReturnError:(NSString **)error
-            sessionConfig:(DTiPhoneSimulatorSessionConfig **)sessionConfig
+   andReturnSessionConfig:(DTiPhoneSimulatorSessionConfig **)sessionConfig
 {
   [Swizzler whileSwizzlingSelector:@selector(launchAndWaitForExit)
                forInstancesOfClass:[SimulatorLauncher class]
@@ -64,7 +68,7 @@ static OCUnitTestRunner *TestRunner(Class cls, NSDictionary *settings)
    }
                           runBlock:
    ^{
-     [runner runTestsWithError:error];
+     [runner runTests];
    }];
 }
 
@@ -79,13 +83,11 @@ static OCUnitTestRunner *TestRunner(Class cls, NSDictionary *settings)
   testSettings[@"TEST_HOST"] = TEST_DATA @"FakeApp.app/FakeAppExe";
 
   DTiPhoneSimulatorSessionConfig *config;
-  NSString *err;
 
   OCUnitTestRunner *runner = TestRunner([OCUnitIOSAppTestRunner class], testSettings);
 
   [self runTestsForRunner:runner
-           andReturnError:&err
-            sessionConfig:&config];
+   andReturnSessionConfig:&config];
 
   assertThat(config, notNilValue());
   assertThat([config simulatedApplicationLaunchArgs],
@@ -109,16 +111,24 @@ static OCUnitTestRunner *TestRunner(Class cls, NSDictionary *settings)
   testSettings[@"TEST_HOST"] = @"/var/empty/whee";
 
   DTiPhoneSimulatorSessionConfig *config;
-  NSString *err;
 
   OCUnitTestRunner *runner = TestRunner([OCUnitIOSAppTestRunner class], testSettings);
 
   [self runTestsForRunner:runner
-           andReturnError:&err
-            sessionConfig:&config];
+   andReturnSessionConfig:&config];
 
   assertThat(config, nilValue());
-  assertThat(err, containsString(@"TEST_HOST"));
+
+  EventBuffer *eventBuffer = runner.reporters[0];
+  NSArray *events = [eventBuffer events];
+
+  // A fake test should get inserted to advertise the error.
+  assertThat(SelectEventFields(events, kReporter_Events_BeginTest, kReporter_BeginTest_TestKey),
+             equalTo(@[@"-[TEST_BUNDLE FAILED_TO_START]"]));
+
+  // And, it should indicate what broke.
+  assertThat(SelectEventFields(events, kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey),
+             equalTo(@[@"There was a problem starting the test bundle: TEST_HOST not executable."]));
 
   [config release];
 }
@@ -132,12 +142,10 @@ static OCUnitTestRunner *TestRunner(Class cls, NSDictionary *settings)
   NSDictionary *testSettings = allSettings[@"TestProject-LibraryTests"];
 
   NSArray *launchedTasks;
-  NSString *error;
 
   OCUnitTestRunner *runner = TestRunner([OCUnitIOSLogicTestRunner class], testSettings);
   [self runTestsForRunner:runner
-           andReturnError:&error
-                    tasks:&launchedTasks];
+           andReturnTasks:&launchedTasks];
 
   assertThatInteger([launchedTasks count], equalToInteger(1));
 
@@ -152,11 +160,10 @@ static OCUnitTestRunner *TestRunner(Class cls, NSDictionary *settings)
 #pragma mark OSX Tests
 
 - (void)runTestsForRunner:(OCUnitTestRunner *)runner
-           andReturnError:(NSString **)error
-                    tasks:(NSArray **)launchedTasks
+           andReturnTasks:(NSArray **)launchedTasks
 {
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
-    [runner runTestsWithError:error];
+    [runner runTests];
     *launchedTasks = [[[FakeTaskManager sharedManager] launchedTasks] retain];
   }];
 }
@@ -172,12 +179,10 @@ static OCUnitTestRunner *TestRunner(Class cls, NSDictionary *settings)
   testSettings[@"TEST_HOST"] = TEST_DATA @"FakeApp.app/FakeAppExe";
 
   NSArray *launchedTasks;
-  NSString *err;
 
   OCUnitTestRunner *runner = TestRunner([OCUnitOSXAppTestRunner class], testSettings);
   [self runTestsForRunner:runner
-           andReturnError:&err
-                    tasks:&launchedTasks];
+           andReturnTasks:&launchedTasks];
 
   assertThatInteger([launchedTasks count], equalToInteger(1));
   assertThat([launchedTasks[0] arguments],
@@ -199,17 +204,24 @@ static OCUnitTestRunner *TestRunner(Class cls, NSDictionary *settings)
   testSettings[@"TEST_HOST"] = @"/var/empty/whee";
 
   NSArray *launchedTasks;
-  NSString *err;
 
   OCUnitTestRunner *runner = TestRunner([OCUnitOSXAppTestRunner class], testSettings);
   [self runTestsForRunner:runner
-           andReturnError:&err
-                    tasks:&launchedTasks];
+           andReturnTasks:&launchedTasks];
 
   assertThatInteger([launchedTasks count], equalToInteger(0));
-  assertThat(err, containsString(@"TEST_HOST"));
-}
 
+  EventBuffer *eventBuffer = runner.reporters[0];
+  NSArray *events = [eventBuffer events];
+
+  // A fake test should get inserted to advertise the error.
+  assertThat(SelectEventFields(events, kReporter_Events_BeginTest, kReporter_BeginTest_TestKey),
+             equalTo(@[@"-[TEST_BUNDLE FAILED_TO_START]"]));
+
+  // And, it should indicate what broke.
+  assertThat(SelectEventFields(events, kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey),
+             equalTo(@[@"There was a problem starting the test bundle: TEST_HOST not executable."]));
+}
 
 - (void)testArgsAndEnvArePassedToOSXLogicTest
 {
@@ -219,13 +231,11 @@ static OCUnitTestRunner *TestRunner(Class cls, NSDictionary *settings)
                                                        error:nil]);
   NSDictionary *testSettings = allSettings[@"TestProject-Library-OSXTests"];
 
-  NSString *error = nil;
   NSArray *launchedTasks = nil;
 
   OCUnitTestRunner *runner = TestRunner([OCUnitOSXLogicTestRunner class], testSettings);
   [self runTestsForRunner:runner
-           andReturnError:&error
-                    tasks:&launchedTasks];
+           andReturnTasks:&launchedTasks];
 
   assertThatInteger([launchedTasks count], equalToInteger(1));
 

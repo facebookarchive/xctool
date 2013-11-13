@@ -456,7 +456,7 @@
 
     __block OCUnitTestRunner *runner = nil;
 
-    [Swizzler whileSwizzlingSelector:@selector(runTestsWithError:)
+    [Swizzler whileSwizzlingSelector:@selector(runTests)
                  forInstancesOfClass:[OCUnitTestRunner class]
                            withBlock:
      ^(id self, SEL sel){
@@ -509,7 +509,7 @@
 
     __block OCUnitTestRunner *runner = nil;
 
-    [Swizzler whileSwizzlingSelector:@selector(runTestsWithError:)
+    [Swizzler whileSwizzlingSelector:@selector(runTests)
                  forInstancesOfClass:[OCUnitTestRunner class]
                            withBlock:
      ^(id self, SEL sel){
@@ -562,7 +562,7 @@
 
     __block OCUnitTestRunner *runner = nil;
 
-    [Swizzler whileSwizzlingSelector:@selector(runTestsWithError:)
+    [Swizzler whileSwizzlingSelector:@selector(runTests)
                  forInstancesOfClass:[OCUnitTestRunner class]
                            withBlock:
      ^(id self, SEL sel){

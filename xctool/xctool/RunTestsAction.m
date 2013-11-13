@@ -556,14 +556,13 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                             [[self class] eventForBeginOCUnitFromTestableExecutionInfo:testableExecutionInfo
                                                       garbageCollectionEnabled:garbageCollectionEnabled]);
 
-    NSString *error = nil;
-    BOOL succeeded = [testRunner runTestsWithError:&error];
+    BOOL succeeded = [testRunner runTests];
 
     PublishEventToReporters(reporters,
                             [[self class] eventForEndOCUnitFromTestableExecutionInfo:testableExecutionInfo
                                                     garbageCollectionEnabled:garbageCollectionEnabled
                                                                    succeeded:succeeded
-                                                               failureReason:error]);
+                                                               failureReason:nil]);
 
     return succeeded;
   } copy] autorelease];

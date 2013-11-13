@@ -117,7 +117,8 @@
   // Subclasses will override this method.
 }
 
-- (BOOL)runTestsWithError:(NSString **)error {
+- (BOOL)runTests
+{
   TestRunState *testRunState = [[[TestRunState alloc] initWithTests:_focusedTestCases reporters:_reporters] autorelease];
 
   void (^feedOutputToBlock)(NSString *) = ^(NSString *line) {
@@ -135,7 +136,6 @@
                    startupError:&runTestsError];
 
   [testRunState didFinishRunWithStartupError:runTestsError];
-  *error = runTestsError;
 
   return [testRunState allTestsPassed];
 }
