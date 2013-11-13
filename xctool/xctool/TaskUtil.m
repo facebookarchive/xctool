@@ -125,6 +125,28 @@ NSDictionary *LaunchTaskAndCaptureOutput(NSTask *task, NSString *description)
   return output;
 }
 
+NSString *LaunchTaskAndCaptureOutputInCombinedStream(NSTask *task, NSString *description)
+{
+  NSPipe *outputPipe = [NSPipe pipe];
+  NSFileHandle *outputHandle = [outputPipe fileHandleForReading];
+
+  [task setStandardOutput:outputPipe];
+  [task setStandardError:outputPipe];
+  LaunchTaskAndMaybeLogCommand(task, description);
+
+  NSString *outputs[1] = {nil};
+  int fides[1] = {outputHandle.fileDescriptor};
+
+  readOutputs(outputs, fides, 1);
+
+  [task waitUntilExit];
+
+  NSCAssert(outputs[0] != nil,
+            @"output should have been populated");
+
+  return [outputs[0] autorelease];
+}
+
 void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, void (^block)(NSString *))
 {
   NSPipe *stdoutPipe = [NSPipe pipe];

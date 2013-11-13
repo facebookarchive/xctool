@@ -114,7 +114,7 @@
     
     assertThatInt(tool.exitStatus, equalToInt(1));
     assertThat(output[@"stdout"],
-               containsString(@"Could not get build settings."));
+               containsString(@"Unable to read build settings for target 'TestProject-LibraryTests'."));
   }];
 }
 

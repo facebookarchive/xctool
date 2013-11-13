@@ -23,6 +23,12 @@
 NSDictionary *LaunchTaskAndCaptureOutput(NSTask *task, NSString *description);
 
 /**
+ * Launches a task, waits for exit, and returns a string of the combined
+ * STDOUT and STDERR output.
+ */
+NSString *LaunchTaskAndCaptureOutputInCombinedStream(NSTask *task, NSString *description);
+
+/**
  * Launchs a task, waits for exit, and feeds lines from standard out to a block.
  */
 void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, void (^block)(NSString *));
