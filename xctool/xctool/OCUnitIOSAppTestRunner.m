@@ -264,7 +264,7 @@ static void KillSimulatorJobs()
                            @"Tried to uninstall the test host app '%@' but failed.",
                            testHostBundleID);
     *error = [NSString stringWithFormat:
-              @"Failed to uninstall the test host app '%@' "
+              @"Tests did not run. Failed to uninstall the test host app '%@' "
               @"before running tests.",
               testHostBundleID];
     return NO;
@@ -295,7 +295,7 @@ static void KillSimulatorJobs()
                            @"Tried to install the test host app '%@' but failed.",
                            testHostBundleID);
     *error = [NSString stringWithFormat:
-              @"Failed to install the test host app '%@'.",
+              @"Tests did not run. Failed to install the test host app '%@'.",
               testHostBundleID];
 
     return NO;
@@ -303,11 +303,9 @@ static void KillSimulatorJobs()
 }
 
 - (BOOL)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
-              gotUncaughtSignal:(BOOL *)gotUncaughtSignal
+       testsNotStartedOrErrored:(BOOL *)testsNotStartedOrErrored
                           error:(NSString **)error
 {
-  *gotUncaughtSignal = NO; // no equivalent for simulator
-
   NSString *sdkName = _buildSettings[@"SDK_NAME"];
   NSAssert([sdkName hasPrefix:@"iphonesimulator"], @"Unexpected SDK: %@", sdkName);
 
@@ -319,7 +317,8 @@ static void KillSimulatorJobs()
   if (![[NSFileManager defaultManager] isExecutableFileAtPath:testHostPath]) {
     ReportStatusMessage(_reporters, REPORTER_MESSAGE_ERROR,
                         @"Your TEST_HOST '%@' does not appear to be an executable.", testHostPath);
-    *error = @"TEST_HOST not executable.";
+    *testsNotStartedOrErrored = YES;
+    *error = @"Tests did not run. TEST_HOST not executable.";
     return NO;
   }
 
@@ -327,7 +326,8 @@ static void KillSimulatorJobs()
   if (!testHostInfoPlist) {
     ReportStatusMessage(_reporters, REPORTER_MESSAGE_ERROR,
                         @"Info.plist for TEST_HOST missing or malformatted.");
-    *error = @"Bad Info.plist for TEST_HOST";
+    *testsNotStartedOrErrored = YES;
+    *error = @"Tests did not run. Bad Info.plist for TEST_HOST";
     return NO;
   }
 
@@ -395,6 +395,7 @@ static void KillSimulatorJobs()
         ReportStatusMessage(_reporters,
                             REPORTER_MESSAGE_INFO,
                             @"Preparing test environment failed.");
+        *testsNotStartedOrErrored = YES;
         return NO;
       }
     }
@@ -411,8 +412,10 @@ static void KillSimulatorJobs()
              testsSucceeded:&testsSucceeded
              infraSucceeded:&infraSucceeded];
 
+  *testsNotStartedOrErrored = !infraSucceeded;
+  
   if (!infraSucceeded) {
-    *error = @"The simulator failed to start, or the TEST_HOST application failed to run.";
+    *error = @"Tests did not run. The simulator failed to start, or the TEST_HOST application failed to run.";
     return NO;
   } else {
     return testsSucceeded;
