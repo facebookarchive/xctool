@@ -15,6 +15,34 @@
 #import "Swizzler.h"
 #import "XCToolUtil.h"
 
+static OCUnitTestRunner *TestRunnerWithTestLists(Class cls, NSDictionary *settings, NSArray *focusedTestCases, NSArray *allTestCases)
+{
+  NSArray *arguments = @[@"-SomeArg", @"SomeVal"];
+  NSDictionary *environment = @{@"SomeEnvKey" : @"SomeEnvValue"};
+
+  return [[[cls alloc] initWithBuildSettings:settings
+                            focusedTestCases:focusedTestCases
+                                allTestCases:allTestCases
+                                   arguments:arguments
+                                 environment:environment
+                           garbageCollection:NO
+                              freshSimulator:NO
+                                freshInstall:NO
+                               simulatorType:nil
+                                   reporters:@[]] autorelease];
+}
+
+static OCUnitTestRunner *TestRunnerWithTestList(Class cls, NSDictionary *settings, NSArray *testList)
+{
+  return TestRunnerWithTestLists(cls, settings, testList, testList);
+}
+
+static OCUnitTestRunner *TestRunner(Class cls, NSDictionary *settings)
+{
+  return TestRunnerWithTestLists(cls, settings, @[], @[]);
+}
+
+
 @interface OCUnitTestRunnerTests : SenTestCase
 @end
 
@@ -39,23 +67,7 @@
    }
                           runBlock:
    ^{
-     OCUnitIOSAppTestRunner *runner =
-      [[[OCUnitIOSAppTestRunner alloc] initWithBuildSettings:testSettings
-                                            focusedTestCases:@[]
-                                                allTestCases:@[]
-                                                   arguments:
-       @[
-       @"-SomeArg", @"SomeVal",
-       ]
-                                                 environment:
-       @{
-       @"SomeEnvKey" : @"SomeEnvValue",
-       }
-                                           garbageCollection:NO
-                                              freshSimulator:NO
-                                                freshInstall:NO
-                                               simulatorType:nil
-                                                   reporters:@[]] autorelease];
+     OCUnitTestRunner *runner = TestRunner([OCUnitIOSAppTestRunner class], testSettings);
      [runner runTestsWithError:errPtr];
    }];
 }
@@ -116,23 +128,8 @@
   NSDictionary *testSettings = allSettings[@"TestProject-LibraryTests"];
 
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
-     OCUnitIOSLogicTestRunner *runner =
-     [[[OCUnitIOSLogicTestRunner alloc] initWithBuildSettings:testSettings
-                                             focusedTestCases:@[]
-                                                 allTestCases:@[]
-                                                    arguments:
-      @[
-      @"-SomeArg", @"SomeVal",
-      ]
-                                                  environment:
-      @{
-      @"SomeEnvKey" : @"SomeEnvValue",
-      }
-                                            garbageCollection:NO
-                                               freshSimulator:NO
-                                                 freshInstall:NO
-                                                simulatorType:nil
-                                                    reporters:@[]] autorelease];
+    OCUnitTestRunner *runner = TestRunner([OCUnitIOSLogicTestRunner class], testSettings);
+
     NSString *error = nil;
     [runner runTestsWithError:&error];
 
@@ -158,24 +155,7 @@
   *errPtr = nil;
 
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
-    OCUnitOSXAppTestRunner *runner =
-    [[[OCUnitOSXAppTestRunner alloc] initWithBuildSettings:testSettings
-                                          focusedTestCases:@[]
-                                              allTestCases:@[]
-                                                 arguments:
-     @[
-     @"-SomeArg", @"SomeVal",
-     ]
-                                               environment:
-     @{
-     @"SomeEnvKey" : @"SomeEnvValue",
-     }
-                                         garbageCollection:NO
-                                            freshSimulator:NO
-                                              freshInstall:NO
-                                             simulatorType:nil
-                                                 reporters:@[]] autorelease];
-
+    OCUnitTestRunner *runner = TestRunner([OCUnitOSXAppTestRunner class], testSettings);
     [runner runTestsWithError:errPtr];
 
     *tasksptr = [[[FakeTaskManager sharedManager] launchedTasks] retain];
@@ -235,23 +215,8 @@
   NSDictionary *testSettings = allSettings[@"TestProject-Library-OSXTests"];
 
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
-    OCUnitOSXLogicTestRunner *runner =
-    [[[OCUnitOSXLogicTestRunner alloc] initWithBuildSettings:testSettings
-                                            focusedTestCases:@[]
-                                                allTestCases:@[]
-                                                   arguments:
-      @[
-      @"-SomeArg", @"SomeVal",
-      ]
-                                                 environment:
-      @{
-      @"SomeEnvKey" : @"SomeEnvValue",
-      }
-                                           garbageCollection:NO
-                                              freshSimulator:NO
-                                                freshInstall:NO
-                                               simulatorType:nil
-                                                   reporters:@[]] autorelease];
+    OCUnitTestRunner *runner = TestRunner([OCUnitOSXLogicTestRunner class], testSettings);
+
     NSString *error = nil;
     [runner runTestsWithError:&error];
 
@@ -275,17 +240,7 @@
                                                        error:nil]);
   NSDictionary *testSettings = allSettings[@"TestProject-Library-OSXTests"];
 
-  OCUnitTestRunner *runner =
-  [[[OCUnitTestRunner alloc] initWithBuildSettings:testSettings
-                                  focusedTestCases:@[]
-                                      allTestCases:@[]
-                                         arguments:@[]
-                                       environment:@{}
-                                 garbageCollection:NO
-                                    freshSimulator:NO
-                                      freshInstall:NO
-                                     simulatorType:nil
-                                         reporters:@[]] autorelease];
+  OCUnitTestRunner *runner = TestRunner([OCUnitTestRunner class], testSettings);
 
   // Xcode.app always passes these...
   assertThat([runner testArguments],
@@ -304,17 +259,7 @@
                                                        error:nil]);
   NSDictionary *testSettings = allSettings[@"TestProject-Library-OSXTests"];
 
-  OCUnitTestRunner *runner =
-  [[[OCUnitTestRunner alloc] initWithBuildSettings:testSettings
-                                  focusedTestCases:@[]
-                                      allTestCases:@[]
-                                         arguments:@[]
-                                       environment:@{}
-                                 garbageCollection:NO
-                                    freshSimulator:NO
-                                      freshInstall:NO
-                                     simulatorType:nil
-                                         reporters:@[]] autorelease];
+  OCUnitTestRunner *runner = TestRunner([OCUnitIOSAppTestRunner class], testSettings);
 
   assertThat([runner testArguments], containsArray(@[@"-SenTest"]));
   assertThat([runner testArguments], containsArray(@[@"-SenTestInvertScope"]));
@@ -328,18 +273,7 @@
                                                        error:nil]);
   NSDictionary *testSettings = allSettings[@"TestProject-Library-XCTest-OSXTests"];
 
-  OCUnitTestRunner *runner =
-  [[[OCUnitTestRunner alloc] initWithBuildSettings:testSettings
-                                  focusedTestCases:@[]
-                                      allTestCases:@[]
-                                         arguments:@[]
-                                       environment:@{}
-                                 garbageCollection:NO
-                                    freshSimulator:NO
-                                      freshInstall:NO
-                                     simulatorType:nil
-                                         reporters:@[]] autorelease];
-
+  OCUnitTestRunner *runner = TestRunner([OCUnitTestRunner class], testSettings);
   assertThat([runner testArguments], containsArray(@[@"-XCTest"]));
   assertThat([runner testArguments], containsArray(@[@"-XCTestInvertScope"]));
 }
@@ -352,17 +286,7 @@
                                                        error:nil]);
   NSDictionary *testSettings = allSettings[@"TestProject-Library-OSXTests"];
 
-  OCUnitTestRunner *runner =
-  [[[OCUnitTestRunner alloc] initWithBuildSettings:testSettings
-                                  focusedTestCases:@[@"Cls1/testA", @"Cls2/testB"]
-                                      allTestCases:@[@"Cls1/testA", @"Cls2/testB"]
-                                         arguments:@[]
-                                       environment:@{}
-                                 garbageCollection:NO
-                                    freshSimulator:NO
-                                      freshInstall:NO
-                                     simulatorType:nil
-                                         reporters:@[]] autorelease];
+  OCUnitTestRunner *runner = TestRunnerWithTestList([OCUnitTestRunner class], testSettings, @[@"Cls1/testA", @"Cls2/testB"]);
 
   assertThat([runner testArguments],
              containsArray(@[@"-SenTest",
@@ -380,17 +304,7 @@
                                                        error:nil]);
   NSDictionary *testSettings = allSettings[@"TestProject-App-OSXTests"];
 
-  OCUnitTestRunner *runner =
-  [[[OCUnitTestRunner alloc] initWithBuildSettings:testSettings
-                                  focusedTestCases:@[@"Cls1/testA", @"Cls2/testB"]
-                                      allTestCases:@[@"Cls1/testA", @"Cls2/testB"]
-                                         arguments:@[]
-                                       environment:@{}
-                                 garbageCollection:NO
-                                    freshSimulator:NO
-                                      freshInstall:NO
-                                     simulatorType:nil
-                                         reporters:@[]] autorelease];
+  OCUnitTestRunner *runner = TestRunnerWithTestList([OCUnitTestRunner class], testSettings, @[@"Cls1/testA", @"Cls2/testB"]);
 
   assertThat([runner testArguments],
              containsArray(@[@"-SenTest",
@@ -408,18 +322,10 @@
                                                        error:nil]);
   NSDictionary *testSettings = allSettings[@"TestProject-Library-OSXTests"];
 
-  OCUnitTestRunner *runner =
-  [[[OCUnitTestRunner alloc] initWithBuildSettings:testSettings
-                                  focusedTestCases:@[@"Cls1/testA"]
-                                      allTestCases:@[@"Cls1/testA", @"Cls2/testB"]
-                                         arguments:@[]
-                                       environment:@{}
-                                 garbageCollection:NO
-                                    freshSimulator:NO
-                                      freshInstall:NO
-                                     simulatorType:nil
-                                         reporters:@[]] autorelease];
-
+  OCUnitTestRunner *runner = TestRunnerWithTestLists([OCUnitTestRunner class],
+                                                     testSettings,
+                                                     @[@"Cls1/testA"],
+                                                     @[@"Cls1/testA", @"Cls2/testB"]);
   assertThat([runner testArguments],
              containsArray(@[@"-SenTest",
                              @"Cls2/testB",
