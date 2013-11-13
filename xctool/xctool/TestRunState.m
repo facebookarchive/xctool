@@ -122,6 +122,19 @@
 {
   [[_testSuiteState unstartedTests] makeObjectsPerformSelector:@selector(appendOutput:)
                                                     withObject:[NSString stringWithFormat:@"Test did not run: %@", startupError]];
+
+  // Insert a place holder test to hold detailed error info.
+  OCTestEventState *fakeTest = [[[OCTestEventState alloc] initWithInputName:@"TEST_BUNDLE/FAILED_TO_START"] autorelease];
+  // Append crash reports (if any) to the place holder test.
+  NSString *fakeTestOutput = [NSString stringWithFormat:
+                              @"There was a problem starting the test bundle: %@\n"
+                              @"\n"
+                              @"%@",
+                              startupError,
+                              [self collectCrashReports:_crashReportsAtStart]];
+  fakeTestOutput = [fakeTestOutput stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+  [fakeTest appendOutput:fakeTestOutput];
+  [_testSuiteState insertTest:fakeTest atIndex:0];
 }
 
 - (void)handleCrashBeforeAnyTestsRan

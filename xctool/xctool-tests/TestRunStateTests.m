@@ -229,10 +229,21 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
                        kReporter_Events_BeginTest,
                        kReporter_Events_TestOuput,
                        kReporter_Events_EndTest,
+                       kReporter_Events_BeginTest,
+                       kReporter_Events_TestOuput,
+                       kReporter_Events_EndTest,
                        kReporter_Events_EndTestSuite]));
 
+  // A "fake" test gets inserted to advertise the failure.
+  assertThat(SelectEventFields(eventBuffer.events, kReporter_Events_EndTest, kReporter_EndTest_TestKey),
+             equalTo(@[@"-[TEST_BUNDLE FAILED_TO_START]",
+                       @"-[OtherTests testSomething]",
+                       @"-[OtherTests testAnother]",
+                       ]));
+
   NSArray *output = SelectEventFields(eventBuffer.events, kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey);
-  assertThat(output[0], equalTo(@"Test did not run: cupcakes candy donuts cookies"));
+  assertThat(output[0], equalTo(@"There was a problem starting the test bundle: cupcakes candy donuts cookies"));
+  assertThat(output[1], equalTo(@"Test did not run: cupcakes candy donuts cookies"));
   assertThat(output[1], equalTo(@"Test did not run: cupcakes candy donuts cookies"));
 }
 
