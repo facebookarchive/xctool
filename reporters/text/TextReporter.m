@@ -620,8 +620,20 @@ static NSString *abbreviatePath(NSString *string) {
 {
   [self.reportWriter decreaseIndent];
 
-  if (![event[kReporter_EndOCUnit_MessageKey] isEqual:[NSNull null]]) {
-    [self.reportWriter printLine:@"%@", event[kReporter_EndOCUnit_MessageKey]];
+  NSString *message = event[kReporter_EndOCUnit_MessageKey];
+
+  if (![message isEqual:[NSNull null]]) {
+    [self printDivider];
+    [self.reportWriter disableIndent];
+
+    [self.reportWriter printString:@"<faint>%@<reset>", message];
+
+    if (![message hasSuffix:@"\n"]) {
+      [self.reportWriter printNewline];
+    }
+
+    [self.reportWriter enableIndent];
+    [self printDivider];
   }
 }
 
