@@ -113,8 +113,9 @@ static void ReadFileDescriptorAndOutputLinesToBlock(int inputFD,
   NSDictionary *dict = [NSJSONSerialization JSONObjectWithData:[line dataUsingEncoding:NSUTF8StringEncoding]
                                                        options:0
                                                          error:&error];
-  NSAssert(dict != nil, @"Failed to decode JSON '%@' with error: %@", line, [error localizedFailureReason]);
-  [self handleEvent:dict];
+  if (dict != nil) {
+    [self handleEvent:dict];
+  }
 }
 
 - (void)handleEvent:(NSDictionary *)eventDict
