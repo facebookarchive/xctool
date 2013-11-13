@@ -41,24 +41,6 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
                                     reporters:@[sink]] autorelease];
 }
 
-static NSArray *SelectEventFields(NSArray *events, NSString *eventName, NSString *fieldName)
-{
-  NSMutableArray *result = [NSMutableArray array];
-
-  for (NSDictionary *event in events) {
-    if (eventName == nil || [event[@"event"] isEqual:eventName]) {
-      NSCAssert(event[fieldName],
-                @"Should have value for field '%@' in event '%@': %@",
-                fieldName,
-                eventName,
-                event);
-      [result addObject:event[fieldName]];
-    }
-  }
-
-  return result;
-}
-
 @interface TestRunStateTests : SenTestCase {
 }
 @end

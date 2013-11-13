@@ -33,3 +33,9 @@ BOOL HasXCTestFramework();
  Returns YES if an array contains a contiguous sub-array.
  */
 BOOL ArrayContainsSubsequence(NSArray *anArray, NSArray *subArray);
+
+/**
+ Scans through an array of event dictionaries and returns the value of `fieldName`
+ for all events of type `eventName`.
+ */
+NSArray *SelectEventFields(NSArray *events, NSString *eventName, NSString *fieldName);

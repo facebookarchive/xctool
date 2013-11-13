@@ -109,3 +109,21 @@ BOOL ArrayContainsSubsequence(NSArray *anArray, NSArray *subArray)
 
   return NO;
 }
+
+NSArray *SelectEventFields(NSArray *events, NSString *eventName, NSString *fieldName)
+{
+  NSMutableArray *result = [NSMutableArray array];
+
+  for (NSDictionary *event in events) {
+    if (eventName == nil || [event[@"event"] isEqual:eventName]) {
+      NSCAssert(event[fieldName],
+                @"Should have value for field '%@' in event '%@': %@",
+                fieldName,
+                eventName,
+                event);
+      [result addObject:event[fieldName]];
+    }
+  }
+
+  return result;
+}
