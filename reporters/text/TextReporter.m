@@ -635,6 +635,8 @@ static NSString *abbreviatePath(NSString *string) {
     [self.reportWriter enableIndent];
     [self printDivider];
   }
+
+  [self.reportWriter printNewline];
 }
 
 - (void)beginTestSuite:(NSDictionary *)event
@@ -666,7 +668,6 @@ static NSString *abbreviatePath(NSString *string) {
      [self formattedTestDuration:[event[kReporter_EndTestSuite_TotalDurationKey] floatValue] withColor:NO]
      ];
     [self.reportWriter decreaseIndent];
-    [self.reportWriter printNewline];
   } else if ([suite isEqualToString:kReporter_TestSuite_TopLevelSuiteName] && [_resultCounter suiteTotal] > 0) {
     [self.reportWriter printLine:@"<bold>%lu passed, %lu failed, %lu errored, %lu total %@<reset>",
       [_resultCounter suitePassed],
@@ -675,7 +676,6 @@ static NSString *abbreviatePath(NSString *string) {
       [_resultCounter suiteTotal],
      [self formattedTestDuration:[event[kReporter_EndTestSuite_TotalDurationKey] floatValue] withColor:NO]
      ];
-    [self.reportWriter printNewline];
   }
 }
 
