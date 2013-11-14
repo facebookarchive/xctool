@@ -79,7 +79,7 @@ static OCUnitTestRunner *TestRunner(Class cls, NSDictionary *settings)
                                                     encoding:NSUTF8StringEncoding
                                                        error:nil]);
 
-  NSMutableDictionary *testSettings = [allSettings[@"TestProject-LibraryTests2"] mutableCopy];
+  NSMutableDictionary *testSettings = [[allSettings[@"TestProject-LibraryTests2"] mutableCopy] autorelease];
   testSettings[@"TEST_HOST"] = TEST_DATA @"FakeApp.app/FakeAppExe";
 
   DTiPhoneSimulatorSessionConfig *config;
@@ -107,7 +107,7 @@ static OCUnitTestRunner *TestRunner(Class cls, NSDictionary *settings)
                                                     encoding:NSUTF8StringEncoding
                                                        error:nil]);
 
-  NSMutableDictionary *testSettings = [allSettings[@"TestProject-LibraryTests2"] mutableCopy];
+  NSMutableDictionary *testSettings = [[allSettings[@"TestProject-LibraryTests2"] mutableCopy] autorelease];
   testSettings[@"TEST_HOST"] = @"/var/empty/whee";
 
   DTiPhoneSimulatorSessionConfig *config;
@@ -175,7 +175,7 @@ static OCUnitTestRunner *TestRunner(Class cls, NSDictionary *settings)
                                                     encoding:NSUTF8StringEncoding
                                                        error:nil]);
 
-  NSMutableDictionary *testSettings = [allSettings[@"TestProject-App-OSXTests"] mutableCopy];
+  NSMutableDictionary *testSettings = [[allSettings[@"TestProject-App-OSXTests"] mutableCopy] autorelease];
   testSettings[@"TEST_HOST"] = TEST_DATA @"FakeApp.app/FakeAppExe";
 
   NSArray *launchedTasks;
@@ -200,7 +200,7 @@ static OCUnitTestRunner *TestRunner(Class cls, NSDictionary *settings)
                                                     encoding:NSUTF8StringEncoding
                                                        error:nil]);
 
-  NSMutableDictionary *testSettings = [allSettings[@"TestProject-App-OSXTests"] mutableCopy];
+  NSMutableDictionary *testSettings = [[allSettings[@"TestProject-App-OSXTests"] mutableCopy] autorelease];
   testSettings[@"TEST_HOST"] = @"/var/empty/whee";
 
   NSArray *launchedTasks;
