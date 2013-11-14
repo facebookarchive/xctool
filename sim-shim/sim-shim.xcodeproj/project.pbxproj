@@ -20,7 +20,6 @@
 		28AF3219182716E20051F658 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		28AF321A182716E20051F658 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		28AF321B182716E20051F658 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
-		28AF321E182716E20051F658 /* sim-shim-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "sim-shim-Prefix.pch"; sourceTree = "<group>"; };
 		28AF3220182716E20051F658 /* sim_shim.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = sim_shim.m; sourceTree = "<group>"; };
 		28AF3227182716E20051F658 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		28D9C57F182725030032FEA8 /* sim-shim.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "sim-shim.xcconfig"; sourceTree = "<group>"; };
@@ -83,17 +82,8 @@
 			isa = PBXGroup;
 			children = (
 				28AF3220182716E20051F658 /* sim_shim.m */,
-				28AF321D182716E20051F658 /* Supporting Files */,
 			);
 			path = "sim-shim";
-			sourceTree = "<group>";
-		};
-		28AF321D182716E20051F658 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				28AF321E182716E20051F658 /* sim-shim-Prefix.pch */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		28D9C580182725DC0032FEA8 /* Common */ = {
@@ -247,7 +237,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "sim-shim/sim-shim-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -259,7 +248,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "sim-shim/sim-shim-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
