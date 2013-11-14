@@ -17,6 +17,7 @@
 		284AF0D81719F0D300935238 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 284AF0B81719F0D300935238 /* Cocoa.framework */; };
 		284AF0E01719F0D300935238 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 284AF0DE1719F0D300935238 /* InfoPlist.strings */; };
 		284AF0E31719F0D300935238 /* TestProject_App_OSXTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 284AF0E21719F0D300935238 /* TestProject_App_OSXTests.m */; };
+		2866071718346E32000ACB87 /* Something.m in Sources */ = {isa = PBXBuildFile; fileRef = 2866071618346E32000ACB87 /* Something.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,8 @@
 		284AF0DF1719F0D300935238 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		284AF0E11719F0D300935238 /* TestProject_App_OSXTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestProject_App_OSXTests.h; sourceTree = "<group>"; };
 		284AF0E21719F0D300935238 /* TestProject_App_OSXTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestProject_App_OSXTests.m; sourceTree = "<group>"; };
+		2866071518346E32000ACB87 /* Something.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Something.h; sourceTree = "<group>"; };
+		2866071618346E32000ACB87 /* Something.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Something.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +121,8 @@
 				284AF0CB1719F0D300935238 /* AppDelegate.m */,
 				284AF0CD1719F0D300935238 /* MainMenu.xib */,
 				284AF0BF1719F0D300935238 /* Supporting Files */,
+				2866071518346E32000ACB87 /* Something.h */,
+				2866071618346E32000ACB87 /* Something.m */,
 			);
 			path = "TestProject-App-OSX";
 			sourceTree = "<group>";
@@ -261,6 +266,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2866071718346E32000ACB87 /* Something.m in Sources */,
 				284AF0C51719F0D300935238 /* main.m in Sources */,
 				284AF0CC1719F0D300935238 /* AppDelegate.m in Sources */,
 			);
@@ -450,6 +456,7 @@
 				284AF0E81719F0D300935238 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		284AF0E91719F0D300935238 /* Build configuration list for PBXNativeTarget "TestProject-App-OSXTests" */ = {
 			isa = XCConfigurationList;
@@ -458,6 +465,7 @@
 				284AF0EB1719F0D300935238 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

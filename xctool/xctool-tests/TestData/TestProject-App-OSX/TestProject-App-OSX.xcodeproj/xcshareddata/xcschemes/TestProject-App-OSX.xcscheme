@@ -20,6 +20,20 @@
                ReferencedContainer = "container:TestProject-App-OSX.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "284AF0D41719F0D300935238"
+               BuildableName = "TestProject-App-OSXTests.octest"
+               BlueprintName = "TestProject-App-OSXTests"
+               ReferencedContainer = "container:TestProject-App-OSX.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction

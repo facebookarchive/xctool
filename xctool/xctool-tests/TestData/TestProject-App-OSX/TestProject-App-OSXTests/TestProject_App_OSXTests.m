@@ -10,6 +10,8 @@
 
 #import <execinfo.h>
 
+#import "Something.h"
+
 @implementation TestProject_App_OSXTests
 
 - (void)setUp
@@ -27,7 +29,6 @@
 }
 
 - (void)testWillPass {
-
   STAssertEquals(1, 1, @"Equal!");
 }
 
@@ -44,6 +45,14 @@
   void *exceptionSymbols[256];
   int numSymbols = backtrace(exceptionSymbols, 256);
   backtrace_symbols_fd(exceptionSymbols, numSymbols, STDERR_FILENO);
+}
+
+- (void)testCanUseSymbolsFromTestHost
+{
+  // Just reference a symbol in the TEST_HOST just to make sure we can.  If the
+  // test bundle doesn't load, it will mean that we're not properly loading the
+  // test bundle inside of the running TEST_HOST.
+  Something *something = [[Something alloc] init];
 }
 
 @end
