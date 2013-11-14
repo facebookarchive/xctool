@@ -54,16 +54,16 @@ static void readOutputs(NSString **outputs, int *fildes, int sz) {
     } else {
       for (int i = 0; i < sz; i++) {
         if (fds[i].revents & (POLLIN | POLLHUP)) {
-          void *buf = malloc(4096);
-          ssize_t readResult = read(fds[i].fd, buf, 4096);
+          uint8_t buf[4096] = {0};
+          ssize_t readResult = read(fds[i].fd, buf, (sizeof(buf) / sizeof(uint8_t)));
 
           if (readResult > 0) {  // some bytes read
             dispatch_data_t part =
               dispatch_data_create(buf,
                                    readResult,
                                    dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
-                                   // free() buf when this is destroyed.
-                                   DISPATCH_DATA_DESTRUCTOR_FREE);
+                                   // copy data from the buffer
+                                   DISPATCH_DATA_DESTRUCTOR_DEFAULT);
             dispatch_data_t combined = dispatch_data_create_concat(data[i], part);
             dispatch_release(part);
             dispatch_release(data[i]);
@@ -72,7 +72,6 @@ static void readOutputs(NSString **outputs, int *fildes, int sz) {
             remaining--;
             fds[i].fd = -1;
             fds[i].events = 0;
-            free(buf);
           } else if (errno != EINTR) {
             NSLog(@"error during read: %@", [NSError errorWithDomain:NSPOSIXErrorDomain code:errno userInfo:@{}]);
             abort();
