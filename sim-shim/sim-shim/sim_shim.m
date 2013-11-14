@@ -16,6 +16,12 @@
 
 #import <Foundation/Foundation.h>
 
+#import <launch.h>
+#import <mach/mach.h>
+#import <servers/bootstrap.h>
+
+#import "dyld-interposing.h"
+
 #import "Swizzle.h"
 
 @interface BootlegTask : NSObject
@@ -57,6 +63,41 @@ static int BootlegTask_runUntilExit(BootlegTask *self, SEL sel)
 
   return (int)objc_msgSend(self, @selector(__BootlegTask_runUntilExit));
 }
+
+// `sim` WANTS to run the process inside the same bootstrap subset as the iOS
+// simulator, but we want to prevent this!  We don't know exactly why, but
+// sometimes the `sim` process can hang while it's trying to make contact with
+// the iOS Simulator.
+//
+// To do this, `sim` will use the launchd `GetJobs` command to lookup the
+// the bootstrap name for the simulator subset (i.e. com.apple.iphonesimulator.launchd.XXXXX).
+// Then, it uses that to somehow poke into that bootstrap context.
+//
+// We can prevent this just by prevening `sim` from ever finding the bootstrap
+// service.
+static launch_data_t __launch_msg(launch_data_t msg)
+{
+  if ((launch_data_get_type(msg) == LAUNCH_DATA_STRING) &&
+      (strcmp(launch_data_get_string(msg), LAUNCH_KEY_GETJOBS) == 0)) {
+    launch_data_t emptyDictionary = launch_data_alloc(LAUNCH_DATA_DICTIONARY);
+    return emptyDictionary;
+  } else {
+    return launch_msg(msg);
+  }
+}
+DYLD_INTERPOSE(__launch_msg, launch_msg);
+
+// In iOS 6, `sim` doesn't have to call GetJobs to look up the bootstrap name
+// since it's always constant.  Let's prevent it from over reaching that mach
+// service.
+kern_return_t	__bootstrap_look_up(mach_port_t bp, const name_t service_name, mach_port_t *sp) {
+  if (strcmp(service_name, "com.apple.iphonesimulator.bootstrap_subset") == 0) {
+    return BOOTSTRAP_UNKNOWN_SERVICE;
+  } else {
+    return bootstrap_look_up(bp, service_name, sp);
+  }
+}
+DYLD_INTERPOSE(__bootstrap_look_up, bootstrap_look_up);
 
 __attribute__((constructor)) static void Initializer()
 {

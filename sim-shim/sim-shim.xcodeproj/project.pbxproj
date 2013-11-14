@@ -14,6 +14,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		286607751834870F000ACB87 /* dyld-interposing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "dyld-interposing.h"; sourceTree = "<group>"; };
 		28AF3213182716E20051F658 /* sim-shim.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "sim-shim.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		28AF3216182716E20051F658 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		28AF3219182716E20051F658 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -98,6 +99,7 @@
 		28D9C580182725DC0032FEA8 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				286607751834870F000ACB87 /* dyld-interposing.h */,
 				28D9C58E182725DC0032FEA8 /* Swizzle.h */,
 				28D9C58F182725DC0032FEA8 /* Swizzle.m */,
 			);
