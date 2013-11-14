@@ -10,7 +10,6 @@
 		282BFE1B171602C60022F9FF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 282BFE1A171602C60022F9FF /* Cocoa.framework */; };
 		282BFE2B1716044C0022F9FF /* otest-shim.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCA9916C2EE4C00F2E343 /* otest-shim.m */; };
 		283CCA9A16C2EE4C00F2E343 /* otest-shim.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCA9916C2EE4C00F2E343 /* otest-shim.m */; };
-		287A37E916C7776E00319E81 /* dyld-interposing.h in Headers */ = {isa = PBXBuildFile; fileRef = 287A37E816C7776E00319E81 /* dyld-interposing.h */; };
 		2887CC41181E0D9200B0D049 /* DuplicateTestNameFix.h in Headers */ = {isa = PBXBuildFile; fileRef = 2887CC3F181E0D9200B0D049 /* DuplicateTestNameFix.h */; };
 		2887CC42181E0D9200B0D049 /* DuplicateTestNameFix.h in Headers */ = {isa = PBXBuildFile; fileRef = 2887CC3F181E0D9200B0D049 /* DuplicateTestNameFix.h */; };
 		2887CC43181E0D9200B0D049 /* DuplicateTestNameFix.m in Sources */ = {isa = PBXBuildFile; fileRef = 2887CC40181E0D9200B0D049 /* DuplicateTestNameFix.m */; };
@@ -23,7 +22,6 @@
 		28897FCA173E50F9004BA024 /* Swizzle.h in Headers */ = {isa = PBXBuildFile; fileRef = 28897FC7173E50F9004BA024 /* Swizzle.h */; };
 		28897FCB173E50F9004BA024 /* Swizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 28897FC8173E50F9004BA024 /* Swizzle.m */; };
 		28897FCC173E50F9004BA024 /* Swizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 28897FC8173E50F9004BA024 /* Swizzle.m */; };
-		28A094B41731DA3500838CDD /* dyld_priv.h in Headers */ = {isa = PBXBuildFile; fileRef = 28A094B31731DA3500838CDD /* dyld_priv.h */; };
 		28E28FB417968EC50072376C /* ReporterEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 28E28FB317968EC50072376C /* ReporterEvents.h */; };
 		28E28FB517968EC50072376C /* ReporterEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 28E28FB317968EC50072376C /* ReporterEvents.h */; };
 		28E44D521811024F00211BD5 /* ParseTestName.h in Headers */ = {isa = PBXBuildFile; fileRef = 28E44D501811024F00211BD5 /* ParseTestName.h */; };
@@ -51,14 +49,14 @@
 		283CCA9416C2EE4C00F2E343 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		283CCA9716C2EE4C00F2E343 /* otest-shim-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "otest-shim-Prefix.pch"; sourceTree = "<group>"; };
 		283CCA9916C2EE4C00F2E343 /* otest-shim.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "otest-shim.m"; sourceTree = "<group>"; };
-		287A37E816C7776E00319E81 /* dyld-interposing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dyld-interposing.h"; sourceTree = "<group>"; };
+		2866077318348676000ACB87 /* dyld_priv.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dyld_priv.h; sourceTree = "<group>"; };
+		2866077418348676000ACB87 /* dyld-interposing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "dyld-interposing.h"; sourceTree = "<group>"; };
 		2887CC3F181E0D9200B0D049 /* DuplicateTestNameFix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DuplicateTestNameFix.h; sourceTree = "<group>"; };
 		2887CC40181E0D9200B0D049 /* DuplicateTestNameFix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DuplicateTestNameFix.m; sourceTree = "<group>"; };
 		2887CC45181E145D00B0D049 /* TestingFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestingFramework.h; sourceTree = "<group>"; };
 		2887CC46181E145D00B0D049 /* TestingFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestingFramework.m; sourceTree = "<group>"; };
 		28897FC7173E50F9004BA024 /* Swizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Swizzle.h; sourceTree = "<group>"; };
 		28897FC8173E50F9004BA024 /* Swizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Swizzle.m; sourceTree = "<group>"; };
-		28A094B31731DA3500838CDD /* dyld_priv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dyld_priv.h; sourceTree = "<group>"; };
 		28E28FB317968EC50072376C /* ReporterEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReporterEvents.h; sourceTree = "<group>"; };
 		28E44D501811024F00211BD5 /* ParseTestName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseTestName.h; sourceTree = "<group>"; };
 		28E44D511811024F00211BD5 /* ParseTestName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseTestName.m; sourceTree = "<group>"; };
@@ -133,8 +131,6 @@
 		283CCA9516C2EE4C00F2E343 /* otest-shim */ = {
 			isa = PBXGroup;
 			children = (
-				287A37E816C7776E00319E81 /* dyld-interposing.h */,
-				28A094B31731DA3500838CDD /* dyld_priv.h */,
 				283CCA9916C2EE4C00F2E343 /* otest-shim.m */,
 				283CCA9616C2EE4C00F2E343 /* Supporting Files */,
 			);
@@ -152,6 +148,8 @@
 		28897FC6173E50F9004BA024 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				2866077318348676000ACB87 /* dyld_priv.h */,
+				2866077418348676000ACB87 /* dyld-interposing.h */,
 				2887CC3F181E0D9200B0D049 /* DuplicateTestNameFix.h */,
 				2887CC40181E0D9200B0D049 /* DuplicateTestNameFix.m */,
 				3892D7571815ACE200E68652 /* EventGenerator.h */,
@@ -190,11 +188,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				287A37E916C7776E00319E81 /* dyld-interposing.h in Headers */,
 				28E44D521811024F00211BD5 /* ParseTestName.h in Headers */,
 				3892D7591815ACE200E68652 /* EventGenerator.h in Headers */,
 				2887CC47181E145D00B0D049 /* TestingFramework.h in Headers */,
-				28A094B41731DA3500838CDD /* dyld_priv.h in Headers */,
 				28897FC9173E50F9004BA024 /* Swizzle.h in Headers */,
 				28E28FB417968EC50072376C /* ReporterEvents.h in Headers */,
 				AA318BEA17E9B43000BF159E /* XCTest.h in Headers */,
