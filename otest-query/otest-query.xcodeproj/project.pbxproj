@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		283758E517CED68F006E1544 /* otest-query-ios-dylib.m in Sources */ = {isa = PBXBuildFile; fileRef = 283758E417CED68F006E1544 /* otest-query-ios-dylib.m */; };
 		283758EA17CED7AF006E1544 /* OtestQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = CD9049131756C6C0006CF16D /* OtestQuery.m */; };
 		283758EB17CED83B006E1544 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283758DF17CED68F006E1544 /* Foundation.framework */; };
+		28660742183471FF000ACB87 /* otest-query-lib.m in Sources */ = {isa = PBXBuildFile; fileRef = 28660741183471FF000ACB87 /* otest-query-lib.m */; };
 		2887CC35181DDB5F00B0D049 /* Swizzle.h in Headers */ = {isa = PBXBuildFile; fileRef = 2887CC33181DDB5F00B0D049 /* Swizzle.h */; };
 		2887CC36181DDB5F00B0D049 /* Swizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2887CC34181DDB5F00B0D049 /* Swizzle.m */; };
 		2887CC37181DDB5F00B0D049 /* Swizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 2887CC34181DDB5F00B0D049 /* Swizzle.m */; };
@@ -60,8 +60,8 @@
 		283758DD17CED68F006E1544 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		283758DE17CED68F006E1544 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		283758DF17CED68F006E1544 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		283758E417CED68F006E1544 /* otest-query-ios-dylib.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "otest-query-ios-dylib.m"; sourceTree = "<group>"; };
-		283758E917CED6A7006E1544 /* otest-query-ios-dylib.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "otest-query-ios-dylib.xcconfig"; sourceTree = "<group>"; };
+		283758E917CED6A7006E1544 /* otest-query-lib-ios.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "otest-query-lib-ios.xcconfig"; sourceTree = "<group>"; };
+		28660741183471FF000ACB87 /* otest-query-lib.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "otest-query-lib.m"; sourceTree = "<group>"; };
 		2887CC33181DDB5F00B0D049 /* Swizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Swizzle.h; path = ../Common/Swizzle.h; sourceTree = "<group>"; };
 		2887CC34181DDB5F00B0D049 /* Swizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Swizzle.m; path = ../Common/Swizzle.m; sourceTree = "<group>"; };
 		2887CC39181E0D8600B0D049 /* DuplicateTestNameFix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DuplicateTestNameFix.h; path = ../Common/DuplicateTestNameFix.h; sourceTree = "<group>"; };
@@ -120,12 +120,12 @@
 			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
-		283758E017CED68F006E1544 /* otest-query-ios-dylib */ = {
+		28660740183471FF000ACB87 /* otest-query-lib */ = {
 			isa = PBXGroup;
 			children = (
-				283758E417CED68F006E1544 /* otest-query-ios-dylib.m */,
+				28660741183471FF000ACB87 /* otest-query-lib.m */,
 			);
-			path = "otest-query-ios-dylib";
+			path = "otest-query-lib";
 			sourceTree = "<group>";
 		};
 		AA318BE217E9A8B000BF159E /* Common */ = {
@@ -146,13 +146,13 @@
 		CD9048F51756C5B1006CF16D = {
 			isa = PBXGroup;
 			children = (
-				CD666138175D1B090057DF4D /* otest-query-osx.xcconfig */,
 				CD9049151756CDF4006CF16D /* otest-query-ios.xcconfig */,
-				283758E917CED6A7006E1544 /* otest-query-ios-dylib.xcconfig */,
-				CD9049031756C5B1006CF16D /* otest-query */,
-				283758E017CED68F006E1544 /* otest-query-ios-dylib */,
+				CD666138175D1B090057DF4D /* otest-query-osx.xcconfig */,
+				283758E917CED6A7006E1544 /* otest-query-lib-ios.xcconfig */,
 				AA318BE217E9A8B000BF159E /* Common */,
 				CD9049001756C5B1006CF16D /* Frameworks */,
+				CD9049031756C5B1006CF16D /* otest-query */,
+				28660740183471FF000ACB87 /* otest-query-lib */,
 				CD9048FF1756C5B1006CF16D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -213,9 +213,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		283758D817CED68F006E1544 /* otest-query-ios-dylib */ = {
+		283758D817CED68F006E1544 /* otest-query-lib-ios */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 283758E817CED68F006E1544 /* Build configuration list for PBXNativeTarget "otest-query-ios-dylib" */;
+			buildConfigurationList = 283758E817CED68F006E1544 /* Build configuration list for PBXNativeTarget "otest-query-lib-ios" */;
 			buildPhases = (
 				283758D517CED68F006E1544 /* Sources */,
 				283758D617CED68F006E1544 /* Frameworks */,
@@ -225,8 +225,8 @@
 			);
 			dependencies = (
 			);
-			name = "otest-query-ios-dylib";
-			productName = "otest-query-ios-dylib";
+			name = "otest-query-lib-ios";
+			productName = "otest-query-lib-ios";
 			productReference = 283758D917CED68F006E1544 /* otest-query-ios-dylib.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
@@ -287,7 +287,7 @@
 			targets = (
 				CD9048FD1756C5B1006CF16D /* otest-query-ios */,
 				CD66612B175D1A890057DF4D /* otest-query-osx */,
-				283758D817CED68F006E1544 /* otest-query-ios-dylib */,
+				283758D817CED68F006E1544 /* otest-query-lib-ios */,
 			);
 		};
 /* End PBXProject section */
@@ -300,9 +300,9 @@
 				2887CC3E181E0D8600B0D049 /* DuplicateTestNameFix.m in Sources */,
 				28E44D4F1810FBE500211BD5 /* ParseTestName.m in Sources */,
 				2887CC38181DDB5F00B0D049 /* Swizzle.m in Sources */,
+				28660742183471FF000ACB87 /* otest-query-lib.m in Sources */,
 				283758EA17CED7AF006E1544 /* OtestQuery.m in Sources */,
 				AA318BE817E9AA7400BF159E /* TestingFramework.m in Sources */,
-				283758E517CED68F006E1544 /* otest-query-ios-dylib.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -337,7 +337,7 @@
 /* Begin XCBuildConfiguration section */
 		283758E617CED68F006E1544 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 283758E917CED6A7006E1544 /* otest-query-ios-dylib.xcconfig */;
+			baseConfigurationReference = 283758E917CED6A7006E1544 /* otest-query-lib-ios.xcconfig */;
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -347,7 +347,7 @@
 		};
 		283758E717CED68F006E1544 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 283758E917CED6A7006E1544 /* otest-query-ios-dylib.xcconfig */;
+			baseConfigurationReference = 283758E917CED6A7006E1544 /* otest-query-lib-ios.xcconfig */;
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -460,7 +460,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		283758E817CED68F006E1544 /* Build configuration list for PBXNativeTarget "otest-query-ios-dylib" */ = {
+		283758E817CED68F006E1544 /* Build configuration list for PBXNativeTarget "otest-query-lib-ios" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				283758E617CED68F006E1544 /* Debug */,

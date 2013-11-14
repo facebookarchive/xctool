@@ -43,8 +43,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "283758D817CED68F006E1544"
-               BuildableName = "otest-query-ios-dylib.dylib"
-               BlueprintName = "otest-query-ios-dylib"
+               BuildableName = "otest-query-lib-ios.dylib"
+               BlueprintName = "otest-query-lib-ios"
                ReferencedContainer = "container:../otest-query/otest-query.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
