@@ -37,6 +37,8 @@
 		2862C1B6180DE7BA00E5F58B /* XCToolUtilTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2862C1B5180DE7BA00E5F58B /* XCToolUtilTests.m */; };
 		2864A3FA1734E52800BBF3B1 /* Version.m in Sources */ = {isa = PBXBuildFile; fileRef = 2864A3F91734E52800BBF3B1 /* Version.m */; };
 		2864A3FB1734E52800BBF3B1 /* Version.m in Sources */ = {isa = PBXBuildFile; fileRef = 2864A3F91734E52800BBF3B1 /* Version.m */; };
+		286607711834757F000ACB87 /* OCUnitOSXAppTestQueryRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 286607701834757F000ACB87 /* OCUnitOSXAppTestQueryRunner.m */; };
+		286607721834757F000ACB87 /* OCUnitOSXAppTestQueryRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 286607701834757F000ACB87 /* OCUnitOSXAppTestQueryRunner.m */; };
 		2869F3C517C82FB80078F078 /* TestableExecutionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 2869F3C417C82FB80078F078 /* TestableExecutionInfo.m */; };
 		2869F3C617C82FB80078F078 /* TestableExecutionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 2869F3C417C82FB80078F078 /* TestableExecutionInfo.m */; };
 		287A37DE16C711AF00319E81 /* LineReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A37DD16C711AE00319E81 /* LineReader.m */; };
@@ -105,8 +107,8 @@
 		AA6C88F71808C2C5006A3581 /* OTestShimTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AA6C88F61808C2C5006A3581 /* OTestShimTests.m */; };
 		AAC1E0B11811F5C3005A4FD5 /* OCUnitTestQueryRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC1E0B01811F5C3005A4FD5 /* OCUnitTestQueryRunner.m */; };
 		AAC1E0B21811F5C3005A4FD5 /* OCUnitTestQueryRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC1E0B01811F5C3005A4FD5 /* OCUnitTestQueryRunner.m */; };
-		AAC1E0B51811F5E3005A4FD5 /* OCUnitOSXTestQueryRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC1E0B41811F5E3005A4FD5 /* OCUnitOSXTestQueryRunner.m */; };
-		AAC1E0B61811F5E3005A4FD5 /* OCUnitOSXTestQueryRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC1E0B41811F5E3005A4FD5 /* OCUnitOSXTestQueryRunner.m */; };
+		AAC1E0B51811F5E3005A4FD5 /* OCUnitOSXLogicTestQueryRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC1E0B41811F5E3005A4FD5 /* OCUnitOSXLogicTestQueryRunner.m */; };
+		AAC1E0B61811F5E3005A4FD5 /* OCUnitOSXLogicTestQueryRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC1E0B41811F5E3005A4FD5 /* OCUnitOSXLogicTestQueryRunner.m */; };
 		AAC1E0BD18121071005A4FD5 /* OCUnitIOSLogicTestQueryRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC1E0BC18121071005A4FD5 /* OCUnitIOSLogicTestQueryRunner.m */; };
 		AAC1E0BE18121071005A4FD5 /* OCUnitIOSLogicTestQueryRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC1E0BC18121071005A4FD5 /* OCUnitIOSLogicTestQueryRunner.m */; };
 		AAC1E0C118121AC6005A4FD5 /* OCUnitIOSAppTestQueryRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC1E0C018121AC6005A4FD5 /* OCUnitIOSAppTestQueryRunner.m */; };
@@ -207,6 +209,8 @@
 		2862C1B5180DE7BA00E5F58B /* XCToolUtilTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCToolUtilTests.m; sourceTree = "<group>"; };
 		2864A3F81734E52800BBF3B1 /* Version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Version.h; sourceTree = "<group>"; };
 		2864A3F91734E52800BBF3B1 /* Version.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Version.m; sourceTree = "<group>"; };
+		2866076F1834757F000ACB87 /* OCUnitOSXAppTestQueryRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUnitOSXAppTestQueryRunner.h; sourceTree = "<group>"; };
+		286607701834757F000ACB87 /* OCUnitOSXAppTestQueryRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitOSXAppTestQueryRunner.m; sourceTree = "<group>"; };
 		2869F3C317C82FB80078F078 /* TestableExecutionInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestableExecutionInfo.h; sourceTree = "<group>"; };
 		2869F3C417C82FB80078F078 /* TestableExecutionInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestableExecutionInfo.m; sourceTree = "<group>"; };
 		287A37DC16C711AE00319E81 /* LineReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LineReader.h; sourceTree = "<group>"; };
@@ -285,8 +289,8 @@
 		AA6C88F61808C2C5006A3581 /* OTestShimTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTestShimTests.m; sourceTree = "<group>"; };
 		AAC1E0AF1811F5C3005A4FD5 /* OCUnitTestQueryRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUnitTestQueryRunner.h; sourceTree = "<group>"; };
 		AAC1E0B01811F5C3005A4FD5 /* OCUnitTestQueryRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitTestQueryRunner.m; sourceTree = "<group>"; };
-		AAC1E0B31811F5E3005A4FD5 /* OCUnitOSXTestQueryRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUnitOSXTestQueryRunner.h; sourceTree = "<group>"; };
-		AAC1E0B41811F5E3005A4FD5 /* OCUnitOSXTestQueryRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitOSXTestQueryRunner.m; sourceTree = "<group>"; };
+		AAC1E0B31811F5E3005A4FD5 /* OCUnitOSXLogicTestQueryRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUnitOSXLogicTestQueryRunner.h; sourceTree = "<group>"; };
+		AAC1E0B41811F5E3005A4FD5 /* OCUnitOSXLogicTestQueryRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitOSXLogicTestQueryRunner.m; sourceTree = "<group>"; };
 		AAC1E0BB18121071005A4FD5 /* OCUnitIOSLogicTestQueryRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUnitIOSLogicTestQueryRunner.h; sourceTree = "<group>"; };
 		AAC1E0BC18121071005A4FD5 /* OCUnitIOSLogicTestQueryRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitIOSLogicTestQueryRunner.m; sourceTree = "<group>"; };
 		AAC1E0BF18121AC6005A4FD5 /* OCUnitIOSAppTestQueryRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUnitIOSAppTestQueryRunner.h; sourceTree = "<group>"; };
@@ -600,8 +604,10 @@
 				AAC1E0C018121AC6005A4FD5 /* OCUnitIOSAppTestQueryRunner.m */,
 				AAC1E0BB18121071005A4FD5 /* OCUnitIOSLogicTestQueryRunner.h */,
 				AAC1E0BC18121071005A4FD5 /* OCUnitIOSLogicTestQueryRunner.m */,
-				AAC1E0B31811F5E3005A4FD5 /* OCUnitOSXTestQueryRunner.h */,
-				AAC1E0B41811F5E3005A4FD5 /* OCUnitOSXTestQueryRunner.m */,
+				2866076F1834757F000ACB87 /* OCUnitOSXAppTestQueryRunner.h */,
+				286607701834757F000ACB87 /* OCUnitOSXAppTestQueryRunner.m */,
+				AAC1E0B31811F5E3005A4FD5 /* OCUnitOSXLogicTestQueryRunner.h */,
+				AAC1E0B41811F5E3005A4FD5 /* OCUnitOSXLogicTestQueryRunner.m */,
 				AAC1E0AF1811F5C3005A4FD5 /* OCUnitTestQueryRunner.h */,
 				AAC1E0B01811F5C3005A4FD5 /* OCUnitTestQueryRunner.m */,
 			);
@@ -701,7 +707,7 @@
 				28E9B9D916C3275200A52E4D /* OCUnitIOSLogicTestRunner.m in Sources */,
 				28E9B9DB16C3275200A52E4D /* OCUnitTestRunner.m in Sources */,
 				287A37DE16C711AF00319E81 /* LineReader.m in Sources */,
-				AAC1E0B51811F5E3005A4FD5 /* OCUnitOSXTestQueryRunner.m in Sources */,
+				AAC1E0B51811F5E3005A4FD5 /* OCUnitOSXLogicTestQueryRunner.m in Sources */,
 				287A37E116C711E000319E81 /* SimulatorLauncher.m in Sources */,
 				28046D2C16D7603B000AA15C /* Action.m in Sources */,
 				2834799416E199A2003C3B77 /* BuildAction.m in Sources */,
@@ -710,6 +716,7 @@
 				283479AD16E2A736003C3B77 /* BuildTestsAction.m in Sources */,
 				AAC1E0B11811F5C3005A4FD5 /* OCUnitTestQueryRunner.m in Sources */,
 				283479B516E2B39C003C3B77 /* RunTestsAction.m in Sources */,
+				286607711834757F000ACB87 /* OCUnitOSXAppTestQueryRunner.m in Sources */,
 				28BB043D17C7FF43004F6C13 /* Buildable.m in Sources */,
 				287BF08416F1A97900590E06 /* XcodeSubjectInfo.m in Sources */,
 				28ACFC8316FBA888004BAF33 /* TaskUtil.m in Sources */,
@@ -812,10 +819,11 @@
 				28E28FBD1797099E0072376C /* ReporterTask.m in Sources */,
 				28E28FC01797193F0072376C /* ReporterTaskTests.m in Sources */,
 				28F489F317973B6100068E00 /* FakeFileHandle.m in Sources */,
-				AAC1E0B61811F5E3005A4FD5 /* OCUnitOSXTestQueryRunner.m in Sources */,
+				AAC1E0B61811F5E3005A4FD5 /* OCUnitOSXLogicTestQueryRunner.m in Sources */,
 				28F489FD17973BF900068E00 /* NSFileHandle+Print.m in Sources */,
 				2804514517C410F100D16420 /* OTestQueryTests.m in Sources */,
 				28404AE017C7E16F00CB436A /* Testable.m in Sources */,
+				286607721834757F000ACB87 /* OCUnitOSXAppTestQueryRunner.m in Sources */,
 				EEB31CED17C6867300CFB0E1 /* OCEventStateTests.m in Sources */,
 				EEB31CF417C6A21400CFB0E1 /* OCTestEventStateTests.m in Sources */,
 				EEB31CFA17C6D57B00CFB0E1 /* OCTestSuiteEventState.m in Sources */,

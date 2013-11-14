@@ -56,6 +56,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "28660746183474A7000ACB87"
+               BuildableName = "otest-query-lib-osx.dylib"
+               BlueprintName = "otest-query-lib-osx"
+               ReferencedContainer = "container:../otest-query/otest-query.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "283CCA8B16C2EE4C00F2E343"
                BuildableName = "otest-shim-ios.dylib"
                BlueprintName = "otest-shim-ios"

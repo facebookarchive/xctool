@@ -18,7 +18,8 @@
 
 #import "OCUnitIOSAppTestQueryRunner.h"
 #import "OCUnitIOSLogicTestQueryRunner.h"
-#import "OCUnitOSXTestQueryRunner.h"
+#import "OCUnitOSXAppTestQueryRunner.h"
+#import "OCUnitOSXLogicTestQueryRunner.h"
 #import "TestUtil.h"
 #import "XCToolUtil.h"
 
@@ -34,7 +35,7 @@
     kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"tests-osx-test-bundle"),
     kFullProductName : @"TestProject-Library-OSXTests.octest",
   };
-  OCUnitTestQueryRunner *runner = [[[OCUnitOSXTestQueryRunner alloc] initWithBuildSettings:buildSettings
+  OCUnitTestQueryRunner *runner = [[[OCUnitOSXLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
                                                                                withCpuType:CPU_TYPE_ANY] autorelease];
   NSArray *classes = [runner runQueryWithError:&error];
   assertThat(error, is(nilValue()));
@@ -44,6 +45,27 @@
                      @"TestProject_Library_OSXTests/testWillFail",
                      @"TestProject_Library_OSXTests/testWillPass",
                      ]));
+}
+
+- (void)testCanQueryClassesFromOSXBundle_AppTests
+{
+  NSString *error = nil;
+  NSDictionary *buildSettings = @{
+                                  kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"TestProject-App-OSX/Build/Products/Debug"),
+                                  kFullProductName : @"TestProject-App-OSXTests.octest",
+                                  kSdkName : GetAvailableSDKsAndAliases()[@"macosx"],
+                                  kTestHost : AbsolutePathFromRelative(TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/TestProject-App-OSX.app/Contents/MacOS/TestProject-App-OSX"),
+                                  };
+  OCUnitTestQueryRunner *runner = [[[OCUnitOSXAppTestQueryRunner alloc] initWithBuildSettings:buildSettings
+                                                                                  withCpuType:CPU_TYPE_ANY] autorelease];
+  NSArray *classes = [runner runQueryWithError:&error];
+  assertThat(error, is(nilValue()));
+  assertThat(classes,
+             equalTo(@[@"TestProject_App_OSXTests/testCanUseSymbolsFromTestHost",
+                       @"TestProject_App_OSXTests/testOutput",
+                       @"TestProject_App_OSXTests/testWillFail",
+                       @"TestProject_App_OSXTests/testWillPass",
+                       ]));
 }
 
 - (void)testCanQueryXCTestClassesFromOSXBundle
@@ -57,7 +79,7 @@
     kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"tests-osx-test-bundle"),
     kFullProductName : @"TestProject-Library-XCTest-OSXTests.xctest",
   };
-  OCUnitTestQueryRunner *runner = [[[OCUnitOSXTestQueryRunner alloc] initWithBuildSettings:buildSettings
+  OCUnitTestQueryRunner *runner = [[[OCUnitOSXLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
                                                                                withCpuType:CPU_TYPE_ANY] autorelease];
   NSArray *classes = [runner runQueryWithError:&error];
   assertThat(error, is(nilValue()));
@@ -219,7 +241,7 @@
     kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"tests-ios-test-bundle"),
     kFullProductName : @"TestProject-LibraryTests.octest",
   };
-  OCUnitTestQueryRunner *runner = [[[OCUnitOSXTestQueryRunner alloc] initWithBuildSettings:buildSettings
+  OCUnitTestQueryRunner *runner = [[[OCUnitOSXLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
                                                                                withCpuType:CPU_TYPE_ANY] autorelease];
   NSArray *classes = [runner runQueryWithError:&error];
   assertThat(classes, equalTo(nil));

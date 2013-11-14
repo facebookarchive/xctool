@@ -23,7 +23,6 @@
 #import "OCUnitIOSLogicTestRunner.h"
 #import "OCUnitOSXAppTestRunner.h"
 #import "OCUnitOSXLogicTestRunner.h"
-#import "OCUnitOSXTestQueryRunner.h"
 #import "Options.h"
 #import "ReporterEvents.h"
 #import "ReportStatus.h"

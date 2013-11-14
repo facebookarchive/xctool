@@ -18,7 +18,8 @@
 
 #import "OCUnitIOSAppTestQueryRunner.h"
 #import "OCUnitIOSLogicTestQueryRunner.h"
-#import "OCUnitOSXTestQueryRunner.h"
+#import "OCUnitOSXAppTestQueryRunner.h"
+#import "OCUnitOSXLogicTestQueryRunner.h"
 #import "TaskUtil.h"
 #import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
@@ -165,7 +166,11 @@
       runnerClass = [OCUnitIOSLogicTestQueryRunner class];
     }
   } else if ([sdkName hasPrefix:@"macosx"]) {
-    runnerClass = [OCUnitOSXTestQueryRunner class];
+    if (hasTestHost) {
+      runnerClass = [OCUnitOSXAppTestQueryRunner class];
+    } else {
+      runnerClass = [OCUnitOSXLogicTestQueryRunner class];
+    }
   } else if ([sdkName hasPrefix:@"iphoneos"]) {
     // We can't run tests on device yet, but we must return a test list here or
     // we'll never get far enough to run OCUnitIOSDeviceTestRunner.

@@ -16,6 +16,6 @@
 
 #import "OCUnitTestQueryRunner.h"
 
-@interface OCUnitOSXTestQueryRunner : OCUnitTestQueryRunner
+@interface OCUnitOSXAppTestQueryRunner : OCUnitTestQueryRunner
 
 @end

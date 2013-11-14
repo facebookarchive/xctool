@@ -14,13 +14,13 @@
 // limitations under the License.
 //
 
-#import "OCUnitOSXTestQueryRunner.h"
+#import "OCUnitOSXLogicTestQueryRunner.h"
 
 #import "iPhoneSimulatorRemoteClient.h"
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
 
-@implementation OCUnitOSXTestQueryRunner
+@implementation OCUnitOSXLogicTestQueryRunner
 
 - (NSTask *)createTaskForQuery
 {
