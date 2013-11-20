@@ -555,18 +555,20 @@ containsFilesModifiedSince:(NSDate *)sinceDate
                  error:&error];
   NSAssert(error == nil, @"Failed to get nodes: %@", [error localizedFailureReason]);
 
-  NSMutableArray *arguments = [NSMutableArray array];
-  NSMutableDictionary *environment = [NSMutableDictionary dictionary];
-
+  NSMutableString* combinedArgumentsString = [NSMutableString string];
   for (NSXMLElement *node in commandLineArgumentNodes) {
-    NSString *argument = [[node attributeForName:@"argument"] stringValue];
+    NSString *argumentString = [[node attributeForName:@"argument"] stringValue];
     BOOL isEnabled = [[[node attributeForName:@"isEnabled"] stringValue] isEqualToString:@"YES"];
-
     if (isEnabled) {
-      [arguments addObject:argument];
+      if (combinedArgumentsString.length > 0) {
+        [combinedArgumentsString appendString:@" "];
+      }
+      [combinedArgumentsString appendString:argumentString];
     }
   }
+  NSArray* arguments = ParseArgumentsFromArgumentString(combinedArgumentsString);
 
+  NSMutableDictionary *environment = [NSMutableDictionary dictionary];
   for (NSXMLElement *node in environmentVariableNodes) {
     NSString *key = [[node attributeForName:@"key"] stringValue];
     NSString *value = [[node attributeForName:@"value"] stringValue];

@@ -404,6 +404,88 @@ NSArray *ArgumentListByOverriding(NSArray *arguments,
   return result;
 }
 
+/**
+ Every line of arguments defined in an Xcode scheme may provide multiple command line arguments
+ which get passed to the testable. This method returns the command line arguments contained in one
+ argument line string. It splits the string into arguments at spaces which are not contained
+ in unescaped quotes
+ It treats quotes and escaped quotes like Xcode does when it runs
+ a test executable. (The escape character is the backslash.)
+ */
+NSArray *ParseArgumentsFromArgumentString(NSString *string)
+{
+  NSCParameterAssert(string);
+
+  enum ParsingState {
+    OutsideOfArgument,
+    InsideArgument,
+    BetweenQuotes,
+  };
+
+  enum ParsingState state = OutsideOfArgument;
+  NSUInteger escapeIndex = NSNotFound;  // points to the index following the last single backslash
+  unichar openingQuoteCharacter;
+
+  NSMutableArray *arguments = [NSMutableArray array];
+  NSMutableString *currentArgument = nil;
+  NSUInteger length = string.length;
+  for (NSUInteger index = 0; index < length; index++) {
+    unichar iChar = [string characterAtIndex:index];
+
+    if(iChar == '\\') {
+      if(escapeIndex == index) {
+        escapeIndex = NSNotFound;
+      } else {
+        escapeIndex = index + 1;
+        continue;
+      }
+    }
+
+    if(iChar == ' ') {
+      if(state == OutsideOfArgument) {
+        continue;
+      } else if(state == InsideArgument) {
+        state = OutsideOfArgument;
+      }
+    }
+    else if((iChar == '\'' || iChar == '"') && (index != escapeIndex)) {
+      if(state == BetweenQuotes) {
+        if(iChar == openingQuoteCharacter) {
+          state = InsideArgument;
+          continue;
+        }
+      } else {
+        openingQuoteCharacter = iChar;
+        state = BetweenQuotes;
+        continue;
+      }
+    }
+    else if(state == OutsideOfArgument) {
+      state = InsideArgument;
+    }
+
+    if(state == OutsideOfArgument) {
+      if(currentArgument.length > 0) {
+        [arguments addObject:currentArgument];
+        currentArgument = nil;
+      }
+    } else {
+      if(!currentArgument) {
+        currentArgument = [NSMutableString string];
+      }
+      // As of Mac OS 10.9/iOS 7.0 there still is no Objective-C method for appending single
+      // characters to strings therefore we have to fall back to using a CF function.
+      CFStringAppendCharacters((CFMutableStringRef)currentArgument, &iChar, 1);
+    }
+  }
+
+  if(currentArgument.length > 0) {
+    [arguments addObject:currentArgument];
+  }
+
+  return arguments;
+}
+
 NSString *TemporaryDirectoryForAction()
 {
   if (__tempDirectoryForAction == nil) {

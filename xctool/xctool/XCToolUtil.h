@@ -85,6 +85,16 @@ NSArray *ArgumentListByOverriding(NSArray *arguments,
                                   NSString *option,
                                   NSString *optionValue);
 
+
+/**
+ This method returns the command line arguments contained in an
+ argument string. It splits the string into arguments at spaces which are not contained
+ in unescaped quotes
+ It treats quotes and escaped quotes like Xcode does when it runs
+ a test executable. (The escape character is the backslash.)
+ */
+NSArray *ParseArgumentsFromArgumentString(NSString *string);
+
 /**
  Returns a temporary directory to be used during the current running action
  (i.e. build, or test).  As soon as the action completes, the temporary
@@ -132,3 +142,4 @@ NSString *SystemPaths();
  * and returns the path.
  */
 NSString *MakeTemporaryDirectory(NSString *nameTemplate);
+
