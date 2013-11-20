@@ -10,7 +10,7 @@ for continuous integration.
 &bull; [Continuous Integration](#continuous-integration)
 &bull; [Reporters](#reporters) &bull;
 [Configuration](#configuration-xctool-args) &bull; 
-[Contributing](#contributing) &bull; [Known Issues](#known-issues) &bull; [License](#license) ]
+[Contributing](#contributing) &bull; [Known Issues & Tips](#known-issues--tips) &bull; [License](#license) ]
 
 ## Features
 
