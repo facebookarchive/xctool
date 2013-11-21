@@ -45,7 +45,8 @@
     return;
   }
 
-  NSArray *libraries = @[[XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-osx.dylib"],
+  NSArray *libraries = @[[XCToolLibPath() stringByAppendingPathComponent:@"swizzle-guard-osx.dylib"],
+                         [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-osx.dylib"],
                          [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection"],
                          ];
 

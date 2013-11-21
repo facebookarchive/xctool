@@ -70,6 +70,34 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "282FBC7F183C6909006C58BD"
+               BuildableName = "swizzle-guard-ios.dylib"
+               BlueprintName = "swizzle-guard-ios"
+               ReferencedContainer = "container:../swizzle-guard/swizzle-guard.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "282FBC52183C6888006C58BD"
+               BuildableName = "swizzle-guard-osx.dylib"
+               BlueprintName = "swizzle-guard-osx"
+               ReferencedContainer = "container:../swizzle-guard/swizzle-guard.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "283CCA8B16C2EE4C00F2E343"
                BuildableName = "otest-shim-ios.dylib"
                BlueprintName = "otest-shim-ios"
@@ -272,6 +300,20 @@
                ReferencedContainer = "container:xctool.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "282FBC92183C6A60006C58BD"
+               BuildableName = "swizzle-guard-tests.octest"
+               BlueprintName = "swizzle-guard-tests"
+               ReferencedContainer = "container:../swizzle-guard/swizzle-guard.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -300,6 +342,16 @@
                ReferencedContainer = "container:../reporters/reporters.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "282FBC92183C6A60006C58BD"
+               BuildableName = "swizzle-guard-tests.octest"
+               BlueprintName = "swizzle-guard-tests"
+               ReferencedContainer = "container:../swizzle-guard/swizzle-guard.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
@@ -314,6 +366,11 @@
          <EnvironmentVariable
             key = "XT_INSTALL_ROOT"
             value = "$(XT_INSTALL_ROOT)"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "DYLD_INSERT_LIBRARIES"
+            value = "$(XT_INSTALL_ROOT)/lib/swizzle-guard-osx.dylib"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>

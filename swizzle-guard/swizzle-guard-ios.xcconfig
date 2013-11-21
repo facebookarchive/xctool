@@ -14,11 +14,7 @@
 // limitations under the License.
 //
 
-#include "../Configurations/Project.xcconfig"
 #include "../Configurations/iOS-Simulator-Dylib.xcconfig"
 
-#include "../Configurations/Install.xcconfig"
-XT_INSTALL_DIR = lib
-
 OTHER_CFLAGS = $(XT_IOS_SIMULATOR_CFLAGS)
-OTHER_LDFLAGS = $(XT_IOS_SIMULATOR_LDFLAGS) $(XT_INSTALL_ROOT)/swizzle-guard-ios.dylib
+OTHER_LDFLAGS = $(XT_IOS_SIMULATOR_LDFLAGS)

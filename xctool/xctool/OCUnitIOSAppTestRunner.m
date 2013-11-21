@@ -134,7 +134,7 @@ static void KillSimulatorJobs()
   [launchEnvironment addEntriesFromDictionary:@{
    @"DYLD_FRAMEWORK_PATH" : _buildSettings[@"TARGET_BUILD_DIR"],
    @"DYLD_LIBRARY_PATH" : _buildSettings[@"TARGET_BUILD_DIR"],
-   @"DYLD_INSERT_LIBRARIES" : [@[
+   @"DYLD_INSERT_LIBRARIES" : [@[[XCToolLibPath() stringByAppendingPathComponent:@"swizzle-guard-ios.dylib"],
                                  [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"],
                                ideBundleInjectionLibPath,
                                ] componentsJoinedByString:@":"],

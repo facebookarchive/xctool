@@ -23,6 +23,8 @@
 #import <Foundation/Foundation.h>
 #import <SenTestingKit/SenTestingKit.h>
 
+#import "../../swizzle-guard/swizzle-guard/SwizzleGuard.h"
+
 #import "XCTest.h"
 
 #import "DuplicateTestNameFix.h"
@@ -223,6 +225,8 @@ static void SenTestLog_testCaseDidStart(id self, SEL sel, NSNotification *notifi
 
 static void XCToolLog_testCaseDidStart(NSString *fullTestName)
 {
+  XTSwizzleGuardEnable();
+
   dispatch_sync(EventQueue(), ^{
     NSString *className = nil;
     NSString *methodName = nil;
@@ -259,6 +263,8 @@ static void SenTestLog_testCaseDidStop(id self, SEL sel, NSNotification *notific
 
 static void XCToolLog_testCaseDidStop(NSString *fullTestName, NSNumber *unexpectedExceptionCount, NSNumber *failureCount, NSNumber *totalDuration)
 {
+  XTSwizzleGuardDisable();
+
   dispatch_sync(EventQueue(), ^{
     NSString *className = nil;
     NSString *methodName = nil;
