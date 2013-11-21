@@ -412,7 +412,8 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
 - (NSArray *)testConfigurationsForBuildSettings:(NSDictionary *)testableBuildSettings
 {
   NSString *sdkName = testableBuildSettings[@"SDK_NAME"];
-  BOOL isApplicationTest = testableBuildSettings[@"TEST_HOST"] != nil;
+  NSString *testHost = testableBuildSettings[@"TEST_HOST"];
+  BOOL isApplicationTest = testHost != nil;
 
   // array of [class, (bool) GC Enabled]
   NSMutableArray *testConfigurations = [NSMutableArray array];
@@ -425,7 +426,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
     }
   } else if ([sdkName hasPrefix:@"macosx"]) {
     Class testClass = {0};
-    if (isApplicationTest) {
+    if (isApplicationTest && IsMachOExecutable(testHost)) {
       testClass = [OCUnitOSXAppTestRunner class];
     } else {
       testClass = [OCUnitOSXLogicTestRunner class];
