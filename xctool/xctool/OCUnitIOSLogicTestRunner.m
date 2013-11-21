@@ -33,7 +33,9 @@
   NSArray *args = [[self testArguments] arrayByAddingObject:testBundlePath];
   NSDictionary *env = [self otestEnvironmentWithOverrides:
                        @{
-                         @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"],
+                         @"DYLD_INSERT_LIBRARIES" : [@[[XCToolLibPath() stringByAppendingPathComponent:@"swizzle-guard-ios.dylib"],
+                                                       [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"]]
+                                                     componentsJoinedByString:@":"],
                          @"DYLD_FRAMEWORK_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
                          @"DYLD_LIBRARY_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
                          @"NSUnbufferedIO" : @"YES",

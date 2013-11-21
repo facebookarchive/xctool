@@ -1,0 +1,523 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		282FBC8B183C69DC006C58BD /* SwizzleGuard.h in Headers */ = {isa = PBXBuildFile; fileRef = 282FBC89183C69DC006C58BD /* SwizzleGuard.h */; };
+		282FBC8C183C69DC006C58BD /* SwizzleGuard.h in Headers */ = {isa = PBXBuildFile; fileRef = 282FBC89183C69DC006C58BD /* SwizzleGuard.h */; };
+		282FBC8D183C69DC006C58BD /* SwizzleGuard.m in Sources */ = {isa = PBXBuildFile; fileRef = 282FBC8A183C69DC006C58BD /* SwizzleGuard.m */; };
+		282FBC8E183C69DC006C58BD /* SwizzleGuard.m in Sources */ = {isa = PBXBuildFile; fileRef = 282FBC8A183C69DC006C58BD /* SwizzleGuard.m */; };
+		282FBC95183C6A60006C58BD /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 282FBC94183C6A60006C58BD /* SenTestingKit.framework */; };
+		282FBC9B183C6A60006C58BD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 282FBC99183C6A60006C58BD /* InfoPlist.strings */; };
+		282FBCBC183C6AD6006C58BD /* SwizzleGuardTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 282FBCBB183C6AD6006C58BD /* SwizzleGuardTests.m */; };
+		282FBCBE183C6BC5006C58BD /* swizzle-guard-osx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 282FBC53183C6888006C58BD /* swizzle-guard-osx.dylib */; };
+		282FBCBF183C6C1C006C58BD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 282FBC59183C6888006C58BD /* Foundation.framework */; };
+		282FBCC0183C6C2B006C58BD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 282FBC59183C6888006C58BD /* Foundation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		282FBC9F183C6A61006C58BD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 282FBC4B183C6888006C58BD /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 282FBC7F183C6909006C58BD;
+			remoteInfo = "swizzle-guard-ios";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		282FBC53183C6888006C58BD /* swizzle-guard-osx.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "swizzle-guard-osx.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		282FBC56183C6888006C58BD /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		282FBC59183C6888006C58BD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		282FBC5A183C6888006C58BD /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		282FBC5B183C6888006C58BD /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		282FBC67183C6888006C58BD /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		282FBC7D183C68E0006C58BD /* swizzle-guard-osx.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "swizzle-guard-osx.xcconfig"; sourceTree = "<group>"; };
+		282FBC7E183C68F8006C58BD /* swizzle-guard-ios.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "swizzle-guard-ios.xcconfig"; sourceTree = "<group>"; };
+		282FBC88183C6909006C58BD /* swizzle-guard-ios.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "swizzle-guard-ios.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		282FBC89183C69DC006C58BD /* SwizzleGuard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwizzleGuard.h; sourceTree = "<group>"; };
+		282FBC8A183C69DC006C58BD /* SwizzleGuard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwizzleGuard.m; sourceTree = "<group>"; };
+		282FBC93183C6A60006C58BD /* swizzle-guard-tests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "swizzle-guard-tests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		282FBC94183C6A60006C58BD /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		282FBC98183C6A60006C58BD /* swizzle-guard-tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "swizzle-guard-tests-Info.plist"; sourceTree = "<group>"; };
+		282FBC9A183C6A60006C58BD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		282FBC9E183C6A60006C58BD /* swizzle-guard-tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "swizzle-guard-tests-Prefix.pch"; sourceTree = "<group>"; };
+		282FBCA7183C6A7E006C58BD /* dyld-interposing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "dyld-interposing.h"; sourceTree = "<group>"; };
+		282FBCA8183C6A7E006C58BD /* dyld_priv.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dyld_priv.h; sourceTree = "<group>"; };
+		282FBCBB183C6AD6006C58BD /* SwizzleGuardTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwizzleGuardTests.m; sourceTree = "<group>"; };
+		282FBCC5183C9259006C58BD /* SwizzleGuardInternal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SwizzleGuardInternal.h; sourceTree = "<group>"; };
+		2839BE1E183EBEB0000D7BEC /* swizzle-guard.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "swizzle-guard.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		282FBC50183C6888006C58BD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				282FBCC0183C6C2B006C58BD /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		282FBC82183C6909006C58BD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				282FBCBF183C6C1C006C58BD /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		282FBC90183C6A60006C58BD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				282FBCBE183C6BC5006C58BD /* swizzle-guard-osx.dylib in Frameworks */,
+				282FBC95183C6A60006C58BD /* SenTestingKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		282FBC4A183C6888006C58BD = {
+			isa = PBXGroup;
+			children = (
+				2839BE1E183EBEB0000D7BEC /* swizzle-guard.xcconfig */,
+				282FBC7E183C68F8006C58BD /* swizzle-guard-ios.xcconfig */,
+				282FBC7D183C68E0006C58BD /* swizzle-guard-osx.xcconfig */,
+				282FBCA4183C6A7E006C58BD /* Common */,
+				282FBC5C183C6888006C58BD /* swizzle-guard */,
+				282FBC96183C6A60006C58BD /* swizzle-guard-tests */,
+				282FBC55183C6888006C58BD /* Frameworks */,
+				282FBC54183C6888006C58BD /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		282FBC54183C6888006C58BD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				282FBC53183C6888006C58BD /* swizzle-guard-osx.dylib */,
+				282FBC88183C6909006C58BD /* swizzle-guard-ios.dylib */,
+				282FBC93183C6A60006C58BD /* swizzle-guard-tests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		282FBC55183C6888006C58BD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				282FBC56183C6888006C58BD /* Cocoa.framework */,
+				282FBC67183C6888006C58BD /* XCTest.framework */,
+				282FBC94183C6A60006C58BD /* SenTestingKit.framework */,
+				282FBC58183C6888006C58BD /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		282FBC58183C6888006C58BD /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				282FBC59183C6888006C58BD /* Foundation.framework */,
+				282FBC5A183C6888006C58BD /* CoreData.framework */,
+				282FBC5B183C6888006C58BD /* AppKit.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		282FBC5C183C6888006C58BD /* swizzle-guard */ = {
+			isa = PBXGroup;
+			children = (
+				282FBC89183C69DC006C58BD /* SwizzleGuard.h */,
+				282FBC8A183C69DC006C58BD /* SwizzleGuard.m */,
+				282FBCC5183C9259006C58BD /* SwizzleGuardInternal.h */,
+			);
+			path = "swizzle-guard";
+			sourceTree = "<group>";
+		};
+		282FBC96183C6A60006C58BD /* swizzle-guard-tests */ = {
+			isa = PBXGroup;
+			children = (
+				282FBCBB183C6AD6006C58BD /* SwizzleGuardTests.m */,
+				282FBC97183C6A60006C58BD /* Supporting Files */,
+			);
+			path = "swizzle-guard-tests";
+			sourceTree = "<group>";
+		};
+		282FBC97183C6A60006C58BD /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				282FBC98183C6A60006C58BD /* swizzle-guard-tests-Info.plist */,
+				282FBC99183C6A60006C58BD /* InfoPlist.strings */,
+				282FBC9E183C6A60006C58BD /* swizzle-guard-tests-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		282FBCA4183C6A7E006C58BD /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				282FBCA7183C6A7E006C58BD /* dyld-interposing.h */,
+				282FBCA8183C6A7E006C58BD /* dyld_priv.h */,
+			);
+			name = Common;
+			path = ../Common;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		282FBC51183C6888006C58BD /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				282FBC8B183C69DC006C58BD /* SwizzleGuard.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		282FBC84183C6909006C58BD /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				282FBC8C183C69DC006C58BD /* SwizzleGuard.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		282FBC52183C6888006C58BD /* swizzle-guard-osx */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 282FBC77183C6888006C58BD /* Build configuration list for PBXNativeTarget "swizzle-guard-osx" */;
+			buildPhases = (
+				282FBC4F183C6888006C58BD /* Sources */,
+				282FBC50183C6888006C58BD /* Frameworks */,
+				282FBC51183C6888006C58BD /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "swizzle-guard-osx";
+			productName = "swizzle-guard";
+			productReference = 282FBC53183C6888006C58BD /* swizzle-guard-osx.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		282FBC7F183C6909006C58BD /* swizzle-guard-ios */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 282FBC85183C6909006C58BD /* Build configuration list for PBXNativeTarget "swizzle-guard-ios" */;
+			buildPhases = (
+				282FBC80183C6909006C58BD /* Sources */,
+				282FBC82183C6909006C58BD /* Frameworks */,
+				282FBC84183C6909006C58BD /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "swizzle-guard-ios";
+			productName = "swizzle-guard";
+			productReference = 282FBC88183C6909006C58BD /* swizzle-guard-ios.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		282FBC92183C6A60006C58BD /* swizzle-guard-tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 282FBCA1183C6A61006C58BD /* Build configuration list for PBXNativeTarget "swizzle-guard-tests" */;
+			buildPhases = (
+				282FBC8F183C6A60006C58BD /* Sources */,
+				282FBC90183C6A60006C58BD /* Frameworks */,
+				282FBC91183C6A60006C58BD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				282FBCA0183C6A61006C58BD /* PBXTargetDependency */,
+			);
+			name = "swizzle-guard-tests";
+			productName = "swizzle-guard-tests";
+			productReference = 282FBC93183C6A60006C58BD /* swizzle-guard-tests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		282FBC4B183C6888006C58BD /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0500;
+				ORGANIZATIONNAME = "Facebook, Inc.";
+				TargetAttributes = {
+					282FBC92183C6A60006C58BD = {
+						TestTargetID = 282FBC7F183C6909006C58BD;
+					};
+				};
+			};
+			buildConfigurationList = 282FBC4E183C6888006C58BD /* Build configuration list for PBXProject "swizzle-guard" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 282FBC4A183C6888006C58BD;
+			productRefGroup = 282FBC54183C6888006C58BD /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				282FBC52183C6888006C58BD /* swizzle-guard-osx */,
+				282FBC7F183C6909006C58BD /* swizzle-guard-ios */,
+				282FBC92183C6A60006C58BD /* swizzle-guard-tests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		282FBC91183C6A60006C58BD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				282FBC9B183C6A60006C58BD /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		282FBC4F183C6888006C58BD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				282FBC8D183C69DC006C58BD /* SwizzleGuard.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		282FBC80183C6909006C58BD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				282FBC8E183C69DC006C58BD /* SwizzleGuard.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		282FBC8F183C6A60006C58BD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				282FBCBC183C6AD6006C58BD /* SwizzleGuardTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		282FBCA0183C6A61006C58BD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 282FBC7F183C6909006C58BD /* swizzle-guard-ios */;
+			targetProxy = 282FBC9F183C6A61006C58BD /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		282FBC99183C6A60006C58BD /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				282FBC9A183C6A60006C58BD /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		282FBC75183C6888006C58BD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2839BE1E183EBEB0000D7BEC /* swizzle-guard.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+			};
+			name = Debug;
+		};
+		282FBC76183C6888006C58BD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2839BE1E183EBEB0000D7BEC /* swizzle-guard.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+			};
+			name = Release;
+		};
+		282FBC78183C6888006C58BD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 282FBC7D183C68E0006C58BD /* swizzle-guard-osx.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		282FBC79183C6888006C58BD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 282FBC7D183C68E0006C58BD /* swizzle-guard-osx.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		282FBC86183C6909006C58BD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 282FBC7E183C68F8006C58BD /* swizzle-guard-ios.xcconfig */;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				PRODUCT_NAME = "swizzle-guard-ios";
+			};
+			name = Debug;
+		};
+		282FBC87183C6909006C58BD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 282FBC7E183C68F8006C58BD /* swizzle-guard-ios.xcconfig */;
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				PRODUCT_NAME = "swizzle-guard-ios";
+			};
+			name = Release;
+		};
+		282FBCA2183C6A61006C58BD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "swizzle-guard-tests/swizzle-guard-tests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		282FBCA3183C6A61006C58BD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				INFOPLIST_FILE = "swizzle-guard-tests/swizzle-guard-tests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		282FBC4E183C6888006C58BD /* Build configuration list for PBXProject "swizzle-guard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				282FBC75183C6888006C58BD /* Debug */,
+				282FBC76183C6888006C58BD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		282FBC77183C6888006C58BD /* Build configuration list for PBXNativeTarget "swizzle-guard-osx" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				282FBC78183C6888006C58BD /* Debug */,
+				282FBC79183C6888006C58BD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		282FBC85183C6909006C58BD /* Build configuration list for PBXNativeTarget "swizzle-guard-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				282FBC86183C6909006C58BD /* Debug */,
+				282FBC87183C6909006C58BD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		282FBCA1183C6A61006C58BD /* Build configuration list for PBXNativeTarget "swizzle-guard-tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				282FBCA2183C6A61006C58BD /* Debug */,
+				282FBCA3183C6A61006C58BD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 282FBC4B183C6888006C58BD /* Project object */;
+}

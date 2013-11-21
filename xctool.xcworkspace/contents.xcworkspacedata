@@ -22,6 +22,9 @@
    <FileRef
       location = "group:sim-shim/sim-shim.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:swizzle-guard/swizzle-guard.xcodeproj">
+   </FileRef>
    <Group
       location = "group:Common"
       name = "Common">
