@@ -49,7 +49,7 @@
 		287BF08416F1A97900590E06 /* XcodeSubjectInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 287BF08316F1A97900590E06 /* XcodeSubjectInfo.m */; };
 		287BF08516F1A97900590E06 /* XcodeSubjectInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 287BF08316F1A97900590E06 /* XcodeSubjectInfo.m */; };
 		287E0DC517CD60B00088A264 /* xctool-tests.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 287E0DC417CD60B00088A264 /* xctool-tests.xcconfig */; };
-		28869AFC178CEA7600DED56A /* SenTestListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 28869AFB178CEA7600DED56A /* SenTestListener.m */; };
+		28869AFC178CEA7600DED56A /* Initializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 28869AFB178CEA7600DED56A /* Initializer.m */; };
 		28897FBD173E4C74004BA024 /* FakeTaskManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28897FBA173E4C73004BA024 /* FakeTaskManagerTests.m */; };
 		28897FD0173E6215004BA024 /* Swizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 28897FCF173E6215004BA024 /* Swizzle.m */; };
 		288980601742B675004BA024 /* FakeTaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2889805F1742B675004BA024 /* FakeTaskManager.m */; };
@@ -221,7 +221,7 @@
 		287BF08216F1A97900590E06 /* XcodeSubjectInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XcodeSubjectInfo.h; sourceTree = "<group>"; };
 		287BF08316F1A97900590E06 /* XcodeSubjectInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodeSubjectInfo.m; sourceTree = "<group>"; };
 		287E0DC417CD60B00088A264 /* xctool-tests.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "xctool-tests.xcconfig"; sourceTree = "<group>"; };
-		28869AFB178CEA7600DED56A /* SenTestListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SenTestListener.m; sourceTree = "<group>"; };
+		28869AFB178CEA7600DED56A /* Initializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Initializer.m; sourceTree = "<group>"; };
 		28897FBA173E4C73004BA024 /* FakeTaskManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeTaskManagerTests.m; sourceTree = "<group>"; };
 		28897FCE173E6215004BA024 /* Swizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Swizzle.h; sourceTree = "<group>"; };
 		28897FCF173E6215004BA024 /* Swizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Swizzle.m; sourceTree = "<group>"; };
@@ -508,6 +508,7 @@
 				2889805E1742B675004BA024 /* FakeTaskManager.h */,
 				2889805F1742B675004BA024 /* FakeTaskManager.m */,
 				28897FBA173E4C73004BA024 /* FakeTaskManagerTests.m */,
+				28869AFB178CEA7600DED56A /* Initializer.m */,
 				AAF334451806A46F00928A00 /* LaunchHandlers.h */,
 				AAF334461806A46F00928A00 /* LaunchHandlers.m */,
 				EEB31CEC17C6867300CFB0E1 /* OCEventStateTests.m */,
@@ -522,7 +523,6 @@
 				28E28FBF1797193F0072376C /* ReporterTaskTests.m */,
 				28C81A62175562050072DDB8 /* ReportStatusTests.m */,
 				283479A416E1B242003C3B77 /* RunTestsActionTests.m */,
-				28869AFB178CEA7600DED56A /* SenTestListener.m */,
 				283CCAC616C2EE9900F2E343 /* Supporting Files */,
 				28A5A8EB1746D2AA001733A9 /* Swizzler.h */,
 				28A5A8EC1746D2AA001733A9 /* Swizzler.m */,
@@ -814,7 +814,7 @@
 				CD5677101766782C003B727C /* BuildStateParser.mm in Sources */,
 				28BB043E17C7FF43004F6C13 /* Buildable.m in Sources */,
 				CDEE9EA1176950DC0026D278 /* BuildStateParserTests.m in Sources */,
-				28869AFC178CEA7600DED56A /* SenTestListener.m in Sources */,
+				28869AFC178CEA7600DED56A /* Initializer.m in Sources */,
 				AAF334521806A48A00928A00 /* OCUnitTestRunnerTests.m in Sources */,
 				28E28FBD1797099E0072376C /* ReporterTask.m in Sources */,
 				28E28FC01797193F0072376C /* ReporterTaskTests.m in Sources */,
