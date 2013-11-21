@@ -595,3 +595,16 @@ NSString *MakeTemporaryDirectory(NSString *nameTemplate)
 
   return [NSString stringWithUTF8String:template.bytes];
 }
+
+// Forward declaration for private CFBundle API.
+// https://www.opensource.apple.com/source/CF/CF-855.11/CFBundle.c
+CFStringRef _CFBundleCopyFileTypeForFileURL(CFURLRef url);
+
+BOOL IsMachOExecutable(NSString *path)
+{
+  NSURL *fileURL = [NSURL fileURLWithPath:path];
+  CFStringRef fileType = _CFBundleCopyFileTypeForFileURL((CFURLRef)fileURL);
+  CFComparisonResult result = CFStringCompare(fileType, CFSTR("tool"), 0);
+  CFRelease(fileType);
+  return result == kCFCompareEqualTo;
+}

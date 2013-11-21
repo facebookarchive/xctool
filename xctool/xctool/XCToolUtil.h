@@ -143,3 +143,7 @@ NSString *SystemPaths();
  */
 NSString *MakeTemporaryDirectory(NSString *nameTemplate);
 
+/**
+ * Returns YES if the path leads to an executable.
+ */
+BOOL IsMachOExecutable(NSString *path);
