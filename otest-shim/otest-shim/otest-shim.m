@@ -29,6 +29,7 @@
 #import "EventGenerator.h"
 #import "ParseTestName.h"
 #import "ReporterEvents.h"
+#import "SenTestClassEnumeratorFix.h"
 #import "Swizzle.h"
 #import "TestingFramework.h"
 
@@ -549,6 +550,7 @@ static const char *DyldImageStateChangeHandler(enum dyld_image_states state,
 
       NSDictionary *frameworkInfo = FrameworkInfoForExtension(@"octest");
       ApplyDuplicateTestNameFix([frameworkInfo objectForKey:kTestingFrameworkTestProbeClassName]);
+      XTApplySenTestClassEnumeratorFix();
     }
     else if (strstr(info[i].imageFilePath, "XCTest.framework") != NULL) {
       // Since the 'XCTestLog' class now exists, we can swizzle it!
