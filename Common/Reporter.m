@@ -138,7 +138,10 @@ static void ReadFileDescriptorAndOutputLinesToBlock(int inputFD,
   [selectorName appendString:@":"];
 
   SEL sel = sel_registerName([selectorName UTF8String]);
-  [self performSelector:sel withObject:eventDict];
+
+  if ([self respondsToSelector:sel]) {
+    [self performSelector:sel withObject:eventDict];
+  }
 }
 
 - (void)beginAction:(NSDictionary *)event {}

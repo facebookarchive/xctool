@@ -24,6 +24,7 @@
   OCTestSuiteEventState *_testSuiteState;
   OCTestEventState *_previousTestState;
   NSSet *_crashReportsAtStart;
+  NSMutableString *_outputBeforeTestsStart;
 }
 
 - (instancetype)initWithTests:(NSArray *)testList

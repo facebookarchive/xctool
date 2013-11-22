@@ -34,6 +34,7 @@
       [[OCTestSuiteEventState alloc] initWithName:kReporter_TestSuite_TopLevelSuiteName
                                         reporters:reporters];
     [_testSuiteState addTestsFromArray:testList];
+    _outputBeforeTestsStart = [[NSMutableString alloc] init];
   }
   return self;
 }
@@ -43,6 +44,7 @@
   [_testSuiteState release];
   [_previousTestState release];
   [_crashReportsAtStart release];
+  [_outputBeforeTestsStart release];
   [super dealloc];
 }
 
@@ -68,6 +70,11 @@
 {
   NSAssert(_crashReportsAtStart == nil, @"Should not have set yet.");
   _crashReportsAtStart = [[NSSet setWithArray:[self collectCrashReportPaths]] retain];
+}
+
+- (void)outputBeforeTestBundleStarts:(NSDictionary *)event
+{
+  [_outputBeforeTestsStart appendString:event[kReporter_OutputBeforeTestBundleStarts_OutputKey]];
 }
 
 - (void)beginTestSuite:(NSDictionary *)event
@@ -149,11 +156,8 @@
 
   // And, our "place holder" test should have a more detailed message about
   // what we think went wrong.
-  NSString *fakeTestOutput = [NSString stringWithFormat:
-                              @"The crash was triggered before any test code ran.  You might look at "
-                              @"Obj-C class 'initialize' or 'load' methods, or C-style constructor functions "
-                              @"as possible causes.\n"
-                              @"%@",
+  NSString *fakeTestOutput = [NSString stringWithFormat:@"%@\n%@",
+                              _outputBeforeTestsStart,
                               [self collectCrashReports:_crashReportsAtStart]];
   fakeTestOutput = [fakeTestOutput stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
   [fakeTest appendOutput:[@"\n\n" stringByAppendingString:fakeTestOutput]];

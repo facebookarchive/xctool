@@ -123,12 +123,16 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
     NSArray *output = SelectEventFields(eventBuffer.events, kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey);
     assertThat(output[0], equalTo(@"Test did not run: the test bundle stopped running or crashed before the test suite started.\n"
                                   @"\n"
-                                  @"The crash was triggered before any test code ran.  You might look at Obj-C class 'initialize' or 'load' methods, or C-style constructor functions as possible causes."));
+                                  @"Some output that happens before tests run."));
     assertThat(output[1], equalTo(@"Test did not run: the test bundle stopped running or crashed before the test suite started."));
     assertThat(output[2], equalTo(@"Test did not run: the test bundle stopped running or crashed before the test suite started."));
   };
 
-  testCrashBeforeTestsRan(@[],
+  NSDictionary *outputBeforeTests = @{@"event" : kReporter_Events_OutputBeforeTestBundleStarts,
+                                      kReporter_OutputBeforeTestBundleStarts_OutputKey : @"Some output that happens before tests run."};
+
+  // Send no events, except the output before the tests.
+  testCrashBeforeTestsRan(@[outputBeforeTests],
                           @[kReporter_Events_BeginTestSuite,
                             kReporter_Events_BeginTest,
                             kReporter_Events_TestOuput,
@@ -140,7 +144,10 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
                             kReporter_Events_TestOuput,
                             kReporter_Events_EndTest,
                             kReporter_Events_EndTestSuite]);
-  testCrashBeforeTestsRan([EventsForFakeRun() subarrayWithRange:NSMakeRange(0, 1)],
+
+  // Send the 'begin-test-suite' event, but stop before the first test.
+  testCrashBeforeTestsRan([@[outputBeforeTests] arrayByAddingObjectsFromArray:
+                           [EventsForFakeRun() subarrayWithRange:NSMakeRange(0, 1)]],
                           @[kReporter_Events_BeginTest,
                             kReporter_Events_TestOuput,
                             kReporter_Events_EndTest,
