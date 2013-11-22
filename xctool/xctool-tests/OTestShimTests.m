@@ -329,4 +329,21 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
   assertThat(reason, containsString(@"[GOOD1]"));
 }
 
+- (void)testOutputBeforeTestBundleStartsIsCaptured
+{
+  NSString *bundlePath = TEST_DATA @"TestThatThrowsExceptionOnStart/Build/Products/Debug/TestThatThrowsExceptionOnStart.octest";
+  NSString *targetName = @"TestThatThrowsExceptionOnStart";
+  NSString *settingsPath = TEST_DATA @"TestThatThrowsExceptionOnStart/TestThatThrowsExceptionOnStart-showBuildSettings.txt";
+  NSArray *testList = @[ @"TestThatThrowsExceptionOnStart/testExample" ];
+
+  NSArray *allTests = AllTestCasesInTestBundleOSX(bundlePath);
+  NSTask *task = OtestShimTaskOSX(settingsPath, targetName, bundlePath, testList, allTests);
+  NSArray *events = RunOtestAndParseResult(task);
+
+  NSString *output = [SelectEventFields(events, kReporter_Events_OutputBeforeTestBundleStarts, kReporter_OutputBeforeTestBundleStarts_OutputKey)
+                      componentsJoinedByString:@""];
+
+  assertThat(output, containsString(@"Terminating app due to uncaught exception"));
+}
+
 @end

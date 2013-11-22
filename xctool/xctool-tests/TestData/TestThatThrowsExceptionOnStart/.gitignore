@@ -1,0 +1,5 @@
+# We're going to commit the build products of KiwiTests, so allow build.
+!build
+# But, we don't need the intermediate products or dSYM files.
+Build/Intermediates
+*.dSYM

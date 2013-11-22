@@ -15,6 +15,7 @@
 //
 
 #import "OCUnitTestRunner.h"
+#import "OCUnitTestRunnerInternal.h"
 
 #import <QuartzCore/QuartzCore.h>
 

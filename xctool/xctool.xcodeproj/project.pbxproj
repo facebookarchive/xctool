@@ -188,6 +188,7 @@
 		283479B716E3EBE5003C3B77 /* TestUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestUtil.h; sourceTree = "<group>"; };
 		283479B816E3EBE5003C3B77 /* TestUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = TestUtil.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		283479BB16E3FC0E003C3B77 /* BuildTestsActionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = BuildTestsActionTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		2839BE5D183FDB17000D7BEC /* OCUnitTestRunnerInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUnitTestRunnerInternal.h; sourceTree = "<group>"; };
 		283CCA4216C2EA3800F2E343 /* xctool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = xctool; sourceTree = BUILT_PRODUCTS_DIR; };
 		283CCA4516C2EA3800F2E343 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		283CCA4816C2EA3800F2E343 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -593,6 +594,7 @@
 				288B9FB7171A50C1008F0BDF /* OCUnitOSXLogicTestRunner.m */,
 				28E9B9D516C3275200A52E4D /* OCUnitTestRunner.h */,
 				28E9B9D616C3275200A52E4D /* OCUnitTestRunner.m */,
+				2839BE5D183FDB17000D7BEC /* OCUnitTestRunnerInternal.h */,
 			);
 			name = OCUnitTestRunner;
 			sourceTree = "<group>";

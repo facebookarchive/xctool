@@ -33,6 +33,7 @@
 #define kReporter_Events_BeginStatus @"begin-status"
 #define kReporter_Events_EndStatus @"end-status"
 #define kReporter_Events_AnalyzerResult @"analyzer-result"
+#define kReporter_Events_OutputBeforeTestBundleStarts @"output-before-test-bundle-starts"
 
 #define kReporter_BeginAction_NameKey @"name"
 #define kReporter_BeginAction_WorkspaceKey @"workspace"
@@ -125,3 +126,6 @@
 #define kReporter_AnalyzerResult_ColumnKey @"col"
 #define kReporter_AnalyzerResult_DescriptionKey @"description"
 #define kReporter_AnalyzerResult_ContextKey @"context"
+
+#define kReporter_OutputBeforeTestBundleStarts_OutputKey @"output"
+

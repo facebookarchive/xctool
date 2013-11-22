@@ -67,6 +67,8 @@ static NSMutableArray *__testExceptions = nil;
 static NSMutableString *__testOutput = nil;
 static int __testSuiteDepth = 0;
 
+static BOOL __testBundleHasStartedRunning = NO;
+
 static dispatch_queue_t EventQueue()
 {
   static dispatch_queue_t eventQueue = {0};
@@ -156,6 +158,8 @@ static void SenTestLog_testSuiteDidStart(id self, SEL sel, NSNotification *notif
 
 static void XCToolLog_testSuiteDidStart(NSString *testDescription)
 {
+  __testBundleHasStartedRunning = YES;
+
   if (__testSuiteDepth == 0) {
     dispatch_sync(EventQueue(), ^{
       PrintJSON(EventDictionaryWithNameAndContent(
@@ -374,6 +378,12 @@ static ssize_t ___write_nocancel(int fildes, const void *buf, size_t nbyte)
         ));
         [__testOutput appendString:output];
         [output release];
+      } else if (!__testBundleHasStartedRunning && nbyte > 0) {
+        NSString *output = [[NSString alloc] initWithBytes:buf length:nbyte encoding:NSUTF8StringEncoding];
+        PrintJSON(EventDictionaryWithNameAndContent(kReporter_Events_OutputBeforeTestBundleStarts,
+                                                    @{kReporter_OutputBeforeTestBundleStarts_OutputKey: StripAnsi(output)}
+                                                    ));
+        [output release];
       }
     });
     return nbyte;
@@ -395,6 +405,12 @@ static ssize_t __write(int fildes, const void *buf, size_t nbyte)
           @{kReporter_TestOutput_OutputKey: StripAnsi(output)}
         ));
         [__testOutput appendString:output];
+        [output release];
+      } else if (!__testBundleHasStartedRunning && nbyte > 0) {
+        NSString *output = [[NSString alloc] initWithBytes:buf length:nbyte encoding:NSUTF8StringEncoding];
+        PrintJSON(EventDictionaryWithNameAndContent(kReporter_Events_OutputBeforeTestBundleStarts,
+                                                    @{kReporter_OutputBeforeTestBundleStarts_OutputKey: StripAnsi(output)}
+                                                    ));
         [output release];
       }
     });
@@ -450,6 +466,12 @@ static ssize_t ___writev_nocancel(int fildes, const struct iovec *iov, int iovcn
         ));
         [__testOutput appendString:buffer];
         [buffer release];
+      } else if (!__testBundleHasStartedRunning && iovcnt > 0) {
+        NSString *buffer = CreateStringFromIOV(iov, iovcnt);
+        PrintJSON(EventDictionaryWithNameAndContent(kReporter_Events_OutputBeforeTestBundleStarts,
+                                                    @{kReporter_OutputBeforeTestBundleStarts_OutputKey: StripAnsi(buffer)}
+                                                    ));
+        [buffer release];
       }
     });
     return iovcnt;
@@ -471,6 +493,12 @@ static ssize_t __writev(int fildes, const struct iovec *iov, int iovcnt)
           @{kReporter_TestOutput_OutputKey: StripAnsi(buffer)}
         ));
         [__testOutput appendString:buffer];
+        [buffer release];
+      } else if (!__testBundleHasStartedRunning && iovcnt > 0) {
+        NSString *buffer = CreateStringFromIOV(iov, iovcnt);
+        PrintJSON(EventDictionaryWithNameAndContent(kReporter_Events_OutputBeforeTestBundleStarts,
+                                                    @{kReporter_OutputBeforeTestBundleStarts_OutputKey: StripAnsi(buffer)}
+                                                    ));
         [buffer release];
       }
     });
