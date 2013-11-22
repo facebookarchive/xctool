@@ -19,39 +19,62 @@
 #import "ContainsAssertionFailure.h"
 #import "OCUnitIOSLogicTestRunner.h"
 #import "OCUnitIOSLogicTestQueryRunner.h"
+#import "OCUnitOSXLogicTestRunner.h"
+#import "OCUnitOSXLogicTestQueryRunner.h"
 #import "ReporterEvents.h"
 #import "TaskUtil.h"
 #import "TestUtil.h"
 #import "XCToolUtil.h"
 
 @interface OTestShimTests : SenTestCase
-
 @end
 
-static NSArray *AllTestCasesInIOSTestBundle(NSString *bundlePath)
+static NSArray *AllTestCasesInTestBundle(NSString *sdkName,
+                                         Class testQueryClass,
+                                         NSString *bundlePath)
 {
   NSString *error = nil;
-  NSString *latestSDK = GetAvailableSDKsAndAliases()[@"iphonesimulator"];
+  NSString *latestSDK = GetAvailableSDKsAndAliases()[sdkName];
   NSString *builtProductsDir = [bundlePath stringByDeletingLastPathComponent];
   NSString *fullProductName = [bundlePath lastPathComponent];
   NSDictionary *buildSettings = @{
-    kBuiltProductsDir : builtProductsDir,
-    kFullProductName : fullProductName,
-    kSdkName : latestSDK,
-  };
-  OCUnitTestQueryRunner *runner = [[[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
-                                                                                    withCpuType:CPU_TYPE_ANY] autorelease];
+                                  kBuiltProductsDir : builtProductsDir,
+                                  kFullProductName : fullProductName,
+                                  kSdkName : latestSDK,
+                                  };
+  OCUnitTestQueryRunner *runner = [[[testQueryClass alloc] initWithBuildSettings:buildSettings
+                                                                     withCpuType:CPU_TYPE_ANY] autorelease];
   NSArray *allTests = [runner runQueryWithError:&error];
   NSCAssert(error == nil, @"Error while querying test cases: %@", error);
 
   return allTests;
 }
 
-static NSTask *otestShimTask(NSString *settingsPath, NSString *targetName, NSString *bundlePath, NSArray *focusedTests, NSArray *allTests)
+static NSArray *AllTestCasesInTestBundleOSX(NSString *bundlePath)
+{
+  return AllTestCasesInTestBundle(@"macosx",
+                                  [OCUnitOSXLogicTestQueryRunner class],
+                                  bundlePath);
+}
+
+static NSArray *AllTestCasesInTestBundleIOS(NSString *bundlePath)
+{
+  return AllTestCasesInTestBundle(@"iphonesimulator",
+                                  [OCUnitIOSLogicTestQueryRunner class],
+                                  bundlePath);
+}
+
+static NSTask *OtestShimTask(NSString *platformName,
+                             Class testRunnerClass,
+                             NSString *settingsPath,
+                             NSString *targetName,
+                             NSString *bundlePath,
+                             NSArray *focusedTests,
+                             NSArray *allTests)
 {
   // Make sure supplied files actually exist at their supposed paths.
   NSCAssert([[NSFileManager defaultManager] fileExistsAtPath:bundlePath], @"Bundle does not exist at '%@'", bundlePath);
-  NSCAssert([[NSFileManager defaultManager] fileExistsAtPath:settingsPath], @"Settings dump does not exist at '%@'", bundlePath);
+  NSCAssert([[NSFileManager defaultManager] fileExistsAtPath:settingsPath], @"Settings dump does not exist at '%@'", settingsPath);
 
   // Get pre-dumped build settings
   NSString *output = [NSString stringWithContentsOfFile:settingsPath
@@ -65,21 +88,22 @@ static NSTask *otestShimTask(NSString *settingsPath, NSString *targetName, NSStr
   // that aren't valid on the current machine.  So, we rewrite the SDKROOT
   // so we can be sure it points to a valid directory based off the true Xcode
   // install location.
-  targetSettings[@"SDKROOT"] = [XcodeDeveloperDirPathViaForcedConcreteTask(YES) stringByAppendingPathComponent:
-                                [@"Platforms/iPhoneSimulator.platform/Developer/SDKs" stringByAppendingPathComponent:
-                                 [targetSettings[@"SDKROOT"] lastPathComponent]]];
+  targetSettings[@"SDKROOT"] = [NSString stringWithFormat:@"%@/Platforms/%@.platform/Developer/SDKs/%@",
+                                XcodeDeveloperDirPathViaForcedConcreteTask(YES),
+                                platformName,
+                                [targetSettings[@"SDKROOT"] lastPathComponent]];
 
   // set up an OCUnitIOSLogicTestRunner
-  OCUnitIOSLogicTestRunner *runner = [[OCUnitIOSLogicTestRunner alloc] initWithBuildSettings:targetSettings
-                                                                            focusedTestCases:focusedTests
-                                                                                allTestCases:allTests
-                                                                                   arguments:@[]
-                                                                                 environment:@{}
-                                                                           garbageCollection:NO
-                                                                              freshSimulator:NO
-                                                                                freshInstall:NO
-                                                                               simulatorType:nil
-                                                                                   reporters:@[]];
+  OCUnitIOSLogicTestRunner *runner = [[testRunnerClass alloc] initWithBuildSettings:targetSettings
+                                                                   focusedTestCases:focusedTests
+                                                                       allTestCases:allTests
+                                                                          arguments:@[]
+                                                                        environment:@{}
+                                                                  garbageCollection:NO
+                                                                     freshSimulator:NO
+                                                                       freshInstall:NO
+                                                                      simulatorType:nil
+                                                                          reporters:@[]];
 
   NSTask *task = [runner otestTaskWithTestBundle: bundlePath];
   [runner release];
@@ -89,6 +113,29 @@ static NSTask *otestShimTask(NSString *settingsPath, NSString *targetName, NSStr
   NSCAssert([[NSFileManager defaultManager] fileExistsAtPath:launchPath], @"The executable file '%@' does not exist.", launchPath);
 
   return task;
+}
+
+
+static NSTask *OtestShimTaskIOS(NSString *settingsPath, NSString *targetName, NSString *bundlePath, NSArray *focusedTests, NSArray *allTests)
+{
+  return OtestShimTask(@"iPhoneSimulator",
+                       [OCUnitIOSLogicTestRunner class],
+                       settingsPath,
+                       targetName,
+                       bundlePath,
+                       focusedTests,
+                       allTests);
+}
+
+static NSTask *OtestShimTaskOSX(NSString *settingsPath, NSString *targetName, NSString *bundlePath, NSArray *focusedTests, NSArray *allTests)
+{
+  return OtestShimTask(@"MacOSX",
+                       [OCUnitOSXLogicTestRunner class],
+                       settingsPath,
+                       targetName,
+                       bundlePath,
+                       focusedTests,
+                       allTests);
 }
 
 // returns nil when an error is encountered
@@ -148,8 +195,8 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
   NSArray *testList = @[ @"SenTestingKit_Assertion/testAssertionFailure" ];
   NSString *methodName = @"-[SenTestingKit_Assertion testAssertionFailure]";
 
-  NSArray *allTests = AllTestCasesInIOSTestBundle(bundlePath);
-  NSTask *task = otestShimTask(settingsPath, targetName, bundlePath, testList, allTests);
+  NSArray *allTests = AllTestCasesInTestBundleIOS(bundlePath);
+  NSTask *task = OtestShimTaskIOS(settingsPath, targetName, bundlePath, testList, allTests);
   NSArray *events = RunOtestAndParseResult(task);
   assertThat(events, isNot(nilValue()));
   assertThat(@([events count]), is(@4));
@@ -176,8 +223,8 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
   NSArray *testList = @[ @"XCTest_Assertion/testAssertionFailure" ];
   NSString *methodName = @"-[XCTest_Assertion testAssertionFailure]";
 
-  NSArray *allTests = AllTestCasesInIOSTestBundle(bundlePath);
-  NSTask *task = otestShimTask(settingsPath, targetName, bundlePath, testList, allTests);
+  NSArray *allTests = AllTestCasesInTestBundleIOS(bundlePath);
+  NSTask *task = OtestShimTaskIOS(settingsPath, targetName, bundlePath, testList, allTests);
   NSArray *events = RunOtestAndParseResult(task);
   assertThat(events, isNot(nilValue()));
   assertThat(@([events count]), is(@4));
@@ -200,8 +247,8 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
   NSArray *testList = @[ @"SenTestingKit_Assertion/testExpectedAssertionIsSilent" ];
   NSString *methodName = @"-[SenTestingKit_Assertion testExpectedAssertionIsSilent]";
 
-  NSArray *allTests = AllTestCasesInIOSTestBundle(bundlePath);
-  NSTask *task = otestShimTask(settingsPath, targetName, bundlePath, testList, allTests);
+  NSArray *allTests = AllTestCasesInTestBundleIOS(bundlePath);
+  NSTask *task = OtestShimTaskIOS(settingsPath, targetName, bundlePath, testList, allTests);
   NSArray *events = RunOtestAndParseResult(task);
   assertThat(events, isNot(nilValue()));
   assertThat(@([events count]), is(@5));
@@ -226,8 +273,8 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
   NSArray *testList = @[ @"XCTest_Assertion/testExpectedAssertionIsSilent" ];
   NSString *methodName = @"-[XCTest_Assertion testExpectedAssertionIsSilent]";
 
-  NSArray *allTests = AllTestCasesInIOSTestBundle(bundlePath);
-  NSTask *task = otestShimTask(settingsPath, targetName, bundlePath, testList, allTests);
+  NSArray *allTests = AllTestCasesInTestBundleIOS(bundlePath);
+  NSTask *task = OtestShimTaskIOS(settingsPath, targetName, bundlePath, testList, allTests);
   NSArray *events = RunOtestAndParseResult(task);
   assertThat(events, isNot(nilValue()));
   assertThat(@([events count]), is(@5));
@@ -247,8 +294,8 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
   NSString *settingsPath = TEST_DATA @"TestProject-Assertion-SenTestingKit_Assertion-showBuildSettings.txt";
   NSArray *testList = @[ @"SenTestingKit_Assertion/testExpectedAssertionMissingIsNotSilent" ];
 
-  NSArray *allTests = AllTestCasesInIOSTestBundle(bundlePath);
-  NSTask *task = otestShimTask(settingsPath, targetName, bundlePath, testList, allTests);
+  NSArray *allTests = AllTestCasesInTestBundleIOS(bundlePath);
+  NSTask *task = OtestShimTaskIOS(settingsPath, targetName, bundlePath, testList, allTests);
   NSArray *events = RunOtestAndParseResult(task);
   assertThat(events, isNot(nilValue()));
   assertThat(@([events count]), is(@4));
@@ -273,8 +320,8 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
   NSString *settingsPath = TEST_DATA @"TestProject-Assertion-XCTest_Assertion-showBuildSettings.txt";
   NSArray *testList = @[ @"XCTest_Assertion/testExpectedAssertionMissingIsNotSilent" ];
 
-  NSArray *allTests = AllTestCasesInIOSTestBundle(bundlePath);
-  NSTask *task = otestShimTask(settingsPath, targetName, bundlePath, testList, allTests);
+  NSArray *allTests = AllTestCasesInTestBundleIOS(bundlePath);
+  NSTask *task = OtestShimTaskIOS(settingsPath, targetName, bundlePath, testList, allTests);
   NSArray *events = RunOtestAndParseResult(task);
   assertThat(events, isNot(nilValue()));
   assertThat(@([events count]), is(@4));
