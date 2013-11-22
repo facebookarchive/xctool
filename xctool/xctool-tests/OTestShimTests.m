@@ -198,8 +198,7 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
   NSArray *allTests = AllTestCasesInTestBundleIOS(bundlePath);
   NSTask *task = OtestShimTaskIOS(settingsPath, targetName, bundlePath, testList, allTests);
   NSArray *events = RunOtestAndParseResult(task);
-  assertThat(events, isNot(nilValue()));
-  assertThat(@([events count]), is(@4));
+
   NSDictionary *testEndEvent = ExtractEvent(events, kReporter_Events_EndTest);
   assertThat(testEndEvent, hasKey(@"exceptions"));
   NSArray *exceptions = testEndEvent[@"exceptions"];
@@ -226,8 +225,7 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
   NSArray *allTests = AllTestCasesInTestBundleIOS(bundlePath);
   NSTask *task = OtestShimTaskIOS(settingsPath, targetName, bundlePath, testList, allTests);
   NSArray *events = RunOtestAndParseResult(task);
-  assertThat(events, isNot(nilValue()));
-  assertThat(@([events count]), is(@4));
+
   NSDictionary *testEndEvent = ExtractEvent(events, kReporter_Events_EndTest);
   assertThat(testEndEvent, hasKey(@"exceptions"));
   NSArray *exceptions = testEndEvent[@"exceptions"];
@@ -250,8 +248,7 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
   NSArray *allTests = AllTestCasesInTestBundleIOS(bundlePath);
   NSTask *task = OtestShimTaskIOS(settingsPath, targetName, bundlePath, testList, allTests);
   NSArray *events = RunOtestAndParseResult(task);
-  assertThat(events, isNot(nilValue()));
-  assertThat(@([events count]), is(@5));
+
   NSDictionary *testBeginEvent = ExtractEvent(events, kReporter_Events_BeginTest);
   assertThat(testBeginEvent, hasKey(@"test"));
   assertThat(testBeginEvent[@"test"], is(methodName));
@@ -276,8 +273,7 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
   NSArray *allTests = AllTestCasesInTestBundleIOS(bundlePath);
   NSTask *task = OtestShimTaskIOS(settingsPath, targetName, bundlePath, testList, allTests);
   NSArray *events = RunOtestAndParseResult(task);
-  assertThat(events, isNot(nilValue()));
-  assertThat(@([events count]), is(@5));
+
   NSDictionary *testBeginEvent = ExtractEvent(events, kReporter_Events_BeginTest);
   assertThat(testBeginEvent, hasKey(@"test"));
   assertThat(testBeginEvent[@"test"], is(methodName));
@@ -297,8 +293,7 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
   NSArray *allTests = AllTestCasesInTestBundleIOS(bundlePath);
   NSTask *task = OtestShimTaskIOS(settingsPath, targetName, bundlePath, testList, allTests);
   NSArray *events = RunOtestAndParseResult(task);
-  assertThat(events, isNot(nilValue()));
-  assertThat(@([events count]), is(@4));
+
   NSDictionary *testEndEvent = ExtractEvent(events, kReporter_Events_EndTest);
   assertThat(testEndEvent, hasKey(@"exceptions"));
   NSArray *exceptions = testEndEvent[@"exceptions"];
@@ -323,8 +318,7 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
   NSArray *allTests = AllTestCasesInTestBundleIOS(bundlePath);
   NSTask *task = OtestShimTaskIOS(settingsPath, targetName, bundlePath, testList, allTests);
   NSArray *events = RunOtestAndParseResult(task);
-  assertThat(events, isNot(nilValue()));
-  assertThat(@([events count]), is(@4));
+
   NSDictionary *testEndEvent = ExtractEvent(events, kReporter_Events_EndTest);
   assertThat(testEndEvent, hasKey(@"exceptions"));
   NSArray *exceptions = testEndEvent[@"exceptions"];
