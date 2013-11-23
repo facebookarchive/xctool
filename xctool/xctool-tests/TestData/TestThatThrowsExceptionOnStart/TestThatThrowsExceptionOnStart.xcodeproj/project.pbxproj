@@ -1,0 +1,281 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2839BE50183F44B5000D7BEC /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2839BE4F183F44B5000D7BEC /* SenTestingKit.framework */; };
+		2839BE56183F44B5000D7BEC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2839BE54183F44B5000D7BEC /* InfoPlist.strings */; };
+		2839BE58183F44B6000D7BEC /* TestThatThrowsExceptionOnStart.m in Sources */ = {isa = PBXBuildFile; fileRef = 2839BE57183F44B6000D7BEC /* TestThatThrowsExceptionOnStart.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2839BE4C183F44B5000D7BEC /* TestThatThrowsExceptionOnStart.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TestThatThrowsExceptionOnStart.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2839BE4F183F44B5000D7BEC /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		2839BE53183F44B5000D7BEC /* TestThatThrowsExceptionOnStart-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TestThatThrowsExceptionOnStart-Info.plist"; sourceTree = "<group>"; };
+		2839BE55183F44B5000D7BEC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		2839BE57183F44B6000D7BEC /* TestThatThrowsExceptionOnStart.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestThatThrowsExceptionOnStart.m; sourceTree = "<group>"; };
+		2839BE59183F44B6000D7BEC /* TestThatThrowsExceptionOnStart-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestThatThrowsExceptionOnStart-Prefix.pch"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2839BE49183F44B5000D7BEC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2839BE50183F44B5000D7BEC /* SenTestingKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2839BE41183F449B000D7BEC = {
+			isa = PBXGroup;
+			children = (
+				2839BE51183F44B5000D7BEC /* TestThatThrowsExceptionOnStart */,
+				2839BE4E183F44B5000D7BEC /* Frameworks */,
+				2839BE4D183F44B5000D7BEC /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2839BE4D183F44B5000D7BEC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2839BE4C183F44B5000D7BEC /* TestThatThrowsExceptionOnStart.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2839BE4E183F44B5000D7BEC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2839BE4F183F44B5000D7BEC /* SenTestingKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2839BE51183F44B5000D7BEC /* TestThatThrowsExceptionOnStart */ = {
+			isa = PBXGroup;
+			children = (
+				2839BE57183F44B6000D7BEC /* TestThatThrowsExceptionOnStart.m */,
+				2839BE52183F44B5000D7BEC /* Supporting Files */,
+			);
+			path = TestThatThrowsExceptionOnStart;
+			sourceTree = "<group>";
+		};
+		2839BE52183F44B5000D7BEC /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				2839BE53183F44B5000D7BEC /* TestThatThrowsExceptionOnStart-Info.plist */,
+				2839BE54183F44B5000D7BEC /* InfoPlist.strings */,
+				2839BE59183F44B6000D7BEC /* TestThatThrowsExceptionOnStart-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2839BE4B183F44B5000D7BEC /* TestThatThrowsExceptionOnStart */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2839BE5A183F44B6000D7BEC /* Build configuration list for PBXNativeTarget "TestThatThrowsExceptionOnStart" */;
+			buildPhases = (
+				2839BE48183F44B5000D7BEC /* Sources */,
+				2839BE49183F44B5000D7BEC /* Frameworks */,
+				2839BE4A183F44B5000D7BEC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TestThatThrowsExceptionOnStart;
+			productName = TestThatThrowsExceptionOnStart;
+			productReference = 2839BE4C183F44B5000D7BEC /* TestThatThrowsExceptionOnStart.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2839BE42183F449B000D7BEC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0500;
+			};
+			buildConfigurationList = 2839BE45183F449B000D7BEC /* Build configuration list for PBXProject "TestThatThrowsExceptionOnStart" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 2839BE41183F449B000D7BEC;
+			productRefGroup = 2839BE4D183F44B5000D7BEC /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2839BE4B183F44B5000D7BEC /* TestThatThrowsExceptionOnStart */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2839BE4A183F44B5000D7BEC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2839BE56183F44B5000D7BEC /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2839BE48183F44B5000D7BEC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2839BE58183F44B6000D7BEC /* TestThatThrowsExceptionOnStart.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		2839BE54183F44B5000D7BEC /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2839BE55183F44B5000D7BEC /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		2839BE46183F449B000D7BEC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		2839BE47183F449B000D7BEC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		2839BE5B183F44B6000D7BEC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TestThatThrowsExceptionOnStart/TestThatThrowsExceptionOnStart-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "TestThatThrowsExceptionOnStart/TestThatThrowsExceptionOnStart-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		2839BE5C183F44B6000D7BEC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TestThatThrowsExceptionOnStart/TestThatThrowsExceptionOnStart-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "TestThatThrowsExceptionOnStart/TestThatThrowsExceptionOnStart-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2839BE45183F449B000D7BEC /* Build configuration list for PBXProject "TestThatThrowsExceptionOnStart" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2839BE46183F449B000D7BEC /* Debug */,
+				2839BE47183F449B000D7BEC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2839BE5A183F44B6000D7BEC /* Build configuration list for PBXNativeTarget "TestThatThrowsExceptionOnStart" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2839BE5B183F44B6000D7BEC /* Debug */,
+				2839BE5C183F44B6000D7BEC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2839BE42183F449B000D7BEC /* Project object */;
+}

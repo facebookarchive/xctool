@@ -116,12 +116,12 @@
                                  @"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET" : target,
                                  }];
 
-  NSString *output = LaunchTaskAndCaptureOutputInCombinedStream(settingsTask,
-                                                                [NSString stringWithFormat:@"running xcodebuild -showBuildSettings for '%@' target", target]);
+  NSDictionary *output = LaunchTaskAndCaptureOutput(settingsTask,
+                                                    [NSString stringWithFormat:@"running xcodebuild -showBuildSettings for '%@' target", target]);
   [settingsTask release];
   settingsTask = nil;
 
-  NSDictionary *allSettings = BuildSettingsFromOutput(output);
+  NSDictionary *allSettings = BuildSettingsFromOutput(output[@"stdout"]);
 
   if ([allSettings count] > 1) {
     *error = @"Should only have build settings for a single target.";
@@ -134,9 +134,13 @@
               @"scheme references a non-existent target.\n"
               @"\n"
               @"Output from `xcodebuild -showBuildSettings`:\n\n"
-              @"%@",
+              @"STDOUT:\n"
+              @"%@\n\n"
+              @"STDERR:\n"
+              @"%@\n\n",
               target,
-              output];
+              output[@"stdout"],
+              output[@"stderr"]];
     return nil;
   }
 

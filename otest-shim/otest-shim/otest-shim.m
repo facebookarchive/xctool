@@ -69,6 +69,15 @@ static NSMutableArray *__testExceptions = nil;
 static NSMutableString *__testOutput = nil;
 static int __testSuiteDepth = 0;
 
+static BOOL __testBundleHasStartedRunning = NO;
+
+/**
+ We don't want to turn this on until our initializer runs.  Otherwise, dylibs
+ that are loaded earlier (like libSystem) will call into our interposed
+ functions, but we're not ready for that yet.
+ */
+static BOOL __enableWriteInterception = NO;
+
 static dispatch_queue_t EventQueue()
 {
   static dispatch_queue_t eventQueue = {0};
@@ -158,6 +167,8 @@ static void SenTestLog_testSuiteDidStart(id self, SEL sel, NSNotification *notif
 
 static void XCToolLog_testSuiteDidStart(NSString *testDescription)
 {
+  __testBundleHasStartedRunning = YES;
+
   if (__testSuiteDepth == 0) {
     dispatch_sync(EventQueue(), ^{
       PrintJSON(EventDictionaryWithNameAndContent(
@@ -370,7 +381,7 @@ static void XCTestCase_performTest(id self, SEL sel, id arg1)
 ssize_t __write_nocancel(int fildes, const void *buf, size_t nbyte);
 static ssize_t ___write_nocancel(int fildes, const void *buf, size_t nbyte)
 {
-  if (fildes == STDOUT_FILENO || fildes == STDERR_FILENO) {
+  if (__enableWriteInterception && (fildes == STDOUT_FILENO || fildes == STDERR_FILENO)) {
     dispatch_sync(EventQueue(), ^{
       if (__testIsRunning && nbyte > 0) {
         NSString *output = [[NSString alloc] initWithBytes:buf length:nbyte encoding:NSUTF8StringEncoding];
@@ -379,6 +390,12 @@ static ssize_t ___write_nocancel(int fildes, const void *buf, size_t nbyte)
           @{kReporter_TestOutput_OutputKey: StripAnsi(output)}
         ));
         [__testOutput appendString:output];
+        [output release];
+      } else if (!__testBundleHasStartedRunning && nbyte > 0) {
+        NSString *output = [[NSString alloc] initWithBytes:buf length:nbyte encoding:NSUTF8StringEncoding];
+        PrintJSON(EventDictionaryWithNameAndContent(kReporter_Events_OutputBeforeTestBundleStarts,
+                                                    @{kReporter_OutputBeforeTestBundleStarts_OutputKey: StripAnsi(output)}
+                                                    ));
         [output release];
       }
     });
@@ -392,7 +409,7 @@ DYLD_INTERPOSE(___write_nocancel, __write_nocancel);
 static ssize_t __write(int fildes, const void *buf, size_t nbyte);
 static ssize_t __write(int fildes, const void *buf, size_t nbyte)
 {
-  if (fildes == STDOUT_FILENO || fildes == STDERR_FILENO) {
+  if (__enableWriteInterception && (fildes == STDOUT_FILENO || fildes == STDERR_FILENO)) {
     dispatch_sync(EventQueue(), ^{
       if (__testIsRunning && nbyte > 0) {
         NSString *output = [[NSString alloc] initWithBytes:buf length:nbyte encoding:NSUTF8StringEncoding];
@@ -401,6 +418,12 @@ static ssize_t __write(int fildes, const void *buf, size_t nbyte)
           @{kReporter_TestOutput_OutputKey: StripAnsi(output)}
         ));
         [__testOutput appendString:output];
+        [output release];
+      } else if (!__testBundleHasStartedRunning && nbyte > 0) {
+        NSString *output = [[NSString alloc] initWithBytes:buf length:nbyte encoding:NSUTF8StringEncoding];
+        PrintJSON(EventDictionaryWithNameAndContent(kReporter_Events_OutputBeforeTestBundleStarts,
+                                                    @{kReporter_OutputBeforeTestBundleStarts_OutputKey: StripAnsi(output)}
+                                                    ));
         [output release];
       }
     });
@@ -446,7 +469,7 @@ static NSString *CreateStringFromIOV(const struct iovec *iov, int iovcnt) {
 ssize_t __writev_nocancel(int fildes, const struct iovec *iov, int iovcnt);
 static ssize_t ___writev_nocancel(int fildes, const struct iovec *iov, int iovcnt)
 {
-  if (fildes == STDOUT_FILENO || fildes == STDERR_FILENO) {
+  if (__enableWriteInterception && (fildes == STDOUT_FILENO || fildes == STDERR_FILENO)) {
     dispatch_sync(EventQueue(), ^{
       if (__testIsRunning && iovcnt > 0) {
         NSString *buffer = CreateStringFromIOV(iov, iovcnt);
@@ -455,6 +478,12 @@ static ssize_t ___writev_nocancel(int fildes, const struct iovec *iov, int iovcn
           @{kReporter_TestOutput_OutputKey: StripAnsi(buffer)}
         ));
         [__testOutput appendString:buffer];
+        [buffer release];
+      } else if (!__testBundleHasStartedRunning && iovcnt > 0) {
+        NSString *buffer = CreateStringFromIOV(iov, iovcnt);
+        PrintJSON(EventDictionaryWithNameAndContent(kReporter_Events_OutputBeforeTestBundleStarts,
+                                                    @{kReporter_OutputBeforeTestBundleStarts_OutputKey: StripAnsi(buffer)}
+                                                    ));
         [buffer release];
       }
     });
@@ -468,7 +497,7 @@ DYLD_INTERPOSE(___writev_nocancel, __writev_nocancel);
 // Output from NSLog flows through writev
 static ssize_t __writev(int fildes, const struct iovec *iov, int iovcnt)
 {
-  if (fildes == STDOUT_FILENO || fildes == STDERR_FILENO) {
+  if (__enableWriteInterception && (fildes == STDOUT_FILENO || fildes == STDERR_FILENO)) {
     dispatch_sync(EventQueue(), ^{
       if (__testIsRunning && iovcnt > 0) {
         NSString *buffer = CreateStringFromIOV(iov, iovcnt);
@@ -477,6 +506,12 @@ static ssize_t __writev(int fildes, const struct iovec *iov, int iovcnt)
           @{kReporter_TestOutput_OutputKey: StripAnsi(buffer)}
         ));
         [__testOutput appendString:buffer];
+        [buffer release];
+      } else if (!__testBundleHasStartedRunning && iovcnt > 0) {
+        NSString *buffer = CreateStringFromIOV(iov, iovcnt);
+        PrintJSON(EventDictionaryWithNameAndContent(kReporter_Events_OutputBeforeTestBundleStarts,
+                                                    @{kReporter_OutputBeforeTestBundleStarts_OutputKey: StripAnsi(buffer)}
+                                                    ));
         [buffer release];
       }
     });
@@ -565,5 +600,7 @@ __attribute__((constructor)) static void EntryPoint()
 
   // Unset so we don't cascade into any other process that might be spawned.
   unsetenv("DYLD_INSERT_LIBRARIES");
+
+  __enableWriteInterception = YES;
 }
 
