@@ -14,15 +14,7 @@
 // limitations under the License.
 //
 
-#include "../Configurations/Project.xcconfig"
-
-#include "../Configurations/Install.xcconfig"
-XT_INSTALL_DIR = lib
-
 MACOSX_DEPLOYMENT_TARGET = 10.7
-
-// Needed so we can #import from SenTestingKit.
-OTHER_CFLAGS = -F"$(DEVELOPER_FRAMEWORKS_DIR)"
 
 // OSX tests or test hosts may use GC, so we have to be GC friendly.
 // By setting the main value to 'unsupported' and then setting the arch-specific setting to
@@ -42,5 +34,3 @@ ONLY_ACTIVE_ARCH_0500_1080 = NO
 ONLY_ACTIVE_ARCH_0500_1090 = NO
 
 ONLY_ACTIVE_ARCH = $(ONLY_ACTIVE_ARCH_$(XCODE_VERSION_MAJOR)_$(MAC_OS_X_VERSION_MAJOR))
-
-OTHER_LDFLAGS = $(XT_INSTALL_ROOT)/swizzle-guard-osx.dylib

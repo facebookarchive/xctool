@@ -40,7 +40,10 @@
   // When invoking otest directly, the last arg needs to be the the test bundle.
   [task setArguments:[[self testArguments] arrayByAddingObject:testBundlePath]];
   NSMutableDictionary *env = [[self.environmentOverrides mutableCopy] autorelease];
-  env[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-osx.dylib"];
+  env[@"DYLD_INSERT_LIBRARIES"] = [@[[XCToolLibPath() stringByAppendingPathComponent:@"swizzle-guard-osx.dylib"],
+                                     [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-osx.dylib"]]
+                                   componentsJoinedByString:@":"];
+
   [task setEnvironment:[self otestEnvironmentWithOverrides:env]];
   return task;
 }

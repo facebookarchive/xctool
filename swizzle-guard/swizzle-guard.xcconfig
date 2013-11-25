@@ -15,10 +15,10 @@
 //
 
 #include "../Configurations/Project.xcconfig"
-#include "../Configurations/iOS-Simulator-Dylib.xcconfig"
 
 #include "../Configurations/Install.xcconfig"
 XT_INSTALL_DIR = lib
 
-OTHER_CFLAGS = $(XT_IOS_SIMULATOR_CFLAGS)
-OTHER_LDFLAGS = $(XT_IOS_SIMULATOR_LDFLAGS)
+// When other libs link swizzle-guard, they should look for the dylib in
+// the same directory that they're located in.
+LD_DYLIB_INSTALL_NAME = @loader_path/$(PRODUCT_NAME).dylib

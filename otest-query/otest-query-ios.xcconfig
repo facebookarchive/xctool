@@ -20,5 +20,6 @@
 #include "../Configurations/Install.xcconfig"
 XT_INSTALL_DIR = libexec
 
-OTHER_LDFLAGS = $(_IOS_SIMULATOR_LDFLAGS) -weak_framework SenTestingKit
+OTHER_CFLAGS = $(XT_IOS_SIMULATOR_CFLAGS)
+OTHER_LDFLAGS = $(XT_IOS_SIMULATOR_LDFLAGS) -weak_framework SenTestingKit
 
