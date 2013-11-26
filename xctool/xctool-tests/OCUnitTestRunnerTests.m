@@ -12,6 +12,7 @@
 #import "OCUnitOSXLogicTestRunner.h"
 #import "OCUnitIOSAppTestRunner.h"
 #import "OCUnitIOSLogicTestRunner.h"
+#import "OCUnitTestQueryRunner.h"
 #import "ReporterEvents.h"
 #import "SimulatorLauncher.h"
 #import "Swizzler.h"
@@ -313,11 +314,11 @@ static OCUnitTestRunner *TestRunner(Class cls, NSDictionary *settings)
 
 - (void)testTestSpecifierIsAllWhenRunningAllTestsInApplicationTestBundle
 {
-  NSDictionary *allSettings =
-  BuildSettingsFromOutput([NSString stringWithContentsOfFile:TEST_DATA @"OSX-Application-Test-showBuildSettings.txt"
-                                                    encoding:NSUTF8StringEncoding
-                                                       error:nil]);
-  NSDictionary *testSettings = allSettings[@"TestProject-App-OSXTests"];
+  NSDictionary *testSettings = @{kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/"),
+                                 kFullProductName : @"TestProject-App-OSXTests.octest",
+                                 kSdkName : GetAvailableSDKsAndAliases()[@"macosx"],
+                                 kTestHost : AbsolutePathFromRelative(TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/TestProject-App-OSX.app/Contents/MacOS/TestProject-App-OSX"),
+                                  };
 
   OCUnitTestRunner *runner = TestRunnerWithTestList([OCUnitTestRunner class], testSettings, @[@"Cls1/testA", @"Cls2/testB"]);
 
