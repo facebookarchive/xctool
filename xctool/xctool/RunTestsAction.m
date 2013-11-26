@@ -412,8 +412,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
 - (NSArray *)testConfigurationsForBuildSettings:(NSDictionary *)testableBuildSettings
 {
   NSString *sdkName = testableBuildSettings[@"SDK_NAME"];
-  NSString *testHost = testableBuildSettings[@"TEST_HOST"];
-  BOOL isApplicationTest = testHost != nil;
+  BOOL isApplicationTest = TestableSettingsIndicatesApplicationTest(testableBuildSettings);
 
   // array of [class, (bool) GC Enabled]
   NSMutableArray *testConfigurations = [NSMutableArray array];
@@ -426,7 +425,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
     }
   } else if ([sdkName hasPrefix:@"macosx"]) {
     Class testClass = {0};
-    if (isApplicationTest && IsMachOExecutable(testHost)) {
+    if (isApplicationTest) {
       testClass = [OCUnitOSXAppTestRunner class];
     } else {
       testClass = [OCUnitOSXLogicTestRunner class];
@@ -459,7 +458,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
   NSMutableDictionary *result = [NSMutableDictionary dictionary];
 
   if (testableExecutionInfo.buildSettings) {
-    BOOL isApplicationTest = testableExecutionInfo.buildSettings[@"TEST_HOST"] != nil;
+    BOOL isApplicationTest = TestableSettingsIndicatesApplicationTest(testableExecutionInfo.buildSettings);
 
     result[kReporter_BeginOCUnit_TestTypeKey] = isApplicationTest ? @"application-test" : @"logic-test";
     result[kReporter_BeginOCUnit_GCEnabledKey] = @(garbageCollectionEnabled);
@@ -629,7 +628,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
 
     // array of [class, (bool) GC Enabled]
     NSArray *testConfigurations = [self testConfigurationsForBuildSettings:info.buildSettings];
-    BOOL isApplicationTest = info.buildSettings[@"TEST_HOST"] != nil;
+    BOOL isApplicationTest = TestableSettingsIndicatesApplicationTest(info.buildSettings);
 
     NSArray *testCases = [OCUnitTestRunner filterTestCases:info.testCases
                                            withSenTestList:info.testable.senTestList

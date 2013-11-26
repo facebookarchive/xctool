@@ -21,6 +21,7 @@
 
 #import "ReportStatus.h"
 #import "TestRunState.h"
+#import "XCToolUtil.h"
 
 @implementation OCUnitTestRunner
 
@@ -151,7 +152,7 @@
 
   if ([focusedSet isEqualToSet:allSet]) {
 
-    if (_buildSettings[@"TEST_HOST"] != nil) {
+    if (TestableSettingsIndicatesApplicationTest(_buildSettings)) {
       // Xcode.app will always pass 'All' when running all tests in an
       // application test bundle.
       testSpecifier = @"All";

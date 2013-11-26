@@ -600,11 +600,30 @@ NSString *MakeTemporaryDirectory(NSString *nameTemplate)
 // https://www.opensource.apple.com/source/CF/CF-855.11/CFBundle.c
 CFStringRef _CFBundleCopyFileTypeForFileURL(CFURLRef url);
 
-BOOL IsMachOExecutable(NSString *path)
+static BOOL IsMachOExecutable(NSString *path)
 {
   NSURL *fileURL = [NSURL fileURLWithPath:path];
   CFStringRef fileType = _CFBundleCopyFileTypeForFileURL((CFURLRef)fileURL);
-  CFComparisonResult result = CFStringCompare(fileType, CFSTR("tool"), 0);
-  CFRelease(fileType);
-  return result == kCFCompareEqualTo;
+
+  if (fileType != NULL) {
+    CFComparisonResult result = CFStringCompare(fileType, CFSTR("tool"), 0);
+    CFRelease(fileType);
+    return (result == kCFCompareEqualTo);
+  } else {
+    return NO;
+  }
+}
+
+BOOL TestableSettingsIndicatesApplicationTest(NSDictionary *settings)
+{
+  NSString *testHostPath = settings[@"TEST_HOST"];
+
+  // Sometimes the TEST_HOST is wrapped in double quotes - not sure if our
+  // projects are misconfigured or if these are funky Xcode defaults.
+  testHostPath = [testHostPath stringByTrimmingCharactersInSet:
+                  [NSCharacterSet characterSetWithCharactersInString:@"\""]];
+
+  return (testHostPath != nil &&
+          [[NSFileManager defaultManager] isExecutableFileAtPath:testHostPath] &&
+          IsMachOExecutable(testHostPath));
 }

@@ -144,6 +144,7 @@ NSString *SystemPaths();
 NSString *MakeTemporaryDirectory(NSString *nameTemplate);
 
 /**
- * Returns YES if the path leads to an executable.
+ * Returns YES if the build settings indicate this is an application test.
+ * i.e. we have a TEST_HOST, and that TEST_HOST refers to an executable.
  */
-BOOL IsMachOExecutable(NSString *path);
+BOOL TestableSettingsIndicatesApplicationTest(NSDictionary *settings);

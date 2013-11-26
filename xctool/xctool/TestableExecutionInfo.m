@@ -161,17 +161,17 @@
                                        error:(NSString **)error
 {
   NSString *sdkName = testableBuildSettings[@"SDK_NAME"];
-  NSString *testHost = testableBuildSettings[@"TEST_HOST"];
-  BOOL hasTestHost = (testHost != nil);
+  BOOL isApplicationTest = TestableSettingsIndicatesApplicationTest(testableBuildSettings);
+
   Class runnerClass = {0};
   if ([sdkName hasPrefix:@"iphonesimulator"]) {
-    if (hasTestHost && IsMachOExecutable(testHost)) {
+    if (isApplicationTest) {
       runnerClass = [OCUnitIOSAppTestQueryRunner class];
     } else {
       runnerClass = [OCUnitIOSLogicTestQueryRunner class];
     }
   } else if ([sdkName hasPrefix:@"macosx"]) {
-    if (hasTestHost && IsMachOExecutable(testHost)) {
+    if (isApplicationTest) {
       runnerClass = [OCUnitOSXAppTestQueryRunner class];
     } else {
       runnerClass = [OCUnitOSXLogicTestQueryRunner class];
