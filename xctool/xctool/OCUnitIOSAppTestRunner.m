@@ -146,7 +146,16 @@ static void KillSimulatorJobs()
    [self otestEnvironmentWithOverrides:launchEnvironment]];
 
   [sessionConfig setSimulatedApplicationStdOutPath:outputPath];
-  [sessionConfig setSimulatedApplicationStdErrPath:outputPath];
+
+  // Don't let anything from STDERR get in our stream.  Normally, once
+  // otest-shim gets loaded, we don't have to worry about whatever is coming
+  // over STDERR since the shim will redirect all output (including STDERR) into
+  // JSON outout on STDOUT.
+  //
+  // But, even before otest-shim loads, there's a chance something else may spew
+  // into STDERR.  This happened in --
+  // https://github.com/facebook/xctool/issues/224#issuecomment-29288004
+  [sessionConfig setSimulatedApplicationStdErrPath:@"/dev/null"];
 
   [sessionConfig setLocalizedClientName:@"xctool"];
 
@@ -200,9 +209,6 @@ static void KillSimulatorJobs()
   DTiPhoneSimulatorSessionConfig *sessionConfig =
     [self sessionConfigForRunningTestsWithEnvironment:@{}
                                            outputPath:outputPath];
-
-  [sessionConfig setSimulatedApplicationStdOutPath:outputPath];
-  [sessionConfig setSimulatedApplicationStdErrPath:outputPath];
 
   SimulatorLauncher *launcher = [[[SimulatorLauncher alloc] initWithSessionConfig:sessionConfig
                                                                        deviceName:_deviceName] autorelease];
