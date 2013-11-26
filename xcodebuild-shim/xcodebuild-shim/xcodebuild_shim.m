@@ -43,6 +43,7 @@ static void XTSwizzleSelectorForFunction(Class cls, SEL sel, IMP newImp)
   method_exchangeImplementations(originalMethod, newMethod);
 }
 
+// from IDEFoundation.framework
 @interface IDEActivityLogSection : NSObject
 
 // Will be 0 for success, 1 for failure.
@@ -69,6 +70,12 @@ static void XTSwizzleSelectorForFunction(Class cls, SEL sel, IMP newImp)
 
 @property(readonly) double timeStoppedRecording;
 @property(readonly) double timeStartedRecording;
+
+// The number of times "warning:" appears in the output.
+@property(readonly) NSUInteger totalNumberOfWarnings;
+
+// The number of times "error:" appears in the output.
+@property(readonly) NSUInteger totalNumberOfErrors;
 
 @end
 
@@ -170,12 +177,18 @@ static void AnnounceEndSection(IDEActivityLogSection *section)
     PrintJSON(EventDictionaryWithNameAndContent(
       kReporter_Events_EndBuildCommand, @{
         kReporter_EndBuildCommand_TitleKey : section.title,
-        kReporter_EndBuildCommand_SucceededKey : (section.resultCode == 0) ? @YES : @NO,
+        // Xcode will only consider something a success if resultCode == 0 AND
+        // there's no output that contains the string "error: ".
+        kReporter_EndBuildCommand_SucceededKey : ((section.resultCode == 0) &&
+                                                  (section.totalNumberOfErrors == 0)) ? @YES : @NO,
         // Sometimes things will fail and 'emittedOutputText' will be nil.  We've seen this
         // happen when Xcode's Copy command fails.  In this case, just send an empty string
         // so Reporters don't have to worry about this sometimes being [NSNull null].
         kReporter_EndBuildCommand_EmittedOutputTextKey : section.emittedOutputText ?: @"",
         kReporter_EndBuildCommand_DurationKey : @(section.timeStoppedRecording - section.timeStartedRecording),
+        kReporter_EndBuildCommand_ResultCode : @(section.resultCode),
+        kReporter_EndBuildCommand_TotalNumberOfWarnings : @(section.totalNumberOfWarnings),
+        kReporter_EndBuildCommand_TotalNumberOfErrors : @(section.totalNumberOfErrors),
       }));
   } else if ([sectionTypeString hasPrefix:kDomainTypeProductItemPrefix]) {
     NSString *project = nil;

@@ -95,6 +95,9 @@
 #define kReporter_EndBuildCommand_SucceededKey @"succeeded"
 #define kReporter_EndBuildCommand_EmittedOutputTextKey @"emittedOutputText"
 #define kReporter_EndBuildCommand_DurationKey @"duration"
+#define kReporter_EndBuildCommand_ResultCode @"resultCode"
+#define kReporter_EndBuildCommand_TotalNumberOfWarnings @"totalNumberOfWarnings"
+#define kReporter_EndBuildCommand_TotalNumberOfErrors @"totalNumberOfErrors"
 
 #define kReporter_BeginBuildTarget_ProjectKey @"project"
 #define kReporter_BeginBuildTarget_TargetKey @"target"

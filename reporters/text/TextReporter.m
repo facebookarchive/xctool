@@ -530,7 +530,7 @@ static NSString *abbreviatePath(NSString *string) {
 
   NSString *indicator = nil;
   if (succeeded) {
-    if ([outputText rangeOfString:@"warning:"].location != NSNotFound) {
+    if ([event[kReporter_EndBuildCommand_TotalNumberOfWarnings] unsignedIntegerValue] > 0) {
       indicator = [self warningIndicatorString];
     } else {
       indicator = [self passIndicatorString];
