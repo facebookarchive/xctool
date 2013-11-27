@@ -90,6 +90,12 @@
 
 - (void)run
 {
+  if (XcodebuildVersion() < 500) {
+    [_standardError printString:@"ERROR: This version of xctool supports only Xcode 5.0 or higher.\n"];
+    _exitStatus = 1;
+    return;
+  }
+
   Options *options = [[[Options alloc] init] autorelease];
   NSString *errorMessage = nil;
 
