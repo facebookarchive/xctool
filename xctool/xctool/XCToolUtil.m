@@ -204,28 +204,24 @@ static void AddSDKToDictionary(NSMutableDictionary *dict,
 {
   
   NSMutableDictionary *versionDict = [NSMutableDictionary dictionary];
-  NSString *line = nil;
-  NSString *key = nil;
-  NSString *value = nil;
-  NSString *nlBuffer = nil;
-  
+
   // This isn't present in the output, but adding the mapping here in order
   // to assist with looking up the SDK value quickly
   versionDict[@"SDK"] = sdk;
   
-  while (![scanner isAtEnd]) {
-    // Consume the newline chars into a string; we'll need this to
-    // determine if we're at the end of an SDK block (which we'll know if we
-    // consume more than one newline char)
-    [scanner scanCharactersFromSet:[NSCharacterSet newlineCharacterSet]
-                        intoString:&nlBuffer];
-    if ([nlBuffer length] >= 2) {
+  for (;;) {
+    NSString *line = nil;
+    NSString *key = nil;
+    NSString *value = nil;
+
+    [scanner scanUpToString:@"\n" intoString:&line];
+    [scanner scanString:@"\n" intoString:nil];
+
+    if (line.length == 0) {
+      // a trailing empty line indicates we're done with this SDK section.
       break;
     }
-    
-    // Read the current line and set it into the scanner
-    [scanner scanUpToCharactersFromSet:[NSCharacterSet newlineCharacterSet]
-                            intoString:&line];
+
     NSScanner *lineScanner = [NSScanner scannerWithString:line];
     
     // Parse the label/value pair from the line and add it to the dictionary
@@ -279,8 +275,8 @@ NSDictionary *GetAvailableSDKsInfo()
     NSString *str = nil;
 
     // Read current line
-    [scanner scanUpToCharactersFromSet:[NSCharacterSet newlineCharacterSet]
-                            intoString:&str];
+    [scanner scanUpToString:@"\n" intoString:&str];
+    [scanner scanString:@"\n" intoString:nil];
     
     // Attempt to match the regex
     NSArray *match = [sdkVersionRegex matchesInString:str
