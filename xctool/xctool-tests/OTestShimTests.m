@@ -24,6 +24,7 @@
 #import "ReporterEvents.h"
 #import "TaskUtil.h"
 #import "TestUtil.h"
+#import "XcodeBuildSettings.h"
 #import "XCToolUtil.h"
 
 @interface OTestShimTests : SenTestCase
@@ -38,9 +39,9 @@ static NSArray *AllTestCasesInTestBundle(NSString *sdkName,
   NSString *builtProductsDir = [bundlePath stringByDeletingLastPathComponent];
   NSString *fullProductName = [bundlePath lastPathComponent];
   NSDictionary *buildSettings = @{
-                                  kBuiltProductsDir : builtProductsDir,
-                                  kFullProductName : fullProductName,
-                                  kSdkName : latestSDK,
+                                  Xcode_BUILT_PRODUCTS_DIR : builtProductsDir,
+                                  Xcode_FULL_PRODUCT_NAME : fullProductName,
+                                  Xcode_SDK_NAME : latestSDK,
                                   };
   OCUnitTestQueryRunner *runner = [[[testQueryClass alloc] initWithBuildSettings:buildSettings
                                                                      withCpuType:CPU_TYPE_ANY] autorelease];
@@ -88,10 +89,10 @@ static NSTask *OtestShimTask(NSString *platformName,
   // that aren't valid on the current machine.  So, we rewrite the SDKROOT
   // so we can be sure it points to a valid directory based off the true Xcode
   // install location.
-  targetSettings[@"SDKROOT"] = [NSString stringWithFormat:@"%@/Platforms/%@.platform/Developer/SDKs/%@",
+  targetSettings[Xcode_SDKROOT] = [NSString stringWithFormat:@"%@/Platforms/%@.platform/Developer/SDKs/%@",
                                 XcodeDeveloperDirPathViaForcedConcreteTask(YES),
                                 platformName,
-                                [targetSettings[@"SDKROOT"] lastPathComponent]];
+                                [targetSettings[Xcode_SDKROOT] lastPathComponent]];
 
   // set up an OCUnitIOSLogicTestRunner
   OCUnitIOSLogicTestRunner *runner = [[testRunnerClass alloc] initWithBuildSettings:targetSettings

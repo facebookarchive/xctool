@@ -21,6 +21,7 @@
 
 #import "ReportStatus.h"
 #import "TestRunState.h"
+#import "XcodeBuildSettings.h"
 #import "XCToolUtil.h"
 
 @implementation OCUnitTestRunner
@@ -249,8 +250,8 @@
 - (NSString *)testBundlePath
 {
   return [NSString stringWithFormat:@"%@/%@",
-          _buildSettings[@"BUILT_PRODUCTS_DIR"],
-          _buildSettings[@"FULL_PRODUCT_NAME"]
+          _buildSettings[Xcode_BUILT_PRODUCTS_DIR],
+          _buildSettings[Xcode_FULL_PRODUCT_NAME]
           ];
 }
 

@@ -19,23 +19,24 @@
 #import "NSConcreteTask.h"
 #import "TaskUtil.h"
 #import "TestingFramework.h"
+#import "XcodeBuildSettings.h"
 #import "XCToolUtil.h"
 
 @implementation OCUnitIOSLogicTestRunner
 
 - (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath
 {
-  NSString *version = [_buildSettings[@"SDK_NAME"] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
+  NSString *version = [_buildSettings[Xcode_SDK_NAME] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
 
   NSString *launchPath = [NSString stringWithFormat:@"%@/Developer/%@",
-                          _buildSettings[@"SDKROOT"],
+                          _buildSettings[Xcode_SDKROOT],
                           _framework[kTestingFrameworkIOSTestrunnerName]];
   NSArray *args = [[self testArguments] arrayByAddingObject:testBundlePath];
   NSDictionary *env = [self otestEnvironmentWithOverrides:
                        @{
                          @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"],
-                         @"DYLD_FRAMEWORK_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
-                         @"DYLD_LIBRARY_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
+                         @"DYLD_FRAMEWORK_PATH" : _buildSettings[Xcode_BUILT_PRODUCTS_DIR],
+                         @"DYLD_LIBRARY_PATH" : _buildSettings[Xcode_BUILT_PRODUCTS_DIR],
                          @"NSUnbufferedIO" : @"YES",
                          }];
 
@@ -49,7 +50,7 @@
 - (void)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
                    startupError:(NSString **)startupError
 {
-  NSString *sdkName = _buildSettings[@"SDK_NAME"];
+  NSString *sdkName = _buildSettings[Xcode_SDK_NAME];
   NSAssert([sdkName hasPrefix:@"iphonesimulator"], @"Unexpected SDK name: %@", sdkName);
 
   NSString *testBundlePath = [self testBundlePath];

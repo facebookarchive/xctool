@@ -17,6 +17,7 @@
 #import "OCUnitTestQueryRunner.h"
 
 #import "TaskUtil.h"
+#import "XcodeBuildSettings.h"
 #import "XCToolUtil.h"
 
 @implementation OCUnitTestQueryRunner
@@ -40,8 +41,8 @@
 
 - (NSString *)bundlePath
 {
-  NSString *builtProductsDir = _buildSettings[@"BUILT_PRODUCTS_DIR"];
-  NSString *fullProductName = _buildSettings[@"FULL_PRODUCT_NAME"];
+  NSString *builtProductsDir = _buildSettings[Xcode_BUILT_PRODUCTS_DIR];
+  NSString *fullProductName = _buildSettings[Xcode_FULL_PRODUCT_NAME];
   NSString *bundlePath = [builtProductsDir stringByAppendingPathComponent:fullProductName];
   return bundlePath;
 }
@@ -49,7 +50,7 @@
 - (NSString *)testHostPath
 {
   // TEST_HOST will sometimes be wrapped in "quotes".
-  NSString *testHost = [_buildSettings[@"TEST_HOST"]
+  NSString *testHost = [_buildSettings[Xcode_TEST_HOST]
                         stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
   return testHost;
 }

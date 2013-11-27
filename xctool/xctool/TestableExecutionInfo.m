@@ -21,6 +21,7 @@
 #import "OCUnitOSXAppTestQueryRunner.h"
 #import "OCUnitOSXLogicTestQueryRunner.h"
 #import "TaskUtil.h"
+#import "XcodeBuildSettings.h"
 #import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
 
@@ -104,9 +105,9 @@
   [settingsTask setArguments:[xcodeArguments arrayByAddingObjectsFromArray:@[
                                                                              @"-project", projectPath,
                                                                              @"-target", target,
-                                                                             [NSString stringWithFormat:@"OBJROOT=%@", objRoot],
-                                                                             [NSString stringWithFormat:@"SYMROOT=%@", symRoot],
-                                                                             [NSString stringWithFormat:@"SHARED_PRECOMPS_DIR=%@", sharedPrecompsDir],
+                                                                             [NSString stringWithFormat:@"%@=%@", Xcode_OBJROOT, objRoot],
+                                                                             [NSString stringWithFormat:@"%@=%@", Xcode_SYMROOT, symRoot],
+                                                                             [NSString stringWithFormat:@"%@=%@", Xcode_SHARED_PRECOMPS_DIR, sharedPrecompsDir],
                                                                              action,
                                                                              @"-showBuildSettings",
                                                                              ]]];
@@ -160,7 +161,7 @@
                                      cpuType:(cpu_type_t)cpuType
                                        error:(NSString **)error
 {
-  NSString *sdkName = testableBuildSettings[@"SDK_NAME"];
+  NSString *sdkName = testableBuildSettings[Xcode_SDK_NAME];
   BOOL isApplicationTest = TestableSettingsIndicatesApplicationTest(testableBuildSettings);
 
   Class runnerClass = {0};

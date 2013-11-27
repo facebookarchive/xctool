@@ -21,6 +21,7 @@
 #import "SchemeGenerator.h"
 #import "TaskUtil.h"
 #import "Testable.h"
+#import "XcodeBuildSettings.h"
 #import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
 
@@ -64,9 +65,9 @@
    // products.  Without this, xcodebuild would default to using the
    // generated workspace's DerivedData (which is empty, so everything
    // would get rebuilt).
-   [NSString stringWithFormat:@"OBJROOT=%@", objRoot],
-   [NSString stringWithFormat:@"SYMROOT=%@", symRoot],
-   [NSString stringWithFormat:@"SHARED_PRECOMPS_DIR=%@", sharedPrecompsDir],
+   [NSString stringWithFormat:@"%@=%@", Xcode_OBJROOT, objRoot],
+   [NSString stringWithFormat:@"%@=%@", Xcode_SYMROOT, symRoot],
+   [NSString stringWithFormat:@"%@=%@", Xcode_SHARED_PRECOMPS_DIR, sharedPrecompsDir],
    // Override the DerivedData location to be within our temporary directory so
    // we don't accumulate junk in the user's real DerivedData folder.
    //

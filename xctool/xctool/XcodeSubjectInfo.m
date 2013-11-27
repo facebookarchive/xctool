@@ -20,6 +20,7 @@
 #import "TaskUtil.h"
 #import "Testable.h"
 #import "XCToolUtil.h"
+#import "XcodeBuildSettings.h"
 #import "XcodeTargetMatch.h"
 
 // We consider a DerivedData "recently modified" within this interval.
@@ -923,10 +924,10 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   NSDictionary *targetSettings = [settings allValues][0];
   // The following control where our build output goes - we need to make sure we build the tests
   // in the same places as we built the original products - this is what Xcode does.
-  self.objRoot = targetSettings[@"OBJROOT"];
-  self.symRoot = targetSettings[@"SYMROOT"];
-  self.sharedPrecompsDir = targetSettings[@"SHARED_PRECOMPS_DIR"];
-  self.effectivePlatformName = targetSettings[@"EFFECTIVE_PLATFORM_NAME"];
+  self.objRoot = targetSettings[Xcode_OBJROOT];
+  self.symRoot = targetSettings[Xcode_SYMROOT];
+  self.sharedPrecompsDir = targetSettings[Xcode_SHARED_PRECOMPS_DIR];
+  self.effectivePlatformName = targetSettings[Xcode_EFFECTIVE_PLATFORM_NAME];
 
   NSString *matchingSchemePath = nil;
 

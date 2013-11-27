@@ -18,16 +18,17 @@
 
 #import "iPhoneSimulatorRemoteClient.h"
 #import "TaskUtil.h"
+#import "XcodeBuildSettings.h"
 #import "XCToolUtil.h"
 
 @implementation OCUnitOSXLogicTestQueryRunner
 
 - (NSTask *)createTaskForQuery
 {
-  NSString *builtProductsDir = _buildSettings[@"BUILT_PRODUCTS_DIR"];
+  NSString *builtProductsDir = _buildSettings[Xcode_BUILT_PRODUCTS_DIR];
 
   BOOL disableGC = YES;
-  NSString *gccEnableObjcGC = _buildSettings[@"GCC_ENABLE_OBJC_GC"];
+  NSString *gccEnableObjcGC = _buildSettings[Xcode_GCC_ENABLE_OBJC_GC];
   if ([gccEnableObjcGC isEqualToString:@"required"] ||
       [gccEnableObjcGC isEqualToString:@"supported"]) {
     disableGC = NO;

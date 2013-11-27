@@ -22,6 +22,7 @@
 #import "ReportStatus.h"
 #import "SimulatorLauncher.h"
 #import "TaskUtil.h"
+#import "XcodeBuildSettings.h"
 #import "XCToolUtil.h"
 
 static const NSInteger kMaxInstallOrUninstallAttempts = 3;
@@ -110,12 +111,14 @@ static void KillSimulatorJobs()
                                                                      outputPath:(NSString *)outputPath
 {
   // Sometimes the TEST_HOST will be wrapped in double quotes.
-  NSString *testHostPath = [_buildSettings[@"TEST_HOST"] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
+  NSString *testHostPath = [_buildSettings[Xcode_TEST_HOST] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
   NSString *testHostAppPath = [testHostPath stringByDeletingLastPathComponent];
 
-  NSString *sdkVersion = [_buildSettings[@"SDK_NAME"] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
+  NSString *sdkVersion = [_buildSettings[Xcode_SDK_NAME] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
   NSString *ideBundleInjectionLibPath = @"/../../Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection";
-  NSString *testBundlePath = [NSString stringWithFormat:@"%@/%@", _buildSettings[@"BUILT_PRODUCTS_DIR"], _buildSettings[@"FULL_PRODUCT_NAME"]];
+  NSString *testBundlePath = [NSString stringWithFormat:@"%@/%@",
+                              _buildSettings[Xcode_BUILT_PRODUCTS_DIR],
+                              _buildSettings[Xcode_FULL_PRODUCT_NAME]];
 
   DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKVersion:sdkVersion];
   DTiPhoneSimulatorApplicationSpecifier *appSpec =
@@ -132,8 +135,8 @@ static void KillSimulatorJobs()
   NSMutableDictionary *launchEnvironment = [NSMutableDictionary dictionary];
   [launchEnvironment addEntriesFromDictionary:environment];
   [launchEnvironment addEntriesFromDictionary:@{
-   @"DYLD_FRAMEWORK_PATH" : _buildSettings[@"TARGET_BUILD_DIR"],
-   @"DYLD_LIBRARY_PATH" : _buildSettings[@"TARGET_BUILD_DIR"],
+   @"DYLD_FRAMEWORK_PATH" : _buildSettings[Xcode_TARGET_BUILD_DIR],
+   @"DYLD_LIBRARY_PATH" : _buildSettings[Xcode_TARGET_BUILD_DIR],
    @"DYLD_INSERT_LIBRARIES" : [@[
                                  [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"],
                                ideBundleInjectionLibPath,
@@ -164,7 +167,7 @@ static void KillSimulatorJobs()
 
 - (BOOL)runMobileInstallationHelperWithArguments:(NSArray *)arguments
 {
-  NSString *sdkVersion = [_buildSettings[@"SDK_NAME"] stringByReplacingOccurrencesOfString:@"iphonesimulator"
+  NSString *sdkVersion = [_buildSettings[Xcode_SDK_NAME] stringByReplacingOccurrencesOfString:@"iphonesimulator"
                                                                                 withString:@""];
   DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKVersion:sdkVersion];
   DTiPhoneSimulatorApplicationSpecifier *appSpec = [DTiPhoneSimulatorApplicationSpecifier specifierWithApplicationPath:
@@ -290,11 +293,11 @@ static void KillSimulatorJobs()
 - (void)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
                    startupError:(NSString **)startupError
 {
-  NSString *sdkName = _buildSettings[@"SDK_NAME"];
+  NSString *sdkName = _buildSettings[Xcode_SDK_NAME];
   NSAssert([sdkName hasPrefix:@"iphonesimulator"], @"Unexpected SDK: %@", sdkName);
 
   // Sometimes the TEST_HOST will be wrapped in double quotes.
-  NSString *testHostPath = [_buildSettings[@"TEST_HOST"] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
+  NSString *testHostPath = [_buildSettings[Xcode_TEST_HOST] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
   NSString *testHostAppPath = [testHostPath stringByDeletingLastPathComponent];
   NSString *testHostPlistPath = [[testHostPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Info.plist"];
 

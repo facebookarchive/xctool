@@ -17,6 +17,7 @@
 #import "SimulatorLauncher.h"
 #import "Swizzler.h"
 #import "TestUtil.h"
+#import "XcodeBuildSettings.h"
 #import "XCToolUtil.h"
 
 static OCUnitTestRunner *TestRunnerWithTestLists(Class cls, NSDictionary *settings, NSArray *focusedTestCases, NSArray *allTestCases)
@@ -314,10 +315,10 @@ static OCUnitTestRunner *TestRunner(Class cls, NSDictionary *settings)
 
 - (void)testTestSpecifierIsAllWhenRunningAllTestsInApplicationTestBundle
 {
-  NSDictionary *testSettings = @{kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/"),
-                                 kFullProductName : @"TestProject-App-OSXTests.octest",
-                                 kSdkName : GetAvailableSDKsAndAliases()[@"macosx"],
-                                 kTestHost : AbsolutePathFromRelative(TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/TestProject-App-OSX.app/Contents/MacOS/TestProject-App-OSX"),
+  NSDictionary *testSettings = @{Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/"),
+                                 Xcode_FULL_PRODUCT_NAME : @"TestProject-App-OSXTests.octest",
+                                 Xcode_SDK_NAME : GetAvailableSDKsAndAliases()[@"macosx"],
+                                 Xcode_TEST_HOST : AbsolutePathFromRelative(TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/TestProject-App-OSX.app/Contents/MacOS/TestProject-App-OSX"),
                                   };
 
   OCUnitTestRunner *runner = TestRunnerWithTestList([OCUnitTestRunner class], testSettings, @[@"Cls1/testA", @"Cls2/testB"]);

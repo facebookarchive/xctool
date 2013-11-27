@@ -21,6 +21,7 @@
 #import "OCUnitOSXAppTestQueryRunner.h"
 #import "OCUnitOSXLogicTestQueryRunner.h"
 #import "TestUtil.h"
+#import "XcodeBuildSettings.h"
 #import "XCToolUtil.h"
 
 @interface OTestQueryTests : SenTestCase
@@ -32,8 +33,8 @@
 {
   NSString *error = nil;
   NSDictionary *buildSettings = @{
-    kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"tests-osx-test-bundle"),
-    kFullProductName : @"TestProject-Library-OSXTests.octest",
+    Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"tests-osx-test-bundle"),
+    Xcode_FULL_PRODUCT_NAME : @"TestProject-Library-OSXTests.octest",
   };
   OCUnitTestQueryRunner *runner = [[[OCUnitOSXLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
                                                                                withCpuType:CPU_TYPE_ANY] autorelease];
@@ -51,10 +52,10 @@
 {
   NSString *error = nil;
   NSDictionary *buildSettings = @{
-                                  kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"TestProject-App-OSX/Build/Products/Debug"),
-                                  kFullProductName : @"TestProject-App-OSXTests.octest",
-                                  kSdkName : GetAvailableSDKsAndAliases()[@"macosx"],
-                                  kTestHost : AbsolutePathFromRelative(TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/TestProject-App-OSX.app/Contents/MacOS/TestProject-App-OSX"),
+                                  Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"TestProject-App-OSX/Build/Products/Debug"),
+                                  Xcode_FULL_PRODUCT_NAME : @"TestProject-App-OSXTests.octest",
+                                  Xcode_SDK_NAME : GetAvailableSDKsAndAliases()[@"macosx"],
+                                  Xcode_TEST_HOST : AbsolutePathFromRelative(TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/TestProject-App-OSX.app/Contents/MacOS/TestProject-App-OSX"),
                                   };
   OCUnitTestQueryRunner *runner = [[[OCUnitOSXAppTestQueryRunner alloc] initWithBuildSettings:buildSettings
                                                                                   withCpuType:CPU_TYPE_ANY] autorelease];
@@ -76,8 +77,8 @@
 
   NSString *error = nil;
   NSDictionary *buildSettings = @{
-    kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"tests-osx-test-bundle"),
-    kFullProductName : @"TestProject-Library-XCTest-OSXTests.xctest",
+    Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"tests-osx-test-bundle"),
+    Xcode_FULL_PRODUCT_NAME : @"TestProject-Library-XCTest-OSXTests.xctest",
   };
   OCUnitTestQueryRunner *runner = [[[OCUnitOSXLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
                                                                                withCpuType:CPU_TYPE_ANY] autorelease];
@@ -94,9 +95,9 @@
   NSString *error = nil;
   NSString *latestSDK = GetAvailableSDKsAndAliases()[@"iphonesimulator"];
   NSDictionary *buildSettings = @{
-    kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"tests-ios-test-bundle"),
-    kFullProductName : @"TestProject-LibraryTests.octest",
-    kSdkName : latestSDK,
+    Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"tests-ios-test-bundle"),
+    Xcode_FULL_PRODUCT_NAME : @"TestProject-LibraryTests.octest",
+    Xcode_SDK_NAME : latestSDK,
   };
 
   OCUnitTestQueryRunner *runner = [[[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
@@ -125,9 +126,9 @@
   NSString *error = nil;
   NSString *latestSDK = GetAvailableSDKsAndAliases()[@"iphonesimulator"];
   NSDictionary *buildSettings = @{
-    kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"tests-ios-test-bundle"),
-    kFullProductName : @"TestProject-Library-XCTest-iOSTests.xctest",
-    kSdkName : latestSDK,
+    Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"tests-ios-test-bundle"),
+    Xcode_FULL_PRODUCT_NAME : @"TestProject-Library-XCTest-iOSTests.xctest",
+    Xcode_SDK_NAME : latestSDK,
     };
   OCUnitTestQueryRunner *runner = [[[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
                                                                                     withCpuType:CPU_TYPE_ANY] autorelease];
@@ -150,9 +151,9 @@
 {
   NSString *error = nil;
   NSDictionary *buildSettings = @{
-                                  kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"KiwiTests/Build/Products/Debug-iphonesimulator"),
-                                  kFullProductName : @"KiwiTests-OCUnit.octest",
-                                  kSdkName : GetAvailableSDKsAndAliases()[@"iphonesimulator"],
+                                  Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"KiwiTests/Build/Products/Debug-iphonesimulator"),
+                                  Xcode_FULL_PRODUCT_NAME : @"KiwiTests-OCUnit.octest",
+                                  Xcode_SDK_NAME : GetAvailableSDKsAndAliases()[@"iphonesimulator"],
                                   };
   OCUnitTestQueryRunner *runner = [[[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
                                                                                     withCpuType:CPU_TYPE_ANY] autorelease];
@@ -173,9 +174,9 @@
 
   NSString *error = nil;
   NSDictionary *buildSettings = @{
-                                  kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"KiwiTests/Build/Products/Debug-iphonesimulator"),
-                                  kFullProductName : @"KiwiTests-XCTest.xctest",
-                                  kSdkName : GetAvailableSDKsAndAliases()[@"iphonesimulator"],
+                                  Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"KiwiTests/Build/Products/Debug-iphonesimulator"),
+                                  Xcode_FULL_PRODUCT_NAME : @"KiwiTests-XCTest.xctest",
+                                  Xcode_SDK_NAME : GetAvailableSDKsAndAliases()[@"iphonesimulator"],
                                   };
   OCUnitTestQueryRunner *runner = [[[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
                                                                                     withCpuType:CPU_TYPE_ANY] autorelease];
@@ -196,10 +197,10 @@
 
   NSString *error = nil;
   NSDictionary *buildSettings = @{
-                                  kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"KiwiTests/Build/Products/Debug-iphonesimulator"),
-                                  kFullProductName : @"KiwiTests-XCTest-AppTests.xctest",
-                                  kSdkName : GetAvailableSDKsAndAliases()[@"iphonesimulator"],
-                                  kTestHost : AbsolutePathFromRelative(TEST_DATA @"KiwiTests/Build/Products/Debug-iphonesimulator/KiwiTests-TestHost.app/KiwiTests-TestHost"),
+                                  Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"KiwiTests/Build/Products/Debug-iphonesimulator"),
+                                  Xcode_FULL_PRODUCT_NAME : @"KiwiTests-XCTest-AppTests.xctest",
+                                  Xcode_SDK_NAME : GetAvailableSDKsAndAliases()[@"iphonesimulator"],
+                                  Xcode_TEST_HOST : AbsolutePathFromRelative(TEST_DATA @"KiwiTests/Build/Products/Debug-iphonesimulator/KiwiTests-TestHost.app/KiwiTests-TestHost"),
                                   };
   OCUnitTestQueryRunner *runner = [[[OCUnitIOSAppTestQueryRunner alloc] initWithBuildSettings:buildSettings
                                                                                   withCpuType:CPU_TYPE_ANY] autorelease];
@@ -216,10 +217,10 @@
 {
   NSString *error = nil;
   NSDictionary *buildSettings = @{
-                                  kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"KiwiTests/Build/Products/Debug-iphonesimulator"),
-                                  kFullProductName : @"KiwiTests-OCUnit-AppTests.octest",
-                                  kSdkName : GetAvailableSDKsAndAliases()[@"iphonesimulator"],
-                                  kTestHost : AbsolutePathFromRelative(TEST_DATA @"KiwiTests/Build/Products/Debug-iphonesimulator/KiwiTests-TestHost.app/KiwiTests-TestHost"),
+                                  Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"KiwiTests/Build/Products/Debug-iphonesimulator"),
+                                  Xcode_FULL_PRODUCT_NAME : @"KiwiTests-OCUnit-AppTests.octest",
+                                  Xcode_SDK_NAME : GetAvailableSDKsAndAliases()[@"iphonesimulator"],
+                                  Xcode_TEST_HOST : AbsolutePathFromRelative(TEST_DATA @"KiwiTests/Build/Products/Debug-iphonesimulator/KiwiTests-TestHost.app/KiwiTests-TestHost"),
                                   };
   OCUnitTestQueryRunner *runner = [[[OCUnitIOSAppTestQueryRunner alloc] initWithBuildSettings:buildSettings
                                                                                   withCpuType:CPU_TYPE_ANY] autorelease];
@@ -238,8 +239,8 @@
   // This is going to fail, because we're trying to load an iOS test bundle using
   // the OS X version of otest.
   NSDictionary *buildSettings = @{
-    kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"tests-ios-test-bundle"),
-    kFullProductName : @"TestProject-LibraryTests.octest",
+    Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"tests-ios-test-bundle"),
+    Xcode_FULL_PRODUCT_NAME : @"TestProject-LibraryTests.octest",
   };
   OCUnitTestQueryRunner *runner = [[[OCUnitOSXLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
                                                                                withCpuType:CPU_TYPE_ANY] autorelease];
@@ -255,9 +256,9 @@
   // using the iOS version of otest.
   NSString *latestSDK = GetAvailableSDKsAndAliases()[@"iphonesimulator"];
   NSDictionary *buildSettings = @{
-    kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"tests-osx-test-bundle"),
-    kFullProductName : @"TestProject-Library-OSXTests.octest",
-    kSdkName : latestSDK,
+    Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"tests-osx-test-bundle"),
+    Xcode_FULL_PRODUCT_NAME : @"TestProject-Library-OSXTests.octest",
+    Xcode_SDK_NAME : latestSDK,
   };
   OCUnitTestQueryRunner *runner = [[[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
                                                                                     withCpuType:CPU_TYPE_ANY] autorelease];
@@ -272,10 +273,10 @@
   NSString *error = nil;
   NSString *latestSDK = GetAvailableSDKsAndAliases()[@"iphonesimulator"];
   NSDictionary *buildSettings = @{
-    kBuiltProductsDir : AbsolutePathFromRelative(TEST_DATA @"tests-ios-test-bundle"),
-    kFullProductName : @"TestProject-LibraryTests.octest",
-    kSdkName : latestSDK,
-    kTestHost : @"/path/to/executable/that/does/not/exist",
+    Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"tests-ios-test-bundle"),
+    Xcode_FULL_PRODUCT_NAME : @"TestProject-LibraryTests.octest",
+    Xcode_SDK_NAME : latestSDK,
+    Xcode_TEST_HOST : @"/path/to/executable/that/does/not/exist",
   };
   OCUnitTestQueryRunner *runner = [[[OCUnitIOSAppTestQueryRunner alloc] initWithBuildSettings:buildSettings
                                                                                   withCpuType:CPU_TYPE_ANY] autorelease];

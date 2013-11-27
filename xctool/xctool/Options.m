@@ -26,6 +26,7 @@
 #import "RunTestsAction.h"
 #import "TestAction.h"
 #import "XCToolUtil.h"
+#import "XcodeBuildSettings.h"
 #import "XcodeSubjectInfo.h"
 #import "XcodeTargetMatch.h"
 
@@ -467,9 +468,9 @@
     // sourcecode.c.objc for architecture i386
     //
     // Explicitly setting PLATFORM_NAME=iphonesimulator seems to fix it.
-    if (_buildSettings[@"PLATFORM_NAME"] == nil &&
+    if (_buildSettings[Xcode_PLATFORM_NAME] == nil &&
         [_sdk hasPrefix:@"iphonesimulator"]) {
-      _buildSettings[@"PLATFORM_NAME"] = @"iphonesimulator";
+      _buildSettings[Xcode_PLATFORM_NAME] = @"iphonesimulator";
     }
   }
 

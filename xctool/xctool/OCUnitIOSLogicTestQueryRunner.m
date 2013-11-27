@@ -17,13 +17,14 @@
 #import "OCUnitIOSLogicTestQueryRunner.h"
 
 #import "TaskUtil.h"
+#import "XcodeBuildSettings.h"
 #import "XCToolUtil.h"
 
 @implementation OCUnitIOSLogicTestQueryRunner
 
 - (NSTask *)createTaskForQuery
 {
-  NSString *version = [_buildSettings[@"SDK_NAME"] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
+  NSString *version = [_buildSettings[Xcode_SDK_NAME] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
 
   return CreateTaskForSimulatorExecutable([self cpuType],
                                           version,

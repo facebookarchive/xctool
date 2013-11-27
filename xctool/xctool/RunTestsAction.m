@@ -29,6 +29,7 @@
 #import "TaskUtil.h"
 #import "Testable.h"
 #import "TestableExecutionInfo.h"
+#import "XcodeBuildSettings.h"
 #import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
 
@@ -411,7 +412,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
  */
 - (NSArray *)testConfigurationsForBuildSettings:(NSDictionary *)testableBuildSettings
 {
-  NSString *sdkName = testableBuildSettings[@"SDK_NAME"];
+  NSString *sdkName = testableBuildSettings[Xcode_SDK_NAME];
   BOOL isApplicationTest = TestableSettingsIndicatesApplicationTest(testableBuildSettings);
 
   // array of [class, (bool) GC Enabled]
@@ -431,7 +432,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
       testClass = [OCUnitOSXLogicTestRunner class];
     }
 
-    NSString *enableGC = testableBuildSettings[@"GCC_ENABLE_OBJC_GC"];
+    NSString *enableGC = testableBuildSettings[Xcode_GCC_ENABLE_OBJC_GC];
 
     if ([enableGC isEqualToString:@"required"]) {
       [testConfigurations addObject:@[testClass, @YES]];
@@ -462,8 +463,8 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
 
     result[kReporter_BeginOCUnit_TestTypeKey] = isApplicationTest ? @"application-test" : @"logic-test";
     result[kReporter_BeginOCUnit_GCEnabledKey] = @(garbageCollectionEnabled);
-    result[kReporter_BeginOCUnit_SDKNameKey] = testableExecutionInfo.buildSettings[@"SDK_NAME"];
-    result[kReporter_BeginOCUnit_BundleNameKey] = testableExecutionInfo.buildSettings[@"FULL_PRODUCT_NAME"];
+    result[kReporter_BeginOCUnit_SDKNameKey] = testableExecutionInfo.buildSettings[Xcode_SDK_NAME];
+    result[kReporter_BeginOCUnit_BundleNameKey] = testableExecutionInfo.buildSettings[Xcode_FULL_PRODUCT_NAME];
   }
 
   result[kReporter_BeginOCUnit_TargetNameKey] = testableExecutionInfo.testable.target;
@@ -661,20 +662,20 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                        forTestableExecutionInfo:info
                                       gcEnabled:garbageCollectionEnabled
                                       succeeded:NO];
-          blockAnnotation = info.buildSettings[@"FULL_PRODUCT_NAME"];
+          blockAnnotation = info.buildSettings[Xcode_FULL_PRODUCT_NAME];
         } else if (info.testCases.count == 0) {
           if (_failOnEmptyTestBundles) {
             block = [self blockToAdvertiseMessage:@"This test bundle contained no tests. Treating as a failure since -failOnEmpyTestBundles is enabled.\n"
                          forTestableExecutionInfo:info
                                         gcEnabled:garbageCollectionEnabled
                                         succeeded:NO];
-            blockAnnotation = info.buildSettings[@"FULL_PRODUCT_NAME"];
+            blockAnnotation = info.buildSettings[Xcode_FULL_PRODUCT_NAME];
           } else {
             block = [self blockToAdvertiseMessage:@"skipping: This test bundle contained no tests.\n"
                          forTestableExecutionInfo:info
                                         gcEnabled:garbageCollectionEnabled
                                         succeeded:YES];
-            blockAnnotation = info.buildSettings[@"FULL_PRODUCT_NAME"];
+            blockAnnotation = info.buildSettings[Xcode_FULL_PRODUCT_NAME];
           }
         } else {
           block = [self blockForTestable:info.testable
@@ -688,7 +689,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                          testRunnerClass:testRunnerClass
                                gcEnabled:garbageCollectionEnabled];
           blockAnnotation = [NSString stringWithFormat:@"%@ (bucket #%d, %ld tests)",
-                             info.buildSettings[@"FULL_PRODUCT_NAME"],
+                             info.buildSettings[Xcode_FULL_PRODUCT_NAME],
                              bucketCount,
                              [senTestListChunk count]];
         }

@@ -21,6 +21,7 @@
 #import "SimulatorLauncher.h"
 #import "TaskUtil.h"
 #import "TestingFramework.h"
+#import "XcodeBuildSettings.h"
 #import "XCToolUtil.h"
 
 @implementation OCUnitOSXAppTestRunner
@@ -28,10 +29,10 @@
 - (void)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
                    startupError:(NSString **)startupError
 {
-  NSString *sdkName = _buildSettings[@"SDK_NAME"];
+  NSString *sdkName = _buildSettings[Xcode_SDK_NAME];
   NSAssert([sdkName hasPrefix:@"macosx"], @"Unexpected SDK: %@", sdkName);
 
-  NSString *testHostPath = _buildSettings[@"TEST_HOST"];
+  NSString *testHostPath = _buildSettings[Xcode_TEST_HOST];
   if (![[NSFileManager defaultManager] isExecutableFileAtPath:testHostPath]) {
     // It's conceivable that isExecutableFileAtPath is wrong; for example, maybe we're on
     // a wonky FS, or running as root, or running with differing real/effective UIDs.
@@ -54,16 +55,16 @@
   [task setArguments:[self testArguments]];
   [task setEnvironment:[self otestEnvironmentWithOverrides:@{
                         @"DYLD_INSERT_LIBRARIES" : [libraries componentsJoinedByString:@":"],
-                        @"DYLD_FRAMEWORK_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
-                        @"DYLD_LIBRARY_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
+                        @"DYLD_FRAMEWORK_PATH" : _buildSettings[Xcode_BUILT_PRODUCTS_DIR],
+                        @"DYLD_LIBRARY_PATH" : _buildSettings[Xcode_BUILT_PRODUCTS_DIR],
                         @"DYLD_FALLBACK_FRAMEWORK_PATH" : [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"],
                         @"NSUnbufferedIO" : @"YES",
                         @"OBJC_DISABLE_GC" : !_garbageCollection ? @"YES" : @"NO",
-                        @"XCInjectBundle" : [_buildSettings[@"BUILT_PRODUCTS_DIR"] stringByAppendingPathComponent:_buildSettings[@"FULL_PRODUCT_NAME"]],
+                        @"XCInjectBundle" : [_buildSettings[Xcode_BUILT_PRODUCTS_DIR] stringByAppendingPathComponent:_buildSettings[Xcode_FULL_PRODUCT_NAME]],
                         @"XCInjectBundleInto" : testHostPath,
                         }]];
   // For OSX test bundles only, Xcode will chdir to the project's directory.
-  [task setCurrentDirectoryPath:_buildSettings[@"PROJECT_DIR"]];
+  [task setCurrentDirectoryPath:_buildSettings[Xcode_PROJECT_DIR]];
 
   LaunchTaskAndFeedOuputLinesToBlock(task,
                                      @"running otest/xctest on test bundle",

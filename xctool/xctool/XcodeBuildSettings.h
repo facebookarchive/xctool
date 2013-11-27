@@ -16,17 +16,16 @@
 
 #import <Foundation/Foundation.h>
 
-@interface OCUnitTestQueryRunner : NSObject {
-  NSDictionary *_buildSettings;
-}
-
-@property (nonatomic, assign) cpu_type_t cpuType;
-
-- (instancetype)initWithBuildSettings:(NSDictionary *)buildSettings
-                          withCpuType:(cpu_type_t)cpuType;
-- (NSTask *)createTaskForQuery NS_RETURNS_RETAINED;
-- (NSArray *)runQueryWithError:(NSString **)error;
-- (NSString *)bundlePath;
-- (NSString *)testHostPath;
-
-@end
+NSString * const Xcode_BUILT_PRODUCTS_DIR;
+NSString * const Xcode_EFFECTIVE_PLATFORM_NAME;
+NSString * const Xcode_FULL_PRODUCT_NAME;
+NSString * const Xcode_GCC_ENABLE_OBJC_GC;
+NSString * const Xcode_OBJROOT;
+NSString * const Xcode_PLATFORM_NAME;
+NSString * const Xcode_PROJECT_DIR;
+NSString * const Xcode_SHARED_PRECOMPS_DIR;
+NSString * const Xcode_SDK_NAME;
+NSString * const Xcode_SDKROOT;
+NSString * const Xcode_SYMROOT;
+NSString * const Xcode_TEST_HOST;
+NSString * const Xcode_TARGET_BUILD_DIR;

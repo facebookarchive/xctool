@@ -19,14 +19,15 @@
 
 #import "TaskUtil.h"
 #import "TestingFramework.h"
+#import "XcodeBuildSettings.h"
 #import "XCToolUtil.h"
 
 @implementation OCUnitOSXLogicTestRunner
 
 - (NSDictionary *)environmentOverrides
 {
-  return @{@"DYLD_FRAMEWORK_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
-           @"DYLD_LIBRARY_PATH" : _buildSettings[@"BUILT_PRODUCTS_DIR"],
+  return @{@"DYLD_FRAMEWORK_PATH" : _buildSettings[Xcode_BUILT_PRODUCTS_DIR],
+           @"DYLD_LIBRARY_PATH" : _buildSettings[Xcode_BUILT_PRODUCTS_DIR],
            @"DYLD_FALLBACK_FRAMEWORK_PATH" : [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"],
            @"NSUnbufferedIO" : @"YES",
            @"OBJC_DISABLE_GC" : !_garbageCollection ? @"YES" : @"NO",
@@ -48,7 +49,7 @@
 - (void)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
                    startupError:(NSString **)startupError
 {
-  NSAssert([_buildSettings[@"SDK_NAME"] hasPrefix:@"macosx"], @"Should be a macosx SDK.");
+  NSAssert([_buildSettings[Xcode_SDK_NAME] hasPrefix:@"macosx"], @"Should be a macosx SDK.");
 
   NSString *testBundlePath = [self testBundlePath];
   BOOL bundleExists = [[NSFileManager defaultManager] fileExistsAtPath:testBundlePath];
@@ -62,7 +63,7 @@
     @autoreleasepool {
       NSTask *task = [self otestTaskWithTestBundle:testBundlePath];
       // For OSX test bundles only, Xcode will chdir to the project's directory.
-      [task setCurrentDirectoryPath:_buildSettings[@"PROJECT_DIR"]];
+      [task setCurrentDirectoryPath:_buildSettings[Xcode_PROJECT_DIR]];
 
       LaunchTaskAndFeedOuputLinesToBlock(task,
                                          @"running otest/xctest on test bundle",
