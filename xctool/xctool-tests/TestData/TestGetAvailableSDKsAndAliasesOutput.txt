@@ -1,0 +1,43 @@
+MacOSX10.8.sdk - OS X 10.8 (macosx10.8)
+SDKVersion: 10.8
+Path: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk
+PlatformVersion: 1.1
+PlatformPath: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform
+ProductBuildVersion: 12F37
+ProductCopyright: 1983-2013 Apple Inc.
+ProductName: Mac OS X
+ProductUserVisibleVersion: 10.8.5
+ProductVersion: 10.8.5
+
+MacOSX10.9.sdk - OS X 10.9 (macosx10.9)
+SDKVersion: 10.9
+Path: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk
+PlatformVersion: 1.1
+PlatformPath: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform
+ProductBuildVersion: 13A595
+ProductCopyright: 1983-2013 Apple Inc.
+ProductName: Mac OS X
+ProductUserVisibleVersion: 10.9
+ProductVersion: 10.9
+
+iPhoneOS7.0.sdk - iOS 7.0 (iphoneos7.0)
+SDKVersion: 7.0
+Path: /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk
+PlatformVersion: 7.0
+PlatformPath: /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform
+ProductBuildVersion: 11B508
+ProductCopyright: 1983-2013 Apple Inc.
+ProductName: iPhone OS
+ProductVersion: 7.0.3
+
+iPhoneSimulator7.0.sdk - Simulator - iOS 7.0 (iphonesimulator7.0)
+SDKVersion: 7.0
+Path: /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.0.sdk
+PlatformPath: /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform
+ProductBuildVersion: 11B508
+ProductCopyright: 1983-2013 Apple Inc.
+ProductName: iPhone OS
+ProductVersion: 7.0.3
+
+Xcode 5.0.1
+Build version 5A2053
