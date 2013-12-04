@@ -28,6 +28,10 @@
 		28E44D4D1810FA5300211BD5 /* ParseTestName.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E44D4C1810FA5300211BD5 /* ParseTestName.m */; };
 		28E44D4E1810FBE100211BD5 /* ParseTestName.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E44D4C1810FA5300211BD5 /* ParseTestName.m */; };
 		28E44D4F1810FBE500211BD5 /* ParseTestName.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E44D4C1810FA5300211BD5 /* ParseTestName.m */; };
+		28EC25FA184EAA680061C3B2 /* XcodeRequiredVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 28EC25F9184EAA680061C3B2 /* XcodeRequiredVersion.m */; };
+		28EC25FB184EAA680061C3B2 /* XcodeRequiredVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 28EC25F9184EAA680061C3B2 /* XcodeRequiredVersion.m */; };
+		28EC25FC184EAA680061C3B2 /* XcodeRequiredVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 28EC25F9184EAA680061C3B2 /* XcodeRequiredVersion.m */; };
+		28EC25FD184EAA680061C3B2 /* XcodeRequiredVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 28EC25F9184EAA680061C3B2 /* XcodeRequiredVersion.m */; };
 		AA318BE417E9A8C000BF159E /* TestingFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = AA318BE317E9A8C000BF159E /* TestingFramework.h */; };
 		AA318BE617E9AA7400BF159E /* TestingFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = AA318BE517E9AA7400BF159E /* TestingFramework.m */; };
 		AA318BE717E9AA7400BF159E /* TestingFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = AA318BE517E9AA7400BF159E /* TestingFramework.m */; };
@@ -78,6 +82,7 @@
 		2887CC3A181E0D8600B0D049 /* DuplicateTestNameFix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DuplicateTestNameFix.m; path = ../Common/DuplicateTestNameFix.m; sourceTree = "<group>"; };
 		28E44D4B1810FA5300211BD5 /* ParseTestName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParseTestName.h; path = ../Common/ParseTestName.h; sourceTree = "<group>"; };
 		28E44D4C1810FA5300211BD5 /* ParseTestName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ParseTestName.m; path = ../Common/ParseTestName.m; sourceTree = "<group>"; };
+		28EC25F9184EAA680061C3B2 /* XcodeRequiredVersion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XcodeRequiredVersion.m; path = ../Common/XcodeRequiredVersion.m; sourceTree = "<group>"; };
 		AA318BE317E9A8C000BF159E /* TestingFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestingFramework.h; path = ../Common/TestingFramework.h; sourceTree = "<group>"; };
 		AA318BE517E9AA7400BF159E /* TestingFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestingFramework.m; path = ../Common/TestingFramework.m; sourceTree = "<group>"; };
 		CD66612C175D1A890057DF4D /* otest-query-osx */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "otest-query-osx"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -157,6 +162,7 @@
 				2887CC34181DDB5F00B0D049 /* Swizzle.m */,
 				AA318BE317E9A8C000BF159E /* TestingFramework.h */,
 				AA318BE517E9AA7400BF159E /* TestingFramework.m */,
+				28EC25F9184EAA680061C3B2 /* XcodeRequiredVersion.m */,
 			);
 			name = Common;
 			sourceTree = "<group>";
@@ -343,6 +349,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				28EC25FC184EAA680061C3B2 /* XcodeRequiredVersion.m in Sources */,
 				2887CC3E181E0D8600B0D049 /* DuplicateTestNameFix.m in Sources */,
 				28E44D4F1810FBE500211BD5 /* ParseTestName.m in Sources */,
 				2887CC38181DDB5F00B0D049 /* Swizzle.m in Sources */,
@@ -356,6 +363,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				28EC25FD184EAA680061C3B2 /* XcodeRequiredVersion.m in Sources */,
 				2866076D18347528000ACB87 /* OtestQuery.m in Sources */,
 				2866076E18347528000ACB87 /* otest-query-lib.m in Sources */,
 				2866076918347520000ACB87 /* DuplicateTestNameFix.m in Sources */,
@@ -369,6 +377,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				28EC25FB184EAA680061C3B2 /* XcodeRequiredVersion.m in Sources */,
 				2887CC3D181E0D8600B0D049 /* DuplicateTestNameFix.m in Sources */,
 				28E44D4E1810FBE100211BD5 /* ParseTestName.m in Sources */,
 				2887CC37181DDB5F00B0D049 /* Swizzle.m in Sources */,
@@ -382,6 +391,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				28EC25FA184EAA680061C3B2 /* XcodeRequiredVersion.m in Sources */,
 				2887CC3C181E0D8600B0D049 /* DuplicateTestNameFix.m in Sources */,
 				CD9049051756C5B1006CF16D /* main.m in Sources */,
 				2887CC36181DDB5F00B0D049 /* Swizzle.m in Sources */,

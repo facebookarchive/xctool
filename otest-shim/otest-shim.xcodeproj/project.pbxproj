@@ -37,6 +37,8 @@
 		28E44D541811024F00211BD5 /* ParseTestName.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E44D511811024F00211BD5 /* ParseTestName.m */; };
 		28E44D551811024F00211BD5 /* ParseTestName.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E44D511811024F00211BD5 /* ParseTestName.m */; };
 		28E9B9DF16C32E9A00A52E4D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283CCA9416C2EE4C00F2E343 /* Foundation.framework */; };
+		28EC2602184EABF50061C3B2 /* XcodeRequiredVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 28EC2601184EABF50061C3B2 /* XcodeRequiredVersion.m */; };
+		28EC2603184EABF50061C3B2 /* XcodeRequiredVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 28EC2601184EABF50061C3B2 /* XcodeRequiredVersion.m */; };
 		3892D7591815ACE200E68652 /* EventGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 3892D7571815ACE200E68652 /* EventGenerator.h */; };
 		3892D75A1815ACE200E68652 /* EventGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 3892D7571815ACE200E68652 /* EventGenerator.h */; };
 		3892D75B1815ACE200E68652 /* EventGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D7581815ACE200E68652 /* EventGenerator.m */; };
@@ -73,6 +75,7 @@
 		28E44D501811024F00211BD5 /* ParseTestName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParseTestName.h; sourceTree = "<group>"; };
 		28E44D511811024F00211BD5 /* ParseTestName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParseTestName.m; sourceTree = "<group>"; };
 		28E9B98216C2F2D400A52E4D /* otest-shim-ios.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "otest-shim-ios.xcconfig"; sourceTree = "<group>"; };
+		28EC2601184EABF50061C3B2 /* XcodeRequiredVersion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodeRequiredVersion.m; sourceTree = "<group>"; };
 		3892D7571815ACE200E68652 /* EventGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventGenerator.h; sourceTree = "<group>"; };
 		3892D7581815ACE200E68652 /* EventGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventGenerator.m; sourceTree = "<group>"; };
 		AA318BE917E9B43000BF159E /* XCTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCTest.h; sourceTree = "<group>"; };
@@ -164,10 +167,10 @@
 		28897FC6173E50F9004BA024 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				2866077318348676000ACB87 /* dyld_priv.h */,
-				2866077418348676000ACB87 /* dyld-interposing.h */,
 				2887CC3F181E0D9200B0D049 /* DuplicateTestNameFix.h */,
 				2887CC40181E0D9200B0D049 /* DuplicateTestNameFix.m */,
+				2866077418348676000ACB87 /* dyld-interposing.h */,
+				2866077318348676000ACB87 /* dyld_priv.h */,
 				3892D7571815ACE200E68652 /* EventGenerator.h */,
 				3892D7581815ACE200E68652 /* EventGenerator.m */,
 				28E44D501811024F00211BD5 /* ParseTestName.h */,
@@ -177,6 +180,7 @@
 				28897FC8173E50F9004BA024 /* Swizzle.m */,
 				2887CC45181E145D00B0D049 /* TestingFramework.h */,
 				2887CC46181E145D00B0D049 /* TestingFramework.m */,
+				28EC2601184EABF50061C3B2 /* XcodeRequiredVersion.m */,
 				AA318BE917E9B43000BF159E /* XCTest.h */,
 			);
 			name = Common;
@@ -294,6 +298,7 @@
 				3892D75C1815ACE200E68652 /* EventGenerator.m in Sources */,
 				282BFE2B1716044C0022F9FF /* otest-shim.m in Sources */,
 				28E44D551811024F00211BD5 /* ParseTestName.m in Sources */,
+				28EC2603184EABF50061C3B2 /* XcodeRequiredVersion.m in Sources */,
 				28897FCC173E50F9004BA024 /* Swizzle.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -309,6 +314,7 @@
 				3892D75B1815ACE200E68652 /* EventGenerator.m in Sources */,
 				283CCA9A16C2EE4C00F2E343 /* otest-shim.m in Sources */,
 				28E44D541811024F00211BD5 /* ParseTestName.m in Sources */,
+				28EC2602184EABF50061C3B2 /* XcodeRequiredVersion.m in Sources */,
 				28897FCB173E50F9004BA024 /* Swizzle.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -11,6 +11,7 @@
 		28AF3221182716E20051F658 /* sim_shim.m in Sources */ = {isa = PBXBuildFile; fileRef = 28AF3220182716E20051F658 /* sim_shim.m */; };
 		28D9C5A0182725DC0032FEA8 /* Swizzle.h in Headers */ = {isa = PBXBuildFile; fileRef = 28D9C58E182725DC0032FEA8 /* Swizzle.h */; };
 		28D9C5A1182725DC0032FEA8 /* Swizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 28D9C58F182725DC0032FEA8 /* Swizzle.m */; };
+		28EC2605184EAC0A0061C3B2 /* XcodeRequiredVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 28EC2604184EAC0A0061C3B2 /* XcodeRequiredVersion.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +26,7 @@
 		28D9C57F182725030032FEA8 /* sim-shim.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "sim-shim.xcconfig"; sourceTree = "<group>"; };
 		28D9C58E182725DC0032FEA8 /* Swizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Swizzle.h; sourceTree = "<group>"; };
 		28D9C58F182725DC0032FEA8 /* Swizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Swizzle.m; sourceTree = "<group>"; };
+		28EC2604184EAC0A0061C3B2 /* XcodeRequiredVersion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodeRequiredVersion.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +94,7 @@
 				286607751834870F000ACB87 /* dyld-interposing.h */,
 				28D9C58E182725DC0032FEA8 /* Swizzle.h */,
 				28D9C58F182725DC0032FEA8 /* Swizzle.m */,
+				28EC2604184EAC0A0061C3B2 /* XcodeRequiredVersion.m */,
 			);
 			name = Common;
 			path = ../Common;
@@ -160,6 +163,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				28D9C5A1182725DC0032FEA8 /* Swizzle.m in Sources */,
+				28EC2605184EAC0A0061C3B2 /* XcodeRequiredVersion.m in Sources */,
 				28AF3221182716E20051F658 /* sim_shim.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
