@@ -598,11 +598,6 @@ static NSString *abbreviatePath(NSString *string) {
     [attributes addObject:event[kReporter_BeginOCUnit_TestTypeKey]];
   }
 
-  if (event[kReporter_BeginOCUnit_GCEnabledKey]) {
-    [attributes addObject:[NSString stringWithFormat:@"GC %@",
-                           [event[kReporter_BeginOCUnit_GCEnabledKey] boolValue] ? @"ON" : @"OFF"]];
-  }
-
   NSString *attributesString = nil;
 
   if ([attributes count] > 0) {

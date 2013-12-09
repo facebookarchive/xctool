@@ -54,7 +54,6 @@
                allTestCases:(NSArray *)allTestCases
                   arguments:(NSArray *)arguments
                 environment:(NSDictionary *)environment
-          garbageCollection:(BOOL)garbageCollection
              freshSimulator:(BOOL)freshSimulator
                freshInstall:(BOOL)freshInstall
               simulatorType:(NSString *)simulatorType

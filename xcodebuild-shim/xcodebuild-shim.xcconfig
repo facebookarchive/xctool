@@ -19,10 +19,4 @@
 #include "../Configurations/Install.xcconfig"
 XT_INSTALL_DIR = lib
 
-// xcodebuild uses GC, so we need this or we won't be able to insert the lib into xcodebuild.
-// By setting the main value to 'unsupported' and then setting the arch-specific setting to
-// 'supported', we're able to suppress Xcode's "Target Integrity" warning about GC being deprecated.
-GCC_ENABLE_OBJC_GC = unsupported
-GCC_ENABLE_OBJC_GC[arch=x86_64] = supported
-
 MACOSX_DEPLOYMENT_TARGET = 10.7

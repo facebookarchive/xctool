@@ -24,9 +24,3 @@ MACOSX_DEPLOYMENT_TARGET = 10.7
 // Needed so we can #import from SenTestingKit.
 OTHER_CFLAGS = -F"$(DEVELOPER_FRAMEWORKS_DIR)"
 OTHER_LDFLAGS = -F"$(DEVELOPER_FRAMEWORKS_DIR)" -weak_framework SenTestingKit
-
-// OSX tests or test hosts may use GC, so we have to be GC friendly.
-// By setting the main value to 'unsupported' and then setting the arch-specific setting to
-// 'supported', we're able to suppress Xcode's "Target Integrity" warning about GC being deprecated.
-GCC_ENABLE_OBJC_GC = unsupported
-GCC_ENABLE_OBJC_GC[arch=x86_64] = supported

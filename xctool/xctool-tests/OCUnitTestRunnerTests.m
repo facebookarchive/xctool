@@ -32,7 +32,6 @@ static OCUnitTestRunner *TestRunnerWithTestLists(Class cls, NSDictionary *settin
                                 allTestCases:allTestCases
                                    arguments:arguments
                                  environment:environment
-                           garbageCollection:NO
                               freshSimulator:NO
                                 freshInstall:NO
                                simulatorType:nil

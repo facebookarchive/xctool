@@ -78,7 +78,6 @@
                allTestCases:(NSArray *)allTestCases
                   arguments:(NSArray *)arguments
                 environment:(NSDictionary *)environment
-          garbageCollection:(BOOL)garbageCollection
              freshSimulator:(BOOL)freshSimulator
                freshInstall:(BOOL)freshInstall
               simulatorType:(NSString *)simulatorType
@@ -90,7 +89,6 @@
     _allTestCases = [allTestCases retain];
     _arguments = [arguments retain];
     _environment = [environment retain];
-    _garbageCollection = garbageCollection;
     _freshSimulator = freshSimulator;
     _freshInstall = freshInstall;
     _simulatorType = [simulatorType retain];

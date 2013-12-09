@@ -330,7 +330,6 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				"GCC_ENABLE_OBJC_GC[arch=x86_64]" = supported;
 				GCC_PREFIX_HEADER = "xcodebuild-shim/xcodebuild-shim-Prefix.pch";
 				PRODUCT_NAME = "xcodebuild-shim";
 			};

@@ -108,7 +108,6 @@ static NSTask *OtestShimTask(NSString *platformName,
                                                                        allTestCases:allTests
                                                                           arguments:@[]
                                                                         environment:@{}
-                                                                  garbageCollection:NO
                                                                      freshSimulator:NO
                                                                        freshInstall:NO
                                                                       simulatorType:nil

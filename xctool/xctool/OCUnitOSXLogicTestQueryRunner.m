@@ -27,15 +27,7 @@
 {
   NSString *builtProductsDir = _buildSettings[Xcode_BUILT_PRODUCTS_DIR];
 
-  BOOL disableGC = YES;
-  NSString *gccEnableObjcGC = _buildSettings[Xcode_GCC_ENABLE_OBJC_GC];
-  if ([gccEnableObjcGC isEqualToString:@"required"] ||
-      [gccEnableObjcGC isEqualToString:@"supported"]) {
-    disableGC = NO;
-  }
-
   NSTask *task = CreateTaskInSameProcessGroup();
-
   [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-osx"]];
   [task setArguments:@[ [self bundlePath] ]];
   [task setEnvironment:@{
@@ -43,7 +35,7 @@
     @"DYLD_LIBRARY_PATH" : builtProductsDir,
     @"DYLD_FALLBACK_FRAMEWORK_PATH" : [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"],
     @"NSUnbufferedIO" : @"YES",
-    @"OBJC_DISABLE_GC" : disableGC ? @"YES" : @"NO"
+    @"OBJC_DISABLE_GC" : @"YES",
   }];
 
   return task;

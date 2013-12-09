@@ -19,7 +19,6 @@
 NSString * const Xcode_BUILT_PRODUCTS_DIR = @"BUILT_PRODUCTS_DIR";
 NSString * const Xcode_EFFECTIVE_PLATFORM_NAME = @"EFFECTIVE_PLATFORM_NAME";
 NSString * const Xcode_FULL_PRODUCT_NAME = @"FULL_PRODUCT_NAME";
-NSString * const Xcode_GCC_ENABLE_OBJC_GC = @"GCC_ENABLE_OBJC_GC";
 NSString * const Xcode_OBJROOT = @"OBJROOT";
 NSString * const Xcode_PLATFORM_NAME = @"PLATFORM_NAME";
 NSString * const Xcode_PROJECT_DIR = @"PROJECT_DIR";
