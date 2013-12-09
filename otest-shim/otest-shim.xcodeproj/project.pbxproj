@@ -232,6 +232,7 @@
 				282BFE15171602C60022F9FF /* Sources */,
 				282BFE16171602C60022F9FF /* Frameworks */,
 				282BFE17171602C60022F9FF /* Headers */,
+				28AA035018564F2F00854B0E /* Run Script (assert_universal) */,
 			);
 			buildRules = (
 			);
@@ -249,6 +250,7 @@
 				283CCA8816C2EE4C00F2E343 /* Sources */,
 				283CCA8916C2EE4C00F2E343 /* Frameworks */,
 				283CCA8A16C2EE4C00F2E343 /* Headers */,
+				28AA034F18564F1D00854B0E /* Run Script (assert_universal) */,
 			);
 			buildRules = (
 			);
@@ -285,6 +287,39 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		28AA034F18564F1D00854B0E /* Run Script (assert_universal) */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script (assert_universal)";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${PROJECT_DIR}/../scripts/RunScripts/assert_universal.sh";
+			showEnvVarsInLog = 0;
+		};
+		28AA035018564F2F00854B0E /* Run Script (assert_universal) */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script (assert_universal)";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${PROJECT_DIR}/../scripts/RunScripts/assert_universal.sh";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		282BFE15171602C60022F9FF /* Sources */ = {

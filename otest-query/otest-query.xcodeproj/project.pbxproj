@@ -254,6 +254,7 @@
 				283758D517CED68F006E1544 /* Sources */,
 				283758D617CED68F006E1544 /* Frameworks */,
 				283758D717CED68F006E1544 /* Headers */,
+				28AA034D18564EEC00854B0E /* Run Script (assert_universal) */,
 			);
 			buildRules = (
 			);
@@ -271,6 +272,7 @@
 				28660743183474A7000ACB87 /* Sources */,
 				28660744183474A7000ACB87 /* Frameworks */,
 				28660745183474A7000ACB87 /* Headers */,
+				28AA034E18564EF800854B0E /* Run Script (assert_universal) */,
 			);
 			buildRules = (
 			);
@@ -288,6 +290,7 @@
 				CD666128175D1A890057DF4D /* Sources */,
 				CD666129175D1A890057DF4D /* Frameworks */,
 				CD66612A175D1A890057DF4D /* CopyFiles */,
+				28AA034C18564ED000854B0E /* Run Script (assert_universal) */,
 			);
 			buildRules = (
 			);
@@ -305,6 +308,7 @@
 				CD9048FA1756C5B1006CF16D /* Sources */,
 				CD9048FB1756C5B1006CF16D /* Frameworks */,
 				CD9048FC1756C5B1006CF16D /* CopyFiles */,
+				28AA034B18564D2500854B0E /* Run Script (assert_universal) */,
 			);
 			buildRules = (
 			);
@@ -343,6 +347,69 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		28AA034B18564D2500854B0E /* Run Script (assert_universal) */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script (assert_universal)";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${PROJECT_DIR}/../scripts/RunScripts/assert_universal.sh";
+			showEnvVarsInLog = 0;
+		};
+		28AA034C18564ED000854B0E /* Run Script (assert_universal) */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script (assert_universal)";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${PROJECT_DIR}/../scripts/RunScripts/assert_universal.sh";
+			showEnvVarsInLog = 0;
+		};
+		28AA034D18564EEC00854B0E /* Run Script (assert_universal) */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script (assert_universal)";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${PROJECT_DIR}/../scripts/RunScripts/assert_universal.sh";
+			showEnvVarsInLog = 0;
+		};
+		28AA034E18564EF800854B0E /* Run Script (assert_universal) */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script (assert_universal)";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${PROJECT_DIR}/../scripts/RunScripts/assert_universal.sh";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		283758D517CED68F006E1544 /* Sources */ = {
@@ -441,7 +508,6 @@
 				);
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNUSED_FUNCTION = YES;
-				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -468,9 +534,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CD666138175D1B090057DF4D /* otest-query-osx.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_PREFIX_HEADER = "otest-query/otest-query-Prefix.pch";
-				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -479,7 +543,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CD666138175D1B090057DF4D /* otest-query-osx.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_PREFIX_HEADER = "otest-query/otest-query-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -511,7 +574,6 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = macosx;
 			};
 			name = Debug;

@@ -121,6 +121,7 @@
 				28AF320F182716E20051F658 /* Sources */,
 				28AF3210182716E20051F658 /* Frameworks */,
 				28AF3211182716E20051F658 /* Headers */,
+				28AA035118564F4800854B0E /* Run Script (assert_universal) */,
 			);
 			buildRules = (
 			);
@@ -156,6 +157,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		28AA035118564F4800854B0E /* Run Script (assert_universal) */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script (assert_universal)";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${PROJECT_DIR}/../scripts/RunScripts/assert_universal.sh";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		28AF320F182716E20051F658 /* Sources */ = {
