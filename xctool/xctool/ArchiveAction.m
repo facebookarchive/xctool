@@ -19,7 +19,7 @@
 
 - (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
-  NSMutableArray *arguments = [[options xcodeBuildArgumentsForSubject] mutableCopy];
+  NSMutableArray *arguments = [[[options xcodeBuildArgumentsForSubject] mutableCopy] autorelease];
   [arguments addObjectsFromArray:[options commonXcodeBuildArgumentsForSchemeAction:@"ArchiveAction"
                                                                   xcodeSubjectInfo:xcodeSubjectInfo]];
   [arguments addObject:@"archive"];
