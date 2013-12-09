@@ -27,8 +27,6 @@ then
   exit 0
 fi
 
-source "${XCTOOL_DIR}"/scripts/build_settings.include
-
 # xcodebuild intermittently crashes while building xctool.
 #
 # With Xcode 4, the crash was "Exception: Collection ... was mutated while
@@ -53,7 +51,6 @@ while true; do
     -IDECustomBuildLocationType=Absolute \
     -IDECustomBuildProductsPath="$BUILD_OUTPUT_DIR/Products" \
     -IDECustomBuildIntermediatesPath="$BUILD_OUTPUT_DIR/Intermediates" \
-    ${XT_BUILD_SETTINGS_ARRAY[@]} \
     "$@" 2>&1 | /usr/bin/tee "$BUILD_OUTPUT_PATH"
   BUILD_RESULT=${PIPESTATUS[0]}
 

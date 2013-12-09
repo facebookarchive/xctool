@@ -48,9 +48,6 @@
          location = "group:Install.xcconfig">
       </FileRef>
       <FileRef
-         location = "group:iOS-Simulator-Dylib.xcconfig">
-      </FileRef>
-      <FileRef
          location = "group:Project.xcconfig">
       </FileRef>
    </Group>

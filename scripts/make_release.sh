@@ -25,8 +25,6 @@ OUTPUT_DIR=$(mktemp -d -t xctool-release)
 BUILD_OUTPUT_DIR="$OUTPUT_DIR"/build
 RELEASE_OUTPUT_DIR="$OUTPUT_DIR"/release
 
-source "${XCTOOL_DIR}"/scripts/build_settings.include
-
 xcodebuild \
   -workspace "$XCTOOL_DIR"/xctool.xcworkspace \
   -scheme xctool \
@@ -35,7 +33,6 @@ xcodebuild \
   -IDECustomBuildLocationType=Absolute \
   -IDECustomBuildProductsPath="$BUILD_OUTPUT_DIR/Products" \
   -IDECustomBuildIntermediatesPath="$BUILD_OUTPUT_DIR/Intermediates" \
-  ${XT_BUILD_SETTINGS_ARRAY[@]} \
   XT_INSTALL_ROOT="$RELEASE_OUTPUT_DIR"
 
 if [[ ! -x "$RELEASE_OUTPUT_DIR"/bin/xctool ]]; then
@@ -51,7 +48,6 @@ fi
   -IDECustomBuildLocationType=Absolute \
   -IDECustomBuildProductsPath="$BUILD_OUTPUT_DIR/Products" \
   -IDECustomBuildIntermediatesPath="$BUILD_OUTPUT_DIR/Intermediates" \
-  ${XT_BUILD_SETTINGS_ARRAY[@]} \
   XT_INSTALL_ROOT="$RELEASE_OUTPUT_DIR" \
   test
 

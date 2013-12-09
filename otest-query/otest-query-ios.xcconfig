@@ -15,11 +15,11 @@
 //
 
 #include "../Configurations/Project.xcconfig"
-#include "../Configurations/iOS-Simulator-Dylib.xcconfig"
 
 #include "../Configurations/Install.xcconfig"
 XT_INSTALL_DIR = libexec
 
-OTHER_CFLAGS = $(XT_IOS_SIMULATOR_CFLAGS)
-OTHER_LDFLAGS = $(XT_IOS_SIMULATOR_LDFLAGS) -weak_framework SenTestingKit
+OTHER_LDFLAGS = -weak_framework SenTestingKit
 
+LD = $(PROJECT_DIR)/../Vendor/clang-as-ios-dylib/links/ld-iphonesimulator-latest-targeting-5.0
+CC = $(PROJECT_DIR)/../Vendor/clang-as-ios-dylib/links/cc-iphonesimulator-latest-targeting-5.0
