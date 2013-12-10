@@ -47,7 +47,7 @@ NSArray *TestsFromSuite(id testSuite)
 // Key used by objc_setAssociatedObject
 static int TestDescriptionKey;
 
-static NSString *TestCase_description(id self, SEL cmd)
+static NSString *TestCase_nameOrDescription(id self, SEL cmd)
 {
   id description = objc_getAssociatedObject(self, &TestDescriptionKey);
   NSCAssert(description != nil, @"Value for `TestNameKey` wasn't set.");
@@ -97,7 +97,12 @@ static id TestProbe_specifiedTestSuite(Class cls, SEL cmd)
   }
 
   for (Class cls in classesToSwizzle) {
-    class_replaceMethod(cls, @selector(description), (IMP)TestCase_description, "@@:");
+    // In all versions of XCTest.framework and SenTestingKit.framework I can
+    // find, the `name` method generates the actual string, and `description`
+    // just calls `name`.  We override both, because we don't know which things
+    // call which.
+    class_replaceMethod(cls, @selector(description), (IMP)TestCase_nameOrDescription, "@@:");
+    class_replaceMethod(cls, @selector(name), (IMP)TestCase_nameOrDescription, "@@:");
   }
 
   return testSuite;
