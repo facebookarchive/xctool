@@ -250,7 +250,7 @@
          arrayByAddingObjectsFromArray:@[
          @"-project", buildable.projectPath,
          @"-target", buildable.target,
-         @"RUN_CLANG_STATIC_ANALYZER=YES",
+         @"analyze",
          [NSString stringWithFormat:@"OBJROOT=%@", xcodeSubjectInfo.objRoot],
          [NSString stringWithFormat:@"SYMROOT=%@", xcodeSubjectInfo.symRoot],
          [NSString stringWithFormat:@"SHARED_PRECOMPS_DIR=%@", xcodeSubjectInfo.sharedPrecompsDir],
@@ -260,8 +260,7 @@
     }
   } else {
     NSArray *args = [buildArgs arrayByAddingObjectsFromArray:@[
-                     @"RUN_CLANG_STATIC_ANALYZER=YES",
-                     @"build"]];
+                     @"analyze"]];
     success = RunXcodebuildAndFeedEventsToReporters(args, @"analyze", [options scheme], reporters);
   }
 
