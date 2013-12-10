@@ -171,7 +171,8 @@
                                     firstMatchInString:path
                                     options:0
                                     range:NSMakeRange(0, path.length)];
-    if (result.range.location == NSNotFound) {
+
+    if (result == nil || result.range.location == NSNotFound) {
       continue;
     }
 
