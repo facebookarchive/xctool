@@ -109,17 +109,11 @@ def get_iphonesimulator_sdk_versions_for_arch(developer_dir, arch):
         re.match(r'iPhoneSimulator(.+?)\.sdk', sdk_name).group(1) for sdk_name
         in sdk_names]
 
-    # Any SDK earlier than 7.0 only supports i386 builds.
-    if arch == 'i386':
-        sdk_versions = [
-            version for version in sdk_versions
-            if float(version) < 7.0]
-    elif arch == 'x86_64':
+    # Only 7.0+ supports x86_64 builds.
+    if arch == 'x86_64':
         sdk_versions = [
             version for version in sdk_versions
             if float(version) >= 7.0]
-    else:
-        raise Exception('unexpected arch %s' % arch)
 
     if len(sdk_versions) == 0:
         raise Exception('No matching SDK for arch %s' % arch)
