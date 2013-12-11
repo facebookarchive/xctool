@@ -274,7 +274,7 @@
 		28E9B9D416C3275200A52E4D /* OCUnitIOSLogicTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = OCUnitIOSLogicTestRunner.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		28E9B9D516C3275200A52E4D /* OCUnitTestRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUnitTestRunner.h; sourceTree = "<group>"; };
 		28E9B9D616C3275200A52E4D /* OCUnitTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitTestRunner.m; sourceTree = "<group>"; };
-		28E9B9DE16C3278D00A52E4D /* iPhoneSimulatorRemoteClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iPhoneSimulatorRemoteClient.h; sourceTree = "<group>"; };
+		28E9B9DE16C3278D00A52E4D /* DTiPhoneSimulatorRemoteClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTiPhoneSimulatorRemoteClient.h; sourceTree = "<group>"; };
 		28EAB46017E29647005EB9CF /* NSConcreteTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSConcreteTask.h; sourceTree = "<group>"; };
 		28F489F117973B6100068E00 /* FakeFileHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeFileHandle.h; sourceTree = "<group>"; };
 		28F489F217973B6100068E00 /* FakeFileHandle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeFileHandle.m; sourceTree = "<group>"; };
@@ -389,7 +389,7 @@
 		283CCA3916C2EA3700F2E343 = {
 			isa = PBXGroup;
 			children = (
-				28E9B9DD16C3278D00A52E4D /* iPhoneSimulatorRemoteClient */,
+				28E9B9DD16C3278D00A52E4D /* DTiPhoneSimulatorRemoteClient */,
 				28E9B98316C2F2D900A52E4D /* xctool.xcconfig */,
 				287E0DC417CD60B00088A264 /* xctool-tests.xcconfig */,
 				28897FCD173E6215004BA024 /* Common */,
@@ -581,11 +581,12 @@
 			path = ../Common;
 			sourceTree = "<group>";
 		};
-		28E9B9DD16C3278D00A52E4D /* iPhoneSimulatorRemoteClient */ = {
+		28E9B9DD16C3278D00A52E4D /* DTiPhoneSimulatorRemoteClient */ = {
 			isa = PBXGroup;
 			children = (
-				28E9B9DE16C3278D00A52E4D /* iPhoneSimulatorRemoteClient.h */,
+				28E9B9DE16C3278D00A52E4D /* DTiPhoneSimulatorRemoteClient.h */,
 			);
+			name = DTiPhoneSimulatorRemoteClient;
 			path = iPhoneSimulatorRemoteClient;
 			sourceTree = "<group>";
 		};

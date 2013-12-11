@@ -19,7 +19,6 @@
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
-#import "iPhoneSimulatorRemoteClient.h"
 
 @implementation OCUnitOSXLogicTestQueryRunner
 

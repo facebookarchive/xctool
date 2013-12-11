@@ -16,7 +16,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "iPhoneSimulatorRemoteClient.h"
+#import "DTiPhoneSimulatorRemoteClient.h"
 
 @interface SimulatorLauncher : NSObject <DTiPhoneSimulatorSessionDelegate>
 {
@@ -30,6 +30,7 @@
 
 @property (nonatomic, retain) NSError *launchError;
 
++ (void)loadAllPlatforms;
 - (id)initWithSessionConfig:(DTiPhoneSimulatorSessionConfig *)sessionConfig
                  deviceName:(NSString *)deviceName;
 - (BOOL)launchAndWaitForExit;

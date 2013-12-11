@@ -15,9 +15,10 @@
 //
 
 DEVELOPER_PRIVATE_FRAMEWORK_DIR = "$(DEVELOPER_DIR)"/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks
+SHARED_FRAMEWORKS_DIR = "$(DEVELOPER_DIR)"/../SharedFrameworks
 
 // xctool-tests will strongly link iPhoneSimulatorRemoteClient - we don't need
 // the same dynamic loading magic that the main 'xctool' executable needs.
-OTHER_LDFLAGS = -F$(DEVELOPER_PRIVATE_FRAMEWORK_DIR) -framework iPhoneSimulatorRemoteClient -Wl,-rpath -Wl,$(DEVELOPER_PRIVATE_FRAMEWORK_DIR) -Wl,-rpath -Wl,"$(DEVELOPER_DIR)"/../OtherFrameworks
+OTHER_LDFLAGS = -F$(DEVELOPER_PRIVATE_FRAMEWORK_DIR) -F$(SHARED_FRAMEWORKS_DIR) -framework DVTiPhoneSimulatorRemoteClient -framework DVTFoundation -Wl,-rpath -Wl,$(DEVELOPER_PRIVATE_FRAMEWORK_DIR) -Wl,-rpath -Wl,"$(DEVELOPER_DIR)"/../OtherFrameworks -Wl,-rpath -Wl,$(SHARED_FRAMEWORKS_DIR)
 
 FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks" "$(SRCROOT)/../Vendor"

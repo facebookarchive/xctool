@@ -121,6 +121,8 @@ static void KillSimulatorJobs()
                               _buildSettings[Xcode_FULL_PRODUCT_NAME]];
 
   DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKVersion:sdkVersion];
+  NSAssert(systemRoot != nil, @"Unable to instantiate DTiPhoneSimulatorSystemRoot");
+
   DTiPhoneSimulatorApplicationSpecifier *appSpec =
   [DTiPhoneSimulatorApplicationSpecifier specifierWithApplicationPath:testHostAppPath];
 
@@ -170,6 +172,8 @@ static void KillSimulatorJobs()
   NSString *sdkVersion = [_buildSettings[Xcode_SDK_NAME] stringByReplacingOccurrencesOfString:@"iphonesimulator"
                                                                                 withString:@""];
   DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKVersion:sdkVersion];
+  NSAssert(systemRoot != nil, @"Unable to instantiate DTiPhoneSimulatorSystemRoot");
+
   DTiPhoneSimulatorApplicationSpecifier *appSpec = [DTiPhoneSimulatorApplicationSpecifier specifierWithApplicationPath:
                                                     [XCToolLibExecPath() stringByAppendingPathComponent:@"mobile-installation-helper.app"]];
   DTiPhoneSimulatorSessionConfig *sessionConfig = [[[DTiPhoneSimulatorSessionConfig alloc] init] autorelease];
@@ -318,6 +322,10 @@ static void KillSimulatorJobs()
 
   NSString *testHostBundleID = testHostInfoPlist[@"CFBundleIdentifier"];
   NSAssert(testHostBundleID != nil, @"Missing 'CFBundleIdentifier' in Info.plist");
+
+  // Triggers some global state to be initialized - we must do this before
+  // interacting with DTiPhoneSimulatorRemoteClient.
+  [SimulatorLauncher loadAllPlatforms];
 
   BOOL (^prepTestEnv)() = ^BOOL() {
     if (_freshSimulator) {
