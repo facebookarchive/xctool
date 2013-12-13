@@ -42,7 +42,7 @@ the iOS simulator.
 * **Structured output of build and test results.**
 
   _xctool_ captures all build events and test results as structured JSON
-objects.  If you're building a continous integration system, this means
+objects.  If you're building a continuous integration system, this means
 you don't have to regex parse _xcodebuild_ output anymore.
 
   Try one of the [Reporters](#reporters) to customize the output or get
