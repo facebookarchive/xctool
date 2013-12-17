@@ -125,22 +125,30 @@
   if (!rawCompilerCommand) {
     return nil;
   }
-
+    
   NSTextCheckingResult *workingDirectoryMatch = [rawWorkingDirectory firstMatch:@[@"^cd \"(.+)\"", @"^cd (.+)"]];
   NSTextCheckingResult *sourceFileMatch = [rawCompilerCommand firstMatch:@[@"-c \"(.+?)\"", @" -c (.+?) -o"]];
   NSTextCheckingResult *pchMatch = [rawCompilerCommand firstMatch:@[@"-include \"(.+?\\.pch)\"", @"-include (.+?\\.pch)"]];
-
-  if (sourceFileMatch && workingDirectoryMatch && pchMatch) {
-    NSRange cachedPrecompilePathRange = [pchMatch rangeAtIndex:1];
-    NSString *cachedPrecompiledPath = [rawCompilerCommand substringWithRange:cachedPrecompilePathRange];
-    NSString *localPrecompilePath = precompilesMapping[cachedPrecompiledPath];
-    if (localPrecompilePath) {
-      NSMutableDictionary *compile = [[NSMutableDictionary alloc] init];
-      compile[@"directory"] = [rawWorkingDirectory substringWithRange:[workingDirectoryMatch rangeAtIndex:1]];
-      compile[@"command"] = [rawCompilerCommand stringByReplacingCharactersInRange:cachedPrecompilePathRange withString:localPrecompilePath];
-      compile[@"file"] = [rawCompilerCommand substringWithRange:[sourceFileMatch rangeAtIndex:1]];
-      return [compile autorelease];
+    
+  if (sourceFileMatch && workingDirectoryMatch) {
+    NSMutableDictionary *compile = [[[NSMutableDictionary alloc] init] autorelease];
+    compile[@"file"] = [rawCompilerCommand substringWithRange:[sourceFileMatch rangeAtIndex:1]];
+    compile[@"directory"] = [rawWorkingDirectory substringWithRange:[workingDirectoryMatch rangeAtIndex:1]];
+    NSString *convertedCompilerCommand = nil;
+    if (pchMatch) {
+      NSRange cachedPrecompilePathRange = [pchMatch rangeAtIndex:1];
+      NSString *cachedPrecompiledPath = [rawCompilerCommand substringWithRange:cachedPrecompilePathRange];
+      NSString *localPrecompilePath = precompilesMapping[cachedPrecompiledPath];
+      if (localPrecompilePath) {
+        convertedCompilerCommand = [rawCompilerCommand stringByReplacingCharactersInRange:cachedPrecompilePathRange withString:localPrecompilePath];
+      } else {
+        convertedCompilerCommand = rawCompilerCommand;
+      }
+    } else {
+      convertedCompilerCommand = rawCompilerCommand;
     }
+    compile[@"command"] = convertedCompilerCommand;
+    return compile;
   }
   return nil;
 }
