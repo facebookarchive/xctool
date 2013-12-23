@@ -520,6 +520,10 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                                      reporters:reporters] autorelease];
     [testRunner setCpuType:_cpuType];
 
+    if(_deviceName != nil && [testRunner isKindOfClass:[OCUnitIOSAppTestRunner class]]) {
+      [(OCUnitIOSAppTestRunner *)testRunner setDeviceName:_deviceName];
+    }
+
     PublishEventToReporters(reporters,
                             [[self class] eventForBeginOCUnitFromTestableExecutionInfo:testableExecutionInfo]);
 
