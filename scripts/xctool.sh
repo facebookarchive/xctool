@@ -17,6 +17,7 @@ BUILD_NEEDED=$($BUILD_NEEDED_TOOL_PATH $*)
 COLOR_BRIGHT_WHITE="\033[1;97m"
 COLOR_BOLD_RED="\033[1;31m"
 COLOR_GREEN="\033[0;32m"
+COLOR_BOLD_YELLOW="\033[1;33m"
 COLOR_NORMAL="\033[0m"
 CHECK_MARK="\xe2\x9c\x93"
 
@@ -48,4 +49,17 @@ REVISION=$((\
   git --git-dir="${XCTOOL_DIR}/.git" log -n 1 --format=%h 2> /dev/null) || \
   echo ".")
 
-"$XCTOOL_DIR"/build/$REVISION/Products/Release/bin/xctool "$@"
+SIMULATOR_AVAILABLE_PATH="$XCTOOL_DIR"/scripts/simulator_available.sh
+SIMULATOR_AVAILABLE=$($SIMULATOR_AVAILABLE_PATH $*)
+
+PREFIX_COMMAND=''
+if [ "$SIMULATOR_AVAILABLE" -eq 0 ]; then
+  WHICH_REATTACH=0
+  PREFIX_COMMAND=`which reattach-to-user-namespace` || WHICH_REATTACH=$?
+  if [ "$WHICH_REATTACH" -eq 1 ]; then
+    echo
+    echo -e "${COLOR_BOLD_YELLOW}WARNING${COLOR_NORMAL}: reattach-to-user-namespace is probably needed but was not found"
+  fi
+fi
+
+$PREFIX_COMMAND "$XCTOOL_DIR"/build/$REVISION/Products/Release/bin/xctool "$@"
