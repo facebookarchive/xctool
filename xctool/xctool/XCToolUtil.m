@@ -390,7 +390,6 @@ BOOL RunXcodebuildAndFeedEventsToReporters(NSArray *arguments,
   [environment addEntriesFromDictionary:@{
    @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath()
                                stringByAppendingPathComponent:@"xcodebuild-shim.dylib"],
-   @"PATH": @"/usr/bin:/bin:/usr/sbin:/sbin",
    }];
   [task setEnvironment:environment];
 
