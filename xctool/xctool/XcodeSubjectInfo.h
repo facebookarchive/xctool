@@ -31,6 +31,7 @@
 @property (nonatomic, retain) NSString *subjectWorkspace;
 @property (nonatomic, retain) NSString *subjectProject;
 @property (nonatomic, retain) NSString *subjectScheme;
+@property (nonatomic, assign) BOOL cacheBuildSettings;
 @property (nonatomic, retain) NSArray *subjectXcodeBuildArguments;
 
 @property (nonatomic, retain) NSString *objRoot;

@@ -22,6 +22,7 @@
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
 #import "XcodeTargetMatch.h"
+#import "ReportStatus.h"
 
 // We consider a DerivedData "recently modified" within this interval.
 static const NSTimeInterval RECENTLY_MODIFIED_DERIVED_DATA_INTERVAL = 60 * 15;
@@ -763,22 +764,61 @@ containsFilesModifiedSince:(NSDate *)sinceDate
  */
 - (NSDictionary *)buildSettingsForATarget
 {
-  NSDictionary *(^buildSettingsWithAction)(NSString *) = ^(NSString *action) {
+  NSDictionary *(^buildSettingsWithAction)(NSString *) = ^(NSString *action)
+  {
+    NSDictionary *output = nil;
+    // cached build settings:
+    NSString *BUILD_SETTINGS_FILENAME_CACHE = @".xctool.buildSettings";
+    NSMutableDictionary* buildSettingsCached = nil;
+    buildSettingsCached = [NSDictionary dictionaryWithContentsOfFile:BUILD_SETTINGS_FILENAME_CACHE];
+  
+    NSString *launchPath = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"];
+    NSArray *arguments = [self.subjectXcodeBuildArguments arrayByAddingObjectsFromArray:@[action, @"-showBuildSettings"]];
+    NSDictionary *environment = @{
+       @"DYLD_INSERT_LIBRARIES" :
+         [XCToolLibPath() stringByAppendingPathComponent:
+          @"xcodebuild-fastsettings-shim.dylib"],
+       @"SHOW_ONLY_BUILD_SETTINGS_FOR_FIRST_BUILDABLE" : @"YES"
+    };
+  
+    NSString* buildSettingsCacheKey =
+      [NSString stringWithFormat:@"action:%@ path:%@ arguments:%@ environment:%@",
+                   action,
+                   launchPath,
+                   arguments,
+                   environment];
+  
+    if (self.cacheBuildSettings
+        && buildSettingsCached
+        && buildSettingsCacheKey
+        && [buildSettingsCached objectForKey:buildSettingsCacheKey])
+    {
+      // ReportStatusMessage(nil, REPORTER_MESSAGE_INFO, @"Using cached build settings '%@' ...", action);
+      output = [buildSettingsCached objectForKey:buildSettingsCacheKey];
+      return output;
+    }
+  
     NSTask *task = CreateTaskInSameProcessGroup();
-    [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
-    [task setArguments:
-     [self.subjectXcodeBuildArguments arrayByAddingObjectsFromArray:@[action, @"-showBuildSettings"]]];
-    [task setEnvironment:@{
-                           @"DYLD_INSERT_LIBRARIES" :
-                             [XCToolLibPath() stringByAppendingPathComponent:
-                              @"xcodebuild-fastsettings-shim.dylib"],
-                           @"SHOW_ONLY_BUILD_SETTINGS_FOR_FIRST_BUILDABLE" : @"YES"
-                           }];
+    [task setLaunchPath:launchPath];
+    [task setArguments:arguments];
+    [task setEnvironment:environment];
 
     NSDictionary *result = LaunchTaskAndCaptureOutput(task, @"gathering build settings for a target");
-    [task release];
+    output = BuildSettingsFromOutput(result[@"stdout"]);
     
-    return BuildSettingsFromOutput(result[@"stdout"]);
+    // cache the output:
+    if (self.cacheBuildSettings) {
+      if (!buildSettingsCached) {
+        buildSettingsCached = [NSMutableDictionary dictionary];
+      }
+      
+      buildSettingsCached[buildSettingsCacheKey] = output;
+      [buildSettingsCached writeToFile:BUILD_SETTINGS_FILENAME_CACHE atomically:YES];
+    }
+    
+    [task release];
+
+    return output;
   };
 
   // Starting with Xcode 5+, -showBuildSettings is action-dependent.  If you run

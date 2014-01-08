@@ -53,6 +53,7 @@
 
 @property (nonatomic, assign) BOOL showHelp;
 @property (nonatomic, assign) BOOL showVersion;
+@property (nonatomic, assign) BOOL cacheBuildSettings;
 
 @property (nonatomic, retain) NSMutableArray *actions;
 
