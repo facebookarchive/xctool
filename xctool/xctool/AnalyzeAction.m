@@ -184,6 +184,8 @@
       NSNumber *line = diag[@"location"][@"line"];
       NSNumber *col = diag[@"location"][@"col"];
       NSString *desc = diag[@"description"];
+      NSString *category = diag[@"category"];
+      NSString *type = diag[@"type"];
       NSArray *context = [self.class contextFromDiagPath:diag[@"path"]
                                                  fileMap:diags[@"files"]];
 
@@ -196,6 +198,8 @@
           kReporter_AnalyzerResult_ColumnKey: col,
           kReporter_AnalyzerResult_DescriptionKey: desc,
           kReporter_AnalyzerResult_ContextKey: context,
+          kReporter_AnalyzerResult_CategoryKey: category,
+          kReporter_AnalyzerResult_TypeKey: type,
           }));
     }
   }
