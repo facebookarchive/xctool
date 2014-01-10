@@ -128,6 +128,7 @@
 #define kReporter_AnalyzerResult_ColumnKey @"col"
 #define kReporter_AnalyzerResult_DescriptionKey @"description"
 #define kReporter_AnalyzerResult_ContextKey @"context"
+#define kReporter_AnalyzerResult_CategoryKey @"category"
+#define kReporter_AnalyzerResult_TypeKey @"type"
 
 #define kReporter_OutputBeforeTestBundleStarts_OutputKey @"output"
-
