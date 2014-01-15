@@ -134,6 +134,12 @@
                          aliases:@[@"v"]
                      description:@"print version and exit"
                          setFlag:@selector(setShowVersion:)],
+    [Action actionOptionWithName:@"cacheBuildSettings"
+                         aliases:nil
+                     description:@"use cached build settings (if availble) to speed up incrementa builds.    \n"
+                      "                               CAUTION: unsafe in case one of the xcworkspace / xcproject / xcconfig files has changed \n"
+                      "                                        one of the build settings\n"
+                         setFlag:@selector(setCacheBuildSettings:)],
     [Action actionOptionWithMatcher:^(NSString *argument){
       // Anything that looks like KEY=VALUE should get passed to xcodebuild
       // as a command-line build setting.
@@ -478,6 +484,7 @@
   xcodeSubjectInfo.subjectWorkspace = self.workspace;
   xcodeSubjectInfo.subjectProject = self.project;
   xcodeSubjectInfo.subjectScheme = self.scheme;
+  xcodeSubjectInfo.cacheBuildSettings = self.cacheBuildSettings;
 
   if (xcodeSubjectInfoOut) {
     *xcodeSubjectInfoOut = xcodeSubjectInfo;
@@ -490,7 +497,10 @@
   xcodeSubjectInfo.subjectXcodeBuildArguments =
     [[self xcodeBuildArgumentsForSubject] arrayByAddingObjectsFromArray:commonXcodeBuildArguments];
 
-  ReportStatusMessageBegin(_reporters, REPORTER_MESSAGE_INFO, @"Loading settings for scheme '%@' ...", _scheme);
+  ReportStatusMessageBegin(_reporters, REPORTER_MESSAGE_INFO,
+                           @"Loading settings for scheme '%@' cacheBuildSettings(%d)...",
+                           _scheme,
+                           self.cacheBuildSettings);
   [xcodeSubjectInfo loadSubjectInfo];
   ReportStatusMessageEnd(_reporters, REPORTER_MESSAGE_INFO, @"Loading settings for scheme '%@' ...", _scheme);
 
