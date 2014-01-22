@@ -44,4 +44,6 @@
 - (double)testDuration;
 - (double)totalDuration;
 
+- (void)publishEventsForFinishedTests;
+
 @end

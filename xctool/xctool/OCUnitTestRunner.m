@@ -120,22 +120,48 @@
 
 - (BOOL)runTests
 {
-  TestRunState *testRunState = [[[TestRunState alloc] initWithTests:_focusedTestCases reporters:_reporters] autorelease];
+  BOOL allTestsPassed = YES;
+  OCTestSuiteEventState *testSuiteState = nil;
 
-  void (^feedOutputToBlock)(NSString *) = ^(NSString *line) {
-    [testRunState parseAndHandleEvent:line];
-  };
+  while (!testSuiteState || [[testSuiteState unstartedTests] count]) {
+    TestRunState *testRunState;
+    if (!testSuiteState) {
+      testRunState = [[[TestRunState alloc] initWithTests:_focusedTestCases reporters:_reporters] autorelease];
+      testSuiteState = [testRunState.testSuiteState retain];
+    } else {
+      testRunState = [[[TestRunState alloc] initWithTestSuiteEventState:testSuiteState] autorelease];
+    }
 
-  NSString *runTestsError = nil;
+    void (^feedOutputToBlock)(NSString *) = ^(NSString *line) {
+      [testRunState parseAndHandleEvent:line];
+    };
 
-  [testRunState prepareToRun];
+    NSString *runTestsError = nil;
 
-  [self runTestsAndFeedOutputTo:feedOutputToBlock
-                   startupError:&runTestsError];
+    [testRunState prepareToRun];
 
-  [testRunState didFinishRunWithStartupError:runTestsError];
+    [self runTestsAndFeedOutputTo:feedOutputToBlock
+                     startupError:&runTestsError];
 
-  return [testRunState allTestsPassed];
+    [testRunState didFinishRunWithStartupError:runTestsError];
+
+    allTestsPassed &= [testRunState allTestsPassed];
+
+    // update focused test cases
+    OCTestSuiteEventState *suiteState = [testRunState testSuiteState];
+    NSArray *unstartedTests = [suiteState unstartedTests];
+    NSMutableArray *unstartedTestCases = [[NSMutableArray alloc] initWithCapacity:[unstartedTests count]];
+    [unstartedTests enumerateObjectsUsingBlock:^(OCTestEventState *obj, NSUInteger idx, BOOL *stop) {
+      [unstartedTestCases addObject:[NSString stringWithFormat:@"%@/%@", obj.className, obj.methodName]];
+    }];
+
+    [_focusedTestCases release];
+    _focusedTestCases = unstartedTestCases;
+  }
+
+  [testSuiteState release];
+  
+  return allTestsPassed;
 }
 
 - (NSArray *)testArguments

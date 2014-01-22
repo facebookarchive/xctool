@@ -296,4 +296,45 @@ static NSDictionary *EndEventForTestSuiteWithTestName(NSString * testName)
   assertThat([state runningTest], is(testBState));
 }
 
+- (void)testFailedAndErroredTests
+{
+  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
+
+  OCTestSuiteEventState *state =
+  [[[OCTestSuiteEventState alloc] initWithName:@"ATestSuite" reporters:@[eventBuffer]] autorelease];
+  OCTestEventState *testAState =
+  [[[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod"] autorelease];
+  OCTestEventState *testBState =
+  [[[OCTestEventState alloc] initWithInputName:@"ATestClass/bTestMethod"] autorelease];
+
+  [state addTest:testAState];
+  [state addTest:testBState];
+
+  NSDictionary *beginEvent = EventDictionaryWithNameAndContent(kReporter_Events_BeginTestSuite,
+                               @{kReporter_BeginTestSuite_SuiteKey:state.testName});
+  [state beginTestSuite:beginEvent];
+  [testAState stateBeginTest];
+  [testAState stateEndTest:YES result:@"failure"];
+  [testBState stateBeginTest];
+  [testBState stateEndTest:YES result:@"error"];
+
+  assertThatInteger(state.testCount, equalToInteger(2));
+  assertThatInteger(state.totalFailures, equalToInteger(1));
+  assertThatInteger(state.totalErrors, equalToInteger(1));
+
+  [state publishEvents];
+  NSArray *events = eventBuffer.events;
+
+  assertThatInteger([events count], equalToInteger(2));
+  NSDictionary *endEvent = events[1];
+
+  assertThat(endEvent[kReporter_EndTestSuite_TestCaseCountKey], equalToInt(2));
+  assertThat(endEvent[kReporter_EndTestSuite_TotalFailureCountKey], equalToInt(1));
+  assertThat(endEvent[kReporter_EndTestSuite_UnexpectedExceptionCountKey], equalToInt(1));
+  assertThat(endEvent[kReporter_EndTestSuite_TotalDurationKey],
+             closeTo([testAState duration] + [testBState duration], 0.1f));
+  assertThat(endEvent[kReporter_EndTestSuite_TestDurationKey],
+             closeTo([testAState duration] + [testBState duration], 0.1f));
+}
+
 @end

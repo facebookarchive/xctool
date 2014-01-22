@@ -177,19 +177,13 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
              equalTo(@[kReporter_Events_BeginTestSuite,
                        kReporter_Events_BeginTest,
                        kReporter_Events_TestOuput,
-                       kReporter_Events_EndTest,
-                       kReporter_Events_BeginTest,
-                       kReporter_Events_TestOuput,
-                       kReporter_Events_EndTest,
-                       kReporter_Events_EndTestSuite]));
+                       kReporter_Events_EndTest]));
 
   assertThat(SelectEventFields(eventBuffer.events, kReporter_Events_EndTest, kReporter_EndTest_TestKey),
-             equalTo(@[@"-[OtherTests testSomething]",
-                       @"-[OtherTests testAnother]"]));
+             equalTo(@[@"-[OtherTests testSomething]"]));
 
   NSArray *output = SelectEventFields(eventBuffer.events, kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey);
   assertThat(output[0], equalTo(@"Test crashed while running."));
-  assertThat(output[1], equalTo(@"Test did not run: the test bundle stopped running or crashed in '-[OtherTests testSomething]'."));
 }
 
 - (void)testCrashedAfterFirstTestFinishes
@@ -210,7 +204,6 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
                        kReporter_Events_TestOuput,
                        kReporter_Events_EndTest,
                        kReporter_Events_BeginTest,
-                       kReporter_Events_TestOuput,
                        kReporter_Events_EndTest,
                        kReporter_Events_EndTestSuite]));
 
@@ -224,7 +217,6 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
   assertThat(output[0],
              equalTo(@"The test bundle stopped running or crashed immediately after running '-[OtherTests testSomething]'.  "
                      @"Even though that test finished, it's likely responsible for the crash."));
-  assertThat(output[1], equalTo(@"Test did not run: the test bundle stopped running or crashed after running '-[OtherTests testSomething]'."));
 }
 
 - (void)testTestsNeverRanBecauseOfStartupError

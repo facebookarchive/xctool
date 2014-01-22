@@ -4,6 +4,7 @@
 #import "ContainsArray.h"
 #import "DTiPhoneSimulatorRemoteClient.h"
 #import "EventBuffer.h"
+#import "FakeOCUnitTestRunner.h"
 #import "FakeTask.h"
 #import "FakeTaskManager.h"
 #import "OCUnitIOSAppTestRunner.h"
@@ -19,7 +20,7 @@
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
 
-static OCUnitTestRunner *TestRunnerWithTestLists(Class cls, NSDictionary *settings, NSArray *focusedTestCases, NSArray *allTestCases)
+static id TestRunnerWithTestLists(Class cls, NSDictionary *settings, NSArray *focusedTestCases, NSArray *allTestCases)
 {
   NSArray *arguments = @[@"-SomeArg", @"SomeVal"];
   NSDictionary *environment = @{@"SomeEnvKey" : @"SomeEnvValue"};
@@ -37,16 +38,26 @@ static OCUnitTestRunner *TestRunnerWithTestLists(Class cls, NSDictionary *settin
                                    reporters:@[eventBuffer]] autorelease];
 }
 
-static OCUnitTestRunner *TestRunnerWithTestList(Class cls, NSDictionary *settings, NSArray *testList)
+static id TestRunnerWithTestList(Class cls, NSDictionary *settings, NSArray *testList)
 {
   return TestRunnerWithTestLists(cls, settings, testList, testList);
 }
 
-static OCUnitTestRunner *TestRunner(Class cls, NSDictionary *settings)
+static id TestRunner(Class cls, NSDictionary *settings)
 {
   return TestRunnerWithTestLists(cls, settings, @[], @[]);
 }
 
+static int NumberOfEntries(NSArray *array, NSObject *target)
+{
+  __block int count = 0;
+  [array enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    if ([obj isEqual:target]) {
+      count++;
+    }
+  }];
+  return count;
+}
 
 @interface OCUnitTestRunnerTests : SenTestCase
 @end
@@ -347,6 +358,64 @@ static OCUnitTestRunner *TestRunner(Class cls, NSDictionary *settings)
                              @"-SenTestInvertScope",
                              @"YES",
                              ]));
+}
+
+#pragma mark Tests crashing
+
+- (void)testRunnerIsRunningAllTestsEvenIfCrashed
+{
+  NSDictionary *allSettings =
+  BuildSettingsFromOutput([NSString stringWithContentsOfFile:TEST_DATA @"iOS-TestsThatCrash-showBuildSettings.txt"
+                                                    encoding:NSUTF8StringEncoding
+                                                       error:nil]);
+  NSDictionary *testSettings = allSettings[@"TestsThatCrashTests"];
+
+  NSString *outputLinesString = [NSString stringWithContentsOfFile:TEST_DATA @"iOS-TestsThatCrash-outputLines.txt"
+                                                          encoding:NSUTF8StringEncoding
+                                                             error:nil];
+  NSArray *outputLines = [outputLinesString componentsSeparatedByString:@"\n"];
+
+  FakeOCUnitTestRunner *runner = TestRunnerWithTestList([FakeOCUnitTestRunner class],
+                                                        testSettings,
+                                                        @[@"TestsThatCrashTests/testExample1",
+                                                          @"TestsThatCrashTests/testExample2Fails",
+                                                          @"TestsThatCrashTests/testExample3",
+                                                          @"TestsThatCrashTests/testExample4Crashes",
+                                                          @"TestsThatCrashTests/testExample5",
+                                                          @"TestsThatCrashTests/testExample6",
+                                                          @"TestsThatCrashTests/testExample7",
+                                                          @"TestsThatCrashTests/testExample8"]);
+  [runner setOutputLines:outputLines];
+  [runner runTests];
+
+  EventBuffer *eventBuffer = runner.reporters[0];
+  NSArray *events = [eventBuffer events];
+
+  // check number of events
+  assertThatInteger([events count], equalToInteger(19));
+
+  // check last event statistics
+  assertThat([events lastObject][@"event"], equalTo(kReporter_Events_EndTestSuite));
+  assertThat([events lastObject][kReporter_EndTestSuite_SuiteKey], equalTo(@"Toplevel Test Suite"));
+  assertThat([events lastObject][kReporter_EndTestSuite_TestCaseCountKey], equalToInteger(8));
+  assertThat([events lastObject][kReporter_EndTestSuite_TotalFailureCountKey], equalToInteger(1));
+  assertThat([events lastObject][kReporter_EndTestSuite_UnexpectedExceptionCountKey], equalToInteger(1));
+
+  // check number of begin and end events
+  assertThatInteger(NumberOfEntries([events valueForKeyPath:@"event"], kReporter_Events_BeginTestSuite), equalToInteger(1));
+  assertThatInteger(NumberOfEntries([events valueForKeyPath:@"event"], kReporter_Events_BeginTest), equalToInteger(8));
+  assertThatInteger(NumberOfEntries([events valueForKeyPath:@"event"], kReporter_Events_EndTest), equalToInteger(8));
+  assertThatInteger(NumberOfEntries([events valueForKeyPath:@"event"], kReporter_Events_EndTestSuite), equalToInteger(1));
+
+  // check test results
+  assertThatInteger(NumberOfEntries([events valueForKeyPath:kReporter_EndTest_ResultKey], @"success"), equalToInteger(6));
+  assertThatInteger(NumberOfEntries([events valueForKeyPath:kReporter_EndTest_ResultKey], @"failure"), equalToInteger(1));
+  assertThatInteger(NumberOfEntries([events valueForKeyPath:kReporter_EndTest_ResultKey], @"error"), equalToInteger(1));
+
+  // check test output of crash
+  assertThatInteger(NumberOfEntries([events valueForKeyPath:@"event"], kReporter_Events_TestOuput), equalToInteger(1));
+  assertThat(events[8][kReporter_EndTest_OutputKey], equalTo(@"Test crashed while running."));
+  assertThat(events[9][kReporter_EndTest_OutputKey], equalTo(@"Hello!\nTest crashed while running."));
 }
 
 #pragma mark misc.
