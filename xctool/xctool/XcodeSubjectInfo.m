@@ -777,7 +777,12 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 
     NSDictionary *result = LaunchTaskAndCaptureOutput(task, @"gathering build settings for a target");
     [task release];
-    
+
+    NSString * error = result[@"stderr"];
+    if (error.length > 0) {
+      NSLog(@"Warning: error running xcodebuild -showBuildSettings: %@", error);
+    }
+
     return BuildSettingsFromOutput(result[@"stdout"]);
   };
 
