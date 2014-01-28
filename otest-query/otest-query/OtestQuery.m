@@ -69,6 +69,26 @@
     exit(kMissingExecutable);
   }
 
+  // Make sure the 'SenTest' or 'XCTest' preference is cleared before we load the
+  // test bundle - otherwise otest-query will accidentally start running tests.
+  //
+  // Instead of seeing the JSON list of test methods, you'll see output like ...
+  //
+  //   Test Suite 'All tests' started at 2013-11-07 23:47:46 +0000
+  //   Test Suite 'All tests' finished at 2013-11-07 23:47:46 +0000.
+  //   Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+  //
+  // Here's what happens -- As soon as we dlopen() the test bundle, it will also
+  // trigger the linker to load SenTestingKit.framework or XCTest.framework since
+  // those are linked by the test bundle.  And, as soon as the testing framework
+  // loads, the class initializer '+[SenTestProbe initialize]' is triggered.  If
+  // the initializer sees that the 'SenTest' preference is set, it goes ahead
+  // and runs tests.
+  //
+  // By clearing the preference, we can prevent tests from running.
+  [[NSUserDefaults standardUserDefaults] removeObjectForKey:
+   [framework objectForKey:kTestingFrameworkFilterTestArgsKey]];
+
   // We use dlopen() instead of -[NSBundle loadAndReturnError] because, if
   // something goes wrong, dlerror() gives us a much more helpful error message.
   if (dlopen([[bundle executablePath] UTF8String], RTLD_NOW) == NULL) {

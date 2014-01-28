@@ -77,48 +77,7 @@
   }
 
   NSTask *task = [self createTaskForQuery];
-
-  // Override CFFIXED_USER_HOME so that it's impossible for otest-query to
-  // write or read any .plist preference files in the standard (permanent)
-  // locations.
-  //
-  // This fixes a bug where otest-query will output empty test results like the
-  // following instead of returning the list of tests --
-  //
-  //   Test Suite 'All tests' started at 2013-11-07 23:47:46 +0000
-  //   Test Suite 'All tests' finished at 2013-11-07 23:47:46 +0000.
-  //   Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
-  //
-  // The problem was caused by a `otest-query-ios.plist` preferences file at --
-  //   ~/Library/Application Support/iPhone Simulator/7.0/Library/Preferences/otest-query-ios.plist
-  //
-  // That contained one dictionary that looked like --
-  //   Dict {
-  //     SenTest = All
-  //   }
-  //
-  // That presence of that one "SenTest" key causes all the trouble.  When dyld
-  // loads SenTestingKit.framework, '+[SenTestProbe initialize]' is triggered.
-  // If the initializer sees that the 'SenTest' preference is set, it goes ahead
-  // and runs tests.  But, since it hasn't even loaded the test bundle, there
-  // are no tests and we only see the empty 'All tests' suite.
-  //
-  // NOTE: The reason `SenTest` gets set at all is because otest-query sets it
-  // as part of its necessary trickery.
-  //
-  // Overriding CFFIXED_USER_HOME should have no consequences, since otest-query
-  // doesn't really run any app code or test code.
-  NSString *tempHome = MakeTemporaryDirectory(@"otest-query-CFFIXED_USER_HOME-XXXXXX");
-  NSMutableDictionary *newEnv = [NSMutableDictionary dictionaryWithDictionary:task.environment];
-  newEnv[@"CFFIXED_USER_HOME"] = tempHome;
-  [task setEnvironment:newEnv];
-
   NSDictionary *output = LaunchTaskAndCaptureOutput(task, @"running otest-query");
-
-  NSError *removeError = nil;
-  BOOL removeSucceeded = [[NSFileManager defaultManager] removeItemAtPath:tempHome
-                                                                    error:&removeError];
-  NSAssert(removeSucceeded, @"Failed to remove temp dir: %@", [removeError localizedFailureReason]);
 
   int terminationStatus = [task terminationStatus];
   [task release];
