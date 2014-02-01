@@ -200,6 +200,9 @@ static void AnnounceEndSection(IDEActivityLogSection *section)
         kReporter_EndBuildTarget_ProjectKey : project,
         kReporter_EndBuildTarget_TargetKey : target,
         kReporter_EndBuildTarget_ConfigurationKey : configuration,
+        kReporter_EndBuildCommand_DurationKey : @(section.timeStoppedRecording - section.timeStartedRecording),
+        kReporter_EndBuildCommand_TotalNumberOfWarnings : @(section.totalNumberOfWarnings),
+        kReporter_EndBuildCommand_TotalNumberOfErrors : @(section.totalNumberOfErrors),
       }));
   }
 }
