@@ -494,6 +494,11 @@ static NSString *abbreviatePath(NSString *string) {
 
 - (void)endBuildTarget:(NSDictionary *)event
 {
+  [self.reportWriter printLine:@"<bold>%lu errored, %lu warning %@<reset>",
+   [event[kReporter_EndBuildCommand_TotalNumberOfErrors] unsignedIntegerValue],
+   [event[kReporter_EndBuildCommand_TotalNumberOfWarnings] unsignedIntegerValue],
+   [self formattedTestDuration:[event[kReporter_EndBuildCommand_DurationKey] floatValue] withColor:NO]
+   ];
   [self.reportWriter decreaseIndent];
   [self.reportWriter printNewline];
 }
@@ -508,22 +513,6 @@ static NSString *abbreviatePath(NSString *string) {
 
 - (void)endBuildCommand:(NSDictionary *)event
 {
-  NSString *(^formattedBuildDuration)(float) = ^(float duration){
-    NSString *color = nil;
-
-    if (duration <= 0.05f) {
-      color = @"<faint><green>";
-    } else if (duration <= 0.2f) {
-      color = @"<green>";
-    } else if (duration <= 0.5f) {
-      color = @"<yellow>";
-    } else {
-      color = @"<red>";
-    }
-
-    return [NSString stringWithFormat:@"%@(%d ms)<reset>", color, (int)(duration * 1000)];
-  };
-
   BOOL succeeded = [event[kReporter_EndBuildCommand_SucceededKey] boolValue];
   NSString *outputText = [event[kReporter_EndBuildCommand_EmittedOutputTextKey]
                           stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -542,7 +531,7 @@ static NSString *abbreviatePath(NSString *string) {
   [self.reportWriter updateLine:@"%@ %@ %@",
    indicator,
    [self condensedBuildCommandTitle:event[kReporter_EndBuildCommand_TitleKey]],
-   formattedBuildDuration([event[kReporter_EndBuildCommand_DurationKey] floatValue])];
+   [self formattedTestDuration:[event[kReporter_EndBuildCommand_DurationKey] floatValue] withColor:YES]];
   [self.reportWriter printNewline];
 
   BOOL showInfo = !succeeded || (outputText.length > 0);
