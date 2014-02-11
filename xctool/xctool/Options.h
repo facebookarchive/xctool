@@ -42,6 +42,7 @@
 @property (nonatomic, retain) NSString *jobs;
 @property (nonatomic, retain) NSString *findTarget;
 @property (nonatomic, retain) NSString *findTargetPath;
+@property (nonatomic, copy)   NSString *findProjectPath;
 @property (nonatomic, retain) NSArray *findTargetExcludePaths;
 
 @property (nonatomic, assign) BOOL showBuildSettings;

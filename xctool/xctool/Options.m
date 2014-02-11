@@ -296,10 +296,14 @@
   };
 
   if (self.workspace == nil && self.project == nil && self.findTarget == nil) {
-    *errorMessage = @"Either -workspace, -project, or -find-target must be specified.";
-    return NO;
+    NSString *defaultProject = [self findDefaultProjectErrorMessage:errorMessage];
+    if (defaultProject == nil) {
+      return NO;
+    } else {
+      self.project = defaultProject;
+    }
   } else if (self.workspace != nil && self.project != nil) {
-    *errorMessage = @"Either -workspace or -project must be specified, but not both.";
+    *errorMessage = @"Either -workspace or -project can be specified, but not both.";
     return NO;
   } else if (self.findTarget != nil && (self.workspace != nil || self.project != nil || self.scheme != nil)) {
     *errorMessage = @"If -find-target is specified, -workspace, -project, and -scheme must not be specified.";
@@ -585,6 +589,54 @@
 - (void)setFindTargetExcludePathsFromString:(NSString *)string
 {
   self.findTargetExcludePaths = [string componentsSeparatedByString:@":"];
+}
+
+- (NSString*)findDefaultProjectErrorMessage:(NSString**) errorMessage
+{
+  NSFileManager *fileManager = [NSFileManager defaultManager];
+  NSString *searchPath = self.findProjectPath ? self.findProjectPath : [fileManager currentDirectoryPath];
+  NSArray *directoryContents = [fileManager contentsOfDirectoryAtPath:searchPath error:nil];
+  NSArray *projectFiles = [directoryContents filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"pathExtension == 'xcodeproj'"]];
+  if (projectFiles.count == 1) {
+    return [searchPath stringByAppendingPathComponent:projectFiles[0]];
+  } else if (projectFiles.count > 1) {
+    *errorMessage = [NSString stringWithFormat:@"The directory %@ contains %lu projects, including multiple projects with the current extension (.xcodeproj). Please specify with -workspace, -project, or -find-target.", searchPath, projectFiles.count];
+  } else {
+    *errorMessage = [NSString stringWithFormat:@"Unable to find projects (.xcodeproj) in directory %@. Please specify with -workspace, -project, or -find-target.", searchPath];
+  }
+  return nil;
+}
+
+- (NSString*)description
+{
+  return [NSString stringWithFormat:@"%@\n"
+          "workspace: %@\n"
+          "project: %@\n"
+          "scheme: %@\n"
+          "configuration: %@\n"
+          "sdk: %@\n"
+          "arch: %@\n"
+          "destination: %@\n"
+          "toolchain: %@\n"
+          "xcconfig: %@\n"
+          "jobs: %@\n"
+          "findTarget: %@\n"
+          "findTargetPath: %@\n"
+          "findProjectPath: %@",
+          [super description],
+          _workspace,
+          _project,
+          _scheme,
+          _configuration,
+          _sdk,
+          _arch,
+          _destination,
+          _toolchain,
+          _xcconfig,
+          _jobs,
+          _findTarget,
+          _findTargetPath,
+          _findProjectPath];
 }
 
 @end

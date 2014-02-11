@@ -81,18 +81,14 @@
                        @"DEF" : @"456"}));
 }
 
-- (void)testWorkspaceOrProjectAreRequired
+- (void)testDisallowBothWorkspaceAndProjectSpecified
 {
-  [[Options optionsFrom:@[]]
-   assertOptionsFailToValidateWithError:
-   @"Either -workspace, -project, or -find-target must be specified."];
-
   [[Options optionsFrom:@[
     @"-workspace", @"Something.xcworkspace",
     @"-project", @"Something.xcodeproj"
     ]]
    assertOptionsFailToValidateWithError:
-   @"Either -workspace or -project must be specified, but not both."];
+   @"Either -workspace or -project can be specified, but not both."];
 }
 
 - (void)testSchemeIsRequired
@@ -367,6 +363,48 @@
   Action *action = options.actions[0];
   NSString *actionClassName = [NSString stringWithUTF8String:class_getName([action class])];
   assertThat(actionClassName, equalTo(@"BuildAction"));
+}
+
+- (void)testBuildOnlyProjectFoundIfNoProjectSpecified
+{
+  Options *options = [Options optionsFrom:@[@"-scheme", @"TestProject-Library",
+                                             ]];
+  options.findProjectPath = [[[NSFileManager defaultManager] currentDirectoryPath]
+                             stringByAppendingPathComponent:@"xctool-tests/TestData/TestProject-Library"];
+  
+  [options assertOptionsValidateWithBuildSettingsFromFile:
+                      TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                      ];
+  
+  assertThatInteger(options.actions.count, equalToInteger(1));
+  Action *action = options.actions[0];
+  NSString *actionClassName = [NSString stringWithUTF8String:class_getName([action class])];
+  assertThat(actionClassName, equalTo(@"BuildAction"));
+}
+
+- (void)testDirectoryMustNotContainMultipleProjectsIfNoProjectSpecified
+{
+  Options *options = [Options optionsFrom:@[@"-scheme", @"TestMultipleProjectsInDirectory1",
+                                            ]];
+  options.findProjectPath = [[[NSFileManager defaultManager] currentDirectoryPath]
+                             stringByAppendingPathComponent:@"xctool-tests/TestData/TestMultipleProjectsInDirectory"];
+  
+  [options assertOptionsFailToValidateWithError:
+   [NSString stringWithFormat:@"The directory %@ contains 2 projects, including multiple projects with the current "
+    "extension (.xcodeproj). Please specify with -workspace, -project, or -find-target.",
+    options.findProjectPath]];
+}
+
+- (void)testProjectOrWorkspaceRequiredIfNoProjectSpecifiedOrFound
+{
+  Options *options = [Options optionsFrom:@[@"-scheme", @"TestProject-Library",
+                                            ]];
+  options.findProjectPath = [[[NSFileManager defaultManager] currentDirectoryPath]
+                             stringByAppendingPathComponent:@"xctool-tests/TestData/TestWorkspace-Library"];
+  
+  [options assertOptionsFailToValidateWithError:
+   [NSString stringWithFormat:@"Unable to find projects (.xcodeproj) in directory %@. Please specify with -workspace, -project, or -find-target.",
+    options.findProjectPath]];
 }
 
 @end
