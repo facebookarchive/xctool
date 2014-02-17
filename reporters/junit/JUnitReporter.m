@@ -15,7 +15,7 @@
 @property (nonatomic) int totalTests;
 @property (nonatomic) int totalFailures;
 @property (nonatomic) int totalErrors;
-@property (nonatomic) float totalTime;
+@property (nonatomic) double totalTime;
 
 @end
 
@@ -64,7 +64,7 @@
     self.totalTests += [event[kReporter_EndTestSuite_TestCaseCountKey] intValue];
     self.totalFailures += [event[kReporter_EndTestSuite_TotalFailureCountKey] intValue];
     self.totalErrors += [event[kReporter_EndTestSuite_UnexpectedExceptionCountKey] intValue];
-    self.totalTime += [event[kReporter_EndTestSuite_TotalDurationKey] floatValue];
+    self.totalTime += [event[kReporter_EndTestSuite_TotalDurationKey] doubleValue];
     [self.testSuites addObject:@{
       kJUnitReporter_Suite_Event: event,
       kJUnitReporter_Suite_Results: self.testResults
@@ -108,8 +108,8 @@
                       [[[existingTestSuite attributeForName:@"failures"] objectValue] intValue]);
       int errors = ([suiteEvent[kReporter_EndTestSuite_UnexpectedExceptionCountKey] intValue] +
                     [[[existingTestSuite attributeForName:@"errors"] objectValue] intValue]);
-      float time = ([suiteEvent[kReporter_EndTestSuite_TotalDurationKey] floatValue] +
-                    [[[existingTestSuite attributeForName:@"time"] objectValue] floatValue]);
+      double time = ([suiteEvent[kReporter_EndTestSuite_TotalDurationKey] doubleValue] +
+                    [[[existingTestSuite attributeForName:@"time"] objectValue] doubleValue]);
       
       NSArray *attributes = @[[NSXMLNode attributeWithName:@"tests"
                                                stringValue:[NSString stringWithFormat:@"%d", tests]],
@@ -138,7 +138,7 @@
                                                                [suiteEvent[kReporter_EndTestSuite_UnexpectedExceptionCountKey] intValue]]],
                                  [NSXMLNode attributeWithName:@"time"
                                                   stringValue:[NSString stringWithFormat:@"%f",
-                                                               [suiteEvent[kReporter_EndTestSuite_TotalDurationKey] floatValue]]],
+                                                               [suiteEvent[kReporter_EndTestSuite_TotalDurationKey] doubleValue]]],
                                  [NSXMLNode attributeWithName:@"timestamp"
                                                   stringValue:[self.formatter stringFromDate:[NSDate date]]],
                                  [NSXMLNode attributeWithName:@"name"
@@ -154,7 +154,7 @@
                                                         stringValue:testResult[kReporter_EndTest_MethodNameKey]],
                                        [NSXMLNode attributeWithName:@"time"
                                                         stringValue:[NSString stringWithFormat:@"%f",
-                                                                     [testResult[kReporter_EndTest_TotalDurationKey] floatValue]]]]];
+                                                                     [testResult[kReporter_EndTest_TotalDurationKey] doubleValue]]]]];
 
       if (![testResult[kReporter_EndTest_SucceededKey] boolValue]) {
         NSArray *exceptions = testResult[kReporter_EndTest_ExceptionsKey];

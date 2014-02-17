@@ -497,7 +497,7 @@ static NSString *abbreviatePath(NSString *string) {
   [self.reportWriter printLine:@"<bold>%lu errored, %lu warning %@<reset>",
    [event[kReporter_EndBuildCommand_TotalNumberOfErrors] unsignedIntegerValue],
    [event[kReporter_EndBuildCommand_TotalNumberOfWarnings] unsignedIntegerValue],
-   [self formattedTestDuration:[event[kReporter_EndBuildCommand_DurationKey] floatValue] withColor:NO]
+   [self formattedTestDuration:[event[kReporter_EndBuildCommand_DurationKey] doubleValue] withColor:NO]
    ];
   [self.reportWriter decreaseIndent];
   [self.reportWriter printNewline];
@@ -531,7 +531,7 @@ static NSString *abbreviatePath(NSString *string) {
   [self.reportWriter updateLine:@"%@ %@ %@",
    indicator,
    [self condensedBuildCommandTitle:event[kReporter_EndBuildCommand_TitleKey]],
-   [self formattedTestDuration:[event[kReporter_EndBuildCommand_DurationKey] floatValue] withColor:YES]];
+   [self formattedTestDuration:[event[kReporter_EndBuildCommand_DurationKey] doubleValue] withColor:YES]];
   [self.reportWriter printNewline];
 
   BOOL showInfo = !succeeded || (outputText.length > 0);
@@ -649,7 +649,7 @@ static NSString *abbreviatePath(NSString *string) {
       [_resultCounter suiteFailed],
       [_resultCounter suiteErrored],
       [_resultCounter suiteTotal],
-     [self formattedTestDuration:[event[kReporter_EndTestSuite_TotalDurationKey] floatValue] withColor:NO]
+     [self formattedTestDuration:[event[kReporter_EndTestSuite_TotalDurationKey] doubleValue] withColor:NO]
      ];
     [self.reportWriter decreaseIndent];
   } else if ([suite isEqualToString:kReporter_TestSuite_TopLevelSuiteName] && [_resultCounter suiteTotal] > 0) {
@@ -658,7 +658,7 @@ static NSString *abbreviatePath(NSString *string) {
       [_resultCounter suiteFailed],
       [_resultCounter suiteErrored],
       [_resultCounter suiteTotal],
-     [self formattedTestDuration:[event[kReporter_EndTestSuite_TotalDurationKey] floatValue] withColor:NO]
+     [self formattedTestDuration:[event[kReporter_EndTestSuite_TotalDurationKey] doubleValue] withColor:NO]
      ];
   }
 }
@@ -720,7 +720,7 @@ static NSString *abbreviatePath(NSString *string) {
   _currentStatusEvent = nil;
 }
 
-- (NSString *)formattedTestDuration:(float)duration withColor:(BOOL)withColor
+- (NSString *)formattedTestDuration:(double)duration withColor:(BOOL)withColor
 {
   NSString *color = nil;
 
@@ -798,7 +798,7 @@ static NSString *abbreviatePath(NSString *string) {
   NSMutableString *resultLine = [NSMutableString stringWithFormat:@"%@ %@ %@",
                                  indicator,
                                  event[kReporter_EndTest_TestKey],
-                                 [self formattedTestDuration:[event[kReporter_EndTest_TotalDurationKey] floatValue] withColor:YES]
+                                 [self formattedTestDuration:[event[kReporter_EndTest_TotalDurationKey] doubleValue] withColor:YES]
                                  ];
 
   // If the test failed, add a number linking it to the failure summary.
