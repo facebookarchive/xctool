@@ -65,7 +65,7 @@
   assertThatInteger([events count], equalToInteger(1));
   assertThat(events[0][@"event"], is(kReporter_Events_EndTestSuite));
   assertThat(events[0][kReporter_EndTestSuite_SuiteKey], is(@"ATestSuite"));
-  assertThat(events[0][kReporter_EndTestSuite_TotalDurationKey], is(@(state.duration)));
+  assertThat(events[0][kReporter_EndTestSuite_TotalDurationKey], is(@([state totalDuration])));
   assertThat(events[0][kReporter_EndTestSuite_TestCaseCountKey], is(@0));
   assertThat(events[0][kReporter_EndTestSuite_TotalFailureCountKey], is(@0));
 
@@ -90,7 +90,7 @@
   assertThat(events[0][kReporter_BeginTestSuite_SuiteKey], is(@"ATestSuite"));
   assertThat(events[1][@"event"], is(kReporter_Events_EndTestSuite));
   assertThat(events[1][kReporter_EndTestSuite_SuiteKey], is(@"ATestSuite"));
-  assertThat(events[1][kReporter_EndTestSuite_TotalDurationKey], is(@(state.duration)));
+  assertThat(events[1][kReporter_EndTestSuite_TotalDurationKey], is(@([state totalDuration])));
   assertThat(events[1][kReporter_EndTestSuite_TestCaseCountKey], is(@0));
   assertThat(events[1][kReporter_EndTestSuite_TotalFailureCountKey], is(@0));
 
@@ -137,7 +137,7 @@
   testBState.duration = 10.0f;
   [state endTestSuite];
 
-  assertThatDouble(state.duration, closeTo(15.0, 0.1f));
+  assertThatDouble([state totalDuration], closeTo(15.0, 0.1f));
 }
 
 - (void)testAddTests
@@ -225,7 +225,8 @@
   [testBState stateBeginTest];
 
   assertThatInteger(state.testCount, equalToInteger(2));
-  assertThatInteger(state.totalFailures, equalToInteger(1));
+  assertThatInteger(state.totalErrors, equalToInteger(1));
+  assertThatInteger(state.totalFailures, equalToInteger(0));
 
   [state publishEvents];
   NSArray *events = eventBuffer.events;
@@ -235,7 +236,8 @@
   NSDictionary *suiteEvent = events[1];
 
   assertThat(suiteEvent[kReporter_EndTestSuite_TestCaseCountKey], equalToInt(2));
-  assertThat(suiteEvent[kReporter_EndTestSuite_TotalFailureCountKey], equalToInt(1));
+  assertThat(suiteEvent[kReporter_EndTestSuite_UnexpectedExceptionCountKey], equalToInt(1));
+  assertThat(suiteEvent[kReporter_EndTestSuite_TotalFailureCountKey], equalToInt(0));
   assertThat(suiteEvent[kReporter_EndTestSuite_TotalDurationKey],
              closeTo([testAState duration] + [testBState duration], 0.1f));
 
