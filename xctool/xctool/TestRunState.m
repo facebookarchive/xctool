@@ -72,6 +72,11 @@
   _crashReportsAtStart = [[NSSet setWithArray:[self collectCrashReportPaths]] retain];
 }
 
+- (void)publishEventToReporters:(NSDictionary *)event
+{
+  PublishEventToReporters(_testSuiteState.reporters, event);
+}
+
 - (void)outputBeforeTestBundleStarts:(NSDictionary *)event
 {
   [_outputBeforeTestsStart appendString:event[kReporter_OutputBeforeTestBundleStarts_OutputKey]];
@@ -84,7 +89,7 @@
            @"Expected to begin test suite `%@', got `%@'",
            kReporter_TestSuite_TopLevelSuiteName, event[kReporter_BeginTestSuite_SuiteKey]);
 
-  [_testSuiteState beginTestSuite];
+  [_testSuiteState beginTestSuite:event];
 }
 
 - (void)beginTest:(NSDictionary *)event
@@ -94,6 +99,8 @@
   OCTestEventState *state = [_testSuiteState getTestWithTestName:testName];
   NSAssert(state, @"Can't find test state for '%@', check senTestList", testName);
   [state stateBeginTest];
+
+  [self publishEventToReporters:event];
 }
 
 - (void)endTest:(NSDictionary *)event
@@ -111,11 +118,13 @@
     _previousTestState = nil;
   }
   _previousTestState = [state retain];
+
+  [self publishEventToReporters:event];
 }
 
 - (void)endTestSuite:(NSDictionary *)event
 {
-  [_testSuiteState endTestSuite];
+  [_testSuiteState endTestSuite:event];
 }
 
 - (void)testOutput:(NSDictionary *)event

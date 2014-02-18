@@ -28,8 +28,8 @@
 - (instancetype)initWithName:(NSString *)name
                    reporters:(NSArray *)reporters;
 
-- (void)beginTestSuite;
-- (void)endTestSuite;
+- (void)beginTestSuite:(NSDictionary *)event;
+- (void)endTestSuite:(NSDictionary *)event;
 - (void)insertTest:(OCTestEventState *)test atIndex:(NSUInteger)index;
 - (void)addTest:(OCTestEventState *)test;
 - (void)addTestsFromArray:(NSArray *)tests;
