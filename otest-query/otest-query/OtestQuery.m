@@ -88,6 +88,7 @@
   // By clearing the preference, we can prevent tests from running.
   [[NSUserDefaults standardUserDefaults] removeObjectForKey:
    [framework objectForKey:kTestingFrameworkFilterTestArgsKey]];
+  [[NSUserDefaults standardUserDefaults] synchronize];
 
   // We use dlopen() instead of -[NSBundle loadAndReturnError] because, if
   // something goes wrong, dlerror() gives us a much more helpful error message.
