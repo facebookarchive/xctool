@@ -137,7 +137,7 @@
   testBState.duration = 10.0f;
   [state endTestSuite];
 
-  assertThatFloat(state.duration, closeTo(15.0, 0.1f));
+  assertThatDouble(state.duration, closeTo(15.0, 0.1f));
 }
 
 - (void)testAddTests

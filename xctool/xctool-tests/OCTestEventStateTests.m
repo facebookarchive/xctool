@@ -206,7 +206,7 @@
   NSArray *events = eventBuffer.events;
 
   assertThatInteger([events count], equalToInteger(1));
-  assertThatFloat(state.duration, greaterThan(@0.0));
+  assertThatDouble(state.duration, greaterThan(@0.0));
   assertThat(events[0][kReporter_EndTest_TotalDurationKey], closeTo(state.duration, 0.005f));
 }
 
@@ -218,7 +218,7 @@
   [state stateBeginTest];
   [state stateEndTest:YES result:@"success" duration:123.4];
 
-  assertThatFloat(state.duration, closeTo(123.4, 0.005f));
+  assertThatDouble(state.duration, closeTo(123.4, 0.005f));
 }
 
 @end
