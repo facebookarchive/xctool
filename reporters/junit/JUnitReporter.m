@@ -173,6 +173,14 @@
                                                            stringValue:exception[kReporter_EndTest_Exception_ReasonKey]]]];
           [testcaseElement addChild:failureElement];
         }
+
+        if ([testResult[kReporter_EndTest_ResultKey] isEqualToString:@"error"]) {
+          NSXMLElement *errorElement = [NSXMLElement elementWithName:@"error"
+                                                           stringValue:nil];
+          [errorElement setAttributes:@[[NSXMLNode attributeWithName:@"type"
+                                                           stringValue:@"Error"]]];
+          [testcaseElement addChild:errorElement];
+        }
       }
 
       NSString *output = testResult[kReporter_EndTest_OutputKey];
