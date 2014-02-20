@@ -68,14 +68,14 @@ static void XTSwizzleSelectorForFunction(Class cls, SEL sel, IMP newImp)
 // location of the error, severity, and the list of fix-it tips Xcode would normally show.
 @property (readonly) NSArray *messages;
 
-@property(readonly) double timeStoppedRecording;
-@property(readonly) double timeStartedRecording;
+@property (readonly) double timeStoppedRecording;
+@property (readonly) double timeStartedRecording;
 
 // The number of times "warning:" appears in the output.
-@property(readonly) NSUInteger totalNumberOfWarnings;
+@property (readonly) NSUInteger totalNumberOfWarnings;
 
 // The number of times "error:" appears in the output.
-@property(readonly) NSUInteger totalNumberOfErrors;
+@property (readonly) NSUInteger totalNumberOfErrors;
 
 @end
 

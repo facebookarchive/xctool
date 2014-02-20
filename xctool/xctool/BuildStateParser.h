@@ -21,7 +21,7 @@
 @interface BuildStateParser : NSObject
 
 /// Array of NSString for all known "nodes" (i.e. input and output objects)
-@property (nonatomic, retain) NSArray *nodes;
+@property (nonatomic, copy) NSArray *nodes;
 
 - (instancetype)initWithPath:(NSString *)path;
 

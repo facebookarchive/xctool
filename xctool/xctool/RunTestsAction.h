@@ -60,10 +60,10 @@ typedef enum {
 @property (nonatomic, assign) BOOL parallelize;
 @property (nonatomic, assign) BOOL failOnEmptyTestBundles;
 @property (nonatomic, assign) cpu_type_t cpuType;
-@property (nonatomic, retain) NSString *simulatorType;
-@property (nonatomic, retain) NSString *testSDK;
+@property (nonatomic, copy) NSString *simulatorType;
+@property (nonatomic, copy) NSString *testSDK;
 @property (nonatomic, retain) NSMutableArray *onlyList;
-@property (nonatomic, retain) NSString *deviceName;
+@property (nonatomic, copy) NSString *deviceName;
 
 - (void)setLogicTestBucketSize:(NSString *)str;
 - (void)setAppTestBucketSize:(NSString *)str;

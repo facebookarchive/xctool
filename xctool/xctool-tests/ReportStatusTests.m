@@ -30,13 +30,13 @@
                      @"event" : @"begin-status",
                      @"level" : @"Info",
                      @"message" : @"An info message.",
-                     @"timestamp" : @(0),
+                     @"timestamp" : @0,
                      },
                      @{
                      @"event" : @"end-status",
                      @"level" : @"Info",
                      @"message" : @"An info message.",
-                     @"timestamp" : @(0),
+                     @"timestamp" : @0,
                      },
                      ]));
 }
@@ -61,7 +61,7 @@
                      @"event" : @"begin-status",
                      @"level" : @"Info",
                      @"message" : @"An info message.",
-                     @"timestamp" : @(10),
+                     @"timestamp" : @10,
                      },
                      ]));
 }
@@ -86,7 +86,7 @@
                      @"event" : @"end-status",
                      @"level" : @"Info",
                      @"message" : @"An info message.",
-                     @"timestamp" : @(20),
+                     @"timestamp" : @20,
                      },
                      ]));
 }

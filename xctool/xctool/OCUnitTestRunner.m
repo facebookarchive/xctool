@@ -21,8 +21,8 @@
 
 #import "ReportStatus.h"
 #import "TestRunState.h"
-#import "XcodeBuildSettings.h"
 #import "XCToolUtil.h"
+#import "XcodeBuildSettings.h"
 
 @implementation OCUnitTestRunner
 

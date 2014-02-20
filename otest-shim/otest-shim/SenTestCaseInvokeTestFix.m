@@ -15,13 +15,12 @@
 //
 
 #import "SenTestClassEnumeratorFix.h"
-
-#import "dyld-interposing.h"
 #import "Swizzle.h"
+#import "dyld-interposing.h"
 
 /**
  A struct with the same layout as SenTestCase.
- 
+
  We use this instead of copying the class-dump of SenTestCase into
  this file.  If we did that, the linker would need to link directly into
  SenTestingKit, which we specifically do not want to do (because the initializer
@@ -37,7 +36,7 @@ struct XTSenTestCase
   SEL failureAction;
 };
 
-@interface XTSenTestCase
+@interface XTSenTestCase : NSObject
 - (NSUInteger)numberOfTestIterationsForTestWithSelector:(SEL)arg1;
 - (void)afterTestIteration:(unsigned long long)arg1 selector:(SEL)arg2;
 - (void)beforeTestIteration:(unsigned long long)arg1 selector:(SEL)arg2;

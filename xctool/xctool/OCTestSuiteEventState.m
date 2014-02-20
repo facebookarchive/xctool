@@ -14,8 +14,9 @@
 // limitations under the License.
 //
 
-#import "EventGenerator.h"
 #import "OCTestSuiteEventState.h"
+
+#import "EventGenerator.h"
 #import "ReporterEvents.h"
 
 @implementation OCTestSuiteEventState

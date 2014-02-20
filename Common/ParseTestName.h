@@ -23,7 +23,7 @@
 /**
  Parses a test name like '-[TestClass someMethod]' into its class and method
  name parts.
- 
+
  @param className Out param where class name will be stored.
  @param methodName Out param where method name will be stored.
  @param testName Full name of test, e.g. '-[TestClass someMethod]'

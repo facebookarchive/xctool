@@ -21,12 +21,12 @@
 #import "Action.h"
 #import "FakeTask.h"
 #import "FakeTaskManager.h"
-#import "Options.h"
 #import "Options+Testing.h"
+#import "Options.h"
 #import "ReporterTask.h"
 #import "TaskUtil.h"
-#import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
+#import "XcodeSubjectInfo.h"
 
 @interface OptionsTests : SenTestCase
 @end
@@ -371,11 +371,11 @@
                                              ]];
   options.findProjectPath = [[[NSFileManager defaultManager] currentDirectoryPath]
                              stringByAppendingPathComponent:@"xctool-tests/TestData/TestProject-Library"];
-  
+
   [options assertOptionsValidateWithBuildSettingsFromFile:
                       TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
                       ];
-  
+
   assertThatInteger(options.actions.count, equalToInteger(1));
   Action *action = options.actions[0];
   NSString *actionClassName = [NSString stringWithUTF8String:class_getName([action class])];
@@ -388,7 +388,7 @@
                                             ]];
   options.findProjectPath = [[[NSFileManager defaultManager] currentDirectoryPath]
                              stringByAppendingPathComponent:@"xctool-tests/TestData/TestMultipleProjectsInDirectory"];
-  
+
   [options assertOptionsFailToValidateWithError:
    [NSString stringWithFormat:@"The directory %@ contains 2 projects, including multiple projects with the current "
     "extension (.xcodeproj). Please specify with -workspace, -project, or -find-target.",
@@ -401,7 +401,7 @@
                                             ]];
   options.findProjectPath = [[[NSFileManager defaultManager] currentDirectoryPath]
                              stringByAppendingPathComponent:@"xctool-tests/TestData/TestWorkspace-Library"];
-  
+
   [options assertOptionsFailToValidateWithError:
    [NSString stringWithFormat:@"Unable to find projects (.xcodeproj) in directory %@. Please specify with -workspace, -project, or -find-target.",
     options.findProjectPath]];

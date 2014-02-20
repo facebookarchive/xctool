@@ -2,9 +2,9 @@
 #import "FakeTaskManager.h"
 
 #import "FakeTask.h"
+#import "LaunchHandlers.h"
 #import "Swizzle.h"
 #import "XCToolUtil.h"
-#import "LaunchHandlers.h"
 
 static FakeTaskManager *__sharedManager = nil;
 

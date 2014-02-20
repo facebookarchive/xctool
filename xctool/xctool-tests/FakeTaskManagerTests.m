@@ -1,8 +1,8 @@
 
-#import <SenTestingKit/SenTestingKit.h>
-
 #import <objc/message.h>
 #import <objc/runtime.h>
+
+#import <SenTestingKit/SenTestingKit.h>
 
 #import "FakeTask.h"
 #import "FakeTaskManager.h"

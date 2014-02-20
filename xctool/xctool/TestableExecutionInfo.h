@@ -34,12 +34,12 @@
 /**
  * The key/value pairs from `-showBuildSettings` for this testable.
  */
-@property (nonatomic, retain) NSDictionary *buildSettings;
+@property (nonatomic, copy) NSDictionary *buildSettings;
 
 /**
  * Will contain an error message if retrieving build settings with xcodebuild have failed
  */
-@property (nonatomic, retain) NSString *buildSettingsError;
+@property (nonatomic, copy) NSString *buildSettingsError;
 
 /**
  * A list of all test cases in the bundle, the form of:
@@ -47,22 +47,22 @@
  *
  * These are fetched via otest-query.  May be nil if an error occurred.
  */
-@property (nonatomic, retain) NSArray *testCases;
+@property (nonatomic, copy) NSArray *testCases;
 
 /**
  * Will contain an error message if `otest-query` fails.
  */
-@property (nonatomic, retain) NSString *testCasesQueryError;
+@property (nonatomic, copy) NSString *testCasesQueryError;
 
 /**
  * Any arguments that should be passed to otest, with all macros expanded.
  */
-@property (nonatomic, retain) NSArray *expandedArguments;
+@property (nonatomic, copy) NSArray *expandedArguments;
 
 /**
  * Any environment that should be set for otest, with all macros expanded.
  */
-@property (nonatomic, retain) NSDictionary *expandedEnvironment;
+@property (nonatomic, copy) NSDictionary *expandedEnvironment;
 
 /**
  * @return A populated TestableExecutionInfo instance.

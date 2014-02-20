@@ -21,9 +21,9 @@
 #import "SchemeGenerator.h"
 #import "TaskUtil.h"
 #import "Testable.h"
+#import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
 #import "XcodeSubjectInfo.h"
-#import "XCToolUtil.h"
 
 @implementation BuildTestsAction
 

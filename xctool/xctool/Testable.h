@@ -27,7 +27,7 @@
  * Otherwise, `senTestList` will be a comma seperated list of classes and tests
  * that should be skipped, and the `senTestInvertScope` will be YES.
  */
-@property (nonatomic, retain) NSString *senTestList;
+@property (nonatomic, copy) NSString *senTestList;
 @property (nonatomic, assign) BOOL senTestInvertScope;
 
 /**
@@ -40,24 +40,24 @@
  * Array of arguments to passed on the command-line to the test bundle.  These
  * are optionally set by the Xcode scheme.
  */
-@property (nonatomic, retain) NSArray *arguments;
+@property (nonatomic, copy) NSArray *arguments;
 
 /**
  * Dictionary of environment variables to set before launching the test bundle.
  * These are optionally set by the Xcode scheme.
  */
-@property (nonatomic, retain) NSDictionary *environment;
+@property (nonatomic, copy) NSDictionary *environment;
 
 /**
  * If the "Expand Variables Based On" option is enabled in the Xcode scheme,
  * this is the path to the project that contains the selected target.
  */
-@property (nonatomic, retain) NSString *macroExpansionProjectPath;
+@property (nonatomic, copy) NSString *macroExpansionProjectPath;
 
 /**
  * If the "Expand Variables Based On" option is enabled in the Xcode scheme,
  * this is the name of the selected target.
  */
-@property (nonatomic, retain) NSString *macroExpansionTarget;
+@property (nonatomic, copy) NSString *macroExpansionTarget;
 
 @end

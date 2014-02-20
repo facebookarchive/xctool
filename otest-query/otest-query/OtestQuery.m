@@ -122,7 +122,7 @@
 
     [testNames addObject:[NSString stringWithFormat:@"%@/%@", className, methodName]];
   }
-  
+
   [testNames sortUsingSelector:@selector(compare:)];
 
   NSData *json = [NSJSONSerialization dataWithJSONObject:testNames options:0 error:nil];

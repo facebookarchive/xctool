@@ -22,8 +22,8 @@
 #import "FakeTaskManager.h"
 #import "LaunchHandlers.h"
 #import "OCUnitTestRunner.h"
-#import "Options.h"
 #import "Options+Testing.h"
+#import "Options.h"
 #import "RunTestsAction.h"
 #import "Swizzler.h"
 #import "TaskUtil.h"
@@ -100,18 +100,18 @@
                                                         hide:NO],
       [LaunchHandlers handlerForOtestQueryReturningTestList:@[]],
       ]];
-  
+
     XCTool *tool = [[[XCTool alloc] init] autorelease];
-    
+
     tool.arguments = @[
                        @"-project", TEST_DATA @"TestProjectWithSchemeThatReferencesNonExistentTestTarget/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
                        @"-sdk", @"iphonesimulator",
                        @"test"
                        ];
-    
+
     NSDictionary *output = [TestUtil runWithFakeStreams:tool];
-    
+
     assertThatInt(tool.exitStatus, equalToInt(1));
     assertThat(output[@"stdout"],
                containsString(@"Unable to read build settings for target 'TestProject-LibraryTests'."));
@@ -186,15 +186,15 @@
     ]];
 
     XCTool *tool = [[[XCTool alloc] init] autorelease];
-    
+
     tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library-XCTest-iOS/TestProject-Library-XCTest-iOS.xcodeproj",
                        @"-scheme", @"TestProject-Library-XCTest-iOS",
                        @"-configuration", @"Debug",
                        @"run-tests"
                        ];
-    
+
     NSDictionary *output = [TestUtil runWithFakeStreams:tool];
-    
+
     assertThatInt(tool.exitStatus, equalToInt(1));
     assertThat(output[@"stdout"],
                containsString(@"Testing with the 'iphoneos' SDK is not yet supported.  "

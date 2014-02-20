@@ -18,9 +18,9 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-#import "ReporterEvents.h"
-#import "OCTestSuiteEventState.h"
 #import "OCTestEventState.h"
+#import "OCTestSuiteEventState.h"
+#import "ReporterEvents.h"
 #import "XCToolUtil.h"
 
 @implementation TestRunState

@@ -14,16 +14,15 @@
 // limitations under the License.
 //
 
-#import <mach-o/dyld.h>
-#import <mach-o/dyld_images.h>
-#import <objc/message.h>
 #import <objc/runtime.h>
 #import <sys/uio.h>
 
 #import <Foundation/Foundation.h>
+
 #import <SenTestingKit/SenTestingKit.h>
 
-#import "XCTest.h"
+#import <mach-o/dyld.h>
+#import <mach-o/dyld_images.h>
 
 #import "DuplicateTestNameFix.h"
 #import "EventGenerator.h"
@@ -33,7 +32,7 @@
 #import "SenTestClassEnumeratorFix.h"
 #import "Swizzle.h"
 #import "TestingFramework.h"
-
+#import "XCTest.h"
 #import "dyld-interposing.h"
 #import "dyld_priv.h"
 
@@ -136,7 +135,7 @@ static void PrintJSON(id JSONObject)
             [[error localizedFailureReason] UTF8String]);
     exit(1);
   }
-  
+
   fwrite([data bytes], 1, [data length], __stdout);
   fputs("\n", __stdout);
   fflush(__stdout);
@@ -247,7 +246,7 @@ static void XCToolLog_testCaseDidStart(NSString *fullTestName)
         kReporter_BeginTest_ClassNameKey : className,
         kReporter_BeginTest_MethodNameKey : methodName,
     }));
-    
+
     [__testExceptions release];
     __testExceptions = [[NSMutableArray alloc] init];
     __testIsRunning = YES;
@@ -289,7 +288,7 @@ static void XCToolLog_testCaseDidStop(NSString *fullTestName, NSNumber *unexpect
       result = @"success";
       succeeded = YES;
     }
-    
+
     NSArray *retExceptions = [__testExceptions copy];
     NSDictionary *json = EventDictionaryWithNameAndContent(
       kReporter_Events_EndTest, @{
@@ -303,9 +302,9 @@ static void XCToolLog_testCaseDidStop(NSString *fullTestName, NSNumber *unexpect
         kReporter_EndTest_ExceptionsKey : retExceptions,
     });
     [retExceptions release];
-    
+
     PrintJSON(json);
-    
+
     __testIsRunning = NO;
     [__testOutput release];
     __testOutput = nil;
@@ -436,7 +435,7 @@ static NSString *CreateStringFromIOV(const struct iovec *iov, int iovcnt) {
   for (int i = 0; i < iovcnt; i++) {
     [buffer appendBytes:iov[i].iov_base length:iov[i].iov_len];
   }
-  
+
   NSMutableData *bufferWithoutNulls = [[NSMutableData alloc] initWithLength:buffer.length];
 
   NSUInteger offset = 0;

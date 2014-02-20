@@ -37,7 +37,7 @@
 {
   NSData *outputData = [JSONCompilationDatabaseReporter
                       outputDataWithEventsFromFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-build-objc++.txt"];
-    
+
   NSError *jsonSerializationError;
   // we should compare json objects (not strings from data) because json format does not specify order of keys
   id jsonObject = [NSJSONSerialization JSONObjectWithData:outputData options:0 error:&jsonSerializationError];

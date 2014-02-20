@@ -21,12 +21,12 @@
  to retrieve the list of Obj-C classes.  It first calls objc_getClassList to
  get the count of classes, then allocates a buffer of that size, then calls
  objc_getClassList again to retrieve all the classes (and that's the problem).
- 
+
  In between `-[SenTestClassEnumerator init]`'s two calls to objc_getClassList,
  background threads can trigger more classes to be registered.  Unfortunately,
  the implementation throws an exception if the two counts returned by
  objc_getClassList don't match.
- 
+
  Let's swizzle `init` and provide our own impementation that uses
  objc_copyClassList instead, which will return the class list in one shot.
  This is exactly what XCTest now does.

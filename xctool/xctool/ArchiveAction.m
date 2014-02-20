@@ -6,7 +6,7 @@
 
 @interface ArchiveAction ()
 
-@property (nonatomic, retain) NSString *archivePath;
+@property (nonatomic, copy) NSString *archivePath;
 
 @end
 
@@ -23,12 +23,12 @@
   [arguments addObjectsFromArray:[options commonXcodeBuildArgumentsForSchemeAction:@"ArchiveAction"
                                                                   xcodeSubjectInfo:xcodeSubjectInfo]];
   [arguments addObject:@"archive"];
-  
+
   if (_archivePath)
   {
     [arguments addObjectsFromArray:@[@"-archivePath", _archivePath]];
   }
-  
+
   return RunXcodebuildAndFeedEventsToReporters(arguments,
                                                @"archive",
                                                [options scheme],

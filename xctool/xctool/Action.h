@@ -24,8 +24,8 @@
 #define kActionOptionMapToSelector @"kActionOptionMapToSelector"
 #define kActionOptionSetFlagSelector @"kActionOptionSetFlagSelector"
 
-@class XcodeSubjectInfo;
 @class Options;
+@class XcodeSubjectInfo;
 
 @interface Action : NSObject
 

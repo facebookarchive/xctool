@@ -14,10 +14,11 @@
 // limitations under the License.
 //
 
+#import "OCTestEventState.h"
+
 #import <QuartzCore/QuartzCore.h>
 
 #import "EventGenerator.h"
-#import "OCTestEventState.h"
 #import "ReporterEvents.h"
 
 @implementation OCTestEventState

@@ -28,7 +28,7 @@
 @end
 
 @interface Xcode3TargetBuildable : NSObject
-@property(readonly) Xcode3Target *xcode3Target;
+@property (readonly) Xcode3Target *xcode3Target;
 @end
 
 @interface Xcode3TargetProduct : Xcode3TargetBuildable

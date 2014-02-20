@@ -36,7 +36,7 @@
 - (id)preferredArchitectures;
 
 /**
- * When YES (default), a new progress group is created for the child (via 
+ * When YES (default), a new progress group is created for the child (via
  * POSIX_SPAWN_SETPGROUP to posix_spawnattr_setflags).  If YES, then the child
  * will continue running even if the parent is killed or interrupted.
  */

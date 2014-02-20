@@ -14,15 +14,16 @@
 // limitations under the License.
 //
 
-#import <Foundation/Foundation.h>
 
 #import <launch.h>
 #import <mach/mach.h>
+
+#import <Foundation/Foundation.h>
+
 #import <servers/bootstrap.h>
 
-#import "dyld-interposing.h"
-
 #import "Swizzle.h"
+#import "dyld-interposing.h"
 
 @interface BootlegTask : NSObject
 {
@@ -35,13 +36,13 @@
   NSDictionary *_sessionCookie;
 }
 
-@property int cpuType; // @synthesize cpuType=_cpuType;
-@property BOOL setExec; // @synthesize setExec=_setExec;
-@property BOOL waitForDebugger; // @synthesize waitForDebugger=_waitForDebugger;
-@property(copy) NSDictionary *sessionCookie; // @synthesize sessionCookie=_sessionCookie;
-@property(copy) NSDictionary *environment; // @synthesize environment=_environment;
-@property(copy) NSArray *arguments; // @synthesize arguments=_arguments;
-@property(copy) NSString *launchPath; // @synthesize launchPath=_launchPath;
+@property (atomic, assign) int cpuType; // @synthesize cpuType=_cpuType;
+@property (atomic, assign) BOOL setExec; // @synthesize setExec=_setExec;
+@property (atomic, assign) BOOL waitForDebugger; // @synthesize waitForDebugger=_waitForDebugger;
+@property (atomic, copy) NSDictionary *sessionCookie; // @synthesize sessionCookie=_sessionCookie;
+@property (atomic, copy) NSDictionary *environment; // @synthesize environment=_environment;
+@property (atomic, copy) NSArray *arguments; // @synthesize arguments=_arguments;
+@property (atomic, copy) NSString *launchPath; // @synthesize launchPath=_launchPath;
 - (int)runUntilExit;
 
 @end

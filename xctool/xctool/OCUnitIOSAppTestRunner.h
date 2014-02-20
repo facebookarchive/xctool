@@ -21,6 +21,6 @@
 @interface OCUnitIOSAppTestRunner : OCUnitTestRunner {
 }
 
-@property (nonatomic, retain) NSString *deviceName;
+@property (nonatomic, copy) NSString *deviceName;
 
 @end

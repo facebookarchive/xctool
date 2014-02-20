@@ -40,7 +40,7 @@ NSString *MakeTempFileWithPrefix(NSString *prefix);
  Returns a NSDictionary with a NSString to NSDictionary mapping of information
  to values for all available SDK types. Here is an example of what the output
  might look like:
- 
+
  @{@"macosx10.8" : @{
                      @"SDK": "macosx10.8"
                      @"SDKVersion" : @"10.8",
@@ -52,7 +52,7 @@ NSString *MakeTempFileWithPrefix(NSString *prefix);
                      @"ProductBuildVersion" : @"12347",
                    }
   };
- 
+
  @return NSDictionary mapping a NSString of the particular SDK to an
  NSDictionary containing label/value mappings that xcodebuild -sdk -version
  returned for that environment (e.g. "SDKVersion", "Path",
@@ -68,7 +68,7 @@ NSDictionary *GetAvailableSDKsInfo();
  "macosx10.8"), it also maps the latest version of an SDK family that's
  available (e.g. if macosx10.8 and macosx10.9 are both available, "macosx" will
  map to "macos10.9" since it is the most recent version).
- 
+
  @return NSDictionary mapping a NSString of either a specific SDK or an
  SDK family to an NSString representing the appropriate SDK. Note that this
  mapping is the same as if we we grabbed the appropriate dictionary from the
@@ -83,9 +83,9 @@ BOOL IsRunningUnderTest();
 /**
  Returns the Xcode version, as read from DTXCode in:
  /Applications/Xcode.app/Contents/Info.plist
- 
+
  Version will be 500 for Xcode 5.0, 501 for Xcode 5.0.1, or 460 for Xcode 4.6.
- 
+
  @return int Xcode version
  */
 int XcodebuildVersion();

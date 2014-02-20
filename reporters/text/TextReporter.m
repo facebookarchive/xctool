@@ -48,7 +48,7 @@ static NSString *abbreviatePath(NSString *string) {
 @property (nonatomic, assign) NSInteger savedIndent;
 @property (nonatomic, assign) BOOL useColorOutput;
 @property (nonatomic, retain) NSFileHandle *outputHandle;
-@property (nonatomic, retain) NSString *lastLineUpdate;
+@property (nonatomic, copy) NSString *lastLineUpdate;
 
 - (id)initWithOutputHandle:(NSFileHandle *)outputHandle;
 
@@ -556,7 +556,7 @@ static NSString *abbreviatePath(NSString *string) {
   if (!succeeded) {
     NSString *body = [NSString stringWithFormat:@"%@\n%@",
                       self.currentBuildCommandEvent[kReporter_BeginBuildCommand_CommandKey], outputText];
-    
+
     [self.failedBuildEvents addObject:@{@"title":event[kReporter_EndBuildCommand_TitleKey], @"body":body}];
   }
 

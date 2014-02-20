@@ -24,10 +24,10 @@
   NSTaskTerminationReason _pretendTerminationReason;
 }
 
-@property (nonatomic, retain) NSString *currentDirectoryPath;
-@property (nonatomic, retain) NSString *launchPath;
-@property (nonatomic, retain) NSArray *arguments;
-@property (nonatomic, retain) NSDictionary *environment;
+@property (nonatomic, copy) NSString *currentDirectoryPath;
+@property (nonatomic, copy) NSString *launchPath;
+@property (nonatomic, copy) NSArray *arguments;
+@property (nonatomic, copy) NSDictionary *environment;
 @property (nonatomic, retain) id standardOutput;
 @property (nonatomic, retain) id standardError;
 @property (nonatomic, assign) int terminationStatus;
