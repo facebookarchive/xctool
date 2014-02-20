@@ -29,7 +29,7 @@
 @property (nonatomic, readonly) BOOL isStarted;
 @property (nonatomic, readonly) BOOL isFinished;
 @property (nonatomic, readonly) BOOL isSuccessful;
-@property (nonatomic) double duration;
+@property (nonatomic, assign) double duration;
 
 
 /**

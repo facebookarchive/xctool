@@ -16,8 +16,8 @@
 
 #import "AnalyzeAction.h"
 
-#import "Buildable.h"
 #import "BuildStateParser.h"
+#import "Buildable.h"
 #import "EventGenerator.h"
 #import "EventSink.h"
 #import "Options.h"

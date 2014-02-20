@@ -20,7 +20,7 @@
 
 @interface FakeAction : Action
 @property (nonatomic, assign) BOOL showHelp;
-@property (nonatomic, retain) NSString *name;
+@property (nonatomic, copy) NSString *name;
 @property (nonatomic, retain) NSMutableArray *numbers;
 @end
 

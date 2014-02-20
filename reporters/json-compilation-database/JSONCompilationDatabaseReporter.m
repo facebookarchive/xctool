@@ -125,11 +125,11 @@
   if (!rawCompilerCommand) {
     return nil;
   }
-    
+
   NSTextCheckingResult *workingDirectoryMatch = [rawWorkingDirectory firstMatch:@[@"^cd \"(.+)\"", @"^cd (.+)"]];
   NSTextCheckingResult *sourceFileMatch = [rawCompilerCommand firstMatch:@[@"-c \"(.+?)\"", @" -c (.+?) -o"]];
   NSTextCheckingResult *pchMatch = [rawCompilerCommand firstMatch:@[@"-include \"(.+?\\.pch)\"", @"-include (.+?\\.pch)"]];
-    
+
   if (sourceFileMatch && workingDirectoryMatch) {
     NSMutableDictionary *compile = [[[NSMutableDictionary alloc] init] autorelease];
     compile[@"file"] = [rawCompilerCommand substringWithRange:[sourceFileMatch rangeAtIndex:1]];

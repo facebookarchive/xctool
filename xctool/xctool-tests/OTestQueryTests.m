@@ -21,8 +21,8 @@
 #import "OCUnitOSXAppTestQueryRunner.h"
 #import "OCUnitOSXLogicTestQueryRunner.h"
 #import "TestUtil.h"
-#import "XcodeBuildSettings.h"
 #import "XCToolUtil.h"
+#import "XcodeBuildSettings.h"
 
 @interface OTestQueryTests : SenTestCase
 @end

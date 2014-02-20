@@ -1,3 +1,5 @@
+// Copyright 2004-present Facebook. All Rights Reserved.
+
 #import "JUnitReporter.h"
 
 #import "ReporterEvents.h"
@@ -12,10 +14,10 @@
 @property (nonatomic, retain) NSMutableArray *testSuites;
 @property (nonatomic, retain) NSMutableArray *testResults;
 @property (nonatomic, retain) NSDateFormatter *formatter;
-@property (nonatomic) int totalTests;
-@property (nonatomic) int totalFailures;
-@property (nonatomic) int totalErrors;
-@property (nonatomic) double totalTime;
+@property (nonatomic, assign) int totalTests;
+@property (nonatomic, assign) int totalFailures;
+@property (nonatomic, assign) int totalErrors;
+@property (nonatomic, assign) double totalTime;
 
 @end
 
@@ -110,7 +112,7 @@
                     [[[existingTestSuite attributeForName:@"errors"] objectValue] intValue]);
       double time = ([suiteEvent[kReporter_EndTestSuite_TotalDurationKey] doubleValue] +
                     [[[existingTestSuite attributeForName:@"time"] objectValue] doubleValue]);
-      
+
       NSArray *attributes = @[[NSXMLNode attributeWithName:@"tests"
                                                stringValue:[NSString stringWithFormat:@"%d", tests]],
                               [NSXMLNode attributeWithName:@"failures"

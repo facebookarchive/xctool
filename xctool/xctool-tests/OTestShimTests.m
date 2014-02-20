@@ -17,15 +17,15 @@
 #import <SenTestingKit/SenTestingKit.h>
 
 #import "ContainsAssertionFailure.h"
-#import "OCUnitIOSLogicTestRunner.h"
 #import "OCUnitIOSLogicTestQueryRunner.h"
-#import "OCUnitOSXLogicTestRunner.h"
+#import "OCUnitIOSLogicTestRunner.h"
 #import "OCUnitOSXLogicTestQueryRunner.h"
+#import "OCUnitOSXLogicTestRunner.h"
 #import "ReporterEvents.h"
 #import "TaskUtil.h"
 #import "TestUtil.h"
-#import "XcodeBuildSettings.h"
 #import "XCToolUtil.h"
+#import "XcodeBuildSettings.h"
 
 @interface OTestShimTests : SenTestCase
 @end

@@ -25,7 +25,7 @@
 
 @interface OCEventState : NSObject
 
-@property (nonatomic, retain) NSArray *reporters;
+@property (nonatomic, copy) NSArray *reporters;
 
 - (instancetype)initWithReporters:(NSArray *)reporters;
 

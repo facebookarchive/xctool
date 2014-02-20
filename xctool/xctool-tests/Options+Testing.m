@@ -5,8 +5,8 @@
 #import "FakeTaskManager.h"
 #import "LaunchHandlers.h"
 #import "ReporterTask.h"
-#import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
+#import "XcodeSubjectInfo.h"
 
 @implementation Options (Testing)
 

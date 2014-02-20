@@ -22,8 +22,8 @@
 #import "ReportStatus.h"
 #import "SimulatorLauncher.h"
 #import "TaskUtil.h"
-#import "XcodeBuildSettings.h"
 #import "XCToolUtil.h"
+#import "XcodeBuildSettings.h"
 
 static const NSInteger kMaxInstallOrUninstallAttempts = 3;
 
@@ -129,7 +129,7 @@ static void KillSimulatorJobs()
   [sessionConfig setSimulatedSystemRoot:systemRoot];
   [sessionConfig setSimulatedDeviceFamily:[self simulatedDeviceFamily]];
   [sessionConfig setSimulatedApplicationShouldWaitForDebugger:NO];
-  
+
   [sessionConfig setSimulatedApplicationLaunchArgs:[self testArguments]];
 
   NSMutableDictionary *launchEnvironment = [NSMutableDictionary dictionary];

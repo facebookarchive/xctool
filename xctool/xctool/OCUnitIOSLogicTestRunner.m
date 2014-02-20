@@ -19,8 +19,8 @@
 #import "NSConcreteTask.h"
 #import "TaskUtil.h"
 #import "TestingFramework.h"
-#import "XcodeBuildSettings.h"
 #import "XCToolUtil.h"
+#import "XcodeBuildSettings.h"
 
 @implementation OCUnitIOSLogicTestRunner
 

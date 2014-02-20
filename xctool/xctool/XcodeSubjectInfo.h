@@ -16,8 +16,8 @@
 
 #import <Foundation/Foundation.h>
 
-@class XcodeTargetMatch;
 @class Testable;
+@class XcodeTargetMatch;
 
 /**
  * XcodeSubjectInfo offers up info about the subject (either a workspace/scheme pair, or
@@ -28,23 +28,23 @@
   NSDictionary *_configurationNameByAction;
 }
 
-@property (nonatomic, retain) NSString *subjectWorkspace;
-@property (nonatomic, retain) NSString *subjectProject;
-@property (nonatomic, retain) NSString *subjectScheme;
-@property (nonatomic, retain) NSArray *subjectXcodeBuildArguments;
+@property (nonatomic, copy) NSString *subjectWorkspace;
+@property (nonatomic, copy) NSString *subjectProject;
+@property (nonatomic, copy) NSString *subjectScheme;
+@property (nonatomic, copy) NSArray *subjectXcodeBuildArguments;
 
-@property (nonatomic, retain) NSString *objRoot;
-@property (nonatomic, retain) NSString *symRoot;
-@property (nonatomic, retain) NSString *sharedPrecompsDir;
-@property (nonatomic, retain) NSString *effectivePlatformName;
-@property (nonatomic, retain) NSArray *testables;
+@property (nonatomic, copy) NSString *objRoot;
+@property (nonatomic, copy) NSString *symRoot;
+@property (nonatomic, copy) NSString *sharedPrecompsDir;
+@property (nonatomic, copy) NSString *effectivePlatformName;
+@property (nonatomic, copy) NSArray *testables;
 // Everything in the scheme marked as Build for Test
-@property (nonatomic, retain) NSArray *buildablesForTest;
+@property (nonatomic, copy) NSArray *buildablesForTest;
 @property (nonatomic, assign) BOOL parallelizeBuildables;
 @property (nonatomic, assign) BOOL buildImplicitDependencies;
 
 // buildables for Running or Testing
-@property (nonatomic, retain) NSArray *buildables;
+@property (nonatomic, copy) NSArray *buildables;
 
 /**
  Load subject info for workspace/scheme or project/scheme.

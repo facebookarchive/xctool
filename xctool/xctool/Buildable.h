@@ -21,22 +21,22 @@
 /**
  * Path to the project that contains this buildable's target.
  */
-@property (nonatomic, retain) NSString *projectPath;
+@property (nonatomic, copy) NSString *projectPath;
 
 /**
  * Name of the target.
  */
-@property (nonatomic, retain) NSString *target;
+@property (nonatomic, copy) NSString *target;
 
 /**
  * The Xcode hash/ID for this target.
  */
-@property (nonatomic, retain) NSString *targetID;
+@property (nonatomic, copy) NSString *targetID;
 
 /**
  * Name of the target's executable
  */
-@property (nonatomic, retain) NSString *executable;
+@property (nonatomic, copy) NSString *executable;
 
 /**
  * YES if this target as marked as Build for Run

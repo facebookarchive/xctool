@@ -16,9 +16,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "Reporter.h"
-#import "OCTestSuiteEventState.h"
 #import "OCTestEventState.h"
+#import "OCTestSuiteEventState.h"
+#import "Reporter.h"
 
 @interface TestRunState : Reporter {
   OCTestSuiteEventState *_testSuiteState;

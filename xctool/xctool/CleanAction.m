@@ -19,8 +19,8 @@
 #import "BuildAction.h"
 #import "BuildTestsAction.h"
 #import "Options.h"
-#import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
+#import "XcodeSubjectInfo.h"
 
 @implementation CleanAction
 

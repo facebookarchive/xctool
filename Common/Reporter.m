@@ -16,9 +16,9 @@
 
 #import "Reporter.h"
 
+#import <objc/runtime.h>
 #import <poll.h>
 #import <sys/stat.h>
-#import <objc/runtime.h>
 
 static void ReadFileDescriptorAndOutputLinesToBlock(int inputFD,
                                                     void (^block)(NSString *line))

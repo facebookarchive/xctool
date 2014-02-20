@@ -17,8 +17,8 @@
 #import "OCUnitOSXAppTestQueryRunner.h"
 
 #import "TaskUtil.h"
-#import "XcodeBuildSettings.h"
 #import "XCToolUtil.h"
+#import "XcodeBuildSettings.h"
 
 @implementation OCUnitOSXAppTestQueryRunner
 

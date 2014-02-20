@@ -26,8 +26,8 @@
 #import "ReporterTask.h"
 #import "TaskUtil.h"
 #import "Version.h"
-#import "XcodeSubjectInfo.h"
 #import "XCToolUtil.h"
+#import "XcodeSubjectInfo.h"
 
 @implementation XCTool
 

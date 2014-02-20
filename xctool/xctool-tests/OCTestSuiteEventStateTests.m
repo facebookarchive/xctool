@@ -18,8 +18,8 @@
 
 #import "EventBuffer.h"
 #import "EventGenerator.h"
-#import "OCTestSuiteEventState.h"
 #import "OCTestEventState.h"
+#import "OCTestSuiteEventState.h"
 #import "ReporterEvents.h"
 #import "TestUtil.h"
 

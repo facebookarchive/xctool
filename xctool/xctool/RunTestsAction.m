@@ -24,14 +24,14 @@
 #import "OCUnitOSXAppTestRunner.h"
 #import "OCUnitOSXLogicTestRunner.h"
 #import "Options.h"
-#import "ReporterEvents.h"
 #import "ReportStatus.h"
+#import "ReporterEvents.h"
 #import "TaskUtil.h"
 #import "Testable.h"
 #import "TestableExecutionInfo.h"
+#import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
 #import "XcodeSubjectInfo.h"
-#import "XCToolUtil.h"
 
 static NSDictionary *ParseDestinationString(NSString *destinationString, NSString **errorMessage)
 {
@@ -567,7 +567,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
   for (Testable *testable in testables) {
     dispatch_group_async(group, q, ^{
       dispatch_semaphore_wait(jobLimiter, DISPATCH_TIME_FOREVER);
-      
+
       TestableExecutionInfo *info = [TestableExecutionInfo infoForTestable:testable
                                                           xcodeSubjectInfo:xcodeSubjectInfo
                                                        xcodebuildArguments:xcodebuildArguments

@@ -30,20 +30,20 @@
 
 + (NSArray *)actionClasses;
 
-@property (nonatomic, retain) NSString *workspace;
-@property (nonatomic, retain) NSString *project;
-@property (nonatomic, retain) NSString *scheme;
-@property (nonatomic, retain) NSString *configuration;
-@property (nonatomic, retain) NSString *sdk;
-@property (nonatomic, retain) NSString *arch;
-@property (nonatomic, retain) NSString *destination;
-@property (nonatomic, retain) NSString *toolchain;
-@property (nonatomic, retain) NSString *xcconfig;
-@property (nonatomic, retain) NSString *jobs;
-@property (nonatomic, retain) NSString *findTarget;
-@property (nonatomic, retain) NSString *findTargetPath;
-@property (nonatomic, copy)   NSString *findProjectPath;
-@property (nonatomic, retain) NSArray *findTargetExcludePaths;
+@property (nonatomic, copy) NSString *workspace;
+@property (nonatomic, copy) NSString *project;
+@property (nonatomic, copy) NSString *scheme;
+@property (nonatomic, copy) NSString *configuration;
+@property (nonatomic, copy) NSString *sdk;
+@property (nonatomic, copy) NSString *arch;
+@property (nonatomic, copy) NSString *destination;
+@property (nonatomic, copy) NSString *toolchain;
+@property (nonatomic, copy) NSString *xcconfig;
+@property (nonatomic, copy) NSString *jobs;
+@property (nonatomic, copy) NSString *findTarget;
+@property (nonatomic, copy) NSString *findTargetPath;
+@property (nonatomic, copy) NSString *findProjectPath;
+@property (nonatomic, copy) NSArray *findTargetExcludePaths;
 
 @property (nonatomic, assign) BOOL showBuildSettings;
 @property (nonatomic, assign) BOOL showTasks;

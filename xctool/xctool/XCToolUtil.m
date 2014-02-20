@@ -26,7 +26,6 @@
 #import "ReporterTask.h"
 #import "TaskUtil.h"
 #import "XcodeSubjectInfo.h"
-#import "XCToolUtil.h"
 
 static NSString *__tempDirectoryForAction = nil;
 
@@ -52,9 +51,9 @@ NSDictionary *BuildSettingsFromOutput(NSString *output)
   if ([scanner scanString:@"Build settings from command line:\n" intoString:NULL]) {
     scanUntilEmptyLine();
   }
-  
+
   if ([scanner scanString:@"Build settings from configuration file" intoString:NULL]) {
-    scanUntilEmptyLine(); 
+    scanUntilEmptyLine();
   }
 
   for (;;) {
@@ -202,13 +201,13 @@ static void AddSDKToDictionary(NSMutableDictionary *dict,
                                NSScanner *scanner,
                                NSString *sdk)
 {
-  
+
   NSMutableDictionary *versionDict = [NSMutableDictionary dictionary];
 
   // This isn't present in the output, but adding the mapping here in order
   // to assist with looking up the SDK value quickly
   versionDict[@"SDK"] = sdk;
-  
+
   for (;;) {
     NSString *line = nil;
     NSString *key = nil;
@@ -223,7 +222,7 @@ static void AddSDKToDictionary(NSMutableDictionary *dict,
     }
 
     NSScanner *lineScanner = [NSScanner scannerWithString:line];
-    
+
     // Parse the label/value pair from the line and add it to the dictionary
     [lineScanner scanUpToString:@": " intoString:&key];
     [lineScanner scanString:@": " intoString:nil];
@@ -248,19 +247,19 @@ NSDictionary *GetAvailableSDKsInfo()
   NSTask *task = CreateTaskInSameProcessGroup();
   [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
   [task setArguments:@[@"-sdk", @"-version"]];
-  
+
   NSDictionary *output = LaunchTaskAndCaptureOutput(task,
                                                     @"querying available SDKs");
   NSString *sdkContents = output[@"stdout"];
   [task release];
-  
+
   NSScanner *scanner = [NSScanner scannerWithString:sdkContents];
-  
+
   // We're choosing not to skip characters since we need to know when we
   // encounter newline characters to determine when we've consumed an SDK
   // "block"
   [scanner setCharactersToBeSkipped:nil];
-  
+
   // Regex to pull out SDK value; matching lines with ".sdk" and "([\w.]+)"
   // (capturing group around what's inside of the parentheses).
   NSRegularExpression *sdkVersionRegex =
@@ -268,49 +267,49 @@ NSDictionary *GetAvailableSDKsInfo()
      regularExpressionWithPattern:@"^[\\w.]+.sdk[\\s\\w-.]+\\(([\\w.]+)\\)$"
                           options:0
                             error:nil];
-  
+
   NSMutableDictionary *versionsAvaialble = [NSMutableDictionary dictionary];
-  
+
   while (![scanner isAtEnd]) {
     NSString *str = nil;
 
     // Read current line
     [scanner scanUpToString:@"\n" intoString:&str];
     [scanner scanString:@"\n" intoString:nil];
-    
+
     // Attempt to match the regex
     NSArray *match = [sdkVersionRegex matchesInString:str
                                               options:0
                                                 range:NSMakeRange(0, str.length)];
-    
+
     // If we don't find a match, we are done with the SDK parsing
     if (match.count == 0) {
       break;
     }
-    
+
     // Pull the SDK value from our capturing group
     NSString *sdkVersion = [str substringWithRange:[match[0] rangeAtIndex:1]];
-    
+
     AddSDKToDictionary(versionsAvaialble, scanner, sdkVersion);
   }
-  
+
   return versionsAvaialble;
 }
 
 NSDictionary *GetAvailableSDKsAndAliases()
 {
   NSMutableDictionary *versionsAvailable = [NSMutableDictionary dictionary];
-  
+
   // GetAvailableSDKsInfo already does the hard work for us; we just need to
   //  iterate through its result to pull out the values cooresponding to the
   // "SDK" field for each of the SDK entries.
   NSDictionary *sdkInfo = GetAvailableSDKsInfo();
   NSArray *keys = [sdkInfo allKeys];
-  
+
   for (NSString *key in keys) {
     versionsAvailable[key] = sdkInfo[key][@"SDK"];
   }
-  
+
   return versionsAvailable;
 }
 
@@ -593,7 +592,7 @@ void PublishEventToReporters(NSArray *reporters, NSDictionary *event)
 NSArray *AvailableReporters()
 {
   NSString *reportersPath = XCToolReportersPath();
-  
+
   NSError *error = nil;
   NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:reportersPath
                                                                           error:&error];

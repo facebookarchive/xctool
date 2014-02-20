@@ -21,9 +21,9 @@
 #import "OCUnitOSXAppTestQueryRunner.h"
 #import "OCUnitOSXLogicTestQueryRunner.h"
 #import "TaskUtil.h"
+#import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
 #import "XcodeSubjectInfo.h"
-#import "XCToolUtil.h"
 
 @implementation TestableExecutionInfo
 
@@ -45,7 +45,7 @@
                                                                xcodeArguments:xcodebuildArguments
                                                                       testSDK:testSDK
                                                                         error:&buildSettingsError];
-  
+
   if (buildSettings) {
     info.buildSettings = buildSettings;
   } else {
@@ -149,7 +149,7 @@
     *error = [NSString stringWithFormat:@"Should have found build settings for target '%@'", target];
     return nil;
   }
-  
+
   return allSettings[target];
 }
 

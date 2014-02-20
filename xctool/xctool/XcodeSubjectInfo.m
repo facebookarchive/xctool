@@ -757,7 +757,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
  Returns build settings for some target in the scheme.  We don't actually care
  which target's settings are returned, since we only need a few specific values:
  OBJROOT, SYMROOT, SHARED_PRECOMPS_DIR, and EFFECTIVE_PLATFORM_NAME.
- 
+
  If we knew more about Xcode internals, we could probably find a way to query
  these values without calling -showBuildSettings.
  */

@@ -31,12 +31,12 @@
   NSDictionary *_currentStatusEvent;
 }
 
-@property (nonatomic, retain) NSDictionary *currentBuildCommandEvent;
+@property (nonatomic, copy) NSDictionary *currentBuildCommandEvent;
 @property (nonatomic, assign) BOOL testHadOutput;
 @property (nonatomic, assign) BOOL testOutputEndsInNewline;
 @property (nonatomic, retain) ReportWriter *reportWriter;
 @property (nonatomic, retain) NSMutableArray *failedTests;
-@property (nonatomic, retain) NSString *currentBundle;
+@property (nonatomic, copy) NSString *currentBundle;
 @property (nonatomic, retain) NSMutableArray *analyzerWarnings;
 @property (nonatomic, retain) NSMutableArray *failedBuildEvents;
 

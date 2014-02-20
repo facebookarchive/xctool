@@ -16,8 +16,8 @@
 
 #import "SenTestClassEnumeratorFix.h"
 
-#import "dyld-interposing.h"
 #import "Swizzle.h"
+#import "dyld-interposing.h"
 
 // A struct with the same layout as SenTestClassEnumerator.
 //
@@ -34,7 +34,7 @@ struct XTSenTestClassEnumerator {
   _Bool isAtEnd;
 };
 
-@interface XTSenTestClassEnumerator
+@interface XTSenTestClassEnumerator : NSObject
 - (_Bool)isValidClass:(Class)arg1;
 @end
 
@@ -42,7 +42,7 @@ static id SenTestClassEnumerator_init(id self, SEL cmd)
 {
   unsigned int classCount = 0;
   Class *classList = objc_copyClassList(&classCount);
-  
+
   struct XTSenTestClassEnumerator *selfStruct = (struct XTSenTestClassEnumerator *)self;
   selfStruct->classes = [[NSMutableArray alloc] init];
   selfStruct->isAtEnd = NO;

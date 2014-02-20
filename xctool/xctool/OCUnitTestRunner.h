@@ -15,9 +15,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TestingFramework.h"
 
 #import "TestRunState.h"
+#import "TestingFramework.h"
 
 @interface OCUnitTestRunner : NSObject {
 @public

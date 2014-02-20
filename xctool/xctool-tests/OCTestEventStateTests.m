@@ -17,8 +17,8 @@
 #import <SenTestingKit/SenTestingKit.h>
 
 #import "EventBuffer.h"
-#import "EventSink.h"
 #import "EventGenerator.h"
+#import "EventSink.h"
 #import "OCTestEventState.h"
 #import "ReporterEvents.h"
 #import "TestUtil.h"

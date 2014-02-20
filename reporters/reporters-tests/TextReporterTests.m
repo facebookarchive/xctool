@@ -18,8 +18,8 @@
 
 #import "EventGenerator.h"
 #import "FakeFileHandle.h"
-#import "ReporterEvents.h"
 #import "Reporter+Testing.h"
+#import "ReporterEvents.h"
 #import "TextReporter.h"
 
 @interface TextReporterTests : SenTestCase
@@ -55,12 +55,12 @@
     NSArray *events = @[
       EventDictionaryWithNameAndContent(kReporter_Events_BeginStatus, @{
         kReporter_BeginStatus_MessageKey: @"Some message...",
-        kReporter_TimestampKey: @(1),
+        kReporter_TimestampKey: @1,
         kReporter_BeginStatus_LevelKey: @"Info",
         }),
       EventDictionaryWithNameAndContent(kReporter_Events_EndStatus, @{
         kReporter_EndStatus_MessageKey: @"Some message...",
-        kReporter_TimestampKey: @(1),
+        kReporter_TimestampKey: @1,
         kReporter_EndStatus_LevelKey: @"Info",
         }),
       ];
@@ -80,13 +80,13 @@
       // begin at T+0 seconds.
       EventDictionaryWithNameAndContent(kReporter_Events_BeginStatus, @{
         kReporter_BeginStatus_MessageKey: @"Some message...",
-        kReporter_TimestampKey: @(1),
+        kReporter_TimestampKey: @1,
         kReporter_BeginStatus_LevelKey: @"Info",
         }),
       // begin at T+1 seconds.
       EventDictionaryWithNameAndContent(kReporter_Events_EndStatus, @{
         kReporter_EndStatus_MessageKey: @"Some message.",
-        kReporter_TimestampKey: @(2),
+        kReporter_TimestampKey: @2,
         kReporter_EndStatus_LevelKey: @"Info",
         }),
       ];
