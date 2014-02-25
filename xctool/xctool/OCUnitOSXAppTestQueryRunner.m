@@ -37,6 +37,7 @@
                          @"DYLD_FALLBACK_FRAMEWORK_PATH" : [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"],
                          @"NSUnbufferedIO" : @"YES",
                          @"OBJC_DISABLE_GC" : @"YES",
+                         @"__CFPREFERENCES_AVOID_DAEMON" : @"YES",
                          }];
 
   return task;
