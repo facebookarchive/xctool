@@ -66,7 +66,8 @@ NSDictionary *BuildSettingsFromOutput(NSString *output)
     // or, if there are spaces in the target name...
     // 'Build settings for action build and target "Some Target Name":'
     if (!([scanner scanString:@"Build settings for action test and target " intoString:NULL] ||
-          [scanner scanString:@"Build settings for action build and target " intoString:NULL])) {
+          [scanner scanString:@"Build settings for action build and target " intoString:NULL] ||
+          [scanner scanString:@"Build settings for action analyze and target " intoString:NULL])) {
       break;
     }
 
