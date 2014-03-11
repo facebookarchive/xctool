@@ -1,9 +1,9 @@
 #import <Cocoa/Cocoa.h>
 
 /*
- * File: /Developer/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks/iPhoneSimulatorRemoteClient.framework/Versions/A/iPhoneSimulatorRemoteClient
+ * File: /Developer/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks/DVTiPhoneSimulatorRemoteClient.framework/Versions/A/DVTiPhoneSimulatorRemoteClient
  * Arch: Intel 80x86 (i386)
- *       Current version: 12.0.0, Compatibility version: 1.0.0
+ *       Current version: 5.1
  */
 
 @class DTiPhoneSimulatorSession;

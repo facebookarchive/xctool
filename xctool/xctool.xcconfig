@@ -21,9 +21,9 @@ XT_INSTALL_DIR = bin
 
 DEVELOPER_PRIVATE_FRAMEWORK_DIR = "$(DEVELOPER_DIR)"/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks
 
-// xctool will weak link iPhoneSimulatorRemoteClient, and then configure the necessary
+// xctool will weak link DVTiPhoneSimulatorRemoteClient, and then configure the necessary
 // DYLD paths on startup to make sure the framework can be loaded.
-OTHER_LDFLAGS = -F$(DEVELOPER_PRIVATE_FRAMEWORK_DIR) -weak_framework iPhoneSimulatorRemoteClient
+OTHER_LDFLAGS = -F$(DEVELOPER_PRIVATE_FRAMEWORK_DIR) -weak_framework DVTiPhoneSimulatorRemoteClient
 
 FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks" "$(SRCROOT)/../Vendor"
 

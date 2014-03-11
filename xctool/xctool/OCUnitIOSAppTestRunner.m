@@ -188,7 +188,7 @@ static void KillSimulatorJobs()
 }
 
 /**
- * Use the iPhoneSimulatorRemoteClient framework to start the app in the sim,
+ * Use the DVTiPhoneSimulatorRemoteClient framework to start the app in the sim,
  * inject otest-shim into the app as it starts, and feed line-by-line output to
  * the `feedOutputToBlock`.
  *
