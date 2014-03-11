@@ -22,14 +22,14 @@
 int main(int argc, const char * argv[])
 {
   @autoreleasepool {
-    // xctool depends on iPhoneSimulatorRemoteClient.framework, which is a private
+    // xctool depends on DVTiPhoneSimulatorRemoteClient.framework, which is a private
     // framework for interacting with the simulator that comes bundled with
     // Xcode.
     //
     // Since xctool can work with multiple verstions of Xcode and since each of
     // these Xcode versions might live at different paths, we don't want to strongly
-    // link iPhoneSimulatorRemoteClient.framework.  e.g., if we linked to
-    // `/Applications/Xcode.app/.../.../iPhoneSimulatorRemoteClient.framework`
+    // link DVTiPhoneSimulatorRemoteClient.framework.  e.g., if we linked to
+    // `/Applications/Xcode.app/.../.../DVTiPhoneSimulatorRemoteClient.framework`
     // but Xcode was installed elsewhere, xctool would fail to run.
     //
     // To workaround this, we weak link the framework and at startup, we tweak
@@ -57,9 +57,9 @@ int main(int argc, const char * argv[])
       }
 
       fallbackFrameworkPath = [fallbackFrameworkPath stringByAppendingFormat:@":%@:%@",
-                               // The path to iPhoneSimulatorRemoteClient.framework.
+                               // The path to DVTiPhoneSimulatorRemoteClient.framework.
                                [developerDirPath stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks"],
-                               // The path to other dependencies of iPhoneSimulatorRemoteClient.framework.
+                               // The path to other dependencies of DVTiPhoneSimulatorRemoteClient.framework.
                                [developerDirPath stringByAppendingPathComponent:@"../OtherFrameworks"]
                                ];
       setenv(dyldFallbackFrameworkPathKey, [fallbackFrameworkPath UTF8String], 1);
