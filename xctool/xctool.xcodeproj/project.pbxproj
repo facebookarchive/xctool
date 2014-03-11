@@ -922,6 +922,11 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "xctool/xctool-Prefix.pch";
+				OTHER_LDFLAGS = (
+					"-F$(DEVELOPER_PRIVATE_FRAMEWORK_DIR)",
+					"-weak_framework",
+					DVTiPhoneSimulatorRemoteClient,
+				);
 				PRODUCT_NAME = xctool;
 			};
 			name = Debug;
@@ -931,6 +936,11 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "xctool/xctool-Prefix.pch";
+				OTHER_LDFLAGS = (
+					"-F$(DEVELOPER_PRIVATE_FRAMEWORK_DIR)",
+					"-weak_framework",
+					DVTiPhoneSimulatorRemoteClient,
+				);
 				PRODUCT_NAME = xctool;
 			};
 			name = Release;
@@ -946,6 +956,15 @@
 				);
 				GCC_PREFIX_HEADER = "xctool-tests/xctool-tests-Prefix.pch";
 				INFOPLIST_FILE = "xctool-tests/xctool-tests-Info.plist";
+				OTHER_LDFLAGS = (
+					"-F$(DEVELOPER_PRIVATE_FRAMEWORK_DIR)",
+					"-framework",
+					DVTiPhoneSimulatorRemoteClient,
+					"-Wl,-rpath",
+					"-Wl,$(DEVELOPER_PRIVATE_FRAMEWORK_DIR)",
+					"-Wl,-rpath",
+					"-Wl,\"$(DEVELOPER_DIR)\"/../OtherFrameworks",
+				);
 				PRODUCT_NAME = "xctool-tests";
 				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = octest;
@@ -963,6 +982,15 @@
 				);
 				GCC_PREFIX_HEADER = "xctool-tests/xctool-tests-Prefix.pch";
 				INFOPLIST_FILE = "xctool-tests/xctool-tests-Info.plist";
+				OTHER_LDFLAGS = (
+					"-F$(DEVELOPER_PRIVATE_FRAMEWORK_DIR)",
+					"-framework",
+					DVTiPhoneSimulatorRemoteClient,
+					"-Wl,-rpath",
+					"-Wl,$(DEVELOPER_PRIVATE_FRAMEWORK_DIR)",
+					"-Wl,-rpath",
+					"-Wl,\"$(DEVELOPER_DIR)\"/../OtherFrameworks",
+				);
 				PRODUCT_NAME = "xctool-tests";
 				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = octest;
