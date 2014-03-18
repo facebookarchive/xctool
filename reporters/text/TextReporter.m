@@ -181,6 +181,7 @@ static NSString *abbreviatePath(NSString *string) {
     _analyzerWarnings = [[NSMutableArray alloc] init];
     _resultCounter = [[TestResultCounter alloc] init];
     _failedBuildEvents = [[NSMutableArray alloc] init];
+    _failedOcunitEvents = [[NSMutableArray alloc] init];
   }
   return self;
 }
@@ -195,6 +196,7 @@ static NSString *abbreviatePath(NSString *string) {
   [_analyzerWarnings release];
   [_resultCounter release];
   [_failedBuildEvents release];
+  [_failedOcunitEvents release];
   [super dealloc];
 }
 
@@ -380,18 +382,34 @@ static NSString *abbreviatePath(NSString *string) {
                [_resultCounter actionErrored],
                [_resultCounter actionTotal]];
 
-    if ([self.failedTests count] > 0) {
+    if ([self.failedTests count] > 0 || [self.failedOcunitEvents count] > 0) {
       [self.reportWriter printLine:@"<bold>Failures:<reset>"];
       [self.reportWriter printNewline];
       [self.reportWriter increaseIndent];
 
+      int i = 0;
+      for (NSDictionary *ocUnitEvent in self.failedOcunitEvents) {
+        if (ocUnitEvent[kReporter_BeginOCUnit_BundleNameKey]) {
+          [self.reportWriter printLine:@"%d) %@ (%@)", i, ocUnitEvent[kReporter_BeginOCUnit_TargetNameKey], ocUnitEvent[kReporter_BeginOCUnit_BundleNameKey]];
+        } else {
+          [self.reportWriter printLine:@"%d) %@", i, ocUnitEvent[kReporter_BeginOCUnit_TargetNameKey]];
+        }
+        [self printDivider];
+        [self.reportWriter disableIndent];
+        [self.reportWriter printString:@"<faint>%@\n<reset>", [ocUnitEvent[kReporter_EndOCUnit_MessageKey]
+                                                               stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
+        [self.reportWriter enableIndent];
+        [self printDivider];
+        [self.reportWriter printNewline];
+        i++;
+      }
       for (int failedIndex = 0; failedIndex < [self.failedTests count]; failedIndex++) {
         NSDictionary *test = self.failedTests[failedIndex];
 
         NSDictionary *testEvent = test[@"event"];
 
         [self.reportWriter printLine:@"%d) %@ (%@)",
-         failedIndex,
+         failedIndex + i,
          testEvent[kReporter_EndTest_TestKey],
          test[@"bundle"]
          ];
@@ -614,6 +632,10 @@ static NSString *abbreviatePath(NSString *string) {
 
     if (![message hasSuffix:@"\n"]) {
       [self.reportWriter printNewline];
+    }
+
+    if (![event[kReporter_EndOCUnit_SucceededKey] boolValue]) {
+      [self.failedOcunitEvents addObject:event];
     }
 
     [self.reportWriter enableIndent];

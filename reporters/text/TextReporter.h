@@ -39,6 +39,7 @@
 @property (nonatomic, copy) NSString *currentBundle;
 @property (nonatomic, retain) NSMutableArray *analyzerWarnings;
 @property (nonatomic, retain) NSMutableArray *failedBuildEvents;
+@property (nonatomic, retain) NSMutableArray *failedOcunitEvents;
 
 /**
  Returns an NSString that contains lines of context around errorLine with a mark at colNumber.
