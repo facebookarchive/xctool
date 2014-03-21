@@ -16,6 +16,8 @@
 
 #import "OCUnitIOSLogicTestRunner.h"
 
+#import "ISHDeviceVersions.h"
+#import "ISHSDKInfo.h"
 #import "NSConcreteTask.h"
 #import "TaskUtil.h"
 #import "TestingFramework.h"
@@ -27,6 +29,13 @@
 - (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath
 {
   NSString *version = [_buildSettings[Xcode_SDK_NAME] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
+  if (self.OSVersion) {
+    if ([self.OSVersion isEqualTo:@"latest"]) {
+      version = [[[ISHDeviceVersions sharedInstance] sdkFromSDKRoot:[[ISHDeviceVersions sharedInstance] latestSDKRoot]] shortVersionString];
+    } else {
+      version = self.OSVersion;
+    }
+  }
 
   NSString *launchPath = [NSString stringWithFormat:@"%@/Developer/%@",
                           _buildSettings[Xcode_SDKROOT],

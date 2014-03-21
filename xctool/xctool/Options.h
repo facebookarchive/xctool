@@ -37,6 +37,7 @@
 @property (nonatomic, copy) NSString *sdk;
 @property (nonatomic, copy) NSString *arch;
 @property (nonatomic, copy) NSString *destination;
+@property (nonatomic, copy) NSString *destinationTimeout;
 @property (nonatomic, copy) NSString *toolchain;
 @property (nonatomic, copy) NSString *xcconfig;
 @property (nonatomic, copy) NSString *jobs;

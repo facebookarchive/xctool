@@ -21,6 +21,9 @@
 #import "BuildAction.h"
 #import "BuildTestsAction.h"
 #import "CleanAction.h"
+#import "ISHDeviceInfo.h"
+#import "ISHDeviceVersions.h"
+#import "ISHSDKInfo.h"
 #import "ReportStatus.h"
 #import "ReporterTask.h"
 #import "RunTestsAction.h"
@@ -97,6 +100,11 @@
                                   "pairs describing the destination to use)"
                        paramName:@"DESTINATION"
                            mapTo:@selector(setDestination:)],
+    [Action actionOptionWithName:@"destination-timeout"
+                         aliases:nil
+                     description:@"wait for TIMEOUT seconds while searching for the destination device"
+                       paramName:@"DESTINATION-TIMEOUT"
+                           mapTo:@selector(setDestinationTimeout:)],
     [Action actionOptionWithName:@"jobs"
                          aliases:nil
                      description:@"number of concurrent build operations to run"
@@ -449,8 +457,9 @@
     return NO;
   }
 
+  NSDictionary *sdksAndAliases;
   if (self.sdk != nil) {
-    NSDictionary *sdksAndAliases = GetAvailableSDKsAndAliases();
+    sdksAndAliases = GetAvailableSDKsAndAliases();
 
     // Is this an available SDK?
     if (sdksAndAliases[self.sdk] == nil) {
@@ -460,10 +469,6 @@
                        [[sdksAndAliases allKeys] componentsJoinedByString:@", "]];
       return NO;
     }
-
-    // Map SDK param to actual SDK name.  This allows for aliases like 'iphoneos' to map
-    // to 'iphoneos6.1'.
-    self.sdk = sdksAndAliases[self.sdk];
 
     // Xcode 5's xcodebuild has a bug where it won't build targets for the
     // iphonesimulator SDK.  It fails with...
@@ -475,6 +480,66 @@
     if (_buildSettings[Xcode_PLATFORM_NAME] == nil &&
         [_sdk hasPrefix:@"iphonesimulator"]) {
       _buildSettings[Xcode_PLATFORM_NAME] = @"iphonesimulator";
+    }
+  }
+
+  if (self.destination) {
+    NSDictionary *destInfo = ParseDestinationString(self.destination, errorMessage);
+
+    NSString *deviceName = destInfo[@"name"];
+    if (deviceName) {
+      ISHDeviceInfo *deviceInfo = [[ISHDeviceVersions sharedInstance] deviceInfoNamed:deviceName];
+      if (!deviceInfo) {
+        NSArray *allDeviceNames = [[ISHDeviceVersions sharedInstance] allDeviceNames];
+        *errorMessage = [NSString stringWithFormat:
+                         @"'%@' isn't a valid device name. The valid device names are: %@.",
+                         deviceName, allDeviceNames];
+        return NO;
+      }
+    }
+    if (destInfo[@"OS"] != nil) {
+      NSString *osVersion = destInfo[@"OS"];
+      __block ISHSDKInfo *sdkInfo = nil;
+      if ([osVersion isEqualToString:@"latest"]) {
+        sdkInfo = [[ISHDeviceVersions sharedInstance] sdkFromSDKRoot:[[ISHDeviceVersions sharedInstance] latestSDKRoot]];
+      } else {
+        [[[ISHDeviceVersions sharedInstance] allSDKs] enumerateObjectsUsingBlock:^(ISHSDKInfo *currentSdkInfo, NSUInteger idx, BOOL *stop) {
+          if ([[currentSdkInfo shortVersionString] hasPrefix:osVersion]) {
+            sdkInfo = currentSdkInfo;
+            *stop = YES;
+          }
+        }];
+      }
+      if (!sdkInfo) {
+        NSArray *osVersions = [[[ISHDeviceVersions sharedInstance] allSDKs] valueForKeyPath:@"shortVersionString"];
+        *errorMessage = [NSString stringWithFormat:
+                         @"'%@' isn't a valid iOS version. The valid iOS versions are: %@.",
+                         osVersion, osVersions];
+        return NO;
+      }
+      if (deviceName) {
+        ISHDeviceInfo *deviceInfo = [[ISHDeviceVersions sharedInstance] deviceInfoNamed:deviceName];
+        if (![deviceInfo supportsSDK:sdkInfo]) {
+          NSMutableArray *supportedSdks = [NSMutableArray array];
+          for (ISHSDKInfo *sdk in [[ISHDeviceVersions sharedInstance] allSDKs]) {
+            if ([deviceInfo supportsSDK:sdk]) {
+              [supportedSdks addObject:sdk];
+            }
+          }
+          *errorMessage = [NSString stringWithFormat:
+                           @"Device with name '%@' doesn't support iOS version '%@'. The supported iOS versions are: %@.",
+                           [deviceInfo displayName], osVersion, [supportedSdks valueForKeyPath:@"shortVersionString"]];
+          return NO;
+        }
+      }
+      if (_sdk &&
+          ![_sdk hasSuffix:osVersion] &&
+          [_sdk hasPrefix:@"iphonesimulator"]) {
+        NSString *possibleSdk = [NSString stringWithFormat:@"iphonesimulator%@", osVersion];
+        if (sdksAndAliases[possibleSdk]) {
+          self.sdk = possibleSdk;
+        }
+      }    
     }
   }
 
@@ -536,6 +601,13 @@
 
   if (self.destination != nil) {
     [arguments addObjectsFromArray:@[@"-destination", self.destination]];
+    if (self.destinationTimeout == nil) {
+      self.destinationTimeout = @"10";
+    }
+  }
+
+  if (self.destinationTimeout != nil) {
+    [arguments addObjectsFromArray:@[@"-destination-timeout", self.destinationTimeout]];
   }
 
   if (self.toolchain != nil) {

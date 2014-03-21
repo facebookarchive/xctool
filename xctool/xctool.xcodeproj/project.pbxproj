@@ -311,6 +311,9 @@
 		AAF3344E1806A48A00928A00 /* OCUnitTestRunnerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitTestRunnerTests.m; sourceTree = "<group>"; };
 		C9D5B9871733CC2100011C1F /* ArchiveAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArchiveAction.h; sourceTree = "<group>"; };
 		C9D5B9881733CC2100011C1F /* ArchiveAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArchiveAction.m; sourceTree = "<group>"; };
+		CCC56C9418DB8FCD0029534C /* ISHDeviceInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISHDeviceInfo.h; sourceTree = "<group>"; };
+		CCC56C9518DB8FCD0029534C /* ISHDeviceVersions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISHDeviceVersions.h; sourceTree = "<group>"; };
+		CCC56C9618DB8FCD0029534C /* ISHSDKInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISHSDKInfo.h; sourceTree = "<group>"; };
 		CD098A28175EBD20002E0CAC /* AnalyzeAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnalyzeAction.h; sourceTree = "<group>"; };
 		CD098A29175EBD20002E0CAC /* AnalyzeAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnalyzeAction.m; sourceTree = "<group>"; };
 		CD522EC017471D6300048AF9 /* SchemeGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SchemeGenerator.h; sourceTree = "<group>"; };
@@ -390,6 +393,7 @@
 			isa = PBXGroup;
 			children = (
 				28E9B9DD16C3278D00A52E4D /* DTiPhoneSimulatorRemoteClient */,
+				CCC56C9318DB8FCD0029534C /* SimulatorHost */,
 				28E9B98316C2F2D900A52E4D /* xctool.xcconfig */,
 				287E0DC417CD60B00088A264 /* xctool-tests.xcconfig */,
 				28897FCD173E6215004BA024 /* Common */,
@@ -625,6 +629,16 @@
 				AAC1E0B01811F5C3005A4FD5 /* OCUnitTestQueryRunner.m */,
 			);
 			name = OCUnitTestQueryRunner;
+			sourceTree = "<group>";
+		};
+		CCC56C9318DB8FCD0029534C /* SimulatorHost */ = {
+			isa = PBXGroup;
+			children = (
+				CCC56C9418DB8FCD0029534C /* ISHDeviceInfo.h */,
+				CCC56C9518DB8FCD0029534C /* ISHDeviceVersions.h */,
+				CCC56C9618DB8FCD0029534C /* ISHSDKInfo.h */,
+			);
+			path = SimulatorHost;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

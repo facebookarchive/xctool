@@ -21,6 +21,8 @@
 @interface OCUnitIOSLogicTestRunner : OCUnitTestRunner {
 }
 
+@property (nonatomic, copy) NSString *OSVersion;
+
 - (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath;
 
 @end

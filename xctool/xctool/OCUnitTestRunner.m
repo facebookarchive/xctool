@@ -226,7 +226,8 @@
                       ];
   for (NSDictionary *layer in layers) {
     [layer enumerateKeysAndObjectsUsingBlock:^(id key, id val, BOOL *stop){
-      if ([key isEqualToString:@"DYLD_INSERT_LIBRARIES"]) {
+      if ([key isEqualToString:@"DYLD_INSERT_LIBRARIES"] ||
+          [key isEqualToString:@"DYLD_FALLBACK_FRAMEWORK_PATH"]) {
         // It's possible that the scheme (or regular host environment) has its
         // own value for DYLD_INSERT_LIBRARIES.  In that case, we don't want to
         // stomp on it when insert otest-shim.

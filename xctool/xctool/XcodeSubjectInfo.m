@@ -933,7 +933,8 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   self.symRoot = targetSettings[Xcode_SYMROOT];
   self.sharedPrecompsDir = targetSettings[Xcode_SHARED_PRECOMPS_DIR];
   self.effectivePlatformName = targetSettings[Xcode_EFFECTIVE_PLATFORM_NAME];
-
+  self.targetedDeviceFamily = targetSettings[Xcode_TARGETED_DEVICE_FAMILY];
+  
   NSString *matchingSchemePath = nil;
 
   if (self.subjectWorkspace) {

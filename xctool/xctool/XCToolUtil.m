@@ -543,6 +543,43 @@ NSArray *ParseArgumentsFromArgumentString(NSString *string)
   return arguments;
 }
 
+NSDictionary *ParseDestinationString(NSString *destinationString, NSString **errorMessage)
+{
+  NSMutableDictionary *resultBuilder = [[[NSMutableDictionary alloc] init] autorelease];
+
+  // Might need to do this well later on. Right now though, just blindly split on the comma.
+  NSArray *components = [destinationString componentsSeparatedByString:@","];
+  for (NSString *component in components) {
+    NSError *error = nil;
+    NSString *pattern = @"^\\s*([^=]*)=([^=]*)\\s*$";
+    NSRegularExpression *re = [[[NSRegularExpression alloc] initWithPattern:pattern options:0 error:&error] autorelease];
+    if (error) {
+      *errorMessage = [NSString stringWithFormat:@"Error while creating regex with pattern '%@'. Reason: '%@'.", pattern, [error localizedFailureReason]];
+      return nil;
+    }
+    NSArray *matches = [re matchesInString:component options:0 range:NSMakeRange(0, [component length])];
+    NSCAssert(matches, @"Apple's documentation states that the above call will never return nil.");
+    if ([matches count] != 1) {
+      *errorMessage = [NSString stringWithFormat:@"The string '%@' is formatted badly. It should be KEY=VALUE. "
+                       @"The number of matches with regex '%@' was %llu.",
+                       component, pattern, (long long unsigned)[matches count]];
+      return nil;
+    }
+    NSTextCheckingResult *match = matches[0];
+    if ([match numberOfRanges] != 3) {
+      *errorMessage = [NSString stringWithFormat:@"The string '%@' is formatted badly. It should be KEY=VALUE. "
+                       @"The number of ranges with regex '%@' was %llu.",
+                       component, pattern, (long long unsigned)[match numberOfRanges]];
+      return nil;
+    }
+    NSString *lhs = [component substringWithRange:[match rangeAtIndex:1]];
+    NSString *rhs = [component substringWithRange:[match rangeAtIndex:2]];
+    resultBuilder[lhs] = rhs;
+  }
+
+  return resultBuilder;
+}
+
 NSString *TemporaryDirectoryForAction()
 {
   if (__tempDirectoryForAction == nil) {

@@ -16,8 +16,11 @@
 
 #import "RunTestsAction.h"
 
+#import "DTiPhoneSimulatorRemoteClient.h"
 #import "EventBuffer.h"
 #import "EventGenerator.h"
+#import "ISHDeviceInfo.h"
+#import "ISHDeviceVersions.h"
 #import "OCUnitIOSAppTestRunner.h"
 #import "OCUnitIOSDeviceTestRunner.h"
 #import "OCUnitIOSLogicTestRunner.h"
@@ -32,110 +35,6 @@
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
 #import "XcodeSubjectInfo.h"
-
-static NSDictionary *ParseDestinationString(NSString *destinationString, NSString **errorMessage)
-{
-  NSMutableDictionary *resultBuilder = [[[NSMutableDictionary alloc] init] autorelease];
-
-  // Might need to do this well later on. Right now though, just blindly split on the comma.
-  NSArray *components = [destinationString componentsSeparatedByString:@","];
-  for (NSString *component in components) {
-    NSError *error = nil;
-    NSString *pattern = @"^\\s*([^=]*)=([^=]*)\\s*$";
-    NSRegularExpression *re = [[[NSRegularExpression alloc] initWithPattern:pattern options:0 error:&error] autorelease];
-    if (error) {
-      *errorMessage = [NSString stringWithFormat:@"Error while creating regex with pattern '%@'. Reason: '%@'.", pattern, [error localizedFailureReason]];
-      return nil;
-    }
-    NSArray *matches = [re matchesInString:component options:0 range:NSMakeRange(0, [component length])];
-    NSCAssert(matches, @"Apple's documentation states that the above call will never return nil.");
-    if ([matches count] != 1) {
-      *errorMessage = [NSString stringWithFormat:@"The string '%@' is formatted badly. It should be KEY=VALUE. "
-                       @"The number of matches with regex '%@' was %llu.",
-                       component, pattern, (long long unsigned)[matches count]];
-      return nil;
-    }
-    NSTextCheckingResult *match = matches[0];
-    if ([match numberOfRanges] != 3) {
-      *errorMessage = [NSString stringWithFormat:@"The string '%@' is formatted badly. It should be KEY=VALUE. "
-                       @"The number of ranges with regex '%@' was %llu.",
-                       component, pattern, (long long unsigned)[match numberOfRanges]];
-      return nil;
-    }
-    NSString *lhs = [component substringWithRange:[match rangeAtIndex:1]];
-    NSString *rhs = [component substringWithRange:[match rangeAtIndex:2]];
-    resultBuilder[lhs] = rhs;
-  }
-
-  return resultBuilder;
-}
-
-/**
- * Takes a device name and checks whether it's a valid device name.
- * Also as a bonus, tells you whether the device is 32-bit or 64-bit.
- *
- * @param deviceName Name of the device to check for
- * @param errorMessage Returns the error message
- * @param cpuType Returns the cpu type (CPU_TYPE_I386 or CPU_TYPE_X86_64), wrapped
- *   in an NSNumber.
- * @return YES if the device name is valid, NO otherwise.
- */
-static BOOL IsValidDeviceName(NSString *deviceName, NSString **errorMessage, cpu_type_t *cpuType)
-{
-  NSFileManager *fm = [NSFileManager defaultManager];
-
-  NSError *error = nil;
-  NSString *devicesDirPath = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks/SimulatorHost.framework/Versions/A/Resources/Devices"];
-
-  NSArray *deviceinfoFiles = [fm contentsOfDirectoryAtPath:devicesDirPath
-                                                     error:&error];
-  if (error) {
-    *errorMessage = [NSString stringWithFormat:@"Failed while getting directory listing for '%@': '%@'.", devicesDirPath, [error localizedFailureReason]];
-    return NO;
-  }
-
-  if ([deviceinfoFiles count] == 0) {
-    *errorMessage = [NSString stringWithFormat:@"The directory containing devices, '%@', is empty.", devicesDirPath];
-    return NO;
-  }
-
-  NSMutableArray *devices = [[[NSMutableArray alloc] initWithCapacity:[deviceinfoFiles count]] autorelease];
-  for (NSString *fileName in deviceinfoFiles) {
-    if ([fileName hasSuffix:@".deviceinfo"]) {
-      NSString *deviceinfoPath = [devicesDirPath stringByAppendingPathComponent:fileName];
-      NSString *plistFilePath = [deviceinfoPath stringByAppendingPathComponent:@"Info.plist"];
-      if (![fm fileExistsAtPath:plistFilePath]) {
-        *errorMessage = [NSString stringWithFormat:@"The plist file '%@' does not exist.", plistFilePath];
-        break;
-      }
-      NSDictionary *deviceInfo = [[[NSDictionary alloc] initWithContentsOfFile:plistFilePath] autorelease];
-      if (!deviceInfo) {
-        *errorMessage = [NSString stringWithFormat:@"Encountered an error parsing the plist file '%@'.", plistFilePath];
-        break;
-      }
-      if (![[deviceInfo allKeys] containsObject:@"displayName"]) {
-        *errorMessage = [NSString stringWithFormat:@"The file '%@' didn't contain the key 'displayName'.", plistFilePath];
-        break;
-      }
-      NSString *listedDeviceName = deviceInfo[@"displayName"];
-
-      if (![deviceName isEqualToString:listedDeviceName]) {
-        continue;
-      }
-      if ([deviceInfo[@"wordSize"] isEqualToString:@"64"]) {
-        *cpuType = CPU_TYPE_X86_64;
-      }
-      else {
-        *cpuType = CPU_TYPE_I386;
-      }
-      return YES;
-    }
-  }
-  *errorMessage = [NSString stringWithFormat:
-                   @"'%@' isn't a valid device name. The valid device names are: %@.",
-                   deviceName, devices];
-  return NO;
-}
 
 /// Break up an array into chunks of specified size
 static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
@@ -344,15 +243,23 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
       return NO;
     }
 
-    if (destInfo[@"name"] != nil) {
-      NSString *deviceName = destInfo[@"name"];
-      cpu_type_t cpuType = CPU_TYPE_ANY;
-      if (!IsValidDeviceName(deviceName, errorMessage, &cpuType)) {
-        return NO;
+    if (destInfo[@"arch"] != nil) {
+      if ([destInfo[@"arch"] isEqual:@"i386"]) {
+        _cpuType = CPU_TYPE_I386;
+      } else {
+        _cpuType = CPU_TYPE_X86_64;
       }
-      _cpuType = cpuType;
-      [self setDeviceName:deviceName];
     }
+    [self setDeviceName:destInfo[@"name"]];
+    if (_deviceName) {
+      ISHDeviceInfo *deviceInfo = [[ISHDeviceVersions sharedInstance] deviceInfoNamed:_deviceName];
+      if ([[deviceInfo architecture] isEqualToString:@"x86_64"]) {
+        _cpuType = CPU_TYPE_X86_64;
+      } else {
+        _cpuType = CPU_TYPE_I386;
+      }
+    }
+    [self setOSVersion:destInfo[@"OS"]];
   }
 
   for (NSDictionary *only in [self onlyListAsTargetsAndSenTestList]) {
@@ -520,8 +427,18 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                                      reporters:reporters] autorelease];
     [testRunner setCpuType:_cpuType];
 
-    if(_deviceName != nil && [testRunner isKindOfClass:[OCUnitIOSAppTestRunner class]]) {
-      [(OCUnitIOSAppTestRunner *)testRunner setDeviceName:_deviceName];
+    if ([testRunner isKindOfClass:[OCUnitIOSAppTestRunner class]]) {
+      if (_deviceName) {
+        [(OCUnitIOSAppTestRunner *)testRunner setDeviceName:_deviceName];
+      }
+      if (_OSVersion) {
+        [(OCUnitIOSAppTestRunner *)testRunner setOSVersion:_OSVersion];
+      }
+    }
+    if ([testRunner isKindOfClass:[OCUnitIOSLogicTestRunner class]]) {
+      if (_OSVersion) {
+        [(OCUnitIOSLogicTestRunner *)testRunner setOSVersion:_OSVersion];
+      }
     }
 
     PublishEventToReporters(reporters,

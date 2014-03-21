@@ -258,6 +258,7 @@
                        @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates",
                        @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products",
                        @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates/PrecompiledHeaders",
+                       @"TARGETED_DEVICE_FAMILY=1",
                        @"test",
                        @"-showBuildSettings",
                        ]));
@@ -331,6 +332,7 @@
                        @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates",
                        @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products",
                        @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates/PrecompiledHeaders",
+                       @"TARGETED_DEVICE_FAMILY=1",
                        @"test",
                        @"-showBuildSettings",
                        ]));
@@ -633,7 +635,7 @@
                        @"-configuration",
                        @"TestConfig",
                        @"-sdk",
-                       @"iphonesimulator6.1",
+                       @"iphonesimulator",
                        @"-arch",
                        @"i386",
                        @"PLATFORM_NAME=iphonesimulator",
@@ -644,6 +646,7 @@
                        @"OBJROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-dcmgtqlclwxdzqevoakcspwlrpfm/Build/Intermediates",
                        @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-dcmgtqlclwxdzqevoakcspwlrpfm/Build/Products",
                        @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-dcmgtqlclwxdzqevoakcspwlrpfm/Build/Intermediates/PrecompiledHeaders",
+                       @"TARGETED_DEVICE_FAMILY=1",
                        @"test",
                        @"-showBuildSettings",
                        ]));

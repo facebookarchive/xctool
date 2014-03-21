@@ -47,7 +47,7 @@
 
 @end
 
-static int BootlegTask_runUntilExit(BootlegTask *self, SEL sel)
+static void UpdateProcessEnvironment(BootlegTask *self)
 {
   NSMutableDictionary *newEnv = [NSMutableDictionary dictionary];
   [newEnv addEntriesFromDictionary:[self environment]];
@@ -61,8 +61,18 @@ static int BootlegTask_runUntilExit(BootlegTask *self, SEL sel)
    }];
 
   [self setValue:newEnv forKey:@"_environment"];
+}
 
+static int BootlegTask_runUntilExit(BootlegTask *self, SEL sel)
+{
+  UpdateProcessEnvironment(self);
   return (int)objc_msgSend(self, @selector(__BootlegTask_runUntilExit));
+}
+
+static int BootlegTask_runUntilExitWithBootstrapPort(BootlegTask *self, SEL sel, unsigned int port)
+{
+  UpdateProcessEnvironment(self);
+  return (int)objc_msgSend(self, @selector(__BootlegTask_runUntilExitWithBootstrapPort:), port);
 }
 
 // `sim` WANTS to run the process inside the same bootstrap subset as the iOS
@@ -104,9 +114,18 @@ __attribute__((constructor)) static void Initializer()
 {
   NSCAssert(NSClassFromString(@"BootlegTask") != nil, @"Class should exist.");
 
-  XTSwizzleSelectorForFunction(NSClassFromString(@"BootlegTask"),
-                               @selector(runUntilExit),
-                               (IMP)BootlegTask_runUntilExit);
+  Class BootlegTask = NSClassFromString(@"BootlegTask");
+  if ([BootlegTask instancesRespondToSelector: @selector(runUntilExit)]) {
+    XTSwizzleSelectorForFunction(BootlegTask,
+                                 @selector(runUntilExit),
+                                 (IMP)BootlegTask_runUntilExit);
+  } else if ([BootlegTask instancesRespondToSelector: @selector(runUntilExitWithBootstrapPort:)]) {
+    XTSwizzleSelectorForFunction(BootlegTask,
+                                 @selector(runUntilExitWithBootstrapPort:),
+                                 (IMP)BootlegTask_runUntilExitWithBootstrapPort);
+  } else {
+    NSCAssert(NSClassFromString(@"BootlegTask") != nil, @"BootlegTask class modification is not supported.");
+  }
 
   // Don't cascade into other spawned processes.
   unsetenv("DYLD_INSERT_LIBRARIES");
