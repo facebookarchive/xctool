@@ -113,11 +113,13 @@
   NSArray *eventBuildcommands = [eventBuildCommand componentsSeparatedByString:@"\n"];
   NSString *rawWorkingDirectory = [eventBuildcommands[1] strip];
   NSString *rawCompilerCommand = nil;
+  
   // We know the first line is event tile, the second one is to change to the working directory
   // so we start with the third line, discard lines of setting env variables, then it's compiler command
   for (int i = 2; i < [eventBuildcommands count]; i++) {
     NSString *currentCommand = [eventBuildcommands[i] strip];
-    if (![currentCommand hasPrefix:@"setenv"]) {
+    // on Xcode 5.1, setting env variables is changed from setenv to export
+    if (![currentCommand hasPrefix:@"setenv"] && ![currentCommand hasPrefix:@"export"]) {
       rawCompilerCommand = currentCommand;
       break;
     }
