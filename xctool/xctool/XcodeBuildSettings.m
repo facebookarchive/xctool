@@ -28,3 +28,5 @@ NSString * const Xcode_SDKROOT = @"SDKROOT";
 NSString * const Xcode_SYMROOT = @"SYMROOT";
 NSString * const Xcode_TEST_HOST = @"TEST_HOST";
 NSString * const Xcode_TARGET_BUILD_DIR = @"TARGET_BUILD_DIR";
+NSString * const Xcode_TARGETED_DEVICE_FAMILY = @"TARGETED_DEVICE_FAMILY";
+NSString * const Xcode_IPHONEOS_DEPLOYMENT_TARGET = @"IPHONEOS_DEPLOYMENT_TARGET";

@@ -22,5 +22,6 @@
 }
 
 @property (nonatomic, copy) NSString *deviceName;
+@property (nonatomic, copy) NSString *OSVersion;
 
 @end

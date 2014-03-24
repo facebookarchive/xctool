@@ -16,12 +16,45 @@
 
 #import "SimulatorLauncher.h"
 
+static BOOL __didLoadAllPlatforms = NO;
+
+// class-dump'ed from DVTFoundation
+@interface DVTPlatform : NSObject
+
++ (BOOL)loadAllPlatformsReturningError:(NSError **)error;
++ (id)platformForIdentifier:(NSString *)identifier;
+
+@end
+
 @implementation SimulatorLauncher
+
++ (void)loadAllPlatforms
+{
+  if (!__didLoadAllPlatforms) {
+    NSError *error = nil;
+    NSAssert([DVTPlatform loadAllPlatformsReturningError:&error],
+             @"Failed to load all platforms: %@", error);
+
+    // The following will fail if DVTPlatform hasn't loaded all platforms.
+    NSAssert([DTiPhoneSimulatorSystemRoot knownRoots] != nil,
+             @"DVTPlatform hasn't been initialized yet.");
+    // DTiPhoneSimulatorRemoteClient will make this same call, so let's assert
+    // that it's working.
+    NSAssert([DVTPlatform platformForIdentifier:@"com.apple.platform.iphonesimulator"] != nil,
+             @"DVTPlatform hasn't been initialized yet.");
+
+    __didLoadAllPlatforms = YES;
+  }
+}
 
 - (id)initWithSessionConfig:(DTiPhoneSimulatorSessionConfig *)sessionConfig
                  deviceName:(NSString *)deviceName
 {
   if (self = [super init]) {
+    NSAssert(__didLoadAllPlatforms,
+             @"Must call +[SimulatorLauncher loadAllPlatforms] before "
+             @"interacting with DTiPhoneSimulatorRemoteClient.");
+
     // Set the device type if supplied
     if (deviceName) {
       CFPreferencesSetAppValue((CFStringRef)@"SimulateDevice", (CFPropertyListRef)deviceName, (CFStringRef)@"com.apple.iphonesimulator");

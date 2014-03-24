@@ -50,6 +50,7 @@
   assertThat(([[Options optionsFrom:@[@"-xcconfig", @"something.xcconfig"]] xcconfig]), equalTo(@"something.xcconfig"));
   assertThat(([[Options optionsFrom:@[@"-jobs", @"10"]] jobs]), equalTo(@"10"));
   assertThat(([[Options optionsFrom:@[@"-destination", @"platform=iOS Simulator"]] destination]), equalTo(@"platform=iOS Simulator"));
+  assertThat(([[Options optionsFrom:@[@"-destination-timeout", @"10"]] destinationTimeout]), equalTo(@"10"));
 }
 
 - (void)testReporterOptionsSetupReporters
@@ -259,7 +260,8 @@
   NSArray *arguments = @[@"-configuration", @"SomeConfig",
                          @"-sdk", @"SomeSDK",
                          @"-arch", @"SomeArch",
-                         @"-destination", @"platform=iOS",
+                         @"-destination", @"platform=iOS,OS=6.1",
+                         @"-destination-timeout", @"10",
                          @"-toolchain", @"path/to/some/toolchain",
                          @"-xcconfig", @"some.xcconfig",
                          @"-jobs", @"20",
@@ -304,7 +306,7 @@
              equalTo(@[
                      @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                      @"-scheme", @"TestProject-Library",
-                     @"-sdk", @"iphonesimulator6.1",
+                     @"-sdk", @"iphonesimulator",
                      @"PLATFORM_NAME=iphonesimulator",
                      ]));
 }

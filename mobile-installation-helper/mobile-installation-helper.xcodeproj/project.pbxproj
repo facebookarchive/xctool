@@ -202,6 +202,7 @@
 				INFOPLIST_FILE = "mobile-installation-helper/mobile-installation-helper-Info.plist";
 				PRODUCT_NAME = "mobile-installation-helper";
 				TARGETED_DEVICE_FAMILY = 1;
+				VALID_ARCHS = i386;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -213,6 +214,7 @@
 				INFOPLIST_FILE = "mobile-installation-helper/mobile-installation-helper-Info.plist";
 				PRODUCT_NAME = "mobile-installation-helper";
 				TARGETED_DEVICE_FAMILY = 1;
+				VALID_ARCHS = i386;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

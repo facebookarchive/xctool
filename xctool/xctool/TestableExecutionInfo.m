@@ -42,6 +42,7 @@
                                                                       objRoot:xcodeSubjectInfo.objRoot
                                                                       symRoot:xcodeSubjectInfo.symRoot
                                                             sharedPrecompsDir:xcodeSubjectInfo.sharedPrecompsDir
+                                                         targetedDeviceFamily:xcodeSubjectInfo.targetedDeviceFamily
                                                                xcodeArguments:xcodebuildArguments
                                                                       testSDK:testSDK
                                                                         error:&buildSettingsError];
@@ -83,6 +84,7 @@
                                           objRoot:(NSString *)objRoot
                                           symRoot:(NSString *)symRoot
                                 sharedPrecompsDir:(NSString *)sharedPrecompsDir
+                             targetedDeviceFamily:(NSString *)targetedDeviceFamily
                                    xcodeArguments:(NSArray *)xcodeArguments
                                           testSDK:(NSString *)testSDK
                                             error:(NSString **)error
@@ -108,6 +110,7 @@
                                                                              [NSString stringWithFormat:@"%@=%@", Xcode_OBJROOT, objRoot],
                                                                              [NSString stringWithFormat:@"%@=%@", Xcode_SYMROOT, symRoot],
                                                                              [NSString stringWithFormat:@"%@=%@", Xcode_SHARED_PRECOMPS_DIR, sharedPrecompsDir],
+                                                                             [NSString stringWithFormat:@"%@=%@", Xcode_TARGETED_DEVICE_FAMILY, targetedDeviceFamily],
                                                                              action,
                                                                              @"-showBuildSettings",
                                                                              ]]];

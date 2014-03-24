@@ -37,6 +37,7 @@
 @property (nonatomic, copy) NSString *symRoot;
 @property (nonatomic, copy) NSString *sharedPrecompsDir;
 @property (nonatomic, copy) NSString *effectivePlatformName;
+@property (nonatomic, copy) NSString *targetedDeviceFamily;
 @property (nonatomic, copy) NSArray *testables;
 // Everything in the scheme marked as Build for Test
 @property (nonatomic, copy) NSArray *buildablesForTest;

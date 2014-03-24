@@ -56,11 +56,12 @@ int main(int argc, const char * argv[])
         fallbackFrameworkPath = @"";
       }
 
-      fallbackFrameworkPath = [fallbackFrameworkPath stringByAppendingFormat:@":%@:%@",
+      fallbackFrameworkPath = [fallbackFrameworkPath stringByAppendingFormat:@":%@:%@:%@",
                                // The path to iPhoneSimulatorRemoteClient.framework.
                                [developerDirPath stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks"],
                                // The path to other dependencies of iPhoneSimulatorRemoteClient.framework.
-                               [developerDirPath stringByAppendingPathComponent:@"../OtherFrameworks"]
+                               [developerDirPath stringByAppendingPathComponent:@"../OtherFrameworks"],
+                               [developerDirPath stringByAppendingPathComponent:@"../SharedFrameworks"]
                                ];
       setenv(dyldFallbackFrameworkPathKey, [fallbackFrameworkPath UTF8String], 1);
 

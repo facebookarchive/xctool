@@ -64,6 +64,7 @@ typedef enum {
 @property (nonatomic, copy) NSString *testSDK;
 @property (nonatomic, retain) NSMutableArray *onlyList;
 @property (nonatomic, copy) NSString *deviceName;
+@property (nonatomic, copy) NSString *OSVersion;
 
 - (void)setLogicTestBucketSize:(NSString *)str;
 - (void)setAppTestBucketSize:(NSString *)str;

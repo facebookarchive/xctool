@@ -137,6 +137,13 @@ NSArray *ArgumentListByOverriding(NSArray *arguments,
 NSArray *ParseArgumentsFromArgumentString(NSString *string);
 
 /**
+ This method returns the dictonary with key/values specified in destination string.
+
+ If it fails, errorMessage will be populated.
+ */
+NSDictionary *ParseDestinationString(NSString *destinationString, NSString **errorMessage);
+
+/**
  Returns a temporary directory to be used during the current running action
  (i.e. build, or test).  As soon as the action completes, the temporary
  dir is cleaned up.
