@@ -53,6 +53,12 @@
 		3892D7541815A13400E68652 /* EventGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D74F1815A13400E68652 /* EventGenerator.m */; };
 		3892D7551815A13400E68652 /* EventGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D74F1815A13400E68652 /* EventGenerator.m */; };
 		3892D7561815A13400E68652 /* EventGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D74F1815A13400E68652 /* EventGenerator.m */; };
+		CC8AA20618F368EE00D9F322 /* user-notifications-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CC8AA20518F368EE00D9F322 /* user-notifications-Info.plist */; };
+		CCC0AAF418EC8A92004FD861 /* UserNotificationsReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC0AAF318EC8A92004FD861 /* UserNotificationsReporter.m */; };
+		CCC0AAF818EC8AC4004FD861 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE61734617E284DD00F02C91 /* Reporter.m */; };
+		CCC0AAFB18EC8AC4004FD861 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2893A96A17960D2000EFBD28 /* Foundation.framework */; };
+		CCC0AB0218EC8C6A004FD861 /* UserNotificationsReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC0AAF318EC8A92004FD861 /* UserNotificationsReporter.m */; };
+		CCC0AB0518EC931C004FD861 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC0AAED18EC8A1F004FD861 /* main.m */; };
 		EE61734717E284DD00F02C91 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE61734617E284DD00F02C91 /* Reporter.m */; };
 		EE61734817E284DD00F02C91 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE61734617E284DD00F02C91 /* Reporter.m */; };
 		EE61734917E284DD00F02C91 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE61734617E284DD00F02C91 /* Reporter.m */; };
@@ -131,6 +137,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
+		CCC0AAFC18EC8AC4004FD861 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 8;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -179,6 +194,12 @@
 		28F48A56179750A600068E00 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		3892D74E1815A13400E68652 /* EventGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventGenerator.h; path = ../Common/EventGenerator.h; sourceTree = "<group>"; };
 		3892D74F1815A13400E68652 /* EventGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EventGenerator.m; path = ../Common/EventGenerator.m; sourceTree = "<group>"; };
+		CC8AA20518F368EE00D9F322 /* user-notifications-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "user-notifications-Info.plist"; path = "user-notifications/user-notifications-Info.plist"; sourceTree = "<group>"; };
+		CCC0AAED18EC8A1F004FD861 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = "user-notifications/main.m"; sourceTree = "<group>"; };
+		CCC0AAF218EC8A92004FD861 /* UserNotificationsReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserNotificationsReporter.h; path = "user-notifications/UserNotificationsReporter.h"; sourceTree = "<group>"; };
+		CCC0AAF318EC8A92004FD861 /* UserNotificationsReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserNotificationsReporter.m; path = "user-notifications/UserNotificationsReporter.m"; sourceTree = "<group>"; };
+		CCC0AB0018EC8AC4004FD861 /* user-notifications */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "user-notifications"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CCC0AB0318EC9115004FD861 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		EE61734517E2785F00F02C91 /* Reporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reporter.h; path = ../Common/Reporter.h; sourceTree = "<group>"; };
 		EE61734617E284DD00F02C91 /* Reporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reporter.m; path = ../Common/Reporter.m; sourceTree = "<group>"; };
 		EE9E73E117A7323B008A5ED2 /* TestResultCounter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestResultCounter.h; sourceTree = "<group>"; };
@@ -245,6 +266,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CCC0AAFA18EC8AC4004FD861 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CCC0AAFB18EC8AC4004FD861 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -260,6 +289,7 @@
 				28F48A2417974D4100068E00 /* junit */,
 				28F48A3D17974EF600068E00 /* json-compilation-database */,
 				28F48A55179750A600068E00 /* json-stream */,
+				CCC0AAEC18EC89AE004FD861 /* user-notifications */,
 				2893A94E17960CD400EFBD28 /* Frameworks */,
 				2893A94D17960CD400EFBD28 /* Products */,
 			);
@@ -275,6 +305,7 @@
 				28F48A2217974D4100068E00 /* junit */,
 				28F48A3B17974EF600068E00 /* json-compilation-database */,
 				28F48A53179750A600068E00 /* json-stream */,
+				CCC0AB0018EC8AC4004FD861 /* user-notifications */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -397,6 +428,17 @@
 				28F48A56179750A600068E00 /* main.m */,
 			);
 			path = "json-stream";
+			sourceTree = "<group>";
+		};
+		CCC0AAEC18EC89AE004FD861 /* user-notifications */ = {
+			isa = PBXGroup;
+			children = (
+				CCC0AAED18EC8A1F004FD861 /* main.m */,
+				CCC0AAF218EC8A92004FD861 /* UserNotificationsReporter.h */,
+				CCC0AAF318EC8A92004FD861 /* UserNotificationsReporter.m */,
+				CC8AA20518F368EE00D9F322 /* user-notifications-Info.plist */,
+			);
+			name = "user-notifications";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -522,6 +564,23 @@
 			productReference = 28F48A53179750A600068E00 /* json-stream */;
 			productType = "com.apple.product-type.tool";
 		};
+		CCC0AAF518EC8AC4004FD861 /* user-notifications */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CCC0AAFD18EC8AC4004FD861 /* Build configuration list for PBXNativeTarget "user-notifications" */;
+			buildPhases = (
+				CCC0AAF618EC8AC4004FD861 /* Sources */,
+				CCC0AAFA18EC8AC4004FD861 /* Frameworks */,
+				CCC0AAFC18EC8AC4004FD861 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "user-notifications";
+			productName = "user-notifications";
+			productReference = CCC0AB0018EC8AC4004FD861 /* user-notifications */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -549,6 +608,7 @@
 				28F48A2117974D4100068E00 /* junit */,
 				28F48A3A17974EF600068E00 /* json-compilation-database */,
 				28F48A52179750A500068E00 /* json-stream */,
+				CCC0AAF518EC8AC4004FD861 /* user-notifications */,
 			);
 		};
 /* End PBXProject section */
@@ -558,6 +618,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC8AA20618F368EE00D9F322 /* user-notifications-Info.plist in Resources */,
 				2893A95C17960CD400EFBD28 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -584,6 +645,7 @@
 				28F48A4A17974F3F00068E00 /* JSONCompilationDatabaseReporter.m in Sources */,
 				28F48A4D17974FEB00068E00 /* JSONCompilationDatabaseReporterTests.m in Sources */,
 				EE9E73E317A7323B008A5ED2 /* TestResultCounter.m in Sources */,
+				CCC0AAF418EC8A92004FD861 /* UserNotificationsReporter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -654,6 +716,16 @@
 				3892D7561815A13400E68652 /* EventGenerator.m in Sources */,
 				EE61734D17E284DD00F02C91 /* Reporter.m in Sources */,
 				28F48A57179750A600068E00 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CCC0AAF618EC8AC4004FD861 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CCC0AB0518EC931C004FD861 /* main.m in Sources */,
+				CCC0AB0218EC8C6A004FD861 /* UserNotificationsReporter.m in Sources */,
+				CCC0AAF818EC8AC4004FD861 /* Reporter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1102,6 +1174,77 @@
 			};
 			name = Release;
 		};
+		CCC0AAFE18EC8AC4004FD861 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "user-notifications/user-notifications-Info.plist";
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(INFOPLIST_FILE)",
+				);
+				PRODUCT_NAME = "user-notifications";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		CCC0AAFF18EC8AC4004FD861 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "user-notifications/user-notifications-Info.plist";
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(INFOPLIST_FILE)",
+				);
+				PRODUCT_NAME = "user-notifications";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1173,6 +1316,15 @@
 			buildConfigurations = (
 				28F48A5D179750A600068E00 /* Debug */,
 				28F48A5E179750A600068E00 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CCC0AAFD18EC8AC4004FD861 /* Build configuration list for PBXNativeTarget "user-notifications" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CCC0AAFE18EC8AC4004FD861 /* Debug */,
+				CCC0AAFF18EC8AC4004FD861 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

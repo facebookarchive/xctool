@@ -107,7 +107,8 @@
                        @"-project", TEST_DATA @"TestProjectWithSchemeThatReferencesNonExistentTestTarget/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
                        @"-sdk", @"iphonesimulator",
-                       @"test"
+                       @"test",
+                       @"-reporter", @"plain",
                        ];
 
     NSDictionary *output = [TestUtil runWithFakeStreams:tool];
@@ -153,7 +154,8 @@
     tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
                        @"-configuration", @"Debug",
-                       @"run-tests"
+                       @"run-tests",
+                       @"-reporter", @"plain",
                        ];
 
     NSDictionary *output = [TestUtil runWithFakeStreams:tool];
@@ -190,7 +192,8 @@
     tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library-XCTest-iOS/TestProject-Library-XCTest-iOS.xcodeproj",
                        @"-scheme", @"TestProject-Library-XCTest-iOS",
                        @"-configuration", @"Debug",
-                       @"run-tests"
+                       @"run-tests",
+                       @"-reporter", @"plain",
                        ];
 
     NSDictionary *output = [TestUtil runWithFakeStreams:tool];
@@ -241,7 +244,8 @@
                        @"-scheme", @"TestProject-Library",
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
-                       @"run-tests"
+                       @"run-tests",
+                       @"-reporter", @"plain",
                        ];
 
     [TestUtil runWithFakeStreams:tool];
@@ -316,6 +320,7 @@
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
                        @"run-tests", @"-test-sdk", @"iphonesimulator5.0",
+                       @"-reporter", @"plain",
                        ];
 
     [TestUtil runWithFakeStreams:tool];
@@ -389,6 +394,7 @@
                          @"-configuration", @"Debug",
                          @"-sdk", @"iphonesimulator6.0",
                          @"run-tests", @"-only", onlyArgument,
+                         @"-reporter", @"plain",
                          ];
 
       [TestUtil runWithFakeStreams:tool];
@@ -454,6 +460,7 @@
     tool.arguments = @[@"-project", TEST_DATA @"TestsWithArgAndEnvSettingsInRunAction/TestsWithArgAndEnvSettings.xcodeproj",
                        @"-scheme", @"TestsWithArgAndEnvSettings",
                        @"run-tests",
+                       @"-reporter", @"plain",
                        ];
 
     __block OCUnitTestRunner *runner = nil;
@@ -507,6 +514,7 @@
     tool.arguments = @[@"-project", TEST_DATA @"TestsWithArgAndEnvSettingsInTestAction/TestsWithArgAndEnvSettings.xcodeproj",
                        @"-scheme", @"TestsWithArgAndEnvSettings",
                        @"run-tests",
+                       @"-reporter", @"plain",
                        ];
 
     __block OCUnitTestRunner *runner = nil;
@@ -560,6 +568,7 @@
     tool.arguments = @[@"-project", TEST_DATA @"TestsWithArgAndEnvSettingsWithMacroExpansion/TestsWithArgAndEnvSettings.xcodeproj",
                        @"-scheme", @"TestsWithArgAndEnvSettings",
                        @"run-tests",
+                       @"-reporter", @"plain",
                        ];
 
     __block OCUnitTestRunner *runner = nil;
@@ -626,6 +635,7 @@
                        @"-sdk", @"iphonesimulator",
                        @"-arch", @"i386",
                        @"run-tests",
+                       @"-reporter", @"plain",
                        ];
 
     [TestUtil runWithFakeStreams:tool];
