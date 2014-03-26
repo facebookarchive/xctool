@@ -539,7 +539,7 @@
         if (sdksAndAliases[possibleSdk]) {
           self.sdk = possibleSdk;
         }
-      }    
+      }
     }
   }
 

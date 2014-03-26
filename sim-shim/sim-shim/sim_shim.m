@@ -101,7 +101,7 @@ DYLD_INTERPOSE(__launch_msg, launch_msg);
 // In iOS 6, `sim` doesn't have to call GetJobs to look up the bootstrap name
 // since it's always constant.  Let's prevent it from over reaching that mach
 // service.
-kern_return_t	__bootstrap_look_up(mach_port_t bp, const name_t service_name, mach_port_t *sp) {
+kern_return_t __bootstrap_look_up(mach_port_t bp, const name_t service_name, mach_port_t *sp) {
   if (strcmp(service_name, "com.apple.iphonesimulator.bootstrap_subset") == 0) {
     return BOOTSTRAP_UNKNOWN_SERVICE;
   } else {
