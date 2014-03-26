@@ -1,9 +1,8 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
-#import "DTiPhoneSimulatorRemoteClient.h"
-
 #import "ContainsArray.h"
+#import "DTiPhoneSimulatorRemoteClient.h"
 #import "EventBuffer.h"
 #import "FakeTask.h"
 #import "FakeTaskManager.h"

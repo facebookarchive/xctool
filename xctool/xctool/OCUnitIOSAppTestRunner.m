@@ -201,6 +201,26 @@ static void KillSimulatorJobs()
   }
 }
 
+- (DTiPhoneSimulatorSystemRoot *)systemRootForSimulatedSdk
+{
+  NSString *sdkVersion = [self simulatedSdkVersion];
+  DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKVersion:sdkVersion];
+  if (systemRoot) {
+    return systemRoot;
+  }
+
+  ISHDeviceVersions *versions = [ISHDeviceVersions sharedInstance];
+  NSMutableArray *availableSdks = [NSMutableArray array];
+  for (ISHSDKInfo *sdkInfo in [versions allSDKs]) {
+    [availableSdks addObject:[sdkInfo fullVersionString]];
+    if ([[sdkInfo shortVersionString] isEqualToString:sdkVersion]) {
+      systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKPath:[sdkInfo root]];
+    }
+  }
+  NSAssert(systemRoot != nil, @"Unable to instantiate DTiPhoneSimulatorSystemRoot for sdk version: %@. Available sdks: %@", sdkVersion, availableSdks);
+  return systemRoot;
+}
+
 - (DTiPhoneSimulatorSessionConfig *)sessionConfigForRunningTestsWithEnvironment:(NSDictionary *)environment
                                                                      outputPath:(NSString *)outputPath
 {
@@ -208,14 +228,12 @@ static void KillSimulatorJobs()
   NSString *testHostPath = [_buildSettings[Xcode_TEST_HOST] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
   NSString *testHostAppPath = [testHostPath stringByDeletingLastPathComponent];
 
-  NSString *sdkVersion = [self simulatedSdkVersion];
   NSString *ideBundleInjectionLibPath = @"/../../Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection";
   NSString *testBundlePath = [NSString stringWithFormat:@"%@/%@",
                               _buildSettings[Xcode_BUILT_PRODUCTS_DIR],
                               _buildSettings[Xcode_FULL_PRODUCT_NAME]];
 
-  DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKVersion:sdkVersion];
-  NSAssert(systemRoot != nil, @"Unable to instantiate DTiPhoneSimulatorSystemRoot");
+  DTiPhoneSimulatorSystemRoot *systemRoot = [self systemRootForSimulatedSdk];
 
   DTiPhoneSimulatorApplicationSpecifier *appSpec =
   [DTiPhoneSimulatorApplicationSpecifier specifierWithApplicationPath:testHostAppPath];
@@ -265,10 +283,7 @@ static void KillSimulatorJobs()
 
 - (BOOL)runMobileInstallationHelperWithArguments:(NSArray *)arguments
 {
-  NSString *sdkVersion = [self simulatedSdkVersion];
-
-  DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKVersion:sdkVersion];
-  NSAssert(systemRoot != nil, @"Unable to instantiate DTiPhoneSimulatorSystemRoot");
+  DTiPhoneSimulatorSystemRoot *systemRoot = [self systemRootForSimulatedSdk];
 
   DTiPhoneSimulatorApplicationSpecifier *appSpec = [DTiPhoneSimulatorApplicationSpecifier specifierWithApplicationPath:
                                                     [XCToolLibExecPath() stringByAppendingPathComponent:@"mobile-installation-helper.app"]];
