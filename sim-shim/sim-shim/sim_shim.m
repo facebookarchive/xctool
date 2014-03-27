@@ -43,7 +43,6 @@
 @property (atomic, copy) NSDictionary *environment; // @synthesize environment=_environment;
 @property (atomic, copy) NSArray *arguments; // @synthesize arguments=_arguments;
 @property (atomic, copy) NSString *launchPath; // @synthesize launchPath=_launchPath;
-- (int)runUntilExit;
 
 @end
 
