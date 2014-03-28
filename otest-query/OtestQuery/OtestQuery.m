@@ -24,6 +24,7 @@
 
 #import "DuplicateTestNameFix.h"
 #import "ParseTestName.h"
+#import "SenIsSuperclassOfClassPerformanceFix.h"
 #import "TestingFramework.h"
 
 @implementation OtestQuery
@@ -99,6 +100,7 @@
 
   [[NSBundle allFrameworks] makeObjectsPerformSelector:@selector(principalClass)];
 
+  XTApplySenIsSuperclassOfClassPerformanceFix();
   ApplyDuplicateTestNameFix([framework objectForKey:kTestingFrameworkTestProbeClassName]);
 
   Class testProbeClass = NSClassFromString([framework objectForKey:kTestingFrameworkTestProbeClassName]);

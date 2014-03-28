@@ -33,7 +33,9 @@ static BOOL NSObject_senIsASuperclassOfClass(id self, SEL cmd, Class cls)
 
 void XTApplySenIsSuperclassOfClassPerformanceFix()
 {
-  XTSwizzleClassSelectorForFunction(NSClassFromString(@"NSObject"),
-                                    @selector(senIsASuperclassOfClass:),
-                                    (IMP)NSObject_senIsASuperclassOfClass);
+  if ([NSObject respondsToSelector:@selector(senIsASuperclassOfClass:)]) {
+    XTSwizzleClassSelectorForFunction([NSObject class],
+                                      @selector(senIsASuperclassOfClass:),
+                                      (IMP)NSObject_senIsASuperclassOfClass);
+  }
 }
