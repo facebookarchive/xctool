@@ -636,6 +636,9 @@ static NSString *abbreviatePath(NSString *string) {
 
     if (![event[kReporter_EndOCUnit_SucceededKey] boolValue]) {
       [self.failedOcunitEvents addObject:event];
+      [_resultCounter suiteBegin];
+      [_resultCounter testErrored];
+      [_resultCounter suiteEnd];
     }
 
     [self.reportWriter enableIndent];
