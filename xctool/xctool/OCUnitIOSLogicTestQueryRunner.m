@@ -29,8 +29,10 @@
   return CreateTaskForSimulatorExecutable([self cpuType],
                                           version,
                                           [XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-ios"],
-                                          @[[self bundlePath]],
-                                          @{@"__CFPREFERENCES_AVOID_DAEMON" : @"YES"});
+                                          @[],
+                                          @{@"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"otest-query-lib-ios.dylib"],
+                                            @"OtestQueryBundlePath" : [self bundlePath],
+                                            @"__CFPREFERENCES_AVOID_DAEMON" : @"YES"});
 }
 
 @end
