@@ -43,6 +43,10 @@
 		3892D75A1815ACE200E68652 /* EventGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 3892D7571815ACE200E68652 /* EventGenerator.h */; };
 		3892D75B1815ACE200E68652 /* EventGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D7581815ACE200E68652 /* EventGenerator.m */; };
 		3892D75C1815ACE200E68652 /* EventGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D7581815ACE200E68652 /* EventGenerator.m */; };
+		90F7485418E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.h in Headers */ = {isa = PBXBuildFile; fileRef = 90F7485218E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.h */; };
+		90F7485518E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.h in Headers */ = {isa = PBXBuildFile; fileRef = 90F7485218E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.h */; };
+		90F7485618E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F7485318E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.m */; };
+		90F7485718E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F7485318E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.m */; };
 		AA318BEA17E9B43000BF159E /* XCTest.h in Headers */ = {isa = PBXBuildFile; fileRef = AA318BE917E9B43000BF159E /* XCTest.h */; };
 		AA318BEB17E9B43000BF159E /* XCTest.h in Headers */ = {isa = PBXBuildFile; fileRef = AA318BE917E9B43000BF159E /* XCTest.h */; };
 /* End PBXBuildFile section */
@@ -78,6 +82,8 @@
 		28EC2601184EABF50061C3B2 /* XcodeRequiredVersion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodeRequiredVersion.m; sourceTree = "<group>"; };
 		3892D7571815ACE200E68652 /* EventGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventGenerator.h; sourceTree = "<group>"; };
 		3892D7581815ACE200E68652 /* EventGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventGenerator.m; sourceTree = "<group>"; };
+		90F7485218E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SenIsSuperclassOfClassPerformanceFix.h; sourceTree = "<group>"; };
+		90F7485318E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SenIsSuperclassOfClassPerformanceFix.m; sourceTree = "<group>"; };
 		AA318BE917E9B43000BF159E /* XCTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCTest.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -176,6 +182,8 @@
 				28E44D501811024F00211BD5 /* ParseTestName.h */,
 				28E44D511811024F00211BD5 /* ParseTestName.m */,
 				28E28FB317968EC50072376C /* ReporterEvents.h */,
+				90F7485218E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.h */,
+				90F7485318E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.m */,
 				28897FC7173E50F9004BA024 /* Swizzle.h */,
 				28897FC8173E50F9004BA024 /* Swizzle.m */,
 				2887CC45181E145D00B0D049 /* TestingFramework.h */,
@@ -201,6 +209,7 @@
 				3892D75A1815ACE200E68652 /* EventGenerator.h in Headers */,
 				28897FCA173E50F9004BA024 /* Swizzle.h in Headers */,
 				28E28FB517968EC50072376C /* ReporterEvents.h in Headers */,
+				90F7485518E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.h in Headers */,
 				2839BE61183FEB6F000D7BEC /* SenTestClassEnumeratorFix.h in Headers */,
 				2887CC42181E0D9200B0D049 /* DuplicateTestNameFix.h in Headers */,
 			);
@@ -217,6 +226,7 @@
 				28897FC9173E50F9004BA024 /* Swizzle.h in Headers */,
 				28E28FB417968EC50072376C /* ReporterEvents.h in Headers */,
 				AA318BEA17E9B43000BF159E /* XCTest.h in Headers */,
+				90F7485418E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.h in Headers */,
 				2839BE60183FEB6F000D7BEC /* SenTestClassEnumeratorFix.h in Headers */,
 				2887CC41181E0D9200B0D049 /* DuplicateTestNameFix.h in Headers */,
 			);
@@ -328,6 +338,7 @@
 			files = (
 				2887CC44181E0D9200B0D049 /* DuplicateTestNameFix.m in Sources */,
 				2839BE63183FEB6F000D7BEC /* SenTestClassEnumeratorFix.m in Sources */,
+				90F7485718E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.m in Sources */,
 				2839BE8E1843CCFF000D7BEC /* SenTestCaseInvokeTestFix.m in Sources */,
 				2887CC4A181E145D00B0D049 /* TestingFramework.m in Sources */,
 				3892D75C1815ACE200E68652 /* EventGenerator.m in Sources */,
@@ -344,6 +355,7 @@
 			files = (
 				2887CC43181E0D9200B0D049 /* DuplicateTestNameFix.m in Sources */,
 				2839BE62183FEB6F000D7BEC /* SenTestClassEnumeratorFix.m in Sources */,
+				90F7485618E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.m in Sources */,
 				2839BE8D1843CCFF000D7BEC /* SenTestCaseInvokeTestFix.m in Sources */,
 				2887CC49181E145D00B0D049 /* TestingFramework.m in Sources */,
 				3892D75B1815ACE200E68652 /* EventGenerator.m in Sources */,

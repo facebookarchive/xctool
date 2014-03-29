@@ -22,6 +22,9 @@
 		28E44D4F1810FBE500211BD5 /* ParseTestName.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E44D4C1810FA5300211BD5 /* ParseTestName.m */; };
 		28EC25FC184EAA680061C3B2 /* XcodeRequiredVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 28EC25F9184EAA680061C3B2 /* XcodeRequiredVersion.m */; };
 		28EC25FD184EAA680061C3B2 /* XcodeRequiredVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 28EC25F9184EAA680061C3B2 /* XcodeRequiredVersion.m */; };
+		90ED5F2418E4FC04001B2B14 /* SenIsSuperclassOfClassPerformanceFix.m in Sources */ = {isa = PBXBuildFile; fileRef = 90ED5F2218E4FC04001B2B14 /* SenIsSuperclassOfClassPerformanceFix.m */; };
+		90ED5F2518E4FC0C001B2B14 /* SenIsSuperclassOfClassPerformanceFix.m in Sources */ = {isa = PBXBuildFile; fileRef = 90ED5F2218E4FC04001B2B14 /* SenIsSuperclassOfClassPerformanceFix.m */; };
+		90ED5F2618E4FC0C001B2B14 /* SenIsSuperclassOfClassPerformanceFix.m in Sources */ = {isa = PBXBuildFile; fileRef = 90ED5F2218E4FC04001B2B14 /* SenIsSuperclassOfClassPerformanceFix.m */; };
 		AA318BE417E9A8C000BF159E /* TestingFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = AA318BE317E9A8C000BF159E /* TestingFramework.h */; };
 		AA318BE817E9AA7400BF159E /* TestingFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = AA318BE517E9AA7400BF159E /* TestingFramework.m */; };
 		CC12CBF318E54A1400AA76E9 /* OtestQuery.h in Headers */ = {isa = PBXBuildFile; fileRef = CC12CBF118E54A1400AA76E9 /* OtestQuery.h */; };
@@ -79,6 +82,8 @@
 		28E44D4B1810FA5300211BD5 /* ParseTestName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ParseTestName.h; path = ../Common/ParseTestName.h; sourceTree = "<group>"; };
 		28E44D4C1810FA5300211BD5 /* ParseTestName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ParseTestName.m; path = ../Common/ParseTestName.m; sourceTree = "<group>"; };
 		28EC25F9184EAA680061C3B2 /* XcodeRequiredVersion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XcodeRequiredVersion.m; path = ../Common/XcodeRequiredVersion.m; sourceTree = "<group>"; };
+		90ED5F2118E4FC04001B2B14 /* SenIsSuperclassOfClassPerformanceFix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SenIsSuperclassOfClassPerformanceFix.h; path = ../Common/SenIsSuperclassOfClassPerformanceFix.h; sourceTree = "<group>"; };
+		90ED5F2218E4FC04001B2B14 /* SenIsSuperclassOfClassPerformanceFix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SenIsSuperclassOfClassPerformanceFix.m; path = ../Common/SenIsSuperclassOfClassPerformanceFix.m; sourceTree = "<group>"; };
 		AA318BE317E9A8C000BF159E /* TestingFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestingFramework.h; path = ../Common/TestingFramework.h; sourceTree = "<group>"; };
 		AA318BE517E9AA7400BF159E /* TestingFramework.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestingFramework.m; path = ../Common/TestingFramework.m; sourceTree = "<group>"; };
 		CC12CBF118E54A1400AA76E9 /* OtestQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OtestQuery.h; sourceTree = "<group>"; };
@@ -156,6 +161,8 @@
 				2887CC3A181E0D8600B0D049 /* DuplicateTestNameFix.m */,
 				28E44D4B1810FA5300211BD5 /* ParseTestName.h */,
 				28E44D4C1810FA5300211BD5 /* ParseTestName.m */,
+				90ED5F2118E4FC04001B2B14 /* SenIsSuperclassOfClassPerformanceFix.h */,
+				90ED5F2218E4FC04001B2B14 /* SenIsSuperclassOfClassPerformanceFix.m */,
 				2887CC33181DDB5F00B0D049 /* Swizzle.h */,
 				2887CC34181DDB5F00B0D049 /* Swizzle.m */,
 				AA318BE317E9A8C000BF159E /* TestingFramework.h */,
@@ -430,6 +437,7 @@
 				2887CC3E181E0D8600B0D049 /* DuplicateTestNameFix.m in Sources */,
 				28E44D4F1810FBE500211BD5 /* ParseTestName.m in Sources */,
 				2887CC38181DDB5F00B0D049 /* Swizzle.m in Sources */,
+				90ED5F2518E4FC0C001B2B14 /* SenIsSuperclassOfClassPerformanceFix.m in Sources */,
 				28660742183471FF000ACB87 /* otest-query-lib.m in Sources */,
 				AA318BE817E9AA7400BF159E /* TestingFramework.m in Sources */,
 				CC12CBF518E54A1400AA76E9 /* OtestQuery.m in Sources */,
@@ -443,6 +451,7 @@
 				28EC25FD184EAA680061C3B2 /* XcodeRequiredVersion.m in Sources */,
 				2866076E18347528000ACB87 /* otest-query-lib.m in Sources */,
 				2866076918347520000ACB87 /* DuplicateTestNameFix.m in Sources */,
+				90ED5F2618E4FC0C001B2B14 /* SenIsSuperclassOfClassPerformanceFix.m in Sources */,
 				2866076A18347520000ACB87 /* ParseTestName.m in Sources */,
 				2866076B18347520000ACB87 /* Swizzle.m in Sources */,
 				2866076C18347520000ACB87 /* TestingFramework.m in Sources */,
@@ -457,6 +466,7 @@
 				CC12CC0418E54A7E00AA76E9 /* OtestQuery.m in Sources */,
 				CC12CBFF18E54A7700AA76E9 /* DuplicateTestNameFix.m in Sources */,
 				CC12CC0018E54A7700AA76E9 /* ParseTestName.m in Sources */,
+				90ED5F2418E4FC04001B2B14 /* SenIsSuperclassOfClassPerformanceFix.m in Sources */,
 				CC12CC0118E54A7700AA76E9 /* Swizzle.m in Sources */,
 				CC12CC0218E54A7700AA76E9 /* TestingFramework.m in Sources */,
 				CC12CC0318E54A7700AA76E9 /* XcodeRequiredVersion.m in Sources */,

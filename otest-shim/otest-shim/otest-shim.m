@@ -28,6 +28,7 @@
 #import "EventGenerator.h"
 #import "ParseTestName.h"
 #import "ReporterEvents.h"
+#import "SenIsSuperclassOfClassPerformanceFix.h"
 #import "SenTestCaseInvokeTestFix.h"
 #import "SenTestClassEnumeratorFix.h"
 #import "Swizzle.h"
@@ -552,6 +553,7 @@ static const char *DyldImageStateChangeHandler(enum dyld_image_states state,
       ApplyDuplicateTestNameFix([frameworkInfo objectForKey:kTestingFrameworkTestProbeClassName]);
       XTApplySenTestClassEnumeratorFix();
       XTApplySenTestCaseInvokeTestFix();
+      XTApplySenIsSuperclassOfClassPerformanceFix();
     }
     else if (strstr(info[i].imageFilePath, "XCTest.framework") != NULL) {
       // Since the 'XCTestLog' class now exists, we can swizzle it!
