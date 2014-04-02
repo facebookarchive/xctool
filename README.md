@@ -73,6 +73,28 @@ See [Parallelizing Test Runs](#parallelizing-test-runs) for more info.
 You'll need Xcode's Command Line Tools installed.  From Xcode, install
 via _Xcode &rarr; Preferences &rarr; Downloads_.
 
+## Install
+
+xctool's have two method of install.
+
+### Homebrew
+
+Using homebrew to install:
+
+```
+brew install xctool
+```
+
+### Source
+
+To install the version of GitHub directly to your computer, then you want to just put the path in the PATH console:
+
+```
+git clone https://github.com/facebook/xctool.git
+cd xctool/
+./xctool.sh
+```
+
 ## Usage
 
 xctool's commands and options are mostly a superset of xcodebuild's.  In
