@@ -79,6 +79,7 @@
                   arguments:(NSArray *)arguments
                 environment:(NSDictionary *)environment
              freshSimulator:(BOOL)freshSimulator
+             resetSimulator:(BOOL)resetSimulator
                freshInstall:(BOOL)freshInstall
               simulatorType:(NSString *)simulatorType
                   reporters:(NSArray *)reporters
@@ -90,6 +91,7 @@
     _arguments = [arguments retain];
     _environment = [environment retain];
     _freshSimulator = freshSimulator;
+    _resetSimulator = resetSimulator;
     _freshInstall = freshInstall;
     _simulatorType = [simulatorType retain];
     _reporters = [reporters retain];

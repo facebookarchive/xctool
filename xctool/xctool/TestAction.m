@@ -57,6 +57,11 @@
                      description:
      @"Start fresh simulator for each application test target"
                          setFlag:@selector(setFreshSimulator:)],
+    [Action actionOptionWithName:@"resetSimulator"
+                         aliases:nil
+                     description:
+     @"Reset simulator content and settings and restart it before running every app test run."
+                         setFlag:@selector(setResetSimulator:)],
     [Action actionOptionWithName:@"freshInstall"
                          aliases:nil
                      description:
@@ -121,6 +126,11 @@
 - (void)setFreshSimulator:(BOOL)freshSimulator
 {
   [_runTestsAction setFreshSimulator:freshSimulator];
+}
+
+- (void)setResetSimulator:(BOOL)resetSimulator
+{
+  [_runTestsAction setResetSimulator:resetSimulator];
 }
 
 - (void)setFreshInstall:(BOOL)freshInstall

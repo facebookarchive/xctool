@@ -56,6 +56,7 @@ typedef enum {
 }
 
 @property (nonatomic, assign) BOOL freshSimulator;
+@property (nonatomic, assign) BOOL resetSimulator;
 @property (nonatomic, assign) BOOL freshInstall;
 @property (nonatomic, assign) BOOL parallelize;
 @property (nonatomic, assign) BOOL failOnEmptyTestBundles;

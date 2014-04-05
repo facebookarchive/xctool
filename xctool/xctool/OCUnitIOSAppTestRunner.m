@@ -108,6 +108,31 @@ static void KillSimulatorJobs()
   }
 }
 
+static BOOL RemoveSimulatorContentAndSettings(NSString *simulatorVersion, cpu_type_t cpuType, NSString **removedPath, NSString **errorMessage)
+{
+  NSFileManager *fileManager = [NSFileManager defaultManager];
+  NSString *simulatorDirectory = [@"~/Library/Application Support/iPhone Simulator" stringByExpandingTildeInPath];
+  NSError *error;
+
+  [fileManager removeItemAtPath:[simulatorDirectory stringByAppendingPathComponent:@"Library"] error:nil];
+
+  NSString *sdkDirectory = [simulatorVersion stringByAppendingString:cpuType == CPU_TYPE_X86_64 ? @"-64" : @""];
+  NSString *simulatorContentsDirectory = [simulatorDirectory stringByAppendingPathComponent:sdkDirectory];
+
+  if ([fileManager fileExistsAtPath:simulatorContentsDirectory]) {
+    *removedPath = simulatorContentsDirectory;
+
+    if (![fileManager removeItemAtPath:simulatorContentsDirectory error:&error]) {
+      *errorMessage = [NSString stringWithFormat:@"%@; %@.",
+                       error.localizedDescription ?: @"Unknown error.",
+                       [error.userInfo[NSUnderlyingErrorKey] localizedDescription] ?: @""];
+      return NO;
+    }
+  }
+
+  return YES;
+}
+
 @implementation OCUnitIOSAppTestRunner
 
 - (NSNumber *)simulatedDeviceFamily
@@ -447,8 +472,8 @@ static void KillSimulatorJobs()
   // interacting with DTiPhoneSimulatorRemoteClient.
   [SimulatorLauncher loadAllPlatforms];
 
-  BOOL (^prepTestEnv)() = ^BOOL() {
-    if (_freshSimulator) {
+  void (^prepareSimulator)(BOOL freshSimulator, BOOL resetSimulator) = ^(BOOL freshSimulator, BOOL resetSimulator) {
+    if (freshSimulator || resetSimulator) {
       ReportStatusMessageBegin(_reporters,
                                REPORTER_MESSAGE_INFO,
                                @"Stopping any existing iOS simulator jobs to get a "
@@ -459,6 +484,37 @@ static void KillSimulatorJobs()
                              @"Stopped any existing iOS simulator jobs to get a "
                              @"fresh simulator.");
     }
+
+    if (resetSimulator) {
+      ReportStatusMessageBegin(_reporters,
+                               REPORTER_MESSAGE_INFO,
+                               @"Resetting iOS simulator content and settings...");
+      NSString *removedPath = nil;
+      NSString *removeError = nil;
+      ISHSDKInfo *sdkInfo = [[ISHDeviceVersions sharedInstance] sdkFromSDKRoot:[[self systemRootForSimulatedSdk] sdkRootPath]];
+      if (RemoveSimulatorContentAndSettings([sdkInfo shortVersionString], [self cpuType], &removedPath, &removeError)) {
+        if (removedPath) {
+          ReportStatusMessageEnd(_reporters,
+                                 REPORTER_MESSAGE_INFO,
+                                 @"Reset iOS simulator content and settings at path \"%@\"",
+                                 removedPath);
+        } else {
+          ReportStatusMessageEnd(_reporters,
+                                 REPORTER_MESSAGE_INFO,
+                                 @"Reset iOS simulator content and settings.");
+        }
+      } else {
+        ReportStatusMessageEnd(_reporters,
+                               REPORTER_MESSAGE_WARNING,
+                               @"Failed to reset iOS simulator content and settings at path \"%@\" with error: %@",
+                               removedPath, removeError);
+
+      }
+    }
+  };
+
+  BOOL (^prepTestEnv)() = ^BOOL() {
+    prepareSimulator(_freshSimulator, _resetSimulator);
 
     if (_freshInstall) {
       if (![self uninstallTestHostBundleID:testHostBundleID withError:startupError]) {
@@ -490,26 +546,32 @@ static void KillSimulatorJobs()
   for (NSInteger remainingAttempts = kMaxInstallOrUninstallAttempts - 1; remainingAttempts >= 0; --remainingAttempts) {
     if (prepTestEnv(startupError)) {
       break;
-    } else {
-      NSCAssert(startupError, @"If preparing the test env failed, there should be a description of what failed.");
-      if (remainingAttempts > 0) {
-        ReportStatusMessage(_reporters,
-                            REPORTER_MESSAGE_INFO,
-                            @"Preparing test environment failed; "
-                            @"will retry %ld more time%@",
-                            (long)remainingAttempts,
-                            remainingAttempts == 1 ? @"" : @"s");
-        // Sometimes, the test host app installation retries are starting and
-        // finishing in < 10 ms. That's way too fast for anything real to be
-        // happening. To remedy this, we pause for a second between retries.
-        [NSThread sleepForTimeInterval:1];
-      } else {
-        ReportStatusMessage(_reporters,
-                            REPORTER_MESSAGE_INFO,
-                            @"Preparing test environment failed.");
-        return;
-      }
     }
+
+    NSCAssert(startupError, @"If preparing the test env failed, there should be a description of what failed.");
+    if (!remainingAttempts) {
+      ReportStatusMessage(_reporters,
+                          REPORTER_MESSAGE_WARNING,
+                          @"Preparing test environment failed.");
+      return;
+    }
+
+    ReportStatusMessage(_reporters,
+                        REPORTER_MESSAGE_INFO,
+                        @"Preparing test environment failed; "
+                        @"will retry %ld more time%@",
+                        (long)remainingAttempts,
+                        remainingAttempts == 1 ? @"" : @"s");
+
+    // we will reset iOS simulator contents and settings now if it is not done in `prepTestEnv`
+    if (!_resetSimulator) {
+      prepareSimulator(YES, YES);
+    }
+
+    // Sometimes, the test host app installation retries are starting and
+    // finishing in < 10 ms. That's way too fast for anything real to be
+    // happening. To remedy this, we pause for a second between retries.
+    [NSThread sleepForTimeInterval:1];
   }
 
   ReportStatusMessage(_reporters,
@@ -537,7 +599,7 @@ static void KillSimulatorJobs()
 
     if (!remainingAttempts) {
       ReportStatusMessage(_reporters,
-                          REPORTER_MESSAGE_INFO,
+                          REPORTER_MESSAGE_WARNING,
                           @"%@.",
                           *startupError);
       return;
@@ -554,15 +616,7 @@ static void KillSimulatorJobs()
     [NSThread sleepForTimeInterval:1];
 
     // Restarting simulator
-    ReportStatusMessageBegin(_reporters,
-                             REPORTER_MESSAGE_INFO,
-                             @"Stopping any existing iOS simulator jobs to get a "
-                             @"fresh simulator ...");
-    KillSimulatorJobs();
-    ReportStatusMessageEnd(_reporters,
-                           REPORTER_MESSAGE_INFO,
-                           @"Stopped any existing iOS simulator jobs to get a "
-                           @"fresh simulator.");
+    prepareSimulator(YES, NO);
   }
 }
 
