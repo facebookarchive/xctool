@@ -1,0 +1,20 @@
+{"suite":"Toplevel Test Suite","event":"begin-test-suite","timestamp":1396484448.382279}
+{"className":"TestsThatCrashTests","methodName":"testExample1","test":"-[TestsThatCrashTests testExample1]","event":"begin-test","timestamp":1396484448.389454}
+{"exceptions":[],"methodName":"testExample1","output":"","result":"success","totalDuration":0.004943013191223145,"timestamp":1396484448.389891,"event":"end-test","test":"-[TestsThatCrashTests testExample1]","className":"TestsThatCrashTests","succeeded":true}
+{"className":"TestsThatCrashTests","methodName":"testExample2Fails","test":"-[TestsThatCrashTests testExample2Fails]","event":"begin-test","timestamp":1396484448.390014}
+{"exceptions":[{"lineNumber":31,"reason":"Failing test","filePathInProject":"\/Users\/nekto\/Projects\/xctool\/xctool\/xctool-tests\/TestData\/TestsThatCrash\/TestsThatCrashTests\/TestsThatCrashTests.m"}],"methodName":"testExample2Fails","output":"","result":"failure","totalDuration":0.0005109906196594238,"timestamp":1396484448.390548,"event":"end-test","test":"-[TestsThatCrashTests testExample2Fails]","className":"TestsThatCrashTests","succeeded":false}
+{"className":"TestsThatCrashTests","methodName":"testExample3","test":"-[TestsThatCrashTests testExample3]","event":"begin-test","timestamp":1396484448.390639}
+{"exceptions":[],"methodName":"testExample3","output":"","result":"success","totalDuration":4.804134368896484e-05,"timestamp":1396484448.390702,"event":"end-test","test":"-[TestsThatCrashTests testExample3]","className":"TestsThatCrashTests","succeeded":true}
+{"className":"TestsThatCrashTests","methodName":"testExample4Crashes","test":"-[TestsThatCrashTests testExample4Crashes]","event":"begin-test","timestamp":1396484448.390767}
+{"output":"Hello!\n","event":"test-output","timestamp":1396484448.390825}
+__break__
+{"suite":"Toplevel Test Suite","event":"begin-test-suite","timestamp":1396484449.310573}
+{"className":"TestsThatCrashTests","methodName":"testExample5","test":"-[TestsThatCrashTests testExample5]","event":"begin-test","timestamp":1396484449.313711}
+{"exceptions":[],"methodName":"testExample5","output":"","result":"success","totalDuration":0.003039002418518066,"timestamp":1396484449.313815,"event":"end-test","test":"-[TestsThatCrashTests testExample5]","className":"TestsThatCrashTests","succeeded":true}
+{"className":"TestsThatCrashTests","methodName":"testExample6","test":"-[TestsThatCrashTests testExample6]","event":"begin-test","timestamp":1396484449.313926}
+{"exceptions":[],"methodName":"testExample6","output":"","result":"success","totalDuration":4.500150680541992e-05,"timestamp":1396484449.313991,"event":"end-test","test":"-[TestsThatCrashTests testExample6]","className":"TestsThatCrashTests","succeeded":true}
+{"className":"TestsThatCrashTests","methodName":"testExample7","test":"-[TestsThatCrashTests testExample7]","event":"begin-test","timestamp":1396484449.314047}
+{"exceptions":[],"methodName":"testExample7","output":"","result":"success","totalDuration":2.60472297668457e-05,"timestamp":1396484449.314096,"event":"end-test","test":"-[TestsThatCrashTests testExample7]","className":"TestsThatCrashTests","succeeded":true}
+{"className":"TestsThatCrashTests","methodName":"testExample8","test":"-[TestsThatCrashTests testExample8]","event":"begin-test","timestamp":1396484449.31414}
+{"exceptions":[],"methodName":"testExample8","output":"","result":"success","totalDuration":2.497434616088867e-05,"timestamp":1396484449.314177,"event":"end-test","test":"-[TestsThatCrashTests testExample8]","className":"TestsThatCrashTests","succeeded":true}
+{"totalFailureCount":0,"totalDuration":0.003685951232910156,"testCaseCount":4,"testDuration":0.003135025501251221,"timestamp":1396484449.314242,"unexpectedExceptionCount":0,"suite":"Toplevel Test Suite","event":"end-test-suite"}
