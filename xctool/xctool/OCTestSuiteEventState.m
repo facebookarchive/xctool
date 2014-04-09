@@ -19,6 +19,15 @@
 #import "EventGenerator.h"
 #import "ReporterEvents.h"
 
+@interface OCTestSuiteEventState ()
+{
+  double _totalDuration;
+}
+
+@property (nonatomic, retain) NSDictionary *beginTestSuiteInfo;
+
+@end
+
 @implementation OCTestSuiteEventState
 
 - (instancetype)initWithName:(NSString *)name
@@ -41,54 +50,57 @@
 {
   [_testName release];
   [_tests release];
+  [_beginTestSuiteInfo release];
   [super dealloc];
 }
 
-- (void)beginTestSuite
+- (void)beginTestSuite:(NSDictionary *)event
 {
   NSAssert(!_isStarted, @"Test should not have started yet.");
   _isStarted = true;
+  self.beginTestSuiteInfo = event;
+
+  [self publishWithEvent:event];
 }
 
-- (void)endTestSuite
+- (void)endTestSuite:(NSDictionary *)event
 {
   NSAssert(_isStarted, @"Test must have already started.");
   _isFinished = true;
-}
 
-- (double)duration
-{
-  double __block total = 0.0;
+  _totalDuration = [event[kReporter_TimestampKey] doubleValue] - [_beginTestSuiteInfo[kReporter_TimestampKey] doubleValue];
 
-  [_tests
-   enumerateObjectsUsingBlock:^(OCTestEventState *state, NSUInteger idx, BOOL *stop) {
-     total += state.duration;
-   }];
-
-  return total;
+  NSMutableDictionary *finalEvent = [[event mutableCopy] autorelease];
+  finalEvent[kReporter_EndTestSuite_TestCaseCountKey] = @([self testCount]);
+  finalEvent[kReporter_EndTestSuite_TotalFailureCountKey] = @([self totalFailures]);
+  finalEvent[kReporter_EndTestSuite_UnexpectedExceptionCountKey] = @([self totalErrors]);
+  finalEvent[kReporter_EndTestSuite_TestDurationKey] = @([self testDuration]);
+  finalEvent[kReporter_EndTestSuite_TotalDurationKey] = @([self totalDuration]);
+  [self publishWithEvent:finalEvent];
 }
 
 - (void)publishEvents
 {
   if (!_isStarted) {
-    [self publishWithEvent:
+    NSDictionary *event =
       EventDictionaryWithNameAndContent(kReporter_Events_BeginTestSuite,
-        @{kReporter_BeginTestSuite_SuiteKey:self.testName})
-    ];
-    [self beginTestSuite];
+        @{kReporter_BeginTestSuite_SuiteKey:self.testName});
+    [self beginTestSuite:event];
   }
 
   [_tests makeObjectsPerformSelector:@selector(publishEvents)];
 
   if (!_isFinished) {
-    [self publishWithEvent:
+    NSDictionary *event =
       EventDictionaryWithNameAndContent(kReporter_Events_EndTestSuite, @{
         kReporter_EndTestSuite_SuiteKey:self.testName,
-        kReporter_EndTestSuite_TotalDurationKey:@(self.duration),
-        kReporter_EndTestSuite_TestCaseCountKey:@(self.testCount),
-        kReporter_EndTestSuite_TotalFailureCountKey:@(self.totalFailures)
-    })];
-    [self endTestSuite];
+        kReporter_EndTestSuite_TestCaseCountKey:@([self testCount]),
+        kReporter_EndTestSuite_TotalFailureCountKey:@([self totalFailures]),
+        kReporter_EndTestSuite_UnexpectedExceptionCountKey:@([self totalErrors]),
+        kReporter_EndTestSuite_TotalDurationKey:@([self totalDuration]),
+        kReporter_EndTestSuite_TestDurationKey:@([self testDuration]),
+    });
+    [self endTestSuite:event];
   }
 }
 
@@ -97,6 +109,9 @@
   super.reporters = reporters;
   [_tests makeObjectsPerformSelector:@selector(setReporters:) withObject:reporters];
 }
+
+#pragma mark -
+#pragma mark Test Manipulation Methods
 
 - (void)insertTest:(OCTestEventState *)test atIndex:(NSUInteger)index
 {
@@ -119,6 +134,9 @@
   }];
 }
 
+#pragma mark -
+#pragma mark Query Test Methods
+
 - (OCTestEventState *)runningTest
 {
   NSUInteger idx = [_tests indexOfObjectPassingTest:^(OCTestEventState *test, NSUInteger idx, BOOL *stop) {
@@ -139,6 +157,20 @@
   }]];
 }
 
+- (NSArray *)finishedTests
+{
+  return [_tests filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL (OCTestEventState *test, NSDictionary *bindings) {
+    return [test isFinished];
+  }]];
+}
+
+- (NSArray *)unfinishedTests
+{
+  return [_tests filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL (OCTestEventState *test, NSDictionary *bindings) {
+    return ![test isFinished];
+  }]];
+}
+
 - (OCTestEventState *)getTestWithTestName:(NSString *)name
 {
   NSUInteger idx = [_tests indexOfObjectPassingTest:^(OCTestEventState *test, NSUInteger idx, BOOL *stop) {
@@ -152,6 +184,26 @@
   }
 }
 
+#pragma mark -
+#pragma mark Counter Methods
+
+- (double)testDuration
+{
+  double __block total = 0.0;
+
+  [_tests
+   enumerateObjectsUsingBlock:^(OCTestEventState *state, NSUInteger idx, BOOL *stop) {
+     total += state.duration;
+   }];
+
+  return total;
+}
+
+- (double)totalDuration
+{
+  return _totalDuration;
+}
+
 - (unsigned int)testCount
 {
   return (unsigned int)[_tests count];
@@ -160,10 +212,19 @@
 - (unsigned int)totalFailures
 {
   NSArray *failedTests = [_tests filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL (OCTestEventState *test, NSDictionary *bindings) {
-    return ![test isSuccessful];
+    return [test.result isEqualToString:@"failure"];
   }]];
 
   return (unsigned int)[failedTests count];
+}
+
+- (unsigned int)totalErrors
+{
+  NSArray *erroredTests = [_tests filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL (OCTestEventState *test, NSDictionary *bindings) {
+    return [test.result isEqualToString:@"error"];
+  }]];
+
+  return (unsigned int)[erroredTests count];
 }
 
 @end

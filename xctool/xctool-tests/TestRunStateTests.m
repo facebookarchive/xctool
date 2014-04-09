@@ -97,7 +97,9 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
                 toReporter:state];
   [state didFinishRunWithStartupError:nil];
 
-  assertThat(eventBuffer.events, hasCountOf(0));
+  assertThat(eventBuffer.events, hasCountOf(7*2 + 2));
+  assertThat(SelectEventFields(eventBuffer.events, kReporter_Events_BeginTest, @"event"), hasCountOf(7));
+  assertThat(SelectEventFields(eventBuffer.events, kReporter_Events_EndTest, @"event"), hasCountOf(7));
 }
 
 - (void)testCrashBeforeTestsRan
@@ -148,7 +150,8 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
   // Send the 'begin-test-suite' event, but stop before the first test.
   testCrashBeforeTestsRan([@[outputBeforeTests] arrayByAddingObjectsFromArray:
                            [EventsForFakeRun() subarrayWithRange:NSMakeRange(0, 1)]],
-                          @[kReporter_Events_BeginTest,
+                          @[kReporter_Events_BeginTestSuite,
+                            kReporter_Events_BeginTest,
                             kReporter_Events_TestOuput,
                             kReporter_Events_EndTest,
                             kReporter_Events_BeginTest,
@@ -171,7 +174,9 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
   [state didFinishRunWithStartupError:nil];
 
   assertThat(SelectEventFields(eventBuffer.events, nil, @"event"),
-             equalTo(@[kReporter_Events_TestOuput,
+             equalTo(@[kReporter_Events_BeginTestSuite,
+                       kReporter_Events_BeginTest,
+                       kReporter_Events_TestOuput,
                        kReporter_Events_EndTest,
                        kReporter_Events_BeginTest,
                        kReporter_Events_TestOuput,
@@ -198,7 +203,10 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
   [state didFinishRunWithStartupError:nil];
 
   assertThat(SelectEventFields(eventBuffer.events, nil, @"event"),
-             equalTo(@[kReporter_Events_BeginTest,
+             equalTo(@[kReporter_Events_BeginTestSuite,
+                       kReporter_Events_BeginTest,
+                       kReporter_Events_EndTest,
+                       kReporter_Events_BeginTest,
                        kReporter_Events_TestOuput,
                        kReporter_Events_EndTest,
                        kReporter_Events_BeginTest,
@@ -208,7 +216,8 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
 
   // A "fake" test gets inserted to advertise the failure.
   assertThat(SelectEventFields(eventBuffer.events, kReporter_Events_EndTest, kReporter_EndTest_TestKey),
-             equalTo(@[@"-[OtherTests testSomething_MAYBE_CRASHED]",
+             equalTo(@[@"-[OtherTests testSomething]",
+                       @"-[OtherTests testSomething_MAYBE_CRASHED]",
                        @"-[OtherTests testAnother]"]));
 
   NSArray *output = SelectEventFields(eventBuffer.events, kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey);
@@ -267,14 +276,21 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
   // In this case there are no tests left with which to report the error, so we
   // create a fake one just so we have a place to advertise the error.
   assertThat(SelectEventFields(eventBuffer.events, nil, @"event"),
-             equalTo(@[kReporter_Events_BeginTest,
+             equalTo(@[kReporter_Events_BeginTestSuite,
+                       kReporter_Events_BeginTest,
+                       kReporter_Events_EndTest,
+                       kReporter_Events_BeginTest,
+                       kReporter_Events_EndTest,
+                       kReporter_Events_BeginTest,
                        kReporter_Events_TestOuput,
                        kReporter_Events_EndTest,
                        kReporter_Events_EndTestSuite]));
 
   // A "fake" test gets inserted to advertise the failure.
   assertThat(SelectEventFields(eventBuffer.events, kReporter_Events_EndTest, kReporter_EndTest_TestKey),
-             equalTo(@[@"-[OtherTests testAnother_MAYBE_CRASHED]"]));
+             equalTo(@[@"-[OtherTests testSomething]",
+                       @"-[OtherTests testAnother]",
+                       @"-[OtherTests testAnother_MAYBE_CRASHED]"]));
 
   NSArray *output = SelectEventFields(eventBuffer.events, kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey);
   assertThat(output[0],
@@ -293,7 +309,9 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
   [state didFinishRunWithStartupError:nil];
 
   // Not much we can do here, make sure no events are shipped out
-  assertThatInteger(eventBuffer.events.count, equalToInteger(0));
+  assertThatInteger(eventBuffer.events.count, equalToInteger(6));
+  assertThat(SelectEventFields(eventBuffer.events, kReporter_Events_BeginTest, @"event"), hasCountOf(2));
+  assertThat(SelectEventFields(eventBuffer.events, kReporter_Events_EndTest, @"event"), hasCountOf(2));
 }
 
 @end
