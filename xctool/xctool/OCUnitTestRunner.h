@@ -28,6 +28,7 @@
   NSDictionary *_environment;
   BOOL _garbageCollection;
   BOOL _freshSimulator;
+  BOOL _resetSimulator;
   BOOL _freshInstall;
   NSString *_simulatorType;
   NSArray *_reporters;
@@ -55,6 +56,7 @@
                   arguments:(NSArray *)arguments
                 environment:(NSDictionary *)environment
              freshSimulator:(BOOL)freshSimulator
+             resetSimulator:(BOOL)resetSimulator
                freshInstall:(BOOL)freshInstall
               simulatorType:(NSString *)simulatorType
                   reporters:(NSArray *)reporters;
