@@ -70,8 +70,10 @@ See [Parallelizing Test Runs](#parallelizing-test-runs) for more info.
 
 ## Requirements
 
-You'll need Xcode's Command Line Tools installed.  From Xcode, install
+* Xcode 5 or higher
+* You'll need Xcode's Command Line Tools installed.  From Xcode, install
 via _Xcode &rarr; Preferences &rarr; Downloads_.
+
 
 ## Usage
 
