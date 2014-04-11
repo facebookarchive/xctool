@@ -1,4 +1,3 @@
-
 #import "Version.h"
 
-NSString * const XCToolVersionString = @"0.1.14";
+NSString * const XCToolVersionString = @"0.1.15";
