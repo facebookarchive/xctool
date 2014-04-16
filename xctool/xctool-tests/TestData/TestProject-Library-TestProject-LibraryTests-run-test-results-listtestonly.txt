@@ -1,0 +1,18 @@
+{"message":"Loading settings for scheme 'TestProject-Library' ...","timestamp":1398211102.696059,"level":"Info","event":"begin-status"}
+{"message":"Loading settings for scheme 'TestProject-Library' ...","timestamp":1398211102.719442,"level":"Info","event":"end-status"}
+{"scheme":"TestProject-Library","workspace":null,"timestamp":1398211102.719507,"event":"begin-action","project":"xctool-tests\/TestData\/TestProject-Library\/TestProject-Library.xcodeproj","name":"run-tests"}
+{"message":"Collecting info for testables...","timestamp":1398211102.719552,"level":"Info","event":"begin-status"}
+{"message":"Collecting info for testables...","timestamp":1398211102.803515,"level":"Info","event":"end-status"}
+{"bundleName":"TestProject-LibraryTests.octest","sdkName":"iphonesimulator6.0","timestamp":1398211102.803576,"event":"begin-ocunit","targetName":"TestProject-LibraryTests","testType":"logic-test"}
+{"test":"-[TestProject_LibraryTests testOutputMerging]","className":"TestProject_LibraryTests","timestamp":1398211102.803618,"event":"begin-test","methodName":"testOutputMerging"}
+{"result":"success","test":"-[TestProject_LibraryTests testOutputMerging]","className":"TestProject_LibraryTests","succeeded":"1","event":"end-test","methodName":"testOutputMerging","totalDuration":"0","timestamp":1398211102.803637}
+{"test":"-[TestProject_LibraryTests testPrintSDK]","className":"TestProject_LibraryTests","timestamp":1398211102.803671,"event":"begin-test","methodName":"testPrintSDK"}
+{"result":"success","test":"-[TestProject_LibraryTests testPrintSDK]","className":"TestProject_LibraryTests","succeeded":"1","event":"end-test","methodName":"testPrintSDK","totalDuration":"0","timestamp":1398211102.803688}
+{"test":"-[TestProject_LibraryTests testStream]","className":"TestProject_LibraryTests","timestamp":1398211102.803714,"event":"begin-test","methodName":"testStream"}
+{"result":"success","test":"-[TestProject_LibraryTests testStream]","className":"TestProject_LibraryTests","succeeded":"1","event":"end-test","methodName":"testStream","totalDuration":"0","timestamp":1398211102.803728}
+{"test":"-[TestProject_LibraryTests testWillFail]","className":"TestProject_LibraryTests","timestamp":1398211102.803743,"event":"begin-test","methodName":"testWillFail"}
+{"result":"success","test":"-[TestProject_LibraryTests testWillFail]","className":"TestProject_LibraryTests","succeeded":"1","event":"end-test","methodName":"testWillFail","totalDuration":"0","timestamp":1398211102.803755}
+{"test":"-[TestProject_LibraryTests testWillPass]","className":"TestProject_LibraryTests","timestamp":1398211102.803775,"event":"begin-test","methodName":"testWillPass"}
+{"result":"success","test":"-[TestProject_LibraryTests testWillPass]","className":"TestProject_LibraryTests","succeeded":"1","event":"end-test","methodName":"testWillPass","totalDuration":"0","timestamp":1398211102.803789}
+{"bundleName":"TestProject-LibraryTests.octest","succeeded":true,"event":"end-ocunit","message":null,"targetName":"TestProject-LibraryTests","testType":"logic-test","sdkName":"iphonesimulator6.0","timestamp":1398211102.803806}
+{"scheme":"TestProject-Library","succeeded":true,"event":"end-action","workspace":null,"project":"xctool-tests\/TestData\/TestProject-Library\/TestProject-Library.xcodeproj","duration":0.08434861100249691,"timestamp":1398211102.803864,"name":"run-tests"}
