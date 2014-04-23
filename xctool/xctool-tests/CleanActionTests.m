@@ -60,6 +60,7 @@
     tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
                        @"clean",
+                       @"-reporter", @"plain",
                        ];
 
     [Swizzler whileSwizzlingSelector:@selector(schemeGenerator)
@@ -105,6 +106,7 @@
     tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
                        @"clean",
+                       @"-reporter", @"plain",
                        ];
 
     [TestUtil runWithFakeStreams:tool];

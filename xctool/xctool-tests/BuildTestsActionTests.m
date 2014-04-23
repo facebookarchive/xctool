@@ -115,7 +115,8 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                        @"-scheme", @"TestProject-Library",
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
-                       @"build-tests"
+                       @"build-tests",
+                       @"-reporter", @"plain",
                        ];
 
     [Swizzler whileSwizzlingSelector:@selector(schemeGenerator)
@@ -175,7 +176,8 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                        @"-scheme", @"TestProject-Library",
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
-                       @"build-tests"
+                       @"build-tests",
+                       @"-reporter", @"plain",
                        ];
 
     [Swizzler whileSwizzlingSelector:@selector(schemeGenerator)
@@ -243,7 +245,8 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                        @"-scheme", @"TestProject-Library",
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
-                       @"build-tests", @"-only", @"TestProject-LibraryTests"
+                       @"build-tests", @"-only", @"TestProject-LibraryTests",
+                       @"-reporter", @"plain",
                        ];
 
     [Swizzler whileSwizzlingSelector:@selector(schemeGenerator)
@@ -308,7 +311,8 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                        @"-sdk", @"iphonesimulator6.0",
                        @"build-tests",
                        @"-only", @"TestProject-LibraryTests",
-                       @"-skip-deps"
+                       @"-skip-deps",
+                       @"-reporter", @"plain",
                        ];
 
     [Swizzler whileSwizzlingSelector:@selector(schemeGenerator)
@@ -359,6 +363,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
     tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
                        @"build-tests",
+                       @"-reporter", @"plain",
                        ];
 
     [TestUtil runWithFakeStreams:tool];

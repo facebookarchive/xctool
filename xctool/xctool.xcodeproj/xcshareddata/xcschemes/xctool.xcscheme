@@ -252,6 +252,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CCC0AAF518EC8AC4004FD861"
+               BuildableName = "user-notifications"
+               BlueprintName = "user-notifications"
+               ReferencedContainer = "container:../reporters/reporters.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "2893A94B17960CD400EFBD28"
                BuildableName = "reporters-tests.octest"
                BlueprintName = "reporters-tests"
