@@ -157,6 +157,10 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
                          aliases:nil
                      description:@"Fail when an empty test bundle was run."
                          setFlag:@selector(setFailOnEmptyTestBundles:)],
+    [Action actionOptionWithName:@"listTestsOnly"
+                         aliases:nil
+                     description:@"Skip actual test running and list them only."
+                         setFlag:@selector(setListTestsOnly:)],
     ];
 }
 
@@ -509,6 +513,10 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
   ReportStatusMessageEnd(options.reporters, REPORTER_MESSAGE_INFO,
                          @"Collecting info for testables...");
 
+  if (_listTestsOnly) {
+    return [self listTestsInTestableExecutionInfos:testableExecutionInfos options:options];
+  }
+
   for (TestableExecutionInfo *info in testableExecutionInfos) {
     if (info.buildSettingsError) {
       TestableBlock block = [self blockToAdvertiseMessage:info.buildSettingsError
@@ -651,6 +659,43 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
   dispatch_release(q);
 
   return succeeded;
+}
+
+- (BOOL)listTestsInTestableExecutionInfos:(NSArray *)testableExecutionInfos
+                                  options:(Options *)options
+{
+  for (TestableExecutionInfo *testableExecutionInfo in testableExecutionInfos) {
+    PublishEventToReporters(options.reporters,
+                            [[self class] eventForBeginOCUnitFromTestableExecutionInfo:testableExecutionInfo]);
+
+    for (NSString *testCase in testableExecutionInfo.testCases) {
+      NSArray *components = [testCase componentsSeparatedByString:@"/"];
+      NSString *className = components[0];
+      NSString *methodName = components[1];
+      NSString *testName = [NSString stringWithFormat:@"-[%@ %@]", className, methodName];
+      NSDictionary *beginTestEvent = @{kReporter_BeginTest_TestKey: testName,
+                                       kReporter_BeginTest_ClassNameKey: className,
+                                       kReporter_BeginTest_MethodNameKey: methodName};
+      PublishEventToReporters(options.reporters,
+                              EventDictionaryWithNameAndContent(kReporter_Events_BeginTest, beginTestEvent));
+
+
+      NSDictionary *endTestEvent = @{kReporter_EndTest_TestKey: testName,
+                                     kReporter_EndTest_ClassNameKey: className,
+                                     kReporter_EndTest_MethodNameKey: methodName,
+                                     kReporter_EndTest_SucceededKey: @"1",
+                                     kReporter_EndTest_ResultKey: @"success",
+                                     kReporter_EndTest_TotalDurationKey: @"0"};
+      PublishEventToReporters(options.reporters,
+                              EventDictionaryWithNameAndContent(kReporter_Events_EndTest, endTestEvent));
+    }
+
+    PublishEventToReporters(options.reporters,
+                            [[self class] eventForEndOCUnitFromTestableExecutionInfo:testableExecutionInfo
+                                                                           succeeded:YES
+                                                                       failureReason:nil]);
+  }
+  return YES;
 }
 
 @end

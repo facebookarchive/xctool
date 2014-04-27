@@ -32,6 +32,29 @@
 #import "XCToolUtil.h"
 #import "XcodeSubjectInfo.h"
 
+static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2, NSArray *keys)
+{
+  NSArray *output1Array = [[output1 stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] componentsSeparatedByString:@"\n"];
+  NSArray *output2Array = [[output2 stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] componentsSeparatedByString:@"\n"];
+  if ([output1Array count] != [output2Array count]) {
+    return NO;
+  }
+
+  for (int i=0; i<[output1Array count]; i++) {
+    NSMutableDictionary *dict1 = [[NSJSONSerialization JSONObjectWithData:[output1Array[i] dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil] mutableCopy];
+    NSMutableDictionary *dict2 = [[NSJSONSerialization JSONObjectWithData:[output2Array[i] dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil] mutableCopy];
+    for (NSString *key in keys) {
+      [dict1 removeObjectForKey:key];
+      [dict2 removeObjectForKey:key];
+    }
+    if (![dict1 isEqual:dict2]) {
+      return NO;
+    }
+  }
+
+  return YES;
+}
+
 @interface RunTestsActionTests : SenTestCase
 @end
 
@@ -275,6 +298,48 @@
                                @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
                                ]));
     assertThatInt(tool.exitStatus, equalToInt(1));
+  }];
+}
+
+- (void)testRunTestsActionWithListTestsOnlyOption
+{
+  NSArray *testList = @[@"TestProject_LibraryTests/testOutputMerging",
+                        @"TestProject_LibraryTests/testPrintSDK",
+                        @"TestProject_LibraryTests/testStream",
+                        @"TestProject_LibraryTests/testWillFail",
+                        @"TestProject_LibraryTests/testWillPass"];
+
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+                                                              // Make sure -showBuildSettings returns some data
+                                                              [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
+                                                                                                              scheme:@"TestProject-Library"
+                                                                                                        settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
+                                                              // We're going to call -showBuildSettings on the test target.
+                                                              [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
+                                                                                                              target:@"TestProject-LibraryTests"
+                                                                                                        settingsPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings.txt"
+                                                                                                                hide:NO],
+                                                              [LaunchHandlers handlerForOtestQueryReturningTestList:testList],
+                                                              ]];
+
+    XCTool *tool = [[[XCTool alloc] init] autorelease];
+
+    tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-configuration", @"Debug",
+                       @"-sdk", @"iphonesimulator6.0",
+                       @"run-tests",
+                       @"listTestsOnly",
+                       @"-reporter", @"json-stream"
+                       ];
+
+    NSDictionary *result = [TestUtil runWithFakeStreams:tool];
+    NSString *listTestsOnlyOutput = [NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-run-test-results-listtestonly.txt"
+                                                              encoding:NSUTF8StringEncoding
+                                                                 error:nil];
+    NSString *stdoutString = result[@"stdout"];
+    assertThatBool(areEqualJsonOutputsIgnoringKeys(stdoutString, listTestsOnlyOutput, @[@"timestamp", @"duration"]), equalToBool(YES));
   }];
 }
 

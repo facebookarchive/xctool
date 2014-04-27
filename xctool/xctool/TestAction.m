@@ -95,6 +95,10 @@
                      description:@"Set simulator type (either iphone or ipad)"
                        paramName:@"SIMULATOR"
                            mapTo:@selector(setSimulatorType:)],
+    [Action actionOptionWithName:@"listTestsOnly"
+                         aliases:nil
+                     description:@"Skip actual test running and list them only."
+                         setFlag:@selector(setListTestsOnly:)],
     ];
 }
 
@@ -171,6 +175,11 @@
 - (void)setFailOnEmptyTestBundles:(BOOL)failOnEmptyTestBundles
 {
   [_runTestsAction setFailOnEmptyTestBundles:failOnEmptyTestBundles];
+}
+
+- (void)setListTestsOnly:(BOOL)listTestsOnly
+{
+  [_runTestsAction setListTestsOnly:listTestsOnly];
 }
 
 - (void)addOnly:(NSString *)argument
