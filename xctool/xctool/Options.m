@@ -21,6 +21,7 @@
 #import "BuildAction.h"
 #import "BuildTestsAction.h"
 #import "CleanAction.h"
+#import "InstallAction.h"
 #import "ISHDeviceInfo.h"
 #import "ISHDeviceVersions.h"
 #import "ISHSDKInfo.h"
@@ -44,6 +45,7 @@
            [TestAction class],
            [ArchiveAction class],
            [AnalyzeAction class],
+           [InstallAction class],
            ];
 }
 
