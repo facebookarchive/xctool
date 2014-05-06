@@ -93,7 +93,7 @@
 
   // We use dlopen() instead of -[NSBundle loadAndReturnError] because, if
   // something goes wrong, dlerror() gives us a much more helpful error message.
-  if (dlopen([[bundle executablePath] UTF8String], RTLD_NOW) == NULL) {
+  if (dlopen([[bundle executablePath] UTF8String], RTLD_LAZY) == NULL) {
     fprintf(stderr, "%s\n", dlerror());
     exit(kDLOpenError);
   }
