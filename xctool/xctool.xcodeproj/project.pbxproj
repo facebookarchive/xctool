@@ -106,6 +106,8 @@
 		32A90C551725F05800C2349E /* TestAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 32A90C521725F05800C2349E /* TestAction.m */; };
 		3892D7411811A5CC00E68652 /* EventGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D7401811A5CC00E68652 /* EventGenerator.m */; };
 		3892D7421811A5CC00E68652 /* EventGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D7401811A5CC00E68652 /* EventGenerator.m */; };
+		40623EBE190EA61B004FB374 /* InstallAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 40623EBD190EA61B004FB374 /* InstallAction.m */; };
+		40623EBF190EA61B004FB374 /* InstallAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 40623EBD190EA61B004FB374 /* InstallAction.m */; };
 		AA318BEF17E9BA3500BF159E /* TestingFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = AA318BEE17E9BA3500BF159E /* TestingFramework.m */; };
 		AA318BF017E9BA3500BF159E /* TestingFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = AA318BEE17E9BA3500BF159E /* TestingFramework.m */; };
 		AA6C88F71808C2C5006A3581 /* OTestShimTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AA6C88F61808C2C5006A3581 /* OTestShimTests.m */; };
@@ -291,6 +293,8 @@
 		32A90C531725F05800C2349E /* TestAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestAction.h; sourceTree = "<group>"; };
 		3892D73F1811A5CC00E68652 /* EventGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventGenerator.h; sourceTree = "<group>"; };
 		3892D7401811A5CC00E68652 /* EventGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventGenerator.m; sourceTree = "<group>"; };
+		40623EBC190EA61B004FB374 /* InstallAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstallAction.h; sourceTree = "<group>"; };
+		40623EBD190EA61B004FB374 /* InstallAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InstallAction.m; sourceTree = "<group>"; };
 		AA194FD118091AE700F56AFC /* ContainsAssertionFailure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainsAssertionFailure.h; sourceTree = "<group>"; };
 		AA318BEC17E9B7CA00BF159E /* XCTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XCTest.h; sourceTree = "<group>"; };
 		AA318BED17E9BA3500BF159E /* TestingFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestingFramework.h; sourceTree = "<group>"; };
@@ -388,6 +392,8 @@
 				32A90C521725F05800C2349E /* TestAction.m */,
 				32A90C531725F05800C2349E /* TestAction.h */,
 				32707EE31725FE9500AF2F53 /* TestActionInternal.h */,
+				40623EBC190EA61B004FB374 /* InstallAction.h */,
+				40623EBD190EA61B004FB374 /* InstallAction.m */,
 			);
 			name = Actions;
 			sourceTree = "<group>";
@@ -776,6 +782,7 @@
 				EEB31CEA17C685E500CFB0E1 /* OCEventState.m in Sources */,
 				EEB31CF117C6A1EF00CFB0E1 /* OCTestEventState.m in Sources */,
 				AAC1E0BD18121071005A4FD5 /* OCUnitIOSLogicTestQueryRunner.m in Sources */,
+				40623EBE190EA61B004FB374 /* InstallAction.m in Sources */,
 				EEB31CF917C6D57B00CFB0E1 /* OCTestSuiteEventState.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -849,6 +856,7 @@
 				CD5677101766782C003B727C /* BuildStateParser.mm in Sources */,
 				28BB043E17C7FF43004F6C13 /* Buildable.m in Sources */,
 				CDEE9EA1176950DC0026D278 /* BuildStateParserTests.m in Sources */,
+				40623EBF190EA61B004FB374 /* InstallAction.m in Sources */,
 				28869AFC178CEA7600DED56A /* Initializer.m in Sources */,
 				AAF334521806A48A00928A00 /* OCUnitTestRunnerTests.m in Sources */,
 				CC84C94C18ECE161001F6094 /* FakeOCUnitTestRunner.m in Sources */,
