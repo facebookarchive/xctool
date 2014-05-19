@@ -71,6 +71,11 @@
                      description:@"scheme to use for building or testing"
                        paramName:@"NAME"
                            mapTo:@selector(setScheme:)],
+    [Action actionOptionWithName:@"resultBundlePath"
+                         aliases:nil
+                     description:@"path to bundle to write results from performing a build action"
+                       paramName:@"PATH"
+                           mapTo:@selector(setResultBundlePath:)],
     [Action actionOptionWithName:@"find-target"
                          aliases:nil
                      description:@"Search for the workspace/project/scheme to build the target"
@@ -409,6 +414,16 @@
     *errorMessage = [NSString stringWithFormat:@"Project must end in .xcodeproj: %@", self.project];
     return NO;
   }
+  
+  if (self.resultBundlePath != nil) {
+    BOOL isDirectory = NO;
+    BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:self.resultBundlePath isDirectory:&isDirectory];
+    if (!isDirectory) {
+      NSString *errorReason = fileExists ? @"must be a directory" : @"doesn't exist";
+      *errorMessage = [NSString stringWithFormat:@"Specified result bundle path %@: %@", errorReason, self.resultBundlePath];
+      return NO;
+    }
+  }
 
   NSArray *schemePaths = nil;
   if (self.workspace != nil) {
@@ -631,6 +646,10 @@
     [arguments addObjectsFromArray:@[@"-jobs", self.jobs]];
   }
 
+  if (self.resultBundlePath != nil) {
+    [arguments addObjectsFromArray:@[@"-resultBundlePath", self.resultBundlePath]];
+  }
+    
   [_buildSettings enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
     [arguments addObject:[NSString stringWithFormat:@"%@=%@", key, obj]];
   }];
