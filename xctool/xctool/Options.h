@@ -44,6 +44,7 @@
 @property (nonatomic, copy) NSString *findTarget;
 @property (nonatomic, copy) NSString *findTargetPath;
 @property (nonatomic, copy) NSString *findProjectPath;
+@property (nonatomic, copy) NSString *resultBundlePath;
 @property (nonatomic, copy) NSArray *findTargetExcludePaths;
 
 @property (nonatomic, assign) BOOL showBuildSettings;

@@ -192,6 +192,36 @@
    TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt"];
 }
 
+- (void)testResultBundlePathMustBeADirectory
+{
+  NSString *validFilePath = TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt";
+  [[Options optionsFrom:@[
+                          @"-scheme", @"TestProject-Library",
+                          @"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
+                          @"-resultBundlePath", validFilePath,
+                          ]]
+   assertOptionsFailToValidateWithError:
+   [NSString stringWithFormat:@"Specified result bundle path must be a directory: %@", validFilePath]];
+}
+
+- (void)testResultBundlePathMustExist
+{
+  NSString *invalidResultBundlePath = @"SOME_BAD_PATH";
+  [[Options optionsFrom:@[
+                          @"-scheme", @"TestProject-Library",
+                          @"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
+                          @"-resultBundlePath", invalidResultBundlePath,
+                          ]]
+   assertOptionsFailToValidateWithError:
+   [NSString stringWithFormat:@"Specified result bundle path doesn't exist: %@", invalidResultBundlePath]];
+}
+
+- (void)testResultBundlePathWorks
+{
+  Options *options = [Options optionsFrom:@[@"-resultBundlePath", @"foo"]];
+  assertThat(options.resultBundlePath, equalTo(@"foo"));
+}
+
 - (void)testFindTargetWorks
 {
   Options *options = [Options optionsFrom:@[@"-find-target", @"foo"]];
