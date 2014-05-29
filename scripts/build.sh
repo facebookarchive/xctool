@@ -3,7 +3,7 @@
 set -e
 
 # We need an absolute path to the dir we're in.
-XCTOOL_DIR=$(cd $(dirname $0)/..; pwd)
+XCTOOL_DIR="$(cd "$(dirname "$0")"/..; pwd)"
 
 # Will be a short git hash or just '.' if we're not in a git repo.
 REVISION=$( (\
@@ -13,7 +13,7 @@ REVISION=$( (\
 BUILD_OUTPUT_DIR="$XCTOOL_DIR"/build/$REVISION
 XCTOOL_PATH="$BUILD_OUTPUT_DIR"/Products/Release/xctool
 BUILD_NEEDED_TOOL_PATH="$XCTOOL_DIR"/scripts/build_needed.sh
-BUILD_NEEDED=$($BUILD_NEEDED_TOOL_PATH $*)
+BUILD_NEEDED=$("$BUILD_NEEDED_TOOL_PATH" $*)
 
 # Skip building if we already have the latest build.  If we already have a
 # build for the latest revision, and we're in a git repo, and if there have

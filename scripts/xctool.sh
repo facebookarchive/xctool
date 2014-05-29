@@ -5,14 +5,14 @@
 
 set -e
 
-REALPATH=$([[ -L $0 ]] && echo $(dirname $0)/$(readlink $0) || echo $0)
-XCTOOL_DIR=$(cd $(dirname $REALPATH)/..; pwd)
+REALPATH="$([[ -L $0 ]] && echo $(dirname "$0")/$(readlink "$0") || echo "$0")"
+XCTOOL_DIR="$(cd $(dirname "$REALPATH")/..; pwd)"
 
 TEMP_PATH=$(/usr/bin/mktemp -t xctool-build)
-trap "rm -f $TEMP_PATH" EXIT
+trap "rm -f "$TEMP_PATH"" EXIT
 
 BUILD_NEEDED_TOOL_PATH="$XCTOOL_DIR"/scripts/build_needed.sh
-BUILD_NEEDED=$($BUILD_NEEDED_TOOL_PATH $*)
+BUILD_NEEDED=$("$BUILD_NEEDED_TOOL_PATH" "$*")
 
 COLOR_BRIGHT_WHITE="\033[1;97m"
 COLOR_BOLD_RED="\033[1;31m"

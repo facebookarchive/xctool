@@ -378,7 +378,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "${PROJECT_DIR}/../scripts/RunScripts/assert_universal.sh";
+			shellScript = "\"${PROJECT_DIR}\"/../scripts/RunScripts/assert_universal.sh";
 			showEnvVarsInLog = 0;
 		};
 		28AA034C18564ED000854B0E /* Run Script (assert_universal) */ = {
@@ -393,7 +393,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "${PROJECT_DIR}/../scripts/RunScripts/assert_universal.sh";
+			shellScript = "\"${PROJECT_DIR}\"/../scripts/RunScripts/assert_universal.sh";
 			showEnvVarsInLog = 0;
 		};
 		28AA034D18564EEC00854B0E /* Run Script (assert_universal) */ = {
@@ -408,7 +408,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "${PROJECT_DIR}/../scripts/RunScripts/assert_universal.sh";
+			shellScript = "\"${PROJECT_DIR}\"/../scripts/RunScripts/assert_universal.sh";
 			showEnvVarsInLog = 0;
 		};
 		28AA034E18564EF800854B0E /* Run Script (assert_universal) */ = {
@@ -423,7 +423,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "${PROJECT_DIR}/../scripts/RunScripts/assert_universal.sh";
+			shellScript = "\"${PROJECT_DIR}\"/../scripts/RunScripts/assert_universal.sh";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

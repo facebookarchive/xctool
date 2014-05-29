@@ -3,7 +3,7 @@
 set -e
 
 # We need an absolute path to the dir we're in.
-XCTOOL_DIR=$(cd $(dirname $0)/..; pwd)
+XCTOOL_DIR=$(cd "$(dirname "$0")/.."; pwd)
 
 # Will be a short git hash or just '.' if we're not in a git repo.
 REVISION=$((\
