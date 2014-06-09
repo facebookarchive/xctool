@@ -16,9 +16,8 @@
 
 #import "OCUnitIOSLogicTestRunner.h"
 
-#import "ISHDeviceVersions.h"
-#import "ISHSDKInfo.h"
 #import "NSConcreteTask.h"
+#import "SimulatorInfo.h"
 #import "TaskUtil.h"
 #import "TestingFramework.h"
 #import "XCToolUtil.h"
@@ -28,15 +27,6 @@
 
 - (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath
 {
-  NSString *version = [_buildSettings[Xcode_SDK_NAME] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
-  if (self.OSVersion) {
-    if ([self.OSVersion isEqualTo:@"latest"]) {
-      version = [[[ISHDeviceVersions sharedInstance] sdkFromSDKRoot:[[ISHDeviceVersions sharedInstance] latestSDKRoot]] shortVersionString];
-    } else {
-      version = self.OSVersion;
-    }
-  }
-
   NSString *launchPath = [NSString stringWithFormat:@"%@/Developer/%@",
                           _buildSettings[Xcode_SDKROOT],
                           _framework[kTestingFrameworkIOSTestrunnerName]];
@@ -50,7 +40,7 @@
                          }];
 
   return [CreateTaskForSimulatorExecutable([self cpuType],
-                                           version,
+                                           [SimulatorInfo baseVersionForSDKShortVersion:[self.simulatorInfo simulatedSdkVersion]],
                                            launchPath,
                                            args,
                                            env) autorelease];
@@ -61,6 +51,8 @@
 {
   NSString *sdkName = _buildSettings[Xcode_SDK_NAME];
   NSAssert([sdkName hasPrefix:@"iphonesimulator"], @"Unexpected SDK name: %@", sdkName);
+
+  [self updateSimulatorInfo];
 
   NSString *testBundlePath = [self testBundlePath];
   BOOL bundleExists = [[NSFileManager defaultManager] fileExistsAtPath:testBundlePath];

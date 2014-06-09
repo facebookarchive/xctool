@@ -16,12 +16,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "OCUnitTestRunner.h"
+#import "OCUnitIOSTestRunner.h"
 
-@interface OCUnitIOSAppTestRunner : OCUnitTestRunner {
-}
-
-@property (nonatomic, copy) NSString *deviceName;
-@property (nonatomic, copy) NSString *OSVersion;
+@interface OCUnitIOSAppTestRunner : OCUnitIOSTestRunner
 
 @end
