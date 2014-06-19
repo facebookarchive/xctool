@@ -143,11 +143,6 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
                      description:@"Either 'case' (default) or 'class'."
                        paramName:@"BUCKETBY"
                            mapTo:@selector(setBucketBy:)],
-    [Action actionOptionWithName:@"simulator"
-                         aliases:nil
-                     description:@"Set simulator type (either iphone or ipad)"
-                       paramName:@"SIMULATOR"
-                           mapTo:@selector(setSimulatorType:)],
     [Action actionOptionWithName:@"failOnEmptyTestBundles"
                          aliases:nil
                      description:@"Fail when an empty test bundle was run."
@@ -174,7 +169,6 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
 - (void)dealloc {
   self.onlyList = nil;
   self.testSDK = nil;
-  self.simulatorType = nil;
   [super dealloc];
 }
 
@@ -423,7 +417,6 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                                      freshSimulator:self.freshSimulator
                                      resetSimulator:self.resetSimulator
                                      freshInstall:self.freshInstall
-                                     simulatorType:self.simulatorType
                                      reporters:reporters] autorelease];
     [testRunner setCpuType:_cpuType];
 

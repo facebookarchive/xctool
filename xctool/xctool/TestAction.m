@@ -90,11 +90,6 @@
                      description:@"Either 'case' (default) or 'class'."
                        paramName:@"BUCKETBY"
                            mapTo:@selector(setBucketBy:)],
-    [Action actionOptionWithName:@"simulator"
-                         aliases:nil
-                     description:@"Set simulator type (either iphone or ipad)"
-                       paramName:@"SIMULATOR"
-                           mapTo:@selector(setSimulatorType:)],
     [Action actionOptionWithName:@"listTestsOnly"
                          aliases:nil
                      description:@"Skip actual test running and list them only."
@@ -160,11 +155,6 @@
 - (void)setBucketBy:(NSString *)str
 {
   [_runTestsAction setBucketBy:str];
-}
-
-- (void)setSimulatorType:(NSString *)simulatorType
-{
-  [_runTestsAction setSimulatorType:simulatorType];
 }
 
 - (void)setSkipDependencies:(BOOL)skipDependencies

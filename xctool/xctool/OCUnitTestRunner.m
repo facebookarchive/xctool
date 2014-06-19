@@ -81,7 +81,6 @@
              freshSimulator:(BOOL)freshSimulator
              resetSimulator:(BOOL)resetSimulator
                freshInstall:(BOOL)freshInstall
-              simulatorType:(NSString *)simulatorType
                   reporters:(NSArray *)reporters
 {
   if (self = [super init]) {
@@ -93,7 +92,6 @@
     _freshSimulator = freshSimulator;
     _resetSimulator = resetSimulator;
     _freshInstall = freshInstall;
-    _simulatorType = [simulatorType retain];
     _reporters = [reporters retain];
     _framework = [FrameworkInfoForTestBundleAtPath([self testBundlePath]) retain];
     _cpuType = CPU_TYPE_ANY;
@@ -108,7 +106,6 @@
   [_allTestCases release];
   [_arguments release];
   [_environment release];
-  [_simulatorType release];
   [_reporters release];
   [_framework release];
   [super dealloc];

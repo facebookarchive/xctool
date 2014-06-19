@@ -29,7 +29,6 @@
   _simulatorInfo.cpuType = _cpuType;
   _simulatorInfo.deviceName = _deviceName;
   _simulatorInfo.OSVersion = _OSVersion;
-  _simulatorInfo.simulatorType = _simulatorType;
   _simulatorInfo.buildSettings = _buildSettings;
 }
 
