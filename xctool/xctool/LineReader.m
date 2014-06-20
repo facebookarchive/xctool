@@ -57,7 +57,10 @@
 
 - (void)appendDataToBuffer:(NSData *)data
 {
-  [_buffer appendString:[[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease]];
+    NSString *dataToAppend = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+    if (dataToAppend) {
+        [_buffer appendString:dataToAppend];
+    }
 }
 
 - (void)dataAvailableNotification:(NSNotification *)notification
