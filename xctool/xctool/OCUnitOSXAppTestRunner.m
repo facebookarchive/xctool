@@ -28,6 +28,7 @@
 
 - (void)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
                    startupError:(NSString **)startupError
+                    otherErrors:(NSString **)otherErrors
 {
   NSString *sdkName = _buildSettings[Xcode_SDK_NAME];
   NSAssert([sdkName hasPrefix:@"macosx"], @"Unexpected SDK: %@", sdkName);
