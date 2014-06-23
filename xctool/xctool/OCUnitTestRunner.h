@@ -25,6 +25,7 @@
   NSArray *_focusedTestCases;
   NSArray *_allTestCases;
   NSArray *_arguments;
+  cpu_type_t _cpuType;
   NSDictionary *_environment;
   BOOL _garbageCollection;
   BOOL _freshSimulator;

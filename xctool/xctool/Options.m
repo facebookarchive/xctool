@@ -22,12 +22,10 @@
 #import "BuildTestsAction.h"
 #import "CleanAction.h"
 #import "InstallAction.h"
-#import "ISHDeviceInfo.h"
-#import "ISHDeviceVersions.h"
-#import "ISHSDKInfo.h"
 #import "ReportStatus.h"
 #import "ReporterTask.h"
 #import "RunTestsAction.h"
+#import "SimulatorInfo.h"
 #import "TestAction.h"
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
@@ -512,47 +510,26 @@
 
     NSString *deviceName = destInfo[@"name"];
     if (deviceName) {
-      ISHDeviceInfo *deviceInfo = [[ISHDeviceVersions sharedInstance] deviceInfoNamed:deviceName];
-      if (!deviceInfo) {
-        NSArray *allDeviceNames = [[ISHDeviceVersions sharedInstance] allDeviceNames];
+      if (![SimulatorInfo isDeviceAvailableWithAlias:deviceName]) {
         *errorMessage = [NSString stringWithFormat:
                          @"'%@' isn't a valid device name. The valid device names are: %@.",
-                         deviceName, allDeviceNames];
+                         deviceName, [SimulatorInfo availableDevices]];
         return NO;
       }
     }
     if (destInfo[@"OS"] != nil) {
-      NSString *osVersion = destInfo[@"OS"];
-      __block ISHSDKInfo *sdkInfo = nil;
-      if ([osVersion isEqualToString:@"latest"]) {
-        sdkInfo = [[ISHDeviceVersions sharedInstance] sdkFromSDKRoot:[[ISHDeviceVersions sharedInstance] latestSDKRoot]];
-      } else {
-        [[[ISHDeviceVersions sharedInstance] allSDKs] enumerateObjectsUsingBlock:^(ISHSDKInfo *currentSdkInfo, NSUInteger idx, BOOL *stop) {
-          if ([[currentSdkInfo shortVersionString] hasPrefix:osVersion]) {
-            sdkInfo = currentSdkInfo;
-            *stop = YES;
-          }
-        }];
-      }
-      if (!sdkInfo) {
-        NSArray *osVersions = [[[ISHDeviceVersions sharedInstance] allSDKs] valueForKeyPath:@"shortVersionString"];
+      NSString *osVersion = [SimulatorInfo sdkVersionForOSVersion:destInfo[@"OS"]];
+      if (!osVersion) {
         *errorMessage = [NSString stringWithFormat:
                          @"'%@' isn't a valid iOS version. The valid iOS versions are: %@.",
-                         osVersion, osVersions];
+                         destInfo[@"OS"], [SimulatorInfo availableSdkVersions]];
         return NO;
       }
       if (deviceName) {
-        ISHDeviceInfo *deviceInfo = [[ISHDeviceVersions sharedInstance] deviceInfoNamed:deviceName];
-        if (![deviceInfo supportsSDK:sdkInfo]) {
-          NSMutableArray *supportedSdks = [NSMutableArray array];
-          for (ISHSDKInfo *sdk in [[ISHDeviceVersions sharedInstance] allSDKs]) {
-            if ([deviceInfo supportsSDK:sdk]) {
-              [supportedSdks addObject:sdk];
-            }
-          }
+        if (![SimulatorInfo isSdkVersion:osVersion supportedByDevice:deviceName]) {
           *errorMessage = [NSString stringWithFormat:
                            @"Device with name '%@' doesn't support iOS version '%@'. The supported iOS versions are: %@.",
-                           [deviceInfo displayName], osVersion, [supportedSdks valueForKeyPath:@"shortVersionString"]];
+                           deviceName, osVersion, [SimulatorInfo sdksSupportedByDevice:deviceName]];
           return NO;
         }
       }

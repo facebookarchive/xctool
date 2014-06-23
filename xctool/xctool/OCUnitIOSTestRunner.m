@@ -1,5 +1,5 @@
 //
-// Copyright 2013 Facebook
+// Copyright 2014 Facebook
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,12 +14,29 @@
 // limitations under the License.
 //
 
-#import <Foundation/Foundation.h>
-
 #import "OCUnitIOSTestRunner.h"
 
-@interface OCUnitIOSLogicTestRunner : OCUnitIOSTestRunner
+#import "SimulatorInfo.h"
+#import "SimulatorWrapper.h"
 
-- (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath;
+@implementation OCUnitIOSTestRunner
+
+- (void)updateSimulatorInfo
+{
+  if (!_simulatorInfo) {
+    self.simulatorInfo = [[SimulatorInfo alloc] init];
+  }
+  _simulatorInfo.cpuType = _cpuType;
+  _simulatorInfo.deviceName = _deviceName;
+  _simulatorInfo.OSVersion = _OSVersion;
+  _simulatorInfo.simulatorType = _simulatorType;
+  _simulatorInfo.buildSettings = _buildSettings;
+}
+
+- (SimulatorInfo *)simulatorInfo
+{
+  [self updateSimulatorInfo];
+  return _simulatorInfo;
+}
 
 @end

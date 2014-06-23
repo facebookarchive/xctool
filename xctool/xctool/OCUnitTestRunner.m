@@ -273,10 +273,7 @@
 
 - (NSString *)testBundlePath
 {
-  return [NSString stringWithFormat:@"%@/%@",
-          _buildSettings[Xcode_BUILT_PRODUCTS_DIR],
-          _buildSettings[Xcode_FULL_PRODUCT_NAME]
-          ];
+  return [_buildSettings[Xcode_BUILT_PRODUCTS_DIR] stringByAppendingPathComponent:_buildSettings[Xcode_FULL_PRODUCT_NAME]];
 }
 
 @end

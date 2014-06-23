@@ -16,11 +16,8 @@
 
 #import "RunTestsAction.h"
 
-#import "DTiPhoneSimulatorRemoteClient.h"
 #import "EventBuffer.h"
 #import "EventGenerator.h"
-#import "ISHDeviceInfo.h"
-#import "ISHDeviceVersions.h"
 #import "OCUnitIOSAppTestRunner.h"
 #import "OCUnitIOSDeviceTestRunner.h"
 #import "OCUnitIOSLogicTestRunner.h"
@@ -28,9 +25,7 @@
 #import "OCUnitOSXLogicTestRunner.h"
 #import "Options.h"
 #import "ReportStatus.h"
-#import "ReporterEvents.h"
-#import "TaskUtil.h"
-#import "Testable.h"
+#import "SimulatorInfo.h"
 #import "TestableExecutionInfo.h"
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
@@ -261,12 +256,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
     }
     [self setDeviceName:destInfo[@"name"]];
     if (_deviceName) {
-      ISHDeviceInfo *deviceInfo = [[ISHDeviceVersions sharedInstance] deviceInfoNamed:_deviceName];
-      if ([[deviceInfo architecture] isEqualToString:@"x86_64"]) {
-        _cpuType = CPU_TYPE_X86_64;
-      } else {
-        _cpuType = CPU_TYPE_I386;
-      }
+      _cpuType = [SimulatorInfo cpuTypeForDevice:_deviceName];
     }
     [self setOSVersion:destInfo[@"OS"]];
   }
