@@ -36,6 +36,7 @@
 @property (nonatomic, copy) NSString *objRoot;
 @property (nonatomic, copy) NSString *symRoot;
 @property (nonatomic, copy) NSString *sharedPrecompsDir;
+@property (nonatomic, copy) NSString *projectDir;
 @property (nonatomic, copy) NSString *effectivePlatformName;
 @property (nonatomic, copy) NSString *targetedDeviceFamily;
 @property (nonatomic, copy) NSArray *testables;
