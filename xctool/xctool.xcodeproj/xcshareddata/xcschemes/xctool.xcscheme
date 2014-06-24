@@ -224,6 +224,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "FD023B1A1959ADA800947C28"
+               BuildableName = "teamcity"
+               BlueprintName = "teamcity"
+               ReferencedContainer = "container:../reporters/reporters.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "28F48A3A17974EF600068E00"
                BuildableName = "json-compilation-database"
                BlueprintName = "json-compilation-database"
