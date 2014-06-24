@@ -76,6 +76,8 @@
 		FD023B2D1959ADFC00947C28 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FD023B291959ADFB00947C28 /* main.m */; };
 		FD023B2E1959ADFC00947C28 /* TeamCityReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = FD023B2B1959ADFC00947C28 /* TeamCityReporter.m */; };
 		FD023B2F1959ADFC00947C28 /* TeamCityReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = FD023B2B1959ADFC00947C28 /* TeamCityReporter.m */; };
+		FD3D4AD01959C0D10099B717 /* TeamCityStatusMessageGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = FD3D4ACF1959C0D10099B717 /* TeamCityStatusMessageGenerator.m */; };
+		FD3D4AD11959C0D10099B717 /* TeamCityStatusMessageGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = FD3D4ACF1959C0D10099B717 /* TeamCityStatusMessageGenerator.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -223,6 +225,8 @@
 		FD023B291959ADFB00947C28 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = teamcity/main.m; sourceTree = "<group>"; };
 		FD023B2A1959ADFB00947C28 /* TeamCityReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TeamCityReporter.h; path = teamcity/TeamCityReporter.h; sourceTree = "<group>"; };
 		FD023B2B1959ADFC00947C28 /* TeamCityReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TeamCityReporter.m; path = teamcity/TeamCityReporter.m; sourceTree = "<group>"; };
+		FD3D4ACE1959C0D10099B717 /* TeamCityStatusMessageGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TeamCityStatusMessageGenerator.h; path = teamcity/TeamCityStatusMessageGenerator.h; sourceTree = "<group>"; };
+		FD3D4ACF1959C0D10099B717 /* TeamCityStatusMessageGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TeamCityStatusMessageGenerator.m; path = teamcity/TeamCityStatusMessageGenerator.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -476,6 +480,8 @@
 				FD023B291959ADFB00947C28 /* main.m */,
 				FD023B2A1959ADFB00947C28 /* TeamCityReporter.h */,
 				FD023B2B1959ADFC00947C28 /* TeamCityReporter.m */,
+				FD3D4ACE1959C0D10099B717 /* TeamCityStatusMessageGenerator.h */,
+				FD3D4ACF1959C0D10099B717 /* TeamCityStatusMessageGenerator.m */,
 			);
 			name = teamcity;
 			sourceTree = "<group>";
@@ -695,6 +701,7 @@
 				28F489F917973B7100068E00 /* FakeFileHandle.m in Sources */,
 				28F48A0017973CF600068E00 /* Reporter+Testing.m in Sources */,
 				28F48A17179743C600068E00 /* PhabricatorReporter.m in Sources */,
+				FD3D4AD01959C0D10099B717 /* TeamCityStatusMessageGenerator.m in Sources */,
 				28F48A1C1797462400068E00 /* PhabricatorReporterTests.m in Sources */,
 				28F48A3217974E3900068E00 /* JUnitReporter.m in Sources */,
 				FD023B2E1959ADFC00947C28 /* TeamCityReporter.m in Sources */,
@@ -793,6 +800,7 @@
 			files = (
 				FD023B1C1959ADA800947C28 /* Reporter.m in Sources */,
 				FD023B1D1959ADA800947C28 /* NSFileHandle+Print.m in Sources */,
+				FD3D4AD11959C0D10099B717 /* TeamCityStatusMessageGenerator.m in Sources */,
 				FD023B1F1959ADA800947C28 /* EventGenerator.m in Sources */,
 				FD023B2D1959ADFC00947C28 /* main.m in Sources */,
 				FD023B2F1959ADFC00947C28 /* TeamCityReporter.m in Sources */,

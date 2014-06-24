@@ -3,6 +3,7 @@
 #import "TeamCityReporter.h"
 
 #import "ReporterEvents.h"
+#import "TeamCityStatusMessageGenerator.h"
 
 #pragma mark Private Interface
 @interface TeamCityReporter ()
@@ -39,7 +40,7 @@
 {
   self.totalTests += 1;
   NSString *testNameWithMethodName = [NSString stringWithFormat:@"%@.%@",event[kReporter_EndTest_ClassNameKey],event[kReporter_EndTest_MethodNameKey]];
-  NSLog(@"##teamcity[testStarted name='%@']",testNameWithMethodName);
+  NSLog(@"##teamcity[testStarted name='%@']",[TeamCityStatusMessageGenerator escapeCharacter:testNameWithMethodName]);
 }
 
 - (void)endTest:(NSDictionary *)event
@@ -56,17 +57,17 @@
       exception[kReporter_EndTest_Exception_FilePathInProjectKey],
       [exception[kReporter_EndTest_Exception_LineNumberKey] intValue]];
      
-      NSLog(@"##teamcity[testFailed name='%@' message='%@' details='%@ \n %@']",testNameWithMethodName, exception[kReporter_EndTest_Exception_ReasonKey], failureValue, event[kReporter_EndTest_Exception_ReasonKey] ? event[kReporter_EndTest_Exception_ReasonKey] : @"");
+      NSLog(@"##teamcity[testFailed name='%@' message='%@' details='%@ %@']",[TeamCityStatusMessageGenerator escapeCharacter:testNameWithMethodName], [TeamCityStatusMessageGenerator escapeCharacter:exception[kReporter_EndTest_Exception_ReasonKey]], [TeamCityStatusMessageGenerator escapeCharacter:failureValue], event[kReporter_EndTest_Exception_ReasonKey] ? [TeamCityStatusMessageGenerator escapeCharacter:event[kReporter_EndTest_Exception_ReasonKey]] : @"");
     }
      
   }
     
-  NSLog(@"##teamcity[testFinished name='%@' duration='%d']",testNameWithMethodName, (int)ceil([event[kReporter_EndTest_TotalDurationKey] doubleValue] * 1000));
+  NSLog(@"##teamcity[testFinished name='%@' duration='%d']",[TeamCityStatusMessageGenerator escapeCharacter:testNameWithMethodName], (int)ceil([event[kReporter_EndTest_TotalDurationKey] doubleValue] * 1000));
 }
 
 - (void)endTestSuite:(NSDictionary *)event
 {
-  NSLog(@"##teamcity[testSuiteFinished name='%@']", event[kReporter_EndTestSuite_SuiteKey]);
+  NSLog(@"##teamcity[testSuiteFinished name='%@']", [TeamCityStatusMessageGenerator escapeCharacter:event[kReporter_EndTestSuite_SuiteKey]]);
 }
 
 - (void)didFinishReporting
