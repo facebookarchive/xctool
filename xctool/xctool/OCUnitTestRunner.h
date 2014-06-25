@@ -31,7 +31,6 @@
   BOOL _freshSimulator;
   BOOL _resetSimulator;
   BOOL _freshInstall;
-  NSString *_simulatorType;
   NSArray *_reporters;
   NSDictionary *_framework;
 }
@@ -59,7 +58,6 @@
              freshSimulator:(BOOL)freshSimulator
              resetSimulator:(BOOL)resetSimulator
                freshInstall:(BOOL)freshInstall
-              simulatorType:(NSString *)simulatorType
                   reporters:(NSArray *)reporters;
 
 - (BOOL)runTests;

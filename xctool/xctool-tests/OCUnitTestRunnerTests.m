@@ -35,7 +35,6 @@ static id TestRunnerWithTestLists(Class cls, NSDictionary *settings, NSArray *fo
                               freshSimulator:NO
                               resetSimulator:NO
                                 freshInstall:NO
-                               simulatorType:nil
                                    reporters:@[eventBuffer]] autorelease];
 }
 
