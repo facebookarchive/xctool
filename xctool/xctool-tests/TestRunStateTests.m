@@ -95,7 +95,7 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
   [state prepareToRun];
   [self sendEventsFromFile:TEST_DATA @"JSONStreamReporter-runtests.txt"
                 toReporter:state];
-  [state didFinishRunWithStartupError:nil];
+  [state didFinishRunWithStartupError:nil otherErrors:nil];
 
   assertThat(eventBuffer.events, hasCountOf(7*2 + 2));
   assertThat(SelectEventFields(eventBuffer.events, kReporter_Events_BeginTest, @"event"), hasCountOf(7));
@@ -111,7 +111,7 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
 
     [state prepareToRun];
     [self sendEvents:events toReporter:state];
-    [state didFinishRunWithStartupError:nil];
+    [state didFinishRunWithStartupError:nil otherErrors:nil];
 
     assertThat(SelectEventFields(eventBuffer.events, nil, @"event"),
                equalTo(expectedEvents));
@@ -171,7 +171,7 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
   [state prepareToRun];
   [self sendEvents:[EventsForFakeRun() subarrayWithRange:NSMakeRange(0, 2)]
           toReporter:state];
-  [state didFinishRunWithStartupError:nil];
+  [state didFinishRunWithStartupError:nil otherErrors:nil];
 
   assertThat(SelectEventFields(eventBuffer.events, nil, @"event"),
              equalTo(@[kReporter_Events_BeginTestSuite,
@@ -194,7 +194,7 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
   [state prepareToRun];
   [self sendEvents:[EventsForFakeRun() subarrayWithRange:NSMakeRange(0, 4)]
         toReporter:state];
-  [state didFinishRunWithStartupError:nil];
+  [state didFinishRunWithStartupError:nil otherErrors:nil];
 
   assertThat(SelectEventFields(eventBuffer.events, nil, @"event"),
              equalTo(@[kReporter_Events_BeginTestSuite,
@@ -227,7 +227,7 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
   [state prepareToRun];
   [self sendEvents:@[]
         toReporter:state];
-  [state didFinishRunWithStartupError:@"cupcakes candy donuts cookies"];
+  [state didFinishRunWithStartupError:@"cupcakes candy donuts cookies" otherErrors:nil];
 
   assertThat(SelectEventFields(eventBuffer.events, nil, @"event"),
              equalTo(@[kReporter_Events_BeginTestSuite,
@@ -263,7 +263,7 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
   [state prepareToRun];
   [self sendEvents:[EventsForFakeRun() subarrayWithRange:NSMakeRange(0, 6)]
         toReporter:state];
-  [state didFinishRunWithStartupError:nil];
+  [state didFinishRunWithStartupError:nil otherErrors:nil];
 
   // In this case there are no tests left with which to report the error, so we
   // create a fake one just so we have a place to advertise the error.
@@ -298,7 +298,7 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
   [state prepareToRun];
   [self sendEvents:EventsForFakeRun()
         toReporter:state];
-  [state didFinishRunWithStartupError:nil];
+  [state didFinishRunWithStartupError:nil otherErrors:nil];
 
   // Not much we can do here, make sure no events are shipped out
   assertThatInteger(eventBuffer.events.count, equalToInteger(6));

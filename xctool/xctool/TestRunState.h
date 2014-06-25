@@ -36,6 +36,6 @@
 
 - (BOOL)allTestsPassed;
 - (void)prepareToRun;
-- (void)didFinishRunWithStartupError:(NSString *)startupError;
+- (void)didFinishRunWithStartupError:(NSString *)startupError otherErrors:(NSString *)otherErrors;
 
 @end

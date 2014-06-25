@@ -166,15 +166,19 @@
   [_testSuiteState insertTest:fakeTest atIndex:0];
 }
 
-- (void)handleCrashBeforeAnyTestsRan
+- (void)handleCrashBeforeAnyTestsRanWithOtherErrors:(NSString *)otherErrors
 {
   // The test runner crashed before any tests ran.
   OCTestEventState *fakeTest = [[[OCTestEventState alloc] initWithInputName:@"FAILED_BEFORE/TESTS_RAN"] autorelease];
   [_testSuiteState insertTest:fakeTest atIndex:0];
 
   // All tests should include this message.
+  NSString *output = @"Test did not run: the test bundle stopped running or crashed before the test suite started.";
+  if (otherErrors) {
+    output = [output stringByAppendingFormat:@" Stderr output: %@", otherErrors];
+  }
   [_testSuiteState.tests makeObjectsPerformSelector:@selector(appendOutput:)
-                                         withObject:@"Test did not run: the test bundle stopped running or crashed before the test suite started."];
+                                         withObject:output];
 
   // And, our "place holder" test should have a more detailed message about
   // what we think went wrong.
@@ -224,13 +228,13 @@
   [_testSuiteState insertTest:fakeTest atIndex:previousTestStateIndex + 1];
 }
 
-- (void)didFinishRunWithStartupError:(NSString *)startupError
+- (void)didFinishRunWithStartupError:(NSString *)startupError otherErrors:(NSString *)otherErrors
 {
   if (![_testSuiteState isStarted] && startupError != nil) {
     [self handleStartupError:startupError];
   } else if ((![_testSuiteState isStarted] && startupError == nil) ||
              ([_testSuiteState isStarted] && [_testSuiteState unstartedTests].count == [_testSuiteState testCount])) {
-    [self handleCrashBeforeAnyTestsRan];
+    [self handleCrashBeforeAnyTestsRanWithOtherErrors:otherErrors];
   } else if (![_testSuiteState isFinished] && [_testSuiteState runningTest] != nil) {
     [self handleCrashDuringTest];
     [_testSuiteState publishEventsForFinishedTests];

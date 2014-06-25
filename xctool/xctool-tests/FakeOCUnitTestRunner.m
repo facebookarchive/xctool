@@ -40,6 +40,7 @@
 
 - (void)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
                    startupError:(NSString **)startupError
+                    otherErrors:(NSString **)otherErrors
 {
   for (lastLineIndex++; lastLineIndex < [_outputLines count]; lastLineIndex++) {
     if ([_outputLines[lastLineIndex] isEqualToString:@"__break__"]) {

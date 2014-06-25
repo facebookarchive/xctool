@@ -8,6 +8,7 @@
  run the tests.
  */
 - (void)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
-                   startupError:(NSString **)startupError;
+                   startupError:(NSString **)startupError
+                    otherErrors:(NSString **)otherErrors;
 
 @end

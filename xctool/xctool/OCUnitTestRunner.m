@@ -116,6 +116,7 @@
 
 - (void)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
                    startupError:(NSString **)startupError
+                    otherErrors:(NSString **)otherErrors
 {
   // Subclasses will override this method.
 }
@@ -139,13 +140,15 @@
     };
 
     NSString *runTestsError = nil;
+    NSString *otherErrors = nil;
 
     [testRunState prepareToRun];
 
     [self runTestsAndFeedOutputTo:feedOutputToBlock
-                     startupError:&runTestsError];
+                     startupError:&runTestsError
+                      otherErrors:&otherErrors];
 
-    [testRunState didFinishRunWithStartupError:runTestsError];
+    [testRunState didFinishRunWithStartupError:runTestsError otherErrors:otherErrors];
 
     allTestsPassed &= [testRunState allTestsPassed];
 

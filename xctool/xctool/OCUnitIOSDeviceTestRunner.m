@@ -21,6 +21,7 @@
 
 - (void)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
                    startupError:(NSString **)startupError
+                    otherErrors:(NSString **)otherErrors
 {
   // Just a place holder.  The plumbing for 'run-tests' expects each SDK to have
   // an associated test runner.
