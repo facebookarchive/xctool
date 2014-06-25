@@ -349,7 +349,7 @@ one per line [(example
 output)](https://gist.github.com/fpotter/82ffcc3d9a49d10ee41b).
 * __json-compilation-database__: outputs a [JSON Compilation Database](http://clang.llvm.org/docs/JSONCompilationDatabase.html) of build events which can be used by [Clang Tooling](http://clang.llvm.org/docs/LibTooling.html) based tools, e.g. [OCLint](http://oclint.org).
 * __user-notifications__: sends notification to Notification Center when action is completed [(example notifications)](https://cloud.githubusercontent.com/assets/1044236/2771974/a2715306-ca74-11e3-9889-fa50607cc412.png).
-* __teamctiy__: sends service messages to [TeamCity](http://www.jetbrains.com/teamcity/) Continuous Integration Server
+* __teamcity__: sends service messages to [TeamCity](http://www.jetbrains.com/teamcity/) Continuous Integration Server
 
 ### Implementing Your Own Reporters
 
