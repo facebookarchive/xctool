@@ -159,11 +159,7 @@
                                                                      [testResult[kReporter_EndTest_TotalDurationKey] doubleValue]]]]];
 
       if (![testResult[kReporter_EndTest_SucceededKey] boolValue]) {
-        NSArray *exceptions = testResult[kReporter_EndTest_ExceptionsKey];
-
-        if ([exceptions count] > 0) {
-          NSDictionary *exception = exceptions[0];
-
+        for (NSDictionary *exception in testResult[kReporter_EndTest_ExceptionsKey]) {
           NSString *failureValue = [NSString stringWithFormat:@"%@:%d",
                                     exception[kReporter_EndTest_Exception_FilePathInProjectKey],
                                     [exception[kReporter_EndTest_Exception_LineNumberKey] intValue]];
