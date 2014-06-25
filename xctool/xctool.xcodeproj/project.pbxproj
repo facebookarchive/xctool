@@ -52,7 +52,6 @@
 		287BF04D16F1A6EB00590E06 /* XcodeSubjectInfoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 287BF04C16F1A6EB00590E06 /* XcodeSubjectInfoTests.m */; };
 		287BF08416F1A97900590E06 /* XcodeSubjectInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 287BF08316F1A97900590E06 /* XcodeSubjectInfo.m */; };
 		287BF08516F1A97900590E06 /* XcodeSubjectInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 287BF08316F1A97900590E06 /* XcodeSubjectInfo.m */; };
-		287E0DC517CD60B00088A264 /* xctool-tests.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 287E0DC417CD60B00088A264 /* xctool-tests.xcconfig */; };
 		28869AFC178CEA7600DED56A /* Initializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 28869AFB178CEA7600DED56A /* Initializer.m */; };
 		28897FBD173E4C74004BA024 /* FakeTaskManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28897FBA173E4C73004BA024 /* FakeTaskManagerTests.m */; };
 		28897FD0173E6215004BA024 /* Swizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 28897FCF173E6215004BA024 /* Swizzle.m */; };
@@ -82,7 +81,6 @@
 		28E28FC01797193F0072376C /* ReporterTaskTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E28FBF1797193F0072376C /* ReporterTaskTests.m */; };
 		28E9B97F16C2F1C600A52E4D /* XCToolUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B97E16C2F1C600A52E4D /* XCToolUtil.m */; };
 		28E9B98016C2F1C600A52E4D /* XCToolUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E9B97E16C2F1C600A52E4D /* XCToolUtil.m */; };
-		28E9B98416C2F2D900A52E4D /* xctool.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 28E9B98316C2F2D900A52E4D /* xctool.xcconfig */; };
 		28E9B98B16C2FDA700A52E4D /* OCMockito.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28E9B98A16C2FDA700A52E4D /* OCMockito.framework */; };
 		28E9B98C16C2FDB200A52E4D /* OCMockito.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 28E9B98A16C2FDA700A52E4D /* OCMockito.framework */; };
 		28E9B98E16C2FE4800A52E4D /* OCHamcrest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28E9B98D16C2FE4800A52E4D /* OCHamcrest.framework */; };
@@ -736,7 +734,7 @@
 		283CCA3A16C2EA3700F2E343 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = "Facebook, Inc.";
 			};
 			buildConfigurationList = 283CCA3D16C2EA3700F2E343 /* Build configuration list for PBXProject "xctool" */;
@@ -763,8 +761,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				283CCACA16C2EE9900F2E343 /* InfoPlist.strings in Resources */,
-				28E9B98416C2F2D900A52E4D /* xctool.xcconfig in Resources */,
-				287E0DC517CD60B00088A264 /* xctool-tests.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
