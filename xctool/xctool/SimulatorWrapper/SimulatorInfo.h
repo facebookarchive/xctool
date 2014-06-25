@@ -24,7 +24,6 @@
 @property (nonatomic, assign) cpu_type_t cpuType;
 @property (nonatomic, copy) NSString *deviceName;
 @property (nonatomic, copy) NSString *OSVersion;
-@property (nonatomic, copy) NSString *simulatorType;
 
 - (NSString *)simulatedArchitecture;
 - (NSNumber *)simulatedDeviceFamily;
