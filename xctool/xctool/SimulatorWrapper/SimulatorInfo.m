@@ -261,3 +261,12 @@ static const NSInteger KProductTypeIpad = 2;
 }
 
 @end
+
+#if XCODE_VERSION >= 0600
+@implementation ISHSDKInfo
+@end
+@implementation ISHDeviceVersions
+@end
+@implementation ISHDeviceInfo
+@end
+#endif
