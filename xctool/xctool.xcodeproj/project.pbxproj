@@ -285,7 +285,6 @@
 		28E9B9D416C3275200A52E4D /* OCUnitIOSLogicTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = OCUnitIOSLogicTestRunner.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		28E9B9D516C3275200A52E4D /* OCUnitTestRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUnitTestRunner.h; sourceTree = "<group>"; };
 		28E9B9D616C3275200A52E4D /* OCUnitTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitTestRunner.m; sourceTree = "<group>"; };
-		28E9B9DE16C3278D00A52E4D /* DTiPhoneSimulatorRemoteClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTiPhoneSimulatorRemoteClient.h; sourceTree = "<group>"; };
 		28EAB46017E29647005EB9CF /* NSConcreteTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSConcreteTask.h; sourceTree = "<group>"; };
 		28F489F117973B6100068E00 /* FakeFileHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeFileHandle.h; sourceTree = "<group>"; };
 		28F489F217973B6100068E00 /* FakeFileHandle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeFileHandle.m; sourceTree = "<group>"; };
@@ -334,9 +333,14 @@
 		CC229B191946413400E11C30 /* SimulatorInfoXcode5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimulatorInfoXcode5.m; path = xctool/SimulatorWrapper/SimulatorInfoXcode5.m; sourceTree = "<group>"; };
 		CC84C94A18ECE161001F6094 /* FakeOCUnitTestRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeOCUnitTestRunner.h; sourceTree = "<group>"; };
 		CC84C94B18ECE161001F6094 /* FakeOCUnitTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeOCUnitTestRunner.m; sourceTree = "<group>"; };
-		CCC56C9418DB8FCD0029534C /* ISHDeviceInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISHDeviceInfo.h; sourceTree = "<group>"; };
-		CCC56C9518DB8FCD0029534C /* ISHDeviceVersions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISHDeviceVersions.h; sourceTree = "<group>"; };
-		CCC56C9618DB8FCD0029534C /* ISHSDKInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ISHSDKInfo.h; sourceTree = "<group>"; };
+		CCC55AC0195BB1E80051A50B /* SimDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimDevice.h; sourceTree = "<group>"; };
+		CCC55AC3195BB1E80051A50B /* SimDeviceSet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimDeviceSet.h; sourceTree = "<group>"; };
+		CCC55AC4195BB1E80051A50B /* SimDeviceType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimDeviceType.h; sourceTree = "<group>"; };
+		CCC55AC5195BB1E80051A50B /* SimRuntime.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimRuntime.h; sourceTree = "<group>"; };
+		CCC55AC9195BB1E80051A50B /* DTiPhoneSimulatorRemoteClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DTiPhoneSimulatorRemoteClient.h; sourceTree = "<group>"; };
+		CCC55ACB195BB1E80051A50B /* ISHDeviceInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ISHDeviceInfo.h; sourceTree = "<group>"; };
+		CCC55ACC195BB1E80051A50B /* ISHDeviceVersions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ISHDeviceVersions.h; sourceTree = "<group>"; };
+		CCC55ACD195BB1E80051A50B /* ISHSDKInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ISHSDKInfo.h; sourceTree = "<group>"; };
 		CCF6EE48195BA918005BA335 /* SimulatorInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimulatorInfo.m; path = xctool/SimulatorWrapper/SimulatorInfo.m; sourceTree = "<group>"; };
 		CCF6EE4D195BAA05005BA335 /* SimulatorInfoXcode5.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SimulatorInfoXcode5.h; path = xctool/SimulatorWrapper/SimulatorInfoXcode5.h; sourceTree = "<group>"; };
 		CCF6EE4E195BAAB2005BA335 /* SimulatorInfoXcode6.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimulatorInfoXcode6.h; path = xctool/SimulatorWrapper/SimulatorInfoXcode6.h; sourceTree = "<group>"; };
@@ -615,15 +619,6 @@
 			path = ../Common;
 			sourceTree = "<group>";
 		};
-		28E9B9DD16C3278D00A52E4D /* DTiPhoneSimulatorRemoteClient */ = {
-			isa = PBXGroup;
-			children = (
-				28E9B9DE16C3278D00A52E4D /* DTiPhoneSimulatorRemoteClient.h */,
-			);
-			name = DTiPhoneSimulatorRemoteClient;
-			path = iPhoneSimulatorRemoteClient;
-			sourceTree = "<group>";
-		};
 		AA3E57F91812261B008B9644 /* OCUnitTestRunner */ = {
 			isa = PBXGroup;
 			children = (
@@ -666,7 +661,7 @@
 		CC229B0C194638CC00E11C30 /* Simulator API */ = {
 			isa = PBXGroup;
 			children = (
-				CC229B1119463B4300E11C30 /* Headers */,
+				CCC55ABE195BB1E80051A50B /* Headers */,
 				CCF6EE4A195BA9DC005BA335 /* SimulatorInfo */,
 				CC229B0D1946396600E11C30 /* SimulatorUtils.h */,
 				CC229B0E1946396600E11C30 /* SimulatorUtils.m */,
@@ -676,21 +671,41 @@
 			name = "Simulator API";
 			sourceTree = "<group>";
 		};
-		CC229B1119463B4300E11C30 /* Headers */ = {
+		CCC55ABE195BB1E80051A50B /* Headers */ = {
 			isa = PBXGroup;
 			children = (
-				28E9B9DD16C3278D00A52E4D /* DTiPhoneSimulatorRemoteClient */,
-				CCC56C9318DB8FCD0029534C /* SimulatorHost */,
+				CCC55ABF195BB1E80051A50B /* CoreSimulator */,
+				CCC55AC8195BB1E80051A50B /* iPhoneSimulatorRemoteClient */,
+				CCC55ACA195BB1E80051A50B /* SimulatorHost */,
 			);
-			name = Headers;
+			path = Headers;
 			sourceTree = "<group>";
 		};
-		CCC56C9318DB8FCD0029534C /* SimulatorHost */ = {
+		CCC55ABF195BB1E80051A50B /* CoreSimulator */ = {
 			isa = PBXGroup;
 			children = (
-				CCC56C9418DB8FCD0029534C /* ISHDeviceInfo.h */,
-				CCC56C9518DB8FCD0029534C /* ISHDeviceVersions.h */,
-				CCC56C9618DB8FCD0029534C /* ISHSDKInfo.h */,
+				CCC55AC0195BB1E80051A50B /* SimDevice.h */,
+				CCC55AC3195BB1E80051A50B /* SimDeviceSet.h */,
+				CCC55AC4195BB1E80051A50B /* SimDeviceType.h */,
+				CCC55AC5195BB1E80051A50B /* SimRuntime.h */,
+			);
+			path = CoreSimulator;
+			sourceTree = "<group>";
+		};
+		CCC55AC8195BB1E80051A50B /* iPhoneSimulatorRemoteClient */ = {
+			isa = PBXGroup;
+			children = (
+				CCC55AC9195BB1E80051A50B /* DTiPhoneSimulatorRemoteClient.h */,
+			);
+			path = iPhoneSimulatorRemoteClient;
+			sourceTree = "<group>";
+		};
+		CCC55ACA195BB1E80051A50B /* SimulatorHost */ = {
+			isa = PBXGroup;
+			children = (
+				CCC55ACB195BB1E80051A50B /* ISHDeviceInfo.h */,
+				CCC55ACC195BB1E80051A50B /* ISHDeviceVersions.h */,
+				CCC55ACD195BB1E80051A50B /* ISHSDKInfo.h */,
 			);
 			path = SimulatorHost;
 			sourceTree = "<group>";
