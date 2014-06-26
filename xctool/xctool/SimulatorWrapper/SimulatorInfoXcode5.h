@@ -14,28 +14,8 @@
 // limitations under the License.
 //
 
-#import "OCUnitIOSTestRunner.h"
-
 #import "SimulatorInfo.h"
-#import "SimulatorWrapper.h"
 
-@implementation OCUnitIOSTestRunner
-
-- (void)updateSimulatorInfo
-{
-  if (!_simulatorInfo) {
-    self.simulatorInfo = [SimulatorInfo infoForCurrentVersionOfXcode];
-  }
-  _simulatorInfo.cpuType = _cpuType;
-  _simulatorInfo.deviceName = _deviceName;
-  _simulatorInfo.OSVersion = _OSVersion;
-  _simulatorInfo.buildSettings = _buildSettings;
-}
-
-- (SimulatorInfo *)simulatorInfo
-{
-  [self updateSimulatorInfo];
-  return _simulatorInfo;
-}
+@interface SimulatorInfoXcode5 : SimulatorInfo
 
 @end
