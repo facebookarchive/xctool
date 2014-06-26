@@ -679,6 +679,11 @@ BOOL ToolchainIsXcode5OrBetter(void)
   return (XcodebuildVersion() >= 0500);
 }
 
+BOOL ToolchainIsXcode6OrBetter(void)
+{
+  return (XcodebuildVersion() >= 0600);
+}
+
 NSString *MakeTemporaryDirectory(NSString *nameTemplate)
 {
   NSMutableData *template = [[[[NSTemporaryDirectory() stringByAppendingPathComponent:nameTemplate]

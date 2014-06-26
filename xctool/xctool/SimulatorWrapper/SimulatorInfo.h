@@ -40,6 +40,7 @@
 - (NSDictionary *)simulatorLaunchEnvironment;
 
 + (NSArray *)availableDevices;
++ (NSString *)deviceNameForAlias:(NSString *)deviceAlias;
 + (BOOL)isDeviceAvailableWithAlias:(NSString *)deviceName;
 + (BOOL)isSdkVersion:(NSString *)sdkVersion supportedByDevice:(NSString *)deviceName;
 + (NSString *)sdkVersionForOSVersion:(NSString *)osVersion;

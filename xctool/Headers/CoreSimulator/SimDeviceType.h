@@ -4,7 +4,8 @@
 //     class-dump is Copyright (C) 1997-1998, 2000-2001, 2004-2013 by Steve Nygard.
 //
 
-@interface SimDeviceType : NSObject
+@protocol SimDeviceType <NSObject>
+@optional
 
 + (id)supportedDeviceTypes;
 + (id)supportedDeviceTypesByAlias;
@@ -17,26 +18,26 @@
 - (id)initWithPath:(id)arg1;
 
 // properties
-@property(copy) NSDictionary *aliases;
-@property(retain) NSBundle *bundle;
-@property(copy) NSDictionary *capabilities;
-@property(copy) NSDictionary *environment_extra;
-@property(copy) NSString *identifier;
-@property struct CGSize mainScreenDPI;
-@property float mainScreenScale;
-@property struct CGSize mainScreenSize;
-@property unsigned int maxRuntimeVersion;
-@property unsigned int minRuntimeVersion;
-@property(copy) NSString *modelIdentifier;
-@property(copy) NSString *name;
-@property(copy) NSString *productClass;
-@property(readonly, copy) NSString *productFamily;
-@property(readonly) int productFamilyID;
-@property(copy) NSString *springBoardConfigName;
-@property(copy) NSArray *supportedArchs;
-@property(copy) NSDictionary *supportedFeatures;
-@property(copy) NSDictionary *supportedFeaturesConditionalOnRuntime;
-@property(copy) NSArray *supportedProductFamilyIDs;
+- (NSDictionary *)aliases;
+- (NSBundle *)bundle;
+- (NSDictionary *)capabilities;
+- (NSDictionary *)environment_extra;
+- (NSString *)identifier;
+- (CGSize) mainScreenDPI;
+- (float) mainScreenScale;
+- (CGSize) mainScreenSize;
+- (unsigned int) maxRuntimeVersion;
+- (unsigned int) minRuntimeVersion;
+- (NSString *)modelIdentifier;
+- (NSString *)name;
+- (NSString *)productClass;
+- (NSString *)productFamily;
+- (int) productFamilyID;
+- (NSString *)springBoardConfigName;
+- (NSArray *)supportedArchs;
+- (NSDictionary *)supportedFeatures;
+- (NSDictionary *)supportedFeaturesConditionalOnRuntime;
+- (NSArray *)supportedProductFamilyIDs;
 
 // getters
 - (Class)deviceClass;
@@ -48,5 +49,8 @@
 - (BOOL)supportsFeature:(id)arg1;
 - (BOOL)supportsFeatureConditionally:(id)arg1;
 
+@end
+
+@interface SimDeviceType : NSObject<SimDeviceType>
 @end
 

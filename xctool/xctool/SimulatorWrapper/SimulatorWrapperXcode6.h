@@ -14,14 +14,7 @@
 // limitations under the License.
 //
 
-#import "SimulatorInfo.h"
+#import "SimulatorWrapper.h"
 
-@class SimDevice;
-@class SimRuntime;
-
-@interface SimulatorInfoXcode6 : SimulatorInfo
-
-- (SimDevice *)simulatedDevice;
-- (SimRuntime *)simulatedRuntime;
-
+@interface SimulatorWrapperXcode6 : SimulatorWrapper
 @end

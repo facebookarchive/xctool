@@ -6,7 +6,8 @@
 
 typedef void (^CDUnknownFunctionPointerType)(void);
 
-@interface SimRuntime : NSObject
+@protocol SimRuntime <NSObject>
+@optional
 
 + (id)supportedRuntimes;
 + (id)supportedRuntimesByAlias;
@@ -64,8 +65,12 @@ typedef void (^CDUnknownFunctionPointerType)(void);
 
 @end
 
-@interface SimRuntime (DVTAdditions)
+@protocol SimRuntimeDVTAdditions <NSObject>
+@optional
+
 + (id)dvt_runtimeFromSDKRoot:(id)arg1;
+
 @end
 
-
+@interface SimRuntime : NSObject<SimRuntime, SimRuntimeDVTAdditions>
+@end

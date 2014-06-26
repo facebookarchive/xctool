@@ -69,7 +69,7 @@ static const NSInteger KProductTypeIpad = 2;
       break;
   }
 
-  DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKVersion:[self sdkVersion]];
+  DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKPath:_buildSettings[Xcode_SDKROOT]];
   if (!systemRoot) {
     return probableDeviceName;
   }
@@ -83,7 +83,7 @@ static const NSInteger KProductTypeIpad = 2;
     }
   }
 
-  NSAssert([supportedDeviceTypes count] > 0, @"There are no available devices that support provided sdk: %@. Supported devices: %@", [self sdkVersion], [[SimDeviceType supportedDevices] valueForKeyPath:@"name"]);
+  NSAssert([supportedDeviceTypes count] > 0, @"There are no available devices that support provided sdk: %@. Supported devices: %@", [systemRoot sdkVersion], [[SimDeviceType supportedDevices] valueForKeyPath:@"name"]);
   return [supportedDeviceTypes[0] name];
 }
 
@@ -99,19 +99,6 @@ static const NSInteger KProductTypeIpad = 2;
   return @"i386";
 }
 
-- (NSString *)sdkVersion
-{
-  NSString *sdkVersion = [_buildSettings[Xcode_IPHONEOS_DEPLOYMENT_TARGET] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
-  if (self.OSVersion) {
-    if ([self.OSVersion isEqualTo:@"latest"]) {
-      sdkVersion = [[SimRuntime latest] versionString];
-    } else {
-      sdkVersion = self.OSVersion;
-    }
-  }
-  return sdkVersion;
-}
-
 - (NSString *)maxSdkVersionForSimulatedDevice
 {
   NSMutableArray *runtimes = [[[[self class] _runtimesSupportedByDevice:[self simulatedDeviceInfoName]] mutableCopy] autorelease];
@@ -121,8 +108,12 @@ static const NSInteger KProductTypeIpad = 2;
 
 - (NSString *)simulatedSdkVersion
 {
-  if (self.OSVersion) {
-    return [self sdkVersion];
+  if (_OSVersion) {
+    if ([_OSVersion isEqualTo:@"latest"]) {
+      return [[SimRuntime latest] versionString];
+    } else {
+      return _OSVersion;
+    }
   } else {
     return [self maxSdkVersionForSimulatedDevice];
   }
@@ -148,7 +139,7 @@ static const NSInteger KProductTypeIpad = 2;
 
   SimRuntime *runtime = [[self class] _runtimeForSdkVersion:sdkVersion];
   systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSimRuntime:runtime];
-  NSAssert(runtime != nil, @"Unable to instantiate DTiPhoneSimulatorSystemRoot for sdk version: %@. Available roots: %@", sdkVersion, [DTiPhoneSimulatorSystemRoot knownRoots]);
+  NSAssert(systemRoot != nil, @"Unable to instantiate DTiPhoneSimulatorSystemRoot for sdk version: %@. Available roots: %@", sdkVersion, [DTiPhoneSimulatorSystemRoot knownRoots]);
   return systemRoot;
 }
 

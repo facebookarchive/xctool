@@ -26,7 +26,7 @@
   return NSClassFromString(@"SimDevice") != nil;
 }
 
-+ (Class)classCurrentVersionOfXcode
++ (Class)classBasedOnCurrentVersionOfXcode
 {
   if ([self isXcode6OrHigher]) {
     return [SimulatorInfoXcode6 class];
@@ -37,7 +37,7 @@
 
 + (SimulatorInfo *)infoForCurrentVersionOfXcode
 {
-  return [[[[self classCurrentVersionOfXcode] alloc] init] autorelease];
+  return [[[[self classBasedOnCurrentVersionOfXcode] alloc] init] autorelease];
 }
 
 #pragma mark -
@@ -45,42 +45,47 @@
 
 + (NSArray *)availableDevices
 {
-  return [[self classCurrentVersionOfXcode] availableDevices];
+  return [[self classBasedOnCurrentVersionOfXcode] availableDevices];
+}
+
++ (NSString *)deviceNameForAlias:(NSString *)deviceAlias
+{
+  return [[self classBasedOnCurrentVersionOfXcode] deviceNameForAlias:deviceAlias];
 }
 
 + (BOOL)isDeviceAvailableWithAlias:(NSString *)deviceName
 {
-  return [[self classCurrentVersionOfXcode] isDeviceAvailableWithAlias:deviceName];
+  return [[self classBasedOnCurrentVersionOfXcode] isDeviceAvailableWithAlias:deviceName];
 }
 
 + (BOOL)isSdkVersion:(NSString *)sdkVersion supportedByDevice:(NSString *)deviceName
 {
-  return [[self classCurrentVersionOfXcode] isSdkVersion:sdkVersion supportedByDevice:deviceName];
+  return [[self classBasedOnCurrentVersionOfXcode] isSdkVersion:sdkVersion supportedByDevice:deviceName];
 }
 
 + (NSString *)sdkVersionForOSVersion:(NSString *)osVersion
 {
-  return [[self classCurrentVersionOfXcode] sdkVersionForOSVersion:osVersion];
+  return [[self classBasedOnCurrentVersionOfXcode] sdkVersionForOSVersion:osVersion];
 }
 
 + (NSArray *)availableSdkVersions
 {
-  return [[self classCurrentVersionOfXcode] availableSdkVersions];
+  return [[self classBasedOnCurrentVersionOfXcode] availableSdkVersions];
 }
 
 + (NSArray *)sdksSupportedByDevice:(NSString *)deviceName
 {
-  return [[self classCurrentVersionOfXcode] sdksSupportedByDevice:deviceName];
+  return [[self classBasedOnCurrentVersionOfXcode] sdksSupportedByDevice:deviceName];
 }
 
 + (cpu_type_t)cpuTypeForDevice:(NSString *)deviceName
 {
-  return [[self classCurrentVersionOfXcode] cpuTypeForDevice:deviceName];
+  return [[self classBasedOnCurrentVersionOfXcode] cpuTypeForDevice:deviceName];
 }
 
 + (NSString *)baseVersionForSDKShortVersion:(NSString *)shortVersionString
 {
-  return [[self classCurrentVersionOfXcode] baseVersionForSDKShortVersion:shortVersionString];
+  return [[self classBasedOnCurrentVersionOfXcode] baseVersionForSDKShortVersion:shortVersionString];
 }
 
 #pragma mark -

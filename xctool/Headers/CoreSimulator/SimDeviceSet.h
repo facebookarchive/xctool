@@ -6,7 +6,8 @@
 
 @class SimDeviceNotificationManager, SimServiceConnectionManager;
 
-@interface SimDeviceSet : NSObject
+@protocol SimDeviceSet <NSObject>
+@optional
 
 + (id)defaultSet;
 + (id)defaultSetPath;
@@ -14,16 +15,16 @@
 - (id)initWithSetPath:(id)arg1;
 
 // properties
-@property(copy) NSString *setPath;
+- (NSString *)setPath;
 
-@property(readonly, copy) NSArray *availableDevices;
-@property(readonly, copy) NSArray *devices;
-@property(readonly, copy) NSDictionary *devicesByUDID;
-@property(retain) NSMutableDictionary *devicesNotificationRegIDs;
-@property(retain) NSObject *devicesQueue;
+- (NSArray *)availableDevices;
+- (NSArray *)devices;
+- (NSDictionary *)devicesByUDID;
+- (NSMutableDictionary *)devicesNotificationRegIDs;
+- (NSObject *)devicesQueue;
 
-@property(retain) SimServiceConnectionManager *connectionManager;
-@property(retain) SimDeviceNotificationManager *notificationManager;
+- (SimServiceConnectionManager *)connectionManager;
+- (SimDeviceNotificationManager *)notificationManager;
 
 // others
 - (void)addDevice:(id)arg1;
@@ -45,5 +46,8 @@
 - (BOOL)unregisterNotificationHandler:(unsigned long long)arg1 error:(id *)arg2;
 - (void)updateDefaultDevices;
 
+@end
+
+@interface SimDeviceSet : NSObject<SimDeviceSet>
 @end
 

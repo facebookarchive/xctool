@@ -46,20 +46,6 @@ static const NSInteger KProductTypeIpad = 2;
   return nil;
 }
 
-- (NSString *)sdkVersion
-{
-  if (self.OSVersion) {
-    if ([self.OSVersion isEqualTo:@"latest"]) {
-      return [[[ISHDeviceVersions sharedInstance] sdkFromSDKRoot:[[ISHDeviceVersions sharedInstance] latestSDKRoot]] shortVersionString];
-    } else {
-      return _OSVersion;
-    }
-  } else {
-    ISHSDKInfo *sdkInfo = [[ISHDeviceVersions sharedInstance] sdkFromSDKRoot:_buildSettings[Xcode_SDKROOT]];
-    return [sdkInfo shortVersionString];
-  }
-}
-
 - (NSString *)maxSdkVersionForSimulatedDevice
 {
   ISHDeviceVersions *versions = [ISHDeviceVersions sharedInstance];
@@ -101,7 +87,7 @@ static const NSInteger KProductTypeIpad = 2;
       break;
   }
 
-  ISHSDKInfo *sdkInfo = [[self class] sdkInfoForShortVersion:[self sdkVersion]];
+  ISHSDKInfo *sdkInfo = [[ISHDeviceVersions sharedInstance] sdkFromSDKRoot:_buildSettings[Xcode_SDKROOT]];
   if (!sdkInfo) {
     return probableDeviceName;
   }
@@ -130,8 +116,12 @@ static const NSInteger KProductTypeIpad = 2;
 
 - (NSString *)simulatedSdkVersion
 {
-  if (self.OSVersion) {
-    return [self sdkVersion];
+  if (_OSVersion) {
+    if ([_OSVersion isEqualTo:@"latest"]) {
+      return [[[ISHDeviceVersions sharedInstance] sdkFromSDKRoot:[[ISHDeviceVersions sharedInstance] latestSDKRoot]] shortVersionString];
+    } else {
+      return _OSVersion;
+    }
   } else {
     return [self maxSdkVersionForSimulatedDevice];
   }
@@ -193,6 +183,11 @@ static const NSInteger KProductTypeIpad = 2;
 + (NSArray *)availableDevices
 {
   return [[ISHDeviceVersions sharedInstance] allDeviceNames];
+}
+
++ (NSString *)deviceNameForAlias:(NSString *)deviceAlias
+{
+  return deviceAlias;
 }
 
 + (BOOL)isDeviceAvailableWithAlias:(NSString *)deviceName

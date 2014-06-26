@@ -16,7 +16,8 @@ typedef NS_ENUM(long long, SimDeviceState) {
   SimDeviceStateShuttingDown = 4,
 };
 
-@interface SimDevice : NSObject
+@protocol SimDevice <NSObject>
+@optional
 
 // initializers
 + (id)createDeviceWithName:(NSString *)arg1 setPath:(NSString *)arg2 deviceType:(SimDeviceType *)arg3 runtime:(SimRuntime *)arg4;
@@ -138,3 +139,5 @@ typedef NS_ENUM(long long, SimDeviceState) {
 
 @end
 
+@interface SimDevice : NSObject<SimDevice>
+@end

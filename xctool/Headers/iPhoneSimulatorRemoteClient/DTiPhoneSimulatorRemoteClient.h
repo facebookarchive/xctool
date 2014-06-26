@@ -165,65 +165,44 @@ typedef void DVTConfinementServiceConnection;
 
 @end
 
+@class SimDevice, SimRuntime;
+
 @interface DTiPhoneSimulatorSessionConfig : NSObject <NSCopying>
-{
-  BOOL _launchForBackgroundFetch;
-  BOOL _simulatedApplicationShouldWaitForDebugger;
-  NSString *_localizedClientName;
-  DTiPhoneSimulatorSystemRoot *_simulatedSystemRoot;
-  NSString *_simulatedDeviceInfoName;
-  NSNumber *_simulatedDeviceFamily;
-  NSString *_simulatedArchitecture;
-  NSNumber *_simulatedDisplayHeight;
-  NSNumber *_simulatedDisplayScale;
-  DTiPhoneSimulatorApplicationSpecifier *_applicationToSimulateOnStart;
-  NSNumber *_pid;
-  NSArray *_simulatedApplicationLaunchArgs;
-  NSDictionary *_simulatedApplicationLaunchEnvironment;
-  NSString *_simulatedApplicationStdOutPath;
-  NSString *_simulatedApplicationStdErrPath;
-  NSFileHandle *_stdinFileHandle;
-  NSFileHandle *_stdoutFileHandle;
-  NSFileHandle *_stderrFileHandle;
-  id _confinementService;
-}
 
 + (id)displayNameForDeviceFamily:(id)arg1;
 
+@property(copy) DTiPhoneSimulatorApplicationSpecifier *applicationToSimulateOnStart;
 @property(retain) id confinementService;
-@property(retain) NSFileHandle *stderrFileHandle;
-@property(retain) NSFileHandle *stdoutFileHandle;
-@property(retain) NSFileHandle *stdinFileHandle;
+@property(retain) SimDevice *device;
+@property(retain) SimRuntime *runtime;
+@property BOOL launchForBackgroundFetch;
+@property(copy) NSString *localizedClientName;
+@property(copy) NSNumber *pid;
+@property(copy) NSArray *simulatedApplicationLaunchArgs;
+@property(copy) NSDictionary *simulatedApplicationLaunchEnvironment;
+@property BOOL simulatedApplicationShouldWaitForDebugger;
 @property(copy) NSString *simulatedApplicationStdErrPath;
 @property(copy) NSString *simulatedApplicationStdOutPath;
-@property BOOL simulatedApplicationShouldWaitForDebugger;
-@property(copy) NSDictionary *simulatedApplicationLaunchEnvironment;
-@property(copy) NSArray *simulatedApplicationLaunchArgs;
-@property(copy) NSNumber *pid;
-@property(copy) DTiPhoneSimulatorApplicationSpecifier *applicationToSimulateOnStart;
-@property(copy) NSNumber *simulatedDisplayScale;
-@property(copy) NSNumber *simulatedDisplayHeight;
 @property(copy) NSString *simulatedArchitecture;
 @property(copy) NSNumber *simulatedDeviceFamily;
 @property(retain) NSString *simulatedDeviceInfoName;
+@property(copy) NSNumber *simulatedDisplayHeight;
+@property(copy) NSNumber *simulatedDisplayScale;
 @property(copy) DTiPhoneSimulatorSystemRoot *simulatedSystemRoot;
-@property(copy) NSString *localizedClientName;
-@property BOOL launchForBackgroundFetch;
+@property(retain) NSFileHandle *stderrFileHandle;
+@property(retain) NSFileHandle *stdinFileHandle;
+@property(retain) NSFileHandle *stdoutFileHandle;
 
 @end
 
 @interface DTiPhoneSimulatorSystemRoot : NSObject <NSCopying>
 
-#if XCODE_VERSION >= 0600
-@property(readonly) id runtime;
-#endif
+@property(readonly) SimRuntime *runtime;
 @property(copy) NSString *sdkDisplayName;
 @property(copy) NSString *sdkVersion;
 @property(copy) NSString *sdkRootPath;
 
-#if XCODE_VERSION >= 0600
 + (id)rootWithSimRuntime:(id)arg1;
-#endif
 + (id)rootWithSDKVersion:(id)arg1;
 + (id)rootWithSDKPath:(id)arg1;
 + (id)defaultRoot;

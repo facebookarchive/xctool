@@ -96,6 +96,11 @@ int XcodebuildVersion();
 BOOL ToolchainIsXcode5OrBetter(void);
 
 /**
+ Returns YES if we're running with Xcode 6 or better.
+ */
+BOOL ToolchainIsXcode6OrBetter(void);
+
+/**
  Launches a task that will invoke xcodebuild.  It will automatically feed
  build events to the provided reporters.
 
