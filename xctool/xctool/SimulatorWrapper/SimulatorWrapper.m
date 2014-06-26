@@ -37,19 +37,20 @@
 
   DTiPhoneSimulatorSystemRoot *systemRoot = [simInfo systemRootForSimulatedSdk];
 
-  DTiPhoneSimulatorApplicationSpecifier *appSpec = [DTiPhoneSimulatorApplicationSpecifier specifierWithApplicationPath:testHostAppPath];
+  DTiPhoneSimulatorApplicationSpecifier *appSpec =
+  [DTiPhoneSimulatorApplicationSpecifier specifierWithApplicationPath:testHostAppPath];
 
   DTiPhoneSimulatorSessionConfig *sessionConfig = [[[DTiPhoneSimulatorSessionConfig alloc] init] autorelease];
   [sessionConfig setApplicationToSimulateOnStart:appSpec];
-  [sessionConfig setSimulatedSystemRoot:systemRoot];
-  [sessionConfig setSimulatedDeviceFamily:[simInfo simulatedDeviceFamily]];
-  [sessionConfig setSimulatedApplicationShouldWaitForDebugger:NO];
   [sessionConfig setSimulatedApplicationLaunchArgs:launchArgs];
-  [sessionConfig setSimulatedDeviceInfoName:[simInfo simulatedDeviceInfoName]];
-  [sessionConfig setSimulatedArchitecture:[simInfo simulatedArchitecture]];
   [sessionConfig setSimulatedApplicationLaunchEnvironment:launchEnvironment];
-  [sessionConfig setSimulatedApplicationStdOutPath:outputPath];
+  [sessionConfig setSimulatedApplicationShouldWaitForDebugger:NO];
+  [sessionConfig setSimulatedArchitecture:[simInfo simulatedArchitecture]];
+  [sessionConfig setSimulatedDeviceFamily:[simInfo simulatedDeviceFamily]];  
+  [sessionConfig setSimulatedDeviceInfoName:[simInfo simulatedDeviceInfoName]];
+  [sessionConfig setSimulatedSystemRoot:systemRoot];
 
+  [sessionConfig setSimulatedApplicationStdOutPath:outputPath];
   // Don't let anything from STDERR get in our stream.  Normally, once
   // otest-shim gets loaded, we don't have to worry about whatever is coming
   // over STDERR since the shim will redirect all output (including STDERR) into
@@ -118,10 +119,11 @@
   LineReader *reader = [[[LineReader alloc] initWithFileHandle:outputHandle] autorelease];
   reader.didReadLineBlock = feedOutputToBlock;
 
-  DTiPhoneSimulatorSessionConfig *sessionConfig = [self sessionConfigForRunningTestsOnSimulator:simInfo
-                                                                          applicationLaunchArgs:launchArgs
-                                                                   applicationLaunchEnvironment:launchEnvironment
-                                                                                     outputPath:outputPath];
+  DTiPhoneSimulatorSessionConfig *sessionConfig =
+  [self sessionConfigForRunningTestsOnSimulator:simInfo
+                          applicationLaunchArgs:launchArgs
+                   applicationLaunchEnvironment:launchEnvironment
+                                         outputPath:outputPath];
 
   SimulatorLauncher *launcher = [[[SimulatorLauncher alloc] initWithSessionConfig:sessionConfig
                                                                        deviceName:[simInfo simulatedDeviceInfoName]] autorelease];
@@ -203,7 +205,7 @@
     *error = [NSString stringWithFormat:
               @"Failed to install the test host app '%@': %@",
               testHostBundleID, localError.localizedDescription ?: @"Failed for unknown reason."];
-
+    
     return NO;
   }
 }
