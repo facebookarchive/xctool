@@ -90,7 +90,7 @@
 
 - (void)run
 {
-  if (XcodebuildVersion() < 500) {
+  if ([XcodebuildVersion() compare:@"0500"] == NSOrderedAscending) {
     [_standardError printString:@"ERROR: This version of xctool supports only Xcode 5.0 or higher.\n"];
     _exitStatus = 1;
     return;

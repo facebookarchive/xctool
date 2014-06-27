@@ -676,12 +676,14 @@ int XcodebuildVersion()
 
 BOOL ToolchainIsXcode5OrBetter(void)
 {
-  return (XcodebuildVersion() >= 0500);
+  NSComparisonResult result = [XcodebuildVersion() compare:@"0500"];
+  return result == NSOrderedSame || result == NSOrderedDescending;
 }
 
 BOOL ToolchainIsXcode6OrBetter(void)
 {
-  return (XcodebuildVersion() >= 0600);
+  NSComparisonResult result = [XcodebuildVersion() compare:@"0600"];
+  return result == NSOrderedSame || result == NSOrderedDescending;
 }
 
 NSString *MakeTemporaryDirectory(NSString *nameTemplate)
