@@ -69,7 +69,7 @@ static const NSInteger KProductTypeIpad = 2;
       break;
   }
 
-  DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKPath:_buildSettings[Xcode_SDKROOT]];
+  DTiPhoneSimulatorSystemRoot *systemRoot = [SimulatorInfoXcode6 _systemRootWithSDKPath:_buildSettings[Xcode_SDKROOT]];
   if (!systemRoot) {
     return probableDeviceName;
   }
@@ -132,13 +132,12 @@ static const NSInteger KProductTypeIpad = 2;
 - (DTiPhoneSimulatorSystemRoot *)systemRootForSimulatedSdk
 {
   NSString *sdkVersion = [self simulatedSdkVersion];
-  DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKVersion:sdkVersion];
+  DTiPhoneSimulatorSystemRoot *systemRoot = [SimulatorInfoXcode6 _systemRootWithSDKVersion:sdkVersion];
   if (systemRoot) {
     return systemRoot;
   }
 
-  SimRuntime *runtime = [[self class] _runtimeForSdkVersion:sdkVersion];
-  systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSimRuntime:runtime];
+  systemRoot = [SimulatorInfoXcode6 _systemRootWithSDKVersion:sdkVersion];
   NSAssert(systemRoot != nil, @"Unable to instantiate DTiPhoneSimulatorSystemRoot for sdk version: %@. Available roots: %@", sdkVersion, [DTiPhoneSimulatorSystemRoot knownRoots]);
   return systemRoot;
 }
@@ -243,8 +242,14 @@ static const NSInteger KProductTypeIpad = 2;
   }
 }
 
++ (NSString *)baseVersionForSDKShortVersion:(NSString *)shortVersionString
+{
+  DTiPhoneSimulatorSystemRoot *root = [self _systemRootWithSDKVersion:shortVersionString];
+  return [root sdkVersion];
+}
+
 #pragma mark -
-#pragma mark - Helpers
+#pragma mark Helpers
 
 + (NSArray *)_runtimesSupportedByDevice:(NSString *)deviceName
 {
@@ -271,8 +276,81 @@ static const NSInteger KProductTypeIpad = 2;
 
 + (SimRuntime *)_runtimeForSDKPath:(NSString *)sdkPath
 {
-  DTiPhoneSimulatorSystemRoot *root = [DTiPhoneSimulatorSystemRoot rootWithSDKPath:sdkPath];
+  DTiPhoneSimulatorSystemRoot *root = [SimulatorInfoXcode6 _systemRootWithSDKPath:sdkPath];
   return [root runtime];
+}
+
+#pragma mark -
+#pragma mark Caching methods
+
++ (DTiPhoneSimulatorSystemRoot *)_systemRootWithSDKPath:(NSString *)path
+{
+  static NSMutableDictionary *map;
+  static dispatch_once_t onceToken;
+  static dispatch_queue_t accessQueue;
+  dispatch_once(&onceToken, ^{
+    map = [@{} mutableCopy];
+    accessQueue = dispatch_queue_create("com.xctool.access_root_with_sdk_path", NULL);
+  });
+
+  __block DTiPhoneSimulatorSystemRoot *root = nil;
+  dispatch_sync(accessQueue, ^{
+    root = map[path];
+  });
+
+  if (root) {
+    return root;
+  }
+
+  [[DTiPhoneSimulatorSystemRoot knownRoots] enumerateObjectsUsingBlock:^(DTiPhoneSimulatorSystemRoot *obj, NSUInteger idx, BOOL *stop) {
+    if ([obj.sdkRootPath isEqual:path]) {
+      root = obj;
+      *stop = YES;
+    }
+  }];
+
+  if (root) {
+    dispatch_async(accessQueue, ^{
+      map[path] = root;
+    });
+  }
+
+  return root;
+}
+
++ (DTiPhoneSimulatorSystemRoot *)_systemRootWithSDKVersion:(NSString *)version
+{
+  static NSMutableDictionary *map;
+  static dispatch_once_t onceToken;
+  static dispatch_queue_t accessQueue;
+  dispatch_once(&onceToken, ^{
+    map = [@{} mutableCopy];
+    accessQueue = dispatch_queue_create("com.xctool.access_root_with_sdk_version", NULL);
+  });
+
+  __block DTiPhoneSimulatorSystemRoot *root = nil;
+  dispatch_sync(accessQueue, ^{
+    root = map[version];
+  });
+
+  if (root) {
+    return root;
+  }
+
+  [[DTiPhoneSimulatorSystemRoot knownRoots] enumerateObjectsUsingBlock:^(DTiPhoneSimulatorSystemRoot *obj, NSUInteger idx, BOOL *stop) {
+    if ([obj.sdkVersion hasPrefix:version]) {
+      root = obj;
+      *stop = YES;
+    }
+  }];
+
+  if (root) {
+    dispatch_async(accessQueue, ^{
+      map[version] = root;
+    });
+  }
+
+  return root;
 }
 
 @end

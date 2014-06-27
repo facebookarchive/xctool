@@ -141,13 +141,12 @@ static const NSInteger KProductTypeIpad = 2;
 - (DTiPhoneSimulatorSystemRoot *)systemRootForSimulatedSdk
 {
   NSString *sdkVersion = [self simulatedSdkVersion];
-  DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKVersion:sdkVersion];
+  DTiPhoneSimulatorSystemRoot *systemRoot = [SimulatorInfoXcode5 _systemRootWithSDKVersion:sdkVersion];
   if (systemRoot) {
     return systemRoot;
   }
 
-  ISHSDKInfo *sdkInfo = [[self class] sdkInfoForShortVersion:sdkVersion];
-  systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKPath:[sdkInfo root]];
+  systemRoot = [SimulatorInfoXcode5 _systemRootWithSDKVersion:sdkVersion];
   if (!systemRoot) {
     NSArray *availableSdks = [[[ISHDeviceVersions sharedInstance] allSDKs] valueForKeyPath:@"shortVersionString"];
     NSAssert(systemRoot != nil, @"Unable to instantiate DTiPhoneSimulatorSystemRoot for sdk version: %@. Available sdks: %@", sdkVersion, availableSdks);
@@ -254,9 +253,72 @@ static const NSInteger KProductTypeIpad = 2;
 
 + (NSString *)baseVersionForSDKShortVersion:(NSString *)shortVersionString
 {
-  ISHSDKInfo *sdkInfo = [self sdkInfoForShortVersion:shortVersionString];
-  DTiPhoneSimulatorSystemRoot *root = [DTiPhoneSimulatorSystemRoot rootWithSDKPath:sdkInfo.root];
+  DTiPhoneSimulatorSystemRoot *root = [self _systemRootWithSDKVersion:shortVersionString];
   return [root sdkVersion];
+}
+
+#pragma mark -
+#pragma mark Caching methods
+
++ (DTiPhoneSimulatorSystemRoot *)_systemRootWithSDKPath:(NSString *)path
+{
+  static NSMutableDictionary *map;
+  static dispatch_once_t onceToken;
+  static dispatch_queue_t accessQueue;
+  dispatch_once(&onceToken, ^{
+    map = [@{} mutableCopy];
+    accessQueue = dispatch_queue_create("com.xctool.access_root_with_sdk_path", NULL);
+  });
+
+  __block DTiPhoneSimulatorSystemRoot *root = nil;
+  dispatch_sync(accessQueue, ^{
+    root = map[path];
+  });
+
+  if (root) {
+    return root;
+  }
+
+  root = [DTiPhoneSimulatorSystemRoot rootWithSDKPath:path];
+
+  if (root) {
+    dispatch_async(accessQueue, ^{
+      map[path] = root;
+    });
+  }
+
+  return root;
+}
+
++ (DTiPhoneSimulatorSystemRoot *)_systemRootWithSDKVersion:(NSString *)version
+{
+  static NSMutableDictionary *map;
+  static dispatch_once_t onceToken;
+  static dispatch_queue_t accessQueue;
+  dispatch_once(&onceToken, ^{
+    map = [@{} mutableCopy];
+    accessQueue = dispatch_queue_create("com.xctool.access_root_with_sdk_version", NULL);
+  });
+
+  __block DTiPhoneSimulatorSystemRoot *root = nil;
+  dispatch_sync(accessQueue, ^{
+    root = map[version];
+  });
+
+  if (root) {
+    return root;
+  }
+
+  ISHSDKInfo *sdkInfo = [self sdkInfoForShortVersion:version];
+  root = [DTiPhoneSimulatorSystemRoot rootWithSDKPath:sdkInfo.root];
+
+  if (root) {
+    dispatch_async(accessQueue, ^{
+      map[version] = root;
+    });
+  }
+
+  return root;
 }
 
 @end
