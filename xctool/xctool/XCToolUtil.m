@@ -115,16 +115,20 @@ NSString *AbsoluteExecutablePath() {
 
 NSString *XCToolBasePath(void)
 {
-  if (IsRunningUnderTest()) {
-    // The Xcode scheme is configured to set XT_INSTALL_ROOT when running
-    // tests.
-    NSString *installRoot = [[NSProcessInfo processInfo] environment][@"XT_INSTALL_ROOT"];
-    NSCAssert(installRoot, @"XT_INSTALL_ROOT is not set.");
-    return installRoot;
-  } else {
-    return [[AbsoluteExecutablePath() stringByDeletingLastPathComponent]
-            stringByDeletingLastPathComponent];
-  }
+  static NSString *path;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    if (IsRunningUnderTest()) {
+      // The Xcode scheme is configured to set XT_INSTALL_ROOT when running
+      // tests.
+      NSString *installRoot = [[NSProcessInfo processInfo] environment][@"XT_INSTALL_ROOT"];
+      NSCAssert(installRoot, @"XT_INSTALL_ROOT is not set.");
+      path = installRoot;
+    } else {
+      path = [[AbsoluteExecutablePath() stringByDeletingLastPathComponent] stringByDeletingLastPathComponent];
+    }
+  });
+  return path;
 }
 
 NSString *XCToolLibPath(void)
@@ -661,17 +665,22 @@ NSString *SystemPaths()
   return [[pathLines componentsSeparatedByString:@"\n"] componentsJoinedByString:@":"];
 }
 
-int XcodebuildVersion()
+NSString *XcodebuildVersion()
 {
-  NSString *xcodePlistPath = [XcodeDeveloperDirPathViaForcedConcreteTask(YES)
-                              stringByAppendingPathComponent:@"../Info.plist"];
-  NSCAssert([[NSFileManager defaultManager] fileExistsAtPath:xcodePlistPath isDirectory:NULL],
-            @"Cannot find Xcode's plist at: %@", xcodePlistPath);
+  static NSString *DTXcode;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    NSString *xcodePlistPath = [XcodeDeveloperDirPathViaForcedConcreteTask(YES)
+                                stringByAppendingPathComponent:@"../Info.plist"];
+    NSCAssert([[NSFileManager defaultManager] fileExistsAtPath:xcodePlistPath isDirectory:NULL],
+              @"Cannot find Xcode's plist at: %@", xcodePlistPath);
 
-  NSDictionary *infoDict = [NSDictionary dictionaryWithContentsOfFile:xcodePlistPath];
-  NSCAssert(infoDict[@"DTXcode"], @"Cannot find the 'DTXcode' key in Xcode's Info.plist.");
+    NSDictionary *infoDict = [NSDictionary dictionaryWithContentsOfFile:xcodePlistPath];
+    NSCAssert(infoDict[@"DTXcode"], @"Cannot find the 'DTXcode' key in Xcode's Info.plist.");
 
-  return [infoDict[@"DTXcode"] intValue];
+    DTXcode = infoDict[@"DTXcode"];
+  });
+  return DTXcode;
 }
 
 BOOL ToolchainIsXcode5OrBetter(void)

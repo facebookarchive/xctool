@@ -18,12 +18,18 @@
 
 #import "SimulatorInfoXcode5.h"
 #import "SimulatorInfoXcode6.h"
+#import "XCToolUtil.h"
 
 @implementation SimulatorInfo
 
 + (BOOL)isXcode6OrHigher
 {
-  return NSClassFromString(@"SimDevice") != nil;
+  static BOOL isXcode6OrHigher;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    isXcode6OrHigher = ToolchainIsXcode6OrBetter();
+  });
+  return isXcode6OrHigher;
 }
 
 + (Class)classBasedOnCurrentVersionOfXcode
