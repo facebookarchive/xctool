@@ -237,7 +237,10 @@ static void AddSDKToDictionary(NSMutableDictionary *dict,
   // leave us with 'iphoneos' mapped to the newest 'iphoneos' SDK.
   NSScanner *versionScanner = [NSScanner scannerWithString:sdk];
   NSString *sdkWithoutVersion = nil;
-  [versionScanner scanCharactersFromSet:[NSCharacterSet letterCharacterSet]
+  NSMutableCharacterSet *sdkCharacterSet = [[NSMutableCharacterSet alloc] init];
+  [sdkCharacterSet formUnionWithCharacterSet:[NSCharacterSet letterCharacterSet]];
+  [sdkCharacterSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"-"]];
+  [versionScanner scanCharactersFromSet:sdkCharacterSet
                              intoString:&sdkWithoutVersion];
   dict[sdkWithoutVersion] = versionDict;
   dict[sdk] = versionDict;
@@ -261,11 +264,11 @@ NSDictionary *GetAvailableSDKsInfo()
   // "block"
   [scanner setCharactersToBeSkipped:nil];
 
-  // Regex to pull out SDK value; matching lines with ".sdk" and "([\w.]+)"
+  // Regex to pull out SDK value; matching lines with ".sdk" and "([\w-.]+)"
   // (capturing group around what's inside of the parentheses).
   NSRegularExpression *sdkVersionRegex =
     [NSRegularExpression
-     regularExpressionWithPattern:@"^[\\w.]+.sdk[\\s\\w-.]+\\(([\\w.]+)\\)$"
+     regularExpressionWithPattern:@"^[\\w-.]+.sdk[\\s\\w-.]+\\(([\\w-.]+)\\)$"
                           options:0
                             error:nil];
 
@@ -290,7 +293,7 @@ NSDictionary *GetAvailableSDKsInfo()
 
     // Pull the SDK value from our capturing group
     NSString *sdkVersion = [str substringWithRange:[match[0] rangeAtIndex:1]];
-
+    
     AddSDKToDictionary(versionsAvaialble, scanner, sdkVersion);
   }
 
