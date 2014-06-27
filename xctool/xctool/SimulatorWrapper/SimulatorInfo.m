@@ -77,11 +77,7 @@ static const NSInteger KProductTypeIpad = 2;
 
 - (NSNumber *)simulatedDeviceFamily
 {
-  if (_simulatorType) {
-    return [[_simulatorType lowercaseString] isEqualToString:@"ipad"] ? @(KProductTypeIpad) : @(KProductTypeIphone);
-  } else {
-    return @([_buildSettings[Xcode_TARGETED_DEVICE_FAMILY] integerValue]);
-  }
+  return @([_buildSettings[Xcode_TARGETED_DEVICE_FAMILY] integerValue]);
 }
 
 - (NSString *)simulatedDeviceInfoName
