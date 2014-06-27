@@ -511,7 +511,8 @@
     NSString *deviceName = destInfo[@"name"];
     if (deviceName) {
       NSString *deviceSystemName = [SimulatorInfo deviceNameForAlias:deviceName];
-      if (![deviceName isEqual:deviceSystemName]) {
+      if (![deviceName isEqual:deviceSystemName] &&
+          deviceSystemName) {
         ReportStatusMessage(_reporters, REPORTER_MESSAGE_WARNING,
                             @"Device name '%@' is not directly supported by xcodebuild. Replacing it with '%@'.", deviceName, deviceSystemName);
         self.destination = [_destination stringByReplacingOccurrencesOfString:deviceName withString:deviceSystemName];
