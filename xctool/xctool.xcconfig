@@ -19,21 +19,19 @@
 #include "../Configurations/Install.xcconfig"
 XT_INSTALL_DIR = bin
 
-DEVELOPER_PRIVATE_FRAMEWORK_DIR = $(DEVELOPER_DIR)/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks
+DEVELOPER_PRIVATE_FRAMEWORKS_DIR = $(DEVELOPER_DIR)/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks
 SHARED_FRAMEWORKS_DIR = $(DEVELOPER_DIR)/../SharedFrameworks
-PRIVATE_FRAMEWORK_DIR = $(DEVELOPER_DIR)/Library/PrivateFrameworks
+PRIVATE_FRAMEWORKS_DIR = $(DEVELOPER_DIR)/Library/PrivateFrameworks
 XCTOOL_VENDOR_DIR = $(SRCROOT)/../Vendor
 
 // xctool will weak link iPhoneSimulatorRemoteClient, and then configure the necessary
 // DYLD paths on startup to make sure the framework can be loaded.
-OTHER_LDFLAGS_0500 = -weak_framework DVTiPhoneSimulatorRemoteClient -weak_framework SimulatorHost -weak_framework DVTFoundation
-OTHER_LDFLAGS_0600 = -weak_framework DVTFoundation -weak_framework DVTiPhoneSimulatorRemoteClient -weak_framework CoreSimulator -Wl,-rpath -Wl,$(PRIVATE_FRAMEWORK_DIR) -Wl,-rpath -Wl,$(SHARED_FRAMEWORKS_DIR
-
-
+OTHER_LDFLAGS_0500 = -weak_framework DVTFoundation -weak_framework DVTiPhoneSimulatorRemoteClient -weak_framework SimulatorHost
+OTHER_LDFLAGS_0600 = -weak_framework DVTFoundation -weak_framework DVTiPhoneSimulatorRemoteClient -weak_framework CoreSimulator -Wl,-rpath -Wl,$(PRIVATE_FRAMEWORKS_DIR) -Wl,-rpath -Wl,$(SHARED_FRAMEWORKS_DIR
 
 OTHER_LDFLAGS = $(OTHER_LDFLAGS_$(XCODE_VERSION_MAJOR))
 
-FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks" "$(SHARED_FRAMEWORKS_DIR)" "$(PRIVATE_FRAMEWORK_DIR)" "$(DEVELOPER_PRIVATE_FRAMEWORK_DIR)" "$(XCTOOL_VENDOR_DIR)"
+FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks" "$(SHARED_FRAMEWORKS_DIR)" "$(PRIVATE_FRAMEWORKS_DIR)" "$(DEVELOPER_PRIVATE_FRAMEWORKS_DIR)" "$(XCTOOL_VENDOR_DIR)"
 
 MACOSX_DEPLOYMENT_TARGET = 10.7
 

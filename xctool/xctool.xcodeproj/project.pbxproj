@@ -134,6 +134,10 @@
 		CC84C94C18ECE161001F6094 /* FakeOCUnitTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = CC84C94B18ECE161001F6094 /* FakeOCUnitTestRunner.m */; };
 		CCC55AD2195BCD7D0051A50B /* SimulatorWrapperXcode6.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC55AD1195BCD7D0051A50B /* SimulatorWrapperXcode6.m */; };
 		CCC55AD6195BCDD90051A50B /* SimulatorWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC55AD5195BCDD90051A50B /* SimulatorWrapper.m */; };
+		CCEB0F26195F2D9E00878E25 /* SimulatorInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CCF6EE48195BA918005BA335 /* SimulatorInfo.m */; };
+		CCEB0F27195F2D9E00878E25 /* SimulatorInfoXcode6.m in Sources */ = {isa = PBXBuildFile; fileRef = CCF6EE4F195BAAB2005BA335 /* SimulatorInfoXcode6.m */; };
+		CCEB0F28195F2D9E00878E25 /* SimulatorWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC55AD5195BCDD90051A50B /* SimulatorWrapper.m */; };
+		CCEB0F29195F2D9E00878E25 /* SimulatorWrapperXcode6.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC55AD1195BCD7D0051A50B /* SimulatorWrapperXcode6.m */; };
 		CCF6EE49195BA918005BA335 /* SimulatorInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CCF6EE48195BA918005BA335 /* SimulatorInfo.m */; };
 		CCF6EE50195BAAB2005BA335 /* SimulatorInfoXcode6.m in Sources */ = {isa = PBXBuildFile; fileRef = CCF6EE4F195BAAB2005BA335 /* SimulatorInfoXcode6.m */; };
 		CD098A2A175EBD20002E0CAC /* AnalyzeAction.m in Sources */ = {isa = PBXBuildFile; fileRef = CD098A29175EBD20002E0CAC /* AnalyzeAction.m */; };
@@ -928,6 +932,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CCEB0F26195F2D9E00878E25 /* SimulatorInfo.m in Sources */,
+				CCEB0F27195F2D9E00878E25 /* SimulatorInfoXcode6.m in Sources */,
+				CCEB0F28195F2D9E00878E25 /* SimulatorWrapper.m in Sources */,
+				CCEB0F29195F2D9E00878E25 /* SimulatorWrapperXcode6.m in Sources */,
 				CC229B1D1946544C00E11C30 /* OCUnitIOSTestRunner.m in Sources */,
 				CC229B1B1946543700E11C30 /* SimulatorInfoXcode5.m in Sources */,
 				CC229B1C1946543700E11C30 /* SimulatorWrapperXcode5.m in Sources */,

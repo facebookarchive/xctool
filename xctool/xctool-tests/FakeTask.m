@@ -30,7 +30,12 @@ static void writeAll(int fildes, const void *buf, size_t nbyte) {
   }
 }
 
+@interface FakeTask ()
+@property (assign, readwrite) int terminationStatus;
+@end
+
 @implementation FakeTask
+@synthesize terminationStatus = _terminationStatus;
 
 + (NSTask *)fakeTaskWithExitStatus:(int)exitStatus
                  terminationReason:(NSTaskTerminationReason)pretendTerminationReason
@@ -90,6 +95,11 @@ static void writeAll(int fildes, const void *buf, size_t nbyte) {
   return _pretendTerminationReason;
 }
 
+- (void)setTerminationReason:(NSTaskTerminationReason)terminationReason
+{
+  // empty implementation
+}
+
 - (id)init
 {
   if (self = [super init]) {
@@ -101,12 +111,6 @@ static void writeAll(int fildes, const void *buf, size_t nbyte) {
 {
   [_pretendStandardOutput release];
   [_pretendStandardError release];
-
-  [_launchPath release];
-  [_arguments release];
-  [_environment release];
-  [_standardOutput release];
-  [_standardError release];
   [super dealloc];
 }
 
@@ -141,21 +145,21 @@ static void writeAll(int fildes, const void *buf, size_t nbyte) {
 
   int standardOutputWriteFd = -1;
   BOOL standardOutputIsAPipe = NO;
-  if ([_standardOutput isKindOfClass:[NSPipe class]]) {
-    standardOutputWriteFd = [[_standardOutput fileHandleForWriting] fileDescriptor];
+  if ([self.standardOutput isKindOfClass:[NSPipe class]]) {
+    standardOutputWriteFd = [[self.standardOutput fileHandleForWriting] fileDescriptor];
     standardOutputIsAPipe = YES;
-  } else if ([_standardOutput isKindOfClass:[NSFileHandle class]]) {
-    standardOutputWriteFd = [_standardOutput fileDescriptor];
+  } else if ([self.standardOutput isKindOfClass:[NSFileHandle class]]) {
+    standardOutputWriteFd = [self.standardOutput fileDescriptor];
     standardOutputIsAPipe = NO;
   }
 
   int standardErrorWriteFd = -1;
   BOOL standardErrorIsAPipe = NO;
-  if ([_standardError isKindOfClass:[NSPipe class]]) {
-    standardErrorWriteFd = [[_standardError fileHandleForWriting] fileDescriptor];
+  if ([self.standardError isKindOfClass:[NSPipe class]]) {
+    standardErrorWriteFd = [[self.standardError fileHandleForWriting] fileDescriptor];
     standardErrorIsAPipe = YES;
-  } else if ([_standardError isKindOfClass:[NSFileHandle class]]) {
-    standardErrorWriteFd = [_standardError fileDescriptor];
+  } else if ([self.standardError isKindOfClass:[NSFileHandle class]]) {
+    standardErrorWriteFd = [self.standardError fileDescriptor];
     standardErrorIsAPipe = NO;
   }
 

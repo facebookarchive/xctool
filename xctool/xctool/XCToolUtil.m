@@ -123,9 +123,9 @@ NSString *XCToolBasePath(void)
       // tests.
       NSString *installRoot = [[NSProcessInfo processInfo] environment][@"XT_INSTALL_ROOT"];
       NSCAssert(installRoot, @"XT_INSTALL_ROOT is not set.");
-      path = installRoot;
+      path = [installRoot retain];
     } else {
-      path = [[AbsoluteExecutablePath() stringByDeletingLastPathComponent] stringByDeletingLastPathComponent];
+      path = [[[AbsoluteExecutablePath() stringByDeletingLastPathComponent] stringByDeletingLastPathComponent] retain];
     }
   });
   return path;
@@ -678,7 +678,7 @@ NSString *XcodebuildVersion()
     NSDictionary *infoDict = [NSDictionary dictionaryWithContentsOfFile:xcodePlistPath];
     NSCAssert(infoDict[@"DTXcode"], @"Cannot find the 'DTXcode' key in Xcode's Info.plist.");
 
-    DTXcode = infoDict[@"DTXcode"];
+    DTXcode = [infoDict[@"DTXcode"] retain];
   });
   return DTXcode;
 }
