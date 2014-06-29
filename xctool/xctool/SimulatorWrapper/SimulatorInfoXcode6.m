@@ -61,11 +61,11 @@ static const NSInteger KProductTypeIpad = 2;
   NSString *probableDeviceName;
   switch ([[self simulatedDeviceFamily] integerValue]) {
     case KProductTypeIphone:
-      probableDeviceName = @"iPhone";
+      probableDeviceName = @"iPhone 4s";
       break;
 
     case KProductTypeIpad:
-      probableDeviceName = @"iPad";
+      probableDeviceName = @"iPad 2";
       break;
   }
 
@@ -255,6 +255,7 @@ static const NSInteger KProductTypeIpad = 2;
 {
   NSMutableArray *supportedRuntimes = [NSMutableArray array];
   SimDeviceType *deviceType = [SimDeviceType supportedDeviceTypesByAlias][deviceName];
+  NSAssert(deviceType != nil, @"SimDeviceType wasn't found for device with alias: %@. Available aliases: %@", deviceName, [SimDeviceType supportedDeviceTypesByAlias]);
   for (SimRuntime *runtime in [SimRuntime supportedRuntimes]) {
     if ([runtime supportsDeviceType:deviceType]) {
       [supportedRuntimes addObject:runtime];
@@ -265,6 +266,7 @@ static const NSInteger KProductTypeIpad = 2;
 
 + (SimRuntime *)_runtimeForSdkVersion:(NSString *)sdkVersion
 {
+  NSAssert(sdkVersion != nil, @"Sdk version shouldn't be nil.");
   NSArray *runtimes = [SimRuntime supportedRuntimes];
   for (SimRuntime *runtime in runtimes) {
     if ([runtime.versionString hasPrefix:sdkVersion]) {

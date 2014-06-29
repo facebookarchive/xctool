@@ -35,6 +35,12 @@ static void writeAll(int fildes, const void *buf, size_t nbyte) {
 @end
 
 @implementation FakeTask
+@synthesize currentDirectoryPath = _currentDirectoryPath;
+@synthesize launchPath = _launchPath;
+@synthesize arguments = _arguments;
+@synthesize environment = _environment;
+@synthesize standardOutput = _standardOutput;
+@synthesize standardError = _standardError;
 @synthesize terminationStatus = _terminationStatus;
 
 + (NSTask *)fakeTaskWithExitStatus:(int)exitStatus
@@ -88,16 +94,6 @@ static void writeAll(int fildes, const void *buf, size_t nbyte) {
 - (void)pretendTerminationReason:(NSTaskTerminationReason)reason
 {
   _pretendTerminationReason = reason;
-}
-
-- (NSTaskTerminationReason)terminationReason
-{
-  return _pretendTerminationReason;
-}
-
-- (void)setTerminationReason:(NSTaskTerminationReason)terminationReason
-{
-  // empty implementation
 }
 
 - (id)init
@@ -218,6 +214,19 @@ static void writeAll(int fildes, const void *buf, size_t nbyte) {
 - (void)setStartsNewProcessGroup:(BOOL)startsNewProcessGroup
 {
   // This is part of NSConcreteTask - we're fine if it's a no-op in tests.
+}
+
+#pragma mark - 
+#pragma mark Setters & Getters
+
+- (NSTaskTerminationReason)terminationReason
+{
+  return _pretendTerminationReason;
+}
+
+- (void)setTerminationReason:(NSTaskTerminationReason)terminationReason
+{
+  // empty implementation
 }
 
 @end
