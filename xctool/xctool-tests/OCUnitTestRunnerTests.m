@@ -392,7 +392,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
   NSArray *events = [eventBuffer events];
 
   // check number of events
-  assertThatInteger([events count], equalToInteger(19));
+  assertThatInteger([events count], equalToInteger(20));
 
   // check last event statistics
   assertThat([events lastObject][@"event"], equalTo(kReporter_Events_EndTestSuite));
@@ -413,9 +413,10 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
   assertThatInteger(NumberOfEntries([events valueForKeyPath:kReporter_EndTest_ResultKey], @"error"), equalToInteger(1));
 
   // check test output of crash
-  assertThatInteger(NumberOfEntries([events valueForKeyPath:@"event"], kReporter_Events_TestOuput), equalToInteger(1));
-  assertThat(events[8][kReporter_EndTest_OutputKey], equalTo(@"Test crashed while running."));
-  assertThat(events[9][kReporter_EndTest_OutputKey], equalTo(@"Hello!\nTest crashed while running."));
+  assertThatInteger(NumberOfEntries([events valueForKeyPath:@"event"], kReporter_Events_TestOuput), equalToInteger(2));
+  assertThat(events[8][kReporter_EndTest_OutputKey], equalTo(@"Hello!\n"));
+  assertThat(events[9][kReporter_EndTest_OutputKey], equalTo(@"Test crashed while running."));
+  assertThat(events[10][kReporter_EndTest_OutputKey], equalTo(@"Hello!\nTest crashed while running."));
 }
 
 #pragma mark misc.
