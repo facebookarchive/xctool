@@ -145,6 +145,8 @@
   OCTestEventState *test = [_testSuiteState runningTest];
   NSAssert(test, @"Got output with no test running");
   [test stateTestOutput:event[kReporter_TestOutput_OutputKey]];
+  
+  [self publishEventToReporters:event];
 }
 
 - (void)handleStartupError:(NSString *)startupError

@@ -97,7 +97,7 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
                 toReporter:state];
   [state didFinishRunWithStartupError:nil otherErrors:nil];
 
-  assertThat(eventBuffer.events, hasCountOf(7*2 + 2));
+  assertThat(eventBuffer.events, hasCountOf(43));
   assertThat(SelectEventFields(eventBuffer.events, kReporter_Events_BeginTest, @"event"), hasCountOf(7));
   assertThat(SelectEventFields(eventBuffer.events, kReporter_Events_EndTest, @"event"), hasCountOf(7));
 }
@@ -199,6 +199,7 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
   assertThat(SelectEventFields(eventBuffer.events, nil, @"event"),
              equalTo(@[kReporter_Events_BeginTestSuite,
                        kReporter_Events_BeginTest,
+                       kReporter_Events_TestOuput,
                        kReporter_Events_EndTest,
                        kReporter_Events_BeginTest,
                        kReporter_Events_TestOuput,
@@ -215,6 +216,8 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
 
   NSArray *output = SelectEventFields(eventBuffer.events, kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey);
   assertThat(output[0],
+             equalTo(@"puppies!\n"));
+  assertThat(output[1],
              equalTo(@"The test bundle stopped running or crashed immediately after running '-[OtherTests testSomething]'.  "
                      @"Even though that test finished, it's likely responsible for the crash."));
 }
@@ -270,6 +273,7 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
   assertThat(SelectEventFields(eventBuffer.events, nil, @"event"),
              equalTo(@[kReporter_Events_BeginTestSuite,
                        kReporter_Events_BeginTest,
+                       kReporter_Events_TestOuput,
                        kReporter_Events_EndTest,
                        kReporter_Events_BeginTest,
                        kReporter_Events_EndTest,
@@ -286,6 +290,8 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
 
   NSArray *output = SelectEventFields(eventBuffer.events, kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey);
   assertThat(output[0],
+             equalTo(@"puppies!\n"));
+  assertThat(output[1],
              equalTo(@"The test bundle stopped running or crashed immediately after running '-[OtherTests testAnother]'.  "
                      @"Even though that test finished, it's likely responsible for the crash."));
 }
@@ -301,7 +307,7 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
   [state didFinishRunWithStartupError:nil otherErrors:nil];
 
   // Not much we can do here, make sure no events are shipped out
-  assertThatInteger(eventBuffer.events.count, equalToInteger(6));
+  assertThatInteger(eventBuffer.events.count, equalToInteger(7));
   assertThat(SelectEventFields(eventBuffer.events, kReporter_Events_BeginTest, @"event"), hasCountOf(2));
   assertThat(SelectEventFields(eventBuffer.events, kReporter_Events_EndTest, @"event"), hasCountOf(2));
 }
