@@ -27,6 +27,8 @@
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
 
+static const NSString * kOtestShimStdoutFilePath = @"OTEST_SHIM_STDOUT_FILE";
+static const NSString * kOtestShimStderrFilePath __unused = @"OTEST_SHIM_STDERR_FILE";
 
 @implementation SimulatorWrapper
 
@@ -47,17 +49,20 @@
   DTiPhoneSimulatorApplicationSpecifier *appSpec =
   [DTiPhoneSimulatorApplicationSpecifier specifierWithApplicationPath:testHostAppPath];
 
+  NSMutableDictionary *launchEnvironmentEdited = [launchEnvironment mutableCopy];
+  launchEnvironmentEdited[kOtestShimStdoutFilePath] = outputPath;
+
   DTiPhoneSimulatorSessionConfig *sessionConfig = [[[DTiPhoneSimulatorSessionConfig alloc] init] autorelease];
   [sessionConfig setApplicationToSimulateOnStart:appSpec];
   [sessionConfig setSimulatedApplicationLaunchArgs:launchArgs];
-  [sessionConfig setSimulatedApplicationLaunchEnvironment:launchEnvironment];
+  [sessionConfig setSimulatedApplicationLaunchEnvironment:launchEnvironmentEdited];
   [sessionConfig setSimulatedApplicationShouldWaitForDebugger:NO];
   [sessionConfig setSimulatedArchitecture:[simInfo simulatedArchitecture]];
   [sessionConfig setSimulatedDeviceFamily:[simInfo simulatedDeviceFamily]];
   [sessionConfig setSimulatedDeviceInfoName:[simInfo simulatedDeviceInfoName]];
   [sessionConfig setSimulatedSystemRoot:systemRoot];
+  [sessionConfig setLocalizedClientName:@"xctool"];
 
-  [sessionConfig setSimulatedApplicationStdOutPath:outputPath];
   // Don't let anything from STDERR get in our stream.  Normally, once
   // otest-shim gets loaded, we don't have to worry about whatever is coming
   // over STDERR since the shim will redirect all output (including STDERR) into
@@ -67,8 +72,6 @@
   // into STDERR.  This happened in --
   // https://github.com/facebook/xctool/issues/224#issuecomment-29288004
   [sessionConfig setSimulatedApplicationStdErrPath:@"/dev/null"];
-
-  [sessionConfig setLocalizedClientName:@"xctool"];
 
   return sessionConfig;
 }
