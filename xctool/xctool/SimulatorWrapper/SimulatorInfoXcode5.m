@@ -154,28 +154,6 @@ static const NSInteger KProductTypeIpad = 2;
   return systemRoot;
 }
 
-- (NSDictionary *)simulatorLaunchEnvironment
-{
-  // Sometimes the TEST_HOST will be wrapped in double quotes.
-  NSString *testHostPath = [_buildSettings[Xcode_TEST_HOST] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
-
-  NSString *ideBundleInjectionLibPath = @"/../../Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection";
-  NSString *testBundlePath = [NSString stringWithFormat:@"%@/%@", _buildSettings[Xcode_BUILT_PRODUCTS_DIR], _buildSettings[Xcode_FULL_PRODUCT_NAME]];
-
-  return @{
-    @"DYLD_FALLBACK_FRAMEWORK_PATH" : [[self simulatedSdkRootPath] stringByAppendingPathComponent:@"/Developer/Library/Frameworks"],
-    @"DYLD_FRAMEWORK_PATH" : _buildSettings[Xcode_TARGET_BUILD_DIR],
-    @"DYLD_LIBRARY_PATH" : _buildSettings[Xcode_TARGET_BUILD_DIR],
-    @"DYLD_INSERT_LIBRARIES" : [@[
-      [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"],
-      ideBundleInjectionLibPath,
-     ] componentsJoinedByString:@":"],
-    @"NSUnbufferedIO" : @"YES",
-    @"XCInjectBundle" : testBundlePath,
-    @"XCInjectBundleInto" : testHostPath,
-  };
-}
-
 #pragma mark -
 #pragma mark Class Methods
 

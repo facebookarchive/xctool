@@ -18,6 +18,7 @@
 
 #import "SimulatorInfoXcode5.h"
 #import "SimulatorInfoXcode6.h"
+#import "XcodeBuildSettings.h"
 #import "XCToolUtil.h"
 
 @implementation SimulatorInfo
@@ -95,6 +96,31 @@
 }
 
 #pragma mark -
+#pragma mark Common
+
+- (NSDictionary *)simulatorLaunchEnvironment
+{
+  // Sometimes the TEST_HOST will be wrapped in double quotes.
+  NSString *testHostPath = [self.buildSettings[Xcode_TEST_HOST] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
+
+  NSString *ideBundleInjectionLibPath = @"/../../Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection";
+  NSString *testBundlePath = [NSString stringWithFormat:@"%@/%@", self.buildSettings[Xcode_BUILT_PRODUCTS_DIR], self.buildSettings[Xcode_FULL_PRODUCT_NAME]];
+
+  return @{
+    @"DYLD_FALLBACK_FRAMEWORK_PATH" : [[self simulatedSdkRootPath] stringByAppendingPathComponent:@"/Developer/Library/Frameworks"],
+    @"DYLD_FRAMEWORK_PATH" : self.buildSettings[Xcode_TARGET_BUILD_DIR],
+    @"DYLD_LIBRARY_PATH" : self.buildSettings[Xcode_TARGET_BUILD_DIR],
+    @"DYLD_INSERT_LIBRARIES" : [@[
+      [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"],
+      ideBundleInjectionLibPath,
+     ] componentsJoinedByString:@":"],
+    @"NSUnbufferedIO" : @"YES",
+    @"XCInjectBundle" : testBundlePath,
+    @"XCInjectBundleInto" : testHostPath,
+    };
+}
+
+#pragma mark -
 #pragma mark Should be implemented in subclass
 
 - (NSString *)simulatedArchitecture {assert(NO);};
@@ -103,7 +129,6 @@
 - (NSString *)simulatedSdkVersion {assert(NO);};
 - (NSString *)simulatedSdkShortVersion {assert(NO);};
 - (NSString *)simulatedSdkRootPath {assert(NO);};
-- (DTiPhoneSimulatorSystemRoot *)systemRootForSimulatedSdk{assert(NO);};;
-- (NSDictionary *)simulatorLaunchEnvironment {assert(NO);};;
+- (DTiPhoneSimulatorSystemRoot *)systemRootForSimulatedSdk{assert(NO);};
 
 @end
