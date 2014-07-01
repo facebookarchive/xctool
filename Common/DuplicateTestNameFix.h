@@ -44,7 +44,7 @@
  More conversation on this topic:
  https://github.com/allending/Kiwi/issues/402
  */
-void ApplyDuplicateTestNameFix(NSString *testProbeClassName);
+void ApplyDuplicateTestNameFix(NSString *testProbeClassName, NSString *testSuiteClassName);
 
 /**
  Crawls the (Sen|XC)TestSuite hierarchy and returns a list of (Sen|XC)TestCase

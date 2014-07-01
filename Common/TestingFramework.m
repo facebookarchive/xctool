@@ -17,6 +17,7 @@
 #import "TestingFramework.h"
 
 NSString *const kTestingFrameworkTestProbeClassName = @"kTestingFrameworkTestProbeClassName";
+NSString *const kTestingFrameworkTestSuiteClassName = @"kTestingFrameworkTestSuiteClassName";
 NSString *const kTestingFrameworkIOSTestrunnerName = @"ios_executable";
 NSString *const kTestingFrameworkOSXTestrunnerName = @"osx_executable";
 NSString *const kTestingFrameworkInvertScopeKey = @"invertScope";
@@ -30,13 +31,15 @@ NSDictionary *FrameworkInfoForExtension(NSString *extension)
     frameworks = @{
       @"octest": @{
         kTestingFrameworkTestProbeClassName: @"SenTestProbe",
-        kTestingFrameworkOSXTestrunnerName: @"Tools/otest",
+        kTestingFrameworkTestSuiteClassName: @"SenTestSuite",
         kTestingFrameworkIOSTestrunnerName: @"usr/bin/otest",
+        kTestingFrameworkOSXTestrunnerName: @"Tools/otest",
         kTestingFrameworkFilterTestArgsKey: @"SenTest",
         kTestingFrameworkInvertScopeKey: @"SenTestInvertScope"
       },
       @"xctest": @{
         kTestingFrameworkTestProbeClassName: @"XCTestProbe",
+        kTestingFrameworkTestSuiteClassName: @"XCTestSuite",
         kTestingFrameworkIOSTestrunnerName: @"usr/bin/xctest",
         kTestingFrameworkOSXTestrunnerName: @"usr/bin/xctest",
         kTestingFrameworkFilterTestArgsKey: @"XCTest",

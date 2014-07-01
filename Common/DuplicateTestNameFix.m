@@ -66,12 +66,8 @@ static NSString *TestNameWithCount(NSString *name, NSUInteger count) {
           (unsigned long)count];
 }
 
-static id TestProbe_specifiedTestSuite(Class cls, SEL cmd)
+static void ProcessTestSuite(id testSuite)
 {
-  id testSuite = objc_msgSend(cls,
-                              sel_registerName([[NSString stringWithFormat:@"__%s_specifiedTestSuite",
-                                                 class_getName(cls)] UTF8String]));
-
   NSCountedSet *seenCounts = [NSCountedSet set];
   NSMutableSet *classesToSwizzle = [NSMutableSet set];
 
@@ -105,11 +101,27 @@ static id TestProbe_specifiedTestSuite(Class cls, SEL cmd)
     class_replaceMethod(cls, @selector(description), (IMP)TestCase_nameOrDescription, "@@:");
     class_replaceMethod(cls, @selector(name), (IMP)TestCase_nameOrDescription, "@@:");
   }
+}
 
+static id TestProbe_specifiedTestSuite(Class cls, SEL cmd)
+{
+  id testSuite = objc_msgSend(cls,
+                              sel_registerName([[NSString stringWithFormat:@"__%s_specifiedTestSuite",
+                                                 class_getName(cls)] UTF8String]));
+  ProcessTestSuite(testSuite);
   return testSuite;
 }
 
-void ApplyDuplicateTestNameFix(NSString *testProbeClassName)
+static id TestSuite_allTests(Class cls, SEL cmd)
+{
+  id testSuite = objc_msgSend(cls,
+                              sel_registerName([[NSString stringWithFormat:@"__%s_allTests",
+                                                 class_getName(cls)] UTF8String]));
+  ProcessTestSuite(testSuite);
+  return testSuite;
+}
+
+void ApplyDuplicateTestNameFix(NSString *testProbeClassName, NSString *testSuiteClassName)
 {
   // Hooks into `[-(Sen|XC)TestProbe specifiedTestSuite]` so we have a chance
   // to 1) scan over the entire list of tests to be run, 2) rewrite any
@@ -117,4 +129,11 @@ void ApplyDuplicateTestNameFix(NSString *testProbeClassName)
   XTSwizzleClassSelectorForFunction(NSClassFromString(testProbeClassName),
                                     @selector(specifiedTestSuite),
                                     (IMP)TestProbe_specifiedTestSuite);
+
+  // Hooks into `[-(Sen|XC)TestSuite allTests]` so we have a chance
+  // to 1) scan over the entire list of tests to be run, 2) rewrite any
+  // duplicate names we find, and 3) return the modified list to the caller.
+  XTSwizzleClassSelectorForFunction(NSClassFromString(testSuiteClassName),
+                                    @selector(allTests),
+                                    (IMP)TestSuite_allTests);
 }

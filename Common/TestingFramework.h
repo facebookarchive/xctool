@@ -29,6 +29,7 @@ typedef enum {
 // http://stackoverflow.com/questions/538996/constants-in-objective-c
 // Internally, it just becomes 'extern'.
 FOUNDATION_EXPORT NSString *const kTestingFrameworkTestProbeClassName;
+FOUNDATION_EXPORT NSString *const kTestingFrameworkTestSuiteClassName;
 FOUNDATION_EXPORT NSString *const kTestingFrameworkIOSTestrunnerName;
 FOUNDATION_EXPORT NSString *const kTestingFrameworkOSXTestrunnerName;
 FOUNDATION_EXPORT NSString *const kTestingFrameworkInvertScopeKey;

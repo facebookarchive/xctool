@@ -549,7 +549,8 @@ static const char *DyldImageStateChangeHandler(enum dyld_image_states state,
                                    (IMP)SenTestCase_performTest);
 
       NSDictionary *frameworkInfo = FrameworkInfoForExtension(@"octest");
-      ApplyDuplicateTestNameFix([frameworkInfo objectForKey:kTestingFrameworkTestProbeClassName]);
+      ApplyDuplicateTestNameFix([frameworkInfo objectForKey:kTestingFrameworkTestProbeClassName],
+                                [frameworkInfo objectForKey:kTestingFrameworkTestSuiteClassName]);
       XTApplySenTestClassEnumeratorFix();
       XTApplySenTestCaseInvokeTestFix();
       XTApplySenIsSuperclassOfClassPerformanceFix();
@@ -575,7 +576,8 @@ static const char *DyldImageStateChangeHandler(enum dyld_image_states state,
                                    @selector(performTest:),
                                    (IMP)XCTestCase_performTest);
       NSDictionary *frameworkInfo = FrameworkInfoForExtension(@"xctest");
-      ApplyDuplicateTestNameFix([frameworkInfo objectForKey:kTestingFrameworkTestProbeClassName]);
+      ApplyDuplicateTestNameFix([frameworkInfo objectForKey:kTestingFrameworkTestProbeClassName],
+                                [frameworkInfo objectForKey:kTestingFrameworkTestSuiteClassName]);
     }
   }
 
