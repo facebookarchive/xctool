@@ -665,6 +665,31 @@ NSString *SystemPaths()
   return [[pathLines componentsSeparatedByString:@"\n"] componentsJoinedByString:@":"];
 }
 
+/**
+ SenTesting.framework location:
+ - Xcode 5, Xcode 6: Contents/Developer/Library/Frameworks directory
+ XCTest.framework location:
+ - Xcode 5: Contents/Developer/Library/Frameworks directory
+ - Xcode 6: Contents/Developer/Platforms/{iPhoneSimulator.platform/MacOSX}/Developer/Library/Frameworks
+ */
+NSString *IOSTestFrameworkDirectories()
+{
+  NSString *directories = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"];
+  if (ToolchainIsXcode6OrBetter()) {
+    directories = [directories stringByAppendingFormat:@":%@", [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks"]];
+  }
+  return directories;
+}
+
+NSString *OSXTestFrameworkDirectories()
+{
+  NSString *directories = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"];
+  if (ToolchainIsXcode6OrBetter()) {
+    directories = [directories stringByAppendingFormat:@":%@", [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/MacOSX.platform/Developer/Library/Frameworks"]];
+  }
+  return directories;
+}
+
 NSString *XcodebuildVersion()
 {
   static NSString *DTXcode;

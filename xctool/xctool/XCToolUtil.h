@@ -191,6 +191,16 @@ NSString *AbsoluteExecutablePath();
 NSString *SystemPaths();
 
 /**
+ * Returns absolute paths to directories with iOS test frameworks in the form of `path1:path2:path3`.
+ */
+NSString *IOSTestFrameworkDirectories();
+
+/**
+ * Returns absolute paths to directories with OS X test frameworks in the form of `path1:path2:path3`.
+ */
+NSString *OSXTestFrameworkDirectories();
+
+/**
  * Creates a temporary directory under NSTemporaryDirectory() using mkdtemp,
  * and returns the path.
  */

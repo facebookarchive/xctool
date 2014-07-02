@@ -107,7 +107,7 @@
   NSString *testBundlePath = [NSString stringWithFormat:@"%@/%@", self.buildSettings[Xcode_BUILT_PRODUCTS_DIR], self.buildSettings[Xcode_FULL_PRODUCT_NAME]];
 
   return @{
-    @"DYLD_FALLBACK_FRAMEWORK_PATH" : [[self simulatedSdkRootPath] stringByAppendingPathComponent:@"/Developer/Library/Frameworks"],
+    @"DYLD_FALLBACK_FRAMEWORK_PATH" : IOSTestFrameworkDirectories(),
     @"DYLD_FRAMEWORK_PATH" : self.buildSettings[Xcode_TARGET_BUILD_DIR],
     @"DYLD_LIBRARY_PATH" : self.buildSettings[Xcode_TARGET_BUILD_DIR],
     @"DYLD_INSERT_LIBRARIES" : [@[

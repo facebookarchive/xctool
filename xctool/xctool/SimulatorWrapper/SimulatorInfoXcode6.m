@@ -27,8 +27,6 @@
 static const NSInteger KProductTypeIphone = 1;
 static const NSInteger KProductTypeIpad = 2;
 
-static const NSString *kFrameworkPathKey = @"DYLD_FALLBACK_FRAMEWORK_PATH";
-
 @interface SimRuntime (Latest)
 + (SimRuntime *)latest;
 @end
@@ -142,14 +140,6 @@ static const NSString *kFrameworkPathKey = @"DYLD_FALLBACK_FRAMEWORK_PATH";
   systemRoot = [SimulatorInfoXcode6 _systemRootWithSDKVersion:sdkVersion];
   NSAssert(systemRoot != nil, @"Unable to instantiate DTiPhoneSimulatorSystemRoot for sdk version: %@. Available roots: %@", sdkVersion, [DTiPhoneSimulatorSystemRoot knownRoots]);
   return systemRoot;
-}
-
-- (NSDictionary *)simulatorLaunchEnvironment
-{
-  NSMutableDictionary *env = [[super simulatorLaunchEnvironment] mutableCopy];
-  NSString *frameworkPath = env[kFrameworkPathKey];
-  env[kFrameworkPathKey] = [frameworkPath stringByAppendingFormat:@":%@", [[[self simulatedSdkRootPath] stringByAppendingPathComponent:@"../../Library/Frameworks"] stringByResolvingSymlinksInPath]];
-  return env;
 }
 
 #pragma mark -
