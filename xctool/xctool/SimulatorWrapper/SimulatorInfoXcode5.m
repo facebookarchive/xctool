@@ -50,15 +50,32 @@ static const NSInteger KProductTypeIpad = 2;
 {
   ISHDeviceVersions *versions = [ISHDeviceVersions sharedInstance];
   ISHDeviceInfo *deviceInfo = [versions deviceInfoNamed:[self simulatedDeviceInfoName]];
+  NSAssert(deviceInfo, @"Device info wasn't found for device with name: %@", [self simulatedDeviceInfoName]);
   ISHSDKInfo *maxSdk = nil;
-  for (ISHSDKInfo *sdkInfo in [versions allSDKs]) {
-    if (![deviceInfo supportsSDK:sdkInfo]) {
-      continue;
+  do {
+    for (ISHSDKInfo *sdkInfo in [versions allSDKs]) {
+      if (![deviceInfo supportsSDK:sdkInfo]) {
+        continue;
+      }
+      if ([sdkInfo version] > [maxSdk version]) {
+        maxSdk = sdkInfo;
+      }
     }
-    if ([sdkInfo version] > [maxSdk version]) {
-      maxSdk = sdkInfo;
+    if (!maxSdk) {
+      deviceInfo = [deviceInfo newerEquivalent];
+    } else {
+      break;
     }
-  }
+    if (!deviceInfo) {
+      NSArray *availableSdks = [[[ISHDeviceVersions sharedInstance] allSDKs] valueForKeyPath:@"shortVersionString"];
+      NSArray *availableDevices = [[ISHDeviceVersions sharedInstance] allDeviceNames];
+      NSAssert(deviceInfo, @"There are not comptable devices and SDKs to simulate. Available devices: %@, sdk: %@", availableDevices, availableSdks);
+    }
+  } while (true);
+  
+  // set device name in case if it changed
+  _deviceName = [deviceInfo displayName];
+  
   return [maxSdk shortVersionString];
 }
 
