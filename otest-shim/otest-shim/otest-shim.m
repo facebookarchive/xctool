@@ -26,6 +26,7 @@
 
 #import "DuplicateTestNameFix.h"
 #import "EventGenerator.h"
+#import "NSInvocationInSetFix.h"
 #import "ParseTestName.h"
 #import "ReporterEvents.h"
 #import "SenIsSuperclassOfClassPerformanceFix.h"
