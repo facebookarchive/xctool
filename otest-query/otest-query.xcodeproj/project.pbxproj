@@ -39,6 +39,11 @@
 		CC12CC0218E54A7700AA76E9 /* TestingFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = AA318BE517E9AA7400BF159E /* TestingFramework.m */; };
 		CC12CC0318E54A7700AA76E9 /* XcodeRequiredVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 28EC25F9184EAA680061C3B2 /* XcodeRequiredVersion.m */; };
 		CC12CC0418E54A7E00AA76E9 /* OtestQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = CC12CBF218E54A1400AA76E9 /* OtestQuery.m */; };
+		CC8D774C19660E230035CC60 /* NSInvocationInSetFix.h in Headers */ = {isa = PBXBuildFile; fileRef = CC8D774A19660E230035CC60 /* NSInvocationInSetFix.h */; };
+		CC8D774D19660E230035CC60 /* NSInvocationInSetFix.h in Headers */ = {isa = PBXBuildFile; fileRef = CC8D774A19660E230035CC60 /* NSInvocationInSetFix.h */; };
+		CC8D774E19660E230035CC60 /* NSInvocationInSetFix.m in Sources */ = {isa = PBXBuildFile; fileRef = CC8D774B19660E230035CC60 /* NSInvocationInSetFix.m */; };
+		CC8D774F19660E230035CC60 /* NSInvocationInSetFix.m in Sources */ = {isa = PBXBuildFile; fileRef = CC8D774B19660E230035CC60 /* NSInvocationInSetFix.m */; };
+		CC8D775019660E230035CC60 /* NSInvocationInSetFix.m in Sources */ = {isa = PBXBuildFile; fileRef = CC8D774B19660E230035CC60 /* NSInvocationInSetFix.m */; };
 		CD66612D175D1A890057DF4D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9049011756C5B1006CF16D /* Foundation.framework */; };
 		CD9049021756C5B1006CF16D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD9049011756C5B1006CF16D /* Foundation.framework */; };
 /* End PBXBuildFile section */
@@ -92,6 +97,8 @@
 		CC12CBF918E54A3700AA76E9 /* otest-query-ios-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "otest-query-ios-Prefix.pch"; sourceTree = "<group>"; };
 		CC12CBFC18E54A4200AA76E9 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		CC12CBFD18E54A4200AA76E9 /* otest-query-osx-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "otest-query-osx-Prefix.pch"; sourceTree = "<group>"; };
+		CC8D774A19660E230035CC60 /* NSInvocationInSetFix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSInvocationInSetFix.h; path = ../Common/NSInvocationInSetFix.h; sourceTree = "<group>"; };
+		CC8D774B19660E230035CC60 /* NSInvocationInSetFix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSInvocationInSetFix.m; path = ../Common/NSInvocationInSetFix.m; sourceTree = "<group>"; };
 		CD66612C175D1A890057DF4D /* otest-query-osx */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "otest-query-osx"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD666138175D1B090057DF4D /* otest-query-osx.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "otest-query-osx.xcconfig"; sourceTree = "<group>"; };
 		CD9048FE1756C5B1006CF16D /* otest-query-ios */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "otest-query-ios"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -163,6 +170,8 @@
 				28E44D4C1810FA5300211BD5 /* ParseTestName.m */,
 				90ED5F2118E4FC04001B2B14 /* SenIsSuperclassOfClassPerformanceFix.h */,
 				90ED5F2218E4FC04001B2B14 /* SenIsSuperclassOfClassPerformanceFix.m */,
+				CC8D774A19660E230035CC60 /* NSInvocationInSetFix.h */,
+				CC8D774B19660E230035CC60 /* NSInvocationInSetFix.m */,
 				2887CC33181DDB5F00B0D049 /* Swizzle.h */,
 				2887CC34181DDB5F00B0D049 /* Swizzle.m */,
 				AA318BE317E9A8C000BF159E /* TestingFramework.h */,
@@ -246,6 +255,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC8D774C19660E230035CC60 /* NSInvocationInSetFix.h in Headers */,
 				AA318BE417E9A8C000BF159E /* TestingFramework.h in Headers */,
 				2887CC35181DDB5F00B0D049 /* Swizzle.h in Headers */,
 				2887CC3B181E0D8600B0D049 /* DuplicateTestNameFix.h in Headers */,
@@ -257,6 +267,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC8D774D19660E230035CC60 /* NSInvocationInSetFix.h in Headers */,
 				CC12CBF418E54A1400AA76E9 /* OtestQuery.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -437,6 +448,7 @@
 				2887CC3E181E0D8600B0D049 /* DuplicateTestNameFix.m in Sources */,
 				28E44D4F1810FBE500211BD5 /* ParseTestName.m in Sources */,
 				2887CC38181DDB5F00B0D049 /* Swizzle.m in Sources */,
+				CC8D774F19660E230035CC60 /* NSInvocationInSetFix.m in Sources */,
 				90ED5F2518E4FC0C001B2B14 /* SenIsSuperclassOfClassPerformanceFix.m in Sources */,
 				28660742183471FF000ACB87 /* otest-query-lib.m in Sources */,
 				AA318BE817E9AA7400BF159E /* TestingFramework.m in Sources */,
@@ -452,6 +464,7 @@
 				2866076E18347528000ACB87 /* otest-query-lib.m in Sources */,
 				2866076918347520000ACB87 /* DuplicateTestNameFix.m in Sources */,
 				90ED5F2618E4FC0C001B2B14 /* SenIsSuperclassOfClassPerformanceFix.m in Sources */,
+				CC8D775019660E230035CC60 /* NSInvocationInSetFix.m in Sources */,
 				2866076A18347520000ACB87 /* ParseTestName.m in Sources */,
 				2866076B18347520000ACB87 /* Swizzle.m in Sources */,
 				2866076C18347520000ACB87 /* TestingFramework.m in Sources */,
@@ -467,6 +480,7 @@
 				CC12CBFF18E54A7700AA76E9 /* DuplicateTestNameFix.m in Sources */,
 				CC12CC0018E54A7700AA76E9 /* ParseTestName.m in Sources */,
 				90ED5F2418E4FC04001B2B14 /* SenIsSuperclassOfClassPerformanceFix.m in Sources */,
+				CC8D774E19660E230035CC60 /* NSInvocationInSetFix.m in Sources */,
 				CC12CC0118E54A7700AA76E9 /* Swizzle.m in Sources */,
 				CC12CC0218E54A7700AA76E9 /* TestingFramework.m in Sources */,
 				CC12CC0318E54A7700AA76E9 /* XcodeRequiredVersion.m in Sources */,

@@ -49,6 +49,10 @@
 		90F7485718E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F7485318E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.m */; };
 		AA318BEA17E9B43000BF159E /* XCTest.h in Headers */ = {isa = PBXBuildFile; fileRef = AA318BE917E9B43000BF159E /* XCTest.h */; };
 		AA318BEB17E9B43000BF159E /* XCTest.h in Headers */ = {isa = PBXBuildFile; fileRef = AA318BE917E9B43000BF159E /* XCTest.h */; };
+		CC8D7759196623160035CC60 /* NSInvocationInSetFix.h in Headers */ = {isa = PBXBuildFile; fileRef = CC8D7757196623160035CC60 /* NSInvocationInSetFix.h */; };
+		CC8D775A196623160035CC60 /* NSInvocationInSetFix.h in Headers */ = {isa = PBXBuildFile; fileRef = CC8D7757196623160035CC60 /* NSInvocationInSetFix.h */; };
+		CC8D775B196623160035CC60 /* NSInvocationInSetFix.m in Sources */ = {isa = PBXBuildFile; fileRef = CC8D7758196623160035CC60 /* NSInvocationInSetFix.m */; };
+		CC8D775C196623160035CC60 /* NSInvocationInSetFix.m in Sources */ = {isa = PBXBuildFile; fileRef = CC8D7758196623160035CC60 /* NSInvocationInSetFix.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -85,6 +89,8 @@
 		90F7485218E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SenIsSuperclassOfClassPerformanceFix.h; sourceTree = "<group>"; };
 		90F7485318E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SenIsSuperclassOfClassPerformanceFix.m; sourceTree = "<group>"; };
 		AA318BE917E9B43000BF159E /* XCTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCTest.h; sourceTree = "<group>"; };
+		CC8D7757196623160035CC60 /* NSInvocationInSetFix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSInvocationInSetFix.h; sourceTree = "<group>"; };
+		CC8D7758196623160035CC60 /* NSInvocationInSetFix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSInvocationInSetFix.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,6 +185,8 @@
 				2866077318348676000ACB87 /* dyld_priv.h */,
 				3892D7571815ACE200E68652 /* EventGenerator.h */,
 				3892D7581815ACE200E68652 /* EventGenerator.m */,
+				CC8D7757196623160035CC60 /* NSInvocationInSetFix.h */,
+				CC8D7758196623160035CC60 /* NSInvocationInSetFix.m */,
 				28E44D501811024F00211BD5 /* ParseTestName.h */,
 				28E44D511811024F00211BD5 /* ParseTestName.m */,
 				28E28FB317968EC50072376C /* ReporterEvents.h */,
@@ -203,6 +211,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA318BEB17E9B43000BF159E /* XCTest.h in Headers */,
+				CC8D775A196623160035CC60 /* NSInvocationInSetFix.h in Headers */,
 				28E44D531811024F00211BD5 /* ParseTestName.h in Headers */,
 				2887CC48181E145D00B0D049 /* TestingFramework.h in Headers */,
 				2839BE8C1843CCFF000D7BEC /* SenTestCaseInvokeTestFix.h in Headers */,
@@ -220,6 +229,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				28E44D521811024F00211BD5 /* ParseTestName.h in Headers */,
+				CC8D7759196623160035CC60 /* NSInvocationInSetFix.h in Headers */,
 				3892D7591815ACE200E68652 /* EventGenerator.h in Headers */,
 				2887CC47181E145D00B0D049 /* TestingFramework.h in Headers */,
 				2839BE8B1843CCFF000D7BEC /* SenTestCaseInvokeTestFix.h in Headers */,
@@ -340,6 +350,7 @@
 				2839BE63183FEB6F000D7BEC /* SenTestClassEnumeratorFix.m in Sources */,
 				90F7485718E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.m in Sources */,
 				2839BE8E1843CCFF000D7BEC /* SenTestCaseInvokeTestFix.m in Sources */,
+				CC8D775C196623160035CC60 /* NSInvocationInSetFix.m in Sources */,
 				2887CC4A181E145D00B0D049 /* TestingFramework.m in Sources */,
 				3892D75C1815ACE200E68652 /* EventGenerator.m in Sources */,
 				282BFE2B1716044C0022F9FF /* otest-shim.m in Sources */,
@@ -357,6 +368,7 @@
 				2839BE62183FEB6F000D7BEC /* SenTestClassEnumeratorFix.m in Sources */,
 				90F7485618E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.m in Sources */,
 				2839BE8D1843CCFF000D7BEC /* SenTestCaseInvokeTestFix.m in Sources */,
+				CC8D775B196623160035CC60 /* NSInvocationInSetFix.m in Sources */,
 				2887CC49181E145D00B0D049 /* TestingFramework.m in Sources */,
 				3892D75B1815ACE200E68652 /* EventGenerator.m in Sources */,
 				283CCA9A16C2EE4C00F2E343 /* otest-shim.m in Sources */,

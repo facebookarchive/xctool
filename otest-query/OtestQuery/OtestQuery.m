@@ -23,6 +23,7 @@
 #import <stdio.h>
 
 #import "DuplicateTestNameFix.h"
+#import "NSInvocationInSetFix.h"
 #import "ParseTestName.h"
 #import "SenIsSuperclassOfClassPerformanceFix.h"
 #import "TestingFramework.h"
