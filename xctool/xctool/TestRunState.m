@@ -176,15 +176,13 @@
 
   // All tests should include this message.
   NSString *output = @"Test did not run: the test bundle stopped running or crashed before the test suite started.";
-  if (otherErrors) {
-    output = [output stringByAppendingFormat:@" Stderr output: %@", otherErrors];
-  }
   [_testSuiteState.tests makeObjectsPerformSelector:@selector(appendOutput:)
                                          withObject:output];
 
   // And, our "place holder" test should have a more detailed message about
   // what we think went wrong.
-  NSString *fakeTestOutput = [NSString stringWithFormat:@"%@\n%@",
+  NSString *fakeTestOutput = [NSString stringWithFormat:@"%@\n%@\n%@",
+                              otherErrors ?: @"",
                               _outputBeforeTestsStart,
                               [self collectCrashReports:_crashReportsAtStart]];
   fakeTestOutput = [fakeTestOutput stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
