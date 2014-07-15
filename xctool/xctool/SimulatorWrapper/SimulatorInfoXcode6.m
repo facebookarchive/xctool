@@ -47,6 +47,17 @@ static const NSInteger KProductTypeIpad = 2;
 @synthesize deviceName = _deviceName;
 @synthesize OSVersion = _OSVersion;
 
+- (void)dealloc
+{
+  [_buildSettings release];
+  [_deviceName release];
+  [_OSVersion release];
+  [super dealloc];
+}
+
+#pragma mark -
+#pragma mark Public methods
+
 - (NSNumber *)simulatedDeviceFamily
 {
   return @([_buildSettings[Xcode_TARGETED_DEVICE_FAMILY] integerValue]);
@@ -58,20 +69,19 @@ static const NSInteger KProductTypeIpad = 2;
     return _deviceName;
   }
 
-  NSString *probableDeviceName;
   switch ([[self simulatedDeviceFamily] integerValue]) {
     case KProductTypeIphone:
-      probableDeviceName = @"iPhone 4s";
+      self.deviceName = @"iPhone 4s";
       break;
 
     case KProductTypeIpad:
-      probableDeviceName = @"iPad 2";
+      self.deviceName = @"iPad 2";
       break;
   }
 
   DTiPhoneSimulatorSystemRoot *systemRoot = [SimulatorInfoXcode6 _systemRootWithSDKPath:_buildSettings[Xcode_SDKROOT]];
   if (!systemRoot) {
-    return probableDeviceName;
+    return _deviceName;
   }
 
   // return lowest device that supports simulated sdk
@@ -84,7 +94,8 @@ static const NSInteger KProductTypeIpad = 2;
   }
 
   NSAssert([supportedDeviceTypes count] > 0, @"There are no available devices that support provided sdk: %@. Supported devices: %@", [systemRoot sdkVersion], [[SimDeviceType supportedDevices] valueForKeyPath:@"name"]);
-  return [supportedDeviceTypes[0] name];
+  self.deviceName = [supportedDeviceTypes[0] name];
+  return _deviceName;
 }
 
 - (NSString *)simulatedArchitecture
@@ -101,7 +112,7 @@ static const NSInteger KProductTypeIpad = 2;
 
 - (NSString *)maxSdkVersionForSimulatedDevice
 {
-  NSMutableArray *runtimes = [[[[self class] _runtimesSupportedByDevice:[self simulatedDeviceInfoName]] mutableCopy] autorelease];
+  NSMutableArray *runtimes = [SimulatorInfoXcode6 _runtimesSupportedByDevice:[self simulatedDeviceInfoName]];
   [runtimes sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"version" ascending:YES]]];
   return [[runtimes lastObject] versionString];
 }
@@ -229,7 +240,7 @@ static const NSInteger KProductTypeIpad = 2;
 #pragma mark -
 #pragma mark Helpers
 
-+ (NSArray *)_runtimesSupportedByDevice:(NSString *)deviceName
++ (NSMutableArray *)_runtimesSupportedByDevice:(NSString *)deviceName
 {
   NSMutableArray *supportedRuntimes = [NSMutableArray array];
   SimDeviceType *deviceType = [SimDeviceType supportedDeviceTypesByAlias][deviceName];

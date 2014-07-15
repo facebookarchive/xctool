@@ -49,7 +49,7 @@ static const NSString * kOtestShimStderrFilePath __unused = @"OTEST_SHIM_STDERR_
   DTiPhoneSimulatorApplicationSpecifier *appSpec =
   [DTiPhoneSimulatorApplicationSpecifier specifierWithApplicationPath:testHostAppPath];
 
-  NSMutableDictionary *launchEnvironmentEdited = [launchEnvironment mutableCopy];
+  NSMutableDictionary *launchEnvironmentEdited = [[launchEnvironment mutableCopy] autorelease];
   launchEnvironmentEdited[kOtestShimStdoutFilePath] = outputPath;
 
   DTiPhoneSimulatorSessionConfig *sessionConfig = [[[DTiPhoneSimulatorSessionConfig alloc] init] autorelease];
@@ -122,7 +122,7 @@ static const NSString * kOtestShimStderrFilePath __unused = @"OTEST_SHIM_STDERR_
   [reader startReading];
 
   BOOL simStartedSuccessfully = [launcher launchAndWaitForExit];
-  if (!simStartedSuccessfully) {
+  if (!simStartedSuccessfully && error) {
     *error = launcher.launchError;
   }
 

@@ -50,9 +50,11 @@
 {
   if (![simInfo simulatedDevice].available) {
     NSString *errorDesc = [NSString stringWithFormat: @"Simulator '%@' is not available", [simInfo simulatedDevice].name];
-    *error = [NSError errorWithDomain:@"com.apple.iOSSimulator"
-                                 code:0
-                             userInfo:@{NSLocalizedDescriptionKey: errorDesc}];
+    if (error) {
+      *error = [NSError errorWithDomain:@"com.apple.iOSSimulator"
+                                   code:0
+                               userInfo:@{NSLocalizedDescriptionKey: errorDesc}];
+    }
     return NO;
   }
   
@@ -79,7 +81,7 @@
                                                                        deviceName:[simInfo simulatedDeviceInfoName]] autorelease];
 
   BOOL simStartedSuccessfully = [launcher launchAndWaitForStart] || [simInfo simulatedDevice].state == SimDeviceStateBooted;
-  if (!simStartedSuccessfully) {
+  if (!simStartedSuccessfully && error) {
     *error = launcher.launchError;
   }
   

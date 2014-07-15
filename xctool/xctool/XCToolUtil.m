@@ -248,6 +248,7 @@ static void AddSDKToDictionary(NSMutableDictionary *dict,
                              intoString:&sdkWithoutVersion];
   dict[sdkWithoutVersion] = versionDict;
   dict[sdk] = versionDict;
+  [sdkCharacterSet release];
 }
 
 NSDictionary *GetAvailableSDKsInfo()

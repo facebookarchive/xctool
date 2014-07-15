@@ -46,7 +46,7 @@
                                                                        deviceName:[simInfo simulatedDeviceInfoName]] autorelease];
 
   BOOL simStartedSuccessfully = [launcher launchAndWaitForExit];
-  if (!simStartedSuccessfully) {
+  if (!simStartedSuccessfully && error) {
     *error = launcher.launchError;
   }
 

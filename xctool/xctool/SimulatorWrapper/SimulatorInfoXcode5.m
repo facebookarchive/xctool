@@ -73,10 +73,18 @@ static const NSInteger KProductTypeIpad = 2;
     }
   } while (true);
   
-  // set device name in case if it changed
-  _deviceName = [deviceInfo displayName];
+  // set device name in case if it was changed
+  self.deviceName = [deviceInfo displayName];
   
   return [maxSdk shortVersionString];
+}
+
+- (void)dealloc
+{
+  [_buildSettings release];
+  [_deviceName release];
+  [_OSVersion release];
+  [super dealloc];
 }
 
 #pragma mark -
@@ -93,30 +101,29 @@ static const NSInteger KProductTypeIpad = 2;
     return _deviceName;
   }
 
-  NSString *probableDeviceName;
   switch ([[self simulatedDeviceFamily] integerValue]) {
     case KProductTypeIphone:
-      probableDeviceName = @"iPhone";
+      self.deviceName = @"iPhone";
       break;
 
     case KProductTypeIpad:
-      probableDeviceName = @"iPad";
+      self.deviceName = @"iPad";
       break;
   }
 
   ISHSDKInfo *sdkInfo = [[ISHDeviceVersions sharedInstance] sdkFromSDKRoot:_buildSettings[Xcode_SDKROOT]];
   if (!sdkInfo) {
-    return probableDeviceName;
+    return _deviceName;
   }
 
   ISHDeviceVersions *versions = [ISHDeviceVersions sharedInstance];
-  ISHDeviceInfo *deviceInfo = [versions deviceInfoNamed:probableDeviceName];
+  ISHDeviceInfo *deviceInfo = [versions deviceInfoNamed:_deviceName];
   while (deviceInfo && ![deviceInfo supportsSDK:sdkInfo]) {
     deviceInfo = [deviceInfo newerEquivalent];
-    probableDeviceName = [deviceInfo displayName];
+    self.deviceName = [deviceInfo displayName];
   }
 
-  return probableDeviceName;
+  return _deviceName;
 }
 
 - (NSString *)simulatedArchitecture
