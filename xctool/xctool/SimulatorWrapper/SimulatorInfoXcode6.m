@@ -234,7 +234,11 @@ static const NSInteger KProductTypeIpad = 2;
 + (NSString *)baseVersionForSDKShortVersion:(NSString *)shortVersionString
 {
   DTiPhoneSimulatorSystemRoot *root = [self _systemRootWithSDKVersion:shortVersionString];
-  return [root sdkVersion];
+  NSArray *components = [[root sdkVersion] componentsSeparatedByString:@"."];
+  if ([components count] < 2) {
+    return [root sdkVersion];
+  }
+  return [[components objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]] componentsJoinedByString:@"."];
 }
 
 #pragma mark -
