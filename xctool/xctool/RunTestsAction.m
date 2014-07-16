@@ -332,7 +332,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
   }
 }
 
-+ (NSDictionary *)commonOCUnitEventInfoFromTestableExecutionInfo:(TestableExecutionInfo *)testableExecutionInfo
++ (NSDictionary *)commonOCUnitEventInfoFromTestableExecutionInfo:(TestableExecutionInfo *)testableExecutionInfo action:(RunTestsAction *)action
 {
   NSMutableDictionary *result = [NSMutableDictionary dictionary];
 
@@ -340,8 +340,11 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
     BOOL isApplicationTest = TestableSettingsIndicatesApplicationTest(testableExecutionInfo.buildSettings);
 
     result[kReporter_BeginOCUnit_TestTypeKey] = isApplicationTest ? @"application-test" : @"logic-test";
-    result[kReporter_BeginOCUnit_SDKNameKey] = testableExecutionInfo.buildSettings[Xcode_SDK_NAME];
+    result[kReporter_BeginOCUnit_SDKNameKey] = action.OSVersion?:testableExecutionInfo.buildSettings[Xcode_SDK_NAME];
     result[kReporter_BeginOCUnit_BundleNameKey] = testableExecutionInfo.buildSettings[Xcode_FULL_PRODUCT_NAME];
+    if (action.deviceName) {
+      result[kReporter_BeginOCUnit_DeviceNameKey] = action.deviceName;
+    }
   }
 
   result[kReporter_BeginOCUnit_TargetNameKey] = testableExecutionInfo.testable.target;
@@ -349,13 +352,14 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
   return result;
 }
 
-+ (NSDictionary *)eventForBeginOCUnitFromTestableExecutionInfo:(TestableExecutionInfo *)testableExecutionInfo
++ (NSDictionary *)eventForBeginOCUnitFromTestableExecutionInfo:(TestableExecutionInfo *)testableExecutionInfo action:(RunTestsAction *)action
 {
   return EventDictionaryWithNameAndContent(kReporter_Events_BeginOCUnit,
-                                           [self commonOCUnitEventInfoFromTestableExecutionInfo:testableExecutionInfo]);
+                                           [self commonOCUnitEventInfoFromTestableExecutionInfo:testableExecutionInfo action:action]);
 }
 
 + (NSDictionary *)eventForEndOCUnitFromTestableExecutionInfo:(TestableExecutionInfo *)testableExecutionInfo
+                                                      action:(RunTestsAction *)action
                                                    succeeded:(BOOL)succeeded
                                                failureReason:(NSString *)failureReason
 {
@@ -364,7 +368,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
    EventDictionaryWithNameAndContent(kReporter_Events_EndOCUnit,
   @{kReporter_EndOCUnit_SucceededKey: @(succeeded),
     kReporter_EndOCUnit_MessageKey: (failureReason ?: [NSNull null])})];
-  [event addEntriesFromDictionary:[self commonOCUnitEventInfoFromTestableExecutionInfo:testableExecutionInfo]];
+  [event addEntriesFromDictionary:[self commonOCUnitEventInfoFromTestableExecutionInfo:testableExecutionInfo action:action]];
   return event;
 }
 
@@ -387,10 +391,11 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
 {
   return [[^(NSArray *reporters){
     PublishEventToReporters(reporters,
-                            [[self class] eventForBeginOCUnitFromTestableExecutionInfo:testableExecutionInfo]);
+                            [[self class] eventForBeginOCUnitFromTestableExecutionInfo:testableExecutionInfo action:self]);
 
     PublishEventToReporters(reporters,
                             [[self class] eventForEndOCUnitFromTestableExecutionInfo:testableExecutionInfo
+                                                                              action:self
                                                                            succeeded:succeeded
                                                                        failureReason:error]);
     return succeeded;
@@ -435,14 +440,15 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
     }
 
     PublishEventToReporters(reporters,
-                            [[self class] eventForBeginOCUnitFromTestableExecutionInfo:testableExecutionInfo]);
+                            [[self class] eventForBeginOCUnitFromTestableExecutionInfo:testableExecutionInfo action:self]);
 
     BOOL succeeded = [testRunner runTests];
 
     PublishEventToReporters(reporters,
                             [[self class] eventForEndOCUnitFromTestableExecutionInfo:testableExecutionInfo
-                                                                   succeeded:succeeded
-                                                               failureReason:nil]);
+                                                                              action:self
+                                                                           succeeded:succeeded
+                                                                       failureReason:nil]);
 
     return succeeded;
   } copy] autorelease];
@@ -649,7 +655,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
 {
   for (TestableExecutionInfo *testableExecutionInfo in testableExecutionInfos) {
     PublishEventToReporters(options.reporters,
-                            [[self class] eventForBeginOCUnitFromTestableExecutionInfo:testableExecutionInfo]);
+                            [[self class] eventForBeginOCUnitFromTestableExecutionInfo:testableExecutionInfo action:self]);
 
     for (NSString *testCase in testableExecutionInfo.testCases) {
       NSArray *components = [testCase componentsSeparatedByString:@"/"];
@@ -675,6 +681,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
 
     PublishEventToReporters(options.reporters,
                             [[self class] eventForEndOCUnitFromTestableExecutionInfo:testableExecutionInfo
+                                                                              action:self
                                                                            succeeded:YES
                                                                        failureReason:nil]);
   }
