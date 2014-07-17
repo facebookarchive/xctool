@@ -64,8 +64,10 @@
   }
 
   if (bundleExists) {
-    NSPipe *outputPipe = [NSPipe pipe];
+    NSString *output = nil;
     @autoreleasepool {
+      NSPipe *outputPipe = [NSPipe pipe];
+
       NSTask *task = [self otestTaskWithTestBundle:testBundlePath];
 
       // Don't let STDERR pass through.  This silences the warning message that
@@ -76,9 +78,11 @@
       LaunchTaskAndFeedOuputLinesToBlock(task,
                                          @"running otest/xctest on test bundle",
                                          outputLineBlock);
+
+      NSData *outputData = [[outputPipe fileHandleForReading] readDataToEndOfFile];
+      output = [[NSString alloc] initWithData:outputData encoding:NSUTF8StringEncoding];
     }
-    NSData *outputData = [[outputPipe fileHandleForReading] readDataToEndOfFile];
-    *otherErrors = [[[NSString alloc] initWithData:outputData encoding:NSUTF8StringEncoding] autorelease];
+    *otherErrors = [output autorelease];
   } else {
     *startupError = [NSString stringWithFormat:@"Test bundle not found at: %@", testBundlePath];
   }
