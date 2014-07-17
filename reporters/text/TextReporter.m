@@ -601,6 +601,10 @@ static NSString *abbreviatePath(NSString *string) {
     [attributes addObject:event[kReporter_BeginOCUnit_SDKNameKey]];
   }
 
+  if (event[kReporter_BeginOCUnit_DeviceNameKey]) {
+    [attributes addObject:event[kReporter_BeginOCUnit_DeviceNameKey]];
+  }
+
   if (event[kReporter_BeginOCUnit_TestTypeKey]) {
     [attributes addObject:event[kReporter_BeginOCUnit_TestTypeKey]];
   }
