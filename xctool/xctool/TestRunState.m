@@ -259,17 +259,15 @@
     return @[];
   }
 
-  NSError *error = nil;
-  NSArray *allContents = [fm contentsOfDirectoryAtPath:diagnosticReportsPath
-                                                 error:&error];
-  NSAssert(error == nil, @"Failed getting contents of directory: %@", error);
-
   NSMutableArray *matchingContents = [NSMutableArray array];
-
-  for (NSString *path in allContents) {
-    if ([[path pathExtension] isEqualToString:@"crash"]) {
-      NSString *fullPath = [[@"~/Library/Logs/DiagnosticReports" stringByAppendingPathComponent:path] stringByStandardizingPath];
-      [matchingContents addObject:fullPath];
+  NSDirectoryEnumerator *enumerator = [fm enumeratorAtURL:[NSURL fileURLWithPath:diagnosticReportsPath]
+                               includingPropertiesForKeys:nil
+                                                  options:NSDirectoryEnumerationSkipsHiddenFiles
+                                             errorHandler:nil];
+  NSURL *fileUrl = nil;
+  while ((fileUrl = [enumerator nextObject])) {
+    if ([[fileUrl pathExtension] isEqualToString:@"crash"]) {
+      [matchingContents addObject:fileUrl];
     }
   }
 
@@ -280,12 +278,15 @@
 {
   NSMutableString *buffer = [NSMutableString string];
 
-  for (NSString *path in reports) {
-    NSString *crashReportText = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+  for (NSURL *fileURL in reports) {
+    NSString *crashReportText = [NSString stringWithContentsOfURL:fileURL encoding:NSUTF8StringEncoding error:nil];
     // Throw out everything below "Binary Images" - we mostly just care about the thread backtraces.
-    NSString *minimalCrashReportText = [crashReportText substringToIndex:[crashReportText rangeOfString:@"\nBinary Images:"].location];
-
-    [buffer appendFormat:@"CRASH REPORT: %@\n\n", [path lastPathComponent]];
+    NSRange range = [crashReportText rangeOfString:@"\nBinary Images:"];
+    if (!crashReportText || range.location == NSNotFound) {
+      continue;
+    }
+    NSString *minimalCrashReportText = [crashReportText substringToIndex:range.location];
+    [buffer appendFormat:@"CRASH REPORT: %@\n\n", [fileURL lastPathComponent]];
     [buffer appendString:minimalCrashReportText];
     [buffer appendString:@"\n"];
   }
