@@ -58,7 +58,7 @@
                         @"DYLD_INSERT_LIBRARIES" : [libraries componentsJoinedByString:@":"],
                         @"DYLD_FRAMEWORK_PATH" : _buildSettings[Xcode_BUILT_PRODUCTS_DIR],
                         @"DYLD_LIBRARY_PATH" : _buildSettings[Xcode_BUILT_PRODUCTS_DIR],
-                        @"DYLD_FALLBACK_FRAMEWORK_PATH" : [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"],
+                        @"DYLD_FALLBACK_FRAMEWORK_PATH" : OSXTestFrameworkDirectories(),
                         @"NSUnbufferedIO" : @"YES",
                         @"OBJC_DISABLE_GC" : !_garbageCollection ? @"YES" : @"NO",
                         @"XCInjectBundle" : [_buildSettings[Xcode_BUILT_PRODUCTS_DIR] stringByAppendingPathComponent:_buildSettings[Xcode_FULL_PRODUCT_NAME]],

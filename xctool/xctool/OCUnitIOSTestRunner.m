@@ -24,7 +24,7 @@
 - (void)updateSimulatorInfo
 {
   if (!_simulatorInfo) {
-    self.simulatorInfo = [[SimulatorInfo alloc] init];
+    self.simulatorInfo = [SimulatorInfo infoForCurrentVersionOfXcode];
   }
   _simulatorInfo.cpuType = _cpuType;
   _simulatorInfo.deviceName = _deviceName;
@@ -36,6 +36,14 @@
 {
   [self updateSimulatorInfo];
   return _simulatorInfo;
+}
+
+- (void)dealloc
+{
+  [_deviceName release];
+  [_OSVersion release];
+  [_simulatorInfo release];
+  [super dealloc];
 }
 
 @end

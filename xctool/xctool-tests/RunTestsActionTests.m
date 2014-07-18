@@ -41,8 +41,8 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
   }
 
   for (int i=0; i<[output1Array count]; i++) {
-    NSMutableDictionary *dict1 = [[NSJSONSerialization JSONObjectWithData:[output1Array[i] dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil] mutableCopy];
-    NSMutableDictionary *dict2 = [[NSJSONSerialization JSONObjectWithData:[output2Array[i] dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil] mutableCopy];
+    NSMutableDictionary *dict1 = [[[NSJSONSerialization JSONObjectWithData:[output1Array[i] dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil] mutableCopy] autorelease];
+    NSMutableDictionary *dict2 = [[[NSJSONSerialization JSONObjectWithData:[output2Array[i] dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil] mutableCopy] autorelease];
     for (NSString *key in keys) {
       [dict1 removeObjectForKey:key];
       [dict2 removeObjectForKey:key];

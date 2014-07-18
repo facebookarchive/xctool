@@ -83,7 +83,7 @@
   // Here's what happens -- As soon as we dlopen() the test bundle, it will also
   // trigger the linker to load SenTestingKit.framework or XCTest.framework since
   // those are linked by the test bundle.  And, as soon as the testing framework
-  // loads, the class initializer '+[SenTestProbe initialize]' is triggered.  If
+  // loads, the class initializer '+[SenTestSuite initialize]' is triggered.  If
   // the initializer sees that the 'SenTest' preference is set, it goes ahead
   // and runs tests.
   //
@@ -102,20 +102,20 @@
   [[NSBundle allFrameworks] makeObjectsPerformSelector:@selector(principalClass)];
 
   XTApplySenIsSuperclassOfClassPerformanceFix();
-  ApplyDuplicateTestNameFix([framework objectForKey:kTestingFrameworkTestProbeClassName]);
+  ApplyDuplicateTestNameFix([framework objectForKey:kTestingFrameworkTestProbeClassName],
+                            [framework objectForKey:kTestingFrameworkTestSuiteClassName]);
 
-  Class testProbeClass = NSClassFromString([framework objectForKey:kTestingFrameworkTestProbeClassName]);
-  NSCAssert(testProbeClass, @"Should have *TestProbe class");
+  Class testSuiteClass = NSClassFromString([framework objectForKey:kTestingFrameworkTestSuiteClassName]);
+  NSCAssert(testSuiteClass, @"Should have *TestSuite class");
 
-  // By setting `-(XC|Sen)Test All`, we'll make `-[(XC|Sen)TestProbe specifiedTestSuite]`
+  // By setting `-(XC|Sen)Test All`, we'll make `-[(XC|Sen)TestSuite allTests]`
   // return all tests.
   [[NSUserDefaults standardUserDefaults] setObject:@"All"
                                             forKey:[framework objectForKey:kTestingFrameworkFilterTestArgsKey]];
-  id specifiedTestSuite = [testProbeClass performSelector:@selector(specifiedTestSuite)];
-  NSCAssert(specifiedTestSuite, @"Should have gotten a test suite from specifiedTestSuite");
+  id allTestsSuite = [testSuiteClass performSelector:@selector(allTests)];
+  NSCAssert(allTestsSuite, @"Should have gotten a test suite from allTests");
 
-
-  NSArray *fullTestNames = [self testNamesFromSuite:specifiedTestSuite];
+  NSArray *fullTestNames = [self testNamesFromSuite:allTestsSuite];
   NSMutableArray *testNames = [NSMutableArray array];
 
   for (NSString *fullTestName in fullTestNames) {

@@ -8,6 +8,7 @@
 
 #import "SomeTests.h"
 #import <UIKit/UIKit.h>
+#include <execinfo.h>
 
 @implementation SomeTests
 

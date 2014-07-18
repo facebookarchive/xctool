@@ -15,6 +15,9 @@
 //
 
 #import "SimulatorWrapper.h"
+#import "SimulatorWrapperInternal.h"
+#import "SimulatorWrapperXcode5.h"
+#import "SimulatorWrapperXcode6.h"
 
 #import "DTiPhoneSimulatorRemoteClient.h"
 #import "LineReader.h"
@@ -24,7 +27,13 @@
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
 
+static const NSString * kOtestShimStdoutFilePath = @"OTEST_SHIM_STDOUT_FILE";
+static const NSString * kOtestShimStderrFilePath __unused = @"OTEST_SHIM_STDERR_FILE";
+
 @implementation SimulatorWrapper
+
+#pragma mark -
+#pragma mark Internal
 
 + (DTiPhoneSimulatorSessionConfig *)sessionConfigForRunningTestsOnSimulator:(SimulatorInfo *)simInfo
                                                       applicationLaunchArgs:(NSArray *)launchArgs
@@ -37,18 +46,22 @@
 
   DTiPhoneSimulatorSystemRoot *systemRoot = [simInfo systemRootForSimulatedSdk];
 
-  DTiPhoneSimulatorApplicationSpecifier *appSpec = [DTiPhoneSimulatorApplicationSpecifier specifierWithApplicationPath:testHostAppPath];
+  DTiPhoneSimulatorApplicationSpecifier *appSpec =
+  [DTiPhoneSimulatorApplicationSpecifier specifierWithApplicationPath:testHostAppPath];
+
+  NSMutableDictionary *launchEnvironmentEdited = [[launchEnvironment mutableCopy] autorelease];
+  launchEnvironmentEdited[kOtestShimStdoutFilePath] = outputPath;
 
   DTiPhoneSimulatorSessionConfig *sessionConfig = [[[DTiPhoneSimulatorSessionConfig alloc] init] autorelease];
   [sessionConfig setApplicationToSimulateOnStart:appSpec];
-  [sessionConfig setSimulatedSystemRoot:systemRoot];
-  [sessionConfig setSimulatedDeviceFamily:[simInfo simulatedDeviceFamily]];
-  [sessionConfig setSimulatedApplicationShouldWaitForDebugger:NO];
   [sessionConfig setSimulatedApplicationLaunchArgs:launchArgs];
-  [sessionConfig setSimulatedDeviceInfoName:[simInfo simulatedDeviceInfoName]];
+  [sessionConfig setSimulatedApplicationLaunchEnvironment:launchEnvironmentEdited];
+  [sessionConfig setSimulatedApplicationShouldWaitForDebugger:NO];
   [sessionConfig setSimulatedArchitecture:[simInfo simulatedArchitecture]];
-  [sessionConfig setSimulatedApplicationLaunchEnvironment:launchEnvironment];
-  [sessionConfig setSimulatedApplicationStdOutPath:outputPath];
+  [sessionConfig setSimulatedDeviceFamily:[simInfo simulatedDeviceFamily]];
+  [sessionConfig setSimulatedDeviceInfoName:[simInfo simulatedDeviceInfoName]];
+  [sessionConfig setSimulatedSystemRoot:systemRoot];
+  [sessionConfig setLocalizedClientName:@"xctool"];
 
   // Don't let anything from STDERR get in our stream.  Normally, once
   // otest-shim gets loaded, we don't have to worry about whatever is coming
@@ -60,50 +73,29 @@
   // https://github.com/facebook/xctool/issues/224#issuecomment-29288004
   [sessionConfig setSimulatedApplicationStdErrPath:@"/dev/null"];
 
-  [sessionConfig setLocalizedClientName:@"xctool"];
-
   return sessionConfig;
 }
 
-+ (BOOL)runMobileInstallationHelperWithArguments:(NSArray *)arguments simulatorInfo:(SimulatorInfo *)simInfo error:(NSError **)error
+#pragma mark -
+#pragma mark Helpers
+
++ (BOOL)isXcode6OrHigher
 {
-  DTiPhoneSimulatorSystemRoot *systemRoot = [simInfo systemRootForSimulatedSdk];
-
-  DTiPhoneSimulatorApplicationSpecifier *appSpec = [DTiPhoneSimulatorApplicationSpecifier specifierWithApplicationPath:
-                                                    [XCToolLibExecPath() stringByAppendingPathComponent:@"mobile-installation-helper.app"]];
-  DTiPhoneSimulatorSessionConfig *sessionConfig = [[[DTiPhoneSimulatorSessionConfig alloc] init] autorelease];
-  [sessionConfig setApplicationToSimulateOnStart:appSpec];
-  [sessionConfig setSimulatedSystemRoot:systemRoot];
-  [sessionConfig setSimulatedDeviceFamily:[simInfo simulatedDeviceFamily]];
-  [sessionConfig setSimulatedApplicationShouldWaitForDebugger:NO];
-  [sessionConfig setLocalizedClientName:@"xctool"];
-  [sessionConfig setSimulatedApplicationLaunchArgs:arguments];
-  [sessionConfig setSimulatedApplicationLaunchEnvironment:@{}];
-  [sessionConfig setSimulatedDeviceInfoName:[simInfo simulatedDeviceInfoName]];
-
-  SimulatorLauncher *launcher = [[[SimulatorLauncher alloc] initWithSessionConfig:sessionConfig
-                                                                       deviceName:[simInfo simulatedDeviceInfoName]] autorelease];
-
-  BOOL simStartedSuccessfully = [launcher launchAndWaitForExit];
-  if (!simStartedSuccessfully) {
-    *error = launcher.launchError;
-  }
-
-  return simStartedSuccessfully;
+  return NSClassFromString(@"SimDevice") != nil;
 }
 
-/**
- * Use the DTiPhoneSimulatorRemoteClient framework to start the app in the sim,
- * inject otest-shim into the app as it starts, and feed line-by-line output to
- * the `feedOutputToBlock`.
- *
- * @param testHostAppPath Path to the .app
- * @param feedOutputToBlock The block is called once for every line of output
- * @param testsSucceeded If all tests ran and passed, this will be set to YES.
- * @param infraSucceeded If we succeeded in launching the app and running the
- *   the tests, this will be set to YES.  Note that this will be YES even if
- *   some tests failed.
- */
++ (Class)classBasedOnCurrentVersionOfXcode
+{
+  if ([self isXcode6OrHigher]) {
+    return [SimulatorWrapperXcode6 class];
+  } else {
+    return [SimulatorWrapperXcode5 class];
+  }
+}
+
+#pragma mark -
+#pragma mark Main Methods
+
 + (void)runHostAppTests:(NSString *)testHostAppPath
           simulatorInfo:(SimulatorInfo *)simInfo
           appLaunchArgs:(NSArray *)launchArgs
@@ -118,10 +110,11 @@
   LineReader *reader = [[[LineReader alloc] initWithFileHandle:outputHandle] autorelease];
   reader.didReadLineBlock = feedOutputToBlock;
 
-  DTiPhoneSimulatorSessionConfig *sessionConfig = [self sessionConfigForRunningTestsOnSimulator:simInfo
-                                                                          applicationLaunchArgs:launchArgs
-                                                                   applicationLaunchEnvironment:launchEnvironment
-                                                                                     outputPath:outputPath];
+  DTiPhoneSimulatorSessionConfig *sessionConfig =
+    [[self classBasedOnCurrentVersionOfXcode] sessionConfigForRunningTestsOnSimulator:simInfo
+                                                                applicationLaunchArgs:launchArgs
+                                                         applicationLaunchEnvironment:launchEnvironment
+                                                                           outputPath:outputPath];
 
   SimulatorLauncher *launcher = [[[SimulatorLauncher alloc] initWithSessionConfig:sessionConfig
                                                                        deviceName:[simInfo simulatedDeviceInfoName]] autorelease];
@@ -129,7 +122,7 @@
   [reader startReading];
 
   BOOL simStartedSuccessfully = [launcher launchAndWaitForExit];
-  if (!simStartedSuccessfully) {
+  if (!simStartedSuccessfully && error) {
     *error = launcher.launchError;
   }
 
@@ -152,27 +145,23 @@
                            REPORTER_MESSAGE_INFO,
                            @"Uninstalling '%@' to get a fresh install ...",
                            testHostBundleID);
-  NSError *localError = nil;
-  BOOL uninstalled = [self runMobileInstallationHelperWithArguments:@[@"uninstall", testHostBundleID]
-                                                      simulatorInfo:simInfo
-                                                              error:&localError];
+
+  BOOL uninstalled = [[self classBasedOnCurrentVersionOfXcode] uninstallTestHostBundleID:testHostBundleID
+                                                                           simulatorInfo:simInfo
+                                                                               reporters:reporters
+                                                                                   error:error];
   if (uninstalled) {
     ReportStatusMessageEnd(reporters,
                            REPORTER_MESSAGE_INFO,
                            @"Uninstalled '%@' to get a fresh install.",
                            testHostBundleID);
-    return YES;
   } else {
     ReportStatusMessageEnd(reporters,
                            REPORTER_MESSAGE_WARNING,
                            @"Tried to uninstall the test host app '%@' but failed.",
                            testHostBundleID);
-    *error = [NSString stringWithFormat:
-              @"Failed to uninstall the test host app '%@' "
-              @"before running tests: %@",
-              testHostBundleID, localError.localizedDescription ?: @"Failed for unknown reason."];
-    return NO;
   }
+  return uninstalled;
 }
 
 + (BOOL)installTestHostBundleID:(NSString *)testHostBundleID
@@ -185,27 +174,24 @@
                            REPORTER_MESSAGE_INFO,
                            @"Installing '%@' ...",
                            testHostBundleID);
-  NSError *localError = nil;
-  BOOL installed = [self runMobileInstallationHelperWithArguments:@[@"install", testHostBundlePath,]
-                                                    simulatorInfo:simInfo
-                                                            error:&localError];
+
+  BOOL installed = [[self classBasedOnCurrentVersionOfXcode] installTestHostBundleID:testHostBundleID
+                                                                      fromBundlePath:testHostBundlePath
+                                                                       simulatorInfo:simInfo
+                                                                           reporters:reporters
+                                                                               error:error];
   if (installed) {
     ReportStatusMessageEnd(reporters,
                            REPORTER_MESSAGE_INFO,
                            @"Installed '%@'.",
                            testHostBundleID);
-    return YES;
   } else {
     ReportStatusMessageEnd(reporters,
                            REPORTER_MESSAGE_WARNING,
                            @"Tried to install the test host app '%@' but failed.",
                            testHostBundleID);
-    *error = [NSString stringWithFormat:
-              @"Failed to install the test host app '%@': %@",
-              testHostBundleID, localError.localizedDescription ?: @"Failed for unknown reason."];
-
-    return NO;
   }
+  return installed;
 }
 
 @end

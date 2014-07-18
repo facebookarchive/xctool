@@ -115,16 +115,20 @@ NSString *AbsoluteExecutablePath() {
 
 NSString *XCToolBasePath(void)
 {
-  if (IsRunningUnderTest()) {
-    // The Xcode scheme is configured to set XT_INSTALL_ROOT when running
-    // tests.
-    NSString *installRoot = [[NSProcessInfo processInfo] environment][@"XT_INSTALL_ROOT"];
-    NSCAssert(installRoot, @"XT_INSTALL_ROOT is not set.");
-    return installRoot;
-  } else {
-    return [[AbsoluteExecutablePath() stringByDeletingLastPathComponent]
-            stringByDeletingLastPathComponent];
-  }
+  static NSString *path;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    if (IsRunningUnderTest()) {
+      // The Xcode scheme is configured to set XT_INSTALL_ROOT when running
+      // tests.
+      NSString *installRoot = [[NSProcessInfo processInfo] environment][@"XT_INSTALL_ROOT"];
+      NSCAssert(installRoot, @"XT_INSTALL_ROOT is not set.");
+      path = [installRoot retain];
+    } else {
+      path = [[[AbsoluteExecutablePath() stringByDeletingLastPathComponent] stringByDeletingLastPathComponent] retain];
+    }
+  });
+  return path;
 }
 
 NSString *XCToolLibPath(void)
@@ -244,6 +248,7 @@ static void AddSDKToDictionary(NSMutableDictionary *dict,
                              intoString:&sdkWithoutVersion];
   dict[sdkWithoutVersion] = versionDict;
   dict[sdk] = versionDict;
+  [sdkCharacterSet release];
 }
 
 NSDictionary *GetAvailableSDKsInfo()
@@ -661,22 +666,59 @@ NSString *SystemPaths()
   return [[pathLines componentsSeparatedByString:@"\n"] componentsJoinedByString:@":"];
 }
 
-int XcodebuildVersion()
+/**
+ SenTesting.framework location:
+ - Xcode 5, Xcode 6: Contents/Developer/Library/Frameworks directory
+ XCTest.framework location:
+ - Xcode 5: Contents/Developer/Library/Frameworks directory
+ - Xcode 6: Contents/Developer/Platforms/{iPhoneSimulator.platform/MacOSX}/Developer/Library/Frameworks
+ */
+NSString *IOSTestFrameworkDirectories()
 {
-  NSString *xcodePlistPath = [XcodeDeveloperDirPathViaForcedConcreteTask(YES)
-                              stringByAppendingPathComponent:@"../Info.plist"];
-  NSCAssert([[NSFileManager defaultManager] fileExistsAtPath:xcodePlistPath isDirectory:NULL],
-            @"Cannot find Xcode's plist at: %@", xcodePlistPath);
+  NSString *directories = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"];
+  if (ToolchainIsXcode6OrBetter()) {
+    directories = [directories stringByAppendingFormat:@":%@", [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks"]];
+  }
+  return directories;
+}
 
-  NSDictionary *infoDict = [NSDictionary dictionaryWithContentsOfFile:xcodePlistPath];
-  NSCAssert(infoDict[@"DTXcode"], @"Cannot find the 'DTXcode' key in Xcode's Info.plist.");
+NSString *OSXTestFrameworkDirectories()
+{
+  NSString *directories = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"];
+  if (ToolchainIsXcode6OrBetter()) {
+    directories = [directories stringByAppendingFormat:@":%@", [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/MacOSX.platform/Developer/Library/Frameworks"]];
+  }
+  return directories;
+}
 
-  return [infoDict[@"DTXcode"] intValue];
+NSString *XcodebuildVersion()
+{
+  static NSString *DTXcode;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    NSString *xcodePlistPath = [XcodeDeveloperDirPathViaForcedConcreteTask(YES)
+                                stringByAppendingPathComponent:@"../Info.plist"];
+    NSCAssert([[NSFileManager defaultManager] fileExistsAtPath:xcodePlistPath isDirectory:NULL],
+              @"Cannot find Xcode's plist at: %@", xcodePlistPath);
+
+    NSDictionary *infoDict = [NSDictionary dictionaryWithContentsOfFile:xcodePlistPath];
+    NSCAssert(infoDict[@"DTXcode"], @"Cannot find the 'DTXcode' key in Xcode's Info.plist.");
+
+    DTXcode = [infoDict[@"DTXcode"] retain];
+  });
+  return DTXcode;
 }
 
 BOOL ToolchainIsXcode5OrBetter(void)
 {
-  return (XcodebuildVersion() >= 0500);
+  NSComparisonResult result = [XcodebuildVersion() compare:@"0500"];
+  return result == NSOrderedSame || result == NSOrderedDescending;
+}
+
+BOOL ToolchainIsXcode6OrBetter(void)
+{
+  NSComparisonResult result = [XcodebuildVersion() compare:@"0600"];
+  return result == NSOrderedSame || result == NSOrderedDescending;
 }
 
 NSString *MakeTemporaryDirectory(NSString *nameTemplate)

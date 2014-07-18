@@ -16,6 +16,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class SimulatorInfo;
+
 void KillSimulatorJobs();
-BOOL RemoveSimulatorContentAndSettings(NSString *simulatorVersion, cpu_type_t cpuType, NSString **removedPath, NSString **errorMessage);
+BOOL RemoveSimulatorContentAndSettings(SimulatorInfo *simulatorInfo, NSString **removedPath, NSString **errorMessage);
 

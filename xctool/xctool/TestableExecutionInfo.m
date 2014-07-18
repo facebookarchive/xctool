@@ -239,4 +239,16 @@
   return result;
 }
 
+- (void)dealloc
+{
+  [_testable release];
+  [_buildSettings release];
+  [_buildSettingsError release];
+  [_testCases release];
+  [_testCasesQueryError release];
+  [_expandedArguments release];
+  [_expandedEnvironment release];
+  [super dealloc];
+}
+
 @end

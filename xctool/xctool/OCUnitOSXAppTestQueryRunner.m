@@ -34,7 +34,7 @@
                          @"OtestQueryBundlePath" : [self bundlePath],
                          @"DYLD_FRAMEWORK_PATH" : builtProductsDir,
                          @"DYLD_LIBRARY_PATH" : builtProductsDir,
-                         @"DYLD_FALLBACK_FRAMEWORK_PATH" : [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"],
+                         @"DYLD_FALLBACK_FRAMEWORK_PATH" : OSXTestFrameworkDirectories(),
                          @"NSUnbufferedIO" : @"YES",
                          @"OBJC_DISABLE_GC" : @"YES",
                          @"__CFPREFERENCES_AVOID_DAEMON" : @"YES",

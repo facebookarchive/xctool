@@ -24,15 +24,15 @@
   NSTaskTerminationReason _pretendTerminationReason;
 }
 
-@property (nonatomic, copy) NSString *currentDirectoryPath;
-@property (nonatomic, copy) NSString *launchPath;
-@property (nonatomic, copy) NSArray *arguments;
-@property (nonatomic, copy) NSDictionary *environment;
-@property (nonatomic, retain) id standardOutput;
-@property (nonatomic, retain) id standardError;
-@property (nonatomic, assign) int terminationStatus;
-@property (nonatomic, assign) NSTaskTerminationReason terminationReason;
-@property (nonatomic, assign) BOOL isRunning;
+@property (copy) NSString *currentDirectoryPath;
+@property (copy) NSString *launchPath;
+@property (copy) NSArray *arguments;
+@property (copy) NSDictionary *environment;
+@property (retain) id standardOutput;
+@property (retain) id standardError;
+@property (assign, readonly) int terminationStatus;
+@property (assign) NSTaskTerminationReason terminationReason;
+@property (assign) BOOL isRunning;
 
 /**
  * If YES (default), this task will be included in the list of launched

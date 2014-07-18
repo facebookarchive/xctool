@@ -16,6 +16,8 @@
 
 #import <UIKit/UIKit.h>
 
+#if XCODE_VERSION < 0600
+
 // From MobileInstallation.framework
 int MobileInstallationUninstall(CFStringRef bundleID,
                                 CFDictionaryRef installationOptions,
@@ -62,6 +64,7 @@ int MobileInstallationInstall(CFStringRef bundlePath,
 }
 
 @end
+#endif
 
 int main(int argc, char *argv[])
 {

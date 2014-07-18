@@ -23,3 +23,5 @@ GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES
 // fatal error: file '.../foo.pch' has been modified since the
 // precompiled header '../foo.pch' was built
 GCC_PRECOMPILE_PREFIX_HEADER = NO
+
+GCC_PREPROCESSOR_DEFINITIONS = SENTEST_IGNORE_DEPRECATION_WARNING=YES

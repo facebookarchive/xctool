@@ -34,5 +34,6 @@
 - (id)initWithSessionConfig:(DTiPhoneSimulatorSessionConfig *)sessionConfig
                  deviceName:(NSString *)deviceName;
 - (BOOL)launchAndWaitForExit;
+- (BOOL)launchAndWaitForStart;
 
 @end

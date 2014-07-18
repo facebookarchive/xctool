@@ -84,16 +84,21 @@ BOOL IsRunningUnderTest();
  Returns the Xcode version, as read from DTXCode in:
  /Applications/Xcode.app/Contents/Info.plist
 
- Version will be 500 for Xcode 5.0, 501 for Xcode 5.0.1, or 460 for Xcode 4.6.
+ Version will be @"0600" for Xcode 6.0, @"0500" for Xcode 5.0, @"0501" for Xcode 5.0.1, or @"0460" for Xcode 4.6.
 
- @return int Xcode version
+ @return NSString Xcode version
  */
-int XcodebuildVersion();
+NSString *XcodebuildVersion();
 
 /**
  Returns YES if we're running with Xcode 5 or better.
  */
 BOOL ToolchainIsXcode5OrBetter(void);
+
+/**
+ Returns YES if we're running with Xcode 6 or better.
+ */
+BOOL ToolchainIsXcode6OrBetter(void);
 
 /**
  Launches a task that will invoke xcodebuild.  It will automatically feed
@@ -184,6 +189,16 @@ NSString *AbsoluteExecutablePath();
  * Returns the contents of `/etc/paths` in the form of `path1:path2:path3`.
  */
 NSString *SystemPaths();
+
+/**
+ * Returns absolute paths to directories with iOS test frameworks in the form of `path1:path2:path3`.
+ */
+NSString *IOSTestFrameworkDirectories();
+
+/**
+ * Returns absolute paths to directories with OS X test frameworks in the form of `path1:path2:path3`.
+ */
+NSString *OSXTestFrameworkDirectories();
 
 /**
  * Creates a temporary directory under NSTemporaryDirectory() using mkdtemp,

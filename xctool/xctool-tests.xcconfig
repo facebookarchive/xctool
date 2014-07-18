@@ -14,11 +14,17 @@
 // limitations under the License.
 //
 
-DEVELOPER_PRIVATE_FRAMEWORK_DIR = "$(DEVELOPER_DIR)"/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks
-SHARED_FRAMEWORKS_DIR = "$(DEVELOPER_DIR)"/../SharedFrameworks
+DEVELOPER_PRIVATE_FRAMEWORKS_DIR = $(DEVELOPER_DIR)/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks
+SHARED_FRAMEWORKS_DIR = $(DEVELOPER_DIR)/../SharedFrameworks
+PRIVATE_FRAMEWORKS_DIR = $(DEVELOPER_DIR)/Library/PrivateFrameworks
+OTHER_FRAMEWORKS_DIR = $(DEVELOPER_DIR)/../OtherFrameworks
+XCTOOL_VENDOR_DIR = $(SRCROOT)/../Vendor
 
-// xctool-tests will strongly link iPhoneSimulatorRemoteClient - we don't need
+// xctool-tests will strongly link DTiPhoneSimulatorRemoteClient - we don't need
 // the same dynamic loading magic that the main 'xctool' executable needs.
-OTHER_LDFLAGS = -F$(DEVELOPER_PRIVATE_FRAMEWORK_DIR) -F$(SHARED_FRAMEWORKS_DIR) -framework DVTiPhoneSimulatorRemoteClient -framework SimulatorHost -framework DVTFoundation -Wl,-rpath -Wl,$(DEVELOPER_PRIVATE_FRAMEWORK_DIR) -Wl,-rpath -Wl,"$(DEVELOPER_DIR)"/../OtherFrameworks -Wl,-rpath -Wl,$(SHARED_FRAMEWORKS_DIR)
+OTHER_LDFLAGS_0500 = -F$(SHARED_FRAMEWORKS_DIR) -F$(DEVELOPER_PRIVATE_FRAMEWORKS_DIR) -framework DVTFoundation -framework DVTiPhoneSimulatorRemoteClient -framework SimulatorHost -Wl,-rpath -Wl,$(SHARED_FRAMEWORKS_DIR) -Wl,-rpath -Wl,$(DEVELOPER_PRIVATE_FRAMEWORKS_DIR)
+OTHER_LDFLAGS_0600 = -F$(SHARED_FRAMEWORKS_DIR) -F$(PRIVATE_FRAMEWORKS_DIR) -framework DVTFoundation -framework DVTiPhoneSimulatorRemoteClient -framework CoreSimulator -Wl,-rpath -Wl,$(SHARED_FRAMEWORKS_DIR) -Wl,-rpath -Wl,$(PRIVATE_FRAMEWORKS_DIR)
 
-FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks" "$(SRCROOT)/../Vendor"
+OTHER_LDFLAGS = $(OTHER_LDFLAGS_$(XCODE_VERSION_MAJOR))
+
+GCC_PREPROCESSOR_DEFINITIONS = XCODE_VERSION=$(XCODE_VERSION_MAJOR) SENTEST_IGNORE_DEPRECATION_WARNING=YES

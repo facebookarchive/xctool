@@ -14,165 +14,102 @@
 // limitations under the License.
 //
 
-#import "SimulatorInfo.h"
+#import <Foundation/Foundation.h>
 
-#import "DTiPhoneSimulatorRemoteClient.h"
-#import "ISHDeviceInfo.h"
-#import "ISHDeviceVersions.h"
-#import "ISHSDKInfo.h"
-#import "XCToolUtil.h"
+#import "SimulatorInfoXcode5.h"
+#import "SimulatorInfoXcode6.h"
 #import "XcodeBuildSettings.h"
-
-static const NSInteger KProductTypeIphone = 1;
-static const NSInteger KProductTypeIpad = 2;
+#import "XCToolUtil.h"
 
 @implementation SimulatorInfo
 
-#pragma mark -
-#pragma mark Private methods
-
-+ (ISHSDKInfo *)sdkInfoForShortVersion:(NSString *)sdkVersion
++ (BOOL)isXcode6OrHigher
 {
-  ISHDeviceVersions *versions = [ISHDeviceVersions sharedInstance];
-  for (ISHSDKInfo *sdkInfo in [versions allSDKs]) {
-    if ([[sdkInfo shortVersionString] isEqualToString:sdkVersion]) {
-      return sdkInfo;
-    }
-  }
-  return nil;
+  static BOOL isXcode6OrHigher;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    isXcode6OrHigher = ToolchainIsXcode6OrBetter();
+  });
+  return isXcode6OrHigher;
 }
 
-- (NSString *)sdkVersion
++ (Class)classBasedOnCurrentVersionOfXcode
 {
-  if (self.OSVersion) {
-    if ([self.OSVersion isEqualTo:@"latest"]) {
-      return [[[ISHDeviceVersions sharedInstance] sdkFromSDKRoot:[[ISHDeviceVersions sharedInstance] latestSDKRoot]] shortVersionString];
-    } else {
-      return _OSVersion;
-    }
+  if ([self isXcode6OrHigher]) {
+    return [SimulatorInfoXcode6 class];
   } else {
-    ISHSDKInfo *sdkInfo = [[ISHDeviceVersions sharedInstance] sdkFromSDKRoot:_buildSettings[Xcode_SDKROOT]];
-    return [sdkInfo shortVersionString];
+    return [SimulatorInfoXcode5 class];
   }
 }
 
-- (NSString *)maxSdkVersionForSimulatedDevice
++ (SimulatorInfo *)infoForCurrentVersionOfXcode
 {
-  ISHDeviceVersions *versions = [ISHDeviceVersions sharedInstance];
-  ISHDeviceInfo *deviceInfo = [versions deviceInfoNamed:[self simulatedDeviceInfoName]];
-  ISHSDKInfo *maxSdk = nil;
-  for (ISHSDKInfo *sdkInfo in [versions allSDKs]) {
-    if (![deviceInfo supportsSDK:sdkInfo]) {
-      continue;
-    }
-    if ([sdkInfo version] > [maxSdk version]) {
-      maxSdk = sdkInfo;
-    }
-  }
-  return [maxSdk shortVersionString];
+  return [[[[self classBasedOnCurrentVersionOfXcode] alloc] init] autorelease];
 }
 
 #pragma mark -
-#pragma mark Public methods
+#pragma mark Redirect to available class
 
-- (NSNumber *)simulatedDeviceFamily
++ (NSArray *)availableDevices
 {
-  return @([_buildSettings[Xcode_TARGETED_DEVICE_FAMILY] integerValue]);
+  return [[self classBasedOnCurrentVersionOfXcode] availableDevices];
 }
 
-- (NSString *)simulatedDeviceInfoName
++ (NSString *)deviceNameForAlias:(NSString *)deviceAlias
 {
-  if (_deviceName) {
-    return _deviceName;
-  }
-
-  NSString *probableDeviceName;
-  switch ([[self simulatedDeviceFamily] integerValue]) {
-    case KProductTypeIphone:
-      probableDeviceName = @"iPhone";
-      break;
-
-    case KProductTypeIpad:
-      probableDeviceName = @"iPad";
-      break;
-  }
-
-  ISHSDKInfo *sdkInfo = [SimulatorInfo sdkInfoForShortVersion:[self sdkVersion]];
-  if (!sdkInfo) {
-    return probableDeviceName;
-  }
-
-  ISHDeviceVersions *versions = [ISHDeviceVersions sharedInstance];
-  ISHDeviceInfo *deviceInfo = [versions deviceInfoNamed:probableDeviceName];
-  while (deviceInfo && ![deviceInfo supportsSDK:sdkInfo]) {
-    deviceInfo = [deviceInfo newerEquivalent];
-    probableDeviceName = [deviceInfo displayName];
-  }
-
-  return probableDeviceName;
+  return [[self classBasedOnCurrentVersionOfXcode] deviceNameForAlias:deviceAlias];
 }
 
-- (NSString *)simulatedArchitecture
++ (BOOL)isDeviceAvailableWithAlias:(NSString *)deviceName
 {
-  switch (self.cpuType) {
-    case CPU_TYPE_I386:
-      return @"i386";
-
-    case CPU_TYPE_X86_64:
-      return @"x86_64";
-  }
-  return @"i386";
+  return [[self classBasedOnCurrentVersionOfXcode] isDeviceAvailableWithAlias:deviceName];
 }
 
-- (NSString *)simulatedSdkVersion
++ (BOOL)isSdkVersion:(NSString *)sdkVersion supportedByDevice:(NSString *)deviceName
 {
-  if (self.OSVersion) {
-    return [self sdkVersion];
-  } else {
-    return [self maxSdkVersionForSimulatedDevice];
-  }
+  return [[self classBasedOnCurrentVersionOfXcode] isSdkVersion:sdkVersion supportedByDevice:deviceName];
 }
 
-- (NSString *)simulatedSdkRootPath
++ (NSString *)sdkVersionForOSVersion:(NSString *)osVersion
 {
-  return [[self systemRootForSimulatedSdk] sdkRootPath];
+  return [[self classBasedOnCurrentVersionOfXcode] sdkVersionForOSVersion:osVersion];
 }
 
-- (NSString *)simulatedSdkShortVersion
++ (NSArray *)availableSdkVersions
 {
-  ISHSDKInfo *sdkInfo = [[ISHDeviceVersions sharedInstance] sdkFromSDKRoot:[self simulatedSdkRootPath]];
-  return [sdkInfo shortVersionString];
+  return [[self classBasedOnCurrentVersionOfXcode] availableSdkVersions];
 }
 
-- (DTiPhoneSimulatorSystemRoot *)systemRootForSimulatedSdk
++ (NSArray *)sdksSupportedByDevice:(NSString *)deviceName
 {
-  NSString *sdkVersion = [self simulatedSdkVersion];
-  DTiPhoneSimulatorSystemRoot *systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKVersion:sdkVersion];
-  if (systemRoot) {
-    return systemRoot;
-  }
-
-  ISHSDKInfo *sdkInfo = [SimulatorInfo sdkInfoForShortVersion:sdkVersion];
-  systemRoot = [DTiPhoneSimulatorSystemRoot rootWithSDKPath:[sdkInfo root]];
-  if (!systemRoot) {
-    NSArray *availableSdks = [[[ISHDeviceVersions sharedInstance] allSDKs] valueForKeyPath:@"shortVersionString"];
-    NSAssert(systemRoot != nil, @"Unable to instantiate DTiPhoneSimulatorSystemRoot for sdk version: %@. Available sdks: %@", sdkVersion, availableSdks);
-  }
-  return systemRoot;
+  return [[self classBasedOnCurrentVersionOfXcode] sdksSupportedByDevice:deviceName];
 }
+
++ (cpu_type_t)cpuTypeForDevice:(NSString *)deviceName
+{
+  return [[self classBasedOnCurrentVersionOfXcode] cpuTypeForDevice:deviceName];
+}
+
++ (NSString *)baseVersionForSDKShortVersion:(NSString *)shortVersionString
+{
+  return [[self classBasedOnCurrentVersionOfXcode] baseVersionForSDKShortVersion:shortVersionString];
+}
+
+#pragma mark -
+#pragma mark Common
 
 - (NSDictionary *)simulatorLaunchEnvironment
 {
   // Sometimes the TEST_HOST will be wrapped in double quotes.
-  NSString *testHostPath = [_buildSettings[Xcode_TEST_HOST] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
+  NSString *testHostPath = [self.buildSettings[Xcode_TEST_HOST] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
 
   NSString *ideBundleInjectionLibPath = @"/../../Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection";
-  NSString *testBundlePath = [NSString stringWithFormat:@"%@/%@", _buildSettings[Xcode_BUILT_PRODUCTS_DIR], _buildSettings[Xcode_FULL_PRODUCT_NAME]];
+  NSString *testBundlePath = [NSString stringWithFormat:@"%@/%@", self.buildSettings[Xcode_BUILT_PRODUCTS_DIR], self.buildSettings[Xcode_FULL_PRODUCT_NAME]];
 
   return @{
-    @"DYLD_FALLBACK_FRAMEWORK_PATH" : [[self simulatedSdkRootPath] stringByAppendingPathComponent:@"/Developer/Library/Frameworks"],
-    @"DYLD_FRAMEWORK_PATH" : _buildSettings[Xcode_TARGET_BUILD_DIR],
-    @"DYLD_LIBRARY_PATH" : _buildSettings[Xcode_TARGET_BUILD_DIR],
+    @"DYLD_FALLBACK_FRAMEWORK_PATH" : IOSTestFrameworkDirectories(),
+    @"DYLD_FRAMEWORK_PATH" : self.buildSettings[Xcode_TARGET_BUILD_DIR],
+    @"DYLD_LIBRARY_PATH" : self.buildSettings[Xcode_TARGET_BUILD_DIR],
     @"DYLD_INSERT_LIBRARIES" : [@[
       [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"],
       ideBundleInjectionLibPath,
@@ -180,84 +117,18 @@ static const NSInteger KProductTypeIpad = 2;
     @"NSUnbufferedIO" : @"YES",
     @"XCInjectBundle" : testBundlePath,
     @"XCInjectBundleInto" : testHostPath,
-  };
+    };
 }
 
 #pragma mark -
-#pragma mark Class Methods
+#pragma mark Should be implemented in subclass
 
-+ (NSArray *)availableDevices
-{
-  return [[ISHDeviceVersions sharedInstance] allDeviceNames];
-}
-
-+ (BOOL)isDeviceAvailableWithAlias:(NSString *)deviceName
-{
-  return [[ISHDeviceVersions sharedInstance] deviceInfoNamed:deviceName] != nil;
-}
-
-+ (ISHSDKInfo *)sdkWithVersion:(NSString *)sdkVersion
-{
-  __block ISHSDKInfo *sdkInfo = nil;
-  [[[ISHDeviceVersions sharedInstance] allSDKs] enumerateObjectsUsingBlock:^(ISHSDKInfo *currentSdkInfo, NSUInteger idx, BOOL *stop) {
-    if ([[currentSdkInfo shortVersionString] hasPrefix:sdkVersion]) {
-      sdkInfo = currentSdkInfo;
-      *stop = YES;
-    }
-  }];
-  return sdkInfo;
-}
-
-+ (BOOL)isSdkVersion:(NSString *)sdkVersion supportedByDevice:(NSString *)deviceName
-{
-  ISHDeviceInfo *deviceInfo = [[ISHDeviceVersions sharedInstance] deviceInfoNamed:deviceName];
-  ISHSDKInfo *sdkInfo = [self sdkWithVersion:sdkVersion];
-  return [deviceInfo supportsSDK:sdkInfo];
-}
-
-+ (NSString *)sdkVersionForOSVersion:(NSString *)osVersion
-{
-  ISHSDKInfo *sdkInfo = nil;
-  if ([osVersion isEqualToString:@"latest"]) {
-    sdkInfo = [[ISHDeviceVersions sharedInstance] sdkFromSDKRoot:[[ISHDeviceVersions sharedInstance] latestSDKRoot]];
-  } else {
-    sdkInfo = [self sdkWithVersion:osVersion];
-  }
-  return [sdkInfo shortVersionString];
-}
-
-+ (NSArray *)availableSdkVersions
-{
-  return [[[ISHDeviceVersions sharedInstance] allSDKs] valueForKeyPath:@"shortVersionString"];
-}
-
-+ (NSArray *)sdksSupportedByDevice:(NSString *)deviceName
-{
-  ISHDeviceInfo *deviceInfo = [[ISHDeviceVersions sharedInstance] deviceInfoNamed:deviceName];
-  NSMutableArray *supportedSdks = [NSMutableArray array];
-  for (ISHSDKInfo *sdk in [[ISHDeviceVersions sharedInstance] allSDKs]) {
-    if ([deviceInfo supportsSDK:sdk]) {
-      [supportedSdks addObject:sdk];
-    }
-  }
-  return supportedSdks;
-}
-
-+ (cpu_type_t)cpuTypeForDevice:(NSString *)deviceName
-{
-  ISHDeviceInfo *deviceInfo = [[ISHDeviceVersions sharedInstance] deviceInfoNamed:deviceName];
-  if ([[deviceInfo architecture] isEqualToString:@"x86_64"]) {
-    return CPU_TYPE_X86_64;
-  } else {
-    return CPU_TYPE_I386;
-  }
-}
-
-+ (NSString *)baseVersionForSDKShortVersion:(NSString *)shortVersionString
-{
-  ISHSDKInfo *sdkInfo = [self sdkInfoForShortVersion:shortVersionString];
-  DTiPhoneSimulatorSystemRoot *root = [DTiPhoneSimulatorSystemRoot rootWithSDKPath:sdkInfo.root];
-  return [root sdkVersion];
-}
+- (NSString *)simulatedArchitecture {assert(NO);};
+- (NSNumber *)simulatedDeviceFamily {assert(NO);};
+- (NSString *)simulatedDeviceInfoName {assert(NO);};
+- (NSString *)simulatedSdkVersion {assert(NO);};
+- (NSString *)simulatedSdkShortVersion {assert(NO);};
+- (NSString *)simulatedSdkRootPath {assert(NO);};
+- (DTiPhoneSimulatorSystemRoot *)systemRootForSimulatedSdk{assert(NO);};
 
 @end

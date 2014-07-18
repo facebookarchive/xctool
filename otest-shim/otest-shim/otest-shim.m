@@ -60,9 +60,7 @@
 
 @end
 
-static int __stdoutHandle;
 static FILE *__stdout;
-static int __stderrHandle;
 static FILE *__stderr;
 
 static BOOL __testIsRunning = NO;
@@ -551,7 +549,8 @@ static const char *DyldImageStateChangeHandler(enum dyld_image_states state,
                                    (IMP)SenTestCase_performTest);
 
       NSDictionary *frameworkInfo = FrameworkInfoForExtension(@"octest");
-      ApplyDuplicateTestNameFix([frameworkInfo objectForKey:kTestingFrameworkTestProbeClassName]);
+      ApplyDuplicateTestNameFix([frameworkInfo objectForKey:kTestingFrameworkTestProbeClassName],
+                                [frameworkInfo objectForKey:kTestingFrameworkTestSuiteClassName]);
       XTApplySenTestClassEnumeratorFix();
       XTApplySenTestCaseInvokeTestFix();
       XTApplySenIsSuperclassOfClassPerformanceFix();
@@ -577,7 +576,8 @@ static const char *DyldImageStateChangeHandler(enum dyld_image_states state,
                                    @selector(performTest:),
                                    (IMP)XCTestCase_performTest);
       NSDictionary *frameworkInfo = FrameworkInfoForExtension(@"xctest");
-      ApplyDuplicateTestNameFix([frameworkInfo objectForKey:kTestingFrameworkTestProbeClassName]);
+      ApplyDuplicateTestNameFix([frameworkInfo objectForKey:kTestingFrameworkTestProbeClassName],
+                                [frameworkInfo objectForKey:kTestingFrameworkTestSuiteClassName]);
     }
   }
 
@@ -586,10 +586,21 @@ static const char *DyldImageStateChangeHandler(enum dyld_image_states state,
 
 __attribute__((constructor)) static void EntryPoint()
 {
-  __stdoutHandle = dup(STDOUT_FILENO);
-  __stdout = fdopen(__stdoutHandle, "w");
-  __stderrHandle = dup(STDERR_FILENO);
-  __stderr = fdopen(__stderrHandle, "w");
+  const char *stdoutFileKey = "OTEST_SHIM_STDOUT_FILE";
+  if (getenv(stdoutFileKey)) {
+    __stdout = fopen(getenv(stdoutFileKey), "w");
+  } else {
+    int stdoutHandle = dup(STDOUT_FILENO);
+    __stdout = fdopen(stdoutHandle, "w");
+  }
+
+  const char *stderrFileKey = "OTEST_SHIM_STDERR_FILE";
+  if (getenv(stderrFileKey)) {
+    __stderr = fopen(getenv(stderrFileKey), "w");
+  } else {
+    int stderrHandle = dup(STDERR_FILENO);
+    __stderr = fdopen(stderrHandle, "w");
+  }
 
   // We need to swizzle SenTestLog (part of SenTestingKit), but the test bundle
   // which links SenTestingKit hasn't been loaded yet.  Let's register to get

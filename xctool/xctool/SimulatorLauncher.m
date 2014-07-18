@@ -91,6 +91,21 @@ static BOOL __didLoadAllPlatforms = NO;
   return _didStart;
 }
 
+- (BOOL)launchAndWaitForStart
+{
+  NSError *error = nil;
+  if (![_session requestStartWithConfig:[_session sessionConfig] timeout:30 error:&error]) {
+    self.launchError = error;
+    return NO;
+  }
+
+  while (!_didStart && !_didFailToStart) {
+    CFRunLoopRun();
+  }
+
+  return _didStart;
+}
+
 - (void)session:(DTiPhoneSimulatorSession *)session didEndWithError:(NSError *)error
 {
   if (error) {

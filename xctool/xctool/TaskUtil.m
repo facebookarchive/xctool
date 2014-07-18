@@ -419,7 +419,11 @@ NSTask *CreateTaskForSimulatorExecutable(cpu_type_t cpuType,
 
   NSTask *task = CreateTaskInSameProcessGroup();
 
-  [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/usr/bin/sim"]];
+  if (ToolchainIsXcode6OrBetter()) {
+    [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/usr/bin/sim"]];
+  } else {
+    [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/usr/bin/sim"]];
+  }
   [task setArguments:taskArgs];
   [task setEnvironment:taskEnv];
 

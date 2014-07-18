@@ -34,7 +34,8 @@
                                             // The test bundle that we want to query from, as loaded by otest-query-lib-ios.dylib.
                                             @"OtestQueryBundlePath" : [self bundlePath],
                                             @"__CFPREFERENCES_AVOID_DAEMON" : @"YES",
-                                            });
+                                            @"DYLD_FALLBACK_FRAMEWORK_PATH" : IOSTestFrameworkDirectories()
+                                           });
 }
 
 @end

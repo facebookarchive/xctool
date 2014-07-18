@@ -18,6 +18,11 @@
 
 #import <launch.h>
 
+#import "SimDevice.h"
+#import "SimulatorInfo.h"
+#import "SimulatorInfoXcode6.h"
+#import "XCToolUtil.h"
+
 static void GetJobsIterator(const launch_data_t launch_data, const char *key, void *context) {
   void (^block)(const launch_data_t, const char *) = context;
   block(launch_data, key);
@@ -92,7 +97,7 @@ void KillSimulatorJobs()
   }
 }
 
-BOOL RemoveSimulatorContentAndSettings(NSString *simulatorVersion, cpu_type_t cpuType, NSString **removedPath, NSString **errorMessage)
+BOOL RemoveSimulatorContentAndSettingsFolder(NSString *simulatorVersion, cpu_type_t cpuType, NSString **removedPath, NSString **errorMessage)
 {
   NSFileManager *fileManager = [NSFileManager defaultManager];
   NSString *simulatorDirectory = [@"~/Library/Application Support/iPhone Simulator" stringByExpandingTildeInPath];
@@ -115,4 +120,23 @@ BOOL RemoveSimulatorContentAndSettings(NSString *simulatorVersion, cpu_type_t cp
   }
 
   return YES;
+}
+
+BOOL RemoveSimulatorContentAndSettings(SimulatorInfo *simulatorInfo, NSString **removedPath, NSString **errorMessage)
+{
+  if ([simulatorInfo isKindOfClass:[SimulatorInfoXcode6 class]]) {
+    SimDevice *simulatedDevice = [(SimulatorInfoXcode6 *)simulatorInfo simulatedDevice];
+    NSError *error = nil;
+    *removedPath = [simulatedDevice dataPath];
+    if ([simulatedDevice eraseContentsAndSettingsWithError:&error]) {
+      return YES;
+    } else {
+      *errorMessage = [NSString stringWithFormat:@"%@; %@.",
+                       error.localizedDescription ?: @"Unknown error.",
+                       [error.userInfo[NSUnderlyingErrorKey] localizedDescription] ?: @""];
+      return NO;
+    }
+  } else {
+    return RemoveSimulatorContentAndSettingsFolder([simulatorInfo simulatedSdkShortVersion], [simulatorInfo cpuType], removedPath, errorMessage);
+  }
 }

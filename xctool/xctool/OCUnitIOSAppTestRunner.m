@@ -82,7 +82,7 @@ static const NSInteger kMaxRunTestsAttempts = 3;
                                @"Resetting iOS simulator content and settings...");
       NSString *removedPath = nil;
       NSString *removeError = nil;
-      if (RemoveSimulatorContentAndSettings([self.simulatorInfo simulatedSdkShortVersion], [self cpuType], &removedPath, &removeError)) {
+      if (RemoveSimulatorContentAndSettings(self.simulatorInfo, &removedPath, &removeError)) {
         if (removedPath) {
           ReportStatusMessageEnd(_reporters,
                                  REPORTER_MESSAGE_INFO,

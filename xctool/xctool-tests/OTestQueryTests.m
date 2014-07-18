@@ -243,7 +243,7 @@
     Xcode_FULL_PRODUCT_NAME : @"TestProject-LibraryTests.octest",
   };
   OCUnitTestQueryRunner *runner = [[[OCUnitOSXLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
-                                                                               withCpuType:CPU_TYPE_ANY] autorelease];
+                                                                                    withCpuType:CPU_TYPE_ANY] autorelease];
   NSArray *classes = [runner runQueryWithError:&error];
   assertThat(classes, equalTo(nil));
   assertThat(error, containsString(@"no suitable image found."));

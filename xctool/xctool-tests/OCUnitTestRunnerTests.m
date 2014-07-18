@@ -91,7 +91,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
                                                        error:nil]);
 
   NSMutableDictionary *testSettings = [[allSettings[@"TestProject-LibraryTests2"] mutableCopy] autorelease];
-  testSettings[@"TEST_HOST"] = TEST_DATA @"FakeApp.app/FakeAppExe";
+  testSettings[@"TEST_HOST"] = TEST_DATA @"FakeApp.app/FakeApp";
 
   DTiPhoneSimulatorSessionConfig *config;
 
@@ -187,7 +187,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
                                                        error:nil]);
 
   NSMutableDictionary *testSettings = [[allSettings[@"TestProject-App-OSXTests"] mutableCopy] autorelease];
-  testSettings[@"TEST_HOST"] = TEST_DATA @"FakeApp.app/FakeAppExe";
+  testSettings[@"TEST_HOST"] = TEST_DATA @"FakeApp.app/FakeApp";
 
   NSArray *launchedTasks;
 

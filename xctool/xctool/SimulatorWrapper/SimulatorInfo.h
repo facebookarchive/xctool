@@ -25,6 +25,8 @@
 @property (nonatomic, copy) NSString *deviceName;
 @property (nonatomic, copy) NSString *OSVersion;
 
++ (SimulatorInfo *)infoForCurrentVersionOfXcode;
+
 - (NSString *)simulatedArchitecture;
 - (NSNumber *)simulatedDeviceFamily;
 - (NSString *)simulatedDeviceInfoName;
@@ -38,6 +40,7 @@
 - (NSDictionary *)simulatorLaunchEnvironment;
 
 + (NSArray *)availableDevices;
++ (NSString *)deviceNameForAlias:(NSString *)deviceAlias;
 + (BOOL)isDeviceAvailableWithAlias:(NSString *)deviceName;
 + (BOOL)isSdkVersion:(NSString *)sdkVersion supportedByDevice:(NSString *)deviceName;
 + (NSString *)sdkVersionForOSVersion:(NSString *)osVersion;
