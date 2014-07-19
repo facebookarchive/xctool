@@ -18,6 +18,13 @@
 
 #import "ReporterEvents.h"
 
+@interface PhabricatorReporter ()
+@property (nonatomic, copy) NSDictionary *currentBuildCommand;
+@property (nonatomic, copy) NSMutableArray *currentTargetFailures;
+@property (nonatomic, copy) NSMutableArray *results;
+@property (nonatomic, copy) NSString *scheme;
+@end
+
 @implementation PhabricatorReporter
 
 - (id)init
@@ -30,6 +37,8 @@
 
 - (void)dealloc
 {
+  [_currentBuildCommand release];
+  [_currentTargetFailures release];
   [_results release];
   [_scheme release];
   [super dealloc];
@@ -37,13 +46,12 @@
 
 - (void)beginAction:(NSDictionary *)event
 {
-  _scheme = [event[kReporter_BeginAction_SchemeKey] retain];
+  self.scheme = event[kReporter_BeginAction_SchemeKey];
 }
 
 - (void)endAction:(NSDictionary *)event
 {
-  [_scheme release];
-  _scheme = nil;
+  self.scheme = nil;
 }
 
 - (void)beginBuildTarget:(NSDictionary *)event
@@ -65,13 +73,12 @@
    @"extra" : [NSNull null],
    }];
 
-  [_currentTargetFailures release];
-  _currentTargetFailures = nil;
+  self.currentTargetFailures = nil;
 }
 
 - (void)beginBuildCommand:(NSDictionary *)event
 {
-  _currentBuildCommand = [event retain];
+  self.currentBuildCommand = event;
 }
 
 - (void)endBuildCommand:(NSDictionary *)event
@@ -84,8 +91,7 @@
     [_currentTargetFailures addObject:commandAndFailure];
   }
 
-  [_currentBuildCommand release];
-  _currentBuildCommand = nil;
+  self.currentBuildCommand = nil;
 }
 
 - (void)beginXcodebuild:(NSDictionary *)event

@@ -22,24 +22,6 @@
 @class ReportWriter;
 
 @interface TextReporter : Reporter
-{
-@public
-  BOOL _isPretty;
-
-  TestResultCounter *_resultCounter;
-
-  NSDictionary *_currentStatusEvent;
-}
-
-@property (nonatomic, copy) NSDictionary *currentBuildCommandEvent;
-@property (nonatomic, assign) BOOL testHadOutput;
-@property (nonatomic, assign) BOOL testOutputEndsInNewline;
-@property (nonatomic, retain) ReportWriter *reportWriter;
-@property (nonatomic, retain) NSMutableArray *failedTests;
-@property (nonatomic, copy) NSString *currentBundle;
-@property (nonatomic, retain) NSMutableArray *analyzerWarnings;
-@property (nonatomic, retain) NSMutableArray *failedBuildEvents;
-@property (nonatomic, retain) NSMutableArray *failedOcunitEvents;
 
 /**
  Returns an NSString that contains lines of context around errorLine with a mark at colNumber.

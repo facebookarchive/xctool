@@ -19,6 +19,13 @@
 @class DTiPhoneSimulatorSystemRoot;
 
 @interface SimulatorInfo : NSObject
+{
+@protected
+  NSDictionary *_buildSettings;
+  cpu_type_t _cpuType;
+  NSString *_deviceName;
+  NSString *_OSVersion;
+}
 
 @property (nonatomic, copy) NSDictionary *buildSettings;
 @property (nonatomic, assign) cpu_type_t cpuType;

@@ -88,6 +88,13 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
   return result;
 }
 
+@interface RunTestsAction ()
+@property (nonatomic, assign) int logicTestBucketSize;
+@property (nonatomic, assign) int appTestBucketSize;
+@property (nonatomic, assign) BucketBy bucketBy;
+@property (nonatomic, assign) int testTimeout;
+@end
+
 @implementation RunTestsAction
 
 + (NSString *)name
@@ -132,17 +139,17 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
                          aliases:nil
                      description:@"Break logic test bundles in buckets of N test cases."
                        paramName:@"N"
-                           mapTo:@selector(setLogicTestBucketSize:)],
+                           mapTo:@selector(setLogicTestBucketSizeValue:)],
     [Action actionOptionWithName:@"appTestBucketSize"
                          aliases:nil
                      description:@"Break app test bundles in buckets of N test cases."
                        paramName:@"N"
-                           mapTo:@selector(setAppTestBucketSize:)],
+                           mapTo:@selector(setAppTestBucketSizeValue:)],
     [Action actionOptionWithName:@"bucketBy"
                          aliases:nil
                      description:@"Either 'case' (default) or 'class'."
                        paramName:@"BUCKETBY"
-                           mapTo:@selector(setBucketBy:)],
+                           mapTo:@selector(setBucketByValue:)],
     [Action actionOptionWithName:@"failOnEmptyTestBundles"
                          aliases:nil
                      description:@"Fail when an empty test bundle was run."
@@ -163,7 +170,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
 - (id)init
 {
   if (self = [super init]) {
-    self.onlyList = [NSMutableArray array];
+    _onlyList = [[NSMutableArray alloc] init];
     _logicTestBucketSize = 0;
     _appTestBucketSize = 0;
     _bucketBy = BucketByTestCase;
@@ -173,28 +180,31 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
   return self;
 }
 
-- (void)dealloc {
-  self.onlyList = nil;
-  self.testSDK = nil;
+- (void)dealloc
+{
+  [_testSDK release];
+  [_onlyList release];
+  [_deviceName release];
+  [_OSVersion release];
   [super dealloc];
 }
 
 - (void)addOnly:(NSString *)argument
 {
-  [self.onlyList addObject:argument];
+  [_onlyList addObject:argument];
 }
 
-- (void)setLogicTestBucketSize:(NSString *)str
+- (void)setLogicTestBucketSizeValue:(NSString *)str
 {
   _logicTestBucketSize = [str intValue];
 }
 
-- (void)setAppTestBucketSize:(NSString *)str
+- (void)setAppTestBucketSizeValue:(NSString *)str
 {
   _appTestBucketSize = [str intValue];
 }
 
-- (void)setBucketBy:(NSString *)str
+- (void)setBucketByValue:(NSString *)str
 {
   if ([str isEqualToString:@"class"]) {
     _bucketBy = BucketByClass;
@@ -203,7 +213,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
   }
 }
 
-- (void)setTestTimeout:(NSString *)str
+- (void)setTestTimeoutValue:(NSString *)str
 {
   _testTimeout = [str intValue];
 }
@@ -212,7 +222,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
 {
   NSMutableArray *results = [NSMutableArray array];
 
-  for (NSString *only in self.onlyList) {
+  for (NSString *only in _onlyList) {
     NSRange colonRange = [only rangeOfString:@":"];
     NSString *target = nil;
     NSString *senTestList = nil;
@@ -281,7 +291,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
 {
   NSArray *testables = nil;
 
-  if (self.onlyList.count == 0) {
+  if (_onlyList.count == 0) {
     // Use whatever we found in the scheme, except for skipped tests.
     NSMutableArray *unskipped = [NSMutableArray array];
     for (Testable *testable in xcodeSubjectInfo.testables) {
@@ -428,9 +438,9 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                                      allTestCases:allTestCases
                                      arguments:arguments
                                      environment:environment
-                                     freshSimulator:self.freshSimulator
-                                     resetSimulator:self.resetSimulator
-                                     freshInstall:self.freshInstall
+                                     freshSimulator:_freshSimulator
+                                     resetSimulator:_resetSimulator
+                                     freshInstall:_freshInstall
                                      testTimeout:_testTimeout
                                      reporters:reporters] autorelease];
     [testRunner setCpuType:_cpuType];
@@ -469,8 +479,8 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
     xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   dispatch_queue_t q = dispatch_queue_create("xctool.runtests",
-                                             self.parallelize ? DISPATCH_QUEUE_CONCURRENT
-                                                              : DISPATCH_QUEUE_SERIAL);
+                                             _parallelize ? DISPATCH_QUEUE_CONCURRENT
+                                                          : DISPATCH_QUEUE_SERIAL);
   dispatch_group_t group = dispatch_group_create();
 
   // Limits the number of simultaneously existing threads.

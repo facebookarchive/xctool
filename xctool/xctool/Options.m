@@ -32,6 +32,10 @@
 #import "XcodeSubjectInfo.h"
 #import "XcodeTargetMatch.h"
 
+@interface Options ()
+@property (nonatomic, retain) NSMutableArray *reporterOptions;
+@end
+
 @implementation Options
 
 + (NSArray *)actionClasses
@@ -185,11 +189,11 @@
 {
   if (self = [super init])
   {
-    self.reporters = [NSMutableArray array];
+    _reporters = [[NSMutableArray alloc] init];
     _reporterOptions = [[NSMutableArray alloc] init];
-    self.buildSettings = [NSMutableDictionary dictionary];
-    self.userDefaults = [NSMutableDictionary dictionary];
-    self.actions = [NSMutableArray array];
+    _buildSettings = [[NSMutableDictionary alloc] init];
+    _userDefaults = [[NSMutableDictionary alloc] init];
+    _actions = [[NSMutableArray alloc] init];
   }
   return self;
 }
@@ -197,11 +201,30 @@
 - (void)dealloc
 {
   [_reporterOptions release];
-  self.reporters = nil;
-  self.buildSettings = nil;
-  self.userDefaults = nil;
-  self.actions = nil;
-  self.findTargetExcludePaths = nil;
+
+  [_workspace release];
+  [_project release];
+  [_scheme release];
+  [_configuration release];
+  [_sdk release];
+  [_arch release];
+  [_destination release];
+  [_destinationTimeout release];
+  [_toolchain release];
+  [_xcconfig release];
+  [_jobs release];
+  [_findTarget release];
+  [_findTargetPath release];
+  [_findProjectPath release];
+  [_resultBundlePath release];
+  [_findTargetExcludePaths release];
+
+  [_buildSettings release];
+  [_userDefaults release];
+  [_reporters release];
+
+  [_actions release];
+
   [super dealloc];
 }
 
@@ -260,7 +283,7 @@
     if (verbToClass[argument]) {
       Action *action = [[[verbToClass[argument] alloc] init] autorelease];
       consumed += [action consumeArguments:argumentList errorMessage:errorMessage];
-      [self.actions addObject:action];
+      [_actions addObject:action];
     } else {
       *errorMessage = [NSString stringWithFormat:@"Unexpected action: %@", argument];
       break;
@@ -296,20 +319,20 @@
     ReporterTask *reporterTask =
     [[[ReporterTask alloc] initWithReporterPath:reporterPath
                                      outputPath:outputFile] autorelease];
-    [self.reporters addObject:reporterTask];
+    [_reporters addObject:reporterTask];
   }
 
-  if (self.reporters.count == 0) {
+  if (_reporters.count == 0) {
     ReporterTask *reporterTask =
     [[[ReporterTask alloc] initWithReporterPath:[XCToolReportersPath() stringByAppendingPathComponent:@"pretty"]
                                      outputPath:@"-"] autorelease];
-    [self.reporters addObject:reporterTask];
+    [_reporters addObject:reporterTask];
 
     if (![[[NSProcessInfo processInfo] environment][@"TRAVIS"] isEqualToString:@"true"]) {
       ReporterTask *userNotificationsReporterTask =
       [[[ReporterTask alloc] initWithReporterPath:[XCToolReportersPath() stringByAppendingPathComponent:@"user-notifications"]
                                        outputPath:@"-"] autorelease];
-      [self.reporters addObject:userNotificationsReporterTask];
+      [_reporters addObject:userNotificationsReporterTask];
     }
   }
 
@@ -325,38 +348,38 @@
     return (BOOL)(exists && isDirectory);
   };
 
-  if (self.workspace == nil && self.project == nil && self.findTarget == nil) {
+  if (!_workspace && !_project && !_findTarget) {
     NSString *defaultProject = [self findDefaultProjectErrorMessage:errorMessage];
-    if (defaultProject == nil) {
+    if (!defaultProject) {
       return NO;
     } else {
       self.project = defaultProject;
     }
-  } else if (self.workspace != nil && self.project != nil) {
+  } else if (_workspace && _project) {
     *errorMessage = @"Either -workspace or -project can be specified, but not both.";
     return NO;
-  } else if (self.findTarget != nil && (self.workspace != nil || self.project != nil || self.scheme != nil)) {
+  } else if (_findTarget && (_workspace || _project || _scheme)) {
     *errorMessage = @"If -find-target is specified, -workspace, -project, and -scheme must not be specified.";
     return NO;
   }
 
-  if (self.findTargetPath != nil && self.findTarget == nil) {
+  if (_findTargetPath && !_findTarget) {
     *errorMessage = @"If -find-target-path is specified, -find-target must be specified.";
     return NO;
   }
 
-  if (self.findTarget != nil) {
+  if (_findTarget) {
     ReportStatusMessageBegin(_reporters,
                              REPORTER_MESSAGE_INFO,
                              @"Searching for target '%@' ...",
-                             self.findTarget);
+                             _findTarget);
 
     XcodeTargetMatch *targetMatch;
-    if (![XcodeSubjectInfo findTarget:self.findTarget
-                          inDirectory:self.findTargetPath ?: @"."
-                         excludePaths:self.findTargetExcludePaths ?: @[]
+    if (![XcodeSubjectInfo findTarget:_findTarget
+                          inDirectory:_findTargetPath ?: @"."
+                         excludePaths:_findTargetExcludePaths ?: @[]
                       bestTargetMatch:&targetMatch]) {
-      *errorMessage = [NSString stringWithFormat:@"Couldn't find workspace/project and scheme for target: %@", self.findTarget];
+      *errorMessage = [NSString stringWithFormat:@"Couldn't find workspace/project and scheme for target: %@", _findTarget];
       return NO;
     }
 
@@ -380,7 +403,7 @@
         _reporters,
         REPORTER_MESSAGE_INFO,
         @"Found target %@. Using workspace path %@, scheme %@.",
-        self.findTarget,
+        _findTarget,
         pathRelativeToCurrentDir(targetMatch.workspacePath),
         targetMatch.schemeName);
     } else {
@@ -388,7 +411,7 @@
         _reporters,
         REPORTER_MESSAGE_INFO,
         @"Found target %@. Using project path %@, scheme %@.",
-        self.findTarget,
+        _findTarget,
         pathRelativeToCurrentDir(targetMatch.projectPath),
         targetMatch.schemeName);
     }
@@ -398,46 +421,46 @@
     self.scheme = targetMatch.schemeName;
   };
 
-  if (self.scheme == nil) {
+  if (!_scheme) {
     *errorMessage = @"Missing the required -scheme argument.";
     return NO;
   }
 
-  if (self.workspace != nil && !isDirectory(self.workspace)) {
-    *errorMessage = [NSString stringWithFormat:@"Specified workspace doesn't exist: %@", self.workspace];
+  if (_workspace && !isDirectory(_workspace)) {
+    *errorMessage = [NSString stringWithFormat:@"Specified workspace doesn't exist: %@", _workspace];
     return NO;
   }
 
-  if (self.workspace != nil && ![[self.workspace pathExtension] isEqualToString:@"xcworkspace"]) {
-    *errorMessage = [NSString stringWithFormat:@"Workspace must end in .xcworkspace: %@", self.workspace];
+  if (_workspace && ![[_workspace pathExtension] isEqualToString:@"xcworkspace"]) {
+    *errorMessage = [NSString stringWithFormat:@"Workspace must end in .xcworkspace: %@", _workspace];
     return NO;
   }
 
-  if (self.project != nil && !isDirectory(self.project)) {
-    *errorMessage = [NSString stringWithFormat:@"Specified project doesn't exist: %@", self.project];
+  if (_project && !isDirectory(_project)) {
+    *errorMessage = [NSString stringWithFormat:@"Specified project doesn't exist: %@", _project];
     return NO;
   }
 
-  if (self.project != nil && ![[self.project pathExtension] isEqualToString:@"xcodeproj"]) {
-    *errorMessage = [NSString stringWithFormat:@"Project must end in .xcodeproj: %@", self.project];
+  if (_project && ![[_project pathExtension] isEqualToString:@"xcodeproj"]) {
+    *errorMessage = [NSString stringWithFormat:@"Project must end in .xcodeproj: %@", _project];
     return NO;
   }
   
-  if (self.resultBundlePath != nil) {
+  if (_resultBundlePath) {
     BOOL isDirectory = NO;
-    BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:self.resultBundlePath isDirectory:&isDirectory];
+    BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:_resultBundlePath isDirectory:&isDirectory];
     if (!isDirectory) {
       NSString *errorReason = fileExists ? @"must be a directory" : @"doesn't exist";
-      *errorMessage = [NSString stringWithFormat:@"Specified result bundle path %@: %@", errorReason, self.resultBundlePath];
+      *errorMessage = [NSString stringWithFormat:@"Specified result bundle path %@: %@", errorReason, _resultBundlePath];
       return NO;
     }
   }
 
   NSArray *schemePaths = nil;
-  if (self.workspace != nil) {
-    schemePaths = [XcodeSubjectInfo schemePathsInWorkspace:self.workspace];
+  if (_workspace) {
+    schemePaths = [XcodeSubjectInfo schemePathsInWorkspace:_workspace];
   } else {
-    schemePaths = [XcodeSubjectInfo schemePathsInContainer:self.project];
+    schemePaths = [XcodeSubjectInfo schemePathsInContainer:_project];
   }
 
   NSMutableArray *schemeNames = [NSMutableArray array];
@@ -448,12 +471,12 @@
   BOOL automaticSchemeCreationDisabled = NO;
 
   {
-    NSString *basePath = self.project != nil ? [self.project stringByAppendingPathComponent:@"project.xcworkspace"] : self.workspace;
+    NSString *basePath = _project ? [_project stringByAppendingPathComponent:@"project.xcworkspace"] : _workspace;
     NSString *settingsPath = [basePath stringByAppendingPathComponent:@"xcshareddata/WorkspaceSettings.xcsettings"];
     NSDictionary *settings = [NSDictionary dictionaryWithContentsOfFile:settingsPath];
     NSNumber *automaticSchemeCreationSetting = [settings objectForKey:@"IDEWorkspaceSharedSettings_AutocreateContextsIfNeeded"];
 
-    if (automaticSchemeCreationSetting != nil && [automaticSchemeCreationSetting isKindOfClass:[NSNumber class]]) {
+    if (automaticSchemeCreationSetting && [automaticSchemeCreationSetting isKindOfClass:[NSNumber class]]) {
       automaticSchemeCreationDisabled = ![automaticSchemeCreationSetting boolValue];
     }
   }
@@ -476,10 +499,10 @@
     return NO;
   }
 
-  if (![schemeNames containsObject:self.scheme]) {
+  if (![schemeNames containsObject:_scheme]) {
     *errorMessage = [NSString stringWithFormat:
                      @"Can't find scheme '%@'.\n\nPossible schemes include:\n  %@",
-                     self.scheme,
+                     _scheme,
                      [schemeNames componentsJoinedByString:@"\n  "]];
 
     if (!automaticSchemeCreationDisabled) {
@@ -489,15 +512,15 @@
     return NO;
   }
 
-  NSDictionary *sdksAndAliases;
-  if (self.sdk != nil) {
+  NSDictionary *sdksAndAliases = nil;
+  if (_sdk) {
     sdksAndAliases = GetAvailableSDKsAndAliases();
 
     // Is this an available SDK?
-    if (sdksAndAliases[self.sdk] == nil) {
+    if (!sdksAndAliases[_sdk]) {
       *errorMessage = [NSString stringWithFormat:
                        @"SDK '%@' doesn't exist.  Possible SDKs include: %@",
-                       self.sdk,
+                       _sdk,
                        [[sdksAndAliases allKeys] componentsJoinedByString:@", "]];
       return NO;
     }
@@ -513,14 +536,14 @@
     // sourcecode.c.objc for architecture i386
     //
     // Explicitly setting PLATFORM_NAME=iphonesimulator seems to fix it.
-    if (_buildSettings[Xcode_PLATFORM_NAME] == nil &&
+    if (!_buildSettings[Xcode_PLATFORM_NAME] &&
         [_sdk hasPrefix:@"iphonesimulator"]) {
       _buildSettings[Xcode_PLATFORM_NAME] = @"iphonesimulator";
     }
   }
 
-  if (self.destination) {
-    NSDictionary *destInfo = ParseDestinationString(self.destination, errorMessage);
+  if (_destination) {
+    NSDictionary *destInfo = ParseDestinationString(_destination, errorMessage);
 
     NSString *deviceName = destInfo[@"name"];
     if (deviceName) {
@@ -539,7 +562,7 @@
         return NO;
       }
     }
-    if (destInfo[@"OS"] != nil) {
+    if (destInfo[@"OS"]) {
       NSString *osVersion = [SimulatorInfo sdkVersionForOSVersion:destInfo[@"OS"]];
       if (!osVersion) {
         *errorMessage = [NSString stringWithFormat:
@@ -559,9 +582,9 @@
   }
 
   XcodeSubjectInfo *xcodeSubjectInfo = [[[XcodeSubjectInfo alloc] init] autorelease];
-  xcodeSubjectInfo.subjectWorkspace = self.workspace;
-  xcodeSubjectInfo.subjectProject = self.project;
-  xcodeSubjectInfo.subjectScheme = self.scheme;
+  xcodeSubjectInfo.subjectWorkspace = _workspace;
+  xcodeSubjectInfo.subjectProject = _project;
+  xcodeSubjectInfo.subjectScheme = _scheme;
 
   if (xcodeSubjectInfoOut) {
     *xcodeSubjectInfoOut = xcodeSubjectInfo;
@@ -578,7 +601,7 @@
   [xcodeSubjectInfo loadSubjectInfo];
   ReportStatusMessageEnd(_reporters, REPORTER_MESSAGE_INFO, @"Loading settings for scheme '%@' ...", _scheme);
 
-  for (Action *action in self.actions) {
+  for (Action *action in _actions) {
     BOOL valid = [action validateWithOptions:self
                             xcodeSubjectInfo:xcodeSubjectInfo
                                 errorMessage:errorMessage];
@@ -588,8 +611,8 @@
   }
 
   // Assume build if no action is given.
-  if (self.actions.count == 0) {
-    [self.actions addObject:[[[BuildAction alloc] init] autorelease]];
+  if (_actions.count == 0) {
+    [_actions addObject:[[[BuildAction alloc] init] autorelease]];
   }
 
   return YES;
@@ -602,43 +625,43 @@
 
   NSString *effectiveConfigurationName =
   [self effectiveConfigurationForSchemeAction:schemeAction xcodeSubjectInfo:xcodeSubjectInfo];
-  if (effectiveConfigurationName != nil) {
+  if (effectiveConfigurationName) {
     [arguments addObjectsFromArray:@[@"-configuration", effectiveConfigurationName]];
   }
 
-  if (self.sdk != nil) {
-    [arguments addObjectsFromArray:@[@"-sdk", self.sdk]];
+  if (_sdk) {
+    [arguments addObjectsFromArray:@[@"-sdk", _sdk]];
   }
 
-  if (self.arch != nil) {
-    [arguments addObjectsFromArray:@[@"-arch", self.arch]];
+  if (_arch) {
+    [arguments addObjectsFromArray:@[@"-arch", _arch]];
   }
 
-  if (self.destination != nil) {
-    [arguments addObjectsFromArray:@[@"-destination", self.destination]];
-    if (self.destinationTimeout == nil) {
+  if (_destination) {
+    [arguments addObjectsFromArray:@[@"-destination", _destination]];
+    if (!_destinationTimeout) {
       self.destinationTimeout = @"10";
     }
   }
 
-  if (self.destinationTimeout != nil) {
-    [arguments addObjectsFromArray:@[@"-destination-timeout", self.destinationTimeout]];
+  if (_destinationTimeout) {
+    [arguments addObjectsFromArray:@[@"-destination-timeout", _destinationTimeout]];
   }
 
-  if (self.toolchain != nil) {
-    [arguments addObjectsFromArray:@[@"-toolchain", self.toolchain]];
+  if (_toolchain) {
+    [arguments addObjectsFromArray:@[@"-toolchain", _toolchain]];
   }
 
-  if (self.xcconfig != nil) {
-    [arguments addObjectsFromArray:@[@"-xcconfig", self.xcconfig]];
+  if (_xcconfig) {
+    [arguments addObjectsFromArray:@[@"-xcconfig", _xcconfig]];
   }
 
-  if (self.jobs != nil) {
-    [arguments addObjectsFromArray:@[@"-jobs", self.jobs]];
+  if (_jobs) {
+    [arguments addObjectsFromArray:@[@"-jobs", _jobs]];
   }
 
-  if (self.resultBundlePath != nil) {
-    [arguments addObjectsFromArray:@[@"-resultBundlePath", self.resultBundlePath]];
+  if (_resultBundlePath) {
+    [arguments addObjectsFromArray:@[@"-resultBundlePath", _resultBundlePath]];
   }
     
   [_buildSettings enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
@@ -659,7 +682,7 @@
 - (NSString *)effectiveConfigurationForSchemeAction:(NSString *)schemeAction
                                    xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
-  if (_configuration != nil) {
+  if (_configuration) {
     // The -configuration option from the command-line takes precedence.
     return _configuration;
   } else if (schemeAction && xcodeSubjectInfo) {
@@ -673,10 +696,10 @@
 {
   NSArray *buildArgs;
 
-  if (self.workspace != nil && self.scheme != nil) {
-    buildArgs = @[@"-workspace", self.workspace, @"-scheme", self.scheme];
-  } else if (self.project != nil && self.scheme != nil) {
-    buildArgs = @[@"-project", self.project, @"-scheme", self.scheme];
+  if (_workspace && _scheme) {
+    buildArgs = @[@"-workspace", _workspace, @"-scheme", _scheme];
+  } else if (_project && _scheme) {
+    buildArgs = @[@"-project", _project, @"-scheme", _scheme];
   } else {
     NSLog(@"Should have either a workspace or a project.");
     abort();
@@ -696,7 +719,7 @@
 - (NSString*)findDefaultProjectErrorMessage:(NSString**) errorMessage
 {
   NSFileManager *fileManager = [NSFileManager defaultManager];
-  NSString *searchPath = self.findProjectPath ? self.findProjectPath : [fileManager currentDirectoryPath];
+  NSString *searchPath = _findProjectPath ? : [fileManager currentDirectoryPath];
   NSArray *directoryContents = [fileManager contentsOfDirectoryAtPath:searchPath error:nil];
   NSArray *projectFiles = [directoryContents filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"pathExtension == 'xcodeproj'"]];
   if (projectFiles.count == 1) {

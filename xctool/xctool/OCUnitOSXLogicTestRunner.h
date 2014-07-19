@@ -18,7 +18,6 @@
 
 #import "OCUnitTestRunner.h"
 
-@interface OCUnitOSXLogicTestRunner : OCUnitTestRunner {
-}
+@interface OCUnitOSXLogicTestRunner : OCUnitTestRunner
 
 @end

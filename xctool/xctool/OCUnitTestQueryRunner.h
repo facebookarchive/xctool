@@ -16,11 +16,12 @@
 
 #import <Foundation/Foundation.h>
 
-@interface OCUnitTestQueryRunner : NSObject {
+@interface OCUnitTestQueryRunner : NSObject
+{
+@protected
   NSDictionary *_buildSettings;
+  cpu_type_t _cpuType;
 }
-
-@property (nonatomic, assign) cpu_type_t cpuType;
 
 - (instancetype)initWithBuildSettings:(NSDictionary *)buildSettings
                           withCpuType:(cpu_type_t)cpuType;

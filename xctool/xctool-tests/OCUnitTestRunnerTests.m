@@ -75,7 +75,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
                          withBlock:
    ^(SimulatorLauncher *self, SEL sel) {
      // Pretend it launched and succeeded, but save the config so we can check it.
-     *sessionConfig = [[self->_session sessionConfig] retain];
+     *sessionConfig = [[[self valueForKey:@"session"] sessionConfig] retain];
      return YES;
    }
                           runBlock:

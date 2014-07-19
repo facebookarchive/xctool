@@ -134,26 +134,26 @@
 - (id)init
 {
   if (self = [super init]) {
-    self.onlyList = [NSMutableArray array];
+    _onlyList = [[NSMutableArray alloc] init];
   }
   return self;
 }
 
 - (void)dealloc {
-  self.onlyList = nil;
+  [_onlyList release];
   [super dealloc];
 }
 
 - (void)addOnly:(NSString *)argument
 {
-  [self.onlyList addObject:argument];
+  [_onlyList addObject:argument];
 }
 
 - (BOOL)validateWithOptions:(Options *)options
            xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
                errorMessage:(NSString **)errorMessage
 {
-  for (NSString *target in self.onlyList) {
+  for (NSString *target in _onlyList) {
     if ([xcodeSubjectInfo testableWithTarget:target] == nil) {
       *errorMessage = [NSString stringWithFormat:@"build-tests: '%@' is not a testing target in this scheme.", target];
       return NO;
@@ -189,7 +189,7 @@
 - (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   NSArray *buildableList = [self buildableList:[xcodeSubjectInfo testablesAndBuildablesForTest]
-                               matchingTargets:self.onlyList];
+                               matchingTargets:_onlyList];
 
   if (![BuildTestsAction buildTestables:buildableList
                                 command:@"build"

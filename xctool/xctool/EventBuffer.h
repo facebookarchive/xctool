@@ -18,10 +18,7 @@
 /*!
  Buffers calls to the underlying sink until this buffer is flushed.
  */
-@interface EventBuffer : NSObject <EventSink> {
-  id<EventSink> _underlyingSink;
-  NSMutableArray *_bufferedEventData;
-}
+@interface EventBuffer : NSObject <EventSink>
 
 + (instancetype)eventBufferForSink:(id<EventSink>)sink;
 

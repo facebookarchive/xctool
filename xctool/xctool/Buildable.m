@@ -23,13 +23,13 @@
   Buildable *copy = [[[self class] allocWithZone:zone] init];
 
   if (copy) {
-    copy.projectPath = self.projectPath;
-    copy.target = self.target;
-    copy.targetID = self.targetID;
-    copy.executable = self.executable;
-    copy.buildForRunning = self.buildForRunning;
-    copy.buildForTesting = self.buildForTesting;
-    copy.buildForAnalyzing = self.buildForAnalyzing;
+    copy.projectPath = _projectPath;
+    copy.target = _target;
+    copy.targetID = _targetID;
+    copy.executable = _executable;
+    copy.buildForRunning = _buildForRunning;
+    copy.buildForTesting = _buildForTesting;
+    copy.buildForAnalyzing = _buildForAnalyzing;
   }
 
   return copy;
@@ -46,24 +46,33 @@
   };
 
   return ([other isKindOfClass:[Buildable class]] &&
-          bothNilOrEqual(self.projectPath, other.projectPath) &&
-          bothNilOrEqual(self.target, other.target) &&
-          bothNilOrEqual(self.targetID, other.targetID) &&
-          bothNilOrEqual(self.executable, other.executable) &&
-          self.buildForRunning == other.buildForRunning &&
-          self.buildForTesting == other.buildForTesting &&
-          self.buildForAnalyzing == other.buildForAnalyzing);
+          bothNilOrEqual(_projectPath, other.projectPath) &&
+          bothNilOrEqual(_target, other.target) &&
+          bothNilOrEqual(_targetID, other.targetID) &&
+          bothNilOrEqual(_executable, other.executable) &&
+          _buildForRunning == other.buildForRunning &&
+          _buildForTesting == other.buildForTesting &&
+          _buildForAnalyzing == other.buildForAnalyzing);
 }
 
 - (NSUInteger)hash
 {
-  return ([self.projectPath hash] ^
-          [self.target hash] ^
-          [self.targetID hash] ^
-          [self.executable hash] ^
-          self.buildForRunning ^
-          self.buildForTesting ^
-          self.buildForAnalyzing);
+  return ([_projectPath hash] ^
+          [_target hash] ^
+          [_targetID hash] ^
+          [_executable hash] ^
+          _buildForRunning ^
+          _buildForTesting ^
+          _buildForAnalyzing);
+}
+
+- (void)dealloc
+{
+  [_projectPath release];
+  [_target release];
+  [_targetID release];
+  [_executable release];
+  [super dealloc];
 }
 
 @end

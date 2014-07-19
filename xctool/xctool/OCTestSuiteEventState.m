@@ -20,12 +20,8 @@
 #import "ReporterEvents.h"
 
 @interface OCTestSuiteEventState ()
-{
-  double _totalDuration;
-}
-
+@property (nonatomic, assign) double totalDuration;
 @property (nonatomic, retain) NSDictionary *beginTestSuiteInfo;
-
 @end
 
 @implementation OCTestSuiteEventState
@@ -84,7 +80,7 @@
   if (!_isStarted) {
     NSDictionary *event =
       EventDictionaryWithNameAndContent(kReporter_Events_BeginTestSuite,
-        @{kReporter_BeginTestSuite_SuiteKey:self.testName});
+        @{kReporter_BeginTestSuite_SuiteKey:_testName});
     [self beginTestSuite:event];
   }
 
@@ -93,7 +89,7 @@
   if (!_isFinished && [[self unstartedTests] count] == 0) {
     NSDictionary *event =
       EventDictionaryWithNameAndContent(kReporter_Events_EndTestSuite, @{
-        kReporter_EndTestSuite_SuiteKey:self.testName,
+        kReporter_EndTestSuite_SuiteKey:_testName,
         kReporter_EndTestSuite_TestCaseCountKey:@([self testCount]),
         kReporter_EndTestSuite_TotalFailureCountKey:@([self totalFailures]),
         kReporter_EndTestSuite_UnexpectedExceptionCountKey:@([self totalErrors]),
@@ -109,16 +105,16 @@
   if (!_isStarted) {
     NSDictionary *event =
       EventDictionaryWithNameAndContent(kReporter_Events_BeginTestSuite,
-        @{kReporter_BeginTestSuite_SuiteKey:self.testName});
+        @{kReporter_BeginTestSuite_SuiteKey:_testName});
     [self beginTestSuite:event];
   }
 
-  [[self tests] makeObjectsPerformSelector:@selector(publishEvents)];
+  [_tests makeObjectsPerformSelector:@selector(publishEvents)];
 
   if (!_isFinished) {
     NSDictionary *event =
       EventDictionaryWithNameAndContent(kReporter_Events_EndTestSuite, @{
-        kReporter_EndTestSuite_SuiteKey:self.testName,
+        kReporter_EndTestSuite_SuiteKey:_testName,
         kReporter_EndTestSuite_TestCaseCountKey:@([self testCount]),
         kReporter_EndTestSuite_TotalFailureCountKey:@([self totalFailures]),
         kReporter_EndTestSuite_UnexpectedExceptionCountKey:@([self totalErrors]),

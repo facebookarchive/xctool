@@ -21,12 +21,6 @@
  'arc:unit' diff property in Phabricator.
  */
 @interface PhabricatorReporter : Reporter
-{
-  NSMutableArray *_results;
-  NSMutableArray *_currentTargetFailures;
-  NSDictionary *_currentBuildCommand;
-  NSString *_scheme;
-}
 
 - (NSString *)arcUnitJSON;
 

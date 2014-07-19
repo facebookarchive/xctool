@@ -88,18 +88,26 @@
 #pragma mark -
 #pragma mark Common
 
+- (void)dealloc
+{
+  [_buildSettings release];
+  [_deviceName release];
+  [_OSVersion release];
+  [super dealloc];
+}
+
 - (NSDictionary *)simulatorLaunchEnvironment
 {
   // Sometimes the TEST_HOST will be wrapped in double quotes.
-  NSString *testHostPath = [self.buildSettings[Xcode_TEST_HOST] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
+  NSString *testHostPath = [_buildSettings[Xcode_TEST_HOST] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
 
   NSString *ideBundleInjectionLibPath = @"/../../Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection";
-  NSString *testBundlePath = [NSString stringWithFormat:@"%@/%@", self.buildSettings[Xcode_BUILT_PRODUCTS_DIR], self.buildSettings[Xcode_FULL_PRODUCT_NAME]];
+  NSString *testBundlePath = [NSString stringWithFormat:@"%@/%@", _buildSettings[Xcode_BUILT_PRODUCTS_DIR], _buildSettings[Xcode_FULL_PRODUCT_NAME]];
 
   return @{
     @"DYLD_FALLBACK_FRAMEWORK_PATH" : IOSTestFrameworkDirectories(),
-    @"DYLD_FRAMEWORK_PATH" : self.buildSettings[Xcode_TARGET_BUILD_DIR],
-    @"DYLD_LIBRARY_PATH" : self.buildSettings[Xcode_TARGET_BUILD_DIR],
+    @"DYLD_FRAMEWORK_PATH" : _buildSettings[Xcode_TARGET_BUILD_DIR],
+    @"DYLD_LIBRARY_PATH" : _buildSettings[Xcode_TARGET_BUILD_DIR],
     @"DYLD_INSERT_LIBRARIES" : [@[
       [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"],
       ideBundleInjectionLibPath,

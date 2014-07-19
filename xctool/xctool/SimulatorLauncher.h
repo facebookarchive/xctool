@@ -19,16 +19,8 @@
 #import "DTiPhoneSimulatorRemoteClient.h"
 
 @interface SimulatorLauncher : NSObject <DTiPhoneSimulatorSessionDelegate>
-{
-@public
-  BOOL _didQuit;
-  BOOL _didFailToStart;
-  BOOL _didStart;
-  DTiPhoneSimulatorSession *_session;
-  NSError *_didEndWithError;
-}
 
-@property (nonatomic, retain) NSError *launchError;
+@property (nonatomic, retain, readonly) NSError *launchError;
 @property (nonatomic, copy) NSNumber *launchTimeout;
 
 + (void)loadAllPlatforms;

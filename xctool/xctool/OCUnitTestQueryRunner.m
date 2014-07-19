@@ -20,6 +20,11 @@
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
 
+@interface OCUnitTestQueryRunner ()
+@property (nonatomic, copy) NSDictionary *buildSettings;
+@property (nonatomic, assign) cpu_type_t cpuType;
+@end
+
 @implementation OCUnitTestQueryRunner
 
 // Designated initializer.
@@ -27,7 +32,7 @@
                           withCpuType:(cpu_type_t)cpuType
 {
   if (self = [super init]) {
-    _buildSettings = [buildSettings retain];
+    _buildSettings = [buildSettings copy];
     _cpuType = cpuType;
   }
   return self;

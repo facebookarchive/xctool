@@ -27,10 +27,6 @@ static const NSInteger KProductTypeIphone = 1;
 static const NSInteger KProductTypeIpad = 2;
 
 @implementation SimulatorInfoXcode5
-@synthesize buildSettings = _buildSettings;
-@synthesize cpuType = _cpuType;
-@synthesize deviceName = _deviceName;
-@synthesize OSVersion = _OSVersion;
 
 #pragma mark -
 #pragma mark Private methods
@@ -77,14 +73,6 @@ static const NSInteger KProductTypeIpad = 2;
   self.deviceName = [deviceInfo displayName];
   
   return [maxSdk shortVersionString];
-}
-
-- (void)dealloc
-{
-  [_buildSettings release];
-  [_deviceName release];
-  [_OSVersion release];
-  [super dealloc];
 }
 
 #pragma mark -
@@ -137,7 +125,7 @@ static const NSInteger KProductTypeIpad = 2;
 
 - (NSString *)simulatedArchitecture
 {
-  switch (self.cpuType) {
+  switch (_cpuType) {
     case CPU_TYPE_I386:
       return @"i386";
 

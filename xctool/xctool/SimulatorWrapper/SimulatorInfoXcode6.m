@@ -47,18 +47,6 @@ static const NSInteger KProductTypeIpad = 2;
 @end
 
 @implementation SimulatorInfoXcode6
-@synthesize buildSettings = _buildSettings;
-@synthesize cpuType = _cpuType;
-@synthesize deviceName = _deviceName;
-@synthesize OSVersion = _OSVersion;
-
-- (void)dealloc
-{
-  [_buildSettings release];
-  [_deviceName release];
-  [_OSVersion release];
-  [super dealloc];
-}
 
 #pragma mark -
 #pragma mark Public methods
@@ -115,7 +103,7 @@ static const NSInteger KProductTypeIpad = 2;
 
 - (NSString *)simulatedArchitecture
 {
-  switch (self.cpuType) {
+  switch (_cpuType) {
     case CPU_TYPE_I386:
       return @"i386";
 

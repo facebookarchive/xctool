@@ -20,14 +20,9 @@
 #import "OCTestSuiteEventState.h"
 #import "Reporter.h"
 
-@interface TestRunState : Reporter {
-  OCTestSuiteEventState *_testSuiteState;
-  OCTestEventState *_previousTestState;
-  NSSet *_crashReportsAtStart;
-  NSMutableString *_outputBeforeTestsStart;
-}
+@interface TestRunState : Reporter
 
-@property (nonatomic, readonly) OCTestSuiteEventState *testSuiteState;
+@property (nonatomic, retain, readonly) OCTestSuiteEventState *testSuiteState;
 
 - (instancetype)initWithTests:(NSArray *)testList
                     reporters:(NSArray *)reporters;

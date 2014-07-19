@@ -17,11 +17,6 @@
 #import "OCEventState.h"
 
 @interface OCTestEventState : OCEventState
-{
-  CFTimeInterval _beginTime;
-  NSMutableString *_outputToPublish;
-  NSMutableString *_outputAlreadyPublished;
-}
 
 @property (nonatomic, copy, readonly) NSString *className;
 @property (nonatomic, copy, readonly) NSString *methodName;

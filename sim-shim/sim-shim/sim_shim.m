@@ -26,15 +26,6 @@
 #import "dyld-interposing.h"
 
 @interface BootlegTask : NSObject
-{
-  BOOL _waitForDebugger;
-  BOOL _setExec;
-  int _cpuType;
-  NSString *_launchPath;
-  NSArray *_arguments;
-  NSDictionary *_environment;
-  NSDictionary *_sessionCookie;
-}
 
 @property (atomic, assign) int cpuType; // @synthesize cpuType=_cpuType;
 @property (atomic, assign) BOOL setExec; // @synthesize setExec=_setExec;

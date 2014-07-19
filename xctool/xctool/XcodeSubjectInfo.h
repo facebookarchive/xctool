@@ -24,9 +24,6 @@
  * project/scheme pair) being built or tested.
  */
 @interface XcodeSubjectInfo : NSObject
-{
-  NSDictionary *_configurationNameByAction;
-}
 
 @property (nonatomic, copy) NSString *subjectWorkspace;
 @property (nonatomic, copy) NSString *subjectProject;

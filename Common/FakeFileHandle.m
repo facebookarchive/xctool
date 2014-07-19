@@ -1,6 +1,10 @@
 
 #import "FakeFileHandle.h"
 
+@interface FakeFileHandle ()
+@property (nonatomic, retain, readwrite) NSMutableData *dataWritten;
+@end
+
 @implementation FakeFileHandle
 
 - (id)init

@@ -18,9 +18,13 @@
 
 #import "XCToolUtil.h"
 
+@interface SchemeGenerator ()
+@property (nonatomic, copy) NSMutableArray *buildables;
+@property (nonatomic, copy) NSMutableSet *projectPaths;
+
+@end
+
 @implementation SchemeGenerator {
-  NSMutableArray *_buildables;
-  NSMutableSet *_projectPaths;
 }
 
 + (SchemeGenerator *)schemeGenerator
@@ -32,8 +36,8 @@
 {
   self = [super init];
   if (self) {
-    _buildables = [[NSMutableArray array] retain];
-    _projectPaths = [[NSMutableSet set] retain];
+    _buildables = [[NSMutableArray alloc] init];
+    _projectPaths = [[NSMutableSet alloc] init];
   }
   return self;
 }

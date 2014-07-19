@@ -42,14 +42,14 @@
 - (id)init
 {
   if (self = [super init]) {
-    self.numbers = [NSMutableArray array];
+    _numbers = [[NSMutableArray alloc] init];
   }
   return self;
 }
 
 - (void)addNumber:(NSString *)number
 {
-  [self.numbers addObject:@([number intValue])];
+  [_numbers addObject:@([number intValue])];
 }
 
 @end

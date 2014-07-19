@@ -40,7 +40,7 @@
   [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:_framework[kTestingFrameworkOSXTestrunnerName]]];
   // When invoking otest directly, the last arg needs to be the the test bundle.
   [task setArguments:[[self testArguments] arrayByAddingObject:testBundlePath]];
-  NSMutableDictionary *env = [[self.environmentOverrides mutableCopy] autorelease];
+  NSMutableDictionary *env = [[[self environmentOverrides] mutableCopy] autorelease];
   env[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-osx.dylib"];
   [task setEnvironment:[self otestEnvironmentWithOverrides:env]];
   return task;

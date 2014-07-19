@@ -21,6 +21,14 @@
 #import "EventGenerator.h"
 #import "ReporterEvents.h"
 
+@interface OCTestEventState ()
+
+@property (nonatomic, assign) CFTimeInterval beginTime;
+@property (nonatomic, copy) NSMutableString *outputToPublish;
+@property (nonatomic, copy) NSMutableString *outputAlreadyPublished;
+
+@end
+
 @implementation OCTestEventState
 
 - (instancetype)initWithInputName:(NSString *)name
@@ -128,7 +136,7 @@
     [self stateBeginTest];
     [self publishWithEvent:
       EventDictionaryWithNameAndContent(kReporter_Events_BeginTest, @{
-        kReporter_EndTest_TestKey:self.testName,
+        kReporter_EndTest_TestKey:[self testName],
         kReporter_EndTest_ClassNameKey:_className,
         kReporter_EndTest_MethodNameKey:_methodName,
     })];
@@ -138,7 +146,7 @@
     [self stateEndTest:NO result:@"error"];
     [self publishWithEvent:
       EventDictionaryWithNameAndContent(kReporter_Events_EndTest, @{
-        kReporter_EndTest_TestKey:self.testName,
+        kReporter_EndTest_TestKey:[self testName],
         kReporter_EndTest_ClassNameKey:_className,
         kReporter_EndTest_MethodNameKey:_methodName,
         kReporter_EndTest_SucceededKey:@(_isSuccessful),

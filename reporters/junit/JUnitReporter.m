@@ -1,4 +1,18 @@
-// Copyright 2004-present Facebook. All Rights Reserved.
+//
+// Copyright 2013 Facebook
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
 
 #import "JUnitReporter.h"
 
@@ -11,8 +25,8 @@
 #pragma mark Private Interface
 @interface JUnitReporter ()
 
-@property (nonatomic, retain) NSMutableArray *testSuites;
-@property (nonatomic, retain) NSMutableArray *testResults;
+@property (nonatomic, copy) NSMutableArray *testSuites;
+@property (nonatomic, copy) NSMutableArray *testResults;
 @property (nonatomic, retain) NSDateFormatter *formatter;
 @property (nonatomic, assign) int totalTests;
 @property (nonatomic, assign) int totalFailures;
@@ -28,23 +42,23 @@
 - (id)init
 {
   if (self = [super init]) {
-    self.formatter = [[[NSDateFormatter alloc] init] autorelease];
+    _formatter = [[NSDateFormatter alloc] init];
     [_formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZZZZ"];
 
-    self.testSuites = [NSMutableArray array];
-    self.totalTests = 0;
-    self.totalFailures = 0;
-    self.totalErrors = 0;
-    self.totalTime = 0.0;
+    _testSuites = [[NSMutableArray alloc] init];
+    _totalTests = 0;
+    _totalFailures = 0;
+    _totalErrors = 0;
+    _totalTime = 0.0;
   }
   return self;
 }
 
 - (void)dealloc
 {
-  self.testSuites = nil;
-  self.testResults = nil;
-  self.formatter = nil;
+  [_testSuites release];
+  [_testResults release];
+  [_formatter release];
   [super dealloc];
 }
 
@@ -52,24 +66,24 @@
 
 - (void)beginTestSuite:(NSDictionary *)event
 {
-  self.testResults = [NSMutableArray array];
+  _testResults = [[NSMutableArray alloc] init];
 }
 
 - (void)endTest:(NSDictionary *)event
 {
-  [self.testResults addObject:event];
+  [_testResults addObject:event];
 }
 
 - (void)endTestSuite:(NSDictionary *)event
 {
-  if (self.testResults) { // Prevents nested suites
-    self.totalTests += [event[kReporter_EndTestSuite_TestCaseCountKey] intValue];
-    self.totalFailures += [event[kReporter_EndTestSuite_TotalFailureCountKey] intValue];
-    self.totalErrors += [event[kReporter_EndTestSuite_UnexpectedExceptionCountKey] intValue];
-    self.totalTime += [event[kReporter_EndTestSuite_TotalDurationKey] doubleValue];
-    [self.testSuites addObject:@{
+  if (_testResults) { // Prevents nested suites
+    _totalTests += [event[kReporter_EndTestSuite_TestCaseCountKey] intValue];
+    _totalFailures += [event[kReporter_EndTestSuite_TotalFailureCountKey] intValue];
+    _totalErrors += [event[kReporter_EndTestSuite_UnexpectedExceptionCountKey] intValue];
+    _totalTime += [event[kReporter_EndTestSuite_TotalDurationKey] doubleValue];
+    [_testSuites addObject:@{
       kJUnitReporter_Suite_Event: event,
-      kJUnitReporter_Suite_Results: self.testResults
+      kJUnitReporter_Suite_Results: _testResults
     }];
     self.testResults = nil;
   }
@@ -81,19 +95,19 @@
   [testsuitesElement setAttributes:@[[NSXMLNode attributeWithName:@"name"
                                                       stringValue:@"AllTestUnits"],
                                      [NSXMLNode attributeWithName:@"tests"
-                                                      stringValue:[NSString stringWithFormat:@"%d", self.totalTests]],
+                                                      stringValue:[NSString stringWithFormat:@"%d", _totalTests]],
                                      [NSXMLNode attributeWithName:@"failures"
-                                                      stringValue:[NSString stringWithFormat:@"%d", self.totalFailures]],
+                                                      stringValue:[NSString stringWithFormat:@"%d", _totalFailures]],
                                      [NSXMLNode attributeWithName:@"errors"
-                                                      stringValue:[NSString stringWithFormat:@"%d", self.totalErrors]],
+                                                      stringValue:[NSString stringWithFormat:@"%d", _totalErrors]],
                                      [NSXMLNode attributeWithName:@"time"
-                                                      stringValue:[NSString stringWithFormat:@"%f", self.totalTime]]]];
+                                                      stringValue:[NSString stringWithFormat:@"%f", _totalTime]]]];
 
   // Make a dictionary of names already encountered to decide to merge nodes or not
   NSMutableDictionary *nameToTestSuiteDictionary = [NSMutableDictionary dictionary];
 
   // testSuite has two elements in it, NSDictionary testSuite and NSArray suiteResults
-  for (NSDictionary *testSuite in self.testSuites) {
+  for (NSDictionary *testSuite in _testSuites) {
     NSDictionary *suiteEvent = testSuite[kJUnitReporter_Suite_Event];
     NSArray *suiteResults = testSuite[kJUnitReporter_Suite_Results];
 
@@ -122,7 +136,7 @@
                               [NSXMLNode attributeWithName:@"time"
                                                stringValue:[NSString stringWithFormat:@"%f", time]],
                               [NSXMLNode attributeWithName:@"timestamp"
-                                               stringValue:[self.formatter stringFromDate:[NSDate date]]],
+                                               stringValue:[_formatter stringFromDate:[NSDate date]]],
                               [NSXMLNode attributeWithName:@"name"
                                                stringValue:suiteEvent[kReporter_EndTestSuite_SuiteKey]]];
       [existingTestSuite setAttributes:attributes];
@@ -142,7 +156,7 @@
                                                   stringValue:[NSString stringWithFormat:@"%f",
                                                                [suiteEvent[kReporter_EndTestSuite_TotalDurationKey] doubleValue]]],
                                  [NSXMLNode attributeWithName:@"timestamp"
-                                                  stringValue:[self.formatter stringFromDate:[NSDate date]]],
+                                                  stringValue:[_formatter stringFromDate:[NSDate date]]],
                                  [NSXMLNode attributeWithName:@"name"
                                                   stringValue:suiteEvent[kReporter_EndTestSuite_SuiteKey]]]];
     }

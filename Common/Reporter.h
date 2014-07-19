@@ -18,6 +18,7 @@
 
 @interface Reporter : NSObject
 {
+@protected
   NSFileHandle *_outputHandle;
 }
 

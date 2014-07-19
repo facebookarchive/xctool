@@ -22,7 +22,7 @@
 @property (nonatomic, copy, readonly) NSString *testName;
 @property (nonatomic, readonly) BOOL isStarted;
 @property (nonatomic, readonly) BOOL isFinished;
-@property (nonatomic, readonly) NSMutableArray *tests;
+@property (nonatomic, copy, readonly) NSMutableArray *tests;
 
 - (instancetype)initWithName:(NSString *)name;
 - (instancetype)initWithName:(NSString *)name

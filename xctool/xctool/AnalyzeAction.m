@@ -35,9 +35,15 @@
 - (instancetype)init
 {
   if (self = [super init]) {
-    self.seenTargets = [NSMutableSet set];
+    _seenTargets = [[NSMutableSet alloc] init];
   }
   return self;
+}
+
+- (void)dealloc
+{
+  [_seenTargets release];
+  [super dealloc];
 }
 
 - (void)publishDataForEvent:(NSData *)data
@@ -49,7 +55,7 @@
   NSAssert(event != nil, @"Error decoding JSON: %@", [error localizedFailureReason]);
 
   if ([event[@"event"] isEqualTo:kReporter_Events_BeginBuildTarget]) {
-    [self.seenTargets addObject:@{
+    [_seenTargets addObject:@{
      @"projectName": event[kReporter_BeginBuildTarget_ProjectKey],
      @"targetName": event[kReporter_BeginBuildTarget_TargetKey],
      }];
@@ -236,9 +242,15 @@
 - (id)init
 {
   if (self = [super init]) {
-    self.onlySet = [NSMutableSet set];
+    _onlySet = [[NSMutableSet alloc] init];
   }
   return self;
+}
+
+- (void)dealloc
+{
+  [_onlySet release];
+  [super dealloc];
 }
 
 - (void)addOnlyOption:(NSString *)targetName
@@ -260,7 +272,7 @@
 
   BOOL success = YES;
   if (_onlySet.count) {
-    if (!self.skipDependencies) {
+    if (!_skipDependencies) {
       // build everything, and then build with analyze only the specified buildables
       NSArray *args = [buildArgs arrayByAddingObject:@"build"];
       success = RunXcodebuildAndFeedEventsToReporters(args, @"build", [options scheme], reporters);
@@ -313,7 +325,7 @@
     haveFoundWarnings |= foundWarningsInBuildable;
   }
 
-  if (self.failOnWarnings) {
+  if (_failOnWarnings) {
     return !haveFoundWarnings;
   } else {
     return YES;

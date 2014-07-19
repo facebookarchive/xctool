@@ -20,7 +20,7 @@
 #import "TestingFramework.h"
 
 @interface OCUnitTestRunner : NSObject {
-@public
+@protected
   NSDictionary *_buildSettings;
   NSArray *_focusedTestCases;
   NSArray *_allTestCases;
@@ -37,7 +37,7 @@
 }
 
 @property (nonatomic, assign) cpu_type_t cpuType;
-@property (nonatomic, readonly) NSArray *reporters;
+@property (nonatomic, copy, readonly) NSArray *reporters;
 
 /**
  * Filters a list of test class names to only those that match the

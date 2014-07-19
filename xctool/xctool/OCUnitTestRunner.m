@@ -24,6 +24,20 @@
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
 
+@interface OCUnitTestRunner ()
+@property (nonatomic, copy) NSDictionary *buildSettings;
+@property (nonatomic, copy) NSArray *focusedTestCases;
+@property (nonatomic, copy) NSArray *allTestCases;
+@property (nonatomic, copy) NSArray *arguments;
+@property (nonatomic, copy) NSDictionary *environment;
+@property (nonatomic, assign) BOOL garbageCollection;
+@property (nonatomic, assign) BOOL freshSimulator;
+@property (nonatomic, assign) BOOL resetSimulator;
+@property (nonatomic, assign) BOOL freshInstall;
+@property (nonatomic, copy, readwrite) NSArray *reporters;
+@property (nonatomic, copy) NSDictionary *framework;
+@end
+
 @implementation OCUnitTestRunner
 
 + (NSArray *)filterTestCases:(NSArray *)testCases
@@ -85,17 +99,17 @@
                   reporters:(NSArray *)reporters
 {
   if (self = [super init]) {
-    _buildSettings = [buildSettings retain];
-    _focusedTestCases = [focusedTestCases retain];
-    _allTestCases = [allTestCases retain];
-    _arguments = [arguments retain];
-    _environment = [environment retain];
+    _buildSettings = [buildSettings copy];
+    _focusedTestCases = [focusedTestCases copy];
+    _allTestCases = [allTestCases copy];
+    _arguments = [arguments copy];
+    _environment = [environment copy];
     _freshSimulator = freshSimulator;
     _resetSimulator = resetSimulator;
     _freshInstall = freshInstall;
     _testTimeout = testTimeout;
-    _reporters = [reporters retain];
-    _framework = [FrameworkInfoForTestBundleAtPath([self testBundlePath]) retain];
+    _reporters = [reporters copy];
+    _framework = [FrameworkInfoForTestBundleAtPath([self testBundlePath]) copy];
     _cpuType = CPU_TYPE_ANY;
   }
   return self;

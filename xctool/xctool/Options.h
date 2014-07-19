@@ -24,9 +24,6 @@
  * params it accepts are all the common params that xcodebuild would accept.
  */
 @interface Options : Action
-{
-  NSMutableArray *_reporterOptions;
-}
 
 + (NSArray *)actionClasses;
 

@@ -129,7 +129,7 @@
     }
   }
 
-  [options consumeArguments:[NSMutableArray arrayWithArray:self.arguments] errorMessage:&errorMessage];
+  [options consumeArguments:[NSMutableArray arrayWithArray:_arguments] errorMessage:&errorMessage];
   if (errorMessage != nil) {
     [_standardError printString:@"ERROR: %@\n", errorMessage];
     _exitStatus = 1;
@@ -228,5 +228,12 @@
   }
 }
 
+- (void)dealloc
+{
+  [_standardOutput release];
+  [_standardError release];
+  [_arguments release];
+  [super dealloc];
+}
 
 @end

@@ -143,21 +143,21 @@ static void writeAll(int fildes, const void *buf, size_t nbyte) {
 
   int standardOutputWriteFd = -1;
   BOOL standardOutputIsAPipe = NO;
-  if ([self.standardOutput isKindOfClass:[NSPipe class]]) {
-    standardOutputWriteFd = [[self.standardOutput fileHandleForWriting] fileDescriptor];
+  if ([_standardOutput isKindOfClass:[NSPipe class]]) {
+    standardOutputWriteFd = [[_standardOutput fileHandleForWriting] fileDescriptor];
     standardOutputIsAPipe = YES;
-  } else if ([self.standardOutput isKindOfClass:[NSFileHandle class]]) {
-    standardOutputWriteFd = [self.standardOutput fileDescriptor];
+  } else if ([_standardOutput isKindOfClass:[NSFileHandle class]]) {
+    standardOutputWriteFd = [_standardOutput fileDescriptor];
     standardOutputIsAPipe = NO;
   }
 
   int standardErrorWriteFd = -1;
   BOOL standardErrorIsAPipe = NO;
-  if ([self.standardError isKindOfClass:[NSPipe class]]) {
-    standardErrorWriteFd = [[self.standardError fileHandleForWriting] fileDescriptor];
+  if ([_standardError isKindOfClass:[NSPipe class]]) {
+    standardErrorWriteFd = [[_standardError fileHandleForWriting] fileDescriptor];
     standardErrorIsAPipe = YES;
-  } else if ([self.standardError isKindOfClass:[NSFileHandle class]]) {
-    standardErrorWriteFd = [self.standardError fileDescriptor];
+  } else if ([_standardError isKindOfClass:[NSFileHandle class]]) {
+    standardErrorWriteFd = [_standardError fileDescriptor];
     standardErrorIsAPipe = NO;
   }
 

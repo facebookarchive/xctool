@@ -23,6 +23,21 @@
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
 
+@interface ReporterTask ()
+@property (nonatomic, copy) NSString *reporterPath;
+@property (nonatomic, copy) NSString *outputPath;
+
+@property (nonatomic, retain) NSFileHandle *standardOutput;
+@property (nonatomic, retain) NSFileHandle *standardError;
+
+@property (nonatomic, assign) BOOL outputPathIsFile;
+
+@property (nonatomic, retain) NSTask *task;
+@property (nonatomic, retain) NSPipe *pipe;
+
+@property (nonatomic, assign) BOOL wasOpened;
+@property (nonatomic, assign) BOOL wasClosed;
+@end
 
 @implementation ReporterTask
 
@@ -30,8 +45,8 @@
                           outputPath:(NSString *)outputPath
 {
   if (self = [super init]) {
-    _reporterPath = [reporterPath retain];
-    _outputPath = [outputPath retain];
+    _reporterPath = [reporterPath copy];
+    _outputPath = [outputPath copy];
   }
   return self;
 }

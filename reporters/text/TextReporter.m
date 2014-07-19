@@ -41,8 +41,6 @@ static NSString *abbreviatePath(NSString *string) {
 
 
 @interface ReportWriter : NSObject
-{
-}
 
 @property (nonatomic, assign) NSInteger indent;
 @property (nonatomic, assign) NSInteger savedIndent;
@@ -59,7 +57,7 @@ static NSString *abbreviatePath(NSString *string) {
 - (id)initWithOutputHandle:(NSFileHandle *)outputHandle
 {
   if (self = [super init]) {
-    self.outputHandle = outputHandle;
+    _outputHandle = [outputHandle retain];
     _indent = 0;
     _savedIndent = -1;
   }
@@ -68,7 +66,7 @@ static NSString *abbreviatePath(NSString *string) {
 
 - (void)dealloc
 {
-  self.outputHandle = nil;
+  [_outputHandle release];
   [super dealloc];
 }
 
@@ -112,7 +110,7 @@ static NSString *abbreviatePath(NSString *string) {
                              };
 
   for (NSString *ansiTag in [ansiTags allKeys]) {
-    NSString *replaceWith = self.useColorOutput ? ansiTags[ansiTag] : @"";
+    NSString *replaceWith = _useColorOutput ? ansiTags[ansiTag] : @"";
     [str replaceOccurrencesOfString:ansiTag withString:replaceWith options:0 range:NSMakeRange(0, [str length])];
   }
 
@@ -129,17 +127,17 @@ static NSString *abbreviatePath(NSString *string) {
   va_list args;
   va_start(args, format);
   NSString *str = [self formattedStringWithFormat:format arguments:args];
-  [self.outputHandle writeData:[str dataUsingEncoding:NSUTF8StringEncoding]];
+  [_outputHandle writeData:[str dataUsingEncoding:NSUTF8StringEncoding]];
   va_end(args);
 }
 
 - (void)printNewline
 {
-  if (self.lastLineUpdate != nil && !_useColorOutput) {
-    [self.outputHandle writeData:[self.lastLineUpdate dataUsingEncoding:NSUTF8StringEncoding]];
+  if (_lastLineUpdate != nil && !_useColorOutput) {
+    [_outputHandle writeData:[_lastLineUpdate dataUsingEncoding:NSUTF8StringEncoding]];
     self.lastLineUpdate = nil;
   }
-  [self.outputHandle writeData:[@"\n" dataUsingEncoding:NSUTF8StringEncoding]];
+  [_outputHandle writeData:[@"\n" dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
 - (void)updateLineWithFormat:(NSString *)format arguments:(va_list)argList
@@ -147,8 +145,8 @@ static NSString *abbreviatePath(NSString *string) {
   NSString *line = [self formattedStringWithFormat:format arguments:argList];;
 
   if (_useColorOutput) {
-    [self.outputHandle writeData:[@"\r" dataUsingEncoding:NSUTF8StringEncoding]];
-    [self.outputHandle writeData:[line dataUsingEncoding:NSUTF8StringEncoding]];
+    [_outputHandle writeData:[@"\r" dataUsingEncoding:NSUTF8StringEncoding]];
+    [_outputHandle writeData:[line dataUsingEncoding:NSUTF8StringEncoding]];
   } else {
     self.lastLineUpdate = line;
   }
@@ -171,6 +169,21 @@ static NSString *abbreviatePath(NSString *string) {
   va_end(args);
 }
 
+@end
+
+@interface TextReporter ()
+@property (nonatomic, assign) BOOL isPretty;
+@property (nonatomic, retain) TestResultCounter *resultCounter;
+@property (nonatomic, copy) NSDictionary *currentStatusEvent;
+@property (nonatomic, copy) NSDictionary *currentBuildCommandEvent;
+@property (nonatomic, assign) BOOL testHadOutput;
+@property (nonatomic, assign) BOOL testOutputEndsInNewline;
+@property (nonatomic, retain) ReportWriter *reportWriter;
+@property (nonatomic, copy) NSMutableArray *failedTests;
+@property (nonatomic, copy) NSString *currentBundle;
+@property (nonatomic, copy) NSMutableArray *analyzerWarnings;
+@property (nonatomic, copy) NSMutableArray *failedBuildEvents;
+@property (nonatomic, copy) NSMutableArray *failedOcunitEvents;
 @end
 
 @implementation TextReporter
@@ -202,8 +215,8 @@ static NSString *abbreviatePath(NSString *string) {
 
 - (void)willBeginReporting
 {
-  self.reportWriter = [[[ReportWriter alloc] initWithOutputHandle:_outputHandle] autorelease];
-  self.reportWriter.useColorOutput = _isPretty;
+  _reportWriter = [[ReportWriter alloc] initWithOutputHandle:_outputHandle];
+  _reportWriter.useColorOutput = _isPretty;
 }
 
 - (void)didFinishReporting
@@ -265,13 +278,13 @@ static NSString *abbreviatePath(NSString *string) {
   NSString *dividier = [@"" stringByPaddingToLength:width withString:dashStr startingAtIndex:0];
 
   if (showDownLine) {
-    dividier = [dividier stringByReplacingCharactersInRange:NSMakeRange(self.reportWriter.indent * 2, 1) withString:indicatorStr];
+    dividier = [dividier stringByReplacingCharactersInRange:NSMakeRange(_reportWriter.indent * 2, 1) withString:indicatorStr];
   }
 
-  [self.reportWriter disableIndent];
-  [self.reportWriter updateLine:@"<faint>%@<reset>", dividier];
-  [self.reportWriter printNewline];
-  [self.reportWriter enableIndent];
+  [_reportWriter disableIndent];
+  [_reportWriter updateLine:@"<faint>%@<reset>", dividier];
+  [_reportWriter printNewline];
+  [_reportWriter enableIndent];
 }
 
 - (void)printDivider
@@ -281,14 +294,14 @@ static NSString *abbreviatePath(NSString *string) {
 
 - (void)printAnalyzerSummary
 {
-  if (self.analyzerWarnings.count > 0) {
-    [self.reportWriter printLine:@"<bold>Analyzer Warnings:<reset>"];
-    [self.reportWriter printNewline];
-    [self.reportWriter increaseIndent];
+  if (_analyzerWarnings.count > 0) {
+    [_reportWriter printLine:@"<bold>Analyzer Warnings:<reset>"];
+    [_reportWriter printNewline];
+    [_reportWriter increaseIndent];
 
-    [self.analyzerWarnings enumerateObjectsUsingBlock:
+    [_analyzerWarnings enumerateObjectsUsingBlock:
      ^(NSDictionary *event, NSUInteger idx, BOOL *stop) {
-       [self.reportWriter printLine:@"%lu) %@:%@:%@: %@:",
+       [_reportWriter printLine:@"%lu) %@:%@:%@: %@:",
         (unsigned long)idx,
         abbreviatePath(event[kReporter_AnalyzerResult_FileKey]),
         event[kReporter_AnalyzerResult_LineKey],
@@ -296,23 +309,23 @@ static NSString *abbreviatePath(NSString *string) {
         event[kReporter_AnalyzerResult_DescriptionKey]];
 
        [self printDivider];
-       [self.reportWriter disableIndent];
-       [self.reportWriter printLine:@"<faint>%@<rest>",
+       [_reportWriter disableIndent];
+       [_reportWriter printLine:@"<faint>%@<rest>",
         [TextReporter getContext:event[kReporter_AnalyzerResult_FileKey]
                        errorLine:[event[kReporter_AnalyzerResult_LineKey] intValue]
                        colNumber:[event[kReporter_AnalyzerResult_ColumnKey] intValue]]];
-       [self.reportWriter printNewline];
+       [_reportWriter printNewline];
        for (NSDictionary *piece in event[kReporter_AnalyzerResult_ContextKey]) {
-         [self.reportWriter printLine:@"<faint>%@:%@:%@: %@<reset>",
+         [_reportWriter printLine:@"<faint>%@:%@:%@: %@<reset>",
           abbreviatePath(piece[@"file"]), piece[@"line"], piece[@"col"], piece[@"message"]];
        }
-       [self.reportWriter enableIndent];
+       [_reportWriter enableIndent];
        [self printDivider];
 
-       [self.reportWriter printNewline];
+       [_reportWriter printNewline];
      }];
 
-    [self.reportWriter decreaseIndent];
+    [_reportWriter decreaseIndent];
   }
 }
 
@@ -335,20 +348,20 @@ static NSString *abbreviatePath(NSString *string) {
 - (void)beginAction:(NSDictionary *)event
 {
   NSString *name = event[kReporter_BeginAction_NameKey];
-  self.failedTests = [[[NSMutableArray alloc] init] autorelease];
+  _failedTests = [[NSMutableArray alloc] init];
 
   // Ensure there's one blank line between earlier output and this action.
   [_reportWriter printNewline];
 
-  [self.reportWriter printLine:@"<bold>=== %@ ===<reset>", [name uppercaseString]];
-  [self.reportWriter printNewline];
-  [self.reportWriter increaseIndent];
+  [_reportWriter printLine:@"<bold>=== %@ ===<reset>", [name uppercaseString]];
+  [_reportWriter printNewline];
+  [_reportWriter increaseIndent];
 }
 
 - (void)endAction:(NSDictionary *)event
 {
-  [self.reportWriter decreaseIndent];
-  [self.reportWriter printNewline];
+  [_reportWriter decreaseIndent];
+  [_reportWriter printNewline];
 
   NSString *name = event[kReporter_BeginAction_NameKey];
   BOOL succeeded = [event[kReporter_EndAction_SucceededKey] boolValue];
@@ -357,23 +370,23 @@ static NSString *abbreviatePath(NSString *string) {
   NSString *message = nil;
   NSString *status = succeeded ? @"SUCCEEDED" : @"FAILED";
 
-  if (self.failedBuildEvents.count > 0) {
-    [self.reportWriter printLine:@"<bold>Failures:<reset>"];
-    [self.reportWriter printNewline];
-    [self.reportWriter increaseIndent];
+  if (_failedBuildEvents.count > 0) {
+    [_reportWriter printLine:@"<bold>Failures:<reset>"];
+    [_reportWriter printNewline];
+    [_reportWriter increaseIndent];
 
     int i = 0;
-    for (NSDictionary *d in self.failedBuildEvents) {
-      [self.reportWriter printLine:@"%d) %@", i, d[@"title"]];
+    for (NSDictionary *d in _failedBuildEvents) {
+      [_reportWriter printLine:@"%d) %@", i, d[@"title"]];
       [self printDivider];
-      [self.reportWriter disableIndent];
-      [self.reportWriter printString:@"<faint>%@<reset>", d[@"body"]];
-      [self.reportWriter enableIndent];
+      [_reportWriter disableIndent];
+      [_reportWriter printString:@"<faint>%@<reset>", d[@"body"]];
+      [_reportWriter enableIndent];
       [self printDivider];
-      [self.reportWriter printNewline];
+      [_reportWriter printNewline];
       i++;
     }
-    [self.reportWriter decreaseIndent];
+    [_reportWriter decreaseIndent];
   } else if ([name isEqualToString:@"run-tests"] || [name isEqualToString:@"test"]) {
     message = [NSString stringWithFormat:@"%lu passed, %lu failed, %lu errored, %lu total",
                [_resultCounter actionPassed],
@@ -381,33 +394,33 @@ static NSString *abbreviatePath(NSString *string) {
                [_resultCounter actionErrored],
                [_resultCounter actionTotal]];
 
-    if ([self.failedTests count] > 0 || [self.failedOcunitEvents count] > 0) {
-      [self.reportWriter printLine:@"<bold>Failures:<reset>"];
-      [self.reportWriter printNewline];
-      [self.reportWriter increaseIndent];
+    if ([_failedTests count] > 0 || [_failedOcunitEvents count] > 0) {
+      [_reportWriter printLine:@"<bold>Failures:<reset>"];
+      [_reportWriter printNewline];
+      [_reportWriter increaseIndent];
 
       int i = 0;
-      for (NSDictionary *ocUnitEvent in self.failedOcunitEvents) {
+      for (NSDictionary *ocUnitEvent in _failedOcunitEvents) {
         if (ocUnitEvent[kReporter_BeginOCUnit_BundleNameKey]) {
-          [self.reportWriter printLine:@"%d) %@ (%@)", i, ocUnitEvent[kReporter_BeginOCUnit_TargetNameKey], ocUnitEvent[kReporter_BeginOCUnit_BundleNameKey]];
+          [_reportWriter printLine:@"%d) %@ (%@)", i, ocUnitEvent[kReporter_BeginOCUnit_TargetNameKey], ocUnitEvent[kReporter_BeginOCUnit_BundleNameKey]];
         } else {
-          [self.reportWriter printLine:@"%d) %@", i, ocUnitEvent[kReporter_BeginOCUnit_TargetNameKey]];
+          [_reportWriter printLine:@"%d) %@", i, ocUnitEvent[kReporter_BeginOCUnit_TargetNameKey]];
         }
         [self printDivider];
-        [self.reportWriter disableIndent];
-        [self.reportWriter printString:@"<faint>%@\n<reset>", [ocUnitEvent[kReporter_EndOCUnit_MessageKey]
+        [_reportWriter disableIndent];
+        [_reportWriter printString:@"<faint>%@\n<reset>", [ocUnitEvent[kReporter_EndOCUnit_MessageKey]
                                                                stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
-        [self.reportWriter enableIndent];
+        [_reportWriter enableIndent];
         [self printDivider];
-        [self.reportWriter printNewline];
+        [_reportWriter printNewline];
         i++;
       }
-      for (int failedIndex = 0; failedIndex < [self.failedTests count]; failedIndex++) {
-        NSDictionary *test = self.failedTests[failedIndex];
+      for (int failedIndex = 0; failedIndex < [_failedTests count]; failedIndex++) {
+        NSDictionary *test = _failedTests[failedIndex];
 
         NSDictionary *testEvent = test[@"event"];
 
-        [self.reportWriter printLine:@"%d) %@ (%@)",
+        [_reportWriter printLine:@"%d) %@ (%@)",
          failedIndex + i,
          testEvent[kReporter_EndTest_TestKey],
          test[@"bundle"]
@@ -421,15 +434,15 @@ static NSString *abbreviatePath(NSString *string) {
           [self printDivider];
         }
 
-        [self.reportWriter disableIndent];
+        [_reportWriter disableIndent];
 
         NSString *testOutput = testEvent[kReporter_EndTest_OutputKey];
-        [self.reportWriter printString:@"<faint>%@<reset>", testOutput];
+        [_reportWriter printString:@"<faint>%@<reset>", testOutput];
         if (![testOutput hasSuffix:@"\n"]) {
-          [self.reportWriter printNewline];
+          [_reportWriter printNewline];
         }
 
-        [self.reportWriter enableIndent];
+        [_reportWriter enableIndent];
 
         // Show first exception, if any.
         if ([exceptions count] > 0) {
@@ -437,34 +450,34 @@ static NSString *abbreviatePath(NSString *string) {
           NSString *filePath = exception[kReporter_EndTest_Exception_FilePathInProjectKey];
           int lineNumber = [exception[kReporter_EndTest_Exception_LineNumberKey] intValue];
 
-          [self.reportWriter disableIndent];
+          [_reportWriter disableIndent];
 
-          [self.reportWriter printLine:@"<faint>%@:%d: %@:<reset>",
+          [_reportWriter printLine:@"<faint>%@:%d: %@:<reset>",
            filePath,
            lineNumber,
            exception[kReporter_EndTest_Exception_ReasonKey]];
 
           if ([[NSFileManager defaultManager] fileExistsAtPath:filePath isDirectory:nil]) {
             NSString *context = [TextReporter getContext:filePath errorLine:lineNumber];
-            [self.reportWriter printLine:@"<faint>%@<reset>", context];
+            [_reportWriter printLine:@"<faint>%@<reset>", context];
           }
 
-          [self.reportWriter enableIndent];
+          [_reportWriter enableIndent];
         }
 
         if (showInfo) {
           [self printDivider];
         }
-        [self.reportWriter printNewline];
+        [_reportWriter printNewline];
       }
-      [self.reportWriter decreaseIndent];
+      [_reportWriter decreaseIndent];
     }
   } else if ([name isEqual:@"analyze"]) {
     [self printAnalyzerSummary];
   }
 
   NSString *color = succeeded ? @"<green>" : @"<red>";
-  [self.reportWriter printLine:@"<bold>%@** %@ %@%@ **<reset> <faint>(%03d ms)<reset>",
+  [_reportWriter printLine:@"<bold>%@** %@ %@%@ **<reset> <faint>(%03d ms)<reset>",
    color,
    [name uppercaseString],
    status,
@@ -474,15 +487,15 @@ static NSString *abbreviatePath(NSString *string) {
 
 - (void)beginXcodebuild:(NSDictionary *)event
 {
-  [self.reportWriter printLine:@"xcodebuild <bold>%@<reset> <underline>%@<reset>",
+  [_reportWriter printLine:@"xcodebuild <bold>%@<reset> <underline>%@<reset>",
    event[kReporter_BeginXcodebuild_CommandKey],
    event[kReporter_BeginXcodebuild_TitleKey]];
-  [self.reportWriter increaseIndent];
+  [_reportWriter increaseIndent];
 }
 
 - (void)endXcodebuild:(NSDictionary *)event
 {
-  [self.reportWriter decreaseIndent];
+  [_reportWriter decreaseIndent];
 
   BOOL xcodebuildHadError = ![event[kReporter_EndXcodebuild_ErrorMessageKey]
                               isKindOfClass:[NSNull class]];
@@ -497,32 +510,32 @@ static NSString *abbreviatePath(NSString *string) {
     [self printDivider];
   }
 
-  [self.reportWriter printNewline];
+  [_reportWriter printNewline];
 }
 
 - (void)beginBuildTarget:(NSDictionary *)event
 {
-  [self.reportWriter printLine:@"<bold>%@<reset> / <bold>%@<reset> (%@)",
+  [_reportWriter printLine:@"<bold>%@<reset> / <bold>%@<reset> (%@)",
    event[kReporter_BeginBuildTarget_ProjectKey],
    event[kReporter_BeginBuildTarget_TargetKey],
    event[kReporter_BeginBuildTarget_ConfigurationKey]];
-  [self.reportWriter increaseIndent];
+  [_reportWriter increaseIndent];
 }
 
 - (void)endBuildTarget:(NSDictionary *)event
 {
-  [self.reportWriter printLine:@"<bold>%lu errored, %lu warning %@<reset>",
+  [_reportWriter printLine:@"<bold>%lu errored, %lu warning %@<reset>",
    [event[kReporter_EndBuildCommand_TotalNumberOfErrors] unsignedIntegerValue],
    [event[kReporter_EndBuildCommand_TotalNumberOfWarnings] unsignedIntegerValue],
    [self formattedTestDuration:[event[kReporter_EndBuildCommand_DurationKey] doubleValue] withColor:NO]
    ];
-  [self.reportWriter decreaseIndent];
-  [self.reportWriter printNewline];
+  [_reportWriter decreaseIndent];
+  [_reportWriter printNewline];
 }
 
 - (void)beginBuildCommand:(NSDictionary *)event
 {
-  [self.reportWriter updateLine:@"%@ %@",
+  [_reportWriter updateLine:@"%@ %@",
    [self emptyIndicatorString],
    [self condensedBuildCommandTitle:event[kReporter_BeginBuildCommand_TitleKey]]];
   self.currentBuildCommandEvent = event;
@@ -545,36 +558,36 @@ static NSString *abbreviatePath(NSString *string) {
     indicator = [self failIndicatorString];
   }
 
-  [self.reportWriter updateLine:@"%@ %@ %@",
+  [_reportWriter updateLine:@"%@ %@ %@",
    indicator,
    [self condensedBuildCommandTitle:event[kReporter_EndBuildCommand_TitleKey]],
    [self formattedTestDuration:[event[kReporter_EndBuildCommand_DurationKey] doubleValue] withColor:YES]];
-  [self.reportWriter printNewline];
+  [_reportWriter printNewline];
 
   BOOL showInfo = !succeeded || (outputText.length > 0);
 
   if (showInfo) {
     [self printDivider];
-    [self.reportWriter disableIndent];
+    [_reportWriter disableIndent];
 
     // If the command failed, it's always interesting to see the full command being run.
     if (!succeeded) {
-      [self.reportWriter printLine:@"<faint>%@<reset>", self.currentBuildCommandEvent[kReporter_BeginBuildCommand_CommandKey]];
+      [_reportWriter printLine:@"<faint>%@<reset>", _currentBuildCommandEvent[kReporter_BeginBuildCommand_CommandKey]];
     }
 
     if (outputText.length > 0) {
-      [self.reportWriter printLine:@"<faint>%@<reset>", outputText];
+      [_reportWriter printLine:@"<faint>%@<reset>", outputText];
     }
 
-    [self.reportWriter enableIndent];
+    [_reportWriter enableIndent];
     [self printDivider];
   }
 
   if (!succeeded) {
     NSString *body = [NSString stringWithFormat:@"%@\n%@",
-                      self.currentBuildCommandEvent[kReporter_BeginBuildCommand_CommandKey], outputText];
+                      _currentBuildCommandEvent[kReporter_BeginBuildCommand_CommandKey], outputText];
 
-    [self.failedBuildEvents addObject:@{@"title":event[kReporter_EndBuildCommand_TitleKey], @"body":body}];
+    [_failedBuildEvents addObject:@{@"title":event[kReporter_EndBuildCommand_TitleKey], @"body":body}];
   }
 
   self.currentBuildCommandEvent = event;
@@ -616,39 +629,39 @@ static NSString *abbreviatePath(NSString *string) {
     attributesString = @"";
   }
 
-  [self.reportWriter printLine:@"<bold>run-test<reset> <underline>%@<reset> %@", titleString, attributesString];
+  [_reportWriter printLine:@"<bold>run-test<reset> <underline>%@<reset> %@", titleString, attributesString];
   self.currentBundle = event[kReporter_BeginOCUnit_BundleNameKey];
-  [self.reportWriter increaseIndent];
+  [_reportWriter increaseIndent];
 }
 
 - (void)endOcunit:(NSDictionary *)event
 {
-  [self.reportWriter decreaseIndent];
+  [_reportWriter decreaseIndent];
 
   NSString *message = event[kReporter_EndOCUnit_MessageKey];
 
   if (![message isEqual:[NSNull null]]) {
     [self printDivider];
-    [self.reportWriter disableIndent];
+    [_reportWriter disableIndent];
 
-    [self.reportWriter printString:@"<faint>%@<reset>", message];
+    [_reportWriter printString:@"<faint>%@<reset>", message];
 
     if (![message hasSuffix:@"\n"]) {
-      [self.reportWriter printNewline];
+      [_reportWriter printNewline];
     }
 
     if (![event[kReporter_EndOCUnit_SucceededKey] boolValue]) {
-      [self.failedOcunitEvents addObject:event];
+      [_failedOcunitEvents addObject:event];
       [_resultCounter suiteBegin];
       [_resultCounter testErrored];
       [_resultCounter suiteEnd];
     }
 
-    [self.reportWriter enableIndent];
+    [_reportWriter enableIndent];
     [self printDivider];
   }
 
-  [self.reportWriter printNewline];
+  [_reportWriter printNewline];
 }
 
 - (void)beginTestSuite:(NSDictionary *)event
@@ -661,8 +674,8 @@ static NSString *abbreviatePath(NSString *string) {
       suite = [suite lastPathComponent];
     }
 
-    [self.reportWriter printLine:@"<bold>suite<reset> <underline>%@<reset>", suite];
-    [self.reportWriter increaseIndent];
+    [_reportWriter printLine:@"<bold>suite<reset> <underline>%@<reset>", suite];
+    [_reportWriter increaseIndent];
   }
 }
 
@@ -672,16 +685,16 @@ static NSString *abbreviatePath(NSString *string) {
   [_resultCounter suiteEnd];
 
   if (![suite isEqualToString:kReporter_TestSuite_TopLevelSuiteName] && ![suite hasSuffix:@".octest(Tests)"]) {
-    [self.reportWriter printLine:@"<bold>%lu passed, %lu failed, %lu errored, %lu total %@<reset>",
+    [_reportWriter printLine:@"<bold>%lu passed, %lu failed, %lu errored, %lu total %@<reset>",
       [_resultCounter suitePassed],
       [_resultCounter suiteFailed],
       [_resultCounter suiteErrored],
       [_resultCounter suiteTotal],
      [self formattedTestDuration:[event[kReporter_EndTestSuite_TotalDurationKey] doubleValue] withColor:NO]
      ];
-    [self.reportWriter decreaseIndent];
+    [_reportWriter decreaseIndent];
   } else if ([suite isEqualToString:kReporter_TestSuite_TopLevelSuiteName] && [_resultCounter suiteTotal] > 0) {
-    [self.reportWriter printLine:@"<bold>%lu passed, %lu failed, %lu errored, %lu total %@<reset>",
+    [_reportWriter printLine:@"<bold>%lu passed, %lu failed, %lu errored, %lu total %@<reset>",
       [_resultCounter suitePassed],
       [_resultCounter suiteFailed],
       [_resultCounter suiteErrored],
@@ -693,22 +706,22 @@ static NSString *abbreviatePath(NSString *string) {
 
 - (void)beginTest:(NSDictionary *)event
 {
-  [self.reportWriter updateLine:@"%@ %@", [self emptyIndicatorString], event[kReporter_BeginTest_TestKey]];
-  self.testHadOutput = NO;
+  [_reportWriter updateLine:@"%@ %@", [self emptyIndicatorString], event[kReporter_BeginTest_TestKey]];
+  _testHadOutput = NO;
 }
 
 - (void)testOutput:(NSDictionary *)event {
-  if (!self.testHadOutput) {
-    [self.reportWriter printNewline];
+  if (!_testHadOutput) {
+    [_reportWriter printNewline];
     [self printDivider];
   }
 
-  [self.reportWriter disableIndent];
-  [self.reportWriter printString:@"<faint>%@<reset>", event[@"output"]];
-  [self.reportWriter enableIndent];
+  [_reportWriter disableIndent];
+  [_reportWriter printString:@"<faint>%@<reset>", event[@"output"]];
+  [_reportWriter enableIndent];
 
-  self.testHadOutput = YES;
-  self.testOutputEndsInNewline = [event[kReporter_TestOutput_OutputKey] hasSuffix:@"\n"];
+  _testHadOutput = YES;
+  _testOutputEndsInNewline = [event[kReporter_TestOutput_OutputKey] hasSuffix:@"\n"];
 }
 
 - (void)beginStatus:(NSDictionary *)event
@@ -716,7 +729,7 @@ static NSString *abbreviatePath(NSString *string) {
   NSAssert(_currentStatusEvent == nil,
            @"An earlier begin-status event never followed with a end-status event.");
 
-  _currentStatusEvent = [event retain];
+  self.currentStatusEvent = event;
 
   // We purposely don't output a newline - this way endStatus: can have a chance
   // to send a \r and rewrite the existing line.
@@ -788,17 +801,17 @@ static NSString *abbreviatePath(NSString *string) {
   }
 
   if (showInfo) {
-    if (!self.testHadOutput) {
-      [self.reportWriter printNewline];
+    if (!_testHadOutput) {
+      [_reportWriter printNewline];
       [self printDivider];
     }
 
-    [self.reportWriter disableIndent];
+    [_reportWriter disableIndent];
 
     // Make sure the exception or the divider aren't drawn on the same line
     // as the previous output.
-    if (self.testHadOutput && !self.testOutputEndsInNewline) {
-      [self.reportWriter printNewline];
+    if (_testHadOutput && !_testOutputEndsInNewline) {
+      [_reportWriter printNewline];
     }
 
     // Show first exception, if any.
@@ -808,18 +821,18 @@ static NSString *abbreviatePath(NSString *string) {
       NSString *filePath = exception[kReporter_EndTest_Exception_FilePathInProjectKey];
       int lineNumber = [exception[kReporter_EndTest_Exception_LineNumberKey] intValue];
 
-      [self.reportWriter printLine:@"<faint>%@:%d: %@:<reset>",
+      [_reportWriter printLine:@"<faint>%@:%d: %@:<reset>",
        filePath,
        lineNumber,
        exception[kReporter_EndTest_Exception_ReasonKey]];
 
       if ([[NSFileManager defaultManager] fileExistsAtPath:filePath isDirectory:nil]) {
         NSString *context = [TextReporter getContext:filePath errorLine:lineNumber];
-        [self.reportWriter printLine:@"<faint>%@<reset>", context];
+        [_reportWriter printLine:@"<faint>%@<reset>", context];
       }
     }
 
-    [self.reportWriter enableIndent];
+    [_reportWriter enableIndent];
     [self printDividerWithDownLine:YES];
   }
 
@@ -831,19 +844,19 @@ static NSString *abbreviatePath(NSString *string) {
 
   // If the test failed, add a number linking it to the failure summary.
   if (!succeeded) {
-    [resultLine appendFormat:@" (%ld)", [self.failedTests count]];
+    [resultLine appendFormat:@" (%ld)", [_failedTests count]];
 
     // Add the test information to the list of failed tests for printing later.
-    [self.failedTests addObject:@{@"bundle": self.currentBundle, @"event": event}];
+    [_failedTests addObject:@{@"bundle": _currentBundle, @"event": event}];
   }
 
-  [self.reportWriter updateLine:@"%@", resultLine];
-  [self.reportWriter printNewline];
+  [_reportWriter updateLine:@"%@", resultLine];
+  [_reportWriter printNewline];
 }
 
 - (void)analyzerResult:(NSDictionary *)event
 {
-  [self.analyzerWarnings addObject:event];
+  [_analyzerWarnings addObject:event];
 }
 
 + (NSString *)getContext:(NSString *)filePath errorLine:(int)errorLine colNumber:(int)colNumber
@@ -911,7 +924,7 @@ static NSString *abbreviatePath(NSString *string) {
 - (id)init
 {
   if (self = [super init]) {
-    _isPretty = YES;
+    self.isPretty = YES;
   }
   return self;
 }
@@ -923,7 +936,7 @@ static NSString *abbreviatePath(NSString *string) {
 - (id)init
 {
   if (self = [super init]) {
-    _isPretty = NO;
+    self.isPretty = NO;
   }
   return self;
 }

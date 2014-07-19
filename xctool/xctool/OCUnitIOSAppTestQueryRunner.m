@@ -27,7 +27,7 @@
   NSString *version = [_buildSettings[Xcode_SDK_NAME] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
 
   return CreateTaskForSimulatorExecutable(_buildSettings[Xcode_SDK_NAME],
-                                          [self cpuType],
+                                          _cpuType,
                                           version,
                                           [self testHostPath],
                                           @[],

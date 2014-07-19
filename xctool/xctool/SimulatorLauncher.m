@@ -26,6 +26,15 @@ static BOOL __didLoadAllPlatforms = NO;
 
 @end
 
+@interface SimulatorLauncher ()
+@property (nonatomic, assign) BOOL didQuit;
+@property (nonatomic, assign) BOOL didFailToStart;
+@property (nonatomic, assign) BOOL didStart;
+@property (nonatomic, retain) NSError *didEndWithError;
+@property (nonatomic, retain) DTiPhoneSimulatorSession *session;
+@property (nonatomic, retain) NSError *launchError;
+@end
+
 @implementation SimulatorLauncher
 
 + (void)loadAllPlatforms
