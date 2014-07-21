@@ -59,7 +59,7 @@ typedef enum {
 @property (nonatomic, assign) BOOL listTestsOnly;
 @property (nonatomic, assign) cpu_type_t cpuType;
 @property (nonatomic, copy) NSString *testSDK;
-@property (nonatomic, retain) NSMutableArray *onlyList;
+@property (nonatomic, strong) NSMutableArray *onlyList;
 @property (nonatomic, copy) NSString *deviceName;
 @property (nonatomic, copy) NSString *OSVersion;
 

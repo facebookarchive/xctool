@@ -19,7 +19,7 @@
 
 + (SwizzleReceipt *)_replaceMethod:(Method)method withBlock:(id)block
 {
-  SwizzleReceipt *receipt = [[[SwizzleReceipt alloc] init] autorelease];
+  SwizzleReceipt *receipt = [[SwizzleReceipt alloc] init];
 
   receipt->_method = method;
   receipt->_originalIMP = method_getImplementation(method);

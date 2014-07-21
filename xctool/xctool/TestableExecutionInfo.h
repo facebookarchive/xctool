@@ -29,7 +29,7 @@
 /**
  * The `Testable` this info belongs to.
  */
-@property (nonatomic, retain) Testable *testable;
+@property (nonatomic, strong) Testable *testable;
 
 /**
  * The key/value pairs from `-showBuildSettings` for this testable.

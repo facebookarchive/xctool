@@ -24,8 +24,8 @@
 #import "XCToolUtil.h"
 
 @interface TestRunState ()
-@property (nonatomic, retain) OCTestSuiteEventState *testSuiteState;
-@property (nonatomic, retain) OCTestEventState *previousTestState;
+@property (nonatomic, strong) OCTestSuiteEventState *testSuiteState;
+@property (nonatomic, strong) OCTestEventState *previousTestState;
 @property (nonatomic, copy) NSSet *crashReportsAtStart;
 @property (nonatomic, copy) NSMutableString *outputBeforeTestsStart;
 @end
@@ -50,20 +50,12 @@
 {
   self = [super init];
   if (self) {
-    _testSuiteState = [suiteState retain];
+    _testSuiteState = suiteState;
     _outputBeforeTestsStart = [[NSMutableString alloc] init];
   }
   return self;
 }
 
-- (void)dealloc
-{
-  [_testSuiteState release];
-  [_previousTestState release];
-  [_crashReportsAtStart release];
-  [_outputBeforeTestsStart release];
-  [super dealloc];
-}
 
 - (void)setReporters:(NSArray *)reporters
 {
@@ -86,7 +78,7 @@
 - (void)prepareToRun
 {
   NSAssert(_crashReportsAtStart == nil, @"Should not have set yet.");
-  _crashReportsAtStart = [[NSSet setWithArray:[self collectCrashReportPaths]] retain];
+  _crashReportsAtStart = [NSSet setWithArray:[self collectCrashReportPaths]];
 }
 
 - (void)publishEventToReporters:(NSDictionary *)event
@@ -134,10 +126,9 @@
              duration:[event[kReporter_EndTest_TotalDurationKey] doubleValue]];
 
   if (_previousTestState) {
-    [_previousTestState release];
     _previousTestState = nil;
   }
-  _previousTestState = [state retain];
+  _previousTestState = state;
 
   [self publishEventToReporters:event];
 }
@@ -162,7 +153,7 @@
                                                     withObject:[NSString stringWithFormat:@"Test did not run: %@", startupError]];
 
   // Insert a place holder test to hold detailed error info.
-  OCTestEventState *fakeTest = [[[OCTestEventState alloc] initWithInputName:@"TEST_BUNDLE/FAILED_TO_START"] autorelease];
+  OCTestEventState *fakeTest = [[OCTestEventState alloc] initWithInputName:@"TEST_BUNDLE/FAILED_TO_START"];
   // Append crash reports (if any) to the place holder test.
   NSString *fakeTestOutput = [NSString stringWithFormat:
                               @"There was a problem starting the test bundle: %@\n"
@@ -178,7 +169,7 @@
 - (void)handleCrashBeforeAnyTestsRanWithOtherErrors:(NSString *)otherErrors
 {
   // The test runner crashed before any tests ran.
-  OCTestEventState *fakeTest = [[[OCTestEventState alloc] initWithInputName:@"FAILED_BEFORE/TESTS_RAN"] autorelease];
+  OCTestEventState *fakeTest = [[OCTestEventState alloc] initWithInputName:@"FAILED_BEFORE/TESTS_RAN"];
   [_testSuiteState insertTest:fakeTest atIndex:0];
 
   // All tests should include this message.
@@ -229,7 +220,7 @@
                               [self collectCrashReports:_crashReportsAtStart]];
   fakeTestOutput = [fakeTestOutput stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 
-  OCTestEventState *fakeTest = [[[OCTestEventState alloc] initWithInputName:fakeTestName] autorelease];
+  OCTestEventState *fakeTest = [[OCTestEventState alloc] initWithInputName:fakeTestName];
   [fakeTest appendOutput:fakeTestOutput];
 
   [_testSuiteState insertTest:fakeTest atIndex:previousTestStateIndex + 1];

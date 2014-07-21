@@ -26,7 +26,7 @@
 - (void)testExtractNodes
 {
   NSString *testDataPath = TEST_DATA @"example-build-state.dat";
-  BuildStateParser *buildState = [[[BuildStateParser alloc] initWithPath:testDataPath] autorelease];
+  BuildStateParser *buildState = [[BuildStateParser alloc] initWithPath:testDataPath];
   assertThat(buildState.nodes,
              equalTo([NSArray arrayWithContentsOfFile:TEST_DATA @"example-build-state-nodes.plist"]));
 }

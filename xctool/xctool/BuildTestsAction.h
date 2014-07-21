@@ -18,7 +18,7 @@
 
 @interface BuildTestsAction : Action
 
-@property (nonatomic, retain) NSMutableArray *onlyList;
+@property (nonatomic, strong) NSMutableArray *onlyList;
 @property (nonatomic, assign) BOOL skipDependencies;
 
 + (BOOL)buildWorkspace:(NSString *)path

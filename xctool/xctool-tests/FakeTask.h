@@ -28,8 +28,8 @@
 @property (copy) NSString *launchPath;
 @property (copy) NSArray *arguments;
 @property (copy) NSDictionary *environment;
-@property (retain) id standardOutput;
-@property (retain) id standardError;
+@property (strong) id standardOutput;
+@property (strong) id standardError;
 @property (assign, readonly) int terminationStatus;
 @property (assign) NSTaskTerminationReason terminationReason;
 @property (assign) BOOL isRunning;

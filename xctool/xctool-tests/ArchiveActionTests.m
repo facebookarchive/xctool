@@ -22,7 +22,7 @@
                                                settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
      ]];
 
-    XCTool *tool = [[[XCTool alloc] init] autorelease];
+    XCTool *tool = [[XCTool alloc] init];
 
     tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
@@ -50,7 +50,7 @@
      [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-App-OSX/TestProject-App-OSX.xcodeproj"
                                                      scheme:@"TestProject-App-OSX"
                                                settingsPath:TEST_DATA @"TestProject-App-OSX-showBuildSettings.txt"],
-     [[^(FakeTask *task){
+     [^(FakeTask *task){
       if ([[task launchPath] hasSuffix:@"xcodebuild"] &&
           [[task arguments] containsObject:@"archive"])
       {
@@ -61,10 +61,10 @@
         // Even when archive fails, 'xcodebuild' returns zero.
         [task pretendExitStatusOf:0];
       }
-    } copy] autorelease],
+    } copy],
      ]];
 
-    XCTool *tool = [[[XCTool alloc] init] autorelease];
+    XCTool *tool = [[XCTool alloc] init];
 
     tool.arguments = @[@"-project", TEST_DATA @"TestProject-App-OSX/TestProject-App-OSX.xcodeproj",
                        @"-scheme", @"TestProject-App-OSX",
@@ -87,7 +87,7 @@
      [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-App-OSX/TestProject-App-OSX.xcodeproj"
                                                      scheme:@"TestProject-App-OSX"
                                                settingsPath:TEST_DATA @"TestProject-App-OSX-showBuildSettings.txt"],
-     [[^(FakeTask *task){
+     [^(FakeTask *task){
       if ([[task launchPath] hasSuffix:@"xcodebuild"] &&
           [[task arguments] containsObject:@"archive"])
       {
@@ -97,10 +97,10 @@
                                       error:nil]];
         [task pretendExitStatusOf:0];
       }
-    } copy] autorelease],
+    } copy],
      ]];
 
-    XCTool *tool = [[[XCTool alloc] init] autorelease];
+    XCTool *tool = [[XCTool alloc] init];
 
     tool.arguments = @[@"-project", TEST_DATA @"TestProject-App-OSX/TestProject-App-OSX.xcodeproj",
                        @"-scheme", @"TestProject-App-OSX",
@@ -125,7 +125,7 @@
                                                settingsPath:TEST_DATA @"TestProject-Library-WithDifferentConfigurations-showBuildSettings.txt"],
      ]];
 
-    XCTool *tool = [[[XCTool alloc] init] autorelease];
+    XCTool *tool = [[XCTool alloc] init];
 
     tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",

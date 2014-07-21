@@ -67,14 +67,5 @@
           self.buildForAnalyzing);
 }
 
-- (void)dealloc
-{
-  [_senTestList release];
-  [_arguments release];
-  [_environment release];
-  [_macroExpansionProjectPath release];
-  [_macroExpansionTarget release];
-  [super dealloc];
-}
 
 @end

@@ -43,8 +43,8 @@ static NSArray *AllTestCasesInTestBundle(NSString *sdkName,
                                   Xcode_FULL_PRODUCT_NAME : fullProductName,
                                   Xcode_SDK_NAME : latestSDK,
                                   };
-  OCUnitTestQueryRunner *runner = [[[testQueryClass alloc] initWithBuildSettings:buildSettings
-                                                                     withCpuType:CPU_TYPE_ANY] autorelease];
+  OCUnitTestQueryRunner *runner = [[testQueryClass alloc] initWithBuildSettings:buildSettings
+                                                                     withCpuType:CPU_TYPE_ANY];
   NSArray *allTests = [runner runQueryWithError:&error];
   NSCAssert(error == nil, @"Error while querying test cases: %@", error);
 
@@ -115,7 +115,6 @@ static NSTask *OtestShimTask(NSString *platformName,
                                                                           reporters:@[]];
 
   NSTask *task = [runner otestTaskWithTestBundle: bundlePath];
-  [runner release];
 
   // Make sure launch path is accessible.
   NSString *launchPath = [task launchPath];

@@ -13,7 +13,7 @@
   [escapedString replaceOccurrencesOfString:@"\r" withString:@"|r" options:0 range:NSMakeRange(0, [escapedString length])];
   [escapedString replaceOccurrencesOfString:@"[" withString:@"|[" options:0 range:NSMakeRange(0, [escapedString length])];
   [escapedString replaceOccurrencesOfString:@"]" withString:@"|]" options:0 range:NSMakeRange(0, [escapedString length])];
-  return [escapedString autorelease];
+  return escapedString;
 }
 
 @end

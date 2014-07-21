@@ -22,6 +22,6 @@
 @property (nonatomic, copy) NSString *projectPath;
 @property (nonatomic, copy) NSString *schemeName;
 @property (nonatomic, assign) NSUInteger numTargetsInScheme;
-@property (nonatomic, retain) NSDate *recentlyModifiedWorkspaceDate;
+@property (nonatomic, strong) NSDate *recentlyModifiedWorkspaceDate;
 
 @end

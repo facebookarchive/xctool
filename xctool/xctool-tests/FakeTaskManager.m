@@ -8,6 +8,7 @@
 
 static FakeTaskManager *__sharedManager = nil;
 
+static id NSTask_allocWithZone(id cls, SEL sel, NSZone *zone) __attribute((ns_returns_retained));
 static id NSTask_allocWithZone(id cls, SEL sel, NSZone *zone)
 {
   if ([[FakeTaskManager sharedManager] fakeTasksAreEnabled] &&
@@ -24,6 +25,13 @@ __attribute__((constructor)) static void initialize()
                                     @selector(allocWithZone:),
                                     (IMP)NSTask_allocWithZone);
 }
+
+@interface FakeTaskManager ()
+@property (nonatomic, copy) NSMutableArray *launchedTasks;
+@property (nonatomic, copy) NSMutableArray *launchedTasksToBeHidden;
+@property (nonatomic, copy) NSMutableArray *launchHandlerBlocks;
+@property (nonatomic, assign) BOOL fakeTasksAreEnabled;
+@end
 
 @implementation FakeTaskManager
 
@@ -56,11 +64,8 @@ __attribute__((constructor)) static void initialize()
 {
   NSAssert(_fakeTasksAreEnabled, @"Fake tasks weren't enabled.");
   _fakeTasksAreEnabled = NO;
-  [_launchedTasks release];
   _launchedTasks = nil;
-  [_launchedTasksToBeHidden release];
   _launchedTasksToBeHidden = nil;
-  [_launchHandlerBlocks release];
   _launchHandlerBlocks = nil;
 }
 

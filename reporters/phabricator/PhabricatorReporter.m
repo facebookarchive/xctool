@@ -35,14 +35,6 @@
   return self;
 }
 
-- (void)dealloc
-{
-  [_currentBuildCommand release];
-  [_currentTargetFailures release];
-  [_results release];
-  [_scheme release];
-  [super dealloc];
-}
 
 - (void)beginAction:(NSDictionary *)event
 {
@@ -170,7 +162,7 @@
                                                   options:NSJSONWritingPrettyPrinted
                                                     error:&error];
   NSAssert(error == nil, @"Failed while trying to encode as JSON: %@", error);
-  return [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+  return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
 
 - (void)didFinishReporting

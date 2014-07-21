@@ -20,7 +20,7 @@
 
 @interface SimulatorLauncher : NSObject <DTiPhoneSimulatorSessionDelegate>
 
-@property (nonatomic, retain, readonly) NSError *launchError;
+@property (nonatomic, strong, readonly) NSError *launchError;
 @property (nonatomic, copy) NSNumber *launchTimeout;
 
 + (void)loadAllPlatforms;

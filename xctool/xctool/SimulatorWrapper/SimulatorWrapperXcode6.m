@@ -35,7 +35,7 @@
                                                                  outputPath:(NSString *)outputPath
 {
   NSDictionary *deviceEnvironment = [[simInfo simulatedDevice] environment] ?: @{};
-  NSMutableDictionary *launchEnvironmentEdited = [[deviceEnvironment mutableCopy] autorelease];
+  NSMutableDictionary *launchEnvironmentEdited = [deviceEnvironment mutableCopy];
   [launchEnvironmentEdited addEntriesFromDictionary:launchEnvironment];
   if (deviceEnvironment[@"TMPDIR"]) {
     launchEnvironmentEdited[@"TMPDIR"] = deviceEnvironment[@"TMPDIR"];
@@ -72,7 +72,7 @@
   DTiPhoneSimulatorApplicationSpecifier *appSpec = [DTiPhoneSimulatorApplicationSpecifier specifierWithApplicationBundleIdentifier:@"com.apple.unknown"];
   DTiPhoneSimulatorSystemRoot *systemRoot = [simInfo systemRootForSimulatedSdk];
 
-  DTiPhoneSimulatorSessionConfig *sessionConfig = [[[DTiPhoneSimulatorSessionConfig alloc] init] autorelease];
+  DTiPhoneSimulatorSessionConfig *sessionConfig = [[DTiPhoneSimulatorSessionConfig alloc] init];
   [sessionConfig setApplicationToSimulateOnStart:appSpec];
   [sessionConfig setDevice:[simInfo simulatedDevice]];
   [sessionConfig setRuntime:[simInfo simulatedRuntime]];
@@ -84,8 +84,8 @@
   [sessionConfig setSimulatedDeviceInfoName:[simInfo simulatedDeviceInfoName]];
   [sessionConfig setSimulatedSystemRoot:systemRoot];
 
-  SimulatorLauncher *launcher = [[[SimulatorLauncher alloc] initWithSessionConfig:sessionConfig
-                                                                       deviceName:[simInfo simulatedDeviceInfoName]] autorelease];
+  SimulatorLauncher *launcher = [[SimulatorLauncher alloc] initWithSessionConfig:sessionConfig
+                                                                       deviceName:[simInfo simulatedDeviceInfoName]];
   launcher.launchTimeout = [simInfo launchTimeout];
 
   BOOL simStartedSuccessfully = [launcher launchAndWaitForStart] || [simInfo simulatedDevice].state == SimDeviceStateBooted;

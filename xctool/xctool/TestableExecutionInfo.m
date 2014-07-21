@@ -33,7 +33,7 @@
                         testSDK:(NSString *)testSDK
                         cpuType:(cpu_type_t)cpuType
 {
-  TestableExecutionInfo *info = [[[TestableExecutionInfo alloc] init] autorelease];
+  TestableExecutionInfo *info = [[TestableExecutionInfo alloc] init];
   info.testable = testable;
 
   NSString *buildSettingsError = nil;
@@ -122,7 +122,6 @@
 
   NSDictionary *output = LaunchTaskAndCaptureOutput(settingsTask,
                                                     [NSString stringWithFormat:@"running xcodebuild -showBuildSettings for '%@' target", target]);
-  [settingsTask release];
   settingsTask = nil;
 
   NSDictionary *allSettings = BuildSettingsFromOutput(output[@"stdout"]);
@@ -185,8 +184,8 @@
       runnerClass = [OCUnitIOSLogicTestQueryRunner class];
     }
   }
-  OCUnitTestQueryRunner *runner = [[[runnerClass alloc] initWithBuildSettings:testableBuildSettings
-                                                                  withCpuType:cpuType] autorelease];
+  OCUnitTestQueryRunner *runner = [[runnerClass alloc] initWithBuildSettings:testableBuildSettings
+                                                                  withCpuType:cpuType];
   return [runner runQueryWithError:error];
 }
 
@@ -201,7 +200,6 @@
                             withString:val
                                options:0
                                  range:NSMakeRange(0, [result length])];
-    [macroStr release];
   }];
 
   return result;
@@ -236,16 +234,5 @@
   return result;
 }
 
-- (void)dealloc
-{
-  [_testable release];
-  [_buildSettings release];
-  [_buildSettingsError release];
-  [_testCases release];
-  [_testCasesQueryError release];
-  [_expandedArguments release];
-  [_expandedEnvironment release];
-  [super dealloc];
-}
 
 @end

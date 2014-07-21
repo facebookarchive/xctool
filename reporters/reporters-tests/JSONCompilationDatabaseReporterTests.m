@@ -113,8 +113,8 @@
 {
   NSData *outputData = [JSONCompilationDatabaseReporter
                         outputDataWithEventsFromFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results.txt"];
-  NSString *jsonStr = [[[NSString alloc] initWithData:outputData
-                                            encoding:NSUTF8StringEncoding] autorelease];
+  NSString *jsonStr = [[NSString alloc] initWithData:outputData
+                                            encoding:NSUTF8StringEncoding];
   STAssertEqualObjects(@"\
 [\n\
 \n\

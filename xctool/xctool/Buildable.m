@@ -66,13 +66,5 @@
           _buildForAnalyzing);
 }
 
-- (void)dealloc
-{
-  [_projectPath release];
-  [_target release];
-  [_targetID release];
-  [_executable release];
-  [super dealloc];
-}
 
 @end

@@ -42,7 +42,7 @@
 
 - (void)testCallingWithHelpPrintsUsage
 {
-  XCTool *tool = [[[XCTool alloc] init] autorelease];
+  XCTool *tool = [[XCTool alloc] init];
   tool.arguments = @[@"-help"];
 
   NSDictionary *result = [TestUtil runWithFakeStreams:tool];
@@ -53,7 +53,7 @@
 
 - (void)testCanPrintVersion
 {
-  XCTool *tool = [[[XCTool alloc] init] autorelease];
+  XCTool *tool = [[XCTool alloc] init];
   tool.arguments = @[@"-version"];
 
   NSDictionary *result = [TestUtil runWithFakeStreams:tool];
@@ -65,7 +65,7 @@
 
 - (void)testCallingWithNoArgsDefaultsToBuild
 {
-  XCTool *tool = [[[XCTool alloc] init] autorelease];
+  XCTool *tool = [[XCTool alloc] init];
   tool.arguments = @[];
 
   NSDictionary *result = [TestUtil runWithFakeStreams:tool];
@@ -85,7 +85,7 @@
                                                        hide:NO],
      ]];
 
-    XCTool *tool = [[[XCTool alloc] init] autorelease];
+    XCTool *tool = [[XCTool alloc] init];
 
     tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",

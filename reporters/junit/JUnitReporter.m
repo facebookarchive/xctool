@@ -27,7 +27,7 @@
 
 @property (nonatomic, copy) NSMutableArray *testSuites;
 @property (nonatomic, copy) NSMutableArray *testResults;
-@property (nonatomic, retain) NSDateFormatter *formatter;
+@property (nonatomic, strong) NSDateFormatter *formatter;
 @property (nonatomic, assign) int totalTests;
 @property (nonatomic, assign) int totalFailures;
 @property (nonatomic, assign) int totalErrors;
@@ -54,13 +54,6 @@
   return self;
 }
 
-- (void)dealloc
-{
-  [_testSuites release];
-  [_testResults release];
-  [_formatter release];
-  [super dealloc];
-}
 
 #pragma mark Reporter
 

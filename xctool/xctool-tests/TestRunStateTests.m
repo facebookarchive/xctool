@@ -37,8 +37,8 @@ static NSArray *EventsForFakeRun()
 
 static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
 {
-  return [[[TestRunState alloc] initWithTests:@[@"OtherTests/testSomething", @"OtherTests/testAnother"]
-                                    reporters:@[sink]] autorelease];
+  return [[TestRunState alloc] initWithTests:@[@"OtherTests/testSomething", @"OtherTests/testAnother"]
+                                    reporters:@[sink]];
 }
 
 @interface TestRunStateTests : SenTestCase {
@@ -88,10 +88,10 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
                         @"SomeTests/testWillFail",
                         @"SomeTests/testWillPass"];
 
-  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
+  EventBuffer *eventBuffer = [[EventBuffer alloc] init];
   TestRunState *state =
-    [[[TestRunState alloc] initWithTests:testList
-                                    reporters:@[eventBuffer]] autorelease];
+    [[TestRunState alloc] initWithTests:testList
+                                    reporters:@[eventBuffer]];
   [state prepareToRun];
   [self sendEventsFromFile:TEST_DATA @"JSONStreamReporter-runtests.txt"
                 toReporter:state];
@@ -106,7 +106,7 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
 {
   void (^testCrashBeforeTestsRan)(NSArray *, NSArray *expectedEvents) =
   ^(NSArray *events, NSArray *expectedEvents){
-    EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
+    EventBuffer *eventBuffer = [[EventBuffer alloc] init];
     TestRunState *state = TestRunStateForFakeRun(eventBuffer);
 
     [state prepareToRun];
@@ -165,7 +165,7 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
 
 - (void)testCrashedAfterFirstTestStarts
 {
-  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
+  EventBuffer *eventBuffer = [[EventBuffer alloc] init];
   TestRunState *state = TestRunStateForFakeRun(eventBuffer);
 
   [state prepareToRun];
@@ -188,7 +188,7 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
 
 - (void)testCrashedAfterFirstTestFinishes
 {
-  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
+  EventBuffer *eventBuffer = [[EventBuffer alloc] init];
   TestRunState *state = TestRunStateForFakeRun(eventBuffer);
 
   [state prepareToRun];
@@ -224,7 +224,7 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
 
 - (void)testTestsNeverRanBecauseOfStartupError
 {
-  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
+  EventBuffer *eventBuffer = [[EventBuffer alloc] init];
   TestRunState *state = TestRunStateForFakeRun(eventBuffer);
 
   [state prepareToRun];
@@ -260,7 +260,7 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
 
 - (void)testCrashedAfterLastTestFinishes
 {
-  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
+  EventBuffer *eventBuffer = [[EventBuffer alloc] init];
   TestRunState *state = TestRunStateForFakeRun(eventBuffer);
 
   [state prepareToRun];
@@ -298,7 +298,7 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
 
 - (void)testCrashedAfterTestSuiteFinishes
 {
-  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
+  EventBuffer *eventBuffer = [[EventBuffer alloc] init];
   TestRunState *state = TestRunStateForFakeRun(eventBuffer);
 
   [state prepareToRun];

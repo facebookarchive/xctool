@@ -70,7 +70,6 @@
   LaunchTaskAndFeedOuputLinesToBlock(task,
                                      @"running otest/xctest on test bundle",
                                      outputLineBlock);
-  [task release];
 }
 
 @end

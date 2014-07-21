@@ -52,7 +52,7 @@ BOOL IsOtestTask(NSTask *task)
                                settingsPath:(NSString *)settingsPath
                                        hide:(BOOL)hide
 {
-  return [[^(FakeTask *task){
+  return [^(FakeTask *task){
     BOOL match = YES;
     match = [[task launchPath] hasSuffix:@"xcodebuild"];
     match &= ArrayContainsSubsequence([task arguments], @[@"-project",
@@ -76,7 +76,7 @@ BOOL IsOtestTask(NSTask *task)
         [[FakeTaskManager sharedManager] hideTaskFromLaunchedTasks:task];
       }
     }
-  } copy] autorelease];
+  } copy];
 }
 
 + (id)handlerForShowBuildSettingsWithProject:(NSString *)project
@@ -84,7 +84,7 @@ BOOL IsOtestTask(NSTask *task)
                                 settingsPath:(NSString *)settingsPath
                                         hide:(BOOL)hide
 {
-  return [[^(FakeTask *task){
+  return [^(FakeTask *task){
     if ([[task launchPath] hasSuffix:@"xcodebuild"] &&
         ArrayContainsSubsequence([task arguments], @[
                                                      @"-project",
@@ -103,7 +103,7 @@ BOOL IsOtestTask(NSTask *task)
         [[FakeTaskManager sharedManager] hideTaskFromLaunchedTasks:task];
       }
     }
-  } copy] autorelease];
+  } copy];
 }
 
 + (id)handlerForShowBuildSettingsErrorWithProject:(NSString *)project
@@ -111,7 +111,7 @@ BOOL IsOtestTask(NSTask *task)
                                  errorMessagePath:(NSString *)errorMessagePath
                                              hide:(BOOL)hide
 {
-  return [[^(FakeTask *task){
+  return [^(FakeTask *task){
     if ([[task launchPath] hasSuffix:@"xcodebuild"] &&
         ArrayContainsSubsequence([task arguments], @[@"-project",
                                                      project,
@@ -129,7 +129,7 @@ BOOL IsOtestTask(NSTask *task)
         [[FakeTaskManager sharedManager] hideTaskFromLaunchedTasks:task];
       }
     }
-  } copy] autorelease];
+  } copy];
 }
 
 + (id)handlerForShowBuildSettingsWithWorkspace:(NSString *)workspace
@@ -147,7 +147,7 @@ BOOL IsOtestTask(NSTask *task)
                                   settingsPath:(NSString *)settingsPath
                                           hide:(BOOL)hide
 {
-  return [[^(FakeTask *task){
+  return [^(FakeTask *task){
     if ([[task launchPath] hasSuffix:@"xcodebuild"] &&
         ArrayContainsSubsequence([task arguments], @[@"-workspace",
                                                      workspace,
@@ -165,12 +165,12 @@ BOOL IsOtestTask(NSTask *task)
         [[FakeTaskManager sharedManager] hideTaskFromLaunchedTasks:task];
       }
     }
-  } copy] autorelease];
+  } copy];
 }
 
 + (id)handlerForOtestQueryReturningTestList:(NSArray *)testList
 {
-  return [[^(FakeTask *task){
+  return [^(FakeTask *task){
 
     BOOL isOtestQuery = NO;
 
@@ -189,11 +189,11 @@ BOOL IsOtestTask(NSTask *task)
     if (isOtestQuery) {
       [task pretendExitStatusOf:0];
       [task pretendTaskReturnsStandardOutput:
-       [[[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:testList options:0 error:nil]
-                              encoding:NSUTF8StringEncoding] autorelease]];
+       [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:testList options:0 error:nil]
+                              encoding:NSUTF8StringEncoding]];
       [[FakeTaskManager sharedManager] hideTaskFromLaunchedTasks:task];
     }
-  } copy] autorelease];
+  } copy];
 }
 
 @end

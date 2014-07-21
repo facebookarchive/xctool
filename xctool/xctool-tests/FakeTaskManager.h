@@ -4,12 +4,6 @@
 @class FakeTask;
 
 @interface FakeTaskManager : NSObject
-{
-  NSMutableArray *_launchedTasks;
-  NSMutableArray *_launchedTasksToBeHidden;
-  NSMutableArray *_launchHandlerBlocks;
-  BOOL _fakeTasksAreEnabled;
-}
 
 + (FakeTaskManager *)sharedManager;
 

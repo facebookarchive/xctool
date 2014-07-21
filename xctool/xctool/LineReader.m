@@ -17,7 +17,7 @@
 #import "LineReader.h"
 
 @interface LineReader ()
-@property (nonatomic, retain) NSFileHandle *fileHandle;
+@property (nonatomic, strong) NSFileHandle *fileHandle;
 @property (nonatomic, copy) NSMutableString *buffer;
 @end
 
@@ -26,18 +26,12 @@
 - (id)initWithFileHandle:(NSFileHandle *)fileHandle
 {
   if (self = [super init]) {
-    _fileHandle = [fileHandle retain];
+    _fileHandle = fileHandle;
     _buffer = [[NSMutableString alloc] initWithCapacity:0];
   }
   return self;
 }
 
-- (void)dealloc
-{
-  [_fileHandle release];
-  [_buffer release];
-  [super dealloc];
-}
 
 - (void)processBuffer
 {
@@ -62,7 +56,7 @@
 
 - (void)appendDataToBuffer:(NSData *)data
 {
-  NSString *dataToAppend = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+  NSString *dataToAppend = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
   if (dataToAppend) {
     [_buffer appendString:dataToAppend];
   }

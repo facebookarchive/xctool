@@ -49,14 +49,14 @@
 @property (nonatomic, assign) BOOL showBuildSettings;
 @property (nonatomic, assign) BOOL showTasks;
 
-@property (nonatomic, retain) NSMutableDictionary *buildSettings;
-@property (nonatomic, retain) NSMutableDictionary *userDefaults;
-@property (nonatomic, retain) NSMutableArray *reporters;
+@property (nonatomic, strong) NSMutableDictionary *buildSettings;
+@property (nonatomic, strong) NSMutableDictionary *userDefaults;
+@property (nonatomic, strong) NSMutableArray *reporters;
 
 @property (nonatomic, assign) BOOL showHelp;
 @property (nonatomic, assign) BOOL showVersion;
 
-@property (nonatomic, retain) NSMutableArray *actions;
+@property (nonatomic, strong) NSMutableArray *actions;
 
 /**
  Returns the command-line arguments that were passed to xctool, and which should

@@ -828,7 +828,7 @@
 			name = "xctool-tests";
 			productName = "xctool-tests";
 			productReference = 283CCAC216C2EE9900F2E343 /* xctool-tests.octest */;
-			productType = "com.apple.product-type.bundle";
+			productType = "com.apple.product-type.bundle.ocunit-test";
 		};
 /* End PBXNativeTarget section */
 

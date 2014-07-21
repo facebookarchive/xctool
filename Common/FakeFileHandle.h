@@ -3,7 +3,8 @@
 
 @interface FakeFileHandle : NSObject
 
-@property (nonatomic, retain, readonly) NSMutableData *dataWritten;
+@property (nonatomic, strong) NSMutableData *dataWritten;
+
 - (NSString *)stringWritten;
 - (int)fileDescriptor;
 - (void)synchronizeFile;

@@ -38,12 +38,5 @@
   return _simulatorInfo;
 }
 
-- (void)dealloc
-{
-  [_deviceName release];
-  [_OSVersion release];
-  [_simulatorInfo release];
-  [super dealloc];
-}
 
 @end

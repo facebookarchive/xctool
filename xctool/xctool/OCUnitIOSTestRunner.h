@@ -23,7 +23,7 @@
 @property (nonatomic, copy) NSString *deviceName;
 @property (nonatomic, copy) NSString *OSVersion;
 
-@property (nonatomic, retain) SimulatorInfo *simulatorInfo;
+@property (nonatomic, strong) SimulatorInfo *simulatorInfo;
 
 - (void)updateSimulatorInfo;
 

@@ -56,7 +56,7 @@ static void ReportStatusMessageEndWithTimestamp(NSArray *reporters, ReporterMess
 void ReportStatusMessage(NSArray *reporters, ReporterMessageLevel level, NSString *format, ...) {
   va_list args;
   va_start(args, format);
-  NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
+  NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
   va_end(args);
 
   // This is a one-shot status message that has no begin/end, so we send the
@@ -68,7 +68,7 @@ void ReportStatusMessage(NSArray *reporters, ReporterMessageLevel level, NSStrin
 void ReportStatusMessageBegin(NSArray *reporters, ReporterMessageLevel level, NSString *format, ...) {
   va_list args;
   va_start(args, format);
-  NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
+  NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
   va_end(args);
 
   ReportStatusMessageBeginWithTimestamp(reporters, level, message);
@@ -77,7 +77,7 @@ void ReportStatusMessageBegin(NSArray *reporters, ReporterMessageLevel level, NS
 void ReportStatusMessageEnd(NSArray *reporters, ReporterMessageLevel level, NSString *format, ...) {
   va_list args;
   va_start(args, format);
-  NSString *message = [[[NSString alloc] initWithFormat:format arguments:args] autorelease];
+  NSString *message = [[NSString alloc] initWithFormat:format arguments:args];
   va_end(args);
 
   ReportStatusMessageEndWithTimestamp(reporters, level, message);

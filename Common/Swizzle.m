@@ -13,12 +13,15 @@ void XTSwizzleClassSelectorForFunction(Class cls, SEL sel, IMP newImp)
                             class_getName(cls),
                             sel_getName(sel)];
   SEL newSelector = sel_registerName([selectorName UTF8String]);
-  [selectorName release];
 
   class_addMethod(clscls, newSelector, newImp,
                   method_getTypeEncoding(originalMethod));
   Method replacedMethod = class_getClassMethod(cls, newSelector);
   method_exchangeImplementations(originalMethod, replacedMethod);
+
+#if !__has_feature(objc_arc)
+  [selectorName release];
+#endif
 }
 
 void XTSwizzleSelectorForFunction(Class cls, SEL sel, IMP newImp)
@@ -31,10 +34,13 @@ void XTSwizzleSelectorForFunction(Class cls, SEL sel, IMP newImp)
                             class_getName(cls),
                             sel_getName(sel)];
   SEL newSelector = sel_registerName([selectorName UTF8String]);
-  [selectorName release];
 
   class_addMethod(cls, newSelector, newImp, typeEncoding);
 
   Method newMethod = class_getInstanceMethod(cls, newSelector);
   method_exchangeImplementations(originalMethod, newMethod);
+  
+#if !__has_feature(objc_arc)
+  [selectorName release];
+#endif
 }

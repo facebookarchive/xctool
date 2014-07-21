@@ -62,12 +62,12 @@
   // and merging with process environments and `_environment` variable contents
   env = [self otestEnvironmentWithOverrides:env];
 
-  return [CreateTaskForSimulatorExecutable(_buildSettings[Xcode_SDK_NAME],
-                                           [self cpuType],
-                                           [SimulatorInfo baseVersionForSDKShortVersion:[self.simulatorInfo simulatedSdkVersion]],
-                                           launchPath,
-                                           args,
-                                           env) autorelease];
+  return CreateTaskForSimulatorExecutable(_buildSettings[Xcode_SDK_NAME],
+                                          [self cpuType],
+                                          [SimulatorInfo baseVersionForSDKShortVersion:[self.simulatorInfo simulatedSdkVersion]],
+                                          launchPath,
+                                          args,
+                                          env);
 }
 
 - (void)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
@@ -116,9 +116,8 @@
       dispatch_release(io);
 
       output = [[NSString alloc] initWithData:outputData encoding:NSUTF8StringEncoding];
-      [outputData release];
     }
-    *otherErrors = [output autorelease];
+    *otherErrors = output;
   } else {
     *startupError = [NSString stringWithFormat:@"Test bundle not found at: %@", testBundlePath];
   }

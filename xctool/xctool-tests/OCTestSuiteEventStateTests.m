@@ -44,7 +44,7 @@ static NSDictionary *EndEventForTestSuiteWithTestName(NSString * testName)
 - (void)testInitWithEvent
 {
   OCTestSuiteEventState *state =
-    [[[OCTestSuiteEventState alloc] initWithName:@"ATestSuite"] autorelease];
+    [[OCTestSuiteEventState alloc] initWithName:@"ATestSuite"];
   assertThat([state testName], is(@"ATestSuite"));
   assertThatInteger([[state tests] count], equalToInteger(0));
 }
@@ -52,16 +52,16 @@ static NSDictionary *EndEventForTestSuiteWithTestName(NSString * testName)
 - (void)testInitWithName
 {
   OCTestSuiteEventState *state =
-    [[[OCTestSuiteEventState alloc] initWithName:@"ATestSuite"] autorelease];
+    [[OCTestSuiteEventState alloc] initWithName:@"ATestSuite"];
 
   assertThat([state testName], is(@"ATestSuite"));
 }
 
 - (void)testPublishFromStarted
 {
-  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
+  EventBuffer *eventBuffer = [[EventBuffer alloc] init];
   OCTestSuiteEventState *state =
-  [[[OCTestSuiteEventState alloc] initWithName:@"ATestSuite" reporters:@[eventBuffer]] autorelease];
+  [[OCTestSuiteEventState alloc] initWithName:@"ATestSuite" reporters:@[eventBuffer]];
 
   assertThatBool(state.isStarted, equalToBool(NO));
   assertThatBool(state.isFinished, equalToBool(NO));
@@ -92,9 +92,9 @@ static NSDictionary *EndEventForTestSuiteWithTestName(NSString * testName)
 
 - (void)testPublishFromNotStarted
 {
-  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
+  EventBuffer *eventBuffer = [[EventBuffer alloc] init];
   OCTestSuiteEventState *state =
-    [[[OCTestSuiteEventState alloc] initWithName:@"ATestSuite" reporters:@[eventBuffer]] autorelease];
+    [[OCTestSuiteEventState alloc] initWithName:@"ATestSuite" reporters:@[eventBuffer]];
 
   assertThatBool(state.isStarted, equalToBool(NO));
   assertThatBool(state.isFinished, equalToBool(NO));
@@ -120,9 +120,9 @@ static NSDictionary *EndEventForTestSuiteWithTestName(NSString * testName)
 
 - (void)testFromFinished
 {
-  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
+  EventBuffer *eventBuffer = [[EventBuffer alloc] init];
   OCTestSuiteEventState *state =
-    [[[OCTestSuiteEventState alloc] initWithName:@"ATestSuite"] autorelease];
+    [[OCTestSuiteEventState alloc] initWithName:@"ATestSuite"];
 
   assertThatBool(state.isStarted, equalToBool(NO));
   assertThatBool(state.isFinished, equalToBool(NO));
@@ -139,11 +139,11 @@ static NSDictionary *EndEventForTestSuiteWithTestName(NSString * testName)
 - (void)testTestDuration
 {
   OCTestSuiteEventState *state =
-    [[[OCTestSuiteEventState alloc] initWithName:@"ATestSuite"] autorelease];
+    [[OCTestSuiteEventState alloc] initWithName:@"ATestSuite"];
   OCTestEventState *testAState =
-  [[[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod"] autorelease];
+  [[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod"];
   OCTestEventState *testBState =
-  [[[OCTestEventState alloc] initWithInputName:@"ATestClass/bTestMethod"] autorelease];
+  [[OCTestEventState alloc] initWithInputName:@"ATestClass/bTestMethod"];
 
   [state addTest:testAState];
   [state addTest:testBState];
@@ -162,16 +162,16 @@ static NSDictionary *EndEventForTestSuiteWithTestName(NSString * testName)
 
 - (void)testAddTests
 {
-  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
+  EventBuffer *eventBuffer = [[EventBuffer alloc] init];
   OCTestSuiteEventState *state =
-    [[[OCTestSuiteEventState alloc] initWithName:@"ATestSuite" reporters:@[eventBuffer]] autorelease];
+    [[OCTestSuiteEventState alloc] initWithName:@"ATestSuite" reporters:@[eventBuffer]];
 
   OCTestEventState *testAState =
-    [[[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod"] autorelease];
+    [[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod"];
   OCTestEventState *testBState =
-    [[[OCTestEventState alloc] initWithInputName:@"ATestClass/bTestMethod"] autorelease];
+    [[OCTestEventState alloc] initWithInputName:@"ATestClass/bTestMethod"];
   OCTestEventState *testCState =
-    [[[OCTestEventState alloc] initWithInputName:@"ATestClass/cTestMethod"] autorelease];
+    [[OCTestEventState alloc] initWithInputName:@"ATestClass/cTestMethod"];
 
   [state addTest:testAState];
   [state addTest:testBState];
@@ -205,7 +205,7 @@ static NSDictionary *EndEventForTestSuiteWithTestName(NSString * testName)
 - (void)testAddTestsFromString
 {
   OCTestSuiteEventState *state =
-    [[[OCTestSuiteEventState alloc] initWithName:@"ATestSuite"] autorelease];
+    [[OCTestSuiteEventState alloc] initWithName:@"ATestSuite"];
 
   [state addTestsFromArray:@[@"ATestSuite/aTestMethod", @"BTestSuite/bTestMethod"]];
 
@@ -218,11 +218,11 @@ static NSDictionary *EndEventForTestSuiteWithTestName(NSString * testName)
 - (void)testGetTestByName
 {
   OCTestSuiteEventState *state =
-    [[[OCTestSuiteEventState alloc] initWithName:@"ATestSuite"] autorelease];
+    [[OCTestSuiteEventState alloc] initWithName:@"ATestSuite"];
   OCTestEventState *testAState =
-  [[[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod"] autorelease];
+  [[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod"];
   OCTestEventState *testBState =
-  [[[OCTestEventState alloc] initWithInputName:@"ATestClass/bTestMethod"] autorelease];
+  [[OCTestEventState alloc] initWithInputName:@"ATestClass/bTestMethod"];
 
   [state addTest:testAState];
   [state addTest:testBState];
@@ -236,14 +236,14 @@ static NSDictionary *EndEventForTestSuiteWithTestName(NSString * testName)
 
 - (void)testFinishTests
 {
-  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
+  EventBuffer *eventBuffer = [[EventBuffer alloc] init];
 
   OCTestSuiteEventState *state =
-    [[[OCTestSuiteEventState alloc] initWithName:@"ATestSuite" reporters:@[eventBuffer]] autorelease];
+    [[OCTestSuiteEventState alloc] initWithName:@"ATestSuite" reporters:@[eventBuffer]];
   OCTestEventState *testAState =
-  [[[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod"] autorelease];
+  [[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod"];
   OCTestEventState *testBState =
-  [[[OCTestEventState alloc] initWithInputName:@"ATestClass/bTestMethod"] autorelease];
+  [[OCTestEventState alloc] initWithInputName:@"ATestClass/bTestMethod"];
 
   [state addTest:testAState];
   [state addTest:testBState];
@@ -277,11 +277,11 @@ static NSDictionary *EndEventForTestSuiteWithTestName(NSString * testName)
 - (void)testRunningTest
 {
   OCTestSuiteEventState *state =
-  [[[OCTestSuiteEventState alloc] initWithName:@"ATestSuite"] autorelease];
+  [[OCTestSuiteEventState alloc] initWithName:@"ATestSuite"];
   OCTestEventState *testAState =
-  [[[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod"] autorelease];
+  [[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod"];
   OCTestEventState *testBState =
-  [[[OCTestEventState alloc] initWithInputName:@"ATestClass/bTestMethod"] autorelease];
+  [[OCTestEventState alloc] initWithInputName:@"ATestClass/bTestMethod"];
 
   [state addTest:testAState];
   [state addTest:testBState];
@@ -298,14 +298,14 @@ static NSDictionary *EndEventForTestSuiteWithTestName(NSString * testName)
 
 - (void)testFailedAndErroredTests
 {
-  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
+  EventBuffer *eventBuffer = [[EventBuffer alloc] init];
 
   OCTestSuiteEventState *state =
-  [[[OCTestSuiteEventState alloc] initWithName:@"ATestSuite" reporters:@[eventBuffer]] autorelease];
+  [[OCTestSuiteEventState alloc] initWithName:@"ATestSuite" reporters:@[eventBuffer]];
   OCTestEventState *testAState =
-  [[[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod"] autorelease];
+  [[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod"];
   OCTestEventState *testBState =
-  [[[OCTestEventState alloc] initWithInputName:@"ATestClass/bTestMethod"] autorelease];
+  [[OCTestEventState alloc] initWithInputName:@"ATestClass/bTestMethod"];
 
   [state addTest:testAState];
   [state addTest:testBState];

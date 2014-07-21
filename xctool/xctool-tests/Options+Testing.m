@@ -12,7 +12,7 @@
 
 + (Options *)optionsFrom:(NSArray *)arguments
 {
-  Options *options = [[[Options alloc] init] autorelease];
+  Options *options = [[Options alloc] init];
 
   NSString *errorMessage = nil;
   [options consumeArguments:[NSMutableArray arrayWithArray:arguments]
@@ -99,12 +99,12 @@
 
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
-     [[^(FakeTask *task){
+     [^(FakeTask *task){
       if ([[task launchPath] hasSuffix:@"xcodebuild"] &&
           [[task arguments] containsObject:@"-showBuildSettings"]) {
         [task pretendTaskReturnsStandardOutput:contents];
       }
-    } copy] autorelease],
+    } copy],
      ]];
 
     valid = [self validateAndReturnXcodeSubjectInfo:&subjectInfo

@@ -21,7 +21,7 @@
 
 @interface OCTestSuiteEventState ()
 @property (nonatomic, assign) double totalDuration;
-@property (nonatomic, retain) NSDictionary *beginTestSuiteInfo;
+@property (nonatomic, strong) NSDictionary *beginTestSuiteInfo;
 @end
 
 @implementation OCTestSuiteEventState
@@ -42,13 +42,6 @@
   return self;
 }
 
-- (void)dealloc
-{
-  [_testName release];
-  [_tests release];
-  [_beginTestSuiteInfo release];
-  [super dealloc];
-}
 
 - (void)beginTestSuite:(NSDictionary *)event
 {
@@ -66,7 +59,7 @@
 
   _totalDuration = [event[kReporter_TimestampKey] doubleValue] - [_beginTestSuiteInfo[kReporter_TimestampKey] doubleValue];
 
-  NSMutableDictionary *finalEvent = [[event mutableCopy] autorelease];
+  NSMutableDictionary *finalEvent = [event mutableCopy];
   finalEvent[kReporter_EndTestSuite_TestCaseCountKey] = @([self testCount]);
   finalEvent[kReporter_EndTestSuite_TotalFailureCountKey] = @([self totalFailures]);
   finalEvent[kReporter_EndTestSuite_UnexpectedExceptionCountKey] = @([self totalErrors]);
@@ -151,7 +144,6 @@
   [tests enumerateObjectsUsingBlock:^(NSString *testDesc, NSUInteger idx, BOOL *stop) {
     OCTestEventState *state = [[OCTestEventState alloc] initWithInputName:testDesc];
     [self addTest:state];
-    [state release];
   }];
 }
 

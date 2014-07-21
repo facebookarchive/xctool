@@ -27,7 +27,7 @@
 
 @interface BuildTargetsCollector : NSObject <EventSink>
 /// Array of @{@"projectName": projectName, @"targetName": targetName}
-@property (nonatomic, retain) NSMutableSet *seenTargets;
+@property (nonatomic, strong) NSMutableSet *seenTargets;
 @end
 
 @implementation BuildTargetsCollector
@@ -40,11 +40,6 @@
   return self;
 }
 
-- (void)dealloc
-{
-  [_seenTargets release];
-  [super dealloc];
-}
 
 - (void)publishDataForEvent:(NSData *)data
 {
@@ -65,7 +60,7 @@
 @end
 
 @interface AnalyzeAction ()
-@property (nonatomic, retain) NSMutableSet *onlySet;
+@property (nonatomic, strong) NSMutableSet *onlySet;
 @property (nonatomic, assign) BOOL skipDependencies;
 @property (nonatomic, assign) BOOL failOnWarnings;
 @end
@@ -164,7 +159,7 @@
   BOOL buildPathExists = [[NSFileManager defaultManager] fileExistsAtPath:buildStatePath];
 
   if (buildPathExists) {
-    BuildStateParser *buildState = [[[BuildStateParser alloc] initWithPath:buildStatePath] autorelease];
+    BuildStateParser *buildState = [[BuildStateParser alloc] initWithPath:buildStatePath];
     for (NSString *path in buildState.nodes) {
       NSTextCheckingResult *result = [analyzerPlistPathRegex
                                       firstMatchInString:path
@@ -247,11 +242,6 @@
   return self;
 }
 
-- (void)dealloc
-{
-  [_onlySet release];
-  [super dealloc];
-}
 
 - (void)addOnlyOption:(NSString *)targetName
 {
@@ -262,7 +252,7 @@
                 xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
 
-  BuildTargetsCollector *buildTargetsCollector = [[[BuildTargetsCollector alloc] init] autorelease];
+  BuildTargetsCollector *buildTargetsCollector = [[BuildTargetsCollector alloc] init];
   NSArray *reporters = [options.reporters arrayByAddingObject:buildTargetsCollector];
 
   NSArray *buildArgs = [[options xcodeBuildArgumentsForSubject]

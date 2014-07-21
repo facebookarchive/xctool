@@ -505,7 +505,7 @@
 			name = "reporters-tests";
 			productName = "reporters-tests";
 			productReference = 2893A94C17960CD400EFBD28 /* reporters-tests.octest */;
-			productType = "com.apple.product-type.bundle";
+			productType = "com.apple.product-type.bundle.ocunit-test";
 		};
 		2893A96817960D2000EFBD28 /* pretty */ = {
 			isa = PBXNativeTarget;

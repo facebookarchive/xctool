@@ -51,19 +51,17 @@
 
   [reporter didFinishReporting];
 
-  NSData *outputData = [[fakeFileHandle dataWritten] retain];
+  NSData *outputData = [fakeFileHandle dataWritten];
 
-  [reporter release];
-  [fakeFileHandle release];
 
-  return [outputData autorelease];
+  return outputData;
 }
 
 + (NSString *)outputStringWithEvents:(NSArray *)events
 {
-  Reporter *reporter = [[[self alloc] init] autorelease];
+  Reporter *reporter = [[self alloc] init];
 
-  FakeFileHandle *fakeFileHandle = [[[FakeFileHandle alloc] init] autorelease];
+  FakeFileHandle *fakeFileHandle = [[FakeFileHandle alloc] init];
   reporter->_outputHandle = (NSFileHandle *)fakeFileHandle;
 
   [reporter willBeginReporting];

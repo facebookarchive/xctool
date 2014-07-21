@@ -89,7 +89,6 @@ static NSArray *readOutputs(int *fildes, int sz) {
 
     NSString *str = [[NSString alloc] initWithBytes:dataPtr length:dataSz encoding:NSUTF8StringEncoding];
     [outputs addObject:str];
-    [str release];
 
     dispatch_release(data[i]);
     dispatch_release(contig);
@@ -168,7 +167,7 @@ void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, voi
         break;
       } else {
         NSData *line = [buffer subdataWithRange:NSMakeRange(offset, newlineRange.location - offset)];
-        block([[[NSString alloc] initWithData:line encoding:NSUTF8StringEncoding] autorelease]);
+        block([[NSString alloc] initWithData:line encoding:NSUTF8StringEncoding]);
         offset = newlineRange.location + 1;
       }
     }
@@ -244,7 +243,6 @@ void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, voi
   }
 
   [task waitUntilExit];
-  [buffer release];
 }
 
 NSTask *CreateTaskInSameProcessGroupWithArch(cpu_type_t arch)

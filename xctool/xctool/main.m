@@ -76,7 +76,7 @@ int main(int argc, const char * argv[])
 
     NSArray *arguments = [[NSProcessInfo processInfo] arguments];
 
-    XCTool *tool = [[[XCTool alloc] init] autorelease];
+    XCTool *tool = [[XCTool alloc] init];
     tool.arguments = [arguments subarrayWithRange:NSMakeRange(1, arguments.count - 1)];
     tool.standardOutput = [NSFileHandle fileHandleWithStandardOutput];
     tool.standardError = [NSFileHandle fileHandleWithStandardError];

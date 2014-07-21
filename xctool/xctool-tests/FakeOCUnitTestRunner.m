@@ -20,21 +20,15 @@
 {
   int lastLineIndex;
 }
-@property (nonatomic, retain) NSArray *outputLines;
+@property (nonatomic, strong) NSArray *outputLines;
 @end
 
 @implementation FakeOCUnitTestRunner
 
-- (void)dealloc
-{
-  [_outputLines release];
-  
-  [super dealloc];
-}
 
 - (void)setOutputLines:(NSArray *)lines
 {
-  _outputLines = [lines retain];
+  _outputLines = lines;
   lastLineIndex = -1;
 }
 

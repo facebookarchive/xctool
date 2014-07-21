@@ -18,8 +18,8 @@
 
 @interface XCTool : NSObject
 
-@property (nonatomic, retain) NSFileHandle *standardOutput;
-@property (nonatomic, retain) NSFileHandle *standardError;
+@property (nonatomic, strong) NSFileHandle *standardOutput;
+@property (nonatomic, strong) NSFileHandle *standardError;
 @property (nonatomic, copy) NSArray *arguments;
 @property (nonatomic, assign) int exitStatus;
 

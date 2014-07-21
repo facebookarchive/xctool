@@ -82,10 +82,5 @@
   self.nodes = nodePaths;
 }
 
-- (void)dealloc
-{
-  [_nodes release];
-  [super dealloc];
-}
 
 @end

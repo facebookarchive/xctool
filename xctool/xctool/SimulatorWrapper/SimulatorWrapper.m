@@ -49,10 +49,10 @@ static const NSString * kOtestShimStderrFilePath __unused = @"OTEST_SHIM_STDERR_
   DTiPhoneSimulatorApplicationSpecifier *appSpec =
   [DTiPhoneSimulatorApplicationSpecifier specifierWithApplicationPath:testHostAppPath];
 
-  NSMutableDictionary *launchEnvironmentEdited = [[launchEnvironment mutableCopy] autorelease];
+  NSMutableDictionary *launchEnvironmentEdited = [launchEnvironment mutableCopy];
   launchEnvironmentEdited[kOtestShimStdoutFilePath] = outputPath;
 
-  DTiPhoneSimulatorSessionConfig *sessionConfig = [[[DTiPhoneSimulatorSessionConfig alloc] init] autorelease];
+  DTiPhoneSimulatorSessionConfig *sessionConfig = [[DTiPhoneSimulatorSessionConfig alloc] init];
   [sessionConfig setApplicationToSimulateOnStart:appSpec];
   [sessionConfig setSimulatedApplicationLaunchArgs:launchArgs];
   [sessionConfig setSimulatedApplicationLaunchEnvironment:launchEnvironmentEdited];
@@ -101,7 +101,7 @@ static const NSString * kOtestShimStderrFilePath __unused = @"OTEST_SHIM_STDERR_
   NSString *outputPath = MakeTempFileWithPrefix(@"output");
   NSFileHandle *outputHandle = [NSFileHandle fileHandleForReadingAtPath:outputPath];
 
-  LineReader *reader = [[[LineReader alloc] initWithFileHandle:outputHandle] autorelease];
+  LineReader *reader = [[LineReader alloc] initWithFileHandle:outputHandle];
   reader.didReadLineBlock = feedOutputToBlock;
 
   DTiPhoneSimulatorSessionConfig *sessionConfig =
@@ -110,8 +110,8 @@ static const NSString * kOtestShimStderrFilePath __unused = @"OTEST_SHIM_STDERR_
                                                          applicationLaunchEnvironment:launchEnvironment
                                                                            outputPath:outputPath];
 
-  SimulatorLauncher *launcher = [[[SimulatorLauncher alloc] initWithSessionConfig:sessionConfig
-                                                                       deviceName:[simInfo simulatedDeviceInfoName]] autorelease];
+  SimulatorLauncher *launcher = [[SimulatorLauncher alloc] initWithSessionConfig:sessionConfig
+                                                                      deviceName:[simInfo simulatedDeviceInfoName]];
   launcher.launchTimeout = [simInfo launchTimeout];
 
   [reader startReading];

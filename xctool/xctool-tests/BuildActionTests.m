@@ -50,7 +50,7 @@ void _CFAutoreleasePoolPrintPools();
                                                      settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
     ]];
 
-    XCTool *tool = [[[XCTool alloc] init] autorelease];
+    XCTool *tool = [[XCTool alloc] init];
 
     tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
@@ -83,7 +83,7 @@ void _CFAutoreleasePoolPrintPools();
                                                      settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
      ]];
 
-    XCTool *tool = [[[XCTool alloc] init] autorelease];
+    XCTool *tool = [[XCTool alloc] init];
 
     tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
@@ -113,7 +113,7 @@ void _CFAutoreleasePoolPrintPools();
                                                  settingsPath:TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt"],
      ]];
 
-    XCTool *tool = [[[XCTool alloc] init] autorelease];
+    XCTool *tool = [[XCTool alloc] init];
 
     tool.arguments = @[@"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
                        @"-scheme", @"TestProject-Library",
@@ -143,7 +143,7 @@ void _CFAutoreleasePoolPrintPools();
                                                settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
      ]];
 
-    XCTool *tool = [[[XCTool alloc] init] autorelease];
+    XCTool *tool = [[XCTool alloc] init];
 
     tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
@@ -173,16 +173,16 @@ void _CFAutoreleasePoolPrintPools();
        [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
                                                        scheme:@"TestProject-Library"
                                                  settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
-       [[^(FakeTask *task){
+       [^(FakeTask *task){
         if ([[task launchPath] hasSuffix:@"xcodebuild"] &&
             [[task arguments] containsObject:@"build"]) {
           // Pretend the task has a specific exit code.
           [task pretendExitStatusOf:exitStatus];
         }
-      } copy] autorelease],
+      } copy],
        ]];
 
-      XCTool *tool = [[[XCTool alloc] init] autorelease];
+      XCTool *tool = [[XCTool alloc] init];
 
       tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                          @"-scheme", @"TestProject-Library",
@@ -213,7 +213,7 @@ void _CFAutoreleasePoolPrintPools();
                                                settingsPath:TEST_DATA @"TestProject-Library-WithDifferentConfigurations-showBuildSettings.txt"],
      ]];
 
-    XCTool *tool = [[[XCTool alloc] init] autorelease];
+    XCTool *tool = [[XCTool alloc] init];
 
     tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
@@ -243,7 +243,7 @@ void _CFAutoreleasePoolPrintPools();
                                                  settingsPath:TEST_DATA @"ProjectsWithDifferentSDKs-ProjectsWithDifferentSDKs-showBuildSettings.txt"],
      ]];
 
-    XCTool *tool = [[[XCTool alloc] init] autorelease];
+    XCTool *tool = [[XCTool alloc] init];
 
     tool.arguments = @[@"-workspace", TEST_DATA @"ProjectsWithDifferentSDKs/ProjectsWithDifferentSDKs.xcworkspace",
                        @"-scheme", @"ProjectsWithDifferentSDKs",

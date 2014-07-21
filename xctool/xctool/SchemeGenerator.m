@@ -29,7 +29,7 @@
 
 + (SchemeGenerator *)schemeGenerator
 {
-  return [[[SchemeGenerator alloc] init] autorelease];
+  return [[SchemeGenerator alloc] init];
 }
 
 - (instancetype)init
@@ -42,12 +42,6 @@
   return self;
 }
 
-- (void)dealloc
-{
-  [_buildables release];
-  [_projectPaths release];
-  [super dealloc];
-}
 
 - (void)addBuildableWithID:(NSString *)identifier
                  inProject:(NSString *)projectPath

@@ -25,12 +25,5 @@
     _recentlyModifiedWorkspaceDate];
 }
 
-- (void)dealloc {
-  [_workspacePath release];
-  [_projectPath release];
-  [_schemeName release];
-  [_recentlyModifiedWorkspaceDate release];
-  [super dealloc];
-}
 
 @end

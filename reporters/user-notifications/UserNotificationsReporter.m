@@ -27,15 +27,6 @@
 
 @implementation UserNotificationsReporter
 
-- (void)dealloc
-{
-  [_mainProjectName release];
-  [_mainProjectPath release];
-  [_mainWorkspaceName release];
-  [_mainWorkspacePath release];
-  
-  [super dealloc];
-}
 
 - (void)beginAction:(NSDictionary *)event
 {
@@ -104,7 +95,6 @@
 
   NSUserNotificationCenter *center = [NSUserNotificationCenter defaultUserNotificationCenter];
   [center scheduleNotification:userNotification];
-  [userNotification release];
 }
 
 @end

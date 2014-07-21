@@ -12,7 +12,7 @@
 
 - (void)testReportStatusMessageGeneratesTwoEventsWithTheSameTimestamp
 {
-  EventBuffer *buffer = [[[EventBuffer alloc] init] autorelease];
+  EventBuffer *buffer = [[EventBuffer alloc] init];
 
   NSDate *staticDate = [NSDate dateWithTimeIntervalSince1970:0];
 
@@ -43,7 +43,7 @@
 
 - (void)testReportStatusMessageBeginGeneratesAnEvent
 {
-  EventBuffer *buffer = [[[EventBuffer alloc] init] autorelease];
+  EventBuffer *buffer = [[EventBuffer alloc] init];
 
   NSDate *staticDate = [NSDate dateWithTimeIntervalSince1970:10];
 
@@ -68,7 +68,7 @@
 
 - (void)testReportStatusMessageEndGeneratesAnEvent
 {
-  EventBuffer *buffer = [[[EventBuffer alloc] init] autorelease];
+  EventBuffer *buffer = [[EventBuffer alloc] init];
 
   NSDate *staticDate = [NSDate dateWithTimeIntervalSince1970:20];
 

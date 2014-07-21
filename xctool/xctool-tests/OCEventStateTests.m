@@ -29,14 +29,14 @@
 
 - (void)testParseEvent
 {
-  OCEventState *state = [[[OCEventState alloc] initWithReporters: @[]] autorelease];
+  OCEventState *state = [[OCEventState alloc] initWithReporters: @[]];
   STAssertEqualObjects([state reporters], @[], @"Reporters are not equal");
 }
 
 - (void)testPublishWithEvent
 {
-  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
-  OCEventState *state = [[[OCEventState alloc] initWithReporters:@[eventBuffer]] autorelease];
+  EventBuffer *eventBuffer = [[EventBuffer alloc] init];
+  OCEventState *state = [[OCEventState alloc] initWithReporters:@[eventBuffer]];
 
   NSDictionary *event = @{@"ilove": @"jello"};
   [state publishWithEvent:event];

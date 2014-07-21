@@ -295,7 +295,7 @@
     [subjectInfo loadSubjectInfo];
   }];
 
-  return [subjectInfo autorelease];
+  return subjectInfo;
 }
 
 - (void)testCanGetBuildConfigurationForRunAction
@@ -346,7 +346,7 @@
                                               @"-scheme", @"ProjectWithOnlyATestTarget",
                                               ]];
     
-    XcodeSubjectInfo *subjectInfo = [[[XcodeSubjectInfo alloc] init] autorelease];
+    XcodeSubjectInfo *subjectInfo = [[XcodeSubjectInfo alloc] init];
     [subjectInfo setSubjectProject:[options project]];
     [subjectInfo setSubjectScheme:[options scheme]];
     [subjectInfo setSubjectXcodeBuildArguments:[options xcodeBuildArgumentsForSubject]];

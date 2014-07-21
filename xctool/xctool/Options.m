@@ -33,7 +33,7 @@
 #import "XcodeTargetMatch.h"
 
 @interface Options ()
-@property (nonatomic, retain) NSMutableArray *reporterOptions;
+@property (nonatomic, strong) NSMutableArray *reporterOptions;
 @end
 
 @implementation Options
@@ -198,35 +198,6 @@
   return self;
 }
 
-- (void)dealloc
-{
-  [_reporterOptions release];
-
-  [_workspace release];
-  [_project release];
-  [_scheme release];
-  [_configuration release];
-  [_sdk release];
-  [_arch release];
-  [_destination release];
-  [_destinationTimeout release];
-  [_toolchain release];
-  [_xcconfig release];
-  [_jobs release];
-  [_findTarget release];
-  [_findTargetPath release];
-  [_findProjectPath release];
-  [_resultBundlePath release];
-  [_findTargetExcludePaths release];
-
-  [_buildSettings release];
-  [_userDefaults release];
-  [_reporters release];
-
-  [_actions release];
-
-  [super dealloc];
-}
 
 - (void)addReporter:(NSString *)argument
 {
@@ -281,7 +252,7 @@
     consumed++;
 
     if (verbToClass[argument]) {
-      Action *action = [[[verbToClass[argument] alloc] init] autorelease];
+      Action *action = [[verbToClass[argument] alloc] init];
       consumed += [action consumeArguments:argumentList errorMessage:errorMessage];
       [_actions addObject:action];
     } else {
@@ -317,21 +288,21 @@
     }
 
     ReporterTask *reporterTask =
-    [[[ReporterTask alloc] initWithReporterPath:reporterPath
-                                     outputPath:outputFile] autorelease];
+    [[ReporterTask alloc] initWithReporterPath:reporterPath
+                                     outputPath:outputFile];
     [_reporters addObject:reporterTask];
   }
 
   if (_reporters.count == 0) {
     ReporterTask *reporterTask =
-    [[[ReporterTask alloc] initWithReporterPath:[XCToolReportersPath() stringByAppendingPathComponent:@"pretty"]
-                                     outputPath:@"-"] autorelease];
+    [[ReporterTask alloc] initWithReporterPath:[XCToolReportersPath() stringByAppendingPathComponent:@"pretty"]
+                                     outputPath:@"-"];
     [_reporters addObject:reporterTask];
 
     if (![[[NSProcessInfo processInfo] environment][@"TRAVIS"] isEqualToString:@"true"]) {
       ReporterTask *userNotificationsReporterTask =
-      [[[ReporterTask alloc] initWithReporterPath:[XCToolReportersPath() stringByAppendingPathComponent:@"user-notifications"]
-                                       outputPath:@"-"] autorelease];
+      [[ReporterTask alloc] initWithReporterPath:[XCToolReportersPath() stringByAppendingPathComponent:@"user-notifications"]
+                                       outputPath:@"-"];
       [_reporters addObject:userNotificationsReporterTask];
     }
   }
@@ -581,7 +552,7 @@
     }
   }
 
-  XcodeSubjectInfo *xcodeSubjectInfo = [[[XcodeSubjectInfo alloc] init] autorelease];
+  XcodeSubjectInfo *xcodeSubjectInfo = [[XcodeSubjectInfo alloc] init];
   xcodeSubjectInfo.subjectWorkspace = _workspace;
   xcodeSubjectInfo.subjectProject = _project;
   xcodeSubjectInfo.subjectScheme = _scheme;
@@ -612,7 +583,7 @@
 
   // Assume build if no action is given.
   if (_actions.count == 0) {
-    [_actions addObject:[[[BuildAction alloc] init] autorelease]];
+    [_actions addObject:[[BuildAction alloc] init]];
   }
 
   return YES;

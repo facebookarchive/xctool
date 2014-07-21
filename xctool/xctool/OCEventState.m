@@ -24,16 +24,11 @@
 {
   self = [super init];
   if (self) {
-    _reporters = [reporters retain];
+    _reporters = reporters;
   }
   return self;
 }
 
-- (void)dealloc
-{
-  [_reporters release];
-  [super dealloc];
-}
 
 - (void)publishWithEvent:(NSDictionary *)event
 {

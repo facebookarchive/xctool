@@ -70,13 +70,6 @@
   return self;
 }
 
-- (void)dealloc
-{
-  [_compiles release];
-  [_currentBuildCommand release];
-  [_precompiles release];
-  [super dealloc];
-}
 
 - (void)collectEvent:(NSDictionary *)event
 {
@@ -124,7 +117,6 @@
   [_outputHandle writeData:data];
   [_outputHandle writeData:[@"\n" dataUsingEncoding:NSUTF8StringEncoding]];
 
-  [compilationDatabase release];
 }
 
 - (NSDictionary *)convertCompileDictionary:(NSDictionary *)event withPrecompilesLocalMapping:(NSDictionary *)precompilesMapping
@@ -153,7 +145,7 @@
   NSTextCheckingResult *pchMatch = [rawCompilerCommand firstMatch:@[@"-include \"(.+?\\.pch)\"", @"-include (.+?\\.pch)"]];
 
   if (sourceFileMatch && workingDirectoryMatch) {
-    NSMutableDictionary *compile = [[[NSMutableDictionary alloc] init] autorelease];
+    NSMutableDictionary *compile = [[NSMutableDictionary alloc] init];
     compile[@"file"] = [rawCompilerCommand substringWithRange:[sourceFileMatch rangeAtIndex:1]];
     compile[@"directory"] = [rawWorkingDirectory substringWithRange:[workingDirectoryMatch rangeAtIndex:1]];
     NSString *convertedCompilerCommand = nil;
@@ -203,7 +195,7 @@
     }
 
   }
-  return [localMapping autorelease];
+  return localMapping;
 }
 
 @end

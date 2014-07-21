@@ -1,10 +1,6 @@
 
 #import "FakeFileHandle.h"
 
-@interface FakeFileHandle ()
-@property (nonatomic, retain, readwrite) NSMutableData *dataWritten;
-@end
-
 @implementation FakeFileHandle
 
 - (id)init
@@ -13,12 +9,6 @@
     _dataWritten = [[NSMutableData alloc] initWithCapacity:0];
   }
   return self;
-}
-
-- (void)dealloc
-{
-  [_dataWritten release];
-  [super dealloc];
 }
 
 - (void)writeData:(NSData *)data
@@ -33,8 +23,8 @@
 
 - (NSString *)stringWritten
 {
-  return [[[NSString alloc] initWithData:_dataWritten
-                                encoding:NSUTF8StringEncoding] autorelease];
+  return [[NSString alloc] initWithData:_dataWritten
+                                encoding:NSUTF8StringEncoding];
 }
 
 - (int)fileDescriptor {

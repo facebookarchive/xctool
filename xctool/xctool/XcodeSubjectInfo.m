@@ -64,9 +64,9 @@ static NSString *BasePathFromSchemePath(NSString *schemePath) {
 static NSDictionary *BuildConfigurationsByActionForSchemePath(NSString *schemePath)
 {
   NSError *error = nil;
-  NSXMLDocument *doc = [[[NSXMLDocument alloc] initWithContentsOfURL:[NSURL fileURLWithPath:schemePath]
+  NSXMLDocument *doc = [[NSXMLDocument alloc] initWithContentsOfURL:[NSURL fileURLWithPath:schemePath]
                                                              options:0
-                                                               error:&error] autorelease];
+                                                               error:&error];
   if (error != nil) {
     NSLog(@"Error in parsing: %@: %@", schemePath, error);
     abort();
@@ -118,15 +118,17 @@ static NSDictionary *BuildConfigurationsByActionForSchemePath(NSString *schemePa
 
   NSURL *URL = [NSURL fileURLWithPath:path];
   NSError *error = nil;
-  NSXMLDocument *doc = [[[NSXMLDocument alloc] initWithContentsOfURL:URL
+  NSXMLDocument *doc = [[NSXMLDocument alloc] initWithContentsOfURL:URL
                                                              options:0
-                                                               error:&error] autorelease];
+                                                               error:&error];
   if (error != nil) {
     NSLog(@"Error in parsing: %@: %@", workspacePath, error);
     abort();
   }
 
-  __block NSString *(^fullLocation)(NSXMLNode*, NSString *) = ^(NSXMLNode *node, NSString *containerPath) {
+  __block __weak NSString *(^weak_fullLocation)(NSXMLNode*, NSString *);
+  NSString *(^fullLocation)(NSXMLNode*, NSString *);
+  weak_fullLocation = fullLocation = ^(NSXMLNode *node, NSString *containerPath) {
 
     if (node == nil || ![@[@"FileRef", @"Group", @"Workspace"] containsObject:node.name]) {
       return @"";
@@ -143,7 +145,7 @@ static NSDictionary *BuildConfigurationsByActionForSchemePath(NSString *schemePa
     if ([location hasPrefix:@"container:"]) {
       return [containerPath stringByAppendingPathComponent:locationAfterColon];
     } else if ([location hasPrefix:@"group:"]) {
-      return [fullLocation(node.parent, containerPath) stringByAppendingPathComponent:locationAfterColon];
+      return [weak_fullLocation(node.parent, containerPath) stringByAppendingPathComponent:locationAfterColon];
     } else if ([location hasPrefix:@"self:"]) {
       NSCAssert([[workspacePath lastPathComponent] isEqualToString:@"project.xcworkspace"],
                 @"We only expect to see 'self:' in workspaces nested in xcodeproj's.");
@@ -463,27 +465,6 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   }
 }
 
-- (void)dealloc
-{
-  [_configurationNameByAction release];
-
-  [_subjectWorkspace release];
-  [_subjectProject release];
-  [_subjectScheme release];
-  [_subjectXcodeBuildArguments release];
-
-  [_objRoot release];
-  [_symRoot release];
-  [_sharedPrecompsDir release];
-  [_effectivePlatformName release];
-  [_targetedDeviceFamily release];
-  [_testables release];
-  [_buildablesForTest release];
-  
-  [_buildables release];
-
-  [super dealloc];
-}
 
 + (BOOL)   findTarget:(NSString *)target
         inSchemePaths:(NSArray *)schemePaths
@@ -497,7 +478,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
     for (Testable *testable in testables) {
       if ([testable.target isEqualToString:target]) {
         found = YES;
-        XcodeTargetMatch *match = [[[XcodeTargetMatch alloc] init] autorelease];
+        XcodeTargetMatch *match = [[XcodeTargetMatch alloc] init];
         match.schemeName = [[schemePath lastPathComponent] stringByDeletingPathExtension];
         match.numTargetsInScheme = [self numTargetsInSchemePath:schemePath];
         [targetMatches addObject:match];
@@ -514,9 +495,9 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 + (NSUInteger)numTargetsInSchemePath:(NSString *)schemePath
 {
   NSError *error = nil;
-  NSXMLDocument *doc = [[[NSXMLDocument alloc] initWithContentsOfURL:[NSURL fileURLWithPath:schemePath]
+  NSXMLDocument *doc = [[NSXMLDocument alloc] initWithContentsOfURL:[NSURL fileURLWithPath:schemePath]
                                                              options:0
-                                                               error:&error] autorelease];
+                                                               error:&error];
   if (error != nil) {
     NSLog(@"Error in parsing: %@: %@", schemePath, error);
     abort();
@@ -643,9 +624,9 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 + (NSArray *)testablesInSchemePath:(NSString *)schemePath basePath:(NSString *)basePath
 {
   NSError *error = nil;
-  NSXMLDocument *doc = [[[NSXMLDocument alloc] initWithContentsOfURL:[NSURL fileURLWithPath:schemePath]
+  NSXMLDocument *doc = [[NSXMLDocument alloc] initWithContentsOfURL:[NSURL fileURLWithPath:schemePath]
                                                              options:0
-                                                               error:&error] autorelease];
+                                                               error:&error];
   if (error != nil) {
     NSLog(@"Error in parsing: %@: %@", schemePath, error);
     abort();
@@ -695,7 +676,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
       senTestInvertScope = NO;
     }
 
-    Testable *testable = [[[Testable alloc] init] autorelease];
+    Testable *testable = [[Testable alloc] init];
     testable.projectPath = projectPath;
     testable.target = target;
     testable.targetID = targetID;
@@ -718,9 +699,9 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 + (NSArray *)buildablesInSchemePath:(NSString *)schemePath basePath:(NSString *)basePath
 {
   NSError *error = nil;
-  NSXMLDocument *doc = [[[NSXMLDocument alloc] initWithContentsOfURL:[NSURL fileURLWithPath:schemePath]
+  NSXMLDocument *doc = [[NSXMLDocument alloc] initWithContentsOfURL:[NSURL fileURLWithPath:schemePath]
                                                              options:0
-                                                               error:&error] autorelease];
+                                                               error:&error];
   if (error != nil) {
     NSLog(@"Error in parsing: %@: %@", schemePath, error);
     abort();
@@ -754,7 +735,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
     BOOL forTesting = [[[node attributeForName:@"buildForTesting"] stringValue] isEqual:@"YES"];
     BOOL forAnalyzing = [[[node attributeForName:@"buildForAnalyzing"] stringValue] isEqual:@"YES"];
 
-    Buildable *buildable = [[[Buildable alloc] init] autorelease];
+    Buildable *buildable = [[Buildable alloc] init];
     buildable.projectPath = projectPath;
     buildable.target = target;
     buildable.targetID = targetID;
@@ -792,7 +773,6 @@ containsFilesModifiedSince:(NSDate *)sinceDate
                            }];
 
     NSDictionary *result = LaunchTaskAndCaptureOutput(task, @"gathering build settings for a target");
-    [task release];
 
     if (error) {
       *error = result[@"stderr"];
@@ -923,9 +903,9 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 - (void)populateBuildActionPropertiesWithSchemePath:(NSString *)schemePath
 {
   NSError *error = nil;
-  NSXMLDocument *doc = [[[NSXMLDocument alloc] initWithContentsOfURL:[NSURL fileURLWithPath:schemePath]
+  NSXMLDocument *doc = [[NSXMLDocument alloc] initWithContentsOfURL:[NSURL fileURLWithPath:schemePath]
                                                              options:0
-                                                               error:&error] autorelease];
+                                                               error:&error];
   if (error != nil) {
     NSLog(@"Error in parsing: %@: %@", schemePath, error);
     abort();
@@ -976,7 +956,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   [self populateBuildActionPropertiesWithSchemePath:matchingSchemePath];
 
   _configurationNameByAction =
-    [BuildConfigurationsByActionForSchemePath(matchingSchemePath) retain];
+    BuildConfigurationsByActionForSchemePath(matchingSchemePath);
 }
 
 - (Testable *)testableWithTarget:(NSString *)target

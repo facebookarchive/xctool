@@ -19,7 +19,7 @@
 
 - (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
-  NSMutableArray *arguments = [[[options xcodeBuildArgumentsForSubject] mutableCopy] autorelease];
+  NSMutableArray *arguments = [[options xcodeBuildArgumentsForSubject] mutableCopy];
   [arguments addObjectsFromArray:[options commonXcodeBuildArgumentsForSchemeAction:@"ArchiveAction"
                                                                   xcodeSubjectInfo:xcodeSubjectInfo]];
   [arguments addObject:@"archive"];
@@ -47,9 +47,5 @@
     ];
 }
 
-- (void)dealloc {
-  _archivePath = nil;
-  [super dealloc];
-}
 
 @end

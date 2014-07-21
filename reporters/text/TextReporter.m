@@ -45,7 +45,7 @@ static NSString *abbreviatePath(NSString *string) {
 @property (nonatomic, assign) NSInteger indent;
 @property (nonatomic, assign) NSInteger savedIndent;
 @property (nonatomic, assign) BOOL useColorOutput;
-@property (nonatomic, retain) NSFileHandle *outputHandle;
+@property (nonatomic, strong) NSFileHandle *outputHandle;
 @property (nonatomic, copy) NSString *lastLineUpdate;
 
 - (id)initWithOutputHandle:(NSFileHandle *)outputHandle;
@@ -57,18 +57,13 @@ static NSString *abbreviatePath(NSString *string) {
 - (id)initWithOutputHandle:(NSFileHandle *)outputHandle
 {
   if (self = [super init]) {
-    _outputHandle = [outputHandle retain];
+    _outputHandle = outputHandle;
     _indent = 0;
     _savedIndent = -1;
   }
   return self;
 }
 
-- (void)dealloc
-{
-  [_outputHandle release];
-  [super dealloc];
-}
 
 - (void)increaseIndent
 {
@@ -94,7 +89,7 @@ static NSString *abbreviatePath(NSString *string) {
 
 - (NSString *)formattedStringWithFormat:(NSString *)format arguments:(va_list)argList
 {
-  NSMutableString *str = [[[NSMutableString alloc] initWithFormat:format arguments:argList] autorelease];
+  NSMutableString *str = [[NSMutableString alloc] initWithFormat:format arguments:argList];
 
   NSDictionary *ansiTags = @{@"<red>": @"\x1b[31m",
                              @"<green>": @"\x1b[32m",
@@ -173,12 +168,12 @@ static NSString *abbreviatePath(NSString *string) {
 
 @interface TextReporter ()
 @property (nonatomic, assign) BOOL isPretty;
-@property (nonatomic, retain) TestResultCounter *resultCounter;
+@property (nonatomic, strong) TestResultCounter *resultCounter;
 @property (nonatomic, copy) NSDictionary *currentStatusEvent;
 @property (nonatomic, copy) NSDictionary *currentBuildCommandEvent;
 @property (nonatomic, assign) BOOL testHadOutput;
 @property (nonatomic, assign) BOOL testOutputEndsInNewline;
-@property (nonatomic, retain) ReportWriter *reportWriter;
+@property (nonatomic, strong) ReportWriter *reportWriter;
 @property (nonatomic, copy) NSMutableArray *failedTests;
 @property (nonatomic, copy) NSString *currentBundle;
 @property (nonatomic, copy) NSMutableArray *analyzerWarnings;
@@ -199,19 +194,6 @@ static NSString *abbreviatePath(NSString *string) {
   return self;
 }
 
-- (void)dealloc
-{
-  [_currentBuildCommandEvent release];
-  [_reportWriter release];
-  [_currentStatusEvent release];
-  [_failedTests release];
-  [_currentBundle release];
-  [_analyzerWarnings release];
-  [_resultCounter release];
-  [_failedBuildEvents release];
-  [_failedOcunitEvents release];
-  [super dealloc];
-}
 
 - (void)willBeginReporting
 {
@@ -757,7 +739,6 @@ static NSString *abbreviatePath(NSString *string) {
   [_reportWriter updateLine:@"%@", line];
   [_reportWriter printNewline];
 
-  [_currentStatusEvent release];
   _currentStatusEvent = nil;
 }
 

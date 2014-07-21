@@ -22,7 +22,7 @@
 
 @interface TestRunState : Reporter
 
-@property (nonatomic, retain, readonly) OCTestSuiteEventState *testSuiteState;
+@property (nonatomic, strong, readonly) OCTestSuiteEventState *testSuiteState;
 
 - (instancetype)initWithTests:(NSArray *)testList
                     reporters:(NSArray *)reporters;

@@ -25,9 +25,9 @@ static id TestRunnerWithTestLists(Class cls, NSDictionary *settings, NSArray *fo
   NSArray *arguments = @[@"-SomeArg", @"SomeVal"];
   NSDictionary *environment = @{@"SomeEnvKey" : @"SomeEnvValue"};
 
-  EventBuffer *eventBuffer = [[[EventBuffer alloc] init] autorelease];
+  EventBuffer *eventBuffer = [[EventBuffer alloc] init];
 
-  return [[[cls alloc] initWithBuildSettings:settings
+  return [[cls alloc] initWithBuildSettings:settings
                             focusedTestCases:focusedTestCases
                                 allTestCases:allTestCases
                                    arguments:arguments
@@ -36,7 +36,7 @@ static id TestRunnerWithTestLists(Class cls, NSDictionary *settings, NSArray *fo
                               resetSimulator:NO
                                 freshInstall:NO
                                  testTimeout:30
-                                   reporters:@[eventBuffer]] autorelease];
+                                   reporters:@[eventBuffer]];
 }
 
 static id TestRunnerWithTestList(Class cls, NSDictionary *settings, NSArray *testList)
@@ -75,7 +75,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
                          withBlock:
    ^(SimulatorLauncher *self, SEL sel) {
      // Pretend it launched and succeeded, but save the config so we can check it.
-     *sessionConfig = [[[self valueForKey:@"session"] sessionConfig] retain];
+     *sessionConfig = [[self valueForKey:@"session"] sessionConfig];
      return YES;
    }
                           runBlock:
@@ -91,7 +91,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
                                                     encoding:NSUTF8StringEncoding
                                                        error:nil]);
 
-  NSMutableDictionary *testSettings = [[allSettings[@"TestProject-LibraryTests2"] mutableCopy] autorelease];
+  NSMutableDictionary *testSettings = [allSettings[@"TestProject-LibraryTests2"] mutableCopy];
   testSettings[@"TEST_HOST"] = TEST_DATA @"FakeApp.app/FakeApp";
 
   DTiPhoneSimulatorSessionConfig *config;
@@ -111,7 +111,6 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
   assertThat([config simulatedApplicationLaunchEnvironment][@"OTEST_SHIM_TEST_TIMEOUT"],
              equalTo(@30));
 
-  [config release];
 }
 
 - (void)testIOSApplicationTestWithBadTesthostFails
@@ -121,7 +120,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
                                                     encoding:NSUTF8StringEncoding
                                                        error:nil]);
 
-  NSMutableDictionary *testSettings = [[allSettings[@"TestProject-LibraryTests2"] mutableCopy] autorelease];
+  NSMutableDictionary *testSettings = [allSettings[@"TestProject-LibraryTests2"] mutableCopy];
   testSettings[@"TEST_HOST"] = @"/var/empty/whee";
 
   DTiPhoneSimulatorSessionConfig *config;
@@ -144,7 +143,6 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
   assertThat(SelectEventFields(events, kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey),
              equalTo(@[@"There was a problem starting the test bundle: TEST_HOST not executable."]));
 
-  [config release];
 }
 
 - (void)testArgsAndEnvArePassedToIOSLogicTest
@@ -180,7 +178,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
 {
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [runner runTests];
-    *launchedTasks = [[[FakeTaskManager sharedManager] launchedTasks] retain];
+    *launchedTasks = [[FakeTaskManager sharedManager] launchedTasks];
   }];
 }
 
@@ -191,7 +189,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
                                                     encoding:NSUTF8StringEncoding
                                                        error:nil]);
 
-  NSMutableDictionary *testSettings = [[allSettings[@"TestProject-App-OSXTests"] mutableCopy] autorelease];
+  NSMutableDictionary *testSettings = [allSettings[@"TestProject-App-OSXTests"] mutableCopy];
   testSettings[@"TEST_HOST"] = TEST_DATA @"FakeApp.app/FakeApp";
 
   NSArray *launchedTasks;
@@ -218,7 +216,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
                                                     encoding:NSUTF8StringEncoding
                                                        error:nil]);
 
-  NSMutableDictionary *testSettings = [[allSettings[@"TestProject-App-OSXTests"] mutableCopy] autorelease];
+  NSMutableDictionary *testSettings = [allSettings[@"TestProject-App-OSXTests"] mutableCopy];
   testSettings[@"TEST_HOST"] = @"/var/empty/whee";
 
   NSArray *launchedTasks;

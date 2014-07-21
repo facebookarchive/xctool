@@ -57,7 +57,6 @@ static void ReadFileDescriptorAndOutputLinesToBlock(int inputFD,
       @autoreleasepool {
         NSString *str = [[NSString alloc] initWithBytes:readBuffer length:bytesRead encoding:NSUTF8StringEncoding];
         [buffer appendString:str];
-        [str release];
 
         processBuffer();
       }
@@ -68,7 +67,6 @@ static void ReadFileDescriptorAndOutputLinesToBlock(int inputFD,
   }
 
   free(readBuffer);
-  [buffer release];
 }
 
 @implementation Reporter
@@ -94,7 +92,6 @@ static void ReadFileDescriptorAndOutputLinesToBlock(int inputFD,
 
   [reporter didFinishReporting];
 
-  [reporter release];
 }
 
 - (void)willBeginReporting
@@ -140,7 +137,7 @@ static void ReadFileDescriptorAndOutputLinesToBlock(int inputFD,
   SEL sel = sel_registerName([selectorName UTF8String]);
 
   if ([self respondsToSelector:sel]) {
-    [self performSelector:sel withObject:eventDict];
+    ((void (*)(id, SEL, NSDictionary *))[self methodForSelector:sel])(self, sel, eventDict);
   }
 }
 

@@ -96,7 +96,7 @@
     return;
   }
 
-  Options *options = [[[Options alloc] init] autorelease];
+  Options *options = [[Options alloc] init];
   NSString *errorMessage = nil;
 
   NSFileManager *fm = [NSFileManager defaultManager];
@@ -159,7 +159,6 @@
     LaunchTaskAndMaybeLogCommand(task, @"spawning xcodebuild to do -showBuildSettings");
     [task waitUntilExit];
     _exitStatus = [task terminationStatus];
-    [task release];
     return;
   }
 
@@ -228,12 +227,5 @@
   }
 }
 
-- (void)dealloc
-{
-  [_standardOutput release];
-  [_standardError release];
-  [_arguments release];
-  [super dealloc];
-}
 
 @end

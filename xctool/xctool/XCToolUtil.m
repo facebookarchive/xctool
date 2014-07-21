@@ -123,9 +123,9 @@ NSString *XCToolBasePath(void)
       // tests.
       NSString *installRoot = [[NSProcessInfo processInfo] environment][@"XT_INSTALL_ROOT"];
       NSCAssert(installRoot, @"XT_INSTALL_ROOT is not set.");
-      path = [installRoot retain];
+      path = installRoot;
     } else {
-      path = [[[AbsoluteExecutablePath() stringByDeletingLastPathComponent] stringByDeletingLastPathComponent] retain];
+      path = [[AbsoluteExecutablePath() stringByDeletingLastPathComponent] stringByDeletingLastPathComponent];
     }
   });
   return path;
@@ -166,7 +166,6 @@ NSString *XcodeDeveloperDirPathViaForcedConcreteTask(BOOL forceConcreteTask)
     path = [path stringByTrimmingCharactersInSet:
             [NSCharacterSet newlineCharacterSet]];
 
-    [task release];
     return path;
   };
 
@@ -177,7 +176,7 @@ NSString *XcodeDeveloperDirPathViaForcedConcreteTask(BOOL forceConcreteTask)
     return getPath();
   } else {
     if (savedPath == nil) {
-      savedPath = [getPath() retain];
+      savedPath = getPath();
     }
     return savedPath;
   }
@@ -248,7 +247,6 @@ static void AddSDKToDictionary(NSMutableDictionary *dict,
                              intoString:&sdkWithoutVersion];
   dict[sdkWithoutVersion] = versionDict;
   dict[sdk] = versionDict;
-  [sdkCharacterSet release];
 }
 
 NSDictionary *GetAvailableSDKsInfo()
@@ -260,7 +258,6 @@ NSDictionary *GetAvailableSDKsInfo()
   NSDictionary *output = LaunchTaskAndCaptureOutput(task,
                                                     @"querying available SDKs");
   NSString *sdkContents = output[@"stdout"];
-  [task release];
 
   NSScanner *scanner = [NSScanner scannerWithString:sdkContents];
 
@@ -357,7 +354,7 @@ BOOL LaunchXcodebuildTaskAndFeedEventsToReporters(NSTask *task,
       // xcodebuild failed with an error message.  We don't want this to bubble
       // up to reporters itself - instead the caller will capture the error
       // message and include it in the 'end-xcodebuild' event.
-      errorMessage = [event[@"message"] retain];
+      errorMessage = event[@"message"];
       errorCode = [event[@"code"] longLongValue];
     } else {
       PublishEventToReporters(reporters, event);
@@ -455,7 +452,6 @@ BOOL RunXcodebuildAndFeedEventsToReporters(NSArray *arguments,
 
   PublishEventToReporters(reporters, endEvent);
 
-  [task release];
   return succeeded;
 }
 
@@ -568,14 +564,14 @@ NSArray *ParseArgumentsFromArgumentString(NSString *string)
 
 NSDictionary *ParseDestinationString(NSString *destinationString, NSString **errorMessage)
 {
-  NSMutableDictionary *resultBuilder = [[[NSMutableDictionary alloc] init] autorelease];
+  NSMutableDictionary *resultBuilder = [[NSMutableDictionary alloc] init];
 
   // Might need to do this well later on. Right now though, just blindly split on the comma.
   NSArray *components = [destinationString componentsSeparatedByString:@","];
   for (NSString *component in components) {
     NSError *error = nil;
     NSString *pattern = @"^\\s*([^=]*)=([^=]*)\\s*$";
-    NSRegularExpression *re = [[[NSRegularExpression alloc] initWithPattern:pattern options:0 error:&error] autorelease];
+    NSRegularExpression *re = [[NSRegularExpression alloc] initWithPattern:pattern options:0 error:&error];
     if (error) {
       *errorMessage = [NSString stringWithFormat:@"Error while creating regex with pattern '%@'. Reason: '%@'.", pattern, [error localizedFailureReason]];
       return nil;
@@ -616,7 +612,7 @@ NSString *TemporaryDirectoryForAction()
       nameTemplate = @"xctool_temp_XXXXXX";
     }
 
-    __tempDirectoryForAction = [MakeTemporaryDirectory(nameTemplate) retain];
+    __tempDirectoryForAction = MakeTemporaryDirectory(nameTemplate);
   }
 
   return __tempDirectoryForAction;
@@ -634,7 +630,6 @@ void CleanupTemporaryDirectoryForAction()
       abort();
     }
 
-    [__tempDirectoryForAction release];
     __tempDirectoryForAction = nil;
   }
 }
@@ -719,7 +714,7 @@ NSString *XcodebuildVersion()
     NSDictionary *infoDict = [NSDictionary dictionaryWithContentsOfFile:xcodePlistPath];
     NSCAssert(infoDict[@"DTXcode"], @"Cannot find the 'DTXcode' key in Xcode's Info.plist.");
 
-    DTXcode = [infoDict[@"DTXcode"] retain];
+    DTXcode = infoDict[@"DTXcode"];
   });
   return DTXcode;
 }
@@ -748,8 +743,8 @@ BOOL ToolchainIsXcode6OrBetter(void)
 
 NSString *MakeTemporaryDirectory(NSString *nameTemplate)
 {
-  NSMutableData *template = [[[[NSTemporaryDirectory() stringByAppendingPathComponent:nameTemplate]
-                               dataUsingEncoding:NSUTF8StringEncoding] mutableCopy] autorelease];
+  NSMutableData *template = [[[NSTemporaryDirectory() stringByAppendingPathComponent:nameTemplate]
+                               dataUsingEncoding:NSUTF8StringEncoding] mutableCopy];
   [template appendBytes:"\0" length:1];
 
   if (!mkdtemp(template.mutableBytes) && !IsRunningUnderTest()) {
@@ -767,7 +762,7 @@ CFStringRef _CFBundleCopyFileTypeForFileURL(CFURLRef url);
 static BOOL IsMachOExecutable(NSString *path)
 {
   NSURL *fileURL = [NSURL fileURLWithPath:path];
-  CFStringRef fileType = _CFBundleCopyFileTypeForFileURL((CFURLRef)fileURL);
+  CFStringRef fileType = _CFBundleCopyFileTypeForFileURL((__bridge CFURLRef)fileURL);
 
   if (fileType != NULL) {
     CFComparisonResult result = CFStringCompare(fileType, CFSTR("tool"), 0);

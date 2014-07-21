@@ -139,10 +139,6 @@
   return self;
 }
 
-- (void)dealloc {
-  [_onlyList release];
-  [super dealloc];
-}
 
 - (void)addOnly:(NSString *)argument
 {

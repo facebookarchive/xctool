@@ -41,7 +41,7 @@
 
   void (^completionBlock)(NSNotification *) = ^(NSNotification *notification){
     NSData *data = notification.userInfo[NSFileHandleNotificationDataItem];
-    NSString *str = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
+    NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 
     if (notification.object == standardOutputReadHandle) {
       standardOutput = str;

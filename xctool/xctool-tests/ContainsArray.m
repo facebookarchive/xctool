@@ -25,16 +25,11 @@
 - (instancetype)initWithArray:(NSArray *)array
 {
   if (self = [super init]) {
-    _array = [array retain];
+    _array = array;
   }
   return self;
 }
 
-- (void)dealloc
-{
-  [_array release];
-  [super dealloc];
-}
 
 - (BOOL)matches:(NSArray *)otherArray
 {
@@ -56,5 +51,5 @@
 
 id <HCMatcher> containsArray(NSArray *array)
 {
-  return [[[ContainsArray alloc] initWithArray:array] autorelease];
+  return [[ContainsArray alloc] initWithArray:array];
 }

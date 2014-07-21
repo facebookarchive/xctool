@@ -20,22 +20,17 @@
 
 + (instancetype)containsAssertionFailureFromMethod:(NSString *)method
 {
-  return [[[self alloc] initWithMethod:method] autorelease];
+  return [[self alloc] initWithMethod:method];
 }
 
 - (instancetype)initWithMethod:(NSString *)method
 {
   if (self = [super init]) {
-    _method = [method retain];
+    _method = method;
   }
   return self;
 }
 
-- (void)dealloc
-{
-  [super dealloc];
-  [_method release];
-}
 
 - (BOOL)matches:(id)item
 {

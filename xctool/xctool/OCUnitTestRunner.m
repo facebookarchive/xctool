@@ -78,7 +78,7 @@
   if (!senTestInvertScope) {
     [result addObjectsFromArray:[matchingSet allObjects]];
   } else {
-    NSMutableSet *invertedSet = [[originalSet mutableCopy] autorelease];
+    NSMutableSet *invertedSet = [originalSet mutableCopy];
     [invertedSet minusSet:matchingSet];
     [result addObjectsFromArray:[invertedSet allObjects]];
   }
@@ -115,17 +115,6 @@
   return self;
 }
 
-- (void)dealloc
-{
-  [_buildSettings release];
-  [_focusedTestCases release];
-  [_allTestCases release];
-  [_arguments release];
-  [_environment release];
-  [_reporters release];
-  [_framework release];
-  [super dealloc];
-}
 
 - (void)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
                    startupError:(NSString **)startupError
@@ -142,10 +131,10 @@
   while (!testSuiteState || [[testSuiteState unstartedTests] count]) {
     TestRunState *testRunState;
     if (!testSuiteState) {
-      testRunState = [[[TestRunState alloc] initWithTests:_focusedTestCases reporters:_reporters] autorelease];
-      testSuiteState = [testRunState.testSuiteState retain];
+      testRunState = [[TestRunState alloc] initWithTests:_focusedTestCases reporters:_reporters];
+      testSuiteState = testRunState.testSuiteState;
     } else {
-      testRunState = [[[TestRunState alloc] initWithTestSuiteEventState:testSuiteState] autorelease];
+      testRunState = [[TestRunState alloc] initWithTestSuiteEventState:testSuiteState];
     }
 
     void (^feedOutputToBlock)(NSString *) = ^(NSString *line) {
@@ -173,11 +162,9 @@
       [unstartedTestCases addObject:[NSString stringWithFormat:@"%@/%@", obj.className, obj.methodName]];
     }];
 
-    [_focusedTestCases release];
     _focusedTestCases = unstartedTestCases;
   }
 
-  [testSuiteState release];
   
   return allTestsPassed;
 }
