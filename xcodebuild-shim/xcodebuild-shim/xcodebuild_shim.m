@@ -89,42 +89,41 @@ static void GetProjectTargetConfigurationFromHeader(NSString *header,
 {
   // Pull out the pieces from the header that looks like --
   // === BUILD NATIVE TARGET TestTest OF PROJECT TestTest WITH THE DEFAULT CONFIGURATION (Release) ===
+  void (^errorBlock)(void) = ^{
+    fprintf(__stderr,
+            "ERROR: Error parsing project, target, configuration from header '%s'.\n",
+            [header UTF8String]);
+    exit(1);
+  };
 
   NSScanner *scanner = [NSScanner scannerWithString:header];
   [scanner setCharactersToBeSkipped:nil];
 
   if (![scanner scanUpToString:@"TARGET " intoString:nil]) {
-    goto Error;
+    errorBlock();
   }
 
   [scanner scanString:@"TARGET " intoString:nil];
 
   if (![scanner scanUpToString:@" OF PROJECT " intoString:target]) {
-    goto Error;
+    errorBlock();
   }
 
   [scanner scanString:@" OF PROJECT " intoString:nil];
 
   if (![scanner scanUpToString:@" WITH " intoString:project]) {
-    goto Error;
+    errorBlock();
   }
 
   if (![scanner scanUpToString:@" CONFIGURATION " intoString:nil]) {
-    goto Error;
+    errorBlock();
   }
 
   [scanner scanString:@" CONFIGURATION " intoString:nil];
 
   if (![scanner scanUpToString:@" ===" intoString:configuration]) {
-    goto Error;
+    errorBlock();
   }
-
-  return;
-Error:
-  fprintf(__stderr,
-          "ERROR: Error parsing project, target, configuration from header '%s'.\n",
-          [header UTF8String]);
-  exit(1);
 }
 
 static void PrintJSON(id JSONObject)
