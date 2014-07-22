@@ -763,7 +763,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
  */
 - (NSDictionary *)buildSettingsForATarget
 {
-  NSDictionary *(^buildSettingsWithAction)(NSString *) = ^(NSString *action) {
+  NSDictionary *(^buildSettingsWithAction)(NSString *, NSString **) = ^(NSString *action, NSString **error) {
     NSTask *task = CreateTaskInSameProcessGroup();
     [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/xcodebuild"]];
     [task setArguments:
@@ -778,9 +778,8 @@ containsFilesModifiedSince:(NSDate *)sinceDate
     NSDictionary *result = LaunchTaskAndCaptureOutput(task, @"gathering build settings for a target");
     [task release];
 
-    NSString * error = result[@"stderr"];
-    if (error.length > 0) {
-      NSLog(@"Warning: error running xcodebuild -showBuildSettings: %@", error);
+    if (error) {
+      *error = result[@"stderr"];
     }
 
     return BuildSettingsFromOutput(result[@"stdout"]);
@@ -807,16 +806,25 @@ containsFilesModifiedSince:(NSDate *)sinceDate
     actionsToTry = @[@"build"];
   }
 
+  NSString *errors = @" Errors above occured while running xcodebuild -showBuildSettings:\n";
+  BOOL errored = NO;
   for (NSString *action in actionsToTry) {
-    NSDictionary *settings = buildSettingsWithAction(action);
+    NSString *error = nil;
+    NSDictionary *settings = buildSettingsWithAction(action, &error);
 
     if (settings.count == 1) {
       return settings;
     }
+
+    if (error) {
+      errored = YES;
+      errors = [errors stringByAppendingFormat:@"  %@.\n", error];
+    }
   }
 
   NSAssert(NO, @"Failed while trying to gather build settings for your scheme; "
-               @"tried with actions: %@", [actionsToTry componentsJoinedByString:@", "]);
+               @"tried with actions: %@.%@", [actionsToTry componentsJoinedByString:@", "],
+                                             errored ? errors : @"");
   return nil;
 }
 
