@@ -371,7 +371,7 @@ path/to/xctool.sh \
 For example, here's a simple reporter in Python that outputs a _period_
 for every passing test and an _exclamation mark_ for every failing test:
 
-```
+```python
 #!/usr/bin/python
 
 import fileinput
