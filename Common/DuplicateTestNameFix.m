@@ -31,7 +31,8 @@ NSArray *TestsFromSuite(id testSuite)
     id test = [queue objectAtIndex:0];
     [queue removeObjectAtIndex:0];
 
-    if ([test isKindOfClass:[testSuite class]]) {
+    if ([test isKindOfClass:[testSuite class]] ||
+        [test respondsToSelector:@selector(tests)]) {
       // Both SenTestSuite and XCTestSuite keep a list of tests in an ivar
       // called 'tests'.
       id testsInSuite = [test valueForKey:@"tests"];
