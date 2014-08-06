@@ -155,26 +155,26 @@ void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, voi
   NSCAssert(fcntl(stdoutReadFD, F_SETFL, flags | O_NONBLOCK) != -1,
             @"Failed to set O_NONBLOCK: %s", strerror(errno));
 
-  NSMutableString *buffer = [[NSMutableString alloc] initWithCapacity:0];
+  NSMutableData *buffer = [[NSMutableData alloc] initWithCapacity:0];
 
   // Split whatever content we have in 'buffer' into lines.
   void (^processBuffer)(void) = ^{
     NSUInteger offset = 0;
-
+    NSData *newlineData = [NSData dataWithBytes:"\n" length:1];
     for (;;) {
-      NSRange newlineRange = [buffer rangeOfString:@"\n"
-                                           options:0
-                                             range:NSMakeRange(offset, [buffer length] - offset)];
+      NSRange newlineRange = [buffer rangeOfData:newlineData
+                                         options:0
+                                           range:NSMakeRange(offset, [buffer length] - offset)];
       if (newlineRange.length == 0) {
         break;
       } else {
-        NSString *line = [buffer substringWithRange:NSMakeRange(offset, newlineRange.location - offset)];
-        block(line);
+        NSData *line = [buffer subdataWithRange:NSMakeRange(offset, newlineRange.location - offset)];
+        block([[[NSString alloc] initWithData:line encoding:NSUTF8StringEncoding] autorelease]);
         offset = newlineRange.location + 1;
       }
     }
 
-    [buffer replaceCharactersInRange:NSMakeRange(0, offset) withString:@""];
+    [buffer replaceBytesInRange:NSMakeRange(0, offset) withBytes:NULL length:0];
   };
 
   // Uses poll() to block until data (or EOF) is available.
@@ -225,10 +225,7 @@ void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, voi
       ssize_t bytesRead = read(stdoutReadFD, readBuffer, sizeof(readBuffer));
       if (bytesRead > 0) {
         @autoreleasepool {
-          NSString *str = [[NSString alloc] initWithBytes:readBuffer length:bytesRead encoding:NSUTF8StringEncoding];
-          [buffer appendString:str];
-          [str release];
-
+          [buffer appendBytes:readBuffer length:bytesRead];
           processBuffer();
         }
       } else if ((bytesRead == 0) ||
