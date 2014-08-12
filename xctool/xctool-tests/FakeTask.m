@@ -34,7 +34,9 @@ static void writeAll(int fildes, const void *buf, size_t nbyte) {
 @property (assign, readwrite) int terminationStatus;
 @end
 
-@implementation FakeTask
+@implementation FakeTask {
+  pid_t _forkedPid;
+}
 @synthesize currentDirectoryPath = _currentDirectoryPath;
 @synthesize launchPath = _launchPath;
 @synthesize arguments = _arguments;
@@ -186,17 +188,19 @@ static void writeAll(int fildes, const void *buf, size_t nbyte) {
       close(standardErrorWriteFd);
     }
 
-    int pidStatus = 0;
-    waitpid(forkedPid, &pidStatus, 0);
+    _forkedPid = forkedPid;
   }
 
-  [self setTerminationStatus:_pretendExitStatus];
-  [self setIsRunning:NO];
 }
 
 - (void)waitUntilExit
 {
-  // no-op
+  int pidStatus = 0;
+  if (_forkedPid > 0) {
+    waitpid(_forkedPid, &pidStatus, 0);
+  }
+  [self setTerminationStatus:_pretendExitStatus];
+  [self setIsRunning:NO];
 }
 
 - (NSString *)description
