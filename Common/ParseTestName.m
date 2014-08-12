@@ -8,7 +8,7 @@ void ParseClassAndMethodFromTestName(NSString **className, NSString **methodName
   NSCAssert(testName, @"testName should be non-nil");
 
   NSRegularExpression *testNameRegex =
-  [NSRegularExpression regularExpressionWithPattern:@"^-\\[(\\w+) (\\w+)\\]$"
+  [NSRegularExpression regularExpressionWithPattern:@"^-\\[([\\w.]+) (\\w+)\\]$"
                                             options:0
                                               error:nil];
   NSTextCheckingResult *match =
