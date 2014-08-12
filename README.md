@@ -17,28 +17,6 @@ for continuous integration.
 __xctool__ is drop-in replacement for xcodebuild that adds a few extra
 features:
 
-* **Runs the same tests as Xcode.app.**
-
-  Surprisingly, Apple's command-line _xcodebuild_ tool does not run your
-product's tests the same way as _Xcode.app_.  xcodebuild doesn't
-understand which targets in your scheme are test targets, which test
-suites or cases you might have disabled in your scheme, or how to run
-simulator-based, application tests.
-
-  If you use [application
-tests](http://developer.apple.com/library/mac/#documentation/developertools/Conceptual/UnitTesting/08-Glossary/glossary.html#//apple_ref/doc/uid/TP40002143-CH8-SW1),
-you've probably seen xcodebuild skipping them with this message:
-	
-	```
-	Skipping tests; the iPhoneSimulator platform does not currently support
-	application-hosted tests (TEST_HOST set).
-	```
-
-  *xctool* fixes this - it looks at your Xcode scheme and is able to
-reproduce the same test run you would get with Xcode.app via _Cmd-U_ or 
-_Product &rarr; Test_, including running application tests that require
-the iOS simulator.
-
 * **Structured output of build and test results.**
 
   _xctool_ captures all build events and test results as structured JSON
@@ -71,6 +49,7 @@ See [Parallelizing Test Runs](#parallelizing-test-runs) for more info.
 ## Requirements
 
 * Xcode 5 or higher
+* Xcode 6 betas are **not supported yet**. There is preliminary support in `master`, please test and send pull requests!
 * You'll need Xcode's Command Line Tools installed.  From Xcode, install
 via _Xcode &rarr; Preferences &rarr; Downloads_.
 
