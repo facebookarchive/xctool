@@ -447,6 +447,29 @@ It's a nice way to keep things together.
   
   ![example](https://fpotter_public.s3.amazonaws.com/xctool-shared-schemes.png)
 
+* __Hung simulator__
+
+  Running a build that requires a simulator for tests may launch the simulator
+  in what looks like a hung state. Specifically this may happen when runing from
+  within tmux. If this happens you may try to install ```reattach-to-user-namespace```
+  to see if it remedies the problem. The ```xctool.sh``` script will attempt to
+  automatically detect if ```reattach-to-user-namespace``` is needed and will
+  print the following warning if it is not found:
+
+  ```
+  WARNING: reattach-to-user-namespace is probably needed but was not found
+  ```
+
+  You can find ```reattach-to-user-namespace``` in source form:
+
+  [https://github.com/ChrisJohnsen/tmux-MacOSX-pasteboard](https://github.com/ChrisJohnsen/tmux-MacOSX-pasteboard)
+
+  or via brew:
+
+  ```
+  brew install reattach-to-user-namespace
+  ```
+
 ## License
 
 Copyright 2013 Facebook
