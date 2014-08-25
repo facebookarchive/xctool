@@ -100,14 +100,14 @@ def get_args_without_osxims():
 
 
 def get_iphonesimulator_sdk_versions_for_arch(developer_dir, arch):
-    sdk_paths = glob.glob(os.path.join(
-        developer_dir,
-        'Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator*.sdk'))
-    sdk_paths.sort()
-    sdk_names = [os.path.basename(sdk_path) for sdk_path in sdk_paths]
+    sdks_dir = os.path.join(
+        developer_dir, 'Platforms/iPhoneSimulator.platform/Developer/SDKs/')
+    filenames = os.listdir(sdks_dir)
+    pattern = re.compile(r'iPhoneSimulator(.+?)\.sdk')
+
     sdk_versions = [
-        re.match(r'iPhoneSimulator(.+?)\.sdk', sdk_name).group(1) for sdk_name
-        in sdk_names]
+        re.match(pattern, filename).group(1) for filename
+        in filenames if re.match(pattern, filename)]
 
     # Only 7.0+ supports x86_64 builds.
     if arch == 'x86_64':
@@ -118,7 +118,7 @@ def get_iphonesimulator_sdk_versions_for_arch(developer_dir, arch):
     if len(sdk_versions) == 0:
         raise Exception('No matching SDK for arch %s' % arch)
 
-    return sdk_versions
+    return sorted(sdk_versions, key=float)
 
 
 def get_latest_iphonesimulator_sdk_version_arch(developer_dir, arch):
