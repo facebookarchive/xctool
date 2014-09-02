@@ -17,7 +17,9 @@
 #import "OCUnitIOSLogicTestRunner.h"
 
 #import "NSConcreteTask.h"
+#import "SimDevice.h"
 #import "SimulatorInfo.h"
+#import "SimulatorInfoXcode6.h"
 #import "TaskUtil.h"
 #import "TestingFramework.h"
 #import "XCToolUtil.h"
@@ -31,14 +33,34 @@
                           _buildSettings[Xcode_SDKROOT],
                           _framework[kTestingFrameworkIOSTestrunnerName]];
   NSArray *args = [[self testArguments] arrayByAddingObject:testBundlePath];
-  NSDictionary *env = [self otestEnvironmentWithOverrides:
-                       @{
-                         @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"],
-                         @"DYLD_FRAMEWORK_PATH" : _buildSettings[Xcode_BUILT_PRODUCTS_DIR],
-                         @"DYLD_FALLBACK_FRAMEWORK_PATH" : IOSTestFrameworkDirectories(),
-                         @"DYLD_LIBRARY_PATH" : _buildSettings[Xcode_BUILT_PRODUCTS_DIR],
-                         @"NSUnbufferedIO" : @"YES",
-                         }];
+  NSMutableDictionary *env = [NSMutableDictionary dictionary];
+
+  // In Xcode 6 `sim` doesn't set `CFFIXED_USER_HOME` if simulator is not launched
+  // but this environment is used, for example, by NSHomeDirectory().
+  // To avoid similar situations in future let's copy all simulator environments
+  if (ToolchainIsXcode6OrBetter()) {
+    SimDevice *device = [(SimulatorInfoXcode6 *)self.simulatorInfo simulatedDevice];
+    NSDictionary *simulatorEnvironment = [device environment];
+    if (simulatorEnvironment) {
+      [env addEntriesFromDictionary:simulatorEnvironment];
+    }
+    NSString *fixedUserHome = simulatorEnvironment[@"CFFIXED_USER_HOME"];
+    if (!fixedUserHome && [device dataPath]) {
+      env[@"CFFIXED_USER_HOME"] = [device dataPath];
+    }
+  }
+
+  // adding custom xctool environment variables
+  [env addEntriesFromDictionary:@{
+    @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"],
+    @"DYLD_FRAMEWORK_PATH" : _buildSettings[Xcode_BUILT_PRODUCTS_DIR],
+    @"DYLD_FALLBACK_FRAMEWORK_PATH" : IOSTestFrameworkDirectories(),
+    @"DYLD_LIBRARY_PATH" : _buildSettings[Xcode_BUILT_PRODUCTS_DIR],
+    @"NSUnbufferedIO" : @"YES",
+  }];
+
+  // and merging with process environments and `_environment` variable contents
+  env = [self otestEnvironmentWithOverrides:env];
 
   return [CreateTaskForSimulatorExecutable([self cpuType],
                                            [SimulatorInfo baseVersionForSDKShortVersion:[self.simulatorInfo simulatedSdkVersion]],

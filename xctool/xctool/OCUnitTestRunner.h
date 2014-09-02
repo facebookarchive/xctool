@@ -63,7 +63,7 @@
 - (BOOL)runTests;
 
 - (NSArray *)testArguments;
-- (NSDictionary *)otestEnvironmentWithOverrides:(NSDictionary *)overrides;
+- (NSMutableDictionary *)otestEnvironmentWithOverrides:(NSDictionary *)overrides;
 - (NSString *)testBundlePath;
 
 @end

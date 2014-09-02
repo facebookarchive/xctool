@@ -235,7 +235,7 @@
   return args;
 }
 
-- (NSDictionary *)otestEnvironmentWithOverrides:(NSDictionary *)overrides
+- (NSMutableDictionary *)otestEnvironmentWithOverrides:(NSDictionary *)overrides
 {
   NSMutableDictionary *env = [NSMutableDictionary dictionary];
 
