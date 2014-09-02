@@ -14,7 +14,7 @@ _Only iphonesimulator dylibs are supported now, but it would be possible to add 
 cd Vendor
 mkdir clang-as-ios-dylib
 cd clang-as-ios-dylib
-curl https://github.com/facebook/clang-as-ios-dylib/archive/master.tar.gz | tar zxvf - --strip-components=1
+curl -L https://github.com/facebook/clang-as-ios-dylib/archive/master.tar.gz | tar zxvf - --strip-components=1
   ```
 
 
