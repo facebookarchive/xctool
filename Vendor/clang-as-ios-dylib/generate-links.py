@@ -15,6 +15,7 @@ versions = [
     '6.1',
     '7.0',
     '7.1',
+    '8.0',
     # Symbolic names for the earliest and latest SDK versions that support the
     # current arch.
     'earliest',
