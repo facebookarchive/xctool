@@ -41,6 +41,11 @@ static const NSInteger KProductTypeIpad = 2;
 
 @end
 
+@interface SimulatorInfoXcode6 ()
+@property (nonatomic, retain) SimDevice *simulatedDevice;
+@property (nonatomic, retain) SimRuntime *simulatedRuntime;
+@end
+
 @implementation SimulatorInfoXcode6
 @synthesize buildSettings = _buildSettings;
 @synthesize cpuType = _cpuType;
@@ -158,20 +163,26 @@ static const NSInteger KProductTypeIpad = 2;
 
 - (SimRuntime *)simulatedRuntime
 {
-  return [[self systemRootForSimulatedSdk] runtime];
+  if (!_simulatedRuntime) {
+    _simulatedRuntime = [[self systemRootForSimulatedSdk] runtime];
+  }
+  return _simulatedRuntime;
 }
 
 - (SimDevice *)simulatedDevice
 {
-  SimRuntime *runtime = [self simulatedRuntime];
-  SimDeviceType *deviceType = [SimDeviceType supportedDeviceTypesByAlias][[self simulatedDeviceInfoName]];
-  for (SimDevice *device in [[SimDeviceSet defaultSet] availableDevices]) {
-    if ([device.deviceType isEqual:deviceType] &&
-        [device.runtime isEqual:runtime]) {
-      return device;
+  if (!_simulatedDevice) {
+    SimRuntime *runtime = [self simulatedRuntime];
+    SimDeviceType *deviceType = [SimDeviceType supportedDeviceTypesByAlias][[self simulatedDeviceInfoName]];
+    for (SimDevice *device in [[SimDeviceSet defaultSet] availableDevices]) {
+      if ([device.deviceType isEqual:deviceType] &&
+          [device.runtime isEqual:runtime]) {
+        _simulatedDevice = device;
+        break;
+      }
     }
   }
-  return nil;
+  return _simulatedDevice;
 }
 
 #pragma mark -
