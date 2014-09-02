@@ -48,4 +48,7 @@ REVISION=$((\
   git --git-dir="${XCTOOL_DIR}/.git" log -n 1 --format=%h 2> /dev/null) || \
   echo ".")
 
-"$XCTOOL_DIR"/build/$REVISION/Products/Release/bin/xctool "$@"
+XCODEBUILD_VERSION=$(xcodebuild -version)
+XCODEBUILD_VERSION=`expr "$XCODEBUILD_VERSION" : '^.*Build version \(.*\)'`
+
+"$XCTOOL_DIR"/build/$REVISION/$XCODEBUILD_VERSION/Products/Release/bin/xctool "$@"
