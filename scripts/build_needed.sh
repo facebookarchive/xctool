@@ -19,7 +19,10 @@ else
   HAS_GIT_CHANGES=NO
 fi
 
-BUILD_OUTPUT_DIR="$XCTOOL_DIR"/build/$REVISION
+XCODEBUILD_VERSION=$(xcodebuild -version)
+XCODEBUILD_VERSION=`expr "$XCODEBUILD_VERSION" : '^.*Build version \(.*\)'`
+
+BUILD_OUTPUT_DIR="$XCTOOL_DIR"/build/$REVISION/$XCODEBUILD_VERSION
 XCTOOL_PATH="$BUILD_OUTPUT_DIR"/Products/Release/bin/xctool
 
 if [[ -e "$XCTOOL_PATH" && $REVISION != "." && $HAS_GIT_CHANGES == "NO" && \
