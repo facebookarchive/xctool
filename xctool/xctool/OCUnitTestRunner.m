@@ -174,7 +174,8 @@
   NSString *testSpecifier = nil;
   BOOL invertScope = NO;
 
-  if ([focusedSet isEqualToSet:allSet]) {
+  if ((!ToolchainIsXcode6OrBetter() || TestableSettingsIndicatesApplicationTest(_buildSettings)) &&
+      [focusedSet isEqualToSet:allSet]) {
 
     if (TestableSettingsIndicatesApplicationTest(_buildSettings)) {
       // Xcode.app will always pass 'All' when running all tests in an
