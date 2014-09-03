@@ -370,7 +370,7 @@ sys.stdout.write('\n')
 ```
 
 If you're writing a reporter in Objective-C, you'll find the
-`Reporter` class helpful - see [Reporter.h](https://github.com/facebook/xctool/blob/master/reporters/reporters/Reporter.h).
+`Reporter` class helpful - see [Reporter.h](https://github.com/facebook/xctool/blob/master/Common/Reporter.h).
 
 
 ## Configuration (.xctool-args)
@@ -398,7 +398,7 @@ over those in the _.xctool-args_ file.
 ## Contributing
 
 Bug fixes, improvements, and especially new
-[Reporter](https://github.com/facebook/xctool/blob/master/xctool/xctool/Reporter.h)
+[Reporter](#reporters)
 implementations are welcome.  Before submitting a [pull
 request](https://help.github.com/articles/using-pull-requests), please
 be sure to sign the [Facebook
