@@ -57,18 +57,31 @@ static void SenTestCase_invokeTest(XTSenTestCase *self, SEL cmd)
   // This is the whole reason we re-implement this method.
   NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-  [self setUpTestWithSelector:selector];
+  // the SenTestKit framework on iOS 5.0 does not implement most methods used here (see https://github.com/facebook/xctool/issues/334)
+  // so check for that and skip the non-implemented methods if necessary
+
+  if ([self respondsToSelector:@selector(setUpTestWithSelector:)]) {
+    [self setUpTestWithSelector:selector];
+  }
   [self setUp];
 
-  NSUInteger numberOfIterations = [self numberOfTestIterationsForTestWithSelector:selector];
-  for (NSUInteger i = 0; i < numberOfIterations; i++) {
-    [self beforeTestIteration:i selector:selector];
+  BOOL supportsTestIterations = [self respondsToSelector:@selector(numberOfTestIterationsForTestWithSelector:)];
+
+  if (supportsTestIterations) {
+    NSUInteger numberOfIterations = [self numberOfTestIterationsForTestWithSelector:selector];
+    for (NSUInteger i = 0; i < numberOfIterations; i++) {
+      [self beforeTestIteration:i selector:selector];
+      [invocation invoke];
+      [self afterTestIteration:i selector:selector];
+    }
+  } else {
     [invocation invoke];
-    [self afterTestIteration:i selector:selector];
   }
 
   [self tearDown];
-  [self tearDownTestWithSelector:selector];
+  if ([self respondsToSelector:@selector(tearDownTestWithSelector:)]) {
+    [self tearDownTestWithSelector:selector];
+  }
 
   [pool drain];
 }
