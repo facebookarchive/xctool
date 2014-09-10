@@ -710,7 +710,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                        @"-configuration",
                        @"TestConfig",
                        @"-sdk",
-                       @"iphonesimulator",
+                       @"iphonesimulator6.1",
                        @"-arch",
                        @"i386",
                        @"PLATFORM_NAME=iphonesimulator",
