@@ -154,6 +154,11 @@ NSString *XcodeDeveloperDirPath(void)
 NSString *XcodeDeveloperDirPathViaForcedConcreteTask(BOOL forceConcreteTask)
 {
   NSString *(^getPath)() = ^{
+    char *envPathCStr = getenv("DEVELOPER_DIR");
+    if (envPathCStr) {
+      return [NSString stringWithCString:envPathCStr encoding:NSUTF8StringEncoding];
+    }
+
     NSTask *task = (forceConcreteTask ?
                     CreateConcreteTaskInSameProcessGroup() :
                     CreateTaskInSameProcessGroup());
