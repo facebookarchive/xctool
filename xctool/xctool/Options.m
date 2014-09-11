@@ -492,6 +492,10 @@
       return NO;
     }
 
+    // Map SDK param to actual SDK name.  This allows for aliases like 'iphoneos' to map
+    // to 'iphoneos6.1'.
+    self.sdk = sdksAndAliases[self.sdk];
+    
     // Xcode 5's xcodebuild has a bug where it won't build targets for the
     // iphonesimulator SDK.  It fails with...
     //
@@ -539,14 +543,6 @@
                            @"Device with name '%@' doesn't support iOS version '%@'. The supported iOS versions are: %@.",
                            deviceName, osVersion, [SimulatorInfo sdksSupportedByDevice:deviceName]];
           return NO;
-        }
-      }
-      if (_sdk &&
-          ![_sdk hasSuffix:osVersion] &&
-          [_sdk hasPrefix:@"iphonesimulator"]) {
-        NSString *possibleSdk = [NSString stringWithFormat:@"iphonesimulator%@", osVersion];
-        if (sdksAndAliases[possibleSdk]) {
-          self.sdk = possibleSdk;
         }
       }
     }
