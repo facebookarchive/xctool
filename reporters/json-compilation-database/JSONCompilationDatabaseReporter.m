@@ -161,22 +161,25 @@
   for (NSDictionary *event in precompiles) {
     NSString *command = event[kReporter_BeginBuildCommand_CommandKey];
     NSArray *commands = [command componentsSeparatedByString:@"\n"];
-    NSString *precompileTitle = [commands[0] strip];
-    NSString *workingDirectory = [commands[1] strip];
+    NSString *precompileCommand = [commands[0] strip];
+    NSString *workingDirectoryCommand = [commands[1] strip];
 
-    NSTextCheckingResult *precompileTitleMatch =
-    [precompileTitle firstMatch:@[@"^ProcessPCH(\\+\\+)? \"(.+)(\\.pch\\.pth|\\.pch\\.pch)\" \"(.+)\\.pch\"",
+    NSTextCheckingResult *precompileMatch =
+    [precompileCommand firstMatch:@[@"^ProcessPCH(\\+\\+)? \"(.+)(\\.pch\\.pth|\\.pch\\.pch)\" \"(.+)\\.pch\"",
      @"^ProcessPCH(\\+\\+)? (.+)(\\.pch\\.pth|\\.pch\\.pch) (.+)\\.pch"]];
-    NSTextCheckingResult *workingDirectoryMatch = [workingDirectory firstMatch:@[@"^cd \"(.+)\"", @"^cd (.+)"]];
+    NSTextCheckingResult *workingDirectoryMatch = [workingDirectoryCommand firstMatch:@[@"^cd \"(.+)\"", @"^cd (.+)"]];
 
-    if (precompileTitleMatch && workingDirectoryMatch) {
-      NSRange firstHalfRange = [precompileTitleMatch rangeAtIndex:2];
-      NSRange secondHalfRange = [precompileTitleMatch rangeAtIndex:4];
-      NSString *cachedPath = [NSString stringWithFormat:@"%@.pch", [precompileTitle substringWithRange:firstHalfRange]];
-      NSString *localPath = [NSString stringWithFormat:@"%@/%@.pch",
-                             [workingDirectory substringWithRange:[workingDirectoryMatch rangeAtIndex:1]],
-                             [precompileTitle substringWithRange:secondHalfRange]];
-      localMapping[cachedPath] = localPath;
+    if (precompileMatch && workingDirectoryMatch) {
+      NSString *cachedPchPath = [precompileCommand substringWithRange:[precompileMatch rangeAtIndex:2]];
+      NSString *sourcePchName = [precompileCommand substringWithRange:[precompileMatch rangeAtIndex:4]];
+      NSString *workingDir = [workingDirectoryCommand substringWithRange:[workingDirectoryMatch rangeAtIndex:1]];
+
+      cachedPchPath = [cachedPchPath stringByAppendingPathExtension:@"pch"];
+      if (![cachedPchPath hasPrefix:@"/"]) {
+        cachedPchPath = [workingDir stringByAppendingPathComponent:cachedPchPath];
+      }
+      NSString *localPath = [NSString stringWithFormat:@"%@/%@.pch", workingDir, sourcePchName];
+      localMapping[cachedPchPath] = localPath;
     }
 
   }
