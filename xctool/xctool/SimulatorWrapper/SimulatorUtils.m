@@ -140,3 +140,21 @@ BOOL RemoveSimulatorContentAndSettings(SimulatorInfo *simulatorInfo, NSString **
     return RemoveSimulatorContentAndSettingsFolder([simulatorInfo simulatedSdkShortVersion], [simulatorInfo cpuType], removedPath, errorMessage);
   }
 }
+
+BOOL ShutdownSimulator(SimulatorInfo *simulatorInfo, NSString **errorMessage)
+{
+  if ([simulatorInfo isKindOfClass:[SimulatorInfoXcode6 class]]) {
+    SimDevice *simulatedDevice = [(SimulatorInfoXcode6 *)simulatorInfo simulatedDevice];
+    NSError *error = nil;
+
+    if (simulatedDevice.state != SimDeviceStateShutdown) {
+      if (![simulatedDevice shutdownWithError:&error]) {
+        *errorMessage = [NSString stringWithFormat:@"Tried to shutdown the simulator but failed: %@; %@.",
+                         error.localizedDescription ?: @"Unknown error.",
+                         [error.userInfo[NSUnderlyingErrorKey] localizedDescription] ?: @""];
+        return NO;
+      }
+    }
+  }
+  return YES;
+}
