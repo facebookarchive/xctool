@@ -22,6 +22,7 @@
 #import "SimulatorUtils.h"
 #import "SimulatorWrapper.h"
 #import "XcodeBuildSettings.h"
+#import "XCToolUtil.h"
 
 static const NSInteger kMaxInstallOrUninstallAttempts = 3;
 static const NSInteger kMaxRunTestsAttempts = 3;
@@ -65,6 +66,22 @@ static const NSInteger kMaxRunTestsAttempts = 3;
 
   void (^prepareSimulator)(BOOL freshSimulator, BOOL resetSimulator) = ^(BOOL freshSimulator, BOOL resetSimulator) {
     if (freshSimulator || resetSimulator) {
+      if (ToolchainIsXcode6OrBetter()) {
+        ReportStatusMessageBegin(_reporters,
+                                 REPORTER_MESSAGE_INFO,
+                                 @"Shutting down iOS Simulator...");
+        NSString *shutdownError = nil;
+        if (ShutdownSimulator(self.simulatorInfo, &shutdownError)) {
+          ReportStatusMessageEnd(_reporters,
+                                 REPORTER_MESSAGE_INFO,
+                                 @"Shut down iOS Simulator...");
+        } else {
+          ReportStatusMessageEnd(_reporters,
+                                 REPORTER_MESSAGE_WARNING,
+                                 @"Failed to shut down iOS Simulator with error: %@", shutdownError);
+        }
+      }
+
       ReportStatusMessageBegin(_reporters,
                                REPORTER_MESSAGE_INFO,
                                @"Stopping any existing iOS simulator jobs to get a "
