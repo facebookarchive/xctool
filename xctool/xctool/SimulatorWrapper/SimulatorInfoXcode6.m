@@ -89,12 +89,13 @@ static const NSInteger KProductTypeIpad = 2;
     return _deviceName;
   }
 
-  // return lowest device that supports simulated sdk
+  // return lowest device that has configuration with simulated sdk where lowest is defined
+  // by the order in the returned array of devices from `-[SimDeviceSet availableDevices]`
   SimRuntime *runtime = systemRoot.runtime;
   NSMutableArray *supportedDeviceTypes = [NSMutableArray array];
-  for (SimDeviceType *deviceType in [SimDeviceType supportedDeviceTypes]) {
-    if ([runtime supportsDeviceType:deviceType]) {
-      [supportedDeviceTypes addObject:deviceType];
+  for (SimDevice *device in [[SimDeviceSet defaultSet] availableDevices]) {
+    if ([device.runtime isEqual:runtime]) {
+      [supportedDeviceTypes addObject:device.deviceType];
     }
   }
 
@@ -311,6 +312,10 @@ static const NSInteger KProductTypeIpad = 2;
     map = [@{} mutableCopy];
     accessQueue = dispatch_queue_create("com.xctool.access_root_with_sdk_path", NULL);
   });
+
+  // In Xcode 6 latest sdk path could be a symlink to iPhoneSimulator.sdk.
+  // It should be resolved before comparing with `knownRoots` paths.
+  path = [path stringByResolvingSymlinksInPath];
 
   __block DTiPhoneSimulatorSystemRoot *root = nil;
   dispatch_sync(accessQueue, ^{
