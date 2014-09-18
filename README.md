@@ -49,7 +49,6 @@ See [Parallelizing Test Runs](#parallelizing-test-runs) for more info.
 ## Requirements
 
 * Xcode 5 or higher
-* Xcode 6 betas are **not supported yet**. There is preliminary support in `master`, please test and send pull requests!
 * You'll need Xcode's Command Line Tools installed.  From Xcode, install
 via _Xcode &rarr; Preferences &rarr; Downloads_.
 
