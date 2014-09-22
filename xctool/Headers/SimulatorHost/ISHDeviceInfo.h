@@ -63,6 +63,12 @@
 
 @end
 
+#if XCODE_VERSION >= 0600
+@interface ISHDeviceInfoStub : NSObject<ISHDeviceInfo>
+@end
+#else
 @interface ISHDeviceInfo : NSObject<ISHDeviceInfo>
 @end
-
+@interface ISHDeviceInfoStub : ISHDeviceInfo
+@end
+#endif

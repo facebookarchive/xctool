@@ -33,6 +33,12 @@
 
 @end
 
+#if XCODE_VERSION >= 0600
+@interface ISHSDKInfoStub : NSObject<ISHSDKInfo>
+@end
+#else
 @interface ISHSDKInfo : NSObject<ISHSDKInfo>
 @end
-
+@interface ISHSDKInfoStub : ISHSDKInfo
+@end
+#endif

@@ -79,14 +79,9 @@ static const NSString * kOtestShimStderrFilePath __unused = @"OTEST_SHIM_STDERR_
 #pragma mark -
 #pragma mark Helpers
 
-+ (BOOL)isXcode6OrHigher
-{
-  return NSClassFromString(@"SimDevice") != nil;
-}
-
 + (Class)classBasedOnCurrentVersionOfXcode
 {
-  if ([self isXcode6OrHigher]) {
+  if (ToolchainIsXcode6OrBetter()) {
     return [SimulatorWrapperXcode6 class];
   } else {
     return [SimulatorWrapperXcode5 class];

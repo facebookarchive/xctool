@@ -6,7 +6,7 @@
 
 typedef void (^CDUnknownBlockType)(void);
 
-@class SimDeviceNotificationManager, SimDeviceSet, SimDeviceType, SimRuntime, SimServiceConnectionManager;
+@class SimDeviceNotificationManager, SimDeviceSet, SimDeviceType, SimRuntimeStub, SimServiceConnectionManager;
 
 typedef NS_ENUM(long long, SimDeviceState) {
   SimDeviceStateCreating = 0,
@@ -20,11 +20,11 @@ typedef NS_ENUM(long long, SimDeviceState) {
 @optional
 
 // initializers
-+ (id)createDeviceWithName:(NSString *)arg1 setPath:(NSString *)arg2 deviceType:(SimDeviceType *)arg3 runtime:(SimRuntime *)arg4;
-+ (id)simDevice:(id)arg1 UDID:(id)arg2 deviceType:(SimDeviceType *)arg3 runtime:(SimRuntime *)arg4 state:(unsigned long long)arg5 connectionManager:(id)arg6 setPath:(NSString *)arg7;
++ (id)createDeviceWithName:(NSString *)arg1 setPath:(NSString *)arg2 deviceType:(SimDeviceType *)arg3 runtime:(SimRuntimeStub *)arg4;
++ (id)simDevice:(id)arg1 UDID:(id)arg2 deviceType:(SimDeviceType *)arg3 runtime:(SimRuntimeStub *)arg4 state:(unsigned long long)arg5 connectionManager:(id)arg6 setPath:(NSString *)arg7;
 + (id)simDeviceAtPath:(id)arg1;
 
-- (id)initDevice:(id)arg1 UDID:(id)arg2 deviceType:(SimDeviceType *)arg3 runtime:(SimRuntime *)arg4 state:(unsigned long long)arg5 connectionManager:(id)arg6 setPath:(NSString *)arg7;
+- (id)initDevice:(id)arg1 UDID:(id)arg2 deviceType:(SimDeviceType *)arg3 runtime:(SimRuntimeStub *)arg4 state:(unsigned long long)arg5 connectionManager:(id)arg6 setPath:(NSString *)arg7;
 
 // properties
 @property(copy) NSUUID *UDID;
@@ -42,7 +42,7 @@ typedef NS_ENUM(long long, SimDeviceState) {
 @property(copy) NSString *name;
 @property(retain) SimDeviceNotificationManager *notificationManager;
 @property(retain) NSMutableDictionary *registeredServices;
-@property(retain) SimRuntime *runtime;
+@property(retain) SimRuntimeStub *runtime;
 @property(copy) NSString *setPath;
 @property(retain, nonatomic) NSDistantObject *simBridgeDistantObject;
 @property(retain, nonatomic) NSMachPort *simBridgePort;

@@ -72,5 +72,12 @@ typedef void (^CDUnknownFunctionPointerType)(void);
 
 @end
 
+#if XCODE_VERSION < 0600
+@interface SimRuntimeStub : NSObject<SimRuntime, SimRuntimeDVTAdditions>
+@end
+#else
 @interface SimRuntime : NSObject<SimRuntime, SimRuntimeDVTAdditions>
 @end
+@interface SimRuntimeStub : SimRuntime
+@end
+#endif

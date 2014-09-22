@@ -35,10 +35,10 @@ static const NSInteger KProductTypeIpad = 2;
 #pragma mark -
 #pragma mark Private methods
 
-+ (ISHSDKInfo *)sdkInfoForShortVersion:(NSString *)sdkVersion
++ (ISHSDKInfoStub *)sdkInfoForShortVersion:(NSString *)sdkVersion
 {
-  ISHDeviceVersions *versions = [ISHDeviceVersions sharedInstance];
-  for (ISHSDKInfo *sdkInfo in [versions allSDKs]) {
+  ISHDeviceVersionsStub *versions = [ISHDeviceVersionsStub sharedInstance];
+  for (ISHSDKInfoStub *sdkInfo in [versions allSDKs]) {
     if ([[sdkInfo shortVersionString] isEqualToString:sdkVersion]) {
       return sdkInfo;
     }
@@ -48,12 +48,12 @@ static const NSInteger KProductTypeIpad = 2;
 
 - (NSString *)maxSdkVersionForSimulatedDevice
 {
-  ISHDeviceVersions *versions = [ISHDeviceVersions sharedInstance];
-  ISHDeviceInfo *deviceInfo = [versions deviceInfoNamed:[self simulatedDeviceInfoName]];
+  ISHDeviceVersionsStub *versions = [ISHDeviceVersionsStub sharedInstance];
+  ISHDeviceInfoStub *deviceInfo = [versions deviceInfoNamed:[self simulatedDeviceInfoName]];
   NSAssert(deviceInfo, @"Device info wasn't found for device with name: %@", [self simulatedDeviceInfoName]);
-  ISHSDKInfo *maxSdk = nil;
+  ISHSDKInfoStub *maxSdk = nil;
   do {
-    for (ISHSDKInfo *sdkInfo in [versions allSDKs]) {
+    for (ISHSDKInfoStub *sdkInfo in [versions allSDKs]) {
       if (![deviceInfo supportsSDK:sdkInfo]) {
         continue;
       }
@@ -67,8 +67,8 @@ static const NSInteger KProductTypeIpad = 2;
       break;
     }
     if (!deviceInfo) {
-      NSArray *availableSdks = [[[ISHDeviceVersions sharedInstance] allSDKs] valueForKeyPath:@"shortVersionString"];
-      NSArray *availableDevices = [[ISHDeviceVersions sharedInstance] allDeviceNames];
+      NSArray *availableSdks = [[[ISHDeviceVersionsStub sharedInstance] allSDKs] valueForKeyPath:@"shortVersionString"];
+      NSArray *availableDevices = [[ISHDeviceVersionsStub sharedInstance] allDeviceNames];
       NSAssert(deviceInfo, @"There are not comptable devices and SDKs to simulate. Available devices: %@, sdk: %@", availableDevices, availableSdks);
     }
   } while (true);
@@ -111,13 +111,13 @@ static const NSInteger KProductTypeIpad = 2;
       break;
   }
 
-  ISHSDKInfo *sdkInfo = [[ISHDeviceVersions sharedInstance] sdkFromSDKRoot:_buildSettings[Xcode_SDKROOT]];
+  ISHSDKInfoStub *sdkInfo = [[ISHDeviceVersionsStub sharedInstance] sdkFromSDKRoot:_buildSettings[Xcode_SDKROOT]];
   if (!sdkInfo) {
     return _deviceName;
   }
 
-  ISHDeviceVersions *versions = [ISHDeviceVersions sharedInstance];
-  ISHDeviceInfo *deviceInfo = [versions deviceInfoNamed:_deviceName];
+  ISHDeviceVersionsStub *versions = [ISHDeviceVersionsStub sharedInstance];
+  ISHDeviceInfoStub *deviceInfo = [versions deviceInfoNamed:_deviceName];
   while (deviceInfo && ![deviceInfo supportsSDK:sdkInfo]) {
     deviceInfo = [deviceInfo newerEquivalent];
     self.deviceName = [deviceInfo displayName];
@@ -142,7 +142,7 @@ static const NSInteger KProductTypeIpad = 2;
 {
   if (_OSVersion) {
     if ([_OSVersion isEqualTo:@"latest"]) {
-      return [[[ISHDeviceVersions sharedInstance] sdkFromSDKRoot:[[ISHDeviceVersions sharedInstance] latestSDKRoot]] shortVersionString];
+      return [[[ISHDeviceVersionsStub sharedInstance] sdkFromSDKRoot:[[ISHDeviceVersionsStub sharedInstance] latestSDKRoot]] shortVersionString];
     } else {
       return _OSVersion;
     }
@@ -158,7 +158,7 @@ static const NSInteger KProductTypeIpad = 2;
 
 - (NSString *)simulatedSdkShortVersion
 {
-  ISHSDKInfo *sdkInfo = [[ISHDeviceVersions sharedInstance] sdkFromSDKRoot:[self simulatedSdkRootPath]];
+  ISHSDKInfoStub *sdkInfo = [[ISHDeviceVersionsStub sharedInstance] sdkFromSDKRoot:[self simulatedSdkRootPath]];
   return [sdkInfo shortVersionString];
 }
 
@@ -172,7 +172,7 @@ static const NSInteger KProductTypeIpad = 2;
 
   systemRoot = [SimulatorInfoXcode5 _systemRootWithSDKVersion:sdkVersion];
   if (!systemRoot) {
-    NSArray *availableSdks = [[[ISHDeviceVersions sharedInstance] allSDKs] valueForKeyPath:@"shortVersionString"];
+    NSArray *availableSdks = [[[ISHDeviceVersionsStub sharedInstance] allSDKs] valueForKeyPath:@"shortVersionString"];
     NSAssert(systemRoot != nil, @"Unable to instantiate DTiPhoneSimulatorSystemRoot for sdk version: %@. Available sdks: %@", sdkVersion, availableSdks);
   }
   return systemRoot;
@@ -183,7 +183,7 @@ static const NSInteger KProductTypeIpad = 2;
 
 + (NSArray *)availableDevices
 {
-  return [[ISHDeviceVersions sharedInstance] allDeviceNames];
+  return [[ISHDeviceVersionsStub sharedInstance] allDeviceNames];
 }
 
 + (NSString *)deviceNameForAlias:(NSString *)deviceAlias
@@ -193,13 +193,13 @@ static const NSInteger KProductTypeIpad = 2;
 
 + (BOOL)isDeviceAvailableWithAlias:(NSString *)deviceName
 {
-  return [[ISHDeviceVersions sharedInstance] deviceInfoNamed:deviceName] != nil;
+  return [[ISHDeviceVersionsStub sharedInstance] deviceInfoNamed:deviceName] != nil;
 }
 
-+ (ISHSDKInfo *)sdkWithVersion:(NSString *)sdkVersion
++ (ISHSDKInfoStub *)sdkWithVersion:(NSString *)sdkVersion
 {
-  __block ISHSDKInfo *sdkInfo = nil;
-  [[[ISHDeviceVersions sharedInstance] allSDKs] enumerateObjectsUsingBlock:^(ISHSDKInfo *currentSdkInfo, NSUInteger idx, BOOL *stop) {
+  __block ISHSDKInfoStub *sdkInfo = nil;
+  [[[ISHDeviceVersionsStub sharedInstance] allSDKs] enumerateObjectsUsingBlock:^(ISHSDKInfoStub *currentSdkInfo, NSUInteger idx, BOOL *stop) {
     if ([[currentSdkInfo shortVersionString] hasPrefix:sdkVersion]) {
       sdkInfo = currentSdkInfo;
       *stop = YES;
@@ -210,16 +210,16 @@ static const NSInteger KProductTypeIpad = 2;
 
 + (BOOL)isSdkVersion:(NSString *)sdkVersion supportedByDevice:(NSString *)deviceName
 {
-  ISHDeviceInfo *deviceInfo = [[ISHDeviceVersions sharedInstance] deviceInfoNamed:deviceName];
-  ISHSDKInfo *sdkInfo = [self sdkWithVersion:sdkVersion];
+  ISHDeviceInfoStub *deviceInfo = [[ISHDeviceVersionsStub sharedInstance] deviceInfoNamed:deviceName];
+  ISHSDKInfoStub *sdkInfo = [self sdkWithVersion:sdkVersion];
   return [deviceInfo supportsSDK:sdkInfo];
 }
 
 + (NSString *)sdkVersionForOSVersion:(NSString *)osVersion
 {
-  ISHSDKInfo *sdkInfo = nil;
+  ISHSDKInfoStub *sdkInfo = nil;
   if ([osVersion isEqualToString:@"latest"]) {
-    sdkInfo = [[ISHDeviceVersions sharedInstance] sdkFromSDKRoot:[[ISHDeviceVersions sharedInstance] latestSDKRoot]];
+    sdkInfo = [[ISHDeviceVersionsStub sharedInstance] sdkFromSDKRoot:[[ISHDeviceVersionsStub sharedInstance] latestSDKRoot]];
   } else {
     sdkInfo = [self sdkWithVersion:osVersion];
   }
@@ -228,14 +228,14 @@ static const NSInteger KProductTypeIpad = 2;
 
 + (NSArray *)availableSdkVersions
 {
-  return [[[ISHDeviceVersions sharedInstance] allSDKs] valueForKeyPath:@"shortVersionString"];
+  return [[[ISHDeviceVersionsStub sharedInstance] allSDKs] valueForKeyPath:@"shortVersionString"];
 }
 
 + (NSArray *)sdksSupportedByDevice:(NSString *)deviceName
 {
-  ISHDeviceInfo *deviceInfo = [[ISHDeviceVersions sharedInstance] deviceInfoNamed:deviceName];
+  ISHDeviceInfoStub *deviceInfo = [[ISHDeviceVersionsStub sharedInstance] deviceInfoNamed:deviceName];
   NSMutableArray *supportedSdks = [NSMutableArray array];
-  for (ISHSDKInfo *sdk in [[ISHDeviceVersions sharedInstance] allSDKs]) {
+  for (ISHSDKInfoStub *sdk in [[ISHDeviceVersionsStub sharedInstance] allSDKs]) {
     if ([deviceInfo supportsSDK:sdk]) {
       [supportedSdks addObject:sdk];
     }
@@ -245,7 +245,7 @@ static const NSInteger KProductTypeIpad = 2;
 
 + (cpu_type_t)cpuTypeForDevice:(NSString *)deviceName
 {
-  ISHDeviceInfo *deviceInfo = [[ISHDeviceVersions sharedInstance] deviceInfoNamed:deviceName];
+  ISHDeviceInfoStub *deviceInfo = [[ISHDeviceVersionsStub sharedInstance] deviceInfoNamed:deviceName];
   if ([[deviceInfo architecture] isEqualToString:@"x86_64"]) {
     return CPU_TYPE_X86_64;
   } else {
@@ -315,7 +315,7 @@ static const NSInteger KProductTypeIpad = 2;
     return root;
   }
 
-  ISHSDKInfo *sdkInfo = [self sdkInfoForShortVersion:version];
+  ISHSDKInfoStub *sdkInfo = [self sdkInfoForShortVersion:version];
   root = [DTiPhoneSimulatorSystemRoot rootWithSDKPath:sdkInfo.root];
 
   if (root) {
@@ -329,11 +329,74 @@ static const NSInteger KProductTypeIpad = 2;
 
 @end
 
+/*
+ *  In order to make xctool linkable in Xcode 6 we need to provide stub implementations
+ *  of iOS simulator private classes used in xctool and defined in
+ *  the SimulatorHost framework (introduced in Xcode 5 and deprecated in Xcode 6).
+ *
+ *  But xctool, when built with Xcode 6 but running in Xcode 5, should use the
+ *  implementations of those classes from SimulatorHost framework rather than the stub
+ *  implementations. That is why we need to create stubs and forward all selector
+ *  invocations to the original implementation of the class if it exists.
+ */
+
 #if XCODE_VERSION >= 0600
-@implementation ISHSDKInfo
+
+void LoadFrameworkIfNeeded()
+{
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    if (![[[[NSBundle allFrameworks] valueForKeyPath:@"bundlePath"] valueForKey:@"lastPathComponent"] containsObject:@"SimulatorHost.framework"]) {
+      NSString *frameworkPath = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks/SimulatorHost.framework"];
+      NSBundle *bundle = [NSBundle bundleWithPath:frameworkPath];
+      [bundle principalClass];
+    }
+  });
+}
+
+@implementation ISHSDKInfoStub
++ (id)forwardingTargetForSelector:(SEL)aSelector
+{
+  LoadFrameworkIfNeeded();
+  Class class = NSClassFromString(@"ISHSDKInfo");
+  NSAssert(class, @"Class ISHSDKInfo wasn't found though it was expected to exist.");
+  return class;
+}
 @end
-@implementation ISHDeviceVersions
+
+@implementation ISHDeviceVersionsStub
++ (id)forwardingTargetForSelector:(SEL)aSelector
+{
+  LoadFrameworkIfNeeded();
+  Class class = NSClassFromString(@"ISHDeviceVersions");
+  NSAssert(class, @"Class ISHDeviceVersions wasn't found though it was expected to exist.");
+  return class;
+}
 @end
-@implementation ISHDeviceInfo
+
+@implementation ISHDeviceInfoStub
++ (id)forwardingTargetForSelector:(SEL)aSelector
+{
+  LoadFrameworkIfNeeded();
+  Class class = NSClassFromString(@"ISHDeviceInfo");
+  NSAssert(class, @"Class ISHDeviceInfo wasn't found though it was expected to exist.");
+  return class;
+}
 @end
+
+#else
+
+/*
+ *  If xctool is built using Xcode 5 then we just need to provide empty implementations
+ *  of the stubs because they simply inherit original SimulatorHost private classes in
+ *  that case.
+ */
+
+@implementation ISHSDKInfoStub
+@end
+@implementation ISHDeviceVersionsStub
+@end
+@implementation ISHDeviceInfoStub
+@end
+
 #endif
