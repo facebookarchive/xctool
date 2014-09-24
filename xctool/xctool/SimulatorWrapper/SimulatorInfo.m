@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#import <Foundation/Foundation.h>
+#import "SimulatorInfo.h"
 
 #import "SimulatorInfoXcode5.h"
 #import "SimulatorInfoXcode6.h"
@@ -23,19 +23,9 @@
 
 @implementation SimulatorInfo
 
-+ (BOOL)isXcode6OrHigher
-{
-  static BOOL isXcode6OrHigher;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    isXcode6OrHigher = ToolchainIsXcode6OrBetter();
-  });
-  return isXcode6OrHigher;
-}
-
 + (Class)classBasedOnCurrentVersionOfXcode
 {
-  if ([self isXcode6OrHigher]) {
+  if (ToolchainIsXcode6OrBetter()) {
     return [SimulatorInfoXcode6 class];
   } else {
     return [SimulatorInfoXcode5 class];

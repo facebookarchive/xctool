@@ -155,11 +155,61 @@
 @end
 
 
+/*
+ *  In order to make xctool linkable in Xcode 5 we need to provide stub implementations
+ *  of iOS simulator private classes used in xctool and defined in
+ *  the CoreSimulator framework (introduced in Xcode 6).
+ *
+ *  But xctool, when built with Xcode 5 but running in Xcode 6, should use the 
+ *  implementations of those classes from CoreSimulator framework rather than the stub 
+ *  implementations. That is why we need to create stubs and forward all selector
+ *  invocations to the original implementation of the class if it exists.
+ */
+
 #if XCODE_VERSION < 0600
-@implementation SimDeviceSet
+
+@implementation SimDeviceSetStub
++ (id)forwardingTargetForSelector:(SEL)aSelector
+{
+  Class class = NSClassFromString(@"SimDeviceSet");
+  NSAssert(class, @"Class SimDeviceType wasn't found though it was expected to exist.");
+  return class;
+}
 @end
-@implementation SimDeviceType
+
+@implementation SimDeviceTypeStub
++ (id)forwardingTargetForSelector:(SEL)aSelector
+{
+  Class class = NSClassFromString(@"SimDeviceType");
+  NSAssert(class, @"Class SimDeviceType wasn't found though it was expected to exist.");
+  return class;
+}
 @end
-@implementation SimRuntime
+
+@implementation SimRuntimeStub
++ (id)forwardingTargetForSelector:(SEL)aSelector
+{
+  Class class = NSClassFromString(@"SimRuntime");
+  NSAssert(class, @"Class SimRuntime wasn't found though it was expected to exist.");
+  return class;
+}
 @end
+
+#else
+
+/*
+ *  If xctool is built using Xcode 6 then we just need to provide empty implementations
+ *  of the stubs because they simply inherit original CoreSimulator private classes in 
+ *  that case.
+ */
+
+@implementation SimDeviceSetStub
+@end
+
+@implementation SimDeviceTypeStub
+@end
+
+@implementation SimRuntimeStub
+@end
+
 #endif

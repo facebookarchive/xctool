@@ -51,6 +51,13 @@
 
 @end
 
+#if XCODE_VERSION < 0600
+@interface SimDeviceTypeStub : NSObject<SimDeviceType>
+@end
+#else
 @interface SimDeviceType : NSObject<SimDeviceType>
 @end
+@interface SimDeviceTypeStub : SimDeviceType
+@end
+#endif
 

@@ -165,7 +165,7 @@ typedef void DVTConfinementServiceConnection;
 
 @end
 
-@class SimDevice, SimRuntime;
+@class SimDevice, SimRuntimeStub;
 
 @interface DTiPhoneSimulatorSessionConfig : NSObject <NSCopying>
 
@@ -174,7 +174,7 @@ typedef void DVTConfinementServiceConnection;
 @property(copy) DTiPhoneSimulatorApplicationSpecifier *applicationToSimulateOnStart;
 @property(retain) id confinementService;
 @property(retain) SimDevice *device;
-@property(retain) SimRuntime *runtime;
+@property(retain) SimRuntimeStub *runtime;
 @property BOOL launchForBackgroundFetch;
 @property(copy) NSString *localizedClientName;
 @property(copy) NSNumber *pid;
@@ -197,12 +197,12 @@ typedef void DVTConfinementServiceConnection;
 
 @interface DTiPhoneSimulatorSystemRoot : NSObject <NSCopying>
 
-@property(readonly) SimRuntime *runtime;
+@property(readonly) SimRuntimeStub *runtime;
 @property(copy) NSString *sdkDisplayName;
 @property(copy) NSString *sdkVersion;
 @property(copy) NSString *sdkRootPath;
 
-+ (id)rootWithSimRuntime:(id)arg1;
++ (id)rootWithSimRuntimeStub:(id)arg1;
 + (id)rootWithSDKVersion:(id)arg1;
 + (id)rootWithSDKPath:(id)arg1;
 + (id)defaultRoot;
