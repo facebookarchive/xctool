@@ -21,6 +21,7 @@
 #import "SimDevice.h"
 #import "SimulatorInfo.h"
 #import "SimulatorInfoXcode6.h"
+#import "SimVerifier.h"
 #import "XCToolUtil.h"
 
 static void GetJobsIterator(const launch_data_t launch_data, const char *key, void *context) {
@@ -141,6 +142,23 @@ BOOL RemoveSimulatorContentAndSettings(SimulatorInfo *simulatorInfo, NSString **
   }
 }
 
+BOOL VerifySimulators(NSString **errorMessage)
+{
+  if (!NSClassFromString(@"SimVerifier")) {
+    *errorMessage = [NSString stringWithFormat:@"SimVerifier class is not available."];
+    return NO;
+  }
+
+  NSError *error = nil;
+  BOOL result = [[SimVerifierStub sharedVerifier] verifyAllWithError:&error];
+  if (!result || error) {
+    *errorMessage = [NSString stringWithFormat:@"%@; %@.",
+                     error.localizedDescription ?: @"Unknown error.",
+                     [error.userInfo[NSUnderlyingErrorKey] localizedDescription] ?: @""];
+  }
+  return result;
+}
+
 BOOL ShutdownSimulator(SimulatorInfo *simulatorInfo, NSString **errorMessage)
 {
   if ([simulatorInfo isKindOfClass:[SimulatorInfoXcode6 class]]) {
@@ -158,3 +176,38 @@ BOOL ShutdownSimulator(SimulatorInfo *simulatorInfo, NSString **errorMessage)
   }
   return YES;
 }
+
+/*
+ *  In order to make xctool linkable in Xcode 5 we need to provide stub implementations
+ *  of iOS simulator private classes used in xctool and defined in
+ *  the CoreSimulator framework (introduced in Xcode 6).
+ *
+ *  But xctool, when built with Xcode 5 but running in Xcode 6, should use the
+ *  implementations of those classes from CoreSimulator framework rather than the stub
+ *  implementations. That is why we need to create stubs and forward all selector
+ *  invocations to the original implementation of the class if it exists.
+ */
+
+#if XCODE_VERSION < 0600
+
+@implementation SimVerifierStub
++ (id)forwardingTargetForSelector:(SEL)aSelector
+{
+  Class class = NSClassFromString(@"SimVerifier");
+  NSAssert(class, @"Class SimVerifier wasn't found though it was expected to exist.");
+  return class;
+}
+@end
+
+#else
+
+/*
+ *  If xctool is built using Xcode 6 then we just need to provide empty implementations
+ *  of the stubs because they simply inherit original CoreSimulator private classes in
+ *  that case.
+ */
+
+@implementation SimVerifierStub
+@end
+
+#endif
