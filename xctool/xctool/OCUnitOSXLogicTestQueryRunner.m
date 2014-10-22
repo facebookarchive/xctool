@@ -22,6 +22,16 @@
 
 @implementation OCUnitOSXLogicTestQueryRunner
 
+- (void)prepareToRunQuery
+{
+  NSTask *cleanTask = CreateTaskInSameProcessGroup();
+  [cleanTask setLaunchPath:@"/usr/bin/defaults"];
+  [cleanTask setArguments:@[@"delete", @"otest-query-osx"]];
+  [cleanTask setStandardError:[NSFileHandle fileHandleWithNullDevice]];
+  [cleanTask launch];
+  [cleanTask waitUntilExit];
+}
+
 - (NSTask *)createTaskForQuery
 {
   NSString *builtProductsDir = _buildSettings[Xcode_BUILT_PRODUCTS_DIR];
@@ -30,6 +40,7 @@
   [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-osx"]];
   [task setArguments:@[ [self bundlePath] ]];
   [task setEnvironment:@{
+    @"NSArgumentDomain" : @"otest-query-osx",
     @"DYLD_FRAMEWORK_PATH" : builtProductsDir,
     @"DYLD_LIBRARY_PATH" : builtProductsDir,
     @"DYLD_FALLBACK_FRAMEWORK_PATH" : OSXTestFrameworkDirectories(),

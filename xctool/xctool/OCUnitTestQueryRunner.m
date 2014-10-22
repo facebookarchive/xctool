@@ -60,6 +60,10 @@
   return nil;
 }
 
+- (void)prepareToRunQuery
+{
+}
+
 - (NSArray *)runQueryWithError:(NSString **)error
 {
   BOOL bundleIsDir = NO;
@@ -75,6 +79,8 @@
       return nil;
     }
   }
+
+  [self prepareToRunQuery];
 
   NSTask *task = [self createTaskForQuery];
   NSDictionary *output = LaunchTaskAndCaptureOutput(task, @"running otest-query");

@@ -110,7 +110,7 @@
 
   // By setting `-(XC|Sen)Test All`, we'll make `-[(XC|Sen)TestSuite allTests]`
   // return all tests.
-  [[NSUserDefaults standardUserDefaults] setObject:@"All"
+  [[NSUserDefaults standardUserDefaults] setObject:@"None"
                                             forKey:[framework objectForKey:kTestingFrameworkFilterTestArgsKey]];
   id allTestsSuite = [testSuiteClass performSelector:@selector(allTests)];
   NSCAssert(allTestsSuite, @"Should have gotten a test suite from allTests");

@@ -25,6 +25,7 @@
 - (instancetype)initWithBuildSettings:(NSDictionary *)buildSettings
                           withCpuType:(cpu_type_t)cpuType;
 - (NSTask *)createTaskForQuery NS_RETURNS_RETAINED;
+- (void)prepareToRunQuery;
 - (NSArray *)runQueryWithError:(NSString **)error;
 - (NSString *)bundlePath;
 - (NSString *)testHostPath;
