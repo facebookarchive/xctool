@@ -24,6 +24,8 @@
 
 - (void)prepareToRunQuery
 {
+  // otest-query defaults are cleared to ensure that when the task created below
+  // is launched `NSUserDefaults` won't have unexpected values.
   NSTask *cleanTask = CreateTaskInSameProcessGroup();
   [cleanTask setLaunchPath:@"/usr/bin/defaults"];
   [cleanTask setArguments:@[@"delete", @"otest-query-osx"]];
@@ -40,6 +42,9 @@
   [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-osx"]];
   [task setArguments:@[ [self bundlePath] ]];
   [task setEnvironment:@{
+  // Specifying `NSArgumentDomain` forces XCTest/SenTestingKit frameworks to use values
+  // of otest-query-osx `NSUserDefaults` which are changed in otest-query to manipulate
+  // mentioned frameworks behaviour.
     @"NSArgumentDomain" : @"otest-query-osx",
     @"DYLD_FRAMEWORK_PATH" : builtProductsDir,
     @"DYLD_LIBRARY_PATH" : builtProductsDir,

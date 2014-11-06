@@ -108,7 +108,7 @@
   Class testSuiteClass = NSClassFromString([framework objectForKey:kTestingFrameworkTestSuiteClassName]);
   NSCAssert(testSuiteClass, @"Should have *TestSuite class");
 
-  // By setting `-(XC|Sen)Test All`, we'll make `-[(XC|Sen)TestSuite allTests]`
+  // By setting `-(XC|Sen)Test None`, we'll make `-[(XC|Sen)TestSuite allTests]`
   // return all tests.
   [[NSUserDefaults standardUserDefaults] setObject:@"None"
                                             forKey:[framework objectForKey:kTestingFrameworkFilterTestArgsKey]];
