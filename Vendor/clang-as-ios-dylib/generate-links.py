@@ -24,13 +24,15 @@ versions = [
 
 for sdk_version in versions:
     for deployment_target in versions:
-        for tool in ['cc', 'ld']:
-            name = 'links/%s-iphonesimulator-%s-targeting-%s' % (
-                tool, sdk_version, deployment_target)
+        # Empty string for backwards compatibility
+        for clang_name_prefix in ['', 'clang-', 'clang++-']:
+            for tool in ['cc', 'ld']:
+                name = 'links/%s%s-iphonesimulator-%s-targeting-%s' % (
+                    clang_name_prefix, tool, sdk_version, deployment_target)
 
-            if os.path.exists(name):
-                print '%s (exists)' % name
-            else:
-                print '%s (creating)' % name
-                os.symlink('../clang-as-ios-dylib.py', name)
+                if os.path.exists(name):
+                    print '%s (exists)' % name
+                else:
+                    print '%s (creating)' % name
+                    os.symlink('../clang-as-ios-dylib.py', name)
 
