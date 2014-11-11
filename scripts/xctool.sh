@@ -5,7 +5,7 @@
 
 set -e
 
-REALPATH="$([[ -L $0 ]] && echo $(dirname "$0")/$(readlink "$0") || echo "$0")"
+REALPATH="$(realpath $0)"
 XCTOOL_DIR="$(cd $(dirname "$REALPATH")/..; pwd)"
 
 TEMP_PATH=$(/usr/bin/mktemp -t xctool-build)
