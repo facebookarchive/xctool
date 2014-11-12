@@ -641,11 +641,25 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
   // Wait for logic tests to finish before we start running simulator tests.
   dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
 
+  // Resetting `_parallelize` value while running applicaiton tests.
+  //
+  // Application tests are run serially on the main thread so parallelize option
+  // will affect only the way reporters are notified about current status and
+  // test results. If parallelize is YES then reporters won't print anything to
+  // output until `block` is completed. If there is a deadlocking tests in the test
+  // suite then only `[INFO] Starting <TestSuite>` will be printed w/o specifying
+  // which test is actually locking test running.
+  BOOL originalParallelizeValue = _parallelize;
+  _parallelize = NO;
+
   for (NSArray *annotatedBlock in blocksToRunOnMainThread) {
     TestableBlock block = annotatedBlock[0];
     NSString *blockAnnotation = annotatedBlock[1];
     runTestableBlockAndSaveSuccess(block, blockAnnotation);
   }
+
+  // Restore `_parallelize` value.
+  _parallelize = originalParallelizeValue;
 
   dispatch_release(group);
   dispatch_release(queueLimiter);
