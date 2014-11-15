@@ -52,6 +52,14 @@ See [Parallelizing Test Runs](#parallelizing-test-runs) for more info.
 * You'll need Xcode's Command Line Tools installed.  From Xcode, install
 via _Xcode &rarr; Preferences &rarr; Downloads_.
 
+## Installation
+
+xctool can be installed from homebrew via 
+```
+brew install xctool
+```
+
+or can be downloaded and run vai the xctool.sh command. 
 
 ## Usage
 
