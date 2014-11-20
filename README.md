@@ -236,7 +236,7 @@ you must create **Shared Schemes** for your application target and ensure that a
 configured as explicit dependencies. To do so:
     1. Highlight your application target and hit the **Edit...** button to open the Scheme editing sheet.
     1. Click the **Build** tab in the left-hand panel of the Scheme editor.
-    1. Click the **+** button and add each dependency to the project. CocoaPods will appears as static library named **Pods**.
+    1. Click the **+** button and add each dependency to the project. CocoaPods will appear as a static library named **Pods**.
     1. Drag the dependency above your application target so that it is built first.
 
 You will now have a new file in the **xcshareddata/xcschemes** directory underneath your Xcode project. This is the
@@ -317,7 +317,7 @@ path/to/xctool.sh \
 
 * __pretty__: a text-based reporter that uses ANSI colors and unicode
 symbols for pretty output (the default).
-* __plain__: like _pretty_, but with with no colors or unicode.
+* __plain__: like _pretty_, but with no colors or unicode.
 * __phabricator__: outputs a JSON array of build/test results which can
 be fed into the [Phabricator](http://phabricator.org/) code-review tool.
 * __junit__: produces a JUnit/xUnit compatible XML file with test
@@ -391,7 +391,7 @@ The format is just a JSON array of arguments:
 ]
 ```
 
-Any extra arguments you pass on the command-line will take precendence
+Any extra arguments you pass on the command-line will take precedence 
 over those in the _.xctool-args_ file.
 
 ## Contributing
@@ -409,8 +409,7 @@ accept pull requests unless it's been signed.
 
 1. Fork.
 2. Make a feature branch: __git checkout -b my-feature__
-3. Make your feature.  Keep things tidy so you have one commit per self
-   contained change (squashing can help).
+3. Make your feature.  Keep things tidy so you have one commit per self-contained change (squashing can help).
 3. Push your branch to your fork: __git push -u origin my-feature__
 4. Open GitHub, under "Your recently pushed branches", click __Pull
    Request__ for _my-feature_.
