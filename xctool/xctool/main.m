@@ -22,13 +22,13 @@
 int main(int argc, const char * argv[])
 {
   @autoreleasepool {
-    // xctool depends on iPhoneSimulatorRemoteClient.framework, which is a private
-    // framework for interacting with the simulator that comes bundled with
-    // Xcode.
+    // xctool depends on iPhoneSimulatorRemoteClient.framework or CoreSimulator.framework,
+    // which are private framework for interacting with the simulator that come bundled
+    // with respectively Xcode 5 and 6.
     //
     // Since xctool can work with multiple verstions of Xcode and since each of
     // these Xcode versions might live at different paths, we don't want to strongly
-    // link iPhoneSimulatorRemoteClient.framework.  e.g., if we linked to
+    // link those frameworks.  e.g., if we linked to
     // `/Applications/Xcode.app/.../.../iPhoneSimulatorRemoteClient.framework`
     // but Xcode was installed elsewhere, xctool would fail to run.
     //
@@ -56,9 +56,11 @@ int main(int argc, const char * argv[])
         fallbackFrameworkPath = @"";
       }
 
-      fallbackFrameworkPath = [fallbackFrameworkPath stringByAppendingFormat:@":%@:%@:%@",
+      fallbackFrameworkPath = [fallbackFrameworkPath stringByAppendingFormat:@":%@:%@:%@:%@",
                                // The path to iPhoneSimulatorRemoteClient.framework.
                                [developerDirPath stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks"],
+                               // The path to CoreSimulator.framework for Xcode 6.
+                               [developerDirPath stringByAppendingPathComponent:@"Library/PrivateFrameworks"],
                                // The path to other dependencies of iPhoneSimulatorRemoteClient.framework.
                                [developerDirPath stringByAppendingPathComponent:@"../OtherFrameworks"],
                                [developerDirPath stringByAppendingPathComponent:@"../SharedFrameworks"]
