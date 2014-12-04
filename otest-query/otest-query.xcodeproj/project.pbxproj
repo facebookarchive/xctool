@@ -101,7 +101,7 @@
 		CC8D774B19660E230035CC60 /* NSInvocationInSetFix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSInvocationInSetFix.m; path = ../Common/NSInvocationInSetFix.m; sourceTree = "<group>"; };
 		CD66612C175D1A890057DF4D /* otest-query-osx */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "otest-query-osx"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD666138175D1B090057DF4D /* otest-query-osx.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "otest-query-osx.xcconfig"; sourceTree = "<group>"; };
-		CD9048FE1756C5B1006CF16D /* otest-query-ios */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "otest-query-ios"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD9048FE1756C5B1006CF16D /* otest-query-ios */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "otest-query-ios"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD9049011756C5B1006CF16D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		CD90490F1756C685006CF16D /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		CD9049151756CDF4006CF16D /* otest-query-ios.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "otest-query-ios.xcconfig"; sourceTree = "<group>"; };
@@ -345,7 +345,7 @@
 			name = "otest-query-ios";
 			productName = "otest-query";
 			productReference = CD9048FE1756C5B1006CF16D /* otest-query-ios */;
-			productType = "com.apple.product-type.tool";
+			productType = "com.apple.product-type.library.dynamic";
 		};
 /* End PBXNativeTarget section */
 

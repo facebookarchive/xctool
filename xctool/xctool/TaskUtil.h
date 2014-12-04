@@ -67,7 +67,8 @@ void LaunchTaskAndMaybeLogCommand(NSTask *task, NSString *description);
  * Returns an NSTask that will launch an iOS simulator binary via the
  * iPhoneSimulator.platform/usr/bin/sim launcher.
  */
-NSTask *CreateTaskForSimulatorExecutable(cpu_type_t cpuType,
+NSTask *CreateTaskForSimulatorExecutable(NSString *sdkName,
+                                         cpu_type_t cpuType,
                                          NSString *sdkVersion,
                                          NSString *launchPath,
                                          NSArray *arguments,

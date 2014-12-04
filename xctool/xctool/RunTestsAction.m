@@ -312,23 +312,20 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
   NSString *sdkName = testableBuildSettings[Xcode_SDK_NAME];
   BOOL isApplicationTest = TestableSettingsIndicatesApplicationTest(testableBuildSettings);
 
-  if ([sdkName hasPrefix:@"iphonesimulator"]) {
-    if (isApplicationTest) {
-      return [OCUnitIOSAppTestRunner class];
-    } else {
-      return [OCUnitIOSLogicTestRunner class];
-    }
+  if ([sdkName hasPrefix:@"iphoneos"]) {
+    return [OCUnitIOSDeviceTestRunner class];
   } else if ([sdkName hasPrefix:@"macosx"]) {
     if (isApplicationTest) {
       return [OCUnitOSXAppTestRunner class];
     } else {
       return [OCUnitOSXLogicTestRunner class];
     }
-  } else if ([sdkName hasPrefix:@"iphoneos"]) {
-    return [OCUnitIOSDeviceTestRunner class];
   } else {
-    NSAssert(NO, @"Unexpected SDK: %@", sdkName);
-    abort();
+    if (isApplicationTest) {
+      return [OCUnitIOSAppTestRunner class];
+    } else {
+      return [OCUnitIOSLogicTestRunner class];
+    }
   }
 }
 

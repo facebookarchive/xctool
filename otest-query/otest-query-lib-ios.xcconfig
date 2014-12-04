@@ -19,5 +19,4 @@
 #include "../Configurations/Install.xcconfig"
 XT_INSTALL_DIR = lib
 
-LD = $(PROJECT_DIR)/../Vendor/clang-as-ios-dylib/links/ld-iphonesimulator-latest-targeting-5.0
-CC = $(PROJECT_DIR)/../Vendor/clang-as-ios-dylib/links/cc-iphonesimulator-latest-targeting-5.0
+#include "../Configurations/iOS.xcconfig"

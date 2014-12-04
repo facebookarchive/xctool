@@ -182,7 +182,7 @@ BOOL IsOtestTask(NSTask *task)
           break;
         }
       }
-    } else if ([[task launchPath] hasSuffix:@"otest-query-osx"]) {
+    } else if ([[[task launchPath] lastPathComponent] hasPrefix:@"otest-query-"]) {
       isOtestQuery = YES;
     }
 

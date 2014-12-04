@@ -38,7 +38,7 @@
   // In Xcode 6 `sim` doesn't set `CFFIXED_USER_HOME` if simulator is not launched
   // but this environment is used, for example, by NSHomeDirectory().
   // To avoid similar situations in future let's copy all simulator environments
-  if (ToolchainIsXcode6OrBetter()) {
+  if (ToolchainIsXcode6OrBetter() && [_buildSettings[Xcode_SDK_NAME] hasPrefix:@"iphonesimulator"]) {
     SimDevice *device = [(SimulatorInfoXcode6 *)self.simulatorInfo simulatedDevice];
     NSDictionary *simulatorEnvironment = [device environment];
     if (simulatorEnvironment) {
@@ -62,7 +62,8 @@
   // and merging with process environments and `_environment` variable contents
   env = [self otestEnvironmentWithOverrides:env];
 
-  return [CreateTaskForSimulatorExecutable([self cpuType],
+  return [CreateTaskForSimulatorExecutable(_buildSettings[Xcode_SDK_NAME],
+                                           [self cpuType],
                                            [SimulatorInfo baseVersionForSDKShortVersion:[self.simulatorInfo simulatedSdkVersion]],
                                            launchPath,
                                            args,
@@ -73,9 +74,6 @@
                    startupError:(NSString **)startupError
                     otherErrors:(NSString **)otherErrors
 {
-  NSString *sdkName = _buildSettings[Xcode_SDK_NAME];
-  NSAssert([sdkName hasPrefix:@"iphonesimulator"], @"Unexpected SDK name: %@", sdkName);
-
   [self updateSimulatorInfo];
 
   NSString *testBundlePath = [self testBundlePath];

@@ -6,12 +6,11 @@
 
 EXECUTABLE_PATH="$BUILT_PRODUCTS_DIR"/"$FULL_PRODUCT_NAME"
 
-ARCHS=$(lipo -info "$EXECUTABLE_PATH" | \
-          perl -n -e '/\: .*?: (.*?)$/ && print "$1\n";' | \
-          xargs -n 1 echo | sort | xargs)
+ARCHS=$(echo "$ARCHS" | tr " " "\n" | sort -g | tr "\n" " ")
+VALID_ARCHS=$(echo "$VALID_ARCHS" | tr " " "\n" | sort -g | tr "\n" " ")
 
-if [[ $ARCHS != "i386 x86_64" ]]; then
+if [[ "$ARCHS" != "$VALID_ARCHS" ]]; then
   echo -n "error: '$EXECUTABLE_PATH' should have been built as a universal "
-  echo    "binary, but only had archs '$ARCHS'."
+  echo    "binary ($VALID_ARCHS), but only had archs '$ARCHS'."
   exit 1
 fi

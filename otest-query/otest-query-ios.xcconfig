@@ -19,7 +19,12 @@
 #include "../Configurations/Install.xcconfig"
 XT_INSTALL_DIR = libexec
 
-OTHER_LDFLAGS = -weak_framework SenTestingKit
+#include "../Configurations/iOS.xcconfig"
 
-LD = $(PROJECT_DIR)/../Vendor/clang-as-ios-dylib/links/ld-iphonesimulator-latest-targeting-5.0
-CC = $(PROJECT_DIR)/../Vendor/clang-as-ios-dylib/links/cc-iphonesimulator-latest-targeting-5.0
+// This has the product type of a dylib (that's what iOS allows), but we want an executable.
+EXECUTABLE_PREFIX =
+EXECUTABLE_SUFFIX =
+EXECUTABLE_EXTENSION =
+MACH_O_TYPE = mh_execute
+DYLIB_COMPATIBILITY_VERSION =
+DYLIB_CURRENT_VERSION =

@@ -390,37 +390,45 @@ void LaunchTaskAndMaybeLogCommand(NSTask *task, NSString *description)
   [task launch];
 }
 
-NSTask *CreateTaskForSimulatorExecutable(cpu_type_t cpuType,
+NSTask *CreateTaskForSimulatorExecutable(NSString *sdkName,
+                                         cpu_type_t cpuType,
                                          NSString *sdkVersion,
                                          NSString *launchPath,
                                          NSArray *arguments,
                                          NSDictionary *environment)
 {
-  NSMutableArray *taskArgs = [NSMutableArray array];
-  [taskArgs addObjectsFromArray:@[[@"--arch=" stringByAppendingString:(cpuType == CPU_TYPE_X86_64) ? @"64" : @"32"],
-                                  [@"--sdk=" stringByAppendingString:sdkVersion],
-                                  @"--environment=merge",
-                                  ]];
-  [taskArgs addObject:launchPath];
-  [taskArgs addObjectsFromArray:arguments];
-
-  NSMutableDictionary *taskEnv = [NSMutableDictionary dictionary];
-  taskEnv[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"sim-shim.dylib"];
-
-  [environment enumerateKeysAndObjectsUsingBlock:^(id key, id val, BOOL *stop){
-    // sim-shim.dylib will look for all vars prefixed with SIMSHIM_ and add them
-    // to the spawned process's environment (with the prefix removed).
-    NSString *newKey = [@"SIMSHIM_" stringByAppendingString:key];
-    taskEnv[newKey] = val;
-  }];
-
   NSTask *task = CreateTaskInSameProcessGroup();
+  NSMutableArray *taskArgs = [NSMutableArray array];
+  NSMutableDictionary *taskEnv = [NSMutableDictionary dictionary];
 
-  if (ToolchainIsXcode6OrBetter()) {
-    [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/usr/bin/sim"]];
+  if ([sdkName hasPrefix:@"iphonesimulator"]) {
+    [taskArgs addObjectsFromArray:@[[@"--arch=" stringByAppendingString:(cpuType == CPU_TYPE_X86_64) ? @"64" : @"32"],
+                                    [@"--sdk=" stringByAppendingString:sdkVersion],
+                                    @"--environment=merge",
+                                    ]];
+    [taskArgs addObject:launchPath];
+    [taskArgs addObjectsFromArray:arguments];
+
+    taskEnv[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"sim-shim.dylib"];
+
+    [environment enumerateKeysAndObjectsUsingBlock:^(id key, id val, BOOL *stop){
+      // sim-shim.dylib will look for all vars prefixed with SIMSHIM_ and add them
+      // to the spawned process's environment (with the prefix removed).
+      NSString *newKey = [@"SIMSHIM_" stringByAppendingString:key];
+      taskEnv[newKey] = val;
+    }];
+
+    if (ToolchainIsXcode6OrBetter()) {
+      [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/usr/bin/sim"]];
+    } else {
+      [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/usr/bin/sim"]];
+    }
   } else {
-    [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/usr/bin/sim"]];
+    [task setLaunchPath:launchPath];
+    [taskArgs addObjectsFromArray:arguments];
+    [taskEnv addEntriesFromDictionary:environment];
   }
+
   [task setArguments:taskArgs];
   [task setEnvironment:taskEnv];
 

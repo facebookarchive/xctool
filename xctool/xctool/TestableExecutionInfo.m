@@ -168,13 +168,7 @@
   BOOL isApplicationTest = TestableSettingsIndicatesApplicationTest(testableBuildSettings);
 
   Class runnerClass = {0};
-  if ([sdkName hasPrefix:@"iphonesimulator"]) {
-    if (isApplicationTest) {
-      runnerClass = [OCUnitIOSAppTestQueryRunner class];
-    } else {
-      runnerClass = [OCUnitIOSLogicTestQueryRunner class];
-    }
-  } else if ([sdkName hasPrefix:@"macosx"]) {
+  if ([sdkName hasPrefix:@"macosx"]) {
     if (isApplicationTest) {
       runnerClass = [OCUnitOSXAppTestQueryRunner class];
     } else {
@@ -185,8 +179,11 @@
     // we'll never get far enough to run OCUnitIOSDeviceTestRunner.
     return @[@"Placeholder/ForDeviceTests"];
   } else {
-    NSAssert(NO, @"Unexpected SDK: %@", sdkName);
-    abort();
+    if (isApplicationTest) {
+      runnerClass = [OCUnitIOSAppTestQueryRunner class];
+    } else {
+      runnerClass = [OCUnitIOSLogicTestQueryRunner class];
+    }
   }
   OCUnitTestQueryRunner *runner = [[[runnerClass alloc] initWithBuildSettings:testableBuildSettings
                                                                   withCpuType:cpuType] autorelease];
