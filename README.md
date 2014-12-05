@@ -59,7 +59,7 @@ xctool can be installed from homebrew via
 brew install xctool
 ```
 
-or can be downloaded and run vai the xctool.sh command. 
+or can be downloaded and run via the xctool.sh command. 
 
 ## Usage
 
