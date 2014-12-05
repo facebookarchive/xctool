@@ -289,10 +289,12 @@ Started](http://about.travis-ci.org/docs/user/getting-started/) page.
 ## Reporters
 
 xctool has reporters that output build and test results in different
-formats.  By default, _xctool_ always uses the `pretty` and 
-`user-notifications` reporters.
+formats.  If you do not specify any reporters yourself, xctool uses
+the `pretty` and `user-notifications` reporters.  (It won't use
+the `user-notifications` reporter if it detects that the build is being
+run by Travis CI, i.e. `TRAVIS=true` in the environment.)
 
-You can change or add reporters with the `-reporter` option:
+You can choose your own reporters with the `-reporter` option:
 
 ```
 path/to/xctool.sh \
@@ -312,6 +314,9 @@ path/to/xctool.sh \
   -reporter plain:/path/to/plain-output.txt \
   build
 ```
+
+You can use as many reporters as you like; just use the `-reporter`
+option multiple times.
 
 ### Included Reporters
 
