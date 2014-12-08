@@ -46,6 +46,11 @@ and 3x speed ups by parallelizing our runs.
   Use the `-parallelize` option with _run-tests_ or _test_ to enable.
 See [Parallelizing Test Runs](#parallelizing-test-runs) for more info.
 
+* **Written in Objective-C.**
+
+  _xctool_ is written in Objective-C. Mac OS X and iOS developers can easily submit new
+features and fix any bugs they may encounter without learning a new language. We very much welcome pull requests!
+
 ## Requirements
 
 * Xcode 5 or higher
