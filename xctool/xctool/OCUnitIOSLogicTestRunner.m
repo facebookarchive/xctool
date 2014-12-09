@@ -96,12 +96,27 @@
       // "Simulator does not seem to be running, or may be running an old SDK."
       [task setStandardError:outputPipe];
 
+      NSMutableData *outputData = [[NSMutableData alloc] init];
+
+      dispatch_io_t io = dispatch_io_create(DISPATCH_IO_STREAM, outputPipe.fileHandleForReading.fileDescriptor, dispatch_get_main_queue(), NULL);
+      dispatch_io_read(io, 0, SIZE_MAX, dispatch_get_main_queue(), ^(bool done, dispatch_data_t data, int error) {
+        if (data) {
+          dispatch_data_apply(data, ^bool(dispatch_data_t region, size_t offset, const void *buffer, size_t size) {
+            [outputData appendBytes:buffer length:size];
+            return true;
+          });
+        }
+      });
+
       LaunchTaskAndFeedOuputLinesToBlock(task,
                                          @"running otest/xctest on test bundle",
                                          outputLineBlock);
 
-      NSData *outputData = [[outputPipe fileHandleForReading] readDataToEndOfFile];
+      dispatch_io_close(io, DISPATCH_IO_STOP);
+      dispatch_release(io);
+
       output = [[NSString alloc] initWithData:outputData encoding:NSUTF8StringEncoding];
+      [outputData release];
     }
     *otherErrors = [output autorelease];
   } else {
