@@ -149,33 +149,57 @@
 
   NSString *path = [[self class]
                     intermediatesDirForProject:projectName
-                    target:targetName
-                    configuration:[options effectiveConfigurationForSchemeAction:@"AnalyzeAction"
-                                                                xcodeSubjectInfo:xcodeSubjectInfo]
-                    platform:xcodeSubjectInfo.effectivePlatformName
-                    objroot:xcodeSubjectInfo.objRoot];
+                        target:targetName
+                        configuration:[options effectiveConfigurationForSchemeAction:@"AnalyzeAction"
+                                                                    xcodeSubjectInfo:xcodeSubjectInfo]
+                        platform:xcodeSubjectInfo.effectivePlatformName
+                        objroot:xcodeSubjectInfo.objRoot];
   NSString *buildStatePath = [path stringByAppendingPathComponent:@"build-state.dat"];
-
-  if (![[NSFileManager defaultManager] fileExistsAtPath:buildStatePath]) {
+  NSMutableArray *plistPaths = [NSMutableArray array];
+  NSString *analyzerFilesPath = nil;
+  BOOL buildPathExists = [[NSFileManager defaultManager] fileExistsAtPath:buildStatePath];
+  
+  if (buildPathExists) {
+    BuildStateParser *buildState = [[[BuildStateParser alloc] initWithPath:buildStatePath] autorelease];
+    for (NSString *path in buildState.nodes) {
+      NSTextCheckingResult *result = [analyzerPlistPathRegex
+                                      firstMatchInString:path
+                                      options:0
+                                      range:NSMakeRange(0, path.length)];
+      
+      if (result == nil || result.range.location == NSNotFound) {
+        continue;
+      }
+      
+      [plistPaths addObject:path];
+    }
+  } else if(path && projectName && targetName) {
+    NSString *analyzerFilesPath = [NSString pathWithComponents:@[
+                                                                 path,
+                                                                 @"StaticAnalyzer",
+                                                                 projectName,
+                                                                 targetName,
+                                                                 @"normal",
+                                                                 options.arch ? options.arch : @"armv7",
+                                                                 ]];
+    plistPaths = [[[NSFileManager defaultManager] contentsOfDirectoryAtPath:analyzerFilesPath error:nil] mutableCopy];
+  } else {
     NSLog(@"No build-state.dat for project/target: %@/%@, skipping...\n"
           "  it may be overriding CONFIGURATION_TEMP_DIR and emitting intermediate \n"
           "  files in a non-standard location", projectName, targetName);
-    return;
+    
   }
-
+  
   BOOL haveFoundWarnings = NO;
-
-  BuildStateParser *buildState = [[[BuildStateParser alloc] initWithPath:buildStatePath] autorelease];
-  for (NSString *path in buildState.nodes) {
-    NSTextCheckingResult *result = [analyzerPlistPathRegex
-                                    firstMatchInString:path
-                                    options:0
-                                    range:NSMakeRange(0, path.length)];
-
-    if (result == nil || result.range.location == NSNotFound) {
+  
+  for (NSString *path in plistPaths) {
+    
+    if(![path hasSuffix:@".plist"]) {
       continue;
     }
-
+    if(!buildStatePath && analyzerFilesPath) {
+      path = [NSString pathWithComponents:@[analyzerFilesPath, path]];
+    }
     NSDictionary *diags = [NSDictionary dictionaryWithContentsOfFile:path];
     for (NSDictionary *diag in diags[@"diagnostics"]) {
       haveFoundWarnings = YES;
