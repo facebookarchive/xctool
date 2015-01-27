@@ -181,7 +181,7 @@
                                                                  options.arch ? options.arch : @"armv7",
                                                                  ]];
 
-    NSMutableArray *pathContents = [[[NSFileManager defaultManager] contentsOfDirectoryAtPath:analyzerFilesPath error:nil] mutableCopy];
+    NSArray *pathContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:analyzerFilesPath error:nil];
     
     for (NSString *path in pathContents) {
       if([[path pathExtension] isEqualToString:@".plist"]) {
