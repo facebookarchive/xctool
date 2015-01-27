@@ -147,35 +147,59 @@
                                                 error:0];
   }
 
-  NSString *path = [[self class]
-                    intermediatesDirForProject:projectName
-                    target:targetName
-                    configuration:[options effectiveConfigurationForSchemeAction:@"AnalyzeAction"
-                                                                xcodeSubjectInfo:xcodeSubjectInfo]
-                    platform:xcodeSubjectInfo.effectivePlatformName
-                    objroot:xcodeSubjectInfo.objRoot];
+  NSString *path = [[self class] intermediatesDirForProject:projectName
+                                                     target:targetName
+                                              configuration:[options effectiveConfigurationForSchemeAction:@"AnalyzeAction"
+                                                                                          xcodeSubjectInfo:xcodeSubjectInfo]
+                                                   platform:xcodeSubjectInfo.effectivePlatformName
+                                                    objroot:xcodeSubjectInfo.objRoot];
   NSString *buildStatePath = [path stringByAppendingPathComponent:@"build-state.dat"];
+  NSMutableArray *plistPaths = [NSMutableArray array];
+  BOOL buildPathExists = [[NSFileManager defaultManager] fileExistsAtPath:buildStatePath];
+  
+  if (buildPathExists) {
+    BuildStateParser *buildState = [[[BuildStateParser alloc] initWithPath:buildStatePath] autorelease];
+    for (NSString *path in buildState.nodes) {
+      NSTextCheckingResult *result = [analyzerPlistPathRegex
+                                      firstMatchInString:path
+                                      options:0
+                                      range:NSMakeRange(0, path.length)];
+      
+      if (result == nil || result.range.location == NSNotFound) {
+        continue;
+      }
+      
+      [plistPaths addObject:path];
+    }
+  } else if(path && projectName && targetName) {
+    NSString *analyzerFilesPath = [NSString pathWithComponents:@[
+                                                                 path,
+                                                                 @"StaticAnalyzer",
+                                                                 projectName,
+                                                                 targetName,
+                                                                 @"normal",
+                                                                 options.arch ? options.arch : @"armv7",
+                                                                 ]];
 
-  if (![[NSFileManager defaultManager] fileExistsAtPath:buildStatePath]) {
+    NSArray *pathContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:analyzerFilesPath error:nil];
+    
+    for (NSString *path in pathContents) {
+      if([[path pathExtension] isEqualToString:@".plist"]) {
+        NSString *plistPath = [NSString pathWithComponents:@[analyzerFilesPath, path]];
+        [plistPaths addObject:plistPath];
+      }
+    }
+  } else {
     NSLog(@"No build-state.dat for project/target: %@/%@, skipping...\n"
           "  it may be overriding CONFIGURATION_TEMP_DIR and emitting intermediate \n"
           "  files in a non-standard location", projectName, targetName);
     return;
   }
-
+  
   BOOL haveFoundWarnings = NO;
-
-  BuildStateParser *buildState = [[[BuildStateParser alloc] initWithPath:buildStatePath] autorelease];
-  for (NSString *path in buildState.nodes) {
-    NSTextCheckingResult *result = [analyzerPlistPathRegex
-                                    firstMatchInString:path
-                                    options:0
-                                    range:NSMakeRange(0, path.length)];
-
-    if (result == nil || result.range.location == NSNotFound) {
-      continue;
-    }
-
+  
+  for (NSString *path in plistPaths) {
+    
     NSDictionary *diags = [NSDictionary dictionaryWithContentsOfFile:path];
     for (NSDictionary *diag in diags[@"diagnostics"]) {
       haveFoundWarnings = YES;
