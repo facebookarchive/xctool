@@ -156,7 +156,6 @@
                         objroot:xcodeSubjectInfo.objRoot];
   NSString *buildStatePath = [path stringByAppendingPathComponent:@"build-state.dat"];
   NSMutableArray *plistPaths = [NSMutableArray array];
-  NSString *analyzerFilesPath = nil;
   BOOL buildPathExists = [[NSFileManager defaultManager] fileExistsAtPath:buildStatePath];
   
   if (buildPathExists) {
@@ -182,24 +181,26 @@
                                                                  @"normal",
                                                                  options.arch ? options.arch : @"armv7",
                                                                  ]];
-    plistPaths = [[[NSFileManager defaultManager] contentsOfDirectoryAtPath:analyzerFilesPath error:nil] mutableCopy];
+
+    NSMutableArray *pathContents = [[[NSFileManager defaultManager] contentsOfDirectoryAtPath:analyzerFilesPath error:nil] mutableCopy];
+    
+    for (NSString *path in pathContents) {
+      if([[path pathExtension] isEqualToString:@".plist"]) {
+        NSString *plistPath = [NSString pathWithComponents:@[analyzerFilesPath, path]];
+        [plistPaths addObject:plistPath];
+      }
+    }
   } else {
     NSLog(@"No build-state.dat for project/target: %@/%@, skipping...\n"
           "  it may be overriding CONFIGURATION_TEMP_DIR and emitting intermediate \n"
           "  files in a non-standard location", projectName, targetName);
-    
+    return;
   }
   
   BOOL haveFoundWarnings = NO;
   
   for (NSString *path in plistPaths) {
     
-    if(![path hasSuffix:@".plist"]) {
-      continue;
-    }
-    if(!buildStatePath && analyzerFilesPath) {
-      path = [NSString pathWithComponents:@[analyzerFilesPath, path]];
-    }
     NSDictionary *diags = [NSDictionary dictionaryWithContentsOfFile:path];
     for (NSDictionary *diag in diags[@"diagnostics"]) {
       haveFoundWarnings = YES;
