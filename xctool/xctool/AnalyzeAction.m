@@ -147,13 +147,12 @@
                                                 error:0];
   }
 
-  NSString *path = [[self class]
-                    intermediatesDirForProject:projectName
-                        target:targetName
-                        configuration:[options effectiveConfigurationForSchemeAction:@"AnalyzeAction"
-                                                                    xcodeSubjectInfo:xcodeSubjectInfo]
-                        platform:xcodeSubjectInfo.effectivePlatformName
-                        objroot:xcodeSubjectInfo.objRoot];
+  NSString *path = [[self class] intermediatesDirForProject:projectName
+                                                     target:targetName
+                                              configuration:[options effectiveConfigurationForSchemeAction:@"AnalyzeAction"
+                                                                                          xcodeSubjectInfo:xcodeSubjectInfo]
+                                                   platform:xcodeSubjectInfo.effectivePlatformName
+                                                    objroot:xcodeSubjectInfo.objRoot];
   NSString *buildStatePath = [path stringByAppendingPathComponent:@"build-state.dat"];
   NSMutableArray *plistPaths = [NSMutableArray array];
   BOOL buildPathExists = [[NSFileManager defaultManager] fileExistsAtPath:buildStatePath];
