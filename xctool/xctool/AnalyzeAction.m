@@ -156,7 +156,7 @@
   NSString *buildStatePath = [path stringByAppendingPathComponent:@"build-state.dat"];
   NSMutableArray *plistPaths = [NSMutableArray array];
   BOOL buildPathExists = [[NSFileManager defaultManager] fileExistsAtPath:buildStatePath];
-  
+
   if (buildPathExists) {
     BuildStateParser *buildState = [[[BuildStateParser alloc] initWithPath:buildStatePath] autorelease];
     for (NSString *path in buildState.nodes) {
@@ -164,11 +164,11 @@
                                       firstMatchInString:path
                                       options:0
                                       range:NSMakeRange(0, path.length)];
-      
+
       if (result == nil || result.range.location == NSNotFound) {
         continue;
       }
-      
+
       [plistPaths addObject:path];
     }
   } else if(path && projectName && targetName) {
@@ -182,9 +182,9 @@
                                                                  ]];
 
     NSArray *pathContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:analyzerFilesPath error:nil];
-    
+
     for (NSString *path in pathContents) {
-      if([[path pathExtension] isEqualToString:@".plist"]) {
+      if([[path pathExtension] isEqualToString:@"plist"]) {
         NSString *plistPath = [NSString pathWithComponents:@[analyzerFilesPath, path]];
         [plistPaths addObject:plistPath];
       }
@@ -195,11 +195,11 @@
           "  files in a non-standard location", projectName, targetName);
     return;
   }
-  
+
   BOOL haveFoundWarnings = NO;
-  
+
   for (NSString *path in plistPaths) {
-    
+
     NSDictionary *diags = [NSDictionary dictionaryWithContentsOfFile:path];
     for (NSDictionary *diag in diags[@"diagnostics"]) {
       haveFoundWarnings = YES;
