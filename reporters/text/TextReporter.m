@@ -318,19 +318,18 @@ static NSString *abbreviatePath(NSString *string) {
 
 - (NSString *)condensedBuildCommandTitle:(NSString *)title
 {
-  NSArray *parts = [title componentsSeparatedByString:@" "];
-  NSMutableArray *newParts = [NSMutableArray array];
-
-  for (NSString *part in parts) {
-    if ([part rangeOfString:@"/"].length != 0) {
-      // Looks like a path...
-      [newParts addObject:[part lastPathComponent]];
-    } else {
-      [newParts addObject:part];
-    }
+  NSMutableArray *parts = [NSMutableArray array];
+  NSRange pathRange = [title rangeOfString:@"/"];
+  if (pathRange.location != NSNotFound) {
+    NSString *command = [[title substringToIndex:pathRange.location] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSString *path = [title substringFromIndex:pathRange.location];
+    [parts addObject:command ?: @""];
+    [parts addObject:[path lastPathComponent] ?: @""];
+  } else {
+    [parts addObject:title];
   }
 
-  return [newParts componentsJoinedByString:@" "];
+  return [parts componentsJoinedByString:@" "];
 }
 
 - (void)beginAction:(NSDictionary *)event
