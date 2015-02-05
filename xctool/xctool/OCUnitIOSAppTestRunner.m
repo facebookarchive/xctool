@@ -207,14 +207,12 @@ static const NSInteger kMaxRunTestsAttempts = 3;
   // Sometimes simulator or test host app fails to run.
   // Let's try several times to run before reporting about failure to callers.
   for (NSInteger remainingAttempts = kMaxRunTestsAttempts - 1; remainingAttempts >= 0; --remainingAttempts) {
-    BOOL infraSucceeded = NO;
     NSError *error = nil;
-    [SimulatorWrapper runHostAppTests:testHostAppPath
+    BOOL infraSucceeded = [SimulatorWrapper runHostAppTests:testHostAppPath
                         simulatorInfo:self.simulatorInfo
                         appLaunchArgs:[self testArguments]
                  appLaunchEnvironment:[self otestEnvironmentWithOverrides:[self.simulatorInfo simulatorLaunchEnvironment]]
                     feedOutputToBlock:outputLineBlock
-                       infraSucceeded:&infraSucceeded
                                 error:&error];
 
     if (infraSucceeded) {
