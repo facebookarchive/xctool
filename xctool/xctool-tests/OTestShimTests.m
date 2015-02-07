@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "ContainsAssertionFailure.h"
 #import "OCUnitIOSLogicTestQueryRunner.h"
@@ -27,7 +27,7 @@
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
 
-@interface OTestShimTests : SenTestCase
+@interface OTestShimTests : XCTestCase
 @end
 
 static NSArray *AllTestCasesInTestBundle(NSString *sdkName,

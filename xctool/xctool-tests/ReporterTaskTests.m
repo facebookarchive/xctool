@@ -14,13 +14,13 @@
 // limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "FakeFileHandle.h"
 #import "ReporterTask.h"
 #import "XCToolUtil.h"
 
-@interface ReporterTaskTests : SenTestCase
+@interface ReporterTaskTests : XCTestCase
 @end
 
 @implementation ReporterTaskTests

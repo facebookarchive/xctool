@@ -1,9 +1,9 @@
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "JSONCompilationDatabaseReporter.h"
 #import "Reporter+Testing.h"
 
-@interface JSONCompilationDatabaseReporterTests : SenTestCase
+@interface JSONCompilationDatabaseReporterTests : XCTestCase
 @end
 
 @implementation JSONCompilationDatabaseReporterTests
@@ -15,8 +15,8 @@
   NSError *jsonSerializationError;
   // we should compare json objects (not strings from data) because json format does not specify order of keys
   id jsonObject = [NSJSONSerialization JSONObjectWithData:outputData options:0 error:&jsonSerializationError];
-  STAssertNotNil(jsonObject, @"cannot deserialize events file %@", jsonSerializationError.localizedDescription);
-  STAssertTrue([jsonObject isKindOfClass:[NSArray class]], @"compilation database json object should be an array");
+  XCTAssertNotNil(jsonObject, @"cannot deserialize events file %@", jsonSerializationError.localizedDescription);
+  XCTAssertTrue([jsonObject isKindOfClass:[NSArray class]], @"compilation database json object should be an array");
   NSArray *jsonArray = (NSArray *)jsonObject;
   NSArray *expectedJsonArray = @[
                                  @{
@@ -30,7 +30,7 @@
                                      @"file" : @"/Users/fpotter/fb/git/xctool/xctool/xctool-tests/TestData/TestProject-Library/TestProject-Library/TestProject_Library.m"
                                    },
                                 ];
-  STAssertEqualObjects(expectedJsonArray, jsonArray, @"compile_commands.json should match");
+  XCTAssertEqualObjects(expectedJsonArray, jsonArray, @"compile_commands.json should match");
 }
 
 - (void)testBuildObjectCpp
@@ -41,8 +41,8 @@
   NSError *jsonSerializationError;
   // we should compare json objects (not strings from data) because json format does not specify order of keys
   id jsonObject = [NSJSONSerialization JSONObjectWithData:outputData options:0 error:&jsonSerializationError];
-  STAssertNotNil(jsonObject, @"cannot deserialize events file %@", jsonSerializationError.localizedDescription);
-  STAssertTrue([jsonObject isKindOfClass:[NSArray class]], @"compilation database json object should be an array");
+  XCTAssertNotNil(jsonObject, @"cannot deserialize events file %@", jsonSerializationError.localizedDescription);
+  XCTAssertTrue([jsonObject isKindOfClass:[NSArray class]], @"compilation database json object should be an array");
   NSArray *jsonArray = (NSArray *)jsonObject;
   NSArray *expectedJsonArray = @[
                                   @{
@@ -56,7 +56,7 @@
                                       @"file" : @"/Users/yujo/Documents/MyNewTest/MyNewTest/MyClass.mm"
                                    },
                                 ];
-  STAssertEqualObjects(expectedJsonArray, jsonArray, @"compile_commands.json should match");
+  XCTAssertEqualObjects(expectedJsonArray, jsonArray, @"compile_commands.json should match");
 }
 
 - (void)testXcode5DPBuild
@@ -66,8 +66,8 @@
   NSError *jsonSerializationError;
   // we should compare json objects (not strings from data) because json format does not specify order of keys
   id jsonObject = [NSJSONSerialization JSONObjectWithData:outputData options:0 error:&jsonSerializationError];
-  STAssertNotNil(jsonObject, @"cannot deserialize events file %@", jsonSerializationError.localizedDescription);
-  STAssertTrue([jsonObject isKindOfClass:[NSArray class]], @"compilation database json object should be an array");
+  XCTAssertNotNil(jsonObject, @"cannot deserialize events file %@", jsonSerializationError.localizedDescription);
+  XCTAssertTrue([jsonObject isKindOfClass:[NSArray class]], @"compilation database json object should be an array");
   NSArray *jsonArray = (NSArray *)jsonObject;
   NSArray *expectedJsonArray = @[
                                   @{
@@ -81,7 +81,7 @@
                                        @"file" : @"/Users/lqi/Projects/LQRDG/xctool/xctool/xctool-tests/TestData/TestProject-Library/TestProject-Library/TestProject_Library.m"
                                     },
                                 ];
-  STAssertEqualObjects(expectedJsonArray, jsonArray, @"compile_commands.json should match");
+  XCTAssertEqualObjects(expectedJsonArray, jsonArray, @"compile_commands.json should match");
 }
 
 - (void)testXcode51DPBuild
@@ -91,8 +91,8 @@
     NSError *jsonSerializationError;
     // we should compare json objects (not strings from data) because json format does not specify order of keys
     id jsonObject = [NSJSONSerialization JSONObjectWithData:outputData options:0 error:&jsonSerializationError];
-    STAssertNotNil(jsonObject, @"cannot deserialize events file %@", jsonSerializationError.localizedDescription);
-    STAssertTrue([jsonObject isKindOfClass:[NSArray class]], @"compilation database json object should be an array");
+    XCTAssertNotNil(jsonObject, @"cannot deserialize events file %@", jsonSerializationError.localizedDescription);
+    XCTAssertTrue([jsonObject isKindOfClass:[NSArray class]], @"compilation database json object should be an array");
     NSArray *jsonArray = (NSArray *)jsonObject;
     NSArray *expectedJsonArray = @[
                                    @{
@@ -106,7 +106,7 @@
                                        @"file" : @"/Users/lqi/Projects/LQRDG/xctool/xctool/xctool-tests/TestData/TestProject-Library/TestProject-Library/TestProject_Library.m"
                                        },
                                    ];
-    STAssertEqualObjects(expectedJsonArray, jsonArray, @"compile_commands.json should match");
+    XCTAssertEqualObjects(expectedJsonArray, jsonArray, @"compile_commands.json should match");
 }
 - (void)testTestResults
 {
@@ -114,7 +114,7 @@
                         outputDataWithEventsFromFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results.txt"];
   NSString *jsonStr = [[[NSString alloc] initWithData:outputData
                                             encoding:NSUTF8StringEncoding] autorelease];
-  STAssertEqualObjects(@"\
+  XCTAssertEqualObjects(@"\
 [\n\
 \n\
 ]\n", jsonStr, @"compile_commands.json should match");

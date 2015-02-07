@@ -1,5 +1,5 @@
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "ContainsArray.h"
 #import "DTiPhoneSimulatorRemoteClient.h"
@@ -59,7 +59,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
   return count;
 }
 
-@interface OCUnitTestRunnerTests : SenTestCase
+@interface OCUnitTestRunnerTests : XCTestCase
 @end
 
 @implementation OCUnitTestRunnerTests

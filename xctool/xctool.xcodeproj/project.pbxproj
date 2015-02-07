@@ -26,7 +26,6 @@
 		283479B916E3EBE5003C3B77 /* TestUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 283479B816E3EBE5003C3B77 /* TestUtil.m */; };
 		283479BC16E3FC0F003C3B77 /* BuildTestsActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 283479BB16E3FC0E003C3B77 /* BuildTestsActionTests.m */; };
 		283CCA4616C2EA3800F2E343 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283CCA4516C2EA3800F2E343 /* Foundation.framework */; };
-		283CCAC316C2EE9900F2E343 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283CCA5916C2EA8B00F2E343 /* SenTestingKit.framework */; };
 		283CCAC416C2EE9900F2E343 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283CCA5B16C2EA8B00F2E343 /* Cocoa.framework */; };
 		283CCACA16C2EE9900F2E343 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 283CCAC816C2EE9900F2E343 /* InfoPlist.strings */; };
 		283CCACD16C2EE9900F2E343 /* XCToolTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCACC16C2EE9900F2E343 /* XCToolTests.m */; };
@@ -220,7 +219,7 @@
 		283CCA5E16C2EA8B00F2E343 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		283CCA5F16C2EA8B00F2E343 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		283CCA6016C2EA8B00F2E343 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		283CCAC216C2EE9900F2E343 /* xctool-tests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "xctool-tests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		283CCAC216C2EE9900F2E343 /* xctool-tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "xctool-tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		283CCAC716C2EE9900F2E343 /* xctool-tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "xctool-tests-Info.plist"; sourceTree = "<group>"; };
 		283CCAC916C2EE9900F2E343 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		283CCACC16C2EE9900F2E343 /* XCToolTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XCToolTests.m; sourceTree = "<group>"; };
@@ -400,7 +399,6 @@
 				28FFB00516FF5A21000CCE2A /* QuartzCore.framework in Frameworks */,
 				28E9B98E16C2FE4800A52E4D /* OCHamcrest.framework in Frameworks */,
 				28E9B98B16C2FDA700A52E4D /* OCMockito.framework in Frameworks */,
-				283CCAC316C2EE9900F2E343 /* SenTestingKit.framework in Frameworks */,
 				283CCAC416C2EE9900F2E343 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -457,7 +455,7 @@
 			isa = PBXGroup;
 			children = (
 				283CCA4216C2EA3800F2E343 /* xctool */,
-				283CCAC216C2EE9900F2E343 /* xctool-tests.octest */,
+				283CCAC216C2EE9900F2E343 /* xctool-tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -827,8 +825,8 @@
 			);
 			name = "xctool-tests";
 			productName = "xctool-tests";
-			productReference = 283CCAC216C2EE9900F2E343 /* xctool-tests.octest */;
-			productType = "com.apple.product-type.bundle";
+			productReference = 283CCAC216C2EE9900F2E343 /* xctool-tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -1123,16 +1121,18 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 287E0DC417CD60B00088A264 /* xctool-tests.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
 					"\"$(SRCROOT)/../Vendor\"",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks/**",
+					"$(inherited)",
 				);
 				GCC_PREFIX_HEADER = "xctool-tests/xctool-tests-Prefix.pch";
 				INFOPLIST_FILE = "xctool-tests/xctool-tests-Info.plist";
 				PRODUCT_NAME = "xctool-tests";
 				SKIP_INSTALL = YES;
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -1140,16 +1140,18 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 287E0DC417CD60B00088A264 /* xctool-tests.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
 					"\"$(SRCROOT)/../Vendor\"",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks/**",
+					"$(inherited)",
 				);
 				GCC_PREFIX_HEADER = "xctool-tests/xctool-tests-Prefix.pch";
 				INFOPLIST_FILE = "xctool-tests/xctool-tests-Info.plist";
 				PRODUCT_NAME = "xctool-tests";
 				SKIP_INSTALL = YES;
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};

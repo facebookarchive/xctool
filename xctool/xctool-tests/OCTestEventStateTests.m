@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "EventBuffer.h"
 #import "EventGenerator.h"
@@ -23,7 +23,7 @@
 #import "ReporterEvents.h"
 #import "TestUtil.h"
 
-@interface OCTestEventStateTests : SenTestCase
+@interface OCTestEventStateTests : XCTestCase
 @end
 
 @implementation OCTestEventStateTests
@@ -39,7 +39,7 @@
 
 - (void)testInitWithInvalidInputName
 {
-  STAssertThrowsSpecific([[[OCTestEventState alloc] initWithInputName:@"ATestClassaTestMethod"
+  XCTAssertThrowsSpecific([[[OCTestEventState alloc] initWithInputName:@"ATestClassaTestMethod"
                                                             reporters: @[]] autorelease],
                          NSException, @"Invalid class name should have raised exception");
 }

@@ -1,11 +1,11 @@
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "EventBuffer.h"
 #import "ReportStatus.h"
 #import "Swizzler.h"
 
-@interface ReportStatusTests : SenTestCase
+@interface ReportStatusTests : XCTestCase
 @end
 
 @implementation ReportStatusTests

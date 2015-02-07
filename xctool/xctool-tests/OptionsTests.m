@@ -16,7 +16,7 @@
 
 #import <objc/runtime.h>
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "Action.h"
 #import "FakeTask.h"
@@ -28,7 +28,7 @@
 #import "XCToolUtil.h"
 #import "XcodeSubjectInfo.h"
 
-@interface OptionsTests : SenTestCase
+@interface OptionsTests : XCTestCase
 @end
 
 @implementation OptionsTests

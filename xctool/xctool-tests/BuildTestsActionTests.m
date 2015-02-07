@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "Action.h"
 #import "BuildTestsAction.h"
@@ -38,7 +38,7 @@ static NSString *kTestWorkspaceTestProjectLibraryTestsTargetID  = @"28A33CE016CF
 static NSString *kTestWorkspaceTestProjectLibraryTests2TargetID = @"28ADB42416E40E23006301ED";
 static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E42E9A006301ED";
 
-@interface BuildTestsActionTests : SenTestCase
+@interface BuildTestsActionTests : XCTestCase
 @end
 
 @implementation BuildTestsActionTests
@@ -116,8 +116,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
                        @"build-tests",
-                       @"-reporter", @"plain",
-                       ];
+@"-reporter", @"plain"                       ];
 
     [Swizzler whileSwizzlingSelector:@selector(schemeGenerator)
                             forClass:[SchemeGenerator class]
@@ -177,8 +176,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
                        @"build-tests",
-                       @"-reporter", @"plain",
-                       ];
+@"-reporter", @"plain"                       ];
 
     [Swizzler whileSwizzlingSelector:@selector(schemeGenerator)
                             forClass:[SchemeGenerator class]
@@ -246,8 +244,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
                        @"build-tests", @"-only", @"TestProject-LibraryTests",
-                       @"-reporter", @"plain",
-                       ];
+@"-reporter", @"plain"                       ];
 
     [Swizzler whileSwizzlingSelector:@selector(schemeGenerator)
                             forClass:[SchemeGenerator class]
@@ -312,8 +309,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                        @"build-tests",
                        @"-only", @"TestProject-LibraryTests",
                        @"-skip-deps",
-                       @"-reporter", @"plain",
-                       ];
+@"-reporter", @"plain"                       ];
 
     [Swizzler whileSwizzlingSelector:@selector(schemeGenerator)
                             forClass:[SchemeGenerator class]
@@ -363,8 +359,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
     tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
                        @"build-tests",
-                       @"-reporter", @"plain",
-                       ];
+@"-reporter", @"plain"                       ];
 
     [TestUtil runWithFakeStreams:tool];
 

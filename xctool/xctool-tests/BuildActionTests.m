@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "Action.h"
 #import "FakeTask.h"
@@ -29,7 +29,7 @@
 
 void _CFAutoreleasePoolPrintPools();
 
-@interface BuildActionTests : SenTestCase
+@interface BuildActionTests : XCTestCase
 @end
 
 @implementation BuildActionTests
@@ -56,8 +56,7 @@ void _CFAutoreleasePoolPrintPools();
                        @"-scheme", @"TestProject-Library",
                        @"-sdk", @"iphonesimulator6.0",
                        @"build",
-                       @"-reporter", @"plain",
-                       ];
+@"-reporter", @"plain"                       ];
 
     [TestUtil runWithFakeStreams:tool];
 
@@ -88,8 +87,7 @@ void _CFAutoreleasePoolPrintPools();
     tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
                        @"build",
-                       @"-reporter", @"plain",
-                       ];
+@"-reporter", @"plain"                       ];
 
     [TestUtil runWithFakeStreams:tool];
 
@@ -118,8 +116,7 @@ void _CFAutoreleasePoolPrintPools();
     tool.arguments = @[@"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
                        @"-scheme", @"TestProject-Library",
                        @"build",
-                       @"-reporter", @"plain",
-                       ];
+@"-reporter", @"plain"                       ];
 
     [TestUtil runWithFakeStreams:tool];
 
@@ -149,8 +146,7 @@ void _CFAutoreleasePoolPrintPools();
                        @"-scheme", @"TestProject-Library",
                        @"-configuration", @"SOME_CONFIGURATION",
                        @"build",
-                       @"-reporter", @"plain",
-                       ];
+@"-reporter", @"plain"                       ];
 
     [TestUtil runWithFakeStreams:tool];
 
@@ -187,8 +183,7 @@ void _CFAutoreleasePoolPrintPools();
       tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                          @"-scheme", @"TestProject-Library",
                          @"build",
-                         @"-reporter", @"plain",
-                         ];
+@"-reporter", @"plain"                         ];
 
       [TestUtil runWithFakeStreams:tool];
 
@@ -218,8 +213,7 @@ void _CFAutoreleasePoolPrintPools();
     tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
                        @"build",
-                       @"-reporter", @"plain",
-                       ];
+@"-reporter", @"plain"                       ];
 
     [TestUtil runWithFakeStreams:tool];
 
@@ -248,8 +242,7 @@ void _CFAutoreleasePoolPrintPools();
     tool.arguments = @[@"-workspace", TEST_DATA @"ProjectsWithDifferentSDKs/ProjectsWithDifferentSDKs.xcworkspace",
                        @"-scheme", @"ProjectsWithDifferentSDKs",
                        @"build",
-                       @"-reporter", @"plain",
-                       ];
+                       @"-reporter", @"plain"];
 
     [TestUtil runWithFakeStreams:tool];
 

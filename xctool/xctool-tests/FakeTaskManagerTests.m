@@ -2,14 +2,14 @@
 #import <objc/message.h>
 #import <objc/runtime.h>
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "FakeTask.h"
 #import "FakeTaskManager.h"
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
 
-@interface FakeTaskManagerTests : SenTestCase
+@interface FakeTaskManagerTests : XCTestCase
 @end
 
 @implementation FakeTaskManagerTests
