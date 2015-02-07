@@ -16,23 +16,23 @@
 
 #import <Foundation/Foundation.h>
 
-#import "OCTestEventState.h"
-#import "OCTestSuiteEventState.h"
+#import "XCTestEventState.h"
+#import "XCTestSuiteEventState.h"
 #import "Reporter.h"
 
 @interface TestRunState : Reporter {
-  OCTestSuiteEventState *_testSuiteState;
-  OCTestEventState *_previousTestState;
+  XCTestSuiteEventState *_testSuiteState;
+  XCTestEventState *_previousTestState;
   NSSet *_crashReportsAtStart;
   NSMutableString *_outputBeforeTestsStart;
 }
 
-@property (nonatomic, readonly) OCTestSuiteEventState *testSuiteState;
+@property (nonatomic, readonly) XCTestSuiteEventState *testSuiteState;
 
 - (instancetype)initWithTests:(NSArray *)testList
                     reporters:(NSArray *)reporters;
 
-- (instancetype)initWithTestSuiteEventState:(OCTestSuiteEventState *)suiteState;
+- (instancetype)initWithTestSuiteEventState:(XCTestSuiteEventState *)suiteState;
 
 - (BOOL)allTestsPassed;
 - (void)prepareToRun;

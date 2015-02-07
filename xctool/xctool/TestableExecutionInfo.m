@@ -16,10 +16,10 @@
 
 #import "TestableExecutionInfo.h"
 
-#import "OCUnitIOSAppTestQueryRunner.h"
-#import "OCUnitIOSLogicTestQueryRunner.h"
-#import "OCUnitOSXAppTestQueryRunner.h"
-#import "OCUnitOSXLogicTestQueryRunner.h"
+#import "XCIOSAppTestQueryRunner.h"
+#import "XCIOSLogicTestQueryRunner.h"
+#import "XCOSXAppTestQueryRunner.h"
+#import "XCOSXLogicTestQueryRunner.h"
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
@@ -170,9 +170,9 @@
   Class runnerClass = {0};
   if ([sdkName hasPrefix:@"macosx"]) {
     if (isApplicationTest) {
-      runnerClass = [OCUnitOSXAppTestQueryRunner class];
+      runnerClass = [XCOSXAppTestQueryRunner class];
     } else {
-      runnerClass = [OCUnitOSXLogicTestQueryRunner class];
+      runnerClass = [XCOSXLogicTestQueryRunner class];
     }
   } else if ([sdkName hasPrefix:@"iphoneos"]) {
     // We can't run tests on device yet, but we must return a test list here or
@@ -180,12 +180,12 @@
     return @[@"Placeholder/ForDeviceTests"];
   } else {
     if (isApplicationTest) {
-      runnerClass = [OCUnitIOSAppTestQueryRunner class];
+      runnerClass = [XCIOSAppTestQueryRunner class];
     } else {
-      runnerClass = [OCUnitIOSLogicTestQueryRunner class];
+      runnerClass = [XCIOSLogicTestQueryRunner class];
     }
   }
-  OCUnitTestQueryRunner *runner = [[[runnerClass alloc] initWithBuildSettings:testableBuildSettings
+  XCTestQueryRunner *runner = [[[runnerClass alloc] initWithBuildSettings:testableBuildSettings
                                                                   withCpuType:cpuType] autorelease];
   return [runner runQueryWithError:error];
 }

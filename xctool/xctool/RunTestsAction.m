@@ -18,11 +18,11 @@
 
 #import "EventBuffer.h"
 #import "EventGenerator.h"
-#import "OCUnitIOSAppTestRunner.h"
-#import "OCUnitIOSDeviceTestRunner.h"
-#import "OCUnitIOSLogicTestRunner.h"
-#import "OCUnitOSXAppTestRunner.h"
-#import "OCUnitOSXLogicTestRunner.h"
+#import "XCIOSAppTestRunner.h"
+#import "XCIOSDeviceTestRunner.h"
+#import "XCIOSLogicTestRunner.h"
+#import "XCOSXAppTestRunner.h"
+#import "XCOSXLogicTestRunner.h"
 #import "Options.h"
 #import "ReportStatus.h"
 #import "SimulatorInfo.h"
@@ -313,18 +313,18 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
   BOOL isApplicationTest = TestableSettingsIndicatesApplicationTest(testableBuildSettings);
 
   if ([sdkName hasPrefix:@"iphoneos"]) {
-    return [OCUnitIOSDeviceTestRunner class];
+    return [XCIOSDeviceTestRunner class];
   } else if ([sdkName hasPrefix:@"macosx"]) {
     if (isApplicationTest) {
-      return [OCUnitOSXAppTestRunner class];
+      return [XCOSXAppTestRunner class];
     } else {
-      return [OCUnitOSXLogicTestRunner class];
+      return [XCOSXLogicTestRunner class];
     }
   } else {
     if (isApplicationTest) {
-      return [OCUnitIOSAppTestRunner class];
+      return [XCIOSAppTestRunner class];
     } else {
-      return [OCUnitIOSLogicTestRunner class];
+      return [XCIOSLogicTestRunner class];
     }
   }
 }
@@ -410,7 +410,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                   testRunnerClass:(Class)testRunnerClass
 {
   return [[^(NSArray *reporters) {
-    OCUnitTestRunner *testRunner = [[[testRunnerClass alloc]
+    XCTestRunner *testRunner = [[[testRunnerClass alloc]
                                      initWithBuildSettings:testableExecutionInfo.buildSettings
                                      focusedTestCases:focusedTestCases
                                      allTestCases:allTestCases
@@ -422,17 +422,17 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                                      reporters:reporters] autorelease];
     [testRunner setCpuType:_cpuType];
 
-    if ([testRunner isKindOfClass:[OCUnitIOSAppTestRunner class]]) {
+    if ([testRunner isKindOfClass:[XCIOSAppTestRunner class]]) {
       if (_deviceName) {
-        [(OCUnitIOSAppTestRunner *)testRunner setDeviceName:_deviceName];
+        [(XCIOSAppTestRunner *)testRunner setDeviceName:_deviceName];
       }
       if (_OSVersion) {
-        [(OCUnitIOSAppTestRunner *)testRunner setOSVersion:_OSVersion];
+        [(XCIOSAppTestRunner *)testRunner setOSVersion:_OSVersion];
       }
     }
-    if ([testRunner isKindOfClass:[OCUnitIOSLogicTestRunner class]]) {
+    if ([testRunner isKindOfClass:[XCIOSLogicTestRunner class]]) {
       if (_OSVersion) {
-        [(OCUnitIOSLogicTestRunner *)testRunner setOSVersion:_OSVersion];
+        [(XCIOSLogicTestRunner *)testRunner setOSVersion:_OSVersion];
       }
     }
 
@@ -522,7 +522,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
     Class testRunnerClass = [self testRunnerClassForBuildSettings:info.buildSettings];
     BOOL isApplicationTest = TestableSettingsIndicatesApplicationTest(info.buildSettings);
 
-    NSArray *testCases = [OCUnitTestRunner filterTestCases:info.testCases
+    NSArray *testCases = [XCTestRunner filterTestCases:info.testCases
                                            withSenTestList:info.testable.senTestList
                                         senTestInvertScope:info.testable.senTestInvertScope];
 
