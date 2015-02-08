@@ -5,14 +5,12 @@
 #import "XCToolUtil.h"
 
 @interface ArchiveAction ()
+
+@property (nonatomic, copy) NSString *archivePath;
+
 @end
 
 @implementation ArchiveAction
-
-- (void)setArchivePath:(NSString *)archivePath
-{
-  _archivePath = archivePath;
-}
 
 + (NSString *)name
 {

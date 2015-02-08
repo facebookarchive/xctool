@@ -4,6 +4,4 @@
 
 @interface ArchiveAction : Action
 
-@property (nonatomic, copy) NSString *archivePath;
-
 @end
