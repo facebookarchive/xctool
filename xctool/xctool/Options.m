@@ -34,6 +34,7 @@
 
 @implementation Options
 
+
 + (NSArray *)actionClasses
 {
   return @[[CleanAction class],
@@ -50,7 +51,11 @@
 + (NSArray *)options
 {
   return
-  @[[Action actionOptionWithName:@"help"
+  @[[Action actionOptionWithName:@"archivePath"
+                         aliases:nil
+                     description:@"PATH where created archive will be placed."
+                         setFlag:@selector(setArchivePath:)],
+    [Action actionOptionWithName:@"help"
                          aliases:@[@"h", @"usage"]
                      description:@"show help"
                          setFlag:@selector(setShowHelp:)],
@@ -200,6 +205,15 @@
   [_reporterOptions addObject:argument];
 }
 
+- (void)addAction:(Action *)oneAction
+{
+  [self.actions addObject:oneAction];
+  if ([oneAction isKindOfClass:[ArchiveAction class]]) {
+    self.archive = YES;
+    self.archivePath = [(ArchiveAction *)oneAction archivePath];
+  }
+}
+
 - (void)addBuildSetting:(NSString *)argument
 {
   NSRange eqRange = [argument rangeOfString:@"="];
@@ -250,7 +264,8 @@
     if (verbToClass[argument]) {
       Action *action = [[[verbToClass[argument] alloc] init] autorelease];
       consumed += [action consumeArguments:argumentList errorMessage:errorMessage];
-      [self.actions addObject:action];
+      [self addAction:action];
+      
     } else {
       *errorMessage = [NSString stringWithFormat:@"Unexpected action: %@", argument];
       break;
@@ -579,7 +594,7 @@
 
   // Assume build if no action is given.
   if (self.actions.count == 0) {
-    [self.actions addObject:[[[BuildAction alloc] init] autorelease]];
+    [self addAction:[[[BuildAction alloc] init] autorelease]];
   }
 
   return YES;
@@ -703,7 +718,9 @@
           "jobs: %@\n"
           "findTarget: %@\n"
           "findTargetPath: %@\n"
-          "findProjectPath: %@",
+          "findProjectPath: %@\n"
+          "archive: %d\n"
+          "archivePath: %@",
           [super description],
           _workspace,
           _project,
@@ -717,7 +734,9 @@
           _jobs,
           _findTarget,
           _findTargetPath,
-          _findProjectPath];
+          _findProjectPath,
+          _archive,
+          _archivePath];
 }
 
 @end

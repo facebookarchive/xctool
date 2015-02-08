@@ -26,8 +26,9 @@
 
     tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
-                       @"archive",
                        @"-reporter", @"plain",
+                       @"archive",
+                       @"-archivePath",@"/Users/jeromemorissard/"
                        ];
 
     [TestUtil runWithFakeStreams:tool];
@@ -38,6 +39,7 @@
                        @"-scheme", @"TestProject-Library",
                        @"-configuration", @"Release",
                        @"archive",
+                       @"-archivePath",@"/Users/jeromemorissard/",
                        ]));
   }];
 }
@@ -105,7 +107,7 @@
     tool.arguments = @[@"-project", TEST_DATA @"TestProject-App-OSX/TestProject-App-OSX.xcodeproj",
                        @"-scheme", @"TestProject-App-OSX",
                        @"archive",
-                       @"-reporter", @"plain",
+                       @"-reporter", @"plain"
                        ];
 
     NSDictionary *output = [TestUtil runWithFakeStreams:tool];
