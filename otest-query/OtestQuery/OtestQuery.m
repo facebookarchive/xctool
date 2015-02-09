@@ -56,19 +56,19 @@
   if (!bundle) {
     fprintf(stderr, "Bundle '%s' does not identify an accessible bundle directory.\n",
             [testBundlePath UTF8String]);
-    exit(kBundleOpenError);
+    _exit(kBundleOpenError);
   }
 
   NSDictionary *framework = FrameworkInfoForTestBundleAtPath(testBundlePath);
   if (!framework) {
     const char *bundleExtension = [[testBundlePath pathExtension] UTF8String];
     fprintf(stderr, "The bundle extension '%s' is not supported.\n", bundleExtension);
-    exit(kUnsupportedFramework);
+    _exit(kUnsupportedFramework);
   }
 
   if (![bundle executablePath]) {
     fprintf(stderr, "The bundle at %s does not contain an executable.\n", [testBundlePath UTF8String]);
-    exit(kMissingExecutable);
+    _exit(kMissingExecutable);
   }
 
   // Make sure the 'SenTest' or 'XCTest' preference is cleared before we load the
@@ -96,7 +96,7 @@
   // something goes wrong, dlerror() gives us a much more helpful error message.
   if (dlopen([[bundle executablePath] UTF8String], RTLD_LAZY) == NULL) {
     fprintf(stderr, "%s\n", dlerror());
-    exit(kDLOpenError);
+    _exit(kDLOpenError);
   }
 
   [[NSBundle allFrameworks] makeObjectsPerformSelector:@selector(principalClass)];
@@ -130,7 +130,7 @@
 
   NSData *json = [NSJSONSerialization dataWithJSONObject:testNames options:0 error:nil];
   [(NSFileHandle *)[NSFileHandle fileHandleWithStandardOutput] writeData:json];
-  exit(kSuccess);
+  _exit(kSuccess);
 }
 
 @end
