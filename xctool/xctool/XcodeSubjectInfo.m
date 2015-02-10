@@ -859,9 +859,9 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 - (void)populateBuildablesAndTestablesForWorkspaceWithSchemePath:(NSString *)schemePath
 {
   NSArray *testables = [[self class] testablesInSchemePath:schemePath
-                                                  basePath:BasePathFromSchemePath(schemePath)];
+                                                  basePath:self.projectDir];
   NSArray *buildables = [[self class] buildablesInSchemePath:schemePath
-                                                    basePath:BasePathFromSchemePath(schemePath)];
+                                                    basePath:self.projectDir];
 
 
   // It's possible that the scheme references projects that aren't part of the workspace.  When
@@ -893,10 +893,10 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 - (void)populateBuildablesAndTestablesForProjectWithSchemePath:(NSString *)schemePath
 {
   self.testables = [[self class] testablesInSchemePath:schemePath
-                                              basePath:BasePathFromSchemePath(schemePath)];
+                                              basePath:self.projectDir];
 
   self.buildables = [[self class] buildablesInSchemePath:schemePath
-                                                    basePath:BasePathFromSchemePath(schemePath)];
+                                                basePath:self.projectDir];
   self.buildablesForTest = [self.buildables objectsAtIndexes:
                             [self.buildables indexesOfObjectsPassingTest:
                              ^BOOL(Buildable *obj, NSUInteger idx, BOOL *stop) {
@@ -942,7 +942,8 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   self.sharedPrecompsDir = targetSettings[Xcode_SHARED_PRECOMPS_DIR];
   self.effectivePlatformName = targetSettings[Xcode_EFFECTIVE_PLATFORM_NAME];
   self.targetedDeviceFamily = targetSettings[Xcode_TARGETED_DEVICE_FAMILY];
-  
+  self.projectDir = targetSettings[Xcode_PROJECT_DIR];
+
   NSString *matchingSchemePath = nil;
 
   if (self.subjectWorkspace) {
