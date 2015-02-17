@@ -73,13 +73,14 @@ static BOOL __didLoadAllPlatforms = NO;
   [_session release];
   [_launchError release];
   [_didEndWithError release];
+  [_launchTimeout release];
   [super dealloc];
 }
 
 - (BOOL)launchAndWaitForExit
 {
   NSError *error = nil;
-  if (![_session requestStartWithConfig:[_session sessionConfig] timeout:30 error:&error]) {
+  if (![_session requestStartWithConfig:[_session sessionConfig] timeout:self.launchTimeout.intValue error:&error]) {
     self.launchError = error;
     return NO;
   }
@@ -94,7 +95,7 @@ static BOOL __didLoadAllPlatforms = NO;
 - (BOOL)launchAndWaitForStart
 {
   NSError *error = nil;
-  if (![_session requestStartWithConfig:[_session sessionConfig] timeout:30 error:&error]) {
+  if (![_session requestStartWithConfig:[_session sessionConfig] timeout:self.launchTimeout.intValue error:&error]) {
     self.launchError = error;
     return NO;
   }

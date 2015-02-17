@@ -119,6 +119,7 @@
 - (NSString *)simulatedSdkVersion {assert(NO);};
 - (NSString *)simulatedSdkShortVersion {assert(NO);};
 - (NSString *)simulatedSdkRootPath {assert(NO);};
+- (NSNumber *)launchTimeout {assert(NO);};
 - (DTiPhoneSimulatorSystemRoot *)systemRootForSimulatedSdk{assert(NO);};
 
 @end
