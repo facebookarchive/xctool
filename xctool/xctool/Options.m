@@ -147,6 +147,11 @@
                          aliases:@[@"v"]
                      description:@"print version and exit"
                          setFlag:@selector(setShowVersion:)],
+    [Action actionOptionWithName:@"derivedDataPath"
+                         aliases:nil
+                     description:@"override the default derived data path"
+                       paramName:@"PATH"
+                           mapTo:@selector(setDerivedDataPath:)],
     [Action actionOptionWithMatcher:^(NSString *argument){
       // Anything that looks like KEY=VALUE should get passed to xcodebuild
       // as a command-line build setting.
@@ -657,14 +662,21 @@
 
 - (NSArray *)xcodeBuildArgumentsForSubject
 {
+  NSArray *buildArgs;
+
   if (self.workspace != nil && self.scheme != nil) {
-    return @[@"-workspace", self.workspace, @"-scheme", self.scheme];
+    buildArgs = @[@"-workspace", self.workspace, @"-scheme", self.scheme];
   } else if (self.project != nil && self.scheme != nil) {
-    return @[@"-project", self.project, @"-scheme", self.scheme];
+    buildArgs = @[@"-project", self.project, @"-scheme", self.scheme];
   } else {
     NSLog(@"Should have either a workspace or a project.");
     abort();
   }
+
+  if (self.derivedDataPath != nil) {
+    return [buildArgs arrayByAddingObjectsFromArray:@[ @"-derivedDataPath", self.derivedDataPath ]];
+  }
+  return buildArgs;
 }
 
 - (void)setFindTargetExcludePathsFromString:(NSString *)string

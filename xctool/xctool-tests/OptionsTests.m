@@ -222,6 +222,12 @@
   assertThat(options.resultBundlePath, equalTo(@"foo"));
 }
 
+- (void)testDerivedDataPathWorks
+{
+  Options *options = [Options optionsFrom:@[@"-derivedDataPath", @"foo"]];
+  assertThat(options.derivedDataPath, equalTo(@"foo"));
+}
+
 - (void)testFindTargetWorks
 {
   Options *options = [Options optionsFrom:@[@"-find-target", @"foo"]];
@@ -317,6 +323,26 @@
 {
   NSArray *arguments = @[@"-project", @"path/to/Something.xcodeproj",
                          @"-scheme", @"Something",
+                         ];
+  Options *action = [Options optionsFrom:arguments];
+  assertThat([action xcodeBuildArgumentsForSubject], equalTo(arguments));
+}
+
+- (void)testXcodeBuildArgumentsForWorkspaceAndSchemeSubjectWithDerivedData
+{
+  NSArray *arguments = @[@"-workspace", @"path/to/Something.xcworkspace",
+                         @"-scheme", @"Something",
+                         @"-derivedDataPath", @"path/to/deriveddata"
+                         ];
+  Options *action = [Options optionsFrom:arguments];
+  assertThat([action xcodeBuildArgumentsForSubject], equalTo(arguments));
+}
+
+- (void)testXcodeBuildArgumentsForProjectAndSchemeSubjectWithDerivedData
+{
+  NSArray *arguments = @[@"-project", @"path/to/Something.xcodeproj",
+                         @"-scheme", @"Something",
+                         @"-derivedDataPath", @"path/to/deriveddata"
                          ];
   Options *action = [Options optionsFrom:arguments];
   assertThat([action xcodeBuildArgumentsForSubject], equalTo(arguments));
