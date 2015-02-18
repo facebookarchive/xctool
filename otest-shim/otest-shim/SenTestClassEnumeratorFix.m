@@ -28,7 +28,7 @@ static id SenTestClassEnumerator_init(id self, SEL cmd)
   unsigned int classCount = 0;
   Class *classList = objc_copyClassList(&classCount);
 
-  NSMutableArray *classes = [[NSMutableArray alloc] initWithCapacity:classCount];
+  NSMutableArray *classes = [NSMutableArray array];
 
   for (unsigned int i = 0; i < classCount; i++) {
     Class cls = classList[i];

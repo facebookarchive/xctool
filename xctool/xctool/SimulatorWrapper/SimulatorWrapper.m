@@ -91,12 +91,11 @@ static const NSString * kOtestShimStderrFilePath __unused = @"OTEST_SHIM_STDERR_
 #pragma mark -
 #pragma mark Main Methods
 
-+ (void)runHostAppTests:(NSString *)testHostAppPath
++ (BOOL)runHostAppTests:(NSString *)testHostAppPath
           simulatorInfo:(SimulatorInfo *)simInfo
           appLaunchArgs:(NSArray *)launchArgs
    appLaunchEnvironment:(NSDictionary *)launchEnvironment
       feedOutputToBlock:(void (^)(NSString *))feedOutputToBlock
-         infraSucceeded:(BOOL *)infraSucceeded
                   error:(NSError **)error
 {
   NSString *outputPath = MakeTempFileWithPrefix(@"output");
@@ -123,12 +122,7 @@ static const NSString * kOtestShimStderrFilePath __unused = @"OTEST_SHIM_STDERR_
 
   [reader stopReading];
   [reader finishReadingToEndOfFile];
-
-  if (simStartedSuccessfully) {
-    *infraSucceeded = YES;
-  } else {
-    *infraSucceeded = NO;
-  }
+  return  simStartedSuccessfully;
 }
 
 + (BOOL)uninstallTestHostBundleID:(NSString *)testHostBundleID

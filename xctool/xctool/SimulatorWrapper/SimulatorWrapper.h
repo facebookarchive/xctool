@@ -28,16 +28,15 @@
  * @param testHostAppPath Path to the .app
  * @param feedOutputToBlock The block is called once for every line of output
  * @param testsSucceeded If all tests ran and passed, this will be set to YES.
- * @param infraSucceeded If we succeeded in launching the app and running the
  *   the tests, this will be set to YES.  Note that this will be YES even if
  *   some tests failed.
+  @return YES, if we succeeded in launching the app
  */
-+ (void)runHostAppTests:(NSString *)testHostAppPath
++ (BOOL)runHostAppTests:(NSString *)testHostAppPath
           simulatorInfo:(SimulatorInfo *)simInfo
           appLaunchArgs:(NSArray *)launchArgs
    appLaunchEnvironment:(NSDictionary *)launchEnvironment
       feedOutputToBlock:(void (^)(NSString *))feedOutputToBlock
-         infraSucceeded:(BOOL *)infraSucceeded
                   error:(NSError **)error;
 
 + (BOOL)uninstallTestHostBundleID:(NSString *)testHostBundleID
