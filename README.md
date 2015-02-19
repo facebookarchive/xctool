@@ -470,7 +470,20 @@ It's a nice way to keep things together.
 
   If you are running `xctool` in continuous integration, the user account
   calling `xctool` **must** have an active GUI context.
-  If not, the simulator will fail to start with a cryptic warning. Note that the
+  If not, the simulator will fail to start with cryptic warnings like:
+  
+  ```
+  Tried to install the test host app 'com.myapp.test' but failed.
+  Preparing test environment failed.
+  -[TEST_BUNDLE FAILED_TO_START] 
+  There was a problem starting the test bundle: Simulator 'iPhone 6' was not prepared: Failed for unknown reason.
+  Test did not run: Simulator 'iPhone 6' was not prepared: Failed for unknown reason.
+  2015-01-21 12:02:19.296 xcodebuild[35135:875297]  iPhoneSimulator: Timed out waiting 120 seconds for simulator to boot, current state is 1.
+  Testing failed:
+  Test target MyProjectTests encountered an error (Timed out waiting 120 seconds for simulator to boot, current state is 1.  
+  ```
+  
+  Note that the
   same holds true with `xcodebuild`...this is not `xctool` specific.
   
   For more information, see [this post by Jason Jarrett](http://staxmanade.com/2015/01/setting-jenkins-up-to-run-xctool-and-xcode-simulator-tests/).
