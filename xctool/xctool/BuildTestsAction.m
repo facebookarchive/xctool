@@ -153,12 +153,18 @@
            xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
                errorMessage:(NSString **)errorMessage
 {
+  NSMutableArray *skippedTargets = [NSMutableArray array];
   for (NSString *target in self.onlyList) {
     if ([xcodeSubjectInfo testableWithTarget:target] == nil) {
-      *errorMessage = [NSString stringWithFormat:@"build-tests: '%@' is not a testing target in this scheme.", target];
-      return NO;
+      [skippedTargets addObject:target];
     }
   }
+  if ([skippedTargets count]) {
+    *errorMessage = [NSString stringWithFormat:@"Skipping next testing targets because this scheme doesn't contain them: %@", [skippedTargets componentsJoinedByString:@", "]];
+  }
+
+  // skip missing testing targets
+  [self.onlyList removeObjectsInArray:skippedTargets];
 
   return YES;
 }
