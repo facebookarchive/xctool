@@ -34,15 +34,6 @@
 
 @implementation Options
 
-- (void)setProject:(NSString *)project
-{
-  _project = [project copy];
-}
-
-- (void)setArchivePath:(NSString *)archivePath
-{
-  _archivePath = archivePath;
-}
 
 + (NSArray *)actionClasses
 {
