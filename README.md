@@ -468,9 +468,10 @@ It's a nice way to keep things together.
   
 * __Make sure simulators run in a GUI context__.
 
-  If you are running xctool in continuous integration, the user account
-  calling xctool **must** have an active GUI context. If not, the simulator 
-  will fail to start with a cryptic warning.
+  If you are running `xctool` in continuous integration, the user account
+  calling `xctool` **must** have an active GUI context.
+  If not, the simulator will fail to start with a cryptic warning. Note that the
+  same holds true with `xcodebuild`...this is not `xctool` specific.
   
   For more information, see [this post by Jason Jarrett](http://staxmanade.com/2015/01/setting-jenkins-up-to-run-xctool-and-xcode-simulator-tests/).
 
