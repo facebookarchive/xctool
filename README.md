@@ -465,6 +465,14 @@ It's a nice way to keep things together.
   same information, and are building in the same way.
   
   ![example](https://fpotter_public.s3.amazonaws.com/xctool-shared-schemes.png)
+  
+* __Make sure simulators run in a GUI context__.
+
+  If you are running xctool in continuous integration, the user account
+  calling xctool **must** have an active GUI context. If not, the simulator 
+  will fail to start with a cryptic warning.
+  
+  For more information, see [this post by Jason Jarrett](http://staxmanade.com/2015/01/setting-jenkins-up-to-run-xctool-and-xcode-simulator-tests/).
 
 ## License
 
