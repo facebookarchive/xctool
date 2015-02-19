@@ -60,7 +60,7 @@ via _Xcode &rarr; Preferences &rarr; Downloads_.
 ## Installation
 
 xctool can be installed from homebrew via 
-```
+```bash
 brew install xctool
 ```
 
@@ -74,7 +74,7 @@ run as expected but with more attractive output.
 
 You can always get help and a full list of options with:
 
-```
+```bash
 path/to/xctool.sh -help
 ```
 
@@ -85,7 +85,7 @@ _xcodebuild_.
 
 If you use workspaces and schemes:
 
-```
+```bash
 path/to/xctool.sh \
   -workspace YourWorkspace.xcworkspace \
   -scheme YourScheme \
@@ -94,7 +94,7 @@ path/to/xctool.sh \
 
 If you use projects and schemes:
 
-```
+```bash
 path/to/xctool.sh \
   -project YourProject.xcodeproj \
   -scheme YourScheme \
@@ -115,7 +115,7 @@ or change the SDK they're run against.
 
 To build and run all tests in your scheme, you would use:
 
-```
+```bash
 path/to/xctool.sh \
   -workspace YourWorkspace.xcworkspace \
   -scheme YourScheme \
@@ -124,7 +124,7 @@ path/to/xctool.sh \
 
 To build and run just the tests in a specific target, use the `-only` option:
 
-```
+```bash
 path/to/xctool.sh \
   -workspace YourWorkspace.xcworkspace \
   -scheme YourScheme \
@@ -133,7 +133,7 @@ path/to/xctool.sh \
 
 You can go further and just run a specific test class:
 
-```
+```bash
 path/to/xctool.sh \
   -workspace YourWorkspace.xcworkspace \
   -scheme YourScheme \
@@ -142,7 +142,7 @@ path/to/xctool.sh \
 
 Or, even further and run just a single test method:
 
-```
+```bash
 path/to/xctool.sh \
   -workspace YourWorkspace.xcworkspace \
   -scheme YourScheme \
@@ -151,7 +151,7 @@ path/to/xctool.sh \
 
 You can also run tests against a different SDK:
 
-```
+```bash
 path/to/xctool.sh \
   -workspace YourWorkspace.xcworkspace \
   -scheme YourScheme \
@@ -165,7 +165,7 @@ build them without running them.  For that, use __build-tests__.
 
 For example:
 
-```
+```bash
 path/to/xctool.sh \
   -workspace YourWorkspace.xcworkspace \
   -scheme YourScheme \
@@ -174,7 +174,7 @@ path/to/xctool.sh \
 
 You can optionally just build a single test target with the `-only` option:
 
-```
+```bash
 path/to/xctool.sh \
   -workspace YourWorkspace.xcworkspace \
   -scheme YourScheme \
@@ -189,7 +189,7 @@ once but run them against multiple SDKs.
 
 To run all tests, you would use:
 
-```
+```bash
 path/to/xctool.sh \
   -workspace YourWorkspace.xcworkspace \
   -scheme YourScheme \
@@ -209,7 +209,7 @@ parallelizing our test runs.
 To allow test bundles to run concurrently, use the `-parallelize`
 option:
 
-```
+```bash
 path/to/xctool.sh \
   -workspace YourWorkspace.xcworkspace \
   -scheme YourScheme \
@@ -224,7 +224,7 @@ tests, then the above parallelism won't help much.
 You can get further gains by breaking your test execution into buckets
 using the `-logicTestBucketSize` option:
 
-```
+```bash
 path/to/xctool.sh \
   -workspace YourWorkspace.xcworkspace \
   -scheme YourScheme \
@@ -267,7 +267,7 @@ shared Scheme for use with xctool, you will need to configure a
 
 If you're using workspaces, your `.travis.yml` might be:
 
-```
+```yaml
 language: objective-c
 xcode_workspace: path/to/YourApp.xcworkspace
 xcode_scheme: YourApp
@@ -275,7 +275,7 @@ xcode_scheme: YourApp
 
 If you're using projects, your `.travis.yml` might be:
 
-```
+```yaml
 language: objective-c
 xcode_project: path/to/YourApp.xcodeproj
 xcode_scheme: YourApp
@@ -284,7 +284,7 @@ xcode_scheme: YourApp
 For more flexibility, you can also control how Travis installs and
 invokes xctool:
 
-```
+```yaml
 language: objective-c
 before_install:
     - brew update
@@ -312,7 +312,7 @@ being run by Travis CI, i.e. `TRAVIS=true` in the environment.
 
 You can choose your own reporters with the `-reporter` option:
 
-```
+```bash
 path/to/xctool.sh \
   -workspace YourWorkspace.xcworkspace \
   -scheme YourScheme \
@@ -323,7 +323,7 @@ path/to/xctool.sh \
 By default, reporters output to standard out, but you can also direct
 the output to a file by adding `:OUTPUT_PATH` after the reporter name:
 
-```
+```bash
 path/to/xctool.sh \
   -workspace YourWorkspace.xcworkspace \
   -scheme YourScheme \
@@ -359,7 +359,7 @@ objects from STDIN and write formatted results to STDOUT.
 You can invoke reporters by passing their full path via the `-reporter`
 option:
 
-```
+```bash
 path/to/xctool.sh \
   -workspace YourWorkspace.xcworkspace \
   -scheme YourScheme \
@@ -402,7 +402,7 @@ will automatically pre-populate its arguments from there.
 
 The format is just a JSON array of arguments:
 
-```
+```json
 [
   "-workspace", "YourWorkspace.xcworkspace",
   "-scheme", "YourScheme",
