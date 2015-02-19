@@ -639,6 +639,10 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
     }
   });
 
+  if (!_parallelize) {
+    // Wait for all tests to finish
+    dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+  }
 
   // Application tests are run serially on the main thread so parallelize option
   // will affect only the way reporters are notified about current status and
@@ -652,8 +656,10 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
     runTestableBlockAndSaveSuccess(block, blockAnnotation);
   }
 
-  // Wait for all tests to finish
-  dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+  if (_parallelize) {
+    // Wait for all tests to finish
+    dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+  }
 
   dispatch_release(group);
   dispatch_release(queueLimiter);
