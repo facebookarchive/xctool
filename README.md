@@ -200,6 +200,9 @@ Just as with the __test__ action, you can limit which tests are run with
 the `-only`.  And, you can change which SDK they're run against
 with the `-test-sdk`.
 
+By default application tests will wait at most 30 seconds for the simulator
+to launch. If you need to change this timeout, use the `-launch-timeout` option.
+
 #### Parallelizing Test Runs
 
 _xctool_ can optionally run unit tests in parallel, making better use of
