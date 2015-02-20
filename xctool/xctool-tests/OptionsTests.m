@@ -51,6 +51,7 @@
   assertThat(([[Options optionsFrom:@[@"-jobs", @"10"]] jobs]), equalTo(@"10"));
   assertThat(([[Options optionsFrom:@[@"-destination", @"platform=iOS Simulator"]] destination]), equalTo(@"platform=iOS Simulator"));
   assertThat(([[Options optionsFrom:@[@"-destination-timeout", @"10"]] destinationTimeout]), equalTo(@"10"));
+  assertThat(([[Options optionsFrom:@[@"-launch-timeout", @"20"]] launchTimeout]), equalTo(@"20"));
 }
 
 - (void)testReporterOptionsSetupReporters

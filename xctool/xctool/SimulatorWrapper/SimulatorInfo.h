@@ -34,6 +34,7 @@
 - (NSString *)simulatedSdkVersion;
 - (NSString *)simulatedSdkShortVersion;
 - (NSString *)simulatedSdkRootPath;
+- (NSNumber *)launchTimeout;
 
 - (DTiPhoneSimulatorSystemRoot *)systemRootForSimulatedSdk;
 

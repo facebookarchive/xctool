@@ -79,6 +79,7 @@
 
   SimulatorLauncher *launcher = [[[SimulatorLauncher alloc] initWithSessionConfig:sessionConfig
                                                                        deviceName:[simInfo simulatedDeviceInfoName]] autorelease];
+  launcher.launchTimeout = [simInfo launchTimeout];
 
   BOOL simStartedSuccessfully = [launcher launchAndWaitForStart] || [simInfo simulatedDevice].state == SimDeviceStateBooted;
   if (!simStartedSuccessfully && error) {

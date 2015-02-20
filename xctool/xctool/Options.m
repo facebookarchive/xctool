@@ -152,6 +152,11 @@
                      description:@"override the default derived data path"
                        paramName:@"PATH"
                            mapTo:@selector(setDerivedDataPath:)],
+    [Action actionOptionWithName:@"launch-timeout"
+                         aliases:nil
+                     description:@"simulator launch timeout in seconds (default is 30 seconds)"
+                       paramName:@"TIMEOUT"
+                           mapTo:@selector(setLaunchTimeout:)],
     [Action actionOptionWithMatcher:^(NSString *argument){
       // Anything that looks like KEY=VALUE should get passed to xcodebuild
       // as a command-line build setting.
@@ -643,6 +648,10 @@
   [_userDefaults enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
     [arguments addObject:[NSString stringWithFormat:@"-%@=%@", key, obj]];
   }];
+  
+  if (self.launchTimeout != nil) {
+    _buildSettings[Xcode_LAUNCH_TIMEOUT] = self.launchTimeout;
+  }
 
   return arguments;
 }

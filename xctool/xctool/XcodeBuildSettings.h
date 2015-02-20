@@ -30,3 +30,4 @@ NSString * const Xcode_TEST_HOST;
 NSString * const Xcode_TARGET_BUILD_DIR;
 NSString * const Xcode_TARGETED_DEVICE_FAMILY;
 NSString * const Xcode_IPHONEOS_DEPLOYMENT_TARGET;
+NSString * const Xcode_LAUNCH_TIMEOUT;
