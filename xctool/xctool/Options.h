@@ -47,9 +47,11 @@
 @property (nonatomic, copy) NSString *resultBundlePath;
 @property (nonatomic, copy) NSString *derivedDataPath;
 @property (nonatomic, copy) NSArray *findTargetExcludePaths;
+@property (nonatomic, copy) NSString *archivePath;
 
 @property (nonatomic, assign) BOOL showBuildSettings;
 @property (nonatomic, assign) BOOL showTasks;
+@property (nonatomic, assign) BOOL archive;
 
 @property (nonatomic, retain) NSMutableDictionary *buildSettings;
 @property (nonatomic, retain) NSMutableDictionary *userDefaults;
@@ -100,4 +102,5 @@
 - (BOOL)validateAndReturnXcodeSubjectInfo:(XcodeSubjectInfo **)xcodeSubjectInfo
                              errorMessage:(NSString **)errorMessage;
 
+- (void)addAction:(Action *)oneAction;
 @end
