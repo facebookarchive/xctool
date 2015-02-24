@@ -61,7 +61,7 @@
     NSString *outputText = [event[kReporter_EndBuildCommand_EmittedOutputTextKey]
                             stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if (outputText) {
-      NSLog(@"##teamcity[buildStatus status='FAILURE' text='%@']",outputText);
+      NSLog(@"##teamcity[buildStatus status='FAILURE' text='%@']",[TeamCityStatusMessageGenerator escapeCharacter:outputText]);
     }
     else {
       NSLog(@"##teamcity[buildStatus status='FAILURE' text='Build failed']");
