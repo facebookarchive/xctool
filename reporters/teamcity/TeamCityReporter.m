@@ -81,7 +81,7 @@
 
 -(void)endStatus:(NSDictionary *)event {
   if (event[kReporter_EndStatus_MessageKey]) {
-    NSLog(@"##teamcity[progressStart '%@']",[TeamCityStatusMessageGenerator escapeCharacter:event[kReporter_EndStatus_MessageKey]]);
+    NSLog(@"##teamcity[progressFinish '%@']",[TeamCityStatusMessageGenerator escapeCharacter:event[kReporter_EndStatus_MessageKey]]);
   }
 }
 
