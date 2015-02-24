@@ -48,6 +48,21 @@
   return [parts componentsJoinedByString:@" "];
 }
 
+- (NSString *)condensedBuildCommandOutput:(NSString *)output {
+  if ([[output substringToIndex:1] isEqualToString:@"/"]) {
+    NSRange pathRange = [output rangeOfString:@":"];
+    if (pathRange.location != NSNotFound) {
+      NSString *fileName = [[output substringToIndex:pathRange.location] lastPathComponent];
+      NSString *path = [output substringFromIndex:pathRange.location];
+      if (fileName.length > 0 && path.length > 0) {
+        return [NSString stringWithFormat:@"%@%@",fileName, path];
+      }
+    }
+  }
+    
+  return output;
+}
+
 -(void)beginBuildCommand:(NSDictionary *)event {
   if (event[kReporter_BeginBuildCommand_TitleKey]) {
     NSLog(@"##teamcity[progressStart '%@']",[TeamCityStatusMessageGenerator escapeCharacter:[self condensedBuildCommandTitle:event[kReporter_BeginBuildCommand_TitleKey]]]);
@@ -61,7 +76,7 @@
     NSString *outputText = [event[kReporter_EndBuildCommand_EmittedOutputTextKey]
                             stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if (outputText) {
-      NSLog(@"##teamcity[buildStatus status='FAILURE' text='%@']",[TeamCityStatusMessageGenerator escapeCharacter:outputText]);
+      NSLog(@"##teamcity[buildStatus status='FAILURE' text='%@']",[TeamCityStatusMessageGenerator escapeCharacter:[self condensedBuildCommandOutput:outputText]]);
     }
     else {
       NSLog(@"##teamcity[buildStatus status='FAILURE' text='Build failed']");
