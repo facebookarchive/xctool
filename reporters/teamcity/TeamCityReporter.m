@@ -33,9 +33,24 @@
 
 #pragma mark Reporter
 
+- (NSString *)condensedBuildCommandTitle:(NSString *)title {
+  NSMutableArray *parts = [NSMutableArray array];
+  NSRange pathRange = [title rangeOfString:@"/"];
+  if (pathRange.location != NSNotFound) {
+    NSString *command = [[title substringToIndex:pathRange.location] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSString *path = [title substringFromIndex:pathRange.location];
+    [parts addObject:command ?: @""];
+    [parts addObject:[path lastPathComponent] ?: @""];
+  } else {
+    [parts addObject:title];
+  }
+    
+  return [parts componentsJoinedByString:@" "];
+}
+
 -(void)beginBuildCommand:(NSDictionary *)event {
   if (event[kReporter_BeginBuildCommand_TitleKey]) {
-    NSLog(@"##teamcity[progressStart '%@']",[TeamCityStatusMessageGenerator escapeCharacter:event[kReporter_BeginBuildCommand_TitleKey]]);
+    NSLog(@"##teamcity[progressStart '%@']",[TeamCityStatusMessageGenerator escapeCharacter:[self condensedBuildCommandTitle:event[kReporter_BeginBuildCommand_TitleKey]]]);
   }
 }
 
@@ -54,7 +69,7 @@
   }
     
   if (event[kReporter_EndBuildCommand_TitleKey]) {
-    NSLog(@"##teamcity[progressFinish '%@']",[TeamCityStatusMessageGenerator escapeCharacter:event[kReporter_EndBuildCommand_TitleKey]]);
+    NSLog(@"##teamcity[progressFinish '%@']",[TeamCityStatusMessageGenerator escapeCharacter:[self condensedBuildCommandTitle:event[kReporter_BeginBuildCommand_TitleKey]]]);
   }
 }
 
