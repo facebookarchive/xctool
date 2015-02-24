@@ -9,6 +9,7 @@
 @interface TeamCityReporter ()
 
 @property (nonatomic, assign) int totalTests;
+@property (nonatomic, assign) BOOL testShouldRun;
 
 @end
 
@@ -20,6 +21,7 @@
 {
   if (self = [super init]) {
     self.totalTests = 0;
+    self.testShouldRun = NO;
   }
   return self;
 }
@@ -31,8 +33,52 @@
 
 #pragma mark Reporter
 
+-(void)beginBuildCommand:(NSDictionary *)event {
+  if (event[kReporter_BeginBuildCommand_TitleKey]) {
+    NSLog(@"##teamcity[progressStart '%@']",[TeamCityStatusMessageGenerator escapeCharacter:event[kReporter_BeginBuildCommand_TitleKey]]);
+  }
+}
+
+-(void)endBuildCommand:(NSDictionary *)event {
+  BOOL succeeded = [event[kReporter_EndBuildCommand_SucceededKey] boolValue];
+
+  if (!succeeded) {
+    NSString *outputText = [event[kReporter_EndBuildCommand_EmittedOutputTextKey]
+                            stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if (outputText) {
+      NSLog(@"##teamcity[buildStatus status='FAILURE' text='%@']",outputText);
+    }
+    else {
+      NSLog(@"##teamcity[buildStatus status='FAILURE' text='Build failed']");
+    }
+  }
+    
+  if (event[kReporter_EndBuildCommand_TitleKey]) {
+    NSLog(@"##teamcity[progressFinish '%@']",[TeamCityStatusMessageGenerator escapeCharacter:event[kReporter_EndBuildCommand_TitleKey]]);
+  }
+}
+
+-(void)beginStatus:(NSDictionary *)event {
+  if (event[kReporter_BeginStatus_MessageKey]) {
+    NSLog(@"##teamcity[progressStart '%@']",[TeamCityStatusMessageGenerator escapeCharacter:event[kReporter_BeginStatus_MessageKey]]);
+  }
+}
+
+-(void)endStatus:(NSDictionary *)event {
+  if (event[kReporter_EndStatus_MessageKey]) {
+    NSLog(@"##teamcity[progressStart '%@']",[TeamCityStatusMessageGenerator escapeCharacter:event[kReporter_EndStatus_MessageKey]]);
+  }
+}
+
+-(void)beginAction:(NSDictionary *)event {
+  if ([event[kReporter_BeginAction_NameKey] isEqualTo:@"test"]) {
+    self.testShouldRun = YES;
+  }
+}
+
 - (void)beginTestSuite:(NSDictionary *)event
 {
+  self.testShouldRun = YES;
   NSLog(@"##teamcity[testSuiteStarted name='%@']", event[kReporter_EndTestSuite_SuiteKey]);
 }
 
@@ -73,8 +119,8 @@
 - (void)didFinishReporting
 {
     
-  if (self.totalTests == 0) {
-    NSLog(@"##teamcity[buildStatus status='FAILURE' text='No tests suites executed.']");
+  if (self.testShouldRun && self.totalTests == 0) {
+    NSLog(@"##teamcity[buildStatus status='FAILURE' text='No test in test suite executed.']");
   }
   self.totalTests = 0;
 }
