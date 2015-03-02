@@ -353,12 +353,13 @@ static const NSInteger KProductTypeIpad = 2;
 
 void LoadFrameworkIfNeeded()
 {
+  static Class principalClass;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     if (![[[[NSBundle allFrameworks] valueForKeyPath:@"bundlePath"] valueForKey:@"lastPathComponent"] containsObject:@"SimulatorHost.framework"]) {
       NSString *frameworkPath = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks/SimulatorHost.framework"];
       NSBundle *bundle = [NSBundle bundleWithPath:frameworkPath];
-      [bundle principalClass];
+      principalClass = [bundle principalClass];
     }
   });
 }
