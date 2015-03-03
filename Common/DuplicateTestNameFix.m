@@ -52,6 +52,8 @@ static int TestDescriptionKey;
 static NSString *TestCase_nameOrDescription(id self, SEL cmd)
 {
   id description = objc_getAssociatedObject(self, &TestDescriptionKey);
+  description = description ?: [self performSelector:@selector(_originalDescription)];
+  description = description ?: [self performSelector:@selector(_originalName)];
   NSCAssert(description != nil, @"Value for `TestNameKey` wasn't set.");
   return description;
 }
@@ -99,6 +101,16 @@ static void ProcessTestSuite(id testSuite)
     // find, the `name` method generates the actual string, and `description`
     // just calls `name`.  We override both, because we don't know which things
     // call which.
+    Method originalDescriptionMethod = class_getClassMethod(cls, @selector(description));
+    class_addMethod(cls,
+                    @selector(_originalDescription),
+                    method_getImplementation(originalDescriptionMethod),
+                    method_getTypeEncoding(originalDescriptionMethod));
+    Method originalNameMethod = class_getClassMethod(cls, @selector(name));
+    class_addMethod(cls,
+                    @selector(_originalName),
+                    method_getImplementation(originalNameMethod),
+                    method_getTypeEncoding(originalNameMethod));
     class_replaceMethod(cls, @selector(description), (IMP)TestCase_nameOrDescription, "@@:");
     class_replaceMethod(cls, @selector(name), (IMP)TestCase_nameOrDescription, "@@:");
   }
