@@ -460,8 +460,6 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                                                               : DISPATCH_QUEUE_SERIAL);
   dispatch_group_t group = dispatch_group_create();
 
-  dispatch_queue_t scheduling_q = dispatch_queue_create("xctool.runtests.scheduler", DISPATCH_QUEUE_SERIAL);
-
   // Limits the number of simultaneously existing threads.
   //
   // There is a dispatch thread soft limit on OS X (and iOS) which is equal to 64.
@@ -626,45 +624,43 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
     }
   };
 
-  dispatch_group_async(group, scheduling_q, ^{
-    for (NSArray *annotatedBlock in blocksToRunOnDispatchQueue) {
-      dispatch_semaphore_wait(queueLimiter, DISPATCH_TIME_FOREVER);
-      dispatch_group_async(group, q, ^{
-        TestableBlock block = annotatedBlock[0];
-        NSString *blockAnnotation = annotatedBlock[1];
-        runTestableBlockAndSaveSuccess(block, blockAnnotation);
+  for (NSArray *annotatedBlock in blocksToRunOnDispatchQueue) {
+    dispatch_semaphore_wait(queueLimiter, DISPATCH_TIME_FOREVER);
+    dispatch_group_async(group, q, ^{
+      TestableBlock block = annotatedBlock[0];
+      NSString *blockAnnotation = annotatedBlock[1];
+      runTestableBlockAndSaveSuccess(block, blockAnnotation);
 
-        dispatch_semaphore_signal(queueLimiter);
-      });
-    }
-  });
-
-  if (!_parallelize) {
-    // Wait for all tests to finish
-    dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+      dispatch_semaphore_signal(queueLimiter);
+    });
   }
 
+  // Wait for logic tests to finish before we start running simulator tests.
+  dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+
+  // Resetting `_parallelize` value while running applicaiton tests.
+  //
   // Application tests are run serially on the main thread so parallelize option
   // will affect only the way reporters are notified about current status and
   // test results. If parallelize is YES then reporters won't print anything to
   // output until `block` is completed. If there is a deadlocking tests in the test
   // suite then only `[INFO] Starting <TestSuite>` will be printed w/o specifying
   // which test is actually locking test running.
+  BOOL originalParallelizeValue = _parallelize;
+  _parallelize = NO;
+
   for (NSArray *annotatedBlock in blocksToRunOnMainThread) {
     TestableBlock block = annotatedBlock[0];
     NSString *blockAnnotation = annotatedBlock[1];
     runTestableBlockAndSaveSuccess(block, blockAnnotation);
   }
 
-  if (_parallelize) {
-    // Wait for all tests to finish
-    dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
-  }
+  // Restore `_parallelize` value.
+  _parallelize = originalParallelizeValue;
 
   dispatch_release(group);
   dispatch_release(queueLimiter);
   dispatch_release(q);
-  dispatch_release(scheduling_q);
 
   return succeeded;
 }
