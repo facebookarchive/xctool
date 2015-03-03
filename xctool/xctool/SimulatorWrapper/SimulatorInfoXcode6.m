@@ -67,9 +67,9 @@ static const NSInteger KProductTypeIpad = 2;
 {
   NSString *launchTimeoutString = self.buildSettings[Xcode_LAUNCH_TIMEOUT];
   if (launchTimeoutString) {
-    return [NSNumber numberWithInt:launchTimeoutString.intValue];
+    return @(launchTimeoutString.intValue);
   }
-  return [NSNumber numberWithInt:30];
+  return @30;
 }
 
 - (NSNumber *)simulatedDeviceFamily

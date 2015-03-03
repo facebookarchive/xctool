@@ -648,7 +648,7 @@
   [_userDefaults enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
     [arguments addObject:[NSString stringWithFormat:@"-%@=%@", key, obj]];
   }];
-  
+
   if (self.launchTimeout != nil) {
     _buildSettings[Xcode_LAUNCH_TIMEOUT] = self.launchTimeout;
   }

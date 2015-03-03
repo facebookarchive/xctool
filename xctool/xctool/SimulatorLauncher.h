@@ -29,7 +29,7 @@
 }
 
 @property (nonatomic, retain) NSError *launchError;
-@property (nonatomic, retain) NSNumber *launchTimeout;
+@property (nonatomic, copy) NSNumber *launchTimeout;
 
 + (void)loadAllPlatforms;
 - (id)initWithSessionConfig:(DTiPhoneSimulatorSessionConfig *)sessionConfig

@@ -44,7 +44,7 @@
   } else {
     [parts addObject:title];
   }
-    
+
   return [parts componentsJoinedByString:@" "];
 }
 
@@ -59,7 +59,7 @@
       }
     }
   }
-    
+
   return output;
 }
 
@@ -82,7 +82,7 @@
       NSLog(@"##teamcity[buildStatus status='FAILURE' text='Build failed']");
     }
   }
-    
+
   if (event[kReporter_EndBuildCommand_TitleKey]) {
     NSLog(@"##teamcity[progressFinish '%@']",[TeamCityStatusMessageGenerator escapeCharacter:[self condensedBuildCommandTitle:event[kReporter_BeginBuildCommand_TitleKey]]]);
   }
