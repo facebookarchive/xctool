@@ -16,6 +16,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class NSConcreteTask;
+
 /**
  * Launchs a task, waits for exit, and returns a dictionary like
  * { @"stdout": "...", @"stderr": "..." }
@@ -73,3 +75,11 @@ NSTask *CreateTaskForSimulatorExecutable(NSString *sdkName,
                                          NSString *launchPath,
                                          NSArray *arguments,
                                          NSDictionary *environment);
+
+
+/**
+ * Returns a command-line expression which includes the environment, launch
+ * path, and args to reproduce a given task.
+ */
+NSString *CommandLineEquivalentForTask(NSConcreteTask *task);
+

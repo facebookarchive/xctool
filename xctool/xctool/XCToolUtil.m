@@ -377,6 +377,21 @@ BOOL LaunchXcodebuildTaskAndFeedEventsToReporters(NSTask *task,
     *errorCodeOut = errorCode;
   }
 
+  if ([task terminationReason] == NSTaskTerminationReasonUncaughtSignal) {
+    // xcodebuild crashed
+    *errorMessageOut = [NSString stringWithFormat:@"xcodebuild crashed when running the task below:\n%@.", CommandLineEquivalentForTask((NSConcreteTask *)task)];
+    *errorCodeOut = -1;
+
+    // waiting for xcodebuild crash report be generated
+    sleep(5);
+
+    // retreiving latest crash report
+    NSString *crashReportPath = LatestXcodebuildCrashReportPath();
+    if (crashReportPath && [[NSFileManager defaultManager] fileExistsAtPath:crashReportPath]) {
+      *errorMessageOut = [*errorMessageOut stringByAppendingFormat:@"\n\nLatest available xcodebuild crash report (%@):\n%@", crashReportPath, [NSString stringWithContentsOfFile:crashReportPath encoding:NSUTF8StringEncoding error:nil]];
+    }
+  }
+
   // xcodebuild's 'archive' action has a bug where the build can fail, but
   // xcodebuild will still print 'ARCHIVE SUCCEEDED' and give you an exit status
   // of 0.  To compensate, we'll only say xcodebuild succeeded if the exit status
@@ -775,4 +790,27 @@ BOOL TestableSettingsIndicatesApplicationTest(NSDictionary *settings)
   return (testHostPath != nil &&
           [[NSFileManager defaultManager] isExecutableFileAtPath:testHostPath] &&
           IsMachOExecutable(testHostPath));
+}
+
+NSString *LatestXcodebuildCrashReportPath()
+{
+  NSMutableArray *crashReports = [NSMutableArray array];
+  NSArray *directories = @[[NSHomeDirectory() stringByAppendingPathComponent:@"Library/Logs/DiagnosticReports"],
+                           @"/Library/Logs/DiagnosticReports"];
+  NSFileManager *manager = [[NSFileManager alloc] init];
+  for (NSString *directory in directories) {
+    NSDirectoryEnumerator *dirEnum = [manager enumeratorAtPath:directory];
+    NSString *file;
+    while ((file = [dirEnum nextObject])) {
+      if (![file hasPrefix:@"xcodebuild"] ||
+          ![file hasSuffix:@"crash"]) {
+        continue;
+      }
+
+      // process not sent Xcode crash
+      [crashReports addObject:[directory stringByAppendingPathComponent:file]];
+    }
+  }
+  
+  return [crashReports lastObject];
 }
