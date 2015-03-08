@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "EventGenerator.h"
 #import "FakeFileHandle.h"
@@ -22,7 +22,7 @@
 #import "ReporterEvents.h"
 #import "TextReporter.h"
 
-@interface TextReporterTests : SenTestCase
+@interface TextReporterTests : XCTestCase
 @end
 
 @implementation TextReporterTests

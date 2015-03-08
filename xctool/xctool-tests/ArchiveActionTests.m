@@ -1,5 +1,5 @@
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "FakeTask.h"
 #import "FakeTaskManager.h"
@@ -7,7 +7,7 @@
 #import "TestUtil.h"
 #import "XCTool.h"
 
-@interface ArchiveActionTests : SenTestCase
+@interface ArchiveActionTests : XCTestCase
 @end
 
 @implementation ArchiveActionTests
@@ -37,7 +37,7 @@
                        @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
                        @"-configuration", @"Release",
-                       @"archive",
+                       @"archive"//,
                        ]));
   }];
 }
@@ -69,7 +69,7 @@
     tool.arguments = @[@"-project", TEST_DATA @"TestProject-App-OSX/TestProject-App-OSX.xcodeproj",
                        @"-scheme", @"TestProject-App-OSX",
                        @"archive",
-                       @"-reporter", @"plain",
+                       @"-reporter", @"plain"
                        ];
 
     NSDictionary *output = [TestUtil runWithFakeStreams:tool];
@@ -105,7 +105,7 @@
     tool.arguments = @[@"-project", TEST_DATA @"TestProject-App-OSX/TestProject-App-OSX.xcodeproj",
                        @"-scheme", @"TestProject-App-OSX",
                        @"archive",
-                       @"-reporter", @"plain",
+@"-reporter", @"plain"
                        ];
 
     NSDictionary *output = [TestUtil runWithFakeStreams:tool];
@@ -130,8 +130,7 @@
     tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
                        @"archive",
-                       @"-reporter", @"plain",
-                       ];
+                       @"-reporter", @"plain"];
 
     [TestUtil runWithFakeStreams:tool];
 

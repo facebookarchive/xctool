@@ -1,9 +1,9 @@
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "Swizzler.h"
 
-@interface SwizzlerTests : SenTestCase
+@interface SwizzlerTests : XCTestCase
 @end
 
 @implementation SwizzlerTests

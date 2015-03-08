@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "Action.h"
 
@@ -54,7 +54,7 @@
 
 @end
 
-@interface ActionTests : SenTestCase
+@interface ActionTests : XCTestCase
 @end
 
 @implementation ActionTests

@@ -14,14 +14,14 @@
 // limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "Action.h"
 #import "ContainsArray.h"
 #import "FakeTask.h"
 #import "FakeTaskManager.h"
 #import "LaunchHandlers.h"
-#import "OCUnitTestRunner.h"
+#import "XCTestRunner.h"
 #import "Options+Testing.h"
 #import "Options.h"
 #import "RunTestsAction.h"
@@ -55,7 +55,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
   return YES;
 }
 
-@interface RunTestsActionTests : SenTestCase
+@interface RunTestsActionTests : XCTestCase
 @end
 
 @implementation RunTestsActionTests
@@ -551,10 +551,10 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                        @"-reporter", @"plain",
                        ];
 
-    __block OCUnitTestRunner *runner = nil;
+    __block XCTestRunner *runner = nil;
 
     [Swizzler whileSwizzlingSelector:@selector(runTests)
-                 forInstancesOfClass:[OCUnitTestRunner class]
+                 forInstancesOfClass:[XCTestRunner class]
                            withBlock:
      ^(id self, SEL sel){
        // Don't actually run anything and just save a reference to the runner.
@@ -605,10 +605,10 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                        @"-reporter", @"plain",
                        ];
 
-    __block OCUnitTestRunner *runner = nil;
+    __block XCTestRunner *runner = nil;
 
     [Swizzler whileSwizzlingSelector:@selector(runTests)
-                 forInstancesOfClass:[OCUnitTestRunner class]
+                 forInstancesOfClass:[XCTestRunner class]
                            withBlock:
      ^(id self, SEL sel){
        // Don't actually run anything and just save a reference to the runner.
@@ -659,10 +659,10 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                        @"-reporter", @"plain",
                        ];
 
-    __block OCUnitTestRunner *runner = nil;
+    __block XCTestRunner *runner = nil;
 
     [Swizzler whileSwizzlingSelector:@selector(runTests)
-                 forInstancesOfClass:[OCUnitTestRunner class]
+                 forInstancesOfClass:[XCTestRunner class]
                            withBlock:
      ^(id self, SEL sel){
        // Don't actually run anything and just save a reference to the runner.

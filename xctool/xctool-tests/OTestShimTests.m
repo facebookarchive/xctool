@@ -14,20 +14,20 @@
 // limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "ContainsAssertionFailure.h"
-#import "OCUnitIOSLogicTestQueryRunner.h"
-#import "OCUnitIOSLogicTestRunner.h"
-#import "OCUnitOSXLogicTestQueryRunner.h"
-#import "OCUnitOSXLogicTestRunner.h"
+#import "XCIOSLogicTestQueryRunner.h"
+#import "XCIOSLogicTestRunner.h"
+#import "XCOSXLogicTestQueryRunner.h"
+#import "XCOSXLogicTestRunner.h"
 #import "ReporterEvents.h"
 #import "TaskUtil.h"
 #import "TestUtil.h"
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
 
-@interface OTestShimTests : SenTestCase
+@interface OTestShimTests : XCTestCase
 @end
 
 static NSArray *AllTestCasesInTestBundle(NSString *sdkName,
@@ -43,7 +43,7 @@ static NSArray *AllTestCasesInTestBundle(NSString *sdkName,
                                   Xcode_FULL_PRODUCT_NAME : fullProductName,
                                   Xcode_SDK_NAME : latestSDK,
                                   };
-  OCUnitTestQueryRunner *runner = [[[testQueryClass alloc] initWithBuildSettings:buildSettings
+  XCTestQueryRunner *runner = [[[testQueryClass alloc] initWithBuildSettings:buildSettings
                                                                      withCpuType:CPU_TYPE_ANY] autorelease];
   NSArray *allTests = [runner runQueryWithError:&error];
   NSCAssert(error == nil, @"Error while querying test cases: %@", error);
@@ -54,14 +54,14 @@ static NSArray *AllTestCasesInTestBundle(NSString *sdkName,
 static NSArray *AllTestCasesInTestBundleOSX(NSString *bundlePath)
 {
   return AllTestCasesInTestBundle(@"macosx",
-                                  [OCUnitOSXLogicTestQueryRunner class],
+                                  [XCOSXLogicTestQueryRunner class],
                                   bundlePath);
 }
 
 static NSArray *AllTestCasesInTestBundleIOS(NSString *bundlePath)
 {
   return AllTestCasesInTestBundle(@"iphonesimulator",
-                                  [OCUnitIOSLogicTestQueryRunner class],
+                                  [XCIOSLogicTestQueryRunner class],
                                   bundlePath);
 }
 
@@ -103,7 +103,7 @@ static NSTask *OtestShimTask(NSString *platformName,
   targetSettings[Xcode_SDK_NAME] = [GetAvailableSDKsAndAliases() objectForKey:[platformName lowercaseString]];
 
   // set up an OCUnitIOSLogicTestRunner
-  OCUnitIOSLogicTestRunner *runner = [[testRunnerClass alloc] initWithBuildSettings:targetSettings
+  XCIOSLogicTestRunner *runner = [[testRunnerClass alloc] initWithBuildSettings:targetSettings
                                                                    focusedTestCases:focusedTests
                                                                        allTestCases:allTests
                                                                           arguments:@[]
@@ -127,7 +127,7 @@ static NSTask *OtestShimTask(NSString *platformName,
 static NSTask *OtestShimTaskIOS(NSString *settingsPath, NSString *targetName, NSString *bundlePath, NSArray *focusedTests, NSArray *allTests)
 {
   return OtestShimTask(@"iPhoneSimulator",
-                       [OCUnitIOSLogicTestRunner class],
+                       [XCIOSLogicTestRunner class],
                        settingsPath,
                        targetName,
                        bundlePath,
@@ -138,7 +138,7 @@ static NSTask *OtestShimTaskIOS(NSString *settingsPath, NSString *targetName, NS
 static NSTask *OtestShimTaskOSX(NSString *settingsPath, NSString *targetName, NSString *bundlePath, NSArray *focusedTests, NSArray *allTests)
 {
   return OtestShimTask(@"MacOSX",
-                       [OCUnitOSXLogicTestRunner class],
+                       [XCOSXLogicTestRunner class],
                        settingsPath,
                        targetName,
                        bundlePath,

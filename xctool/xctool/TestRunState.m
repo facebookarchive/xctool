@@ -18,8 +18,8 @@
 
 #import <QuartzCore/QuartzCore.h>
 
-#import "OCTestEventState.h"
-#import "OCTestSuiteEventState.h"
+#import "XCTestEventState.h"
+#import "XCTestSuiteEventState.h"
 #import "ReporterEvents.h"
 #import "XCToolUtil.h"
 
@@ -31,7 +31,7 @@
   self = [super init];
   if (self) {
     _testSuiteState =
-      [[OCTestSuiteEventState alloc] initWithName:kReporter_TestSuite_TopLevelSuiteName
+      [[XCTestSuiteEventState alloc] initWithName:kReporter_TestSuite_TopLevelSuiteName
                                         reporters:reporters];
     [_testSuiteState addTestsFromArray:testList];
     _outputBeforeTestsStart = [[NSMutableString alloc] init];
@@ -39,7 +39,7 @@
   return self;
 }
 
-- (instancetype)initWithTestSuiteEventState:(OCTestSuiteEventState *)suiteState
+- (instancetype)initWithTestSuiteEventState:(XCTestSuiteEventState *)suiteState
 {
   self = [super init];
   if (self) {
@@ -67,7 +67,7 @@
 {
   unsigned int numPassed = 0;
   for (int i = 0; i < [_testSuiteState.tests count]; i++) {
-    OCTestEventState *testState = _testSuiteState.tests[i];
+    XCTestEventState *testState = _testSuiteState.tests[i];
     if (testState.isSuccessful) {
       numPassed++;
     }
@@ -109,7 +109,7 @@
 {
   NSAssert(_testSuiteState, @"Starting test without a test suite");
   NSString *testName = event[kReporter_BeginTest_TestKey];
-  OCTestEventState *state = [_testSuiteState getTestWithTestName:testName];
+  XCTestEventState *state = [_testSuiteState getTestWithTestName:testName];
   NSAssert(state, @"Can't find test state for '%@', check senTestList", testName);
   [state stateBeginTest];
 
@@ -120,7 +120,7 @@
 {
   NSAssert(_testSuiteState, @"Ending test without a test suite");
   NSString *testName = event[kReporter_EndTest_TestKey];
-  OCTestEventState *state = [_testSuiteState getTestWithTestName:testName];
+  XCTestEventState *state = [_testSuiteState getTestWithTestName:testName];
   NSAssert(state, @"Can't find test state for '%@', check senTestList", testName);
   [state stateEndTest:[event[kReporter_EndTest_SucceededKey] intValue]
                result:event[kReporter_EndTest_ResultKey]
@@ -142,7 +142,7 @@
 
 - (void)testOutput:(NSDictionary *)event
 {
-  OCTestEventState *test = [_testSuiteState runningTest];
+  XCTestEventState *test = [_testSuiteState runningTest];
   NSAssert(test, @"Got output with no test running");
   [test stateTestOutput:event[kReporter_TestOutput_OutputKey]];
   
@@ -155,7 +155,7 @@
                                                     withObject:[NSString stringWithFormat:@"Test did not run: %@", startupError]];
 
   // Insert a place holder test to hold detailed error info.
-  OCTestEventState *fakeTest = [[[OCTestEventState alloc] initWithInputName:@"TEST_BUNDLE/FAILED_TO_START"] autorelease];
+  XCTestEventState *fakeTest = [[[XCTestEventState alloc] initWithInputName:@"TEST_BUNDLE/FAILED_TO_START"] autorelease];
   // Append crash reports (if any) to the place holder test.
   NSString *fakeTestOutput = [NSString stringWithFormat:
                               @"There was a problem starting the test bundle: %@\n"
@@ -171,7 +171,7 @@
 - (void)handleCrashBeforeAnyTestsRanWithOtherErrors:(NSString *)otherErrors
 {
   // The test runner crashed before any tests ran.
-  OCTestEventState *fakeTest = [[[OCTestEventState alloc] initWithInputName:@"FAILED_BEFORE/TESTS_RAN"] autorelease];
+  XCTestEventState *fakeTest = [[[XCTestEventState alloc] initWithInputName:@"FAILED_BEFORE/TESTS_RAN"] autorelease];
   [_testSuiteState insertTest:fakeTest atIndex:0];
 
   // All tests should include this message.
@@ -222,7 +222,7 @@
                               [self collectCrashReports:_crashReportsAtStart]];
   fakeTestOutput = [fakeTestOutput stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 
-  OCTestEventState *fakeTest = [[[OCTestEventState alloc] initWithInputName:fakeTestName] autorelease];
+  XCTestEventState *fakeTest = [[[XCTestEventState alloc] initWithInputName:fakeTestName] autorelease];
   [fakeTest appendOutput:fakeTestOutput];
 
   [_testSuiteState insertTest:fakeTest atIndex:previousTestStateIndex + 1];

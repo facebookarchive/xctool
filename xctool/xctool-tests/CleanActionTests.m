@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "Action.h"
 #import "FakeTask.h"
@@ -30,7 +30,7 @@
 #import "XCToolUtil.h"
 #import "xcodeSubjectInfo.h"
 
-@interface CleanActionTests : SenTestCase
+@interface CleanActionTests : XCTestCase
 @end
 
 @implementation CleanActionTests
@@ -60,8 +60,7 @@
     tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
                        @"clean",
-                       @"-reporter", @"plain",
-                       ];
+@"-reporter", @"plain"                       ];
 
     [Swizzler whileSwizzlingSelector:@selector(schemeGenerator)
                             forClass:[SchemeGenerator class]
@@ -106,8 +105,7 @@
     tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
                        @"clean",
-                       @"-reporter", @"plain",
-                       ];
+@"-reporter", @"plain"                       ];
 
     [TestUtil runWithFakeStreams:tool];
 

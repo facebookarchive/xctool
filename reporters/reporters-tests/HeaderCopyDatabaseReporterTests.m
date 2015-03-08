@@ -14,12 +14,12 @@
 // limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "HeaderCopyDatabaseReporter.h"
 #import "Reporter+Testing.h"
 
-@interface HeaderCopyDatabaseReporterTests : SenTestCase
+@interface HeaderCopyDatabaseReporterTests : XCTestCase
 @end
 
 @implementation HeaderCopyDatabaseReporterTests
@@ -36,18 +36,18 @@
       c++;
     }
   }
-  STAssertEquals((NSUInteger)1, c, @"expecting one line");
+  XCTAssertEqual((NSUInteger)1, c, @"expecting one line");
 
   NSError *jsonSerializationError;
   id jsonObject = [NSJSONSerialization JSONObjectWithData:outputData options:0 error:&jsonSerializationError];
-  STAssertNotNil(jsonObject, @"cannot deserialize events file %@", jsonSerializationError.localizedDescription);
+  XCTAssertNotNil(jsonObject, @"cannot deserialize events file %@", jsonSerializationError.localizedDescription);
 
-  STAssertTrue([jsonObject isKindOfClass:[NSDictionary class]], @"header copy database json object should be a dictionary");
+  XCTAssertTrue([jsonObject isKindOfClass:[NSDictionary class]], @"header copy database json object should be a dictionary");
   NSDictionary *jsonDict = (NSDictionary *)jsonObject;
 
-  STAssertEquals((NSUInteger)1, [jsonDict count], @"expecting one entry in the dictionary.");
+  XCTAssertEqual((NSUInteger)1, [jsonDict count], @"expecting one entry in the dictionary.");
   // Note that we include all copied objects. What we have here is not a header.
-  STAssertEqualObjects([jsonDict objectForKey:
+  XCTAssertEqualObjects([jsonDict objectForKey:
     @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-App-OSX-ejhuwpipipihzubmntcipqbqtwct/Build/\
 Intermediates/ArchiveIntermediates/TestProject-App-OSX/InstallationBuildProductsLocation/Applications/\
 TestProject-App-OSX.app/Contents/Resources/en.lproj/Credits.rtf"],

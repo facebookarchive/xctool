@@ -114,7 +114,11 @@
 
   [_task setLaunchPath:_reporterPath];
   [_task setArguments:@[]];
-  [_task setStandardInput:_pipe];
+  
+  //if ([_task isKindOfClass:[FakeTask Class]]) {
+    [_task setStandardInput:_pipe];
+  //}
+    
   [_task setStandardOutput:outputHandle];
 
   @try {

@@ -325,8 +325,8 @@ NSDictionary *GetAvailableSDKsAndAliases()
 BOOL IsRunningUnderTest()
 {
   NSString *processName = [[NSProcessInfo processInfo] processName];
-  return ([processName isEqualToString:@"otest"] ||
-          [processName isEqualToString:@"otest-x86_64"]);
+  return ([processName isEqualToString:@"xctest"] ||
+          [processName isEqualToString:@"xctest-x86_64"]);
 }
 
 BOOL LaunchXcodebuildTaskAndFeedEventsToReporters(NSTask *task,
