@@ -104,7 +104,7 @@
   }];
 }
 
-- (void)testRunBlockWithFakeTasksPropogatesExceptionsAndDisablesFakeTasks
+- (void)testRunBlockWithFakeTasksPropagatesExceptionsAndDisablesFakeTasks
 {
   @try {
     [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
