@@ -69,13 +69,6 @@
 		EE9E73E317A7323B008A5ED2 /* TestResultCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE9E73E217A7323B008A5ED2 /* TestResultCounter.m */; };
 		EE9E73E417A732F0008A5ED2 /* TestResultCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE9E73E217A7323B008A5ED2 /* TestResultCounter.m */; };
 		EE9E73E517A73308008A5ED2 /* TestResultCounter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE9E73E217A7323B008A5ED2 /* TestResultCounter.m */; };
-		FBF294FB19D0D1CF00A814F5 /* HeaderCopyDatabaseReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = FBF294EC19D0D0FD00A814F5 /* HeaderCopyDatabaseReporter.m */; };
-		FBF294FC19D0D29800A814F5 /* HeaderCopyDatabaseReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = FBF294EC19D0D0FD00A814F5 /* HeaderCopyDatabaseReporter.m */; };
-		FBF294FD19D0D50600A814F5 /* EventGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D74F1815A13400E68652 /* EventGenerator.m */; };
-		FBF294FE19D0D50600A814F5 /* NSFileHandle+Print.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F489F517973B7100068E00 /* NSFileHandle+Print.m */; };
-		FBF294FF19D0D50600A814F5 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE61734617E284DD00F02C91 /* Reporter.m */; };
-		FBF2950119D0E05B00A814F5 /* HeaderCopyDatabaseReporterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FBF2950019D0E05B00A814F5 /* HeaderCopyDatabaseReporterTests.m */; };
-		FBF2950219D0F7FA00A814F5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FBF294ED19D0D0FD00A814F5 /* main.m */; };
 		FD023B1C1959ADA800947C28 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE61734617E284DD00F02C91 /* Reporter.m */; };
 		FD023B1D1959ADA800947C28 /* NSFileHandle+Print.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F489F517973B7100068E00 /* NSFileHandle+Print.m */; };
 		FD023B1F1959ADA800947C28 /* EventGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D74F1815A13400E68652 /* EventGenerator.m */; };
@@ -162,15 +155,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
-		FBF294F219D0D1B400A814F5 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
 		FD023B231959ADA800947C28 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -237,11 +221,6 @@
 		EE61734617E284DD00F02C91 /* Reporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reporter.m; path = ../Common/Reporter.m; sourceTree = "<group>"; };
 		EE9E73E117A7323B008A5ED2 /* TestResultCounter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestResultCounter.h; sourceTree = "<group>"; };
 		EE9E73E217A7323B008A5ED2 /* TestResultCounter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestResultCounter.m; sourceTree = "<group>"; };
-		FBF294EB19D0D0FD00A814F5 /* HeaderCopyDatabaseReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HeaderCopyDatabaseReporter.h; path = "header-copy-database/HeaderCopyDatabaseReporter.h"; sourceTree = "<group>"; };
-		FBF294EC19D0D0FD00A814F5 /* HeaderCopyDatabaseReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HeaderCopyDatabaseReporter.m; path = "header-copy-database/HeaderCopyDatabaseReporter.m"; sourceTree = "<group>"; };
-		FBF294ED19D0D0FD00A814F5 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = "header-copy-database/main.m"; sourceTree = "<group>"; };
-		FBF294F419D0D1B400A814F5 /* header-copy-database */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "header-copy-database"; sourceTree = BUILT_PRODUCTS_DIR; };
-		FBF2950019D0E05B00A814F5 /* HeaderCopyDatabaseReporterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeaderCopyDatabaseReporterTests.m; sourceTree = "<group>"; };
 		FD023B271959ADA900947C28 /* teamcity */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = teamcity; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD023B291959ADFB00947C28 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = teamcity/main.m; sourceTree = "<group>"; };
 		FD023B2A1959ADFB00947C28 /* TeamCityReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TeamCityReporter.h; path = teamcity/TeamCityReporter.h; sourceTree = "<group>"; };
@@ -318,13 +297,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FBF294F119D0D1B400A814F5 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		FD023B211959ADA800947C28 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -349,7 +321,6 @@
 				28F48A2417974D4100068E00 /* junit */,
 				28F48A3D17974EF600068E00 /* json-compilation-database */,
 				28F48A55179750A600068E00 /* json-stream */,
-				FBF294EA19D0D0DF00A814F5 /* header-copy-database */,
 				CCC0AAEC18EC89AE004FD861 /* user-notifications */,
 				2893A94E17960CD400EFBD28 /* Frameworks */,
 				2893A94D17960CD400EFBD28 /* Products */,
@@ -368,7 +339,6 @@
 				28F48A53179750A600068E00 /* json-stream */,
 				CCC0AB0018EC8AC4004FD861 /* user-notifications */,
 				FD023B271959ADA900947C28 /* teamcity */,
-				FBF294F419D0D1B400A814F5 /* header-copy-database */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -404,7 +374,6 @@
 				28F48A1B1797462400068E00 /* PhabricatorReporterTests.m */,
 				2893A95817960CD400EFBD28 /* Supporting Files */,
 				28F489EF1797388400068E00 /* TextReporterTests.m */,
-				FBF2950019D0E05B00A814F5 /* HeaderCopyDatabaseReporterTests.m */,
 			);
 			path = "reporters-tests";
 			sourceTree = "<group>";
@@ -503,16 +472,6 @@
 				CC8AA20518F368EE00D9F322 /* user-notifications-Info.plist */,
 			);
 			name = "user-notifications";
-			sourceTree = "<group>";
-		};
-		FBF294EA19D0D0DF00A814F5 /* header-copy-database */ = {
-			isa = PBXGroup;
-			children = (
-				FBF294EB19D0D0FD00A814F5 /* HeaderCopyDatabaseReporter.h */,
-				FBF294EC19D0D0FD00A814F5 /* HeaderCopyDatabaseReporter.m */,
-				FBF294ED19D0D0FD00A814F5 /* main.m */,
-			);
-			name = "header-copy-database";
 			sourceTree = "<group>";
 		};
 		FD023B281959ADCD00947C28 /* teamcity */ = {
@@ -667,23 +626,6 @@
 			productReference = CCC0AB0018EC8AC4004FD861 /* user-notifications */;
 			productType = "com.apple.product-type.tool";
 		};
-		FBF294F319D0D1B400A814F5 /* header-copy-database */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = FBF294F819D0D1B400A814F5 /* Build configuration list for PBXNativeTarget "header-copy-database" */;
-			buildPhases = (
-				FBF294F019D0D1B400A814F5 /* Sources */,
-				FBF294F119D0D1B400A814F5 /* Frameworks */,
-				FBF294F219D0D1B400A814F5 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "header-copy-database";
-			productName = "header-copy-database";
-			productReference = FBF294F419D0D1B400A814F5 /* header-copy-database */;
-			productType = "com.apple.product-type.tool";
-		};
 		FD023B1A1959ADA800947C28 /* teamcity */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = FD023B241959ADA800947C28 /* Build configuration list for PBXNativeTarget "teamcity" */;
@@ -708,11 +650,6 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0600;
-				TargetAttributes = {
-					FBF294F319D0D1B400A814F5 = {
-						CreatedOnToolsVersion = 6.0;
-					};
-				};
 			};
 			buildConfigurationList = 2893A94117960CAD00EFBD28 /* Build configuration list for PBXProject "reporters" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -733,7 +670,6 @@
 				28F48A2117974D4100068E00 /* junit */,
 				28F48A3A17974EF600068E00 /* json-compilation-database */,
 				28F48A52179750A500068E00 /* json-stream */,
-				FBF294F319D0D1B400A814F5 /* header-copy-database */,
 				CCC0AAF518EC8AC4004FD861 /* user-notifications */,
 				FD023B1A1959ADA800947C28 /* teamcity */,
 			);
@@ -771,10 +707,8 @@
 				FD023B2E1959ADFC00947C28 /* TeamCityReporter.m in Sources */,
 				28F48A3517974EA000068E00 /* JUnitReporterTests.m in Sources */,
 				EE61734717E284DD00F02C91 /* Reporter.m in Sources */,
-				FBF294FC19D0D29800A814F5 /* HeaderCopyDatabaseReporter.m in Sources */,
 				28F48A4A17974F3F00068E00 /* JSONCompilationDatabaseReporter.m in Sources */,
 				28F48A4D17974FEB00068E00 /* JSONCompilationDatabaseReporterTests.m in Sources */,
-				FBF2950119D0E05B00A814F5 /* HeaderCopyDatabaseReporterTests.m in Sources */,
 				EE9E73E317A7323B008A5ED2 /* TestResultCounter.m in Sources */,
 				CCC0AAF418EC8A92004FD861 /* UserNotificationsReporter.m in Sources */,
 			);
@@ -857,18 +791,6 @@
 				CCC0AB0518EC931C004FD861 /* main.m in Sources */,
 				CCC0AB0218EC8C6A004FD861 /* UserNotificationsReporter.m in Sources */,
 				CCC0AAF818EC8AC4004FD861 /* Reporter.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		FBF294F019D0D1B400A814F5 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				FBF2950219D0F7FA00A814F5 /* main.m in Sources */,
-				FBF294FD19D0D50600A814F5 /* EventGenerator.m in Sources */,
-				FBF294FE19D0D50600A814F5 /* NSFileHandle+Print.m in Sources */,
-				FBF294FF19D0D50600A814F5 /* Reporter.m in Sources */,
-				FBF294FB19D0D1CF00A814F5 /* HeaderCopyDatabaseReporter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1401,18 +1323,6 @@
 			};
 			name = Release;
 		};
-		FBF294F919D0D1B400A814F5 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-			};
-			name = Debug;
-		};
-		FBF294FA19D0D1B400A814F5 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-			};
-			name = Release;
-		};
 		FD023B251959ADA800947C28 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1550,15 +1460,6 @@
 			buildConfigurations = (
 				CCC0AAFE18EC8AC4004FD861 /* Debug */,
 				CCC0AAFF18EC8AC4004FD861 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		FBF294F819D0D1B400A814F5 /* Build configuration list for PBXNativeTarget "header-copy-database" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				FBF294F919D0D1B400A814F5 /* Debug */,
-				FBF294FA19D0D1B400A814F5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
