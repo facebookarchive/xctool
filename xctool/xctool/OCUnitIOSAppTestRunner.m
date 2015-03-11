@@ -209,11 +209,11 @@ static const NSInteger kMaxRunTestsAttempts = 3;
   for (NSInteger remainingAttempts = kMaxRunTestsAttempts - 1; remainingAttempts >= 0; --remainingAttempts) {
     NSError *error = nil;
     BOOL infraSucceeded = [SimulatorWrapper runHostAppTests:testHostAppPath
-                        simulatorInfo:self.simulatorInfo
-                        appLaunchArgs:[self testArguments]
-                 appLaunchEnvironment:[self otestEnvironmentWithOverrides:[self.simulatorInfo simulatorLaunchEnvironment]]
-                    feedOutputToBlock:outputLineBlock
-                                error:&error];
+                                              simulatorInfo:self.simulatorInfo
+                                              appLaunchArgs:[self testArguments]
+                                       appLaunchEnvironment:[self otestEnvironmentWithOverrides:[self.simulatorInfo simulatorLaunchEnvironment]]
+                                          feedOutputToBlock:outputLineBlock
+                                                      error:&error];
 
     if (infraSucceeded) {
       break;

@@ -34,7 +34,14 @@
                                                applicationLaunchEnvironment:(NSDictionary *)launchEnvironment
                                                                  outputPath:(NSString *)outputPath
 {
-  DTiPhoneSimulatorSessionConfig *sessionConfig = [SimulatorWrapper sessionConfigForRunningTestsOnSimulator:simInfo applicationLaunchArgs:launchArgs applicationLaunchEnvironment:launchEnvironment outputPath:outputPath];
+  NSDictionary *deviceEnvironment = [[simInfo simulatedDevice] environment] ?: @{};
+  NSMutableDictionary *launchEnvironmentEdited = [[deviceEnvironment mutableCopy] autorelease];
+  [launchEnvironmentEdited addEntriesFromDictionary:launchEnvironment];
+  if (deviceEnvironment[@"TMPDIR"]) {
+    launchEnvironmentEdited[@"TMPDIR"] = deviceEnvironment[@"TMPDIR"];
+  }
+
+  DTiPhoneSimulatorSessionConfig *sessionConfig = [SimulatorWrapper sessionConfigForRunningTestsOnSimulator:simInfo applicationLaunchArgs:launchArgs applicationLaunchEnvironment:launchEnvironmentEdited outputPath:outputPath];
 
   [sessionConfig setDevice:[simInfo simulatedDevice]];
   [sessionConfig setRuntime:[simInfo simulatedRuntime]];
