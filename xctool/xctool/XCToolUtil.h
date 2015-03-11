@@ -211,3 +211,8 @@ NSString *MakeTemporaryDirectory(NSString *nameTemplate);
  * i.e. we have a TEST_HOST, and that TEST_HOST refers to an executable.
  */
 BOOL TestableSettingsIndicatesApplicationTest(NSDictionary *settings);
+
+/**
+ * Returns path to the latest xcodebuild crash report or nil.
+ */
+NSString *LatestXcodebuildCrashReportPath();

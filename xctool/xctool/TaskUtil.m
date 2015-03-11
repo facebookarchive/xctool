@@ -351,10 +351,6 @@ static NSString *CommandLineEquivalentForTaskArchGenericTask(NSConcreteTask *tas
   return buffer;
 }
 
-/**
- * Returns a command-line expression which includes the environment, launch
- * path, and args to reproduce a given task.
- */
 NSString *CommandLineEquivalentForTask(NSConcreteTask *task)
 {
   NSCAssert(task.launchPath != nil, @"Should have a launchPath");
