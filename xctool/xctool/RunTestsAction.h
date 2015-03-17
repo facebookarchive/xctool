@@ -53,6 +53,7 @@ typedef enum {
   int _logicTestBucketSize;
   int _appTestBucketSize;
   BucketBy _bucketBy;
+  int _testTimeout;
 }
 
 @property (nonatomic, assign) BOOL freshSimulator;
@@ -70,6 +71,7 @@ typedef enum {
 - (void)setLogicTestBucketSize:(NSString *)str;
 - (void)setAppTestBucketSize:(NSString *)str;
 - (void)setBucketBy:(NSString *)str;
+- (void)setTestTimeout:(NSString *)str;
 
 @end
 

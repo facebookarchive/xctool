@@ -112,6 +112,7 @@
                      @"SomeTests/testOutputMerging",
                      @"SomeTests/testPrintSDK",
                      @"SomeTests/testStream",
+                     @"SomeTests/testTimeout",
                      @"SomeTests/testWillFail",
                      @"SomeTests/testWillPass",
                      ]));

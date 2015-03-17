@@ -344,13 +344,47 @@ static void XCToolLog_testCaseDidFail(NSDictionary *exceptionInfo)
 
 static void XCPerformTestWithSuppressedExpectedAssertionFailures(id self, SEL origSel, id arg1)
 {
+  static int timeout = 0;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    const char *testTimeoutKey = "OTEST_SHIM_TEST_TIMEOUT";
+    if (getenv(testTimeoutKey)) {
+      if (sscanf(getenv(testTimeoutKey), "%d", &timeout) != 1) {
+        timeout = 0;
+      }
+    }
+  });
+
   NSAssertionHandler *handler = [[XCToolAssertionHandler alloc] init];
   NSThread *currentThread = [NSThread currentThread];
   NSMutableDictionary *currentThreadDict = [currentThread threadDictionary];
   [currentThreadDict setObject:handler forKey:NSAssertionHandlerKey];
 
-  // Call through original implementation
-  objc_msgSend(self, origSel, arg1);
+  if (timeout > 0) {
+    int64_t interval = timeout * NSEC_PER_SEC;
+    NSString *queueName = [NSString stringWithFormat:@"test.timer.%p", self];
+    dispatch_queue_t queue = dispatch_queue_create([queueName cStringUsingEncoding:NSASCIIStringEncoding], DISPATCH_QUEUE_SERIAL);
+    dispatch_set_target_queue(queue, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0));
+    dispatch_source_t source = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
+    dispatch_source_set_timer(source, dispatch_time(DISPATCH_TIME_NOW, interval), 0, 0);
+    dispatch_source_set_event_handler(source, ^{
+      [NSException raise:NSInternalInconsistencyException
+                  format:@"*** Test %@ ran longer than specified test time limit: %d second(s)", self, timeout];
+    });
+    dispatch_resume(source);
+
+    // Call through original implementation
+    objc_msgSend(self, origSel, arg1);
+
+    dispatch_async(queue, ^{
+      dispatch_source_cancel(source);
+      dispatch_release(source);
+      dispatch_release(queue);
+    });
+  } else {
+    // Call through original implementation
+    objc_msgSend(self, origSel, arg1);
+  }
 
   // The assertion handler hasn't been touched for our test, so we can safely remove it.
   [currentThreadDict removeObjectForKey:NSAssertionHandlerKey];

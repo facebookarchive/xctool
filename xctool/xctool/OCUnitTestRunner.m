@@ -81,6 +81,7 @@
              freshSimulator:(BOOL)freshSimulator
              resetSimulator:(BOOL)resetSimulator
                freshInstall:(BOOL)freshInstall
+                testTimeout:(NSInteger)testTimeout
                   reporters:(NSArray *)reporters
 {
   if (self = [super init]) {
@@ -92,6 +93,7 @@
     _freshSimulator = freshSimulator;
     _resetSimulator = resetSimulator;
     _freshInstall = freshInstall;
+    _testTimeout = testTimeout;
     _reporters = [reporters retain];
     _framework = [FrameworkInfoForTestBundleAtPath([self testBundlePath]) retain];
     _cpuType = CPU_TYPE_ANY;
@@ -240,12 +242,19 @@
 {
   NSMutableDictionary *env = [NSMutableDictionary dictionary];
 
+  NSMutableDictionary *internalEnvironment = [NSMutableDictionary dictionary];
+  if (_testTimeout > 0) {
+    internalEnvironment[@"OTEST_SHIM_TEST_TIMEOUT"] = @(_testTimeout);
+  }
+
   NSArray *layers = @[
                       // Xcode will let your regular environment pass-thru to
                       // the test.
                       [[NSProcessInfo processInfo] environment],
                       // Any special environment vars set in the scheme.
                       _environment,
+                      // Internal environment that should be passed to xctool libs
+                      internalEnvironment,
                       // Whatever values we need to make the test run at all for
                       // ios/mac or logic/application tests.
                       overrides,

@@ -151,6 +151,12 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
                          aliases:nil
                      description:@"Skip actual test running and list them only."
                          setFlag:@selector(setListTestsOnly:)],
+    [Action actionOptionWithName:@"testTimeout"
+                         aliases:nil
+                     description:
+     @"Force individual test cases to be killed after specified timeout."
+                       paramName:@"N"
+                           mapTo:@selector(setTestTimeout:)],
     ];
 }
 
@@ -161,6 +167,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
     _logicTestBucketSize = 0;
     _appTestBucketSize = 0;
     _bucketBy = BucketByTestCase;
+    _testTimeout = 0;
     _cpuType = CPU_TYPE_ANY;
   }
   return self;
@@ -194,6 +201,11 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
   } else {
     _bucketBy = BucketByTestCase;
   }
+}
+
+- (void)setTestTimeout:(NSString *)str
+{
+  _testTimeout = [str intValue];
 }
 
 - (NSArray *)onlyListAsTargetsAndSenTestList
@@ -419,6 +431,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                                      freshSimulator:self.freshSimulator
                                      resetSimulator:self.resetSimulator
                                      freshInstall:self.freshInstall
+                                     testTimeout:_testTimeout
                                      reporters:reporters] autorelease];
     [testRunner setCpuType:_cpuType];
 

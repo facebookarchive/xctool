@@ -363,7 +363,10 @@
 		AA318BD517E98F2F00BF159E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				ARCHS = (
+					armv7,
+					armv7s,
+				);
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -377,6 +380,7 @@
 				);
 				INFOPLIST_FILE = "TestProject-Library-XCTest-iOSTests/TestProject-Library-XCTest-iOSTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Debug;
@@ -384,7 +388,10 @@
 		AA318BD617E98F2F00BF159E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				ARCHS = (
+					armv7,
+					armv7s,
+				);
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -394,6 +401,7 @@
 				GCC_PREFIX_HEADER = "TestProject-Library-XCTest-iOS/TestProject-Library-XCTest-iOS-Prefix.pch";
 				INFOPLIST_FILE = "TestProject-Library-XCTest-iOSTests/TestProject-Library-XCTest-iOSTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Release;
@@ -417,6 +425,7 @@
 				AA318BD317E98F2F00BF159E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		AA318BD417E98F2F00BF159E /* Build configuration list for PBXNativeTarget "TestProject-Library-XCTest-iOSTests" */ = {
 			isa = XCConfigurationList;
@@ -425,6 +434,7 @@
 				AA318BD617E98F2F00BF159E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

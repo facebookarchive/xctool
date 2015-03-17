@@ -181,7 +181,7 @@
 			name = "TestProject-LibraryTests";
 			productName = "TestProject-LibraryTests";
 			productReference = 2828293116B11F0F00426B92 /* TestProject-LibraryTests.octest */;
-			productType = "com.apple.product-type.bundle";
+			productType = "com.apple.product-type.bundle.ocunit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -340,6 +340,10 @@
 		2828294916B11F0F00426B92 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					armv7,
+					armv7s,
+				);
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
@@ -348,6 +352,7 @@
 				GCC_PREFIX_HEADER = "TestProject-Library/TestProject-Library-Prefix.pch";
 				INFOPLIST_FILE = "TestProject-LibraryTests/TestProject-LibraryTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
@@ -355,6 +360,10 @@
 		2828294A16B11F0F00426B92 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					armv7,
+					armv7s,
+				);
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
@@ -363,6 +372,7 @@
 				GCC_PREFIX_HEADER = "TestProject-Library/TestProject-Library-Prefix.pch";
 				INFOPLIST_FILE = "TestProject-LibraryTests/TestProject-LibraryTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;

@@ -111,6 +111,7 @@ static NSTask *OtestShimTask(NSString *platformName,
                                                                      freshSimulator:NO
                                                                      resetSimulator:NO
                                                                        freshInstall:NO
+                                                                        testTimeout:1
                                                                           reporters:@[]];
 
   NSTask *task = [runner otestTaskWithTestBundle: bundlePath];
@@ -352,6 +353,40 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
                       componentsJoinedByString:@""];
 
   assertThat(output, containsString(@"Terminating app due to uncaught exception"));
+}
+
+- (void)testSenTestingKitExceptionIsThrownWhenTestTimeoutIsHit
+{
+  NSString *bundlePath = TEST_DATA @"tests-ios-test-bundle/TestProject-LibraryTests.octest";
+  NSString *targetName = @"TestProject-LibraryTests";
+  NSString *settingsPath = TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings.txt";
+  NSArray *testList = @[ @"SomeTests/testTimeout" ];
+
+  NSArray *allTests = AllTestCasesInTestBundleIOS(bundlePath);
+  NSTask *task = OtestShimTaskIOS(settingsPath, targetName, bundlePath, testList, allTests);
+  NSArray *events = RunOtestAndParseResult(task);
+
+  NSDictionary *testOutputEvent = ExtractEvent(events, kReporter_Events_TestOuput);
+  assertThat(testOutputEvent, hasKey(@"output"));
+  NSString *testOutput = testOutputEvent[@"output"];
+  assertThat(testOutput, containsString(@"Test -[SomeTests testTimeout] ran longer than specified test time limit: 1 second(s)"));
+}
+
+- (void)testXCTestExceptionIsThrownWhenTestTimeoutIsHit
+{
+  NSString *bundlePath = TEST_DATA @"tests-ios-test-bundle/TestProject-Library-XCTest-iOSTests.xctest";
+  NSString *targetName = @"TestProject-Library-XCTest-iOSTests";
+  NSString *settingsPath = TEST_DATA @"TestProject-Library-XCTest-iOS-TestProject-Library-XCTest-iOSTests-showBuildSettings-iphoneos.txt";
+  NSArray *testList = @[ @"SomeTests/testTimeout" ];
+
+  NSArray *allTests = AllTestCasesInTestBundleIOS(bundlePath);
+  NSTask *task = OtestShimTaskIOS(settingsPath, targetName, bundlePath, testList, allTests);
+  NSArray *events = RunOtestAndParseResult(task);
+
+  NSDictionary *testOutputEvent = ExtractEvent(events, kReporter_Events_TestOuput);
+  assertThat(testOutputEvent, hasKey(@"output"));
+  NSString *testOutput = testOutputEvent[@"output"];
+  assertThat(testOutput, containsString(@"Test -[SomeTests testTimeout] ran longer than specified test time limit: 1 second(s)"));
 }
 
 @end

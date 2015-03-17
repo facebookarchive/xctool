@@ -94,6 +94,12 @@
                          aliases:nil
                      description:@"Skip actual test running and list them only."
                          setFlag:@selector(setListTestsOnly:)],
+    [Action actionOptionWithName:@"testTimeout"
+                         aliases:nil
+                     description:
+     @"Force individual test cases to be killed after specified timeout."
+                       paramName:@"N"
+                           mapTo:@selector(setTestTimeout:)],
     ];
 }
 
@@ -170,6 +176,11 @@
 - (void)setListTestsOnly:(BOOL)listTestsOnly
 {
   [_runTestsAction setListTestsOnly:listTestsOnly];
+}
+
+- (void)setTestTimeout:(NSString *)testTimeout
+{
+  [_runTestsAction setTestTimeout:testTimeout];
 }
 
 - (void)addOnly:(NSString *)argument

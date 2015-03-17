@@ -31,6 +31,7 @@
   BOOL _freshSimulator;
   BOOL _resetSimulator;
   BOOL _freshInstall;
+  NSInteger _testTimeout;
   NSArray *_reporters;
   NSDictionary *_framework;
 }
@@ -58,6 +59,7 @@
              freshSimulator:(BOOL)freshSimulator
              resetSimulator:(BOOL)resetSimulator
                freshInstall:(BOOL)freshInstall
+                testTimeout:(NSInteger)testTimeout
                   reporters:(NSArray *)reporters;
 
 - (BOOL)runTests;

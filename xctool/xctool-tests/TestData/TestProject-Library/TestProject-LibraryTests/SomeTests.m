@@ -65,4 +65,9 @@
   backtrace_symbols_fd(exceptionSymbols, numSymbols, STDERR_FILENO);
 }
 
+- (void)testTimeout
+{
+  sleep(15);
+}
+
 @end
