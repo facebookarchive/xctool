@@ -93,20 +93,23 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
   assertThat((action.onlyList), equalTo(@[@"TestProject-LibraryTests"]));
 }
 
-- (void)testOnlyListRequiresValidTarget
+- (void)testOnlyListFiltersOutNotValidTargets
 {
-  [[Options optionsFrom:@[
-    @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-    @"-scheme", @"TestProject-Library",
-    @"-sdk", @"iphonesimulator6.1",
-    @"run-tests", @"-only", @"BOGUS_TARGET",
-    ]]
-   assertOptionsFailToValidateWithError:
-   @"run-tests: 'BOGUS_TARGET' is not a testing target in this scheme."
-   withBuildSettingsFromFile:
-   TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
-   ];
+  Options *options = [[Options optionsFrom:@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-sdk", @"iphonesimulator6.1",
+                       @"build-tests",
+                       @"-only", @"TestProject-LibraryTests",
+                       @"-only", @"TestProject-LibraryTestsNonExisting",
+                       @"-only", @"TestProject-LibraryTestsNonExisting2",
+                       ]] assertOptionsValidateWithBuildSettingsFromFile:
+                      TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                      ];
+  RunTestsAction *action = options.actions[0];
+  assertThat((action.onlyList), equalTo(@[@"TestProject-LibraryTests"]));
 }
+
 
 - (void)testWillComplainWhenSchemeReferencesNonExistentTestTarget
 {

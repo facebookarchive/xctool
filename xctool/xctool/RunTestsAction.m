@@ -267,12 +267,18 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
     [self setOSVersion:destInfo[@"OS"]];
   }
 
+  NSMutableArray *skippedTargets = [NSMutableArray array];
   for (NSDictionary *only in [self onlyListAsTargetsAndSenTestList]) {
     if ([xcodeSubjectInfo testableWithTarget:only[@"target"]] == nil) {
-      *errorMessage = [NSString stringWithFormat:@"run-tests: '%@' is not a testing target in this scheme.", only[@"target"]];
-      return NO;
+      [skippedTargets addObject:only[@"target"]];
     }
   }
+  if ([skippedTargets count]) {
+    *errorMessage = [NSString stringWithFormat:@"Skipping next testing targets because this scheme doesn't contain them: %@", [skippedTargets componentsJoinedByString:@", "]];
+  }
+
+  // skip missing testing targets
+  [self.onlyList removeObjectsInArray:skippedTargets];
 
   return YES;
 }

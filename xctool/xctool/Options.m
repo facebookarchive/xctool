@@ -579,11 +579,16 @@
   ReportStatusMessageEnd(_reporters, REPORTER_MESSAGE_INFO, @"Loading settings for scheme '%@' ...", _scheme);
 
   for (Action *action in self.actions) {
+    NSString *errorOrWarningMessage = nil;
     BOOL valid = [action validateWithOptions:self
                             xcodeSubjectInfo:xcodeSubjectInfo
-                                errorMessage:errorMessage];
+                                errorMessage:&errorOrWarningMessage];
     if (!valid) {
+      *errorMessage = errorOrWarningMessage;
       return NO;
+    }
+    if (errorOrWarningMessage) {
+      ReportStatusMessage(_reporters, REPORTER_MESSAGE_WARNING, @"%@", errorOrWarningMessage);
     }
   }
 
