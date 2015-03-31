@@ -13,9 +13,9 @@ typedef void (^CDUnknownFunctionPointerType)(void);
 + (id)supportedRuntimesByAlias;
 + (id)supportedRuntimesByIdentifier;
 
-- (id)init;
-- (id)initWithBundle:(id)arg1;
-- (id)initWithPath:(id)arg1;
+- (instancetype)init;
+- (instancetype)initWithBundle:(id)arg1;
+- (instancetype)initWithPath:(id)arg1;
 
 // properties
 @property(copy) NSDictionary *aliases;

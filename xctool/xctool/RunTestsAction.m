@@ -167,7 +167,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
     ];
 }
 
-- (id)init
+- (instancetype)init
 {
   if (self = [super init]) {
     _onlyList = [[NSMutableArray alloc] init];
@@ -549,7 +549,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
     } else if (_bucketBy == BucketByTestCase) {
       testChunks = BucketizeTestCasesByTestCase(testCases, bucketSize > 0 ? bucketSize : INT_MAX);
     } else {
-      NSAssert(NO, @"Unexpected value for _bucketBy: %d", _bucketBy);
+      NSAssert(NO, @"Unexpected value for _bucketBy: %ld", _bucketBy);
       abort();
     }
 

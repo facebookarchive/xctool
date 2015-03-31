@@ -185,7 +185,7 @@
     ];
 }
 
-- (id)init
+- (instancetype)init
 {
   if (self = [super init])
   {
@@ -445,7 +445,7 @@
     NSString *basePath = _project ? [_project stringByAppendingPathComponent:@"project.xcworkspace"] : _workspace;
     NSString *settingsPath = [basePath stringByAppendingPathComponent:@"xcshareddata/WorkspaceSettings.xcsettings"];
     NSDictionary *settings = [NSDictionary dictionaryWithContentsOfFile:settingsPath];
-    NSNumber *automaticSchemeCreationSetting = [settings objectForKey:@"IDEWorkspaceSharedSettings_AutocreateContextsIfNeeded"];
+    NSNumber *automaticSchemeCreationSetting = settings[@"IDEWorkspaceSharedSettings_AutocreateContextsIfNeeded"];
 
     if (automaticSchemeCreationSetting && [automaticSchemeCreationSetting isKindOfClass:[NSNumber class]]) {
       automaticSchemeCreationDisabled = ![automaticSchemeCreationSetting boolValue];

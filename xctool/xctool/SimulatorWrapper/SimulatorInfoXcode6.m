@@ -197,12 +197,12 @@ static const NSInteger KProductTypeIpad = 2;
 
 + (BOOL)isDeviceAvailableWithAlias:(NSString *)deviceName
 {
-  return [[SimDeviceTypeStub supportedDeviceTypesByAlias] objectForKey:deviceName] != nil;
+  return [SimDeviceTypeStub supportedDeviceTypesByAlias][deviceName] != nil;
 }
 
 + (NSString *)deviceNameForAlias:(NSString *)deviceAlias
 {
-  SimDeviceTypeStub *deviceType = [[SimDeviceTypeStub supportedDeviceTypesByAlias] objectForKey:deviceAlias];
+  SimDeviceTypeStub *deviceType = [SimDeviceTypeStub supportedDeviceTypesByAlias][deviceAlias];
   return [deviceType name];
 }
 

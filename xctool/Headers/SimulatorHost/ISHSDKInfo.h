@@ -7,7 +7,7 @@
 @protocol ISHSDKInfo <NSObject>
 @optional
 
-- (id)initWithRoot:(id)arg1;
+- (instancetype)initWithRoot:(id)arg1;
 
 @property(copy) NSString *fullVersionString;
 @property(readonly) BOOL isComplete;

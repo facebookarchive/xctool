@@ -44,10 +44,10 @@ typedef void DVTConfinementServiceConnection;
 @property(copy, nonatomic) id readyMessageHandler;
 @property(readonly) DTiPhoneSimulatorSession *session;
 
-+ (id)messengerForSession:(id)arg1 withConnection:(id)arg2;
-+ (id)messengerForSession:(id)arg1;
++ (instancetype)messengerForSession:(id)arg1 withConnection:(id)arg2;
++ (instancetype)messengerForSession:(id)arg1;
 
-- (id)initWithSession:(id)arg1;
+- (instancetype)initWithSession:(id)arg1;
 - (void)doUbiquityFetchEvent;
 - (void)doFetchEventForPID:(int)arg1;
 - (void)backgroundAllApps:(int)arg1;
@@ -123,7 +123,7 @@ typedef void DVTConfinementServiceConnection;
 - (void)enqueueResponse:(id)arg1 withTag:(id)arg2 error:(id)arg3;
 - (BOOL)sendRequest:(id)arg1 withTag:(id)arg2 error:(id *)arg3;
 - (void)dealloc;
-- (id)initWithSession:(id)arg1 connection:(id)arg2;
+- (instancetype)initWithSession:(id)arg1 connection:(id)arg2;
 
 @end
 
@@ -202,14 +202,14 @@ typedef void DVTConfinementServiceConnection;
 @property(copy) NSString *sdkVersion;
 @property(copy) NSString *sdkRootPath;
 
-+ (id)rootWithSimRuntimeStub:(id)arg1;
-+ (id)rootWithSDKVersion:(id)arg1;
-+ (id)rootWithSDKPath:(id)arg1;
-+ (id)defaultRoot;
++ (instancetype)rootWithSimRuntimeStub:(id)arg1;
++ (instancetype)rootWithSDKVersion:(id)arg1;
++ (instancetype)rootWithSDKPath:(id)arg1;
++ (DTiPhoneSimulatorSystemRoot *)defaultRoot;
 + (id)knownRoots;
 
 - (long long)compare:(id)arg1;
-- (id)initWithSDKPath:(id)arg1;
+- (instancetype)initWithSDKPath:(id)arg1;
 
 @end
 
@@ -219,8 +219,8 @@ typedef void DVTConfinementServiceConnection;
 @property(copy, nonatomic) NSString *bundleID;
 @property(copy, nonatomic) NSString *appPath;
 
-+ (id)specifierWithToolPath:(id)arg1;
-+ (id)specifierWithApplicationBundleIdentifier:(id)arg1;
-+ (id)specifierWithApplicationPath:(id)arg1;
++ (instancetype)specifierWithToolPath:(id)arg1;
++ (instancetype)specifierWithApplicationBundleIdentifier:(id)arg1;
++ (instancetype)specifierWithApplicationPath:(id)arg1;
 
 @end

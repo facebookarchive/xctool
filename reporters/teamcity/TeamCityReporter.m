@@ -17,7 +17,7 @@
 @implementation TeamCityReporter
 
 #pragma mark Memory Management
-- (id)init
+- (instancetype)init
 {
   if (self = [super init]) {
     _totalTests = 0;

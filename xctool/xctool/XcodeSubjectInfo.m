@@ -256,7 +256,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 
   NSDictionary *workspaceInfoPlist =
     [NSDictionary dictionaryWithContentsOfFile:[infoPlistURL path]];
-  NSString *result = [workspaceInfoPlist objectForKey:@"WorkspacePath"];
+  NSString *result = workspaceInfoPlist[@"WorkspacePath"];
 
   if ([fm fileExistsAtPath:result]) {
     *workspacePath = result;
@@ -302,7 +302,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 
   NSDictionary *xcodePrefs = [NSDictionary dictionaryWithContentsOfFile:
     [@"~/Library/Preferences/com.apple.dt.Xcode.plist" stringByExpandingTildeInPath]];
-  NSString *derivedDataLocation = [xcodePrefs objectForKey:@"IDECustomDerivedDataLocation"] ?:
+  NSString *derivedDataLocation = xcodePrefs[@"IDECustomDerivedDataLocation"] ?:
     [@"~/Library/Developer/Xcode/DerivedData" stringByExpandingTildeInPath];
 
   // This location might be absolute or relative. If relative, we have to search under
@@ -321,8 +321,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
         NSString *workspacePath;
         if ([self findWorkspacePathForDerivedDataURL:derivedDataWorkspaceURL
                                        workspacePath:&workspacePath]) {
-          [workspacePathModifyDates setObject:modifiedDate
-                                       forKey:workspacePath];
+          workspacePathModifyDates[workspacePath] = modifiedDate;
         }
       }
     }
@@ -351,8 +350,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
                               modifiedDate:&modifiedDate]) {
         NSArray *workspacePaths = [self workspacePathsForRelativeDerivedDataURL:url];
         for (NSString *workspacePath in workspacePaths) {
-          [workspacePathModifyDates setObject:modifiedDate
-                                       forKey:workspacePath];
+          workspacePathModifyDates[workspacePath] = modifiedDate;
         }
       }
     }
@@ -423,7 +421,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
            inSchemePaths:[schemePathsSet allObjects]
            targetMatches:&targetMatches]) {
       NSDate *recentlyModifiedWorkspaceDate =
-        [recentlyModifiedWorkspaces objectForKey:containerPath];
+        recentlyModifiedWorkspaces[containerPath];
 
       for (XcodeTargetMatch *targetMatch in targetMatches) {
         BOOL betterMatch;

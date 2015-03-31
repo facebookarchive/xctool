@@ -51,7 +51,7 @@ int main(int argc, const char * argv[])
       NSString *fallbackFrameworkPath;
 
       if (getenv(dyldFallbackFrameworkPathKey)) {
-        fallbackFrameworkPath = [NSString stringWithUTF8String:getenv(dyldFallbackFrameworkPathKey)];
+        fallbackFrameworkPath = @(getenv(dyldFallbackFrameworkPathKey));
       } else {
         // If unset, this variable takes on an implicit default (see `man dyld`).
         fallbackFrameworkPath = @"/Library/Frameworks:/Network/Library/Frameworks:/System/Library/Frameworks";

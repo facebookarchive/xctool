@@ -96,7 +96,7 @@ static void writeAll(int fildes, const void *buf, size_t nbyte) {
   _pretendTerminationReason = reason;
 }
 
-- (id)init
+- (instancetype)init
 {
   if (self = [super init]) {
   }

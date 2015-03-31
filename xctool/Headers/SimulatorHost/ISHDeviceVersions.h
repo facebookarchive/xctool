@@ -21,7 +21,7 @@
 - (id)deviceInfoForProductType:(int)arg1 displayScale:(float)arg2 displayHeight:(float)arg3 wordSize:(unsigned int)arg4;
 - (id)deviceInfoNamed:(id)arg1;
 - (BOOL)devicesValid;
-- (id)init;
+- (instancetype)init;
 - (id)knownArches;
 - (id)knownScales;
 - (id)knownScreenHeights;

@@ -43,7 +43,7 @@ __attribute__((constructor)) static void initialize()
   return __sharedManager;
 }
 
-- (id)init
+- (instancetype)init
 {
   if (self = [super init])
   {

@@ -3,7 +3,7 @@
 
 @implementation FakeFileHandle
 
-- (id)init
+- (instancetype)init
 {
   if (self = [super init]) {
     _dataWritten = [[NSMutableData alloc] initWithCapacity:0];

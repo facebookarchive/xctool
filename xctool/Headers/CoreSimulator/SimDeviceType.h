@@ -13,9 +13,9 @@
 + (id)supportedDeviceTypesByName;
 + (id)supportedDevices;
 
-- (id)init;
-- (id)initWithBundle:(id)arg1;
-- (id)initWithPath:(id)arg1;
+- (instancetype)init;
+- (instancetype)initWithBundle:(id)arg1;
+- (instancetype)initWithPath:(id)arg1;
 
 // properties
 - (NSDictionary *)aliases;

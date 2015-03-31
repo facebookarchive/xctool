@@ -31,7 +31,7 @@
 
 @implementation XCTool
 
-- (id)init
+- (instancetype)init
 {
   if (self = [super init]) {
     _exitStatus = 0;

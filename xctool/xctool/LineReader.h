@@ -20,7 +20,7 @@
 
 @property (nonatomic, copy) void (^didReadLineBlock)(NSString *);
 
-- (id)initWithFileHandle:(NSFileHandle *)fileHandle;
+- (instancetype)initWithFileHandle:(NSFileHandle *)fileHandle;
 
 - (void)startReading;
 - (void)stopReading;

@@ -24,7 +24,7 @@ typedef NS_ENUM(long long, SimDeviceState) {
 + (id)simDevice:(id)arg1 UDID:(id)arg2 deviceType:(SimDeviceType *)arg3 runtime:(SimRuntimeStub *)arg4 state:(unsigned long long)arg5 connectionManager:(id)arg6 setPath:(NSString *)arg7;
 + (id)simDeviceAtPath:(id)arg1;
 
-- (id)initDevice:(id)arg1 UDID:(id)arg2 deviceType:(SimDeviceType *)arg3 runtime:(SimRuntimeStub *)arg4 state:(unsigned long long)arg5 connectionManager:(id)arg6 setPath:(NSString *)arg7;
+- (instancetype)initDevice:(id)arg1 UDID:(id)arg2 deviceType:(SimDeviceType *)arg3 runtime:(SimRuntimeStub *)arg4 state:(unsigned long long)arg5 connectionManager:(id)arg6 setPath:(NSString *)arg7;
 
 // properties
 @property(copy) NSUUID *UDID;

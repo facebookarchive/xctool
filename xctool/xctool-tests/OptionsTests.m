@@ -390,7 +390,7 @@
   NSArray *(^classNamesFromArray)(NSArray *) = ^(NSArray *arr){
     NSMutableArray *result = [NSMutableArray array];
     for (id item in arr) {
-      [result addObject:[NSString stringWithUTF8String:class_getName([item class])]];
+      [result addObject:@(class_getName([item class]))];
     }
     return result;
   };
@@ -420,7 +420,7 @@
 
   assertThatInteger(options.actions.count, equalToInteger(1));
   Action *action = options.actions[0];
-  NSString *actionClassName = [NSString stringWithUTF8String:class_getName([action class])];
+  NSString *actionClassName = @(class_getName([action class]));
   assertThat(actionClassName, equalTo(@"BuildAction"));
 }
 
@@ -437,7 +437,7 @@
 
   assertThatInteger(options.actions.count, equalToInteger(1));
   Action *action = options.actions[0];
-  NSString *actionClassName = [NSString stringWithUTF8String:class_getName([action class])];
+  NSString *actionClassName = @(class_getName([action class]));
   assertThat(actionClassName, equalTo(@"BuildAction"));
 }
 

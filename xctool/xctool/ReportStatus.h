@@ -16,13 +16,13 @@
 
 #import <Foundation/Foundation.h>
 
-typedef enum {
+typedef NS_ENUM(NSInteger, ReporterMessageLevel) {
   REPORTER_MESSAGE_DEBUG,
   REPORTER_MESSAGE_VERBOSE,
   REPORTER_MESSAGE_INFO,
   REPORTER_MESSAGE_WARNING,
   REPORTER_MESSAGE_ERROR,
-} ReporterMessageLevel;
+} ;
 
 NSString *ReporterMessageLevelToString(ReporterMessageLevel level);
 

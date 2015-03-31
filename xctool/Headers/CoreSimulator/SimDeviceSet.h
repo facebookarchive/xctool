@@ -12,7 +12,7 @@
 + (id)defaultSet;
 + (id)defaultSetPath;
 + (id)setForSetPath:(id)arg1;
-- (id)initWithSetPath:(id)arg1;
+- (instancetype)initWithSetPath:(id)arg1;
 
 // properties
 - (NSString *)setPath;

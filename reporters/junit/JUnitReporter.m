@@ -39,7 +39,7 @@
 @implementation JUnitReporter
 
 #pragma mark Memory Management
-- (id)init
+- (instancetype)init
 {
   if (self = [super init]) {
     _formatter = [[NSDateFormatter alloc] init];

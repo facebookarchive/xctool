@@ -90,7 +90,7 @@ static NSTask *OtestShimTask(NSString *platformName,
   // so we can be sure it points to a valid directory based off the true Xcode
   // install location.
 
-  NSDictionary *latestSDKInfo = [GetAvailableSDKsInfo() objectForKey:[platformName lowercaseString]];
+  NSDictionary *latestSDKInfo = GetAvailableSDKsInfo()[[platformName lowercaseString]];
   NSString *platformNameWithVersion = [platformName stringByAppendingString:latestSDKInfo[@"SDKVersion"]];
 
   targetSettings[Xcode_SDKROOT] = [NSString stringWithFormat:@"%@/Platforms/%@.platform/Developer/SDKs/%@.sdk",
@@ -100,7 +100,7 @@ static NSTask *OtestShimTask(NSString *platformName,
 
   // Regardless of whatever is in the build settings, let's pretend and use
   // the latest available SDK.
-  targetSettings[Xcode_SDK_NAME] = [GetAvailableSDKsAndAliases() objectForKey:[platformName lowercaseString]];
+  targetSettings[Xcode_SDK_NAME] = GetAvailableSDKsAndAliases()[[platformName lowercaseString]];
 
   // set up an OCUnitIOSLogicTestRunner
   OCUnitIOSLogicTestRunner *runner = [[testRunnerClass alloc] initWithBuildSettings:targetSettings

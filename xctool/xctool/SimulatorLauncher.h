@@ -24,7 +24,7 @@
 @property (nonatomic, copy) NSNumber *launchTimeout;
 
 + (void)loadAllPlatforms;
-- (id)initWithSessionConfig:(DTiPhoneSimulatorSessionConfig *)sessionConfig
+- (instancetype)initWithSessionConfig:(DTiPhoneSimulatorSessionConfig *)sessionConfig
                  deviceName:(NSString *)deviceName;
 - (BOOL)launchAndWaitForExit;
 - (BOOL)launchAndWaitForStart;

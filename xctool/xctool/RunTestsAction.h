@@ -34,7 +34,7 @@ NSArray *BucketizeTestCasesByTestCase(NSArray *testCases, int bucketSize);
  */
 NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize);
 
-typedef enum {
+typedef NS_ENUM(NSInteger, BucketBy) {
   // Bucket by individual test case (the most granular option).  Test cases
   // within the same class may be broken into separate buckets.
   //
@@ -47,7 +47,7 @@ typedef enum {
   // be in the same bucket.
   BucketByClass,
 
-} BucketBy;
+} ;
 
 @interface RunTestsAction : Action
 

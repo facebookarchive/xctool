@@ -48,13 +48,13 @@ static NSString *abbreviatePath(NSString *string) {
 @property (nonatomic, strong) NSFileHandle *outputHandle;
 @property (nonatomic, copy) NSString *lastLineUpdate;
 
-- (id)initWithOutputHandle:(NSFileHandle *)outputHandle;
+- (instancetype)initWithOutputHandle:(NSFileHandle *)outputHandle;
 
 @end
 
 @implementation ReportWriter
 
-- (id)initWithOutputHandle:(NSFileHandle *)outputHandle
+- (instancetype)initWithOutputHandle:(NSFileHandle *)outputHandle
 {
   if (self = [super init]) {
     _outputHandle = outputHandle;
@@ -183,7 +183,7 @@ static NSString *abbreviatePath(NSString *string) {
 
 @implementation TextReporter
 
-- (id)init
+- (instancetype)init
 {
   if (self = [super init]) {
     _analyzerWarnings = [[NSMutableArray alloc] init];
@@ -861,7 +861,7 @@ static NSString *abbreviatePath(NSString *string) {
       int lineNoLength = floor(log10(end)) + 1;
       NSString *formatString = [NSString stringWithFormat:@"%@%d%@", @"%", lineNoLength, @"d %@"];
       for (int lineNo = start; lineNo < end; lineNo++) {
-        NSString *lineStr = [[lines objectAtIndex:lineNo] description];
+        NSString *lineStr = [lines[lineNo] description];
         // Careful: Line numbers start at 1 but array indices start at 0.
         [context appendFormat:formatString, lineNo + 1, lineStr];
         if (lineNo + 1 == errorLine) {
@@ -902,7 +902,7 @@ static NSString *abbreviatePath(NSString *string) {
 
 @implementation PrettyTextReporter
 
-- (id)init
+- (instancetype)init
 {
   if (self = [super init]) {
     self.isPretty = YES;
@@ -914,7 +914,7 @@ static NSString *abbreviatePath(NSString *string) {
 
 @implementation PlainTextReporter
 
-- (id)init
+- (instancetype)init
 {
   if (self = [super init]) {
     self.isPretty = NO;

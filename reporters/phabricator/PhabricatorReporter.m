@@ -27,7 +27,7 @@
 
 @implementation PhabricatorReporter
 
-- (id)init
+- (instancetype)init
 {
   if (self = [super init]) {
     _results = [[NSMutableArray alloc] init];

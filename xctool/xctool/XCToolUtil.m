@@ -110,7 +110,7 @@ NSString *AbsoluteExecutablePath() {
   uint32_t execRelativePathSize = sizeof(execRelativePath);
   _NSGetExecutablePath(execRelativePath, &execRelativePathSize);
 
-  return AbsolutePathFromRelative([NSString stringWithUTF8String:execRelativePath]);
+  return AbsolutePathFromRelative(@(execRelativePath));
 }
 
 NSString *XCToolBasePath(void)
@@ -662,7 +662,7 @@ NSString *AbsolutePathFromRelative(NSString *path)
   char absolutePath[PATH_MAX] = {0};
   assert(realpath((const char *)[path UTF8String], absolutePath) != NULL);
 
-  return [NSString stringWithUTF8String:absolutePath];
+  return @(absolutePath);
 }
 
 NSString *SystemPaths()
@@ -757,7 +757,7 @@ NSString *MakeTemporaryDirectory(NSString *nameTemplate)
 
 // Forward declaration for private CFBundle API.
 // https://www.opensource.apple.com/source/CF/CF-855.11/CFBundle.c
-CFStringRef _CFBundleCopyFileTypeForFileURL(CFURLRef url);
+CFStringRef _CFBundleCopyFileTypeForFileURL(CFURLRef url) CF_RETURNS_RETAINED;
 
 static BOOL IsMachOExecutable(NSString *path)
 {

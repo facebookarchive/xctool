@@ -23,7 +23,7 @@
 
 @implementation LineReader
 
-- (id)initWithFileHandle:(NSFileHandle *)fileHandle
+- (instancetype)initWithFileHandle:(NSFileHandle *)fileHandle
 {
   if (self = [super init]) {
     _fileHandle = fileHandle;

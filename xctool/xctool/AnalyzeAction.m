@@ -234,7 +234,7 @@
   }
 }
 
-- (id)init
+- (instancetype)init
 {
   if (self = [super init]) {
     _onlySet = [[NSMutableSet alloc] init];

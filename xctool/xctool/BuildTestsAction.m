@@ -131,7 +131,7 @@
   return YES;
 }
 
-- (id)init
+- (instancetype)init
 {
   if (self = [super init]) {
     _onlyList = [[NSMutableArray alloc] init];

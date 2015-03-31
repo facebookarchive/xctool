@@ -42,7 +42,7 @@
   NSMutableDictionary *action =
     [NSMutableDictionary dictionaryWithDictionary:@{
                                 kActionOptionName: name,
-                     kActionOptionSetFlagSelector: [NSString stringWithUTF8String:sel_getName(setFlagSEL)],
+                     kActionOptionSetFlagSelector: @(sel_getName(setFlagSEL)),
      }];
 
   if (aliases) {
@@ -65,7 +65,7 @@
   NSMutableDictionary *action =
   [NSMutableDictionary dictionaryWithDictionary:@{
                               kActionOptionName: name,
-                     kActionOptionMapToSelector: [NSString stringWithUTF8String:sel_getName(mapToSEL)],
+                     kActionOptionMapToSelector: @(sel_getName(mapToSEL)),
    }];
 
   if (aliases) {
@@ -90,7 +90,7 @@
   NSMutableDictionary *action =
   [NSMutableDictionary dictionaryWithDictionary:@{
                       kActionOptionMatcherBlock: matcherBlock,
-                     kActionOptionMapToSelector: [NSString stringWithUTF8String:sel_getName(mapToSEL)],
+                     kActionOptionMapToSelector: @(sel_getName(mapToSEL)),
    }];
 
   if (description) {

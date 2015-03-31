@@ -16,14 +16,14 @@
 
 #import <Foundation/Foundation.h>
 
-typedef enum {
+typedef NS_ENUM(NSInteger, OTestExitCode) {
   kSuccess = 0,
   kDLOpenError = 1,
   kBundleOpenError,
   kUnsupportedFramework,
   kClassLoadingError,
   kMissingExecutable,
-} OTestExitCode;
+} ;
 
 // Why FOUNDATION_EXPORT? Read here:
 // http://stackoverflow.com/questions/538996/constants-in-objective-c

@@ -19,7 +19,7 @@ NSDictionary *EventDictionaryWithNameAndContent(NSString *name, NSDictionary *co
 {
     NSMutableDictionary *eventJSON = [NSMutableDictionary dictionaryWithDictionary:@{
       @"event": name,
-      kReporter_TimestampKey: [NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]]
+      kReporter_TimestampKey: @([[NSDate date] timeIntervalSince1970])
     }];
     [eventJSON addEntriesFromDictionary:content];
     return eventJSON;

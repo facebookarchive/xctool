@@ -22,7 +22,7 @@ static BOOL __didLoadAllPlatforms = NO;
 @interface DVTPlatform : NSObject
 
 + (BOOL)loadAllPlatformsReturningError:(NSError **)error;
-+ (id)platformForIdentifier:(NSString *)identifier;
++ (instancetype)platformForIdentifier:(NSString *)identifier;
 
 @end
 
@@ -56,7 +56,7 @@ static BOOL __didLoadAllPlatforms = NO;
   }
 }
 
-- (id)initWithSessionConfig:(DTiPhoneSimulatorSessionConfig *)sessionConfig
+- (instancetype)initWithSessionConfig:(DTiPhoneSimulatorSessionConfig *)sessionConfig
                  deviceName:(NSString *)deviceName
 {
   if (self = [super init]) {

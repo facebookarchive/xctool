@@ -51,7 +51,7 @@
              withSenTestList:(NSString *)senTestList
           senTestInvertScope:(BOOL)senTestInvertScope;
 
-- (id)initWithBuildSettings:(NSDictionary *)buildSettings
+- (instancetype)initWithBuildSettings:(NSDictionary *)buildSettings
            focusedTestCases:(NSArray *)focusedTestCases
                allTestCases:(NSArray *)allTestCases
                   arguments:(NSArray *)arguments

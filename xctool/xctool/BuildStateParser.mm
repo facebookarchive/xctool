@@ -62,7 +62,7 @@
         //    t - time
 
         // the rest of string is a file name, that's all we require for now
-        NSString *filename = [NSString stringWithUTF8String:&buf[1]];
+        NSString *filename = @(&buf[1]);
         if (filename.length) {
           [nodePaths addObject:filename];
         }

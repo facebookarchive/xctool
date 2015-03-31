@@ -54,8 +54,7 @@ static NSArray *GetLaunchdJobsForSimulator()
                            GetJobsIterator,
                            (__bridge void *)(^(const launch_data_t launch_data, const char *keyCString)
                            {
-                             NSString *key = [NSString stringWithCString:keyCString
-                                                                encoding:NSUTF8StringEncoding];
+                             NSString *key = @(keyCString);
 
                              NSArray *strings = @[@"com.apple.iphonesimulator",
                                                   @"UIKitApplication",
