@@ -130,7 +130,7 @@ static NSString *abbreviatePath(NSString *string) {
 {
   if (_lastLineUpdate != nil && !_useColorOutput) {
     [_outputHandle writeData:[_lastLineUpdate dataUsingEncoding:NSUTF8StringEncoding]];
-    self.lastLineUpdate = nil;
+    _lastLineUpdate = nil;
   }
   [_outputHandle writeData:[@"\n" dataUsingEncoding:NSUTF8StringEncoding]];
 }
@@ -143,7 +143,7 @@ static NSString *abbreviatePath(NSString *string) {
     [_outputHandle writeData:[@"\r" dataUsingEncoding:NSUTF8StringEncoding]];
     [_outputHandle writeData:[line dataUsingEncoding:NSUTF8StringEncoding]];
   } else {
-    self.lastLineUpdate = line;
+    _lastLineUpdate = line;
   }
 }
 
@@ -520,7 +520,7 @@ static NSString *abbreviatePath(NSString *string) {
   [_reportWriter updateLine:@"%@ %@",
    [self emptyIndicatorString],
    [self condensedBuildCommandTitle:event[kReporter_BeginBuildCommand_TitleKey]]];
-  self.currentBuildCommandEvent = event;
+  _currentBuildCommandEvent = event;
 }
 
 - (void)endBuildCommand:(NSDictionary *)event
@@ -572,7 +572,7 @@ static NSString *abbreviatePath(NSString *string) {
     [_failedBuildEvents addObject:@{@"title":event[kReporter_EndBuildCommand_TitleKey], @"body":body}];
   }
 
-  self.currentBuildCommandEvent = event;
+  _currentBuildCommandEvent = event;
 }
 
 - (void)beginOcunit:(NSDictionary *)event
@@ -612,7 +612,7 @@ static NSString *abbreviatePath(NSString *string) {
   }
 
   [_reportWriter printLine:@"<bold>run-test<reset> <underline>%@<reset> %@", titleString, attributesString];
-  self.currentBundle = event[kReporter_BeginOCUnit_BundleNameKey];
+  _currentBundle = event[kReporter_BeginOCUnit_BundleNameKey];
   [_reportWriter increaseIndent];
 }
 
@@ -711,7 +711,7 @@ static NSString *abbreviatePath(NSString *string) {
   NSAssert(_currentStatusEvent == nil,
            @"An earlier begin-status event never followed with a end-status event.");
 
-  self.currentStatusEvent = event;
+  _currentStatusEvent = event;
 
   // We purposely don't output a newline - this way endStatus: can have a chance
   // to send a \r and rewrite the existing line.

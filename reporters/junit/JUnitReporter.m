@@ -78,7 +78,7 @@
       kJUnitReporter_Suite_Event: event,
       kJUnitReporter_Suite_Results: _testResults
     }];
-    self.testResults = nil;
+    _testResults = nil;
   }
 }
 
@@ -214,7 +214,7 @@
   [doc setCharacterEncoding:@"UTF-8"];
   [_outputHandle writeData:[doc XMLDataWithOptions:NSXMLNodePrettyPrint]];
 
-  self.testSuites = nil;
+  _testSuites = nil;
 }
 
 @end

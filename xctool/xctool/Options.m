@@ -324,7 +324,7 @@
     if (!defaultProject) {
       return NO;
     } else {
-      self.project = defaultProject;
+      _project = defaultProject;
     }
   } else if (_workspace && _project) {
     *errorMessage = @"Either -workspace or -project can be specified, but not both.";
@@ -387,9 +387,9 @@
         targetMatch.schemeName);
     }
 
-    self.workspace = targetMatch.workspacePath;
-    self.project = targetMatch.projectPath;
-    self.scheme = targetMatch.schemeName;
+    _workspace = targetMatch.workspacePath;
+    _project = targetMatch.projectPath;
+    _scheme = targetMatch.schemeName;
   };
 
   if (!_scheme) {
@@ -498,7 +498,7 @@
 
     // Map SDK param to actual SDK name.  This allows for aliases like 'iphoneos' to map
     // to 'iphoneos6.1'.
-    self.sdk = sdksAndAliases[self.sdk];
+    _sdk = sdksAndAliases[_sdk];
     
     // Xcode 5's xcodebuild has a bug where it won't build targets for the
     // iphonesimulator SDK.  It fails with...
@@ -523,7 +523,7 @@
           deviceSystemName) {
         ReportStatusMessage(_reporters, REPORTER_MESSAGE_WARNING,
                             @"Device name '%@' is not directly supported by xcodebuild. Replacing it with '%@'.", deviceName, deviceSystemName);
-        self.destination = [_destination stringByReplacingOccurrencesOfString:deviceName withString:deviceSystemName];
+        _destination = [_destination stringByReplacingOccurrencesOfString:deviceName withString:deviceSystemName];
         deviceName = deviceSystemName;
       }
       if (![SimulatorInfo isDeviceAvailableWithAlias:deviceName]) {
@@ -611,7 +611,7 @@
   if (_destination) {
     [arguments addObjectsFromArray:@[@"-destination", _destination]];
     if (!_destinationTimeout) {
-      self.destinationTimeout = @"10";
+      _destinationTimeout = @"10";
     }
   }
 
@@ -643,8 +643,8 @@
     [arguments addObject:[NSString stringWithFormat:@"-%@=%@", key, obj]];
   }];
 
-  if (self.launchTimeout != nil) {
-    _buildSettings[Xcode_LAUNCH_TIMEOUT] = self.launchTimeout;
+  if (_launchTimeout) {
+    _buildSettings[Xcode_LAUNCH_TIMEOUT] = _launchTimeout;
   }
 
   return arguments;
@@ -676,15 +676,15 @@
     abort();
   }
 
-  if (self.derivedDataPath != nil) {
-    return [buildArgs arrayByAddingObjectsFromArray:@[ @"-derivedDataPath", self.derivedDataPath ]];
+  if (_derivedDataPath) {
+    return [buildArgs arrayByAddingObjectsFromArray:@[ @"-derivedDataPath", _derivedDataPath ]];
   }
   return buildArgs;
 }
 
 - (void)setFindTargetExcludePathsFromString:(NSString *)string
 {
-  self.findTargetExcludePaths = [string componentsSeparatedByString:@":"];
+  _findTargetExcludePaths = [string componentsSeparatedByString:@":"];
 }
 
 - (NSString*)findDefaultProjectErrorMessage:(NSString**) errorMessage

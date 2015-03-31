@@ -38,12 +38,12 @@
 
 - (void)beginAction:(NSDictionary *)event
 {
-  self.scheme = event[kReporter_BeginAction_SchemeKey];
+  _scheme = event[kReporter_BeginAction_SchemeKey];
 }
 
 - (void)endAction:(NSDictionary *)event
 {
-  self.scheme = nil;
+  _scheme = nil;
 }
 
 - (void)beginBuildTarget:(NSDictionary *)event
@@ -65,12 +65,12 @@
    @"extra" : [NSNull null],
    }];
 
-  self.currentTargetFailures = nil;
+  _currentTargetFailures = nil;
 }
 
 - (void)beginBuildCommand:(NSDictionary *)event
 {
-  self.currentBuildCommand = event;
+  _currentBuildCommand = event;
 }
 
 - (void)endBuildCommand:(NSDictionary *)event
@@ -83,7 +83,7 @@
     [_currentTargetFailures addObject:commandAndFailure];
   }
 
-  self.currentBuildCommand = nil;
+  _currentBuildCommand = nil;
 }
 
 - (void)beginXcodebuild:(NSDictionary *)event

@@ -34,20 +34,20 @@
     return;
   }
 
-  self.mainProjectPath = event[kReporter_BeginAction_ProjectKey];
+  _mainProjectPath = event[kReporter_BeginAction_ProjectKey];
   if ([_mainProjectPath isKindOfClass:[NSString class]]) {
-    self.mainProjectName = [[_mainProjectPath lastPathComponent] stringByDeletingPathExtension];
+    _mainProjectName = [[_mainProjectPath lastPathComponent] stringByDeletingPathExtension];
   } else {
-    self.mainProjectPath = nil;
-    self.mainProjectName = nil;
+    _mainProjectPath = nil;
+    _mainProjectName = nil;
   }
 
-  self.mainWorkspacePath = event[kReporter_BeginAction_WorkspaceKey];
+  _mainWorkspacePath = event[kReporter_BeginAction_WorkspaceKey];
   if ([_mainWorkspacePath isKindOfClass:[NSString class]]) {
-    self.mainWorkspaceName = [[_mainWorkspacePath lastPathComponent] stringByDeletingPathExtension];
+    _mainWorkspaceName = [[_mainWorkspacePath lastPathComponent] stringByDeletingPathExtension];
   } else {
-    self.mainWorkspacePath = nil;
-    self.mainWorkspaceName = nil;
+    _mainWorkspacePath = nil;
+    _mainWorkspaceName = nil;
   }
 }
 

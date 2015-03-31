@@ -84,7 +84,7 @@
 
 - (void)beginBuildCommand:(NSDictionary *)event
 {
-  self.currentBuildCommand = event;
+  _currentBuildCommand = event;
 }
 
 - (void)endBuildCommand:(NSDictionary *)event
@@ -94,7 +94,7 @@
     [self collectEvent:_currentBuildCommand];
   }
 
-  self.currentBuildCommand = nil;
+  _currentBuildCommand = nil;
 }
 
 - (void)didFinishReporting

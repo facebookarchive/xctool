@@ -79,7 +79,7 @@
     }
   }
 
-  self.nodes = nodePaths;
+  _nodes = nodePaths;
 }
 
 

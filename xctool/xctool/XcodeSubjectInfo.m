@@ -865,37 +865,37 @@ containsFilesModifiedSince:(NSDate *)sinceDate
     return [projectPathsInWorkspace containsObject:item.projectPath];
   };
 
-  self.testables = [testables objectsAtIndexes:
-                    [testables indexesOfObjectsPassingTest:
-                     ^BOOL(Buildable *obj, NSUInteger idx, BOOL *stop) {
-                       return workspaceContainsProject(obj);
-                     }]];
+  _testables = [testables objectsAtIndexes:
+                [testables indexesOfObjectsPassingTest:
+                 ^BOOL(Buildable *obj, NSUInteger idx, BOOL *stop) {
+                   return workspaceContainsProject(obj);
+                 }]];
 
-  self.buildables = [buildables objectsAtIndexes:
-                     [buildables indexesOfObjectsPassingTest:
-                      ^BOOL(Buildable *obj, NSUInteger idx, BOOL *stop) {
-                        return workspaceContainsProject(obj);
-                      }]];
+  _buildables = [buildables objectsAtIndexes:
+                 [buildables indexesOfObjectsPassingTest:
+                  ^BOOL(Buildable *obj, NSUInteger idx, BOOL *stop) {
+                    return workspaceContainsProject(obj);
+                  }]];
 
-  self.buildablesForTest = [buildables objectsAtIndexes:
-                            [buildables indexesOfObjectsPassingTest:
-                             ^BOOL(Buildable *obj, NSUInteger idx, BOOL *stop) {
-                               return (workspaceContainsProject(obj) && obj.buildForTesting);
-                             }]];
+  _buildablesForTest = [buildables objectsAtIndexes:
+                        [buildables indexesOfObjectsPassingTest:
+                         ^BOOL(Buildable *obj, NSUInteger idx, BOOL *stop) {
+                           return (workspaceContainsProject(obj) && obj.buildForTesting);
+                         }]];
 }
 
 - (void)populateBuildablesAndTestablesForProjectWithSchemePath:(NSString *)schemePath
 {
-  self.testables = [[self class] testablesInSchemePath:schemePath
-                                              basePath:BasePathFromSchemePath(schemePath)];
+  _testables = [[self class] testablesInSchemePath:schemePath
+                                          basePath:BasePathFromSchemePath(schemePath)];
 
-  self.buildables = [[self class] buildablesInSchemePath:schemePath
-                                                    basePath:BasePathFromSchemePath(schemePath)];
-  self.buildablesForTest = [_buildables objectsAtIndexes:
-                            [_buildables indexesOfObjectsPassingTest:
-                             ^BOOL(Buildable *obj, NSUInteger idx, BOOL *stop) {
-                               return obj.buildForTesting;
-                             }]];
+  _buildables = [[self class] buildablesInSchemePath:schemePath
+                                            basePath:BasePathFromSchemePath(schemePath)];
+  _buildablesForTest = [_buildables objectsAtIndexes:
+                        [_buildables indexesOfObjectsPassingTest:
+                         ^BOOL(Buildable *obj, NSUInteger idx, BOOL *stop) {
+                           return obj.buildForTesting;
+                         }]];
 }
 
 - (void)populateBuildActionPropertiesWithSchemePath:(NSString *)schemePath
@@ -914,9 +914,9 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   NSAssert([buildActionNodes count] == 1, @"Should have only one BuildAction node");
   NSXMLElement *buildActionNode = buildActionNodes[0];
 
-  self.parallelizeBuildables =
+  _parallelizeBuildables =
     [[[buildActionNode attributeForName:@"parallelizeBuildables"] stringValue] isEqualToString:@"YES"];
-  self.buildImplicitDependencies =
+  _buildImplicitDependencies =
     [[[buildActionNode attributeForName:@"buildImplicitDependencies"] stringValue] isEqualToString:@"YES"];
 }
 
@@ -931,11 +931,11 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   NSDictionary *targetSettings = [settings allValues][0];
   // The following control where our build output goes - we need to make sure we build the tests
   // in the same places as we built the original products - this is what Xcode does.
-  self.objRoot = targetSettings[Xcode_OBJROOT];
-  self.symRoot = targetSettings[Xcode_SYMROOT];
-  self.sharedPrecompsDir = targetSettings[Xcode_SHARED_PRECOMPS_DIR];
-  self.effectivePlatformName = targetSettings[Xcode_EFFECTIVE_PLATFORM_NAME];
-  self.targetedDeviceFamily = targetSettings[Xcode_TARGETED_DEVICE_FAMILY];
+  _objRoot = targetSettings[Xcode_OBJROOT];
+  _symRoot = targetSettings[Xcode_SYMROOT];
+  _sharedPrecompsDir = targetSettings[Xcode_SHARED_PRECOMPS_DIR];
+  _effectivePlatformName = targetSettings[Xcode_EFFECTIVE_PLATFORM_NAME];
+  _targetedDeviceFamily = targetSettings[Xcode_TARGETED_DEVICE_FAMILY];
   
   NSString *matchingSchemePath = nil;
 

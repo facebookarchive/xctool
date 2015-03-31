@@ -98,13 +98,13 @@
 
 -(void)beginAction:(NSDictionary *)event {
   if ([event[kReporter_BeginAction_NameKey] isEqualTo:@"test"]) {
-    self.testShouldRun = YES;
+    _testShouldRun = YES;
   }
 }
 
 - (void)beginTestSuite:(NSDictionary *)event
 {
-  self.testShouldRun = YES;
+  _testShouldRun = YES;
   NSLog(@"##teamcity[testSuiteStarted name='%@']", event[kReporter_EndTestSuite_SuiteKey]);
 }
 

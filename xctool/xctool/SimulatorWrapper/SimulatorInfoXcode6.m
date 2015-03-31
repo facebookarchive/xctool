@@ -53,7 +53,7 @@ static const NSInteger KProductTypeIpad = 2;
 
 - (NSNumber *)launchTimeout
 {
-  NSString *launchTimeoutString = self.buildSettings[Xcode_LAUNCH_TIMEOUT];
+  NSString *launchTimeoutString = _buildSettings[Xcode_LAUNCH_TIMEOUT];
   if (launchTimeoutString) {
     return @(launchTimeoutString.intValue);
   }
@@ -73,11 +73,11 @@ static const NSInteger KProductTypeIpad = 2;
 
   switch ([[self simulatedDeviceFamily] integerValue]) {
     case KProductTypeIphone:
-      self.deviceName = @"iPhone 4s";
+      _deviceName = @"iPhone 4s";
       break;
 
     case KProductTypeIpad:
-      self.deviceName = @"iPad 2";
+      _deviceName = @"iPad 2";
       break;
   }
 
@@ -97,7 +97,7 @@ static const NSInteger KProductTypeIpad = 2;
   }
 
   NSAssert([supportedDeviceTypes count] > 0, @"There are no available devices that support provided sdk: %@. Supported devices: %@", [systemRoot sdkVersion], [[SimDeviceTypeStub supportedDevices] valueForKeyPath:@"name"]);
-  self.deviceName = [supportedDeviceTypes[0] name];
+  _deviceName = [supportedDeviceTypes[0] name];
   return _deviceName;
 }
 

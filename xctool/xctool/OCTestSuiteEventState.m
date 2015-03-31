@@ -47,7 +47,7 @@
 {
   NSAssert(!_isStarted, @"Test should not have started yet.");
   _isStarted = true;
-  self.beginTestSuiteInfo = event;
+  _beginTestSuiteInfo = event;
 
   [self publishWithEvent:event];
 }
