@@ -15,14 +15,15 @@
 //
 
 #import "SimulatorWrapperXcode6.h"
-#import "SimulatorWrapperInternal.h"
 
-#import "SimulatorInfoXcode6.h"
-#import "SimulatorLauncher.h"
 #import "SimDevice.h"
 #import "SimDeviceSet.h"
 #import "SimDeviceType.h"
 #import "SimRuntime.h"
+#import "SimulatorInfoXcode6.h"
+#import "SimulatorLauncher.h"
+#import "SimulatorWrapperInternal.h"
+#import "XCToolUtil.h"
 
 @implementation SimulatorWrapperXcode6
 
@@ -64,36 +65,31 @@
     }
     return NO;
   }
-  
-  if ([simInfo simulatedDevice].state == SimDeviceStateBooted) {
-    return YES;
+
+  NSURL *iOSSimulatorURL = [NSURL fileURLWithPath:[NSString pathWithComponents:@[XcodeDeveloperDirPath(), @"Applications/iOS Simulator.app"]]];
+  NSDictionary *configuration = @{NSWorkspaceLaunchConfigurationArguments: @[@"-CurrentDeviceUDID", [[[simInfo simulatedDevice] UDID] UUIDString]]};
+  NSError *launchError = nil;
+  NSRunningApplication *app = [[NSWorkspace sharedWorkspace] launchApplicationAtURL:iOSSimulatorURL
+                                                                            options:NSWorkspaceLaunchDefault
+                                                                      configuration:configuration
+                                                                              error:&launchError];
+  if (!app) {
+    NSString *errorDesc = [NSString stringWithFormat: @"iOS Simulator app wasn't launched at path \"%@\" with configuration: %@. Error: %@", [iOSSimulatorURL path], configuration, launchError];
+    if (error) {
+      *error = [NSError errorWithDomain:@"com.apple.iOSSimulator"
+                                   code:0
+                               userInfo:@{NSLocalizedDescriptionKey: errorDesc}];
+    }
+    return NO;
   }
 
-  DTiPhoneSimulatorApplicationSpecifier *appSpec = [DTiPhoneSimulatorApplicationSpecifier specifierWithApplicationBundleIdentifier:@"com.apple.unknown"];
-  DTiPhoneSimulatorSystemRoot *systemRoot = [simInfo systemRootForSimulatedSdk];
-
-  DTiPhoneSimulatorSessionConfig *sessionConfig = [[DTiPhoneSimulatorSessionConfig alloc] init];
-  [sessionConfig setApplicationToSimulateOnStart:appSpec];
-  [sessionConfig setDevice:[simInfo simulatedDevice]];
-  [sessionConfig setRuntime:[simInfo simulatedRuntime]];
-  [sessionConfig setSimulatedApplicationLaunchArgs:@[]];
-  [sessionConfig setSimulatedApplicationLaunchEnvironment:@{}];
-  [sessionConfig setSimulatedApplicationShouldWaitForDebugger:NO];
-  [sessionConfig setSimulatedArchitecture:[simInfo simulatedArchitecture]];
-  [sessionConfig setSimulatedDeviceFamily:[simInfo simulatedDeviceFamily]];
-  [sessionConfig setSimulatedDeviceInfoName:[simInfo simulatedDeviceInfoName]];
-  [sessionConfig setSimulatedSystemRoot:systemRoot];
-
-  SimulatorLauncher *launcher = [[SimulatorLauncher alloc] initWithSessionConfig:sessionConfig
-                                                                       deviceName:[simInfo simulatedDeviceInfoName]];
-  launcher.launchTimeout = [simInfo launchTimeout];
-
-  BOOL simStartedSuccessfully = [launcher launchAndWaitForStart] || [simInfo simulatedDevice].state == SimDeviceStateBooted;
-  if (!simStartedSuccessfully && error) {
-    *error = launcher.launchError;
+  int attempts = 30;
+  while ([[simInfo simulatedDevice] state] != SimDeviceStateBooted && attempts > 0) {
+    [NSThread sleepForTimeInterval:0.1];
+    --attempts;
   }
-  
-  return simStartedSuccessfully;
+
+  return attempts > 0;
 }
 
 #pragma mark -
@@ -168,8 +164,8 @@
  *  of iOS simulator private classes used in xctool and defined in
  *  the CoreSimulator framework (introduced in Xcode 6).
  *
- *  But xctool, when built with Xcode 5 but running in Xcode 6, should use the 
- *  implementations of those classes from CoreSimulator framework rather than the stub 
+ *  But xctool, when built with Xcode 5 but running in Xcode 6, should use the
+ *  implementations of those classes from CoreSimulator framework rather than the stub
  *  implementations. That is why we need to create stubs and forward all selector
  *  invocations to the original implementation of the class if it exists.
  */
@@ -207,7 +203,7 @@
 
 /*
  *  If xctool is built using Xcode 6 then we just need to provide empty implementations
- *  of the stubs because they simply inherit original CoreSimulator private classes in 
+ *  of the stubs because they simply inherit original CoreSimulator private classes in
  *  that case.
  */
 
