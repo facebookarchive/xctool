@@ -221,7 +221,7 @@
 		283CCAA116C2EE7200F2E343 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0600;
+				LastUpgradeCheck = 0620;
 				ORGANIZATIONNAME = "Facebook, Inc.";
 			};
 			buildConfigurationList = 283CCAA416C2EE7200F2E343 /* Build configuration list for PBXProject "xcodebuild-shim" */;
@@ -273,7 +273,6 @@
 			baseConfigurationReference = 285F6F72171FD14F001295EC /* xcodebuild-shim.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -305,7 +304,6 @@
 			baseConfigurationReference = 285F6F72171FD14F001295EC /* xcodebuild-shim.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_CONSTANT_CONVERSION = YES;

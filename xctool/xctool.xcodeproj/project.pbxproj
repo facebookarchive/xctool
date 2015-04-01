@@ -836,7 +836,7 @@
 		283CCA3A16C2EA3700F2E343 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0600;
+				LastUpgradeCheck = 0620;
 				ORGANIZATIONNAME = "Facebook, Inc.";
 			};
 			buildConfigurationList = 283CCA3D16C2EA3700F2E343 /* Build configuration list for PBXProject "xctool" */;
@@ -1050,7 +1050,6 @@
 			baseConfigurationReference = 28E9B98316C2F2D900A52E4D /* xctool.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
@@ -1082,7 +1081,6 @@
 			baseConfigurationReference = 28E9B98316C2F2D900A52E4D /* xctool.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
