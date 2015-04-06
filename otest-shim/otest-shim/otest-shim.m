@@ -70,6 +70,8 @@ static int __testSuiteDepth = 0;
 
 static BOOL __testBundleHasStartedRunning = NO;
 
+static NSString *__testScope = nil;
+
 /**
  We don't want to turn this on until our initializer runs.  Otherwise, dylibs
  that are loaded earlier (like libSystem) will call into our interposed
@@ -392,6 +394,35 @@ static void XCTestCase_performTest(id self, SEL sel, id arg1)
   XCPerformTestWithSuppressedExpectedAssertionFailures(self, originalSelector, arg1);
 }
 
+#pragma mark - Test Scope
+
+static NSString * SenTestProbe_testScope(Class cls, SEL cmd)
+{
+  return __testScope;
+}
+
+static void UpdateTestScope()
+{
+  static NSString * const testListFileKey = @"OTEST_TESTLIST_FILE";
+  static NSString * const testingFrameworkFilterTestArgsKeyKey = @"OTEST_FILTER_TEST_ARGS_KEY";
+
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  NSString *testListFilePath = [defaults objectForKey:testListFileKey];
+  NSString *testingFrameworkFilterTestArgsKey = [defaults objectForKey:testingFrameworkFilterTestArgsKeyKey];
+  if (!testListFilePath && !testingFrameworkFilterTestArgsKey) {
+    return;
+  }
+  NSCAssert(testListFilePath, @"Path to file with list of tests should be specified");
+  NSCAssert(testingFrameworkFilterTestArgsKey, @"Testing framework filter test args key should be specified");
+
+  NSError *readError = nil;
+  NSString *testList = [NSString stringWithContentsOfFile:testListFilePath encoding:NSUTF8StringEncoding error:&readError];
+  NSCAssert(testList, @"Couldn't read file at path %@", testListFilePath);
+  [defaults setValue:testList forKey:testingFrameworkFilterTestArgsKey];
+
+  __testScope = [testList retain];
+}
+
 #pragma mark -
 
 // From /usr/lib/system/libsystem_kernel.dylib - output from printf/fprintf/fwrite will flow to
@@ -570,6 +601,11 @@ static const char *DyldImageStateChangeHandler(enum dyld_image_states state,
       XTSwizzleSelectorForFunction(NSClassFromString(@"SenTestCase"),
                                    @selector(performTest:),
                                    (IMP)SenTestCase_performTest);
+      if (__testScope) {
+        XTSwizzleClassSelectorForFunction(NSClassFromString(@"SenTestProbe"),
+                                          @selector(testScope),
+                                          (IMP)SenTestProbe_testScope);
+      }
 
       NSDictionary *frameworkInfo = FrameworkInfoForExtension(@"octest");
       ApplyDuplicateTestNameFix([frameworkInfo objectForKey:kTestingFrameworkTestProbeClassName],
@@ -625,6 +661,8 @@ __attribute__((constructor)) static void EntryPoint()
     __stderr = fdopen(stderrHandle, "w");
   }
 
+  UpdateTestScope();
+
   // We need to swizzle SenTestLog (part of SenTestingKit), but the test bundle
   // which links SenTestingKit hasn't been loaded yet.  Let's register to get
   // notified when libraries are initialized and we'll watch for SenTestingKit.
@@ -637,4 +675,3 @@ __attribute__((constructor)) static void EntryPoint()
 
   __enableWriteInterception = YES;
 }
-

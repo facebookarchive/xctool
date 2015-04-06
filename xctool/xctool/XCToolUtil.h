@@ -216,3 +216,8 @@ BOOL TestableSettingsIndicatesApplicationTest(NSDictionary *settings);
  * Returns path to the latest xcodebuild crash report or nil.
  */
 NSString *LatestXcodebuildCrashReportPath();
+
+/**
+ * Returns SHA1 for provided string.
+ */
+NSString *HashForString(NSString *string);

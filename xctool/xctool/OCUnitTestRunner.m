@@ -175,6 +175,7 @@
   NSSet *allSet = [NSSet setWithArray:_allTestCases];
 
   NSString *testSpecifier = nil;
+  NSString *testSpecifierToFile = nil;
   BOOL invertScope = NO;
 
   if ((!ToolchainIsXcode6OrBetter() || TestableSettingsIndicatesApplicationTest(_buildSettings)) &&
@@ -210,7 +211,11 @@
     [invertedSet minusSet:focusedSet];
 
     NSArray *invertedTestCases = [[invertedSet allObjects] sortedArrayUsingSelector:@selector(compare:)];
-    testSpecifier = [invertedTestCases componentsJoinedByString:@","];
+    if ([invertedTestCases count]) {
+      testSpecifierToFile = [invertedTestCases componentsJoinedByString:@","];
+    } else {
+      testSpecifier = @"";
+    }
 
     invertScope = YES;
   }
@@ -224,14 +229,41 @@
            @"-NSTreatUnknownArgumentsAsOpen", @"NO",
            // Not sure exactly what this does...
            @"-ApplePersistenceIgnoreState", @"YES",
-           // SenTest / XCTest is one of Self, All, None,
-           // or TestClassName[/testCaseName][,TestClassName2]
-           [@"-" stringByAppendingString:_framework[kTestingFrameworkFilterTestArgsKey]], testSpecifier,
-           // SenTestInvertScope / XCTestInvertScope optionally inverts whatever
-           // SenTest would normally select. We never invert, since we always
-           // pass the exact list of test cases to be run.
+           // Optionally inverts whatever SenTest / XCTest would normally select.
            [@"-" stringByAppendingString:_framework[kTestingFrameworkInvertScopeKey]], invertScope ? @"YES" : @"NO",
-           ]];
+  ]];
+  if (testSpecifier) {
+    // SenTest / XCTest is one of Self, All, None,
+    // or TestClassName[/testCaseName][,TestClassName2]
+    [args addObjectsFromArray:@[
+      [@"-" stringByAppendingString:_framework[kTestingFrameworkFilterTestArgsKey]],
+      testSpecifier
+    ]];
+  } else if (testSpecifierToFile) {
+    NSString *testListFilePath = MakeTempFileWithPrefix([NSString stringWithFormat:@"otest_test_list_%@", HashForString(testSpecifierToFile)]);
+    NSError *writeError = nil;
+    if ([_framework[kTestingFrameworkFilterTestArgsKey] isEqual:@"XCTest"]) {
+      testListFilePath = [testListFilePath stringByAppendingPathExtension:@"plist"];
+      NSData *data = [NSPropertyListSerialization dataWithPropertyList:@{@"XCTestScope": [focusedSet allObjects]}
+                                                                format:NSPropertyListXMLFormat_v1_0
+                                                               options:0
+                                                                 error:&writeError];
+      NSAssert(data, @"Couldn't convert to property list format: %@, error: %@", testSpecifierToFile, writeError);
+      [data writeToFile:testListFilePath atomically:YES];
+      [args addObjectsFromArray:@[
+        @"-XCTestScopeFile", testListFilePath,
+        @"-XCTestInvertScope", @"NO",
+      ]];
+    } else {
+      if (![testSpecifierToFile writeToFile:testListFilePath atomically:NO encoding:NSUTF8StringEncoding error:&writeError]) {
+        NSAssert(NO, @"Couldn't save list of tests to run to a file at path %@; error: %@", testListFilePath, writeError);
+      }
+      [args addObjectsFromArray:@[
+        @"-OTEST_TESTLIST_FILE", testListFilePath,
+        @"-OTEST_FILTER_TEST_ARGS_KEY", _framework[kTestingFrameworkFilterTestArgsKey],
+      ]];
+    }
+  }
 
   // Add any argments that might have been specifed in the scheme.
   [args addObjectsFromArray:_arguments];

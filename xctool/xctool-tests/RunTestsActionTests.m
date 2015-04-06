@@ -294,8 +294,8 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                  containsArray(@[
                                  @"-NSTreatUnknownArgumentsAsOpen", @"NO",
                                  @"-ApplePersistenceIgnoreState", @"YES",
-                                 @"-SenTest", @"",
                                  @"-SenTestInvertScope", @"YES",
+                                 @"-SenTest", @"",
                                  @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
                                  ]));
     } else {
@@ -303,8 +303,8 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                  containsArray(@[
                                  @"-NSTreatUnknownArgumentsAsOpen", @"NO",
                                  @"-ApplePersistenceIgnoreState", @"YES",
-                                 @"-SenTest", @"Self",
                                  @"-SenTestInvertScope", @"NO",
+                                 @"-SenTest", @"Self",
                                  @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
                                  ]));
     }
@@ -423,8 +423,8 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                  containsArray(@[
                                  @"-NSTreatUnknownArgumentsAsOpen", @"NO",
                                  @"-ApplePersistenceIgnoreState", @"YES",
-                                 @"-SenTest", @"",
                                  @"-SenTestInvertScope", @"YES",
+                                 @"-SenTest", @"",
                                  @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
                                  ]));
     } else {
@@ -432,8 +432,8 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                  containsArray(@[
                                  @"-NSTreatUnknownArgumentsAsOpen", @"NO",
                                  @"-ApplePersistenceIgnoreState", @"YES",
-                                 @"-SenTest", @"Self",
                                  @"-SenTestInvertScope", @"NO",
+                                 @"-SenTest", @"Self",
                                  @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
                                  ]));
     }
@@ -489,14 +489,16 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
 
       NSArray *launchedTasks = [[FakeTaskManager sharedManager] launchedTasks];
       assertThatInteger([launchedTasks count], equalToInteger(2));
-      assertThat([launchedTasks[1] arguments],
-                 containsArray(@[
-                                 @"-NSTreatUnknownArgumentsAsOpen", @"NO",
-                                 @"-ApplePersistenceIgnoreState", @"YES",
-                                 @"-SenTest", expectedSenTest,
-                                 @"-SenTestInvertScope", @"YES",
-                                 @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
-                                 ]));
+      NSArray *arguments = [launchedTasks[1] arguments];
+      assertThat(arguments, containsArray(@[
+        @"-NSTreatUnknownArgumentsAsOpen", @"NO",
+        @"-ApplePersistenceIgnoreState", @"YES",
+        @"-SenTestInvertScope", @"YES"]));
+      assertThat(arguments, containsArray(@[
+        @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
+      ]));
+      assertThat(arguments, containsArray(@[@"-OTEST_TESTLIST_FILE"]));
+      assertThat(arguments, containsArray(@[@"-OTEST_FILTER_TEST_ARGS_KEY", @"SenTest"]));
     }];
   };
 

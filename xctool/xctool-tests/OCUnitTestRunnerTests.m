@@ -323,19 +323,11 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
 
   // in Xcode 6 we are always inverting scope
   if (ToolchainIsXcode6OrBetter()) {
-    assertThat([runner testArguments],
-               containsArray(@[@"-SenTest",
-                               @"",
-                               @"-SenTestInvertScope",
-                               @"YES",
-                               ]));
+    assertThat([runner testArguments], containsArray(@[@"-SenTest", @""]));
+    assertThat([runner testArguments], containsArray(@[@"-SenTestInvertScope", @"YES"]));
   } else {
-    assertThat([runner testArguments],
-               containsArray(@[@"-SenTest",
-                               @"Self",
-                               @"-SenTestInvertScope",
-                               @"NO",
-                               ]));
+    assertThat([runner testArguments], containsArray(@[@"-SenTest", @"Self"]));
+    assertThat([runner testArguments], containsArray(@[@"-SenTestInvertScope", @"NO"]));
   }
 }
 
@@ -349,12 +341,8 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
 
   OCUnitTestRunner *runner = TestRunnerWithTestList([OCUnitTestRunner class], testSettings, @[@"Cls1/testA", @"Cls2/testB"]);
 
-  assertThat([runner testArguments],
-             containsArray(@[@"-SenTest",
-                             @"All",
-                             @"-SenTestInvertScope",
-                             @"NO",
-                             ]));
+  assertThat([runner testArguments], containsArray(@[@"-SenTest", @"All"]));
+  assertThat([runner testArguments], containsArray(@[@"-SenTestInvertScope", @"NO"]));
 }
 
 - (void)testTestSpecifierIsInvertedTestListWhenRunningSpecificTests
@@ -369,12 +357,13 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
                                                      testSettings,
                                                      @[@"Cls1/testA"],
                                                      @[@"Cls1/testA", @"Cls2/testB"]);
-  assertThat([runner testArguments],
-             containsArray(@[@"-SenTest",
-                             @"Cls2/testB",
-                             @"-SenTestInvertScope",
-                             @"YES",
-                             ]));
+  assertThat([runner testArguments], containsArray(@[@"-OTEST_TESTLIST_FILE"]));
+  assertThat([runner testArguments], containsArray(@[@"-OTEST_FILTER_TEST_ARGS_KEY", @"SenTest"]));
+  assertThat([runner testArguments], containsArray(@[@"-SenTestInvertScope", @"YES"]));
+
+  NSString *testListFilePath = [runner testArguments][([[runner testArguments] indexOfObject:@"-OTEST_TESTLIST_FILE"] + 1)];
+  NSString *testList = [NSString stringWithContentsOfFile:testListFilePath encoding:NSUTF8StringEncoding error:nil];
+  assertThat(testList, equalTo(@"Cls2/testB"));
 }
 
 #pragma mark Tests crashing
