@@ -344,16 +344,7 @@ static void XCToolLog_testCaseDidFail(NSDictionary *exceptionInfo)
 
 static void XCPerformTestWithSuppressedExpectedAssertionFailures(id self, SEL origSel, id arg1)
 {
-  static int timeout = 0;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    const char *testTimeoutKey = "OTEST_SHIM_TEST_TIMEOUT";
-    if (getenv(testTimeoutKey)) {
-      if (sscanf(getenv(testTimeoutKey), "%d", &timeout) != 1) {
-        timeout = 0;
-      }
-    }
-  });
+  int timeout = [@(getenv("OTEST_SHIM_TEST_TIMEOUT") ?: "0") intValue];
 
   NSAssertionHandler *handler = [[XCToolAssertionHandler alloc] init];
   NSThread *currentThread = [NSThread currentThread];
@@ -376,11 +367,9 @@ static void XCPerformTestWithSuppressedExpectedAssertionFailures(id self, SEL or
     // Call through original implementation
     objc_msgSend(self, origSel, arg1);
 
-    dispatch_async(queue, ^{
-      dispatch_source_cancel(source);
-      dispatch_release(source);
-      dispatch_release(queue);
-    });
+    dispatch_source_cancel(source);
+    dispatch_release(source);
+    dispatch_release(queue);
   } else {
     // Call through original implementation
     objc_msgSend(self, origSel, arg1);
