@@ -88,15 +88,15 @@
 }
 
 - (instancetype)initWithBuildSettings:(NSDictionary *)buildSettings
-           focusedTestCases:(NSArray *)focusedTestCases
-               allTestCases:(NSArray *)allTestCases
-                  arguments:(NSArray *)arguments
-                environment:(NSDictionary *)environment
-             freshSimulator:(BOOL)freshSimulator
-             resetSimulator:(BOOL)resetSimulator
-               freshInstall:(BOOL)freshInstall
-                testTimeout:(NSInteger)testTimeout
-                  reporters:(NSArray *)reporters
+                     focusedTestCases:(NSArray *)focusedTestCases
+                         allTestCases:(NSArray *)allTestCases
+                            arguments:(NSArray *)arguments
+                          environment:(NSDictionary *)environment
+                       freshSimulator:(BOOL)freshSimulator
+                       resetSimulator:(BOOL)resetSimulator
+                         freshInstall:(BOOL)freshInstall
+                          testTimeout:(NSInteger)testTimeout
+                            reporters:(NSArray *)reporters
 {
   if (self = [super init]) {
     _buildSettings = [buildSettings copy];
@@ -165,7 +165,7 @@
     _focusedTestCases = unstartedTestCases;
   }
 
-  
+
   return allTestsPassed;
 }
 
@@ -244,7 +244,8 @@
     NSError *writeError = nil;
     if ([_framework[kTestingFrameworkFilterTestArgsKey] isEqual:@"XCTest"]) {
       testListFilePath = [testListFilePath stringByAppendingPathExtension:@"plist"];
-      NSData *data = [NSPropertyListSerialization dataWithPropertyList:@{@"XCTestScope": [focusedSet allObjects]}
+      NSData *data = [NSPropertyListSerialization dataWithPropertyList:@{@"XCTestScope": @[testSpecifierToFile],
+                                                                         @"XCTestInvertScope": @(invertScope),}
                                                                 format:NSPropertyListXMLFormat_v1_0
                                                                options:0
                                                                  error:&writeError];
@@ -252,7 +253,6 @@
       [data writeToFile:testListFilePath atomically:YES];
       [args addObjectsFromArray:@[
         @"-XCTestScopeFile", testListFilePath,
-        @"-XCTestInvertScope", @"NO",
       ]];
     } else {
       if (![testSpecifierToFile writeToFile:testListFilePath atomically:NO encoding:NSUTF8StringEncoding error:&writeError]) {

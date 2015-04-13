@@ -18,4 +18,3 @@
 #import "ReporterEvents.h"
 
 NSDictionary *EventDictionaryWithNameAndContent(NSString *name, NSDictionary *content);
-

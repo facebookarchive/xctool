@@ -39,7 +39,7 @@ void XTSwizzleSelectorForFunction(Class cls, SEL sel, IMP newImp)
 
   Method newMethod = class_getInstanceMethod(cls, newSelector);
   method_exchangeImplementations(originalMethod, newMethod);
-  
+
 #if !__has_feature(objc_arc)
   [selectorName release];
 #endif
