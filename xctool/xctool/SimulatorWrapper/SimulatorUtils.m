@@ -59,6 +59,7 @@ static NSArray *GetLaunchdJobsForSimulator()
                              NSArray *strings = @[@"com.apple.iphonesimulator",
                                                   @"UIKitApplication",
                                                   @"SimulatorBridge",
+                                                  @"iOS Simulator",
                                                   ];
 
                              BOOL matches = NO;
