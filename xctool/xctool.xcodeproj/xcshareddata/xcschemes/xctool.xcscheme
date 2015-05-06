@@ -344,6 +344,11 @@
             value = "$(XT_INSTALL_ROOT)"
             isEnabled = "YES">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "OBJC_DISABLE_GC"
+            value = "YES"
+            isEnabled = "YES">
+         </EnvironmentVariable>
       </EnvironmentVariables>
    </TestAction>
    <LaunchAction
