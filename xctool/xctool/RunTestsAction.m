@@ -163,7 +163,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
                      description:
      @"Force individual test cases to be killed after specified timeout."
                        paramName:@"N"
-                           mapTo:@selector(setTestTimeout:)],
+                           mapTo:@selector(setTestTimeoutValue:)],
     ];
 }
 
