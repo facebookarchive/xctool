@@ -156,6 +156,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
   NSArray *launchedTasks;
 
   OCUnitTestRunner *runner = TestRunner([OCUnitIOSLogicTestRunner class], testSettings);
+  runner.cpuType = CPU_TYPE_I386;
   [self runTestsForRunner:runner
            andReturnTasks:&launchedTasks];
 

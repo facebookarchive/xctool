@@ -55,6 +55,11 @@
   return testHost;
 }
 
+- (cpu_type_t)cpuType
+{
+  return _cpuType != CPU_TYPE_ANY ? _cpuType : CpuTypeForTestBundleAtPath([self bundlePath]);
+}
+
 - (NSTask *)createTaskForQuery NS_RETURNS_RETAINED
 {
   return nil;

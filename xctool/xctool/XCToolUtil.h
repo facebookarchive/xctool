@@ -221,3 +221,12 @@ NSString *LatestXcodebuildCrashReportPath();
  * Returns SHA1 for provided string.
  */
 NSString *HashForString(NSString *string);
+
+/**
+ * Looks into bundle's executable architectures and returns:
+ *  - `CPU_TYPE_X86_64` if only x86_64 is supported,
+ *  - `CPU_TYPE_I386` if only i386 is supported,
+ *  - `CPU_TYPE_ANY` if both x86_64 and i386 are supported;
+ * or crashes if none of the above applies to bundle's executable.
+ */
+cpu_type_t CpuTypeForTestBundleAtPath(NSString *testBundlePath);

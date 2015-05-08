@@ -824,3 +824,31 @@ NSString *HashForString(NSString *string)
   }
   return output;
 }
+
+
+cpu_type_t CpuTypeForTestBundleAtPath(NSString *testBundlePath)
+{
+  NSArray *archs = [[NSBundle bundleWithPath:testBundlePath] executableArchitectures];
+
+  BOOL isI386Only = YES;
+  BOOL isX86_64Only = YES;
+  for (NSNumber *arch in archs) {
+    switch ([arch unsignedIntegerValue]) {
+      case NSBundleExecutableArchitectureI386:
+        isX86_64Only = NO;
+        break;
+
+      case NSBundleExecutableArchitectureX86_64:
+        isI386Only = NO;
+        break;
+    }
+  }
+  NSCAssert(!(isI386Only && isX86_64Only), @"Bundle's executable code doesn't support nor i386, nor x86_64 CPU types. Bundle path: %@, supported cpu types: %@.", testBundlePath, archs);
+
+  if (isX86_64Only) {
+    return CPU_TYPE_X86_64;
+  } else if (isI386Only) {
+    return CPU_TYPE_I386;
+  }
+  return CPU_TYPE_ANY;
+}

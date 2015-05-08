@@ -267,6 +267,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                        @"-scheme", @"TestProject-Library",
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
+                       @"-destination", @"arch=i386",
                        @"run-tests",
                        @"-reporter", @"plain",
                        ];
@@ -279,6 +280,8 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                equalTo(@[
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
+                       @"-destination", @"arch=i386",
+                       @"-destination-timeout", @"10",
                        @"PLATFORM_NAME=iphonesimulator",
                        @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                        @"-target", @"TestProject-LibraryTests",
@@ -340,6 +343,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                        @"-scheme", @"TestProject-Library",
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
+                       @"-destination", @"arch=i386",
                        @"run-tests",
                        @"listTestsOnly",
                        @"-reporter", @"json-stream"
@@ -395,6 +399,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                        @"-scheme", @"TestProject-Library",
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
+                       @"-destination", @"arch=i386",
                        @"run-tests", @"-test-sdk", @"iphonesimulator5.0",
                        @"-reporter", @"plain",
                        ];
@@ -407,6 +412,8 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                equalTo(@[
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator5.0",
+                       @"-destination", @"arch=i386",
+                       @"-destination-timeout", @"10",
                        @"PLATFORM_NAME=iphonesimulator",
                        @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                        @"-target", @"TestProject-LibraryTests",
@@ -481,6 +488,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                          @"-scheme", @"TestProject-Library",
                          @"-configuration", @"Debug",
                          @"-sdk", @"iphonesimulator6.0",
+                         @"-destination", @"arch=i386",
                          @"run-tests", @"-only", onlyArgument,
                          @"-reporter", @"plain",
                          ];
@@ -721,6 +729,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                        @"-scheme", @"TestProject-Library",
                        @"-sdk", @"iphonesimulator",
                        @"-arch", @"i386",
+                       @"-destination", @"arch=i386",
                        @"run-tests",
                        @"-reporter", @"plain",
                        ];
@@ -735,6 +744,8 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                        @"iphonesimulator6.1",
                        @"-arch",
                        @"i386",
+                       @"-destination", @"arch=i386",
+                       @"-destination-timeout", @"10",
                        @"PLATFORM_NAME=iphonesimulator",
                        @"-project",
                        @"xctool-tests/TestData/TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj",

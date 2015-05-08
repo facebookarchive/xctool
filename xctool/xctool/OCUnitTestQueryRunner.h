@@ -18,9 +18,10 @@
 
 @interface OCUnitTestQueryRunner : NSObject
 {
+@private
+  cpu_type_t _cpuType;
 @protected
   NSDictionary *_buildSettings;
-  cpu_type_t _cpuType;
 }
 
 - (instancetype)initWithBuildSettings:(NSDictionary *)buildSettings
@@ -30,5 +31,6 @@
 - (NSArray *)runQueryWithError:(NSString **)error;
 - (NSString *)bundlePath;
 - (NSString *)testHostPath;
+- (cpu_type_t)cpuType;
 
 @end

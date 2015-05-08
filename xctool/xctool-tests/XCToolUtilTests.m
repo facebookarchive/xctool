@@ -54,7 +54,7 @@
   assertThat(ParseArgumentsFromArgumentString(@"Arg1 \\'Arg 2\\'"), equalTo(@[@"Arg1", @"'Arg", @"2'"]));
 }
 
--(void)testGetAvailableSDKsAndAliases
+- (void)testGetAvailableSDKsAndAliases
 {
   // Mock the output of the call to "/usr/bin/xcodebuild" with fake data
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
@@ -85,7 +85,7 @@
   } withDefaultLaunchHandlers:NO];
 }
 
--(void)testGetAvailableSDKsInfo
+- (void)testGetAvailableSDKsInfo
 {
   // Mock the output of the call to "/usr/bin/xcodebuild" with fake data
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
@@ -179,6 +179,13 @@
     assertThatBool(result, equalToBool(YES));
     
   } withDefaultLaunchHandlers:NO];
+}
+
+- (void)testCpuTypeForTestBundleAtPath
+{
+  assertThatInt(CpuTypeForTestBundleAtPath(TEST_DATA @"tests-ios-test-bundle/SenTestingKit_Assertion.octest"), equalToInt(CPU_TYPE_I386));
+  assertThatInt(CpuTypeForTestBundleAtPath(TEST_DATA @"tests-ios-test-bundle/TestProject-Library-32And64bitTests.xctest"), equalToInt(CPU_TYPE_ANY));
+  assertThatInt(CpuTypeForTestBundleAtPath(TEST_DATA @"tests-ios-test-bundle/TestProject-Library-64bitTests.xctest"), equalToInt(CPU_TYPE_X86_64));
 }
 
 @end

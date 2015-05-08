@@ -234,6 +234,50 @@
                               ]));
 }
 
+- (void)testCanQueryClassesFromIOS64BitOnlyBundle
+{
+  NSString *error = nil;
+  NSString *latestSDK = GetAvailableSDKsAndAliases()[@"iphonesimulator"];
+  NSDictionary *buildSettings = @{
+                                  Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"tests-ios-test-bundle"),
+                                  Xcode_FULL_PRODUCT_NAME : @"TestProject-Library-64bitTests.xctest",
+                                  Xcode_SDK_NAME : latestSDK,
+                                  };
+
+  OCUnitTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
+                                                                                   withCpuType:CPU_TYPE_ANY];
+  NSArray *classes = [runner runQueryWithError:&error];
+
+  assertThat(error, is(nilValue()));
+  assertThat(classes,
+             equalTo(@[
+                       @"TestProjectLibrary64bitTests/testExample",
+                       @"TestProjectLibrary64bitTests/testSuccess",
+                       ]));
+}
+
+- (void)testCanQueryClassesFromIOS32And64BitBundle
+{
+  NSString *error = nil;
+  NSString *latestSDK = GetAvailableSDKsAndAliases()[@"iphonesimulator"];
+  NSDictionary *buildSettings = @{
+                                  Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"tests-ios-test-bundle"),
+                                  Xcode_FULL_PRODUCT_NAME : @"TestProject-Library-32And64bitTests.xctest",
+                                  Xcode_SDK_NAME : latestSDK,
+                                  };
+
+  OCUnitTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithBuildSettings:buildSettings
+                                                                                   withCpuType:CPU_TYPE_ANY];
+  NSArray *classes = [runner runQueryWithError:&error];
+
+  assertThat(error, is(nilValue()));
+  assertThat(classes,
+             equalTo(@[
+                       @"TestProjectLibrary64bitTests/testExample",
+                       @"TestProjectLibrary64bitTests/testSuccess",
+                       ]));
+}
+
 - (void)testQueryFailsWhenDYLDRejectsBundle_OSX
 {
   NSString *error = nil;
