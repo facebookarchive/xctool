@@ -439,22 +439,25 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
                          @"Cls2/test2",
                          @"Cls3/test1",
                          ];
-
-  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"All" senTestInvertScope:NO],
+  NSString *error = nil;
+  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"All" senTestInvertScope:NO error:&error],
              equalTo(testCases));
-  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Cls1" senTestInvertScope:NO],
+  STAssertNil(error, @"Error shouldn't be set");
+  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Cls1" senTestInvertScope:NO error:&error],
              equalTo(@[
                      @"Cls1/test1",
                      @"Cls1/test2",
                      @"Cls1/test3",
                      ]));
-  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Cls1" senTestInvertScope:YES],
+  STAssertNil(error, @"Error shouldn't be set");
+  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Cls1" senTestInvertScope:YES error:&error],
              equalTo(@[
                      @"Cls2/test1",
                      @"Cls2/test2",
                      @"Cls3/test1",
                      ]));
-  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Cls1,Cls2/test1,Cls3" senTestInvertScope:NO],
+  STAssertNil(error, @"Error shouldn't be set");
+  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Cls1,Cls2/test1,Cls3" senTestInvertScope:NO error:&error],
              equalTo(@[
                      @"Cls1/test1",
                      @"Cls1/test2",
@@ -462,10 +465,12 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
                      @"Cls2/test1",
                      @"Cls3/test1"
                      ]));
-  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Cls1,Cls2/test1,Cls3" senTestInvertScope:YES],
+  STAssertNil(error, @"Error shouldn't be set");
+  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Cls1,Cls2/test1,Cls3" senTestInvertScope:YES error:&error],
              equalTo(@[
                      @"Cls2/test2",
                      ]));
+  STAssertNil(error, @"Error shouldn't be set");
 }
 
 @end

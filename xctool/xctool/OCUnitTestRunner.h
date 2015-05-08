@@ -49,7 +49,8 @@
  */
 + (NSArray *)filterTestCases:(NSArray *)testCases
              withSenTestList:(NSString *)senTestList
-          senTestInvertScope:(BOOL)senTestInvertScope;
+          senTestInvertScope:(BOOL)senTestInvertScope
+                       error:(NSString **)error;
 
 - (instancetype)initWithBuildSettings:(NSDictionary *)buildSettings
            focusedTestCases:(NSArray *)focusedTestCases

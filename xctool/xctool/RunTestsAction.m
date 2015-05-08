@@ -537,9 +537,19 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
     Class testRunnerClass = [self testRunnerClassForBuildSettings:info.buildSettings];
     BOOL isApplicationTest = TestableSettingsIndicatesApplicationTest(info.buildSettings);
 
+    NSString *filterError = nil;
     NSArray *testCases = [OCUnitTestRunner filterTestCases:info.testCases
                                            withSenTestList:info.testable.senTestList
-                                        senTestInvertScope:info.testable.senTestInvertScope];
+                                        senTestInvertScope:info.testable.senTestInvertScope
+                                                     error:&filterError];
+    if (!testCases) {
+      TestableBlock block = [self blockToAdvertiseMessage:filterError
+                                 forTestableExecutionInfo:info
+                                                succeeded:NO];
+      NSArray *annotatedBlock = @[block, info.testable.target];
+      [blocksToRunOnDispatchQueue addObject:annotatedBlock];
+      continue;
+    }
 
     int bucketSize = isApplicationTest ? _appTestBucketSize : _logicTestBucketSize;
     NSArray *testChunks;

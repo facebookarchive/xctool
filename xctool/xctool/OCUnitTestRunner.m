@@ -43,11 +43,13 @@
 + (NSArray *)filterTestCases:(NSArray *)testCases
              withSenTestList:(NSString *)senTestList
           senTestInvertScope:(BOOL)senTestInvertScope
+                       error:(NSString **)error
 {
   NSSet *originalSet = [NSSet setWithArray:testCases];
 
   // Come up with a set of test cases that match the senTestList pattern.
   NSMutableSet *matchingSet = [NSMutableSet set];
+  NSMutableArray *notMatchedSpecifiers = [NSMutableArray array];
 
   if ([senTestList isEqualToString:@"All"]) {
     [matchingSet addObjectsFromArray:testCases];
@@ -55,22 +57,35 @@
     // None, we don't add anything to the set.
   } else {
     for (NSString *specifier in [senTestList componentsSeparatedByString:@","]) {
-      // If we have a slash, assume it's int he form of "SomeClass/testMethod"
+      BOOL matched = NO;
+
+      // If we have a slash, assume it's in the form of "SomeClass/testMethod"
       BOOL hasClassAndMethod = [specifier rangeOfString:@"/"].length > 0;
 
       if (hasClassAndMethod) {
         if ([originalSet containsObject:specifier]) {
           [matchingSet addObject:specifier];
+          matched = YES;
         }
       } else {
         NSString *matchingPrefix = [specifier stringByAppendingString:@"/"];
         for (NSString *testCase in testCases) {
           if ([testCase hasPrefix:matchingPrefix]) {
             [matchingSet addObject:testCase];
+            matched = YES;
           }
         }
       }
+
+      if (!matched) {
+        [notMatchedSpecifiers addObject:specifier];
+      }
     }
+  }
+
+  if ([notMatchedSpecifiers count] && senTestInvertScope == NO) {
+    *error = [NSString stringWithFormat:@"Test cases for the following test specifiers weren't found: %@.", [notMatchedSpecifiers componentsJoinedByString:@", "]];
+    return nil;
   }
 
   NSMutableArray *result = [NSMutableArray array];
