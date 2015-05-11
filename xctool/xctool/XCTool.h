@@ -16,12 +16,26 @@
 
 #import <Foundation/Foundation.h>
 
+typedef NS_ENUM(NSInteger, XCToolExitStatus) {
+  XCToolAllActionsSucceeded = 0,
+  XCToolActionFailed = 1,
+  XCToolNotCompatibleVersionOfXcode = 2,
+  XCToolArgsFileIsBroken = 3,
+  XCToolArgumentsValidationFailed = 4,
+  XCToolReporterOptionsValidationFailed = 5,
+  XCToolReporterInitializationFailed = 6,
+  XCToolXcodeInfoValidationFailed = 7,
+
+  XCToolHelpShown = 100,
+  XCToolVersionShown = 101,
+};
+
 @interface XCTool : NSObject
 
 @property (nonatomic, strong) NSFileHandle *standardOutput;
 @property (nonatomic, strong) NSFileHandle *standardError;
 @property (nonatomic, copy) NSArray *arguments;
-@property (nonatomic, assign) int exitStatus;
+@property (nonatomic, assign) XCToolExitStatus exitStatus;
 
 - (void)run;
 

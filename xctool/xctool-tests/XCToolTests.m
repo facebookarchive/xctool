@@ -47,7 +47,7 @@
 
   NSDictionary *result = [TestUtil runWithFakeStreams:tool];
 
-  assertThatInt(tool.exitStatus, equalToInt(1));
+  assertThatInt(tool.exitStatus, equalToInteger(XCToolHelpShown));
   assertThat((result[@"stderr"]), startsWith(@"usage: xctool"));
 }
 
@@ -58,7 +58,7 @@
 
   NSDictionary *result = [TestUtil runWithFakeStreams:tool];
 
-  assertThatInt(tool.exitStatus, equalToInt(0));
+  assertThatInt(tool.exitStatus, equalToInteger(XCToolVersionShown));
   assertThat((result[@"stdout"]),
              equalTo([NSString stringWithFormat:@"%@\n", XCToolVersionString]));
 }
@@ -70,7 +70,7 @@
 
   NSDictionary *result = [TestUtil runWithFakeStreams:tool];
 
-  assertThatInt(tool.exitStatus, equalToInt(1));
+  assertThatInt(tool.exitStatus, equalToInteger(XCToolXcodeInfoValidationFailed));
   assertThat((result[@"stderr"]), startsWith(@"ERROR:"));
 }
 
@@ -101,6 +101,7 @@
                        @"-showBuildSettings",
                        ]));
     assertThat(output[@"stdout"], startsWith(@"Build settings"));
+    assertThatInt(tool.exitStatus, equalToInteger(0));
   }];
 }
 

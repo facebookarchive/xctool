@@ -34,7 +34,7 @@
 - (instancetype)init
 {
   if (self = [super init]) {
-    _exitStatus = 0;
+    _exitStatus = XCToolAllActionsSucceeded;
   }
   return self;
 }
@@ -92,7 +92,7 @@
 {
   if ([XcodebuildVersion() compare:@"0600"] == NSOrderedAscending) {
     [_standardError printString:@"ERROR: This version of xctool supports only Xcode 6.0 or higher.\n"];
-    _exitStatus = 1;
+    _exitStatus = XCToolNotCompatibleVersionOfXcode;
     return;
   }
 
@@ -107,7 +107,7 @@
                                                              error:&readError];
     if (readError) {
       [_standardError printString:@"ERROR: Cannot read '.xctool-args' file: %@\n", [readError localizedFailureReason]];
-      _exitStatus = 1;
+      _exitStatus = XCToolArgsFileIsBroken;
       return;
     }
 
@@ -117,14 +117,14 @@
                                                                error:&JSONError];
     if (JSONError) {
       [_standardError printString:@"ERROR: couldn't parse json: %@: %@\n", argumentsString, [JSONError localizedDescription]];
-      _exitStatus = 1;
+      _exitStatus = XCToolArgsFileIsBroken;
       return;
     }
 
     [options consumeArguments:[NSMutableArray arrayWithArray:argumentsList] errorMessage:&errorMessage];
     if (errorMessage != nil) {
       [_standardError printString:@"ERROR: %@\n", errorMessage];
-      _exitStatus = 1;
+      _exitStatus = XCToolArgsFileIsBroken;
       return;
     }
   }
@@ -132,19 +132,19 @@
   [options consumeArguments:[NSMutableArray arrayWithArray:_arguments] errorMessage:&errorMessage];
   if (errorMessage != nil) {
     [_standardError printString:@"ERROR: %@\n", errorMessage];
-    _exitStatus = 1;
+    _exitStatus = XCToolArgumentsValidationFailed;
     return;
   }
 
   if (options.showHelp) {
     [self printUsage];
-    _exitStatus = 1;
+    _exitStatus = XCToolHelpShown;
     return;
   }
 
   if (options.showVersion) {
     [_standardOutput printString:@"%@\n", XCToolVersionString];
-    _exitStatus = 0;
+    _exitStatus = XCToolVersionShown;
     return;
   }
 
@@ -164,7 +164,7 @@
 
   if (![options validateReporterOptions:&errorMessage]) {
     [_standardError printString:@"ERROR: %@\n\n", errorMessage];
-    _exitStatus = 1;
+    _exitStatus = XCToolReporterOptionsValidationFailed;
     return;
   }
 
@@ -174,7 +174,7 @@
                             standardError:_standardError
                                     error:&error]) {
       [_standardError printString:@"ERROR: %@\n\n", error];
-      _exitStatus = 1;
+      _exitStatus = XCToolReporterInitializationFailed;
       return;
     }
   }
@@ -187,7 +187,7 @@
     if (![options validateAndReturnXcodeSubjectInfo:&xcodeSubjectInfo
                                        errorMessage:&errorMessage]) {
       [_standardError printString:@"ERROR: %@\n\n", errorMessage];
-      _exitStatus = 1;
+      _exitStatus = XCToolXcodeInfoValidationFailed;
       return;
     }
 
@@ -218,7 +218,7 @@
       CleanupTemporaryDirectoryForAction();
 
       if (!succeeded) {
-        _exitStatus = 1;
+        _exitStatus = XCToolActionFailed;
         break;
       }
     }
