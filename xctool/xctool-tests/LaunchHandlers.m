@@ -203,7 +203,17 @@ BOOL IsOtestTask(NSTask *task)
 
     BOOL isOtestQuery = NO;
 
-    if ([[task launchPath] isEqualToString:testHost]) {
+    if ([[task launchPath] hasSuffix:@"usr/bin/sim"]) {
+      // iOS tests get queried through the 'sim' launcher.
+      if ([task environment][@"SIMSHIM_OtestQueryBundlePath"]) {
+        for (NSString *arg in [task arguments]) {
+          if ([arg hasSuffix:testHost]) {
+            isOtestQuery = YES;
+            break;
+          }
+        }
+      }
+    } else if ([[task launchPath] isEqualToString:testHost]) {
       isOtestQuery = YES;
     }
 
