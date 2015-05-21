@@ -330,7 +330,7 @@
 
   __block BOOL testsPresentInOptions = NO;
   [_actions enumerateObjectsUsingBlock:^(Action *action, NSUInteger idx, BOOL *stop) {
-    if ([[action class] conformsToProtocol:@protocol(TestRunning)]) {
+    if ([action conformsToProtocol:@protocol(TestRunning)]) {
       testsPresentInOptions = [(id<TestRunning>)action testsPresentInOptions];
       *stop = YES;
     }
