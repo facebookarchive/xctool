@@ -70,7 +70,7 @@
   NSDictionary *configuration = @{NSWorkspaceLaunchConfigurationArguments: @[@"-CurrentDeviceUDID", [[[simInfo simulatedDevice] UDID] UUIDString]]};
   NSError *launchError = nil;
   NSRunningApplication *app = [[NSWorkspace sharedWorkspace] launchApplicationAtURL:iOSSimulatorURL
-                                                                            options:NSWorkspaceLaunchDefault
+                                                                            options:NSWorkspaceLaunchAsync | NSWorkspaceLaunchWithoutActivation | NSWorkspaceLaunchAndHide
                                                                       configuration:configuration
                                                                               error:&launchError];
   if (!app) {
