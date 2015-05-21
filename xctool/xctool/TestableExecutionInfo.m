@@ -28,31 +28,12 @@
 @implementation TestableExecutionInfo
 
 + (instancetype)infoForTestable:(Testable *)testable
-               xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
-            xcodebuildArguments:(NSArray *)xcodebuildArguments
-                        testSDK:(NSString *)testSDK
+                  buildSettings:(NSDictionary *)buildSettings
                         cpuType:(cpu_type_t)cpuType
 {
   TestableExecutionInfo *info = [[TestableExecutionInfo alloc] init];
   info.testable = testable;
-
-  NSString *buildSettingsError = nil;
-  NSDictionary *buildSettings = [[self class] testableBuildSettingsForProject:testable.projectPath
-                                                                       target:testable.target
-                                                                      objRoot:xcodeSubjectInfo.objRoot
-                                                                      symRoot:xcodeSubjectInfo.symRoot
-                                                            sharedPrecompsDir:xcodeSubjectInfo.sharedPrecompsDir
-                                                         targetedDeviceFamily:xcodeSubjectInfo.targetedDeviceFamily
-                                                               xcodeArguments:xcodebuildArguments
-                                                                      testSDK:testSDK
-                                                                        error:&buildSettingsError];
-
-  if (buildSettings) {
-    info.buildSettings = buildSettings;
-  } else {
-    info.buildSettingsError = buildSettingsError;
-    return info;
-  }
+  info.buildSettings = buildSettings;
 
   NSString *otestQueryError = nil;
   NSArray *testCases = [[self class] queryTestCasesWithBuildSettings:info.buildSettings

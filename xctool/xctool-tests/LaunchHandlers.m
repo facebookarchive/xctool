@@ -196,4 +196,25 @@ BOOL IsOtestTask(NSTask *task)
   } copy];
 }
 
++ (id)handlerForOtestQueryWithTestHost:(NSString *)testHost
+                     returningTestList:(NSArray *)testList
+{
+  return [^(FakeTask *task){
+
+    BOOL isOtestQuery = NO;
+
+    if ([[task launchPath] isEqualToString:testHost]) {
+      isOtestQuery = YES;
+    }
+
+    if (isOtestQuery) {
+      [task pretendExitStatusOf:0];
+      [task pretendTaskReturnsStandardOutput:
+       [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:testList options:0 error:nil]
+                              encoding:NSUTF8StringEncoding]];
+      [[FakeTaskManager sharedManager] hideTaskFromLaunchedTasks:task];
+    }
+  } copy];
+}
+
 @end

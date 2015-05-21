@@ -165,6 +165,11 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
                          aliases:nil
                      description:@"Skip actual test running and list them only."
                          setFlag:@selector(setListTestsOnly:)],
+    [Action actionOptionWithName:@"targetedDeviceFamily"
+                         aliases:nil
+                     description:@"Target specific type of simulator when running tests (1=iPhone, 2=iPad, 4=Apple Watch)"
+                       paramName:@"FAMILY"
+                           mapTo:@selector(setTargetedDeviceFamily:)],
     [Action actionOptionWithName:@"testTimeout"
                          aliases:nil
                      description:
@@ -182,6 +187,100 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
                        paramName:@"BUNDLE:HOST_APP"
                            mapTo:@selector(addAppTest:)],
     ];
+}
+
++ (NSArray *)_allTestablesForLogicTests:(NSArray *)logicTests
+                               appTests:(NSDictionary *)appTests
+                       xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
+{
+  if (logicTests.count || appTests.count) {
+    NSMutableArray *result = [NSMutableArray array];
+    for (NSString *logicTestBundle in logicTests) {
+      Testable *testable = [[Testable alloc] init];
+      testable.target = logicTestBundle;
+
+      // Will be overridden later if -only is passed
+      testable.senTestList = @"All";
+      [result addObject:testable];
+    }
+
+    for (NSString *appTestBundle in appTests) {
+      Testable *testable = [[Testable alloc] init];
+      testable.target = appTestBundle;
+
+      testable.senTestList = @"All";
+      [result addObject:testable];
+    }
+    return result;
+  } else if (xcodeSubjectInfo.testables) {
+    return xcodeSubjectInfo.testables;
+  } else {
+    return nil;
+  }
+}
+
++ (Testable *)_matchingTestableForTarget:(NSString *)target
+                              logicTests:(NSArray *)logicTests
+                                appTests:(NSDictionary *)appTests
+                        xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
+{
+  for (NSString *logicTestBundle in logicTests) {
+    if ([target isEqualToString:logicTestBundle]) {
+      Testable *testable = [[Testable alloc] init];
+      testable.target = logicTestBundle;
+      return testable;
+    }
+  }
+
+  for (NSString *appTestBundle in appTests) {
+    if ([target isEqualToString:appTestBundle]) {
+      Testable *testable = [[Testable alloc] init];
+      testable.target = appTestBundle;
+      return testable;
+    }
+  }
+
+  return [xcodeSubjectInfo testableWithTarget:target];
+}
+
++ (void)_populateTestableBuildSettings:(NSDictionary **)defaultTestableBuildSettings
+        perTargetTestableBuildSettings:(NSDictionary **)perTargetTestableBuildSettings
+                            logicTests:(NSArray *)logicTests
+                              appTests:(NSDictionary *)appTests
+                               sdkName:(NSString *)sdkName
+                               sdkPath:(NSString *)sdkPath
+                  targetedDeviceFamily:(NSString *)targetedDeviceFamily
+{
+  NSAssert(sdkName, @"Sdk name should be specified using -sdk option");
+  NSAssert(sdkPath, @"Sdk path should be known");
+
+  *defaultTestableBuildSettings = @{
+    Xcode_SDK_NAME: sdkName,
+    Xcode_SDKROOT: sdkPath,
+    Xcode_TARGETED_DEVICE_FAMILY: targetedDeviceFamily ?: @"1", // Default to iPhone simulator
+  };
+
+  NSMutableDictionary *newPerTargetTestableBuildSettings = [NSMutableDictionary dictionary];
+  for (NSString *logicTest in logicTests) {
+    NSString *logicTestDirName = [logicTest stringByDeletingLastPathComponent];
+    NSString *logicTestFileName = [logicTest lastPathComponent];
+    newPerTargetTestableBuildSettings[logicTest] = @{
+      Xcode_BUILT_PRODUCTS_DIR: logicTestDirName,
+      Xcode_FULL_PRODUCT_NAME: logicTestFileName,
+    };
+  }
+
+  for (NSString *appTest in appTests) {
+    NSString *appTestDirName = [appTest stringByDeletingLastPathComponent];
+    NSString *appTestFileName = [appTest lastPathComponent];
+    NSString *testHostPath = appTests[appTest];
+    newPerTargetTestableBuildSettings[appTest] = @{
+      Xcode_BUILT_PRODUCTS_DIR: appTestDirName,
+      Xcode_FULL_PRODUCT_NAME: appTestFileName,
+      Xcode_TEST_HOST: testHostPath,
+    };
+  }
+  *perTargetTestableBuildSettings = newPerTargetTestableBuildSettings;
 }
 
 - (instancetype)init
@@ -305,7 +404,10 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
   }
 
   for (NSDictionary *only in [self onlyListAsTargetsAndSenTestList]) {
-    if ([xcodeSubjectInfo testableWithTarget:only[@"target"]] == nil) {
+    if ([[self class] _matchingTestableForTarget:only[@"target"]
+                                      logicTests:_logicTests
+                                        appTests:_appTests
+                                xcodeSubjectInfo:xcodeSubjectInfo] == nil) {
       *errorMessage = [NSString stringWithFormat:@"run-tests: '%@' is not a testing target in this scheme.", only[@"target"]];
       return NO;
     }
@@ -360,7 +462,11 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
   if (_onlyList.count == 0) {
     // Use whatever we found in the scheme, except for skipped tests.
     NSMutableArray *unskipped = [NSMutableArray array];
-    for (Testable *testable in xcodeSubjectInfo.testables) {
+    NSArray *allTestables = [[self class] _allTestablesForLogicTests:_logicTests
+                                                            appTests:_appTests
+                                                    xcodeSubjectInfo:xcodeSubjectInfo];
+
+    for (Testable *testable in allTestables) {
       if (!testable.skipped) {
         [unskipped addObject:testable];
       }
@@ -370,7 +476,11 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
     // Munge the list of testables from the scheme to only include those given.
     NSMutableArray *newTestables = [NSMutableArray array];
     for (NSDictionary *only in [self onlyListAsTargetsAndSenTestList]) {
-      Testable *matchingTestable = [xcodeSubjectInfo testableWithTarget:only[@"target"]];
+      Testable *matchingTestable =
+        [[self class] _matchingTestableForTarget:only[@"target"]
+                                      logicTests:_logicTests
+                                        appTests:_appTests
+                                xcodeSubjectInfo:xcodeSubjectInfo];
 
       if (matchingTestable) {
         Testable *newTestable = [matchingTestable copy];
@@ -575,12 +685,45 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
   for (Testable *testable in testables) {
     dispatch_semaphore_wait(queueLimiter, DISPATCH_TIME_FOREVER);
     dispatch_group_async(group, q, ^{
-      TestableExecutionInfo *info = [TestableExecutionInfo infoForTestable:testable
-                                                          xcodeSubjectInfo:xcodeSubjectInfo
-                                                       xcodebuildArguments:xcodebuildArguments
-                                                                   testSDK:_testSDK
-                                                                   cpuType:_cpuType];
 
+      NSDictionary *testableBuildSettings = nil;
+      NSString *buildSettingsError = nil;
+      // Skip discovering test settings from Xcode if -logicTests or -appTests are passed.
+      if ([self testsPresentInOptions]) {
+        NSDictionary *defaultTestableBuildSettings = nil;
+        NSDictionary *perTargetTestableBuildSettings = nil;
+        [[self class] _populateTestableBuildSettings:&defaultTestableBuildSettings
+                      perTargetTestableBuildSettings:&perTargetTestableBuildSettings
+                                          logicTests:_logicTests
+                                            appTests:_appTests
+                                             sdkName:options.sdk
+                                             sdkPath:options.sdkPath
+                                targetedDeviceFamily:_targetedDeviceFamily];
+        NSMutableDictionary *settings = [defaultTestableBuildSettings mutableCopy];
+        [settings addEntriesFromDictionary:perTargetTestableBuildSettings[testable.target]];
+        testableBuildSettings = settings;
+      } else {
+        testableBuildSettings = [TestableExecutionInfo
+            testableBuildSettingsForProject:testable.projectPath
+                                     target:testable.target
+                                    objRoot:xcodeSubjectInfo.objRoot
+                                    symRoot:xcodeSubjectInfo.symRoot
+                          sharedPrecompsDir:xcodeSubjectInfo.sharedPrecompsDir
+                       targetedDeviceFamily:xcodeSubjectInfo.targetedDeviceFamily
+                             xcodeArguments:xcodebuildArguments
+                                    testSDK:_testSDK
+                                      error:&buildSettingsError];
+      }
+      TestableExecutionInfo *info;
+      if (testableBuildSettings) {
+        info = [TestableExecutionInfo infoForTestable:testable
+                                        buildSettings:testableBuildSettings
+                                              cpuType:_cpuType];
+      } else {
+        info = [[TestableExecutionInfo alloc] init];
+        info.testable = testable;
+        info.buildSettingsError = buildSettingsError ?: @"Unknown build settings error";
+      }
       @synchronized (self) {
         [testableExecutionInfos addObject:info];
       }

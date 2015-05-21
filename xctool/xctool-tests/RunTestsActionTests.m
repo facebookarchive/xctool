@@ -1045,7 +1045,78 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
        assertOptionsFailToValidateWithError:
            @"run-tests: The same test bundle '"TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/TestProject-App-OSXTests.octest' cannot test "
            @"more than one test host app (got '"TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/TestProject-App-OSX.app/Contents/MacOS/TestProject-App-OSX' and '" TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/TestProject-App-OSX.app/Contents/MacOS/TestProject-App-OSX')"];
+  }];
+}
 
+- (void)testPassingLogicTestViaCommandLine
+{
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+     [LaunchHandlers handlerForOtestQueryReturningTestList:@[@"FakeTest/TestA", @"FakeTest/TestB"]],
+     ]];
+
+    XCTool *tool = [[XCTool alloc] init];
+
+    tool.arguments = @[@"-sdk", @"iphonesimulator6.1",
+                       @"run-tests",
+                        @"-logicTest", TEST_DATA @"tests-ios-test-bundle/TestProject-LibraryTests.octest",
+                      ];
+
+    __block OCUnitTestRunner *runner = nil;
+
+    [Swizzler whileSwizzlingSelector:@selector(runTests)
+                 forInstancesOfClass:[OCUnitTestRunner class]
+                           withBlock:
+     ^(id self, SEL sel){
+       // Don't actually run anything and just save a reference to the runner.
+       runner = self;
+       // Pretend tests succeeded.
+       return YES;
+     }
+                            runBlock:
+     ^{
+       [TestUtil runWithFakeStreams:tool];
+
+       assertThat(runner, notNilValue());
+       assertThat([runner testBundlePath], equalTo(TEST_DATA @"tests-ios-test-bundle/TestProject-LibraryTests.octest"));
+     }];
+  }];
+}
+
+- (void)testPassingAppTestViaCommandLine
+{
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+        [LaunchHandlers handlerForOtestQueryWithTestHost:TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/TestProject-App-OSX.app/Contents/MacOS/TestProject-App-OSX"
+                                        returningTestList:@[@"FakeTest/TestA", @"FakeTest/TestB"]],
+        ]];
+
+    XCTool *tool = [[XCTool alloc] init];
+
+    tool.arguments = @[@"-sdk", @"macosx10.8",
+                       @"run-tests",
+                       @"-appTest",
+                       TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/TestProject-App-OSXTests.octest:" TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/TestProject-App-OSX.app/Contents/MacOS/TestProject-App-OSX",
+                       ];
+
+    __block OCUnitTestRunner *runner = nil;
+
+    [Swizzler whileSwizzlingSelector:@selector(runTests)
+                 forInstancesOfClass:[OCUnitTestRunner class]
+                           withBlock:
+     ^(id self, SEL sel){
+       // Don't actually run anything and just save a reference to the runner.
+       runner = self;
+       // Pretend tests succeeded.
+       return YES;
+     }
+                            runBlock:
+     ^{
+       [TestUtil runWithFakeStreams:tool];
+
+       assertThat(runner, notNilValue());
+       assertThat([runner testBundlePath], equalTo(TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/TestProject-App-OSXTests.octest"));
+     }];
   }];
 }
 

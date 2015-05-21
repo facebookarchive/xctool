@@ -53,5 +53,7 @@ BOOL IsOtestTask(NSTask *task);
                                           hide:(BOOL)hide;
 
 + (id)handlerForOtestQueryReturningTestList:(NSArray *)testList;
++ (id)handlerForOtestQueryWithTestHost:(NSString *)testHost
+                     returningTestList:(NSArray *)testList;
 
 @end
