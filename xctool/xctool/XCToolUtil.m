@@ -304,14 +304,10 @@ NSDictionary *GetAvailableSDKsInfo()
   return versionsAvailable;
 }
 
-NSDictionary *GetAvailableSDKsAndAliases()
+NSDictionary *GetAvailableSDKsAndAliasesWithSDKInfo(NSDictionary *sdkInfo)
 {
   NSMutableDictionary *versionsAvailable = [NSMutableDictionary dictionary];
 
-  // GetAvailableSDKsInfo already does the hard work for us; we just need to
-  //  iterate through its result to pull out the values cooresponding to the
-  // "SDK" field for each of the SDK entries.
-  NSDictionary *sdkInfo = GetAvailableSDKsInfo();
   NSArray *keys = [sdkInfo allKeys];
 
   for (NSString *key in keys) {
@@ -319,6 +315,15 @@ NSDictionary *GetAvailableSDKsAndAliases()
   }
 
   return versionsAvailable;
+}
+
+NSDictionary *GetAvailableSDKsAndAliases()
+{
+  // GetAvailableSDKsInfo already does the hard work for us; we just need to
+  //  iterate through its result to pull out the values cooresponding to the
+  // "SDK" field for each of the SDK entries.
+  NSDictionary *sdkInfo = GetAvailableSDKsInfo();
+  return GetAvailableSDKsAndAliasesWithSDKInfo(sdkInfo);
 }
 
 BOOL IsRunningUnderTest()
