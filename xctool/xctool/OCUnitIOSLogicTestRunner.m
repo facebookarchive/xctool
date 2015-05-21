@@ -62,10 +62,8 @@
   // and merging with process environments and `_environment` variable contents
   env = [self otestEnvironmentWithOverrides:env];
 
-  cpu_type_t cpuType = _cpuType != CPU_TYPE_ANY ? _cpuType : CpuTypeForTestBundleAtPath(testBundlePath);
-
   return CreateTaskForSimulatorExecutable(_buildSettings[Xcode_SDK_NAME],
-                                          cpuType,
+                                          _cpuType,
                                           [SimulatorInfo baseVersionForSDKShortVersion:[self.simulatorInfo simulatedSdkVersion]],
                                           launchPath,
                                           args,

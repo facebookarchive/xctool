@@ -73,11 +73,21 @@ static const NSInteger KProductTypeIpad = 2;
 
   switch ([[self simulatedDeviceFamily] integerValue]) {
     case KProductTypeIphone:
-      _deviceName = @"iPhone 4s";
+      if (_cpuType == CPU_TYPE_I386) {
+        _deviceName = @"iPhone 4s";
+      } else {
+        // CPU_TYPE_X86_64 or CPU_TYPE_ANY
+        _deviceName = @"iPhone 5s";
+      }
       break;
 
     case KProductTypeIpad:
-      _deviceName = @"iPad 2";
+      if (_cpuType == CPU_TYPE_I386) {
+        _deviceName = @"iPad 2";
+      } else {
+        // CPU_TYPE_X86_64 or CPU_TYPE_ANY
+        _deviceName = @"iPad Air";
+      }
       break;
   }
 
@@ -92,7 +102,16 @@ static const NSInteger KProductTypeIpad = 2;
   NSMutableArray *supportedDeviceTypes = [NSMutableArray array];
   for (SimDevice *device in [[SimDeviceSetStub defaultSet] availableDevices]) {
     if ([device.runtime isEqual:runtime]) {
-      [supportedDeviceTypes addObject:device.deviceType];
+      if (_cpuType == CPU_TYPE_ANY) {
+        [supportedDeviceTypes addObject:device.deviceType];
+      } else {
+        for (NSNumber *supportedArch in [[device deviceType] supportedArchs]) {
+          if (([supportedArch longLongValue] & _cpuType) == _cpuType) {
+            [supportedDeviceTypes addObject:device.deviceType];
+            break;
+          }
+        }
+      }
     }
   }
 

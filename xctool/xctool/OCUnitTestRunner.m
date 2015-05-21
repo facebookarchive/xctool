@@ -124,8 +124,9 @@
     _freshInstall = freshInstall;
     _testTimeout = testTimeout;
     _reporters = [reporters copy];
-    _framework = [FrameworkInfoForTestBundleAtPath([self testBundlePath]) copy];
-    _cpuType = CPU_TYPE_ANY;
+    NSString *testBundlePath = [self testBundlePath];
+    _framework = [FrameworkInfoForTestBundleAtPath(testBundlePath) copy];
+    _cpuType = CpuTypeForTestBundleAtPath(testBundlePath);
   }
   return self;
 }

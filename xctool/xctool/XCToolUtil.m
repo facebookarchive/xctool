@@ -833,7 +833,13 @@ NSString *HashForString(NSString *string)
 
 cpu_type_t CpuTypeForTestBundleAtPath(NSString *testBundlePath)
 {
-  NSArray *archs = [[NSBundle bundleWithPath:testBundlePath] executableArchitectures];
+  NSBundle *testBundle = [NSBundle bundleWithPath:testBundlePath];
+  if (!testBundle) {
+    // Many unit tests specify a nonexistent bundle.
+    return CPU_TYPE_ANY;
+  }
+
+  NSArray *archs = [testBundle executableArchitectures];
 
   BOOL isI386Only = YES;
   BOOL isX86_64Only = YES;

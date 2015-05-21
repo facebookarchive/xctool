@@ -619,7 +619,9 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                                      freshInstall:_freshInstall
                                      testTimeout:_testTimeout
                                      reporters:reporters];
-    [testRunner setCpuType:_cpuType];
+    if (_cpuType != CPU_TYPE_ANY) {
+      [testRunner setCpuType:_cpuType];
+    }
 
     if ([testRunner isKindOfClass:[OCUnitIOSAppTestRunner class]]) {
       if (_deviceName) {
