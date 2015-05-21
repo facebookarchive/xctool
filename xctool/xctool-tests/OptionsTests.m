@@ -24,6 +24,7 @@
 #import "Options+Testing.h"
 #import "Options.h"
 #import "ReporterTask.h"
+#import "RunTestsAction.h"
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
 #import "XcodeSubjectInfo.h"
@@ -81,6 +82,18 @@
   assertThat(buildSettings,
              equalTo(@{@"ABC" : @"123",
                        @"DEF" : @"456"}));
+}
+
+- (void)testDisallowRunTestsWithBothTestsAndWorkspaceAndProject
+{
+  [[Options optionsFrom:@[
+    @"-workspace", @"Something.xcworkspace",
+    @"-project", @"Something.xcodeproj",
+    @"run-tests",
+    @"-logicTest", TEST_DATA @"tests-ios-test-bundle/TestProject-LibraryTests.octest",
+    ]]
+   assertOptionsFailToValidateWithError:
+      @"If -logicTest or -appTest are specified, -workspace, -project, and -scheme must not be specified."];
 }
 
 - (void)testDisallowBothWorkspaceAndProjectSpecified
@@ -465,5 +478,4 @@
    [NSString stringWithFormat:@"Unable to find projects (.xcodeproj) in directory %@. Please specify with -workspace, -project, or -find-target.",
     options.findProjectPath]];
 }
-
 @end

@@ -52,6 +52,12 @@ static NSArray *chunkifyArray(NSArray *array, NSUInteger chunkSize) {
   return chunks;
 }
 
+static BOOL IsDirectory(NSString *path) {
+  BOOL isDirectory = NO;
+  BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDirectory];
+  return exists && isDirectory;
+};
+
 NSArray *BucketizeTestCasesByTestCase(NSArray *testCases, int bucketSize)
 {
   return chunkifyArray(testCases, bucketSize);
@@ -93,6 +99,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
 @property (nonatomic, assign) int appTestBucketSize;
 @property (nonatomic, assign) BucketBy bucketBy;
 @property (nonatomic, assign) int testTimeout;
+@property (nonatomic, strong) NSMutableArray *rawAppTestArgs;
 @end
 
 @implementation RunTestsAction
@@ -164,6 +171,16 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
      @"Force individual test cases to be killed after specified timeout."
                        paramName:@"N"
                            mapTo:@selector(setTestTimeoutValue:)],
+    [Action actionOptionWithName:@"logicTest"
+                         aliases:nil
+                     description:@"Add a path to a logic test bundle to run"
+                       paramName:@"BUNDLE"
+                           mapTo:@selector(addLogicTest:)],
+    [Action actionOptionWithName:@"appTest"
+                         aliases:nil
+                     description:@"Add a path to an app test bundle with the path to its host app"
+                       paramName:@"BUNDLE:HOST_APP"
+                           mapTo:@selector(addAppTest:)],
     ];
 }
 
@@ -176,6 +193,9 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
     _bucketBy = BucketByTestCase;
     _testTimeout = 0;
     _cpuType = CPU_TYPE_ANY;
+    _rawAppTestArgs = [[NSMutableArray alloc] init];
+    _logicTests = [[NSMutableArray alloc] init];
+    _appTests = [[NSMutableDictionary alloc] init];
   }
   return self;
 }
@@ -208,6 +228,21 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
 - (void)setTestTimeoutValue:(NSString *)str
 {
   _testTimeout = [str intValue];
+}
+
+- (void)addLogicTest:(NSString *)argument
+{
+  [_logicTests addObject:argument];
+}
+
+- (void)addAppTest:(NSString *)argument
+{
+  [_rawAppTestArgs addObject:argument];
+}
+
+- (BOOL)testsPresentInOptions
+{
+  return (_logicTests.count > 0) || (_rawAppTestArgs.count > 0) || (_appTests.count > 0);
 }
 
 - (NSArray *)onlyListAsTargetsAndSenTestList
@@ -274,6 +309,45 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
       *errorMessage = [NSString stringWithFormat:@"run-tests: '%@' is not a testing target in this scheme.", only[@"target"]];
       return NO;
     }
+  }
+
+  for (NSString *logicTestPath in _logicTests) {
+    if (!IsDirectory(logicTestPath)) {
+      *errorMessage = [NSString stringWithFormat:@"run-tests: Logic test at path '%@' does not exist or is not a directory", logicTestPath];
+      return NO;
+    }
+  }
+
+  for (NSString *rawAppTestArg in _rawAppTestArgs) {
+    NSRange colonRange = [rawAppTestArg rangeOfString:@":"];
+
+    if (colonRange.location == NSNotFound || colonRange.location == 0) {
+      *errorMessage = [NSString stringWithFormat:@"run-tests: -appTest must be in the form test-bundle:test-app"];
+      return NO;
+    }
+
+    NSString *testBundle = [rawAppTestArg substringToIndex:colonRange.location];
+    NSString *hostApp = [rawAppTestArg substringFromIndex:colonRange.location + 1];
+    NSString *existingHostAppForTestBundle = _appTests[testBundle];
+
+    if (existingHostAppForTestBundle) {
+      *errorMessage = [NSString stringWithFormat:@"run-tests: The same test bundle '%@' cannot test more than one test host app (got '%@' and '%@')",
+                                testBundle, existingHostAppForTestBundle, hostApp];
+      return NO;
+    }
+
+    if (!IsDirectory(testBundle)) {
+      *errorMessage = [NSString stringWithFormat:@"run-tests: Application test at path '%@' does not exist or is not a directory", testBundle];
+      return NO;
+    }
+    BOOL isDirectory;
+    BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:hostApp isDirectory:&isDirectory];
+    if (!fileExists || isDirectory) {
+      *errorMessage = [NSString stringWithFormat:@"run-tests: Application test host binary at path '%@' does not exist or is not a file", hostApp];
+      return NO;
+    }
+
+    _appTests[testBundle] = hostApp;
   }
 
   return YES;

@@ -59,7 +59,8 @@
 - (void)assertOptionsFailToValidateWithError:(NSString *)message
 {
   NSString *errorMessage = nil;
-  BOOL valid = [self validateAndReturnXcodeSubjectInfo:nil
+  XcodeSubjectInfo *xcodeSubjectInfo;
+  BOOL valid = [self validateAndReturnXcodeSubjectInfo:&xcodeSubjectInfo
                                           errorMessage:&errorMessage];
 
   if (valid) {
@@ -150,6 +151,22 @@
   [self evaluateOptionsWithBuildSettingsFromFile:path
                                            valid:&valid
                                            error:&errorMessage];
+
+  if (!valid) {
+    [NSException raise:NSGenericException
+                format:
+     @"Expected validation to pass but failed with message '%@'", errorMessage];
+  }
+
+  return self;
+}
+
+- (Options *)assertOptionsValidate
+{
+  NSString *errorMessage = nil;
+  XcodeSubjectInfo *xcodeSubjectInfo = [[XcodeSubjectInfo alloc] init];
+  BOOL valid = [self validateAndReturnXcodeSubjectInfo:&xcodeSubjectInfo
+                                          errorMessage:&errorMessage];
 
   if (!valid) {
     [NSException raise:NSGenericException

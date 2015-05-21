@@ -15,6 +15,7 @@
 //
 
 #import "Action.h"
+#import "TestRunning.h"
 
 /**
  * Break test cases into groups of `bucketSize` test cases.  Test methods in
@@ -49,7 +50,7 @@ typedef NS_ENUM(NSInteger, BucketBy) {
 
 } ;
 
-@interface RunTestsAction : Action
+@interface RunTestsAction : Action<TestRunning>
 
 @property (nonatomic, assign) BOOL freshSimulator;
 @property (nonatomic, assign) BOOL resetSimulator;
@@ -62,6 +63,8 @@ typedef NS_ENUM(NSInteger, BucketBy) {
 @property (nonatomic, strong) NSMutableArray *onlyList;
 @property (nonatomic, copy) NSString *deviceName;
 @property (nonatomic, copy) NSString *OSVersion;
+@property (nonatomic, strong) NSMutableArray *logicTests;
+@property (nonatomic, strong) NSMutableDictionary *appTests;
 
 - (void)setLogicTestBucketSizeValue:(NSString *)str;
 - (void)setAppTestBucketSizeValue:(NSString *)str;
@@ -69,4 +72,3 @@ typedef NS_ENUM(NSInteger, BucketBy) {
 - (void)setTestTimeoutValue:(NSString *)str;
 
 @end
-

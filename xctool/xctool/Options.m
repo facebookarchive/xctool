@@ -27,6 +27,7 @@
 #import "RunTestsAction.h"
 #import "SimulatorInfo.h"
 #import "TestAction.h"
+#import "TestRunning.h"
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
 #import "XcodeSubjectInfo.h"
@@ -327,7 +328,22 @@
     return NO;
   }
 
-  if (!_workspace && !_project && !_findTarget) {
+  __block BOOL testsPresentInOptions = NO;
+  [_actions enumerateObjectsUsingBlock:^(Action *action, NSUInteger idx, BOOL *stop) {
+    if ([[action class] conformsToProtocol:@protocol(TestRunning)]) {
+      testsPresentInOptions = [(id<TestRunning>)action testsPresentInOptions];
+      *stop = YES;
+    }
+  }];
+
+  if (testsPresentInOptions && (_workspace || _project || _scheme)) {
+    *errorMessage = @"If -logicTest or -appTest are specified, -workspace, -project, and -scheme must not be specified.";
+    return NO;
+  } else if (testsPresentInOptions) {
+    *xcodeSubjectInfoOut = [[XcodeSubjectInfo alloc] init];
+    return [self _validateActionsWithSubjectInfo:*xcodeSubjectInfoOut
+                                    errorMessage:errorMessage];
+  } else if (!_workspace && !_project && !_findTarget) {
     NSString *defaultProject = [self findDefaultProjectErrorMessage:errorMessage];
     if (!defaultProject) {
       return NO;

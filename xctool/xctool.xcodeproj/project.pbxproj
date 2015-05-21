@@ -307,6 +307,7 @@
 		32707EE31725FE9500AF2F53 /* TestActionInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestActionInternal.h; sourceTree = "<group>"; };
 		32A90C521725F05800C2349E /* TestAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestAction.m; sourceTree = "<group>"; };
 		32A90C531725F05800C2349E /* TestAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestAction.h; sourceTree = "<group>"; };
+		32F66B5C1B0E5DFD00BDCA61 /* TestRunning.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestRunning.h; sourceTree = "<group>"; };
 		3892D73F1811A5CC00E68652 /* EventGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventGenerator.h; sourceTree = "<group>"; };
 		3892D7401811A5CC00E68652 /* EventGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventGenerator.m; sourceTree = "<group>"; };
 		40623EBC190EA61B004FB374 /* InstallAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstallAction.h; sourceTree = "<group>"; };
@@ -434,6 +435,7 @@
 				283479B416E2B39B003C3B77 /* RunTestsAction.m */,
 				32A90C531725F05800C2349E /* TestAction.h */,
 				32A90C521725F05800C2349E /* TestAction.m */,
+				32F66B5C1B0E5DFD00BDCA61 /* TestRunning.h */,
 				32707EE31725FE9500AF2F53 /* TestActionInternal.h */,
 				40623EBC190EA61B004FB374 /* InstallAction.h */,
 				40623EBD190EA61B004FB374 /* InstallAction.m */,
