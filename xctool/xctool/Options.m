@@ -319,6 +319,14 @@
     return (BOOL)(exists && isDirectory);
   };
 
+  if (![self _validateSdkWithErrorMessage:errorMessage]) {
+    return NO;
+  }
+
+  if (![self _validateDestinationWithErrorMessage:errorMessage]) {
+    return NO;
+  }
+
   if (!_workspace && !_project && !_findTarget) {
     NSString *defaultProject = [self findDefaultProjectErrorMessage:errorMessage];
     if (!defaultProject) {
@@ -483,9 +491,35 @@
     return NO;
   }
 
+  XcodeSubjectInfo *xcodeSubjectInfo = [[XcodeSubjectInfo alloc] init];
+  xcodeSubjectInfo.subjectWorkspace = _workspace;
+  xcodeSubjectInfo.subjectProject = _project;
+  xcodeSubjectInfo.subjectScheme = _scheme;
+
+  if (xcodeSubjectInfoOut) {
+    *xcodeSubjectInfoOut = xcodeSubjectInfo;
+  }
+
+  // We can pass nil for the scheme action since we don't care to use the
+  // scheme's specific configuration.
+  NSArray *commonXcodeBuildArguments = [self commonXcodeBuildArgumentsForSchemeAction:nil
+                                                                     xcodeSubjectInfo:nil];
+  xcodeSubjectInfo.subjectXcodeBuildArguments =
+    [[self xcodeBuildArgumentsForSubject] arrayByAddingObjectsFromArray:commonXcodeBuildArguments];
+
+  ReportStatusMessageBegin(_reporters, REPORTER_MESSAGE_INFO, @"Loading settings for scheme '%@' ...", _scheme);
+  [xcodeSubjectInfo loadSubjectInfo];
+  ReportStatusMessageEnd(_reporters, REPORTER_MESSAGE_INFO, @"Loading settings for scheme '%@' ...", _scheme);
+
+  return [self _validateActionsWithSubjectInfo:xcodeSubjectInfo
+                                  errorMessage:errorMessage];
+}
+
+- (BOOL)_validateSdkWithErrorMessage:(NSString **)errorMessage {
   NSDictionary *sdksAndAliases = nil;
   if (_sdk) {
-    sdksAndAliases = GetAvailableSDKsAndAliases();
+    NSDictionary *sdkInfo = GetAvailableSDKsInfo();
+    sdksAndAliases = GetAvailableSDKsAndAliasesWithSDKInfo(sdkInfo);
 
     // Is this an available SDK?
     if (!sdksAndAliases[_sdk]) {
@@ -499,7 +533,8 @@
     // Map SDK param to actual SDK name.  This allows for aliases like 'iphoneos' to map
     // to 'iphoneos6.1'.
     _sdk = sdksAndAliases[_sdk];
-    
+    _sdkPath = sdkInfo[_sdk][@"Path"];
+
     // Xcode 5's xcodebuild has a bug where it won't build targets for the
     // iphonesimulator SDK.  It fails with...
     //
@@ -512,7 +547,10 @@
       _buildSettings[Xcode_PLATFORM_NAME] = @"iphonesimulator";
     }
   }
+  return YES;
+}
 
+- (BOOL)_validateDestinationWithErrorMessage:(NSString **)errorMessage {
   if (_destination) {
     NSDictionary *destInfo = ParseDestinationString(_destination, errorMessage);
 
@@ -552,26 +590,11 @@
     }
   }
 
-  XcodeSubjectInfo *xcodeSubjectInfo = [[XcodeSubjectInfo alloc] init];
-  xcodeSubjectInfo.subjectWorkspace = _workspace;
-  xcodeSubjectInfo.subjectProject = _project;
-  xcodeSubjectInfo.subjectScheme = _scheme;
+  return YES;
+}
 
-  if (xcodeSubjectInfoOut) {
-    *xcodeSubjectInfoOut = xcodeSubjectInfo;
-  }
-
-  // We can pass nil for the scheme action since we don't care to use the
-  // scheme's specific configuration.
-  NSArray *commonXcodeBuildArguments = [self commonXcodeBuildArgumentsForSchemeAction:nil
-                                                                     xcodeSubjectInfo:nil];
-  xcodeSubjectInfo.subjectXcodeBuildArguments =
-    [[self xcodeBuildArgumentsForSubject] arrayByAddingObjectsFromArray:commonXcodeBuildArguments];
-
-  ReportStatusMessageBegin(_reporters, REPORTER_MESSAGE_INFO, @"Loading settings for scheme '%@' ...", _scheme);
-  [xcodeSubjectInfo loadSubjectInfo];
-  ReportStatusMessageEnd(_reporters, REPORTER_MESSAGE_INFO, @"Loading settings for scheme '%@' ...", _scheme);
-
+- (BOOL)_validateActionsWithSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
+                           errorMessage:(NSString **)errorMessage {
   for (Action *action in _actions) {
     BOOL valid = [action validateWithOptions:self
                             xcodeSubjectInfo:xcodeSubjectInfo
