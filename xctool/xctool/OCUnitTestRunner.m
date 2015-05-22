@@ -124,8 +124,9 @@
     _freshInstall = freshInstall;
     _testTimeout = testTimeout;
     _reporters = [reporters copy];
-    _framework = [FrameworkInfoForTestBundleAtPath([self testBundlePath]) copy];
-    _cpuType = CPU_TYPE_ANY;
+    NSString *testBundlePath = [self testBundlePath];
+    _framework = [FrameworkInfoForTestBundleAtPath(testBundlePath) copy];
+    _cpuType = CpuTypeForTestBundleAtPath(testBundlePath);
   }
   return self;
 }
@@ -300,7 +301,7 @@
                       // the test.
                       [[NSProcessInfo processInfo] environment],
                       // Any special environment vars set in the scheme.
-                      _environment,
+                      _environment ?: @{},
                       // Internal environment that should be passed to xctool libs
                       internalEnvironment,
                       // Whatever values we need to make the test run at all for

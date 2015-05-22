@@ -122,19 +122,33 @@ __attribute__((constructor)) static void initialize()
                [[FakeTaskManager sharedManager] hideTaskFromLaunchedTasks:task];
              }
            },
-            // GetAvailableSDKsAndAliases()
+            // GetAvailableSDKsInfo()
             ^(FakeTask *task){
               if ([[task launchPath] hasSuffix:@"usr/bin/xcodebuild"] &&
                   [[task arguments] isEqualToArray:@[@"-sdk", @"-version"
                    ]]) {
                 [task pretendTaskReturnsStandardOutput:
-                 @"MacOSX10.7.sdk - OS X 10.7 (macosx10.7)\n\n"
-                 @"MacOSX10.8.sdk - OS X 10.8 (macosx10.8)\n\n"
-                 @"iPhoneOS6.1.sdk - iOS 6.1 (iphoneos6.1)\n\n"
-                 @"iPhoneSimulator5.0.sdk - Simulator - iOS 5.0 (iphonesimulator5.0)\n\n"
-                 @"iPhoneSimulator5.1.sdk - Simulator - iOS 5.1 (iphonesimulator5.1)\n\n"
-                 @"iPhoneSimulator6.0.sdk - Simulator - iOS 6.0 (iphonesimulator6.0)\n\n"
-                 @"iPhoneSimulator6.1.sdk - Simulator - iOS 6.1 (iphonesimulator6.1)\n\n"
+                 @"MacOSX10.7.sdk - OS X 10.7 (macosx10.7)\n"
+                 @"Path: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk\n"
+                 @"\n"
+                 @"MacOSX10.8.sdk - OS X 10.8 (macosx10.8)\n"
+                 @"Path: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk\n"
+                 @"\n"
+                 @"iPhoneOS6.1.sdk - iOS 6.1 (iphoneos6.1)\n"
+                 @"Path: /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk\n"
+                 @"\n"
+                 @"iPhoneSimulator5.0.sdk - Simulator - iOS 5.0 (iphonesimulator5.0)\n"
+                 @"Path: /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk\n"
+                 @"\n"
+                 @"iPhoneSimulator5.1.sdk - Simulator - iOS 5.1 (iphonesimulator5.1)\n"
+                 @"Path: /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.1.sdk\n"
+                 @"\n"
+                 @"iPhoneSimulator6.0.sdk - Simulator - iOS 6.0 (iphonesimulator6.0)\n"
+                 @"Path: /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.0.sdk\n"
+                 @"\n"
+                 @"iPhoneSimulator6.1.sdk - Simulator - iOS 6.1 (iphonesimulator6.1)\n"
+                 @"Path: /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk\n"
+                 @"\n"
                  @"Xcode 5.0.2\nBuild version 5A3005"];
                 [[FakeTaskManager sharedManager] hideTaskFromLaunchedTasks:task];
               }

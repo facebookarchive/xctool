@@ -77,6 +77,7 @@ NSDictionary *GetAvailableSDKsInfo();
        GetAvailableSDKsAndAliases()[whichSDK])
  */
 NSDictionary *GetAvailableSDKsAndAliases();
+NSDictionary *GetAvailableSDKsAndAliasesWithSDKInfo(NSDictionary *sdkInfo);
 
 BOOL IsRunningUnderTest();
 

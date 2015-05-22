@@ -99,8 +99,8 @@
 
   return @{
     @"DYLD_FALLBACK_FRAMEWORK_PATH" : IOSTestFrameworkDirectories(),
-    @"DYLD_FRAMEWORK_PATH" : _buildSettings[Xcode_TARGET_BUILD_DIR],
-    @"DYLD_LIBRARY_PATH" : _buildSettings[Xcode_TARGET_BUILD_DIR],
+    @"DYLD_FRAMEWORK_PATH" : _buildSettings[Xcode_TARGET_BUILD_DIR] ?: @"",
+    @"DYLD_LIBRARY_PATH" : _buildSettings[Xcode_TARGET_BUILD_DIR] ?: @"",
     @"DYLD_INSERT_LIBRARIES" : [@[
       [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"],
       ideBundleInjectionLibPath,

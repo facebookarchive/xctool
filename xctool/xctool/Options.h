@@ -32,6 +32,7 @@
 @property (nonatomic, copy) NSString *scheme;
 @property (nonatomic, copy) NSString *configuration;
 @property (nonatomic, copy) NSString *sdk;
+@property (nonatomic, copy) NSString *sdkPath;
 @property (nonatomic, copy) NSString *arch;
 @property (nonatomic, copy) NSString *destination;
 @property (nonatomic, copy) NSString *destinationTimeout;

@@ -65,11 +65,23 @@
 @property (nonatomic, copy) NSDictionary *expandedEnvironment;
 
 /**
+ * Extracts testable build settings from an Xcode project.
+ */
++ (NSDictionary *)testableBuildSettingsForProject:(NSString *)projectPath
+                                           target:(NSString *)target
+                                          objRoot:(NSString *)objRoot
+                                          symRoot:(NSString *)symRoot
+                                sharedPrecompsDir:(NSString *)sharedPrecompsDir
+                             targetedDeviceFamily:(NSString *)targetedDeviceFamily
+                                   xcodeArguments:(NSArray *)xcodeArguments
+                                          testSDK:(NSString *)testSDK
+                                            error:(NSString **)error;
+
+/**
  * @return A populated TestableExecutionInfo instance.
  */
 + (instancetype)infoForTestable:(Testable *)testable
-               xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
-            xcodebuildArguments:(NSArray *)xcodebuildArguments
-                        testSDK:(NSString *)testSDK
+                  buildSettings:(NSDictionary *)buildSettings
                         cpuType:(cpu_type_t)cpuType;
+
 @end
