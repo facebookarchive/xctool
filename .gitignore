@@ -10,3 +10,6 @@ xcuserdata
 build
 *.swp
 *.xccheckout
+.buckd
+buck-out
+buck-cache
