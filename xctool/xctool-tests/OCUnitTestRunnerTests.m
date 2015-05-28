@@ -266,6 +266,51 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
              equalTo(@30));
 }
 
+- (void)testOSXAppTestWorksWithNoProjectPath
+{
+  NSDictionary *testSettings = @{
+    Xcode_SDK_NAME: @"macosx10.8",
+    Xcode_SDKROOT: @"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk",
+    Xcode_BUILT_PRODUCTS_DIR: TEST_DATA @"TestProject-App-OSX/Build/Products/Debug",
+    Xcode_FULL_PRODUCT_NAME: @"TestProject-App-OSXTests.octest",
+    Xcode_TEST_HOST: TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/TestProject-App-OSX.app/Contents/MacOS/TestProject-App-OSX",
+  };
+
+  NSArray *launchedTasks = nil;
+
+  OCUnitTestRunner *runner = TestRunner([OCUnitOSXAppTestRunner class], testSettings);
+  [self runTestsForRunner:runner
+           andReturnTasks:&launchedTasks];
+
+  assertThatInteger([launchedTasks count], equalToInteger(1));
+
+  assertThat([launchedTasks[0] environment][@"XCInjectBundle"],
+            equalTo(TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/TestProject-App-OSXTests.octest"));
+  assertThat([launchedTasks[0] environment][@"XCInjectBundleInto"],
+             equalTo(TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/TestProject-App-OSX.app/Contents/MacOS/TestProject-App-OSX"));
+}
+
+- (void)testOSXLogicTestWorksWithNoProjectPath
+{
+  NSDictionary *testSettings = @{
+    Xcode_SDK_NAME: @"macosx10.8",
+    Xcode_SDKROOT: @"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk",
+    Xcode_BUILT_PRODUCTS_DIR: TEST_DATA @"tests-osx-test-bundle",
+    Xcode_FULL_PRODUCT_NAME: @"TestProject-Library-XCTest-OSXTests.xctest",
+  };
+
+  NSArray *launchedTasks = nil;
+
+  OCUnitTestRunner *runner = TestRunner([OCUnitOSXLogicTestRunner class], testSettings);
+  [self runTestsForRunner:runner
+           andReturnTasks:&launchedTasks];
+
+  assertThatInteger([launchedTasks count], equalToInteger(1));
+
+  assertThat([launchedTasks[0] arguments],
+             containsArray(@[TEST_DATA @"tests-osx-test-bundle/TestProject-Library-XCTest-OSXTests.xctest"]));
+}
+
 - (void)testTestArgumentsAlwaysIncludesCommonItems
 {
   NSDictionary *allSettings =

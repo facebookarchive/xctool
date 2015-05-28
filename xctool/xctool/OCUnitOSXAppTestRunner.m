@@ -65,7 +65,10 @@
                         @"XCInjectBundleInto" : testHostPath,
                         }]];
   // For OSX test bundles only, Xcode will chdir to the project's directory.
-  [task setCurrentDirectoryPath:_buildSettings[Xcode_PROJECT_DIR]];
+  NSString *projectDir = _buildSettings[Xcode_PROJECT_DIR];
+  if (projectDir) {
+    [task setCurrentDirectoryPath:projectDir];
+  }
 
   LaunchTaskAndFeedOuputLinesToBlock(task,
                                      @"running otest/xctest on test bundle",
