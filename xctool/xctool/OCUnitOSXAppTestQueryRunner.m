@@ -24,21 +24,19 @@
 
 - (NSTask *)createTaskForQuery
 {
-  NSString *builtProductsDir = _buildSettings[Xcode_BUILT_PRODUCTS_DIR];
+  NSMutableDictionary *environment = OSXTestEnvironment(_buildSettings);
+  [environment addEntriesFromDictionary:@{
+    @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"otest-query-lib-osx.dylib"],
+    // The test bundle that we want to query from, as loaded by otest-query-lib-osx.dylib.
+    @"OtestQueryBundlePath" : [self bundlePath],
+    @"OBJC_DISABLE_GC" : @"YES",
+    @"__CFPREFERENCES_AVOID_DAEMON" : @"YES",
+  }];
 
   NSTask *task = CreateTaskInSameProcessGroup();
   [task setLaunchPath:[self testHostPath]];
   [task setArguments:@[]];
-  [task setEnvironment:@{@"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"otest-query-lib-osx.dylib"],
-                         // The test bundle that we want to query from, as loaded by otest-query-lib-osx.dylib.
-                         @"OtestQueryBundlePath" : [self bundlePath],
-                         @"DYLD_FRAMEWORK_PATH" : builtProductsDir,
-                         @"DYLD_LIBRARY_PATH" : builtProductsDir,
-                         @"DYLD_FALLBACK_FRAMEWORK_PATH" : OSXTestFrameworkDirectories(),
-                         @"NSUnbufferedIO" : @"YES",
-                         @"OBJC_DISABLE_GC" : @"YES",
-                         @"__CFPREFERENCES_AVOID_DAEMON" : @"YES",
-                         }];
+  [task setEnvironment:environment];
 
   return task;
 }

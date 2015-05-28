@@ -36,23 +36,20 @@
 
 - (NSTask *)createTaskForQuery
 {
-  NSString *builtProductsDir = _buildSettings[Xcode_BUILT_PRODUCTS_DIR];
+  NSMutableDictionary *environment = OSXTestEnvironment(_buildSettings);
+  [environment addEntriesFromDictionary:@{
+    // Specifying `NSArgumentDomain` forces XCTest/SenTestingKit frameworks to use values
+    // of otest-query-osx `NSUserDefaults` which are changed in otest-query to manipulate
+    // mentioned frameworks behaviour.
+    @"NSArgumentDomain" : @"otest-query-osx",
+    @"OBJC_DISABLE_GC" : @"YES",
+    @"__CFPREFERENCES_AVOID_DAEMON" : @"YES",
+  }];
 
   NSTask *task = CreateTaskInSameProcessGroup();
   [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-osx"]];
   [task setArguments:@[ [self bundlePath] ]];
-  [task setEnvironment:@{
-  // Specifying `NSArgumentDomain` forces XCTest/SenTestingKit frameworks to use values
-  // of otest-query-osx `NSUserDefaults` which are changed in otest-query to manipulate
-  // mentioned frameworks behaviour.
-    @"NSArgumentDomain" : @"otest-query-osx",
-    @"DYLD_FRAMEWORK_PATH" : builtProductsDir,
-    @"DYLD_LIBRARY_PATH" : builtProductsDir,
-    @"DYLD_FALLBACK_FRAMEWORK_PATH" : OSXTestFrameworkDirectories(),
-    @"NSUnbufferedIO" : @"YES",
-    @"OBJC_DISABLE_GC" : @"YES",
-    @"__CFPREFERENCES_AVOID_DAEMON" : @"YES",
-  }];
+  [task setEnvironment:environment];
 
   return task;
 }

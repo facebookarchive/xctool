@@ -26,12 +26,11 @@
 
 - (NSDictionary *)environmentOverrides
 {
-  return @{@"DYLD_FRAMEWORK_PATH" : _buildSettings[Xcode_BUILT_PRODUCTS_DIR],
-           @"DYLD_LIBRARY_PATH" : _buildSettings[Xcode_BUILT_PRODUCTS_DIR],
-           @"DYLD_FALLBACK_FRAMEWORK_PATH" : OSXTestFrameworkDirectories(),
-           @"NSUnbufferedIO" : @"YES",
-           @"OBJC_DISABLE_GC" : !_garbageCollection ? @"YES" : @"NO",
-           };
+  NSMutableDictionary *environment = OSXTestEnvironment(_buildSettings);
+  [environment addEntriesFromDictionary:@{
+    @"OBJC_DISABLE_GC" : !_garbageCollection ? @"YES" : @"NO",
+  }];
+  return environment;
 }
 
 - (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath

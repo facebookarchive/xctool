@@ -51,11 +51,9 @@
   }
 
   // adding custom xctool environment variables
+  [env addEntriesFromDictionary:IOSTestEnvironment(_buildSettings)];
   [env addEntriesFromDictionary:@{
     @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"],
-    @"DYLD_FRAMEWORK_PATH" : _buildSettings[Xcode_BUILT_PRODUCTS_DIR],
-    @"DYLD_FALLBACK_FRAMEWORK_PATH" : IOSTestFrameworkDirectories(),
-    @"DYLD_LIBRARY_PATH" : _buildSettings[Xcode_BUILT_PRODUCTS_DIR],
     @"NSUnbufferedIO" : @"YES",
   }];
 

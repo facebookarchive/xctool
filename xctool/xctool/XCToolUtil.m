@@ -27,6 +27,7 @@
 #import "ReporterEvents.h"
 #import "ReporterTask.h"
 #import "TaskUtil.h"
+#import "XcodeBuildSettings.h"
 #import "XcodeSubjectInfo.h"
 
 static NSString *__tempDirectoryForAction = nil;
@@ -706,6 +707,25 @@ NSString *OSXTestFrameworkDirectories()
     directories = [directories stringByAppendingFormat:@":%@", [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/MacOSX.platform/Developer/Library/Frameworks"]];
   }
   return directories;
+}
+
+NSMutableDictionary *IOSTestEnvironment(NSDictionary *buildSettings)
+{
+  return [@{
+    @"DYLD_FRAMEWORK_PATH" : buildSettings[Xcode_BUILT_PRODUCTS_DIR] ?: @"",
+    @"DYLD_LIBRARY_PATH" : buildSettings[Xcode_BUILT_PRODUCTS_DIR] ?: @"",
+    @"DYLD_FALLBACK_FRAMEWORK_PATH" : IOSTestFrameworkDirectories(),
+  } mutableCopy];
+}
+
+NSMutableDictionary *OSXTestEnvironment(NSDictionary *buildSettings)
+{
+  return [@{
+    @"DYLD_FRAMEWORK_PATH" : buildSettings[Xcode_BUILT_PRODUCTS_DIR] ?: @"",
+    @"DYLD_LIBRARY_PATH" : buildSettings[Xcode_BUILT_PRODUCTS_DIR] ?: @"",
+    @"DYLD_FALLBACK_FRAMEWORK_PATH" : OSXTestFrameworkDirectories(),
+    @"NSUnbufferedIO" : @"YES",
+  } mutableCopy];
 }
 
 NSString *XcodebuildVersion()

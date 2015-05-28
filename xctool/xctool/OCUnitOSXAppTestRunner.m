@@ -47,23 +47,23 @@
     return;
   }
 
-  NSArray *libraries = @[[XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-osx.dylib"],
-                         [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection"],
-                         ];
+  NSArray *libraries = @[
+    [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-osx.dylib"],
+    [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection"],
+  ];
+
+  NSMutableDictionary *environment = OSXTestEnvironment(_buildSettings);
+  [environment addEntriesFromDictionary:@{
+    @"DYLD_INSERT_LIBRARIES" : [libraries componentsJoinedByString:@":"],
+    @"OBJC_DISABLE_GC" : !_garbageCollection ? @"YES" : @"NO",
+    @"XCInjectBundle" : [_buildSettings[Xcode_BUILT_PRODUCTS_DIR] stringByAppendingPathComponent:_buildSettings[Xcode_FULL_PRODUCT_NAME]],
+    @"XCInjectBundleInto" : testHostPath,
+  }];
 
   NSTask *task = CreateTaskInSameProcessGroup();
   [task setLaunchPath:testHostPath];
   [task setArguments:[self testArguments]];
-  [task setEnvironment:[self otestEnvironmentWithOverrides:@{
-                        @"DYLD_INSERT_LIBRARIES" : [libraries componentsJoinedByString:@":"],
-                        @"DYLD_FRAMEWORK_PATH" : _buildSettings[Xcode_BUILT_PRODUCTS_DIR],
-                        @"DYLD_LIBRARY_PATH" : _buildSettings[Xcode_BUILT_PRODUCTS_DIR],
-                        @"DYLD_FALLBACK_FRAMEWORK_PATH" : OSXTestFrameworkDirectories(),
-                        @"NSUnbufferedIO" : @"YES",
-                        @"OBJC_DISABLE_GC" : !_garbageCollection ? @"YES" : @"NO",
-                        @"XCInjectBundle" : [_buildSettings[Xcode_BUILT_PRODUCTS_DIR] stringByAppendingPathComponent:_buildSettings[Xcode_FULL_PRODUCT_NAME]],
-                        @"XCInjectBundleInto" : testHostPath,
-                        }]];
+  [task setEnvironment:[self otestEnvironmentWithOverrides:environment]];
   // For OSX test bundles only, Xcode will chdir to the project's directory.
   NSString *projectDir = _buildSettings[Xcode_PROJECT_DIR];
   if (projectDir) {

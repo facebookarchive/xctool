@@ -97,18 +97,18 @@
   NSString *ideBundleInjectionLibPath = @"/../../Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection";
   NSString *testBundlePath = [NSString stringWithFormat:@"%@/%@", _buildSettings[Xcode_BUILT_PRODUCTS_DIR], _buildSettings[Xcode_FULL_PRODUCT_NAME]];
 
-  return @{
-    @"DYLD_FALLBACK_FRAMEWORK_PATH" : IOSTestFrameworkDirectories(),
-    @"DYLD_FRAMEWORK_PATH" : _buildSettings[Xcode_TARGET_BUILD_DIR] ?: @"",
-    @"DYLD_LIBRARY_PATH" : _buildSettings[Xcode_TARGET_BUILD_DIR] ?: @"",
+  NSMutableDictionary *environment = IOSTestEnvironment(_buildSettings);
+  [environment addEntriesFromDictionary:@{
     @"DYLD_INSERT_LIBRARIES" : [@[
       [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"],
       ideBundleInjectionLibPath,
-     ] componentsJoinedByString:@":"],
+    ] componentsJoinedByString:@":"],
     @"NSUnbufferedIO" : @"YES",
     @"XCInjectBundle" : testBundlePath,
     @"XCInjectBundleInto" : testHostPath,
-    };
+  }];
+
+  return environment;
 }
 
 #pragma mark -

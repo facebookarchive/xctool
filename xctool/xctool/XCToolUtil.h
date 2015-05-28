@@ -202,6 +202,16 @@ NSString *IOSTestFrameworkDirectories();
 NSString *OSXTestFrameworkDirectories();
 
 /**
+ * Returns common environment required to query and run iOS tests.
+ */
+NSMutableDictionary *IOSTestEnvironment(NSDictionary *buildSettings);
+
+/**
+ * Returns common environment required to query and run OS X tests.
+ */
+NSMutableDictionary *OSXTestEnvironment(NSDictionary *buildSettings);
+
+/**
  * Creates a temporary directory under NSTemporaryDirectory() using mkdtemp,
  * and returns the path.
  */
