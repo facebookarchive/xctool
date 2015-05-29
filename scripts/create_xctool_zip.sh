@@ -41,7 +41,7 @@ for libexec in ${libexecs//:/ }; do
 done
 
 if [[ "$mobile_installation_helper_app" ]]; then
-    pushd out/libexec/mobile-installation-helper.app && unzip "$helper" && popd
+    pushd out/libexec/mobile-installation-helper.app && unzip "$mobile_installation_helper_app" && popd
 fi
 
 for reporter in ${reporters//:/ }; do
