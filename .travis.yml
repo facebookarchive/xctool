@@ -1,2 +1,9 @@
 language: objective-c
-script: scripts/build.sh && ./xctool.sh -workspace xctool.xcworkspace -scheme xctool build build-tests run-tests
+before_script:
+  - sudo brew tap caskroom/cask
+  - sudo brew tap caskroom/versions
+  - sudo brew update
+  - sudo brew install brew-cask
+  - sudo brew cask install java7
+  - sudo brew install ant
+script: ./scripts/travis-ci.sh

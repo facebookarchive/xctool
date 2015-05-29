@@ -1,0 +1,17 @@
+[cache]
+    mode = dir
+    dir_max_size = 512MB
+
+[cxx]
+    cflags = -std=gnu11
+    cxxflags = -std=c++11 -stdlib=libc++
+    default_platform = macosx-x86_64
+    combined_preprocess_and_compile = true
+
+[project]
+  ide = xcode
+  ignore = \
+    .git, \
+    .hg, \
+    .buckd, \
+    build
