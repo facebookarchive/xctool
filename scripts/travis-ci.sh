@@ -12,4 +12,4 @@ scripts/build.sh && ./xctool.sh -workspace xctool.xcworkspace -scheme xctool bui
 git clone https://github.com/facebook/buck.git Vendor/buck
 
 # Build xctool with Buck
-PATH=Vendor/buck/bin:$PATH buck build //:xctool-zip
+TERM=dumb PATH=Vendor/buck/bin:$PATH buck build //:xctool-zip

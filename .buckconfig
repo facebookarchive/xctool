@@ -4,7 +4,7 @@
 
 [cxx]
     cflags = -std=gnu11
-    cxxflags = -std=c++14 -stdlib=libc++
+    cxxflags = -std=c++11 -stdlib=libc++
     default_platform = macosx-x86_64
     combined_preprocess_and_compile = true
 
