@@ -1,4 +1,8 @@
 language: objective-c
-jdk:
-  - oraclejdk7
+before_script:
+  - sudo brew update
+  - sudo brew install brew-cask
+  - sudo brew tap caskroom/versions
+  - sudo brew cask install java7
+  - sudo brew install ant
 script: ./scripts/travis-ci.sh
