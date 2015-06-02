@@ -200,6 +200,8 @@ Just as with the __test__ action, you can limit which tests are run with
 the `-only`.  And, you can change which SDK they're run against
 with the `-test-sdk`.
 
+Optionally you can specify `-testTimeout` when running tests. When an individual test hits this timeout, it is considered a failure rather than waiting indefinitely. This can prevent your test run from deadlocking forever due to misbehaving tests.
+
 By default application tests will wait at most 30 seconds for the simulator
 to launch. If you need to change this timeout, use the `-launch-timeout` option.
 
