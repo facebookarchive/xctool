@@ -52,7 +52,7 @@ NSDictionary *FrameworkInfoForExtension(NSString *extension)
           extension, [frameworks allKeys]);
     return nil;
   }
-  return frameworks[extension];
+  return [frameworks objectForKey:extension];
 }
 
 NSDictionary *FrameworkInfoForTestBundleAtPath (NSString *path)
