@@ -19,6 +19,7 @@
 #import "Options.h"
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
+#import "XcodeSubjectInfo.h"
 
 @implementation BuildAction
 
@@ -29,15 +30,23 @@
 
 - (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
+
+  [xcodeSubjectInfo.actionScripts preBuildWithOptions:options];
+
+
   NSArray *arguments = [[[options xcodeBuildArgumentsForSubject]
                          arrayByAddingObjectsFromArray:[options commonXcodeBuildArgumentsForSchemeAction:@"LaunchAction"
                                                                                         xcodeSubjectInfo:xcodeSubjectInfo]]
                         arrayByAddingObject:@"build"];
 
-  return RunXcodebuildAndFeedEventsToReporters(arguments,
+  BOOL ret = RunXcodebuildAndFeedEventsToReporters(arguments,
                                                @"build",
                                                [options scheme],
                                                [options reporters]);
+
+  [xcodeSubjectInfo.actionScripts postBuildWithOptions:options];
+
+  return ret;
 }
 
 @end

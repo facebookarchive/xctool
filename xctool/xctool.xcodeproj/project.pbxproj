@@ -104,6 +104,9 @@
 		3892D7421811A5CC00E68652 /* EventGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D7401811A5CC00E68652 /* EventGenerator.m */; };
 		40623EBE190EA61B004FB374 /* InstallAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 40623EBD190EA61B004FB374 /* InstallAction.m */; };
 		40623EBF190EA61B004FB374 /* InstallAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 40623EBD190EA61B004FB374 /* InstallAction.m */; };
+		4DC218071B238A4F000C9AA6 /* ActionScripts.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DC218061B238A4F000C9AA6 /* ActionScripts.m */; };
+		4DC2180A1B238AD3000C9AA6 /* ActionScripts.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DC218061B238A4F000C9AA6 /* ActionScripts.m */; };
+		4DD0C68A1B25E25E005FFF7F /* ActionScriptsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD0C6891B25E25E005FFF7F /* ActionScriptsTests.m */; };
 		AA318BEF17E9BA3500BF159E /* TestingFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = AA318BEE17E9BA3500BF159E /* TestingFramework.m */; };
 		AA318BF017E9BA3500BF159E /* TestingFramework.m in Sources */ = {isa = PBXBuildFile; fileRef = AA318BEE17E9BA3500BF159E /* TestingFramework.m */; };
 		AA6C88F71808C2C5006A3581 /* OTestShimTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AA6C88F61808C2C5006A3581 /* OTestShimTests.m */; };
@@ -301,6 +304,9 @@
 		3892D7401811A5CC00E68652 /* EventGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventGenerator.m; sourceTree = "<group>"; };
 		40623EBC190EA61B004FB374 /* InstallAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InstallAction.h; sourceTree = "<group>"; };
 		40623EBD190EA61B004FB374 /* InstallAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InstallAction.m; sourceTree = "<group>"; };
+		4DC218061B238A4F000C9AA6 /* ActionScripts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionScripts.m; sourceTree = "<group>"; };
+		4DC218091B238AB2000C9AA6 /* ActionScripts.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActionScripts.h; sourceTree = "<group>"; };
+		4DD0C6891B25E25E005FFF7F /* ActionScriptsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActionScriptsTests.m; sourceTree = "<group>"; };
 		AA194FD118091AE700F56AFC /* ContainsAssertionFailure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContainsAssertionFailure.h; sourceTree = "<group>"; };
 		AA318BEC17E9B7CA00BF159E /* XCTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = XCTest.h; sourceTree = "<group>"; };
 		AA318BED17E9BA3500BF159E /* TestingFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestingFramework.h; sourceTree = "<group>"; };
@@ -468,6 +474,8 @@
 			isa = PBXGroup;
 			children = (
 				2834799516E199A9003C3B77 /* Actions */,
+				4DC218091B238AB2000C9AA6 /* ActionScripts.h */,
+				4DC218061B238A4F000C9AA6 /* ActionScripts.m */,
 				28BB043B17C7FF43004F6C13 /* Buildable.h */,
 				28BB043C17C7FF43004F6C13 /* Buildable.m */,
 				CD56770D1766782C003B727C /* BuildStateParser.h */,
@@ -541,6 +549,7 @@
 		283CCAC516C2EE9900F2E343 /* xctool-tests */ = {
 			isa = PBXGroup;
 			children = (
+				4DD0C6891B25E25E005FFF7F /* ActionScriptsTests.m */,
 				28046D2F16D76665000AA15C /* ActionTests.m */,
 				28302E1D175A8B6900C997B2 /* ArchiveActionTests.m */,
 				28ADB43A16E410F9006301ED /* BuildActionTests.m */,
@@ -878,6 +887,7 @@
 				2869F3C517C82FB80078F078 /* TestableExecutionInfo.m in Sources */,
 				EEB31CEA17C685E500CFB0E1 /* OCEventState.m in Sources */,
 				EEB31CF117C6A1EF00CFB0E1 /* OCTestEventState.m in Sources */,
+				4DC218071B238A4F000C9AA6 /* ActionScripts.m in Sources */,
 				AAC1E0BD18121071005A4FD5 /* OCUnitIOSLogicTestQueryRunner.m in Sources */,
 				40623EBE190EA61B004FB374 /* InstallAction.m in Sources */,
 				EEB31CF917C6D57B00CFB0E1 /* OCTestSuiteEventState.m in Sources */,
@@ -933,6 +943,7 @@
 				28ADB43B16E410F9006301ED /* BuildActionTests.m in Sources */,
 				287BF04D16F1A6EB00590E06 /* XcodeSubjectInfoTests.m in Sources */,
 				287BF08516F1A97900590E06 /* XcodeSubjectInfo.m in Sources */,
+				4DD0C68A1B25E25E005FFF7F /* ActionScriptsTests.m in Sources */,
 				28ACFC8416FBA888004BAF33 /* TaskUtil.m in Sources */,
 				288B9FB9171A50C1008F0BDF /* OCUnitOSXLogicTestRunner.m in Sources */,
 				288B9FBD171A5509008F0BDF /* OCUnitOSXAppTestRunner.m in Sources */,
@@ -953,6 +964,7 @@
 				AAC1E0BE18121071005A4FD5 /* OCUnitIOSLogicTestQueryRunner.m in Sources */,
 				28C81A63175562050072DDB8 /* ReportStatusTests.m in Sources */,
 				28302E1E175A8B6900C997B2 /* ArchiveActionTests.m in Sources */,
+				4DC2180A1B238AD3000C9AA6 /* ActionScripts.m in Sources */,
 				AA318BF017E9BA3500BF159E /* TestingFramework.m in Sources */,
 				CD098A2B175EBD20002E0CAC /* AnalyzeAction.m in Sources */,
 				CD5677101766782C003B727C /* BuildStateParser.mm in Sources */,

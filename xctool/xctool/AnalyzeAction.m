@@ -252,6 +252,8 @@
                 xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
 
+  [xcodeSubjectInfo.actionScripts preAnalyzeWithOptions:options];
+
   BuildTargetsCollector *buildTargetsCollector = [[BuildTargetsCollector alloc] init];
   NSArray *reporters = [options.reporters arrayByAddingObject:buildTargetsCollector];
 
@@ -293,6 +295,8 @@
                      @"analyze"]];
     success = RunXcodebuildAndFeedEventsToReporters(args, @"analyze", [options scheme], reporters);
   }
+
+  [xcodeSubjectInfo.actionScripts postAnalyzeWithOptions:options];
 
   if (!success) {
     return NO;

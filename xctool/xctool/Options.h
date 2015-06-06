@@ -50,6 +50,7 @@
 
 @property (nonatomic, assign) BOOL showBuildSettings;
 @property (nonatomic, assign) BOOL showTasks;
+@property (nonatomic, assign) BOOL actionScripts;
 
 @property (nonatomic, strong) NSMutableDictionary *buildSettings;
 @property (nonatomic, strong) NSMutableDictionary *userDefaults;

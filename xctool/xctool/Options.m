@@ -148,6 +148,10 @@
                          aliases:nil
                      description:@"show all tasks being spawned by xctool"
                          setFlag:@selector(setShowTasks:)],
+    [Action actionOptionWithName:@"actionScripts"
+                         aliases:nil
+                     description:@"run pre and post action scripts defined in the scheme"
+                         setFlag:@selector(setActionScripts:)],
     [Action actionOptionWithName:@"version"
                          aliases:@[@"v"]
                      description:@"print version and exit"

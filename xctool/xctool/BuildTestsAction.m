@@ -114,6 +114,8 @@
     [schemeGenerator addBuildableWithID:testable.targetID inProject:testable.projectPath];
   }
 
+  [xcodeSubjectInfo.actionScripts preBuildWithOptions:options];
+
   NSArray *xcodebuildArguments = [options commonXcodeBuildArgumentsForSchemeAction:@"TestAction"
                                                                   xcodeSubjectInfo:xcodeSubjectInfo];
   BOOL succeeded = [BuildTestsAction buildWorkspace:[schemeGenerator writeWorkspaceNamed:@"Tests"]
@@ -124,6 +126,8 @@
                                   sharedPrecompsDir:xcodeSubjectInfo.sharedPrecompsDir
                                      xcodeArguments:xcodebuildArguments
                                        xcodeCommand:command];
+
+  [xcodeSubjectInfo.actionScripts postBuildWithOptions:options];
 
   if (!succeeded) {
     return NO;
