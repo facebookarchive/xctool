@@ -65,6 +65,10 @@ apple_binary(
     preprocessor_flags = COMMON_PREPROCESSOR_FLAGS + [
         '-DXCODE_VERSION=0630',
     ],
+    lang_preprocessor_flags = {
+        'CXX': ['-std=c++11', '-stdlib=libc++'],
+        'OBJCXX': ['-std=c++11', '-stdlib=libc++'],
+    },
     frameworks = [
         '$SDKROOT/System/Library/Frameworks/AppKit.framework',
         '$SDKROOT/System/Library/Frameworks/CoreFoundation.framework',
