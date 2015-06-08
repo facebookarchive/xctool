@@ -14,12 +14,6 @@
 // limitations under the License.
 //
 
-#include "../Configurations/Project.xcconfig"
-
-#include "../Configurations/Install.xcconfig"
-XT_INSTALL_DIR = lib
-
-// Needed so we can #import from SenTestingKit.
-OTHER_CFLAGS = -F"$(DEVELOPER_FRAMEWORKS_DIR)"
+#include "otest-shim.xcconfig"
 
 #include "../Configurations/iOS.xcconfig"

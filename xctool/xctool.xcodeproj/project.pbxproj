@@ -782,8 +782,8 @@
 		283CCA3A16C2EA3700F2E343 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastTestingUpgradeCheck = 0630;
-				LastUpgradeCheck = 0620;
+				LastTestingUpgradeCheck = 0700;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Facebook, Inc.";
 			};
 			buildConfigurationList = 283CCA3D16C2EA3700F2E343 /* Build configuration list for PBXProject "xctool" */;

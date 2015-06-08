@@ -181,7 +181,7 @@
 
         if ([testResult[kReporter_EndTest_ResultKey] isEqualToString:@"error"]) {
           NSXMLElement *errorElement = [NSXMLElement elementWithName:@"error"
-                                                           stringValue:nil];
+                                                           stringValue:@""];
           [errorElement setAttributes:@[[NSXMLNode attributeWithName:@"type"
                                                            stringValue:@"Error"]]];
           [testcaseElement addChild:errorElement];
