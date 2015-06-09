@@ -53,7 +53,7 @@ features and fix any bugs they may encounter without learning a new language. We
 
 ## Requirements
 
-* Xcode 5 or higher
+* Xcode 6 or higher
 * You'll need Xcode's Command Line Tools installed.  From Xcode, install
 via _Xcode &rarr; Preferences &rarr; Downloads_.
 
