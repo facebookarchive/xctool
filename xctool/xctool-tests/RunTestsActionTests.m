@@ -296,6 +296,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                        @"test",
                        @"-showBuildSettings",
                        ]));
+    assertThat([launchedTasks[0] environment][@"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET"], equalTo(@"TestProject-LibraryTests"));
     assertThat([launchedTasks[1] arguments],
                containsArray(@[
                                @"-NSTreatUnknownArgumentsAsOpen", @"NO",
@@ -383,8 +384,8 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                                       error:nil]];
       }
 
-    } copy],
-     ]];
+     } copy],
+    ]];
 
     XCTool *tool = [[XCTool alloc] init];
 
@@ -400,6 +401,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
     [TestUtil runWithFakeStreams:tool];
 
     NSArray *launchedTasks = [[FakeTaskManager sharedManager] launchedTasks];
+
     assertThatInteger([launchedTasks count], equalToInteger(2));
     assertThat([launchedTasks[0] arguments],
                equalTo(@[
@@ -417,6 +419,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                        @"test",
                        @"-showBuildSettings",
                        ]));
+    assertThat([launchedTasks[0] environment][@"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET"], equalTo(@"TestProject-LibraryTests"));
     assertThat([launchedTasks[1] arguments],
                containsArray(@[
                                @"-NSTreatUnknownArgumentsAsOpen", @"NO",
@@ -739,6 +742,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                        @"test",
                        @"-showBuildSettings",
                        ]));
+    assertThat([[[FakeTaskManager sharedManager] launchedTasks][0] environment][@"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET"], equalTo(@"TestProject-LibraryTests"));
   }];
 }
 

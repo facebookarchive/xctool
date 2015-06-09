@@ -82,21 +82,28 @@
     xcodeArguments = ArgumentListByOverriding(xcodeArguments, @"-sdk", testSDK);
   }
 
+  // For Xcode 6, we can pass `test -showBuildSettings` to xcodebuild and get
+  // build settings that are specific to the `test` action.  But in Xcode 7
+  // `-scheme` should be passed along with `test` action which isn't always
+  // defined. So we are using `build` action which doesn't require to specify
+  // scheme.
+  NSString *action = ToolchainIsXcode7OrBetter() ? @"build" : @"test";
+
   [settingsTask setArguments:[xcodeArguments arrayByAddingObjectsFromArray:@[
-                                                                             @"-project", projectPath,
-                                                                             @"-target", target,
-                                                                             [NSString stringWithFormat:@"%@=%@", Xcode_OBJROOT, objRoot],
-                                                                             [NSString stringWithFormat:@"%@=%@", Xcode_SYMROOT, symRoot],
-                                                                             [NSString stringWithFormat:@"%@=%@", Xcode_SHARED_PRECOMPS_DIR, sharedPrecompsDir],
-                                                                             [NSString stringWithFormat:@"%@=%@", Xcode_TARGETED_DEVICE_FAMILY, targetedDeviceFamily],
-                                                                             @"test",
-                                                                             @"-showBuildSettings",
-                                                                             ]]];
+    @"-project", projectPath,
+    @"-target", target,
+    [NSString stringWithFormat:@"%@=%@", Xcode_OBJROOT, objRoot],
+    [NSString stringWithFormat:@"%@=%@", Xcode_SYMROOT, symRoot],
+    [NSString stringWithFormat:@"%@=%@", Xcode_SHARED_PRECOMPS_DIR, sharedPrecompsDir],
+    [NSString stringWithFormat:@"%@=%@", Xcode_TARGETED_DEVICE_FAMILY, targetedDeviceFamily],
+    action,
+    @"-showBuildSettings",
+   ]]];
 
   [settingsTask setEnvironment:@{
-                                 @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"xcodebuild-fastsettings-shim.dylib"],
-                                 @"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET" : target,
-                                 }];
+    @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"xcodebuild-fastsettings-shim.dylib"],
+    @"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET" : target,
+  }];
 
   NSDictionary *output = LaunchTaskAndCaptureOutput(settingsTask,
                                                     [NSString stringWithFormat:@"running xcodebuild -showBuildSettings for '%@' target", target]);

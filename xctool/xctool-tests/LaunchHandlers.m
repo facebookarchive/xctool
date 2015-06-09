@@ -60,6 +60,7 @@ BOOL IsOtestTask(NSTask *task)
                                                           @"-scheme",
                                                           scheme,
                                                           ]);
+    match &= ![task environment][@"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET"];
     if (action) {
       match &= ArrayContainsSubsequence([task arguments], @[action, @"-showBuildSettings"]);
     } else {
@@ -92,6 +93,7 @@ BOOL IsOtestTask(NSTask *task)
                                                      @"-target",
                                                      target,
                                                      ]) &&
+        [[task environment][@"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET"] isEqual:target] &&
         [[task arguments] containsObject:@"-showBuildSettings"])
     {
       [task pretendTaskReturnsStandardOutput:
