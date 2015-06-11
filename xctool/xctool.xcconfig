@@ -24,9 +24,8 @@ SHARED_FRAMEWORKS_DIR = $(DEVELOPER_DIR)/../SharedFrameworks
 PRIVATE_FRAMEWORKS_DIR = $(DEVELOPER_DIR)/Library/PrivateFrameworks
 XCTOOL_VENDOR_DIR = $(SRCROOT)/../Vendor
 
-// xctool will weak link iPhoneSimulatorRemoteClient, and then configure the necessary
-// DYLD paths on startup to make sure the framework can be loaded.
-OTHER_LDFLAGS_0500 = -weak_framework DVTFoundation -weak_framework DVTiPhoneSimulatorRemoteClient -weak_framework SimulatorHost
+// xctool will weak link following frameworks, and then configure the necessary
+// DYLD paths on startup to make sure they can be loaded.
 OTHER_LDFLAGS_0600 = -weak_framework DVTFoundation -weak_framework DVTiPhoneSimulatorRemoteClient -weak_framework CoreSimulator
 OTHER_LDFLAGS = $(OTHER_LDFLAGS_$(XCODE_VERSION_MAJOR))
 

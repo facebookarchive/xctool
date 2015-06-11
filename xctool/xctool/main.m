@@ -22,14 +22,13 @@
 int main(int argc, const char * argv[])
 {
   @autoreleasepool {
-    // xctool depends on iPhoneSimulatorRemoteClient.framework or CoreSimulator.framework,
-    // which are private framework for interacting with the simulator that come bundled
-    // with respectively Xcode 5 and 6.
+    // xctool depends on CoreSimulator.framework which is private framework for
+    // interacting with the simulator that come bundled with Xcode 6 and better.
     //
     // Since xctool can work with multiple verstions of Xcode and since each of
-    // these Xcode versions might live at different paths, we don't want to strongly
-    // link those frameworks.  e.g., if we linked to
-    // `/Applications/Xcode.app/.../.../iPhoneSimulatorRemoteClient.framework`
+    // Xcode versions might live at different paths, we don't want to strongly
+    // link this and other frameworks.  e.g., if we linked to
+    // `/Applications/Xcode.app/.../.../CoreSimulator.framework`
     // but Xcode was installed elsewhere, xctool would fail to run.
     //
     // To workaround this, we weak link the framework and at startup, we tweak
@@ -48,24 +47,28 @@ int main(int argc, const char * argv[])
 
       const char *dyldFallbackFrameworkPathKey = "DYLD_FALLBACK_FRAMEWORK_PATH";
 
-      NSString *fallbackFrameworkPath;
-
+      NSMutableArray *fallbackFrameworkPaths = [@[] mutableCopy];
       if (getenv(dyldFallbackFrameworkPathKey)) {
-        fallbackFrameworkPath = @(getenv(dyldFallbackFrameworkPathKey));
+        [fallbackFrameworkPaths addObject:@(getenv(dyldFallbackFrameworkPathKey))];
       } else {
         // If unset, this variable takes on an implicit default (see `man dyld`).
-        fallbackFrameworkPath = @"/Library/Frameworks:/Network/Library/Frameworks:/System/Library/Frameworks";
+        [fallbackFrameworkPaths addObjectsFromArray:@[
+          @"/Library/Frameworks",
+          @"/Network/Library/Frameworks",
+          @"/System/Library/Frameworks",
+        ]];
       }
 
-      fallbackFrameworkPath = [fallbackFrameworkPath stringByAppendingFormat:@":%@:%@:%@:%@",
-                               // The path to iPhoneSimulatorRemoteClient.framework.
-                               [developerDirPath stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks"],
-                               // The path to CoreSimulator.framework for Xcode 6.
-                               [developerDirPath stringByAppendingPathComponent:@"Library/PrivateFrameworks"],
-                               // The path to other dependencies of iPhoneSimulatorRemoteClient.framework.
-                               [developerDirPath stringByAppendingPathComponent:@"../OtherFrameworks"],
-                               [developerDirPath stringByAppendingPathComponent:@"../SharedFrameworks"]
-                               ];
+      [fallbackFrameworkPaths addObjectsFromArray:@[
+        // The path to CoreSimulator.framework for Xcode 6 and better.
+        [developerDirPath stringByAppendingPathComponent:@"Library/PrivateFrameworks"],
+        // Paths to other dependencies
+        [developerDirPath stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks"],
+        [developerDirPath stringByAppendingPathComponent:@"../OtherFrameworks"],
+        [developerDirPath stringByAppendingPathComponent:@"../SharedFrameworks"]
+      ]];
+
+      NSString *fallbackFrameworkPath = [fallbackFrameworkPaths componentsJoinedByString:@":"];
       setenv(dyldFallbackFrameworkPathKey, [fallbackFrameworkPath UTF8String], 1);
 
       // Don't do this setup again...

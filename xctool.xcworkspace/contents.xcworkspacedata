@@ -45,6 +45,9 @@
          location = "group:Install.xcconfig">
       </FileRef>
       <FileRef
+         location = "group:iOS.xcconfig">
+      </FileRef>
+      <FileRef
          location = "group:Project.xcconfig">
       </FileRef>
    </Group>
