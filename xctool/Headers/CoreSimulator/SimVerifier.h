@@ -6,8 +6,7 @@
 
 #import <objc/NSObject.h>
 
-@protocol SimVerifier <NSObject>
-@optional
+@interface SimVerifier : NSObject
 
 @property(retain) NSObject *serviceConnection;
 @property(retain) NSObject *serviceConnectionQueue;
@@ -21,13 +20,3 @@
 - (id)verifyDyldSim:(id)arg1;
 
 @end
-
-#if XCODE_VERSION < 0600
-@interface SimVerifierStub : NSObject<SimVerifier>
-@end
-#else
-@interface SimVerifier : NSObject<SimVerifier>
-@end
-@interface SimVerifierStub : SimVerifier
-@end
-#endif

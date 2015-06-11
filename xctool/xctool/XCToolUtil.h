@@ -92,9 +92,9 @@ BOOL IsRunningUnderTest();
 NSString *XcodebuildVersion();
 
 /**
- Returns YES if we're running with Xcode 6 or better.
+ Returns YES if we're running with Xcode 7 or better.
  */
-BOOL ToolchainIsXcode6OrBetter(void);
+BOOL ToolchainIsXcode7OrBetter(void);
 
 /**
  Launches a task that will invoke xcodebuild.  It will automatically feed

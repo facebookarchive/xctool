@@ -81,11 +81,7 @@ static const NSString * kOtestShimStderrFilePath __unused = @"OTEST_SHIM_STDERR_
 
 + (Class)classBasedOnCurrentVersionOfXcode
 {
-  if (ToolchainIsXcode6OrBetter()) {
-    return [SimulatorWrapperXcode6 class];
-  } else {
-    return [SimulatorWrapperXcode5 class];
-  }
+  return [SimulatorWrapperXcode6 class];
 }
 
 #pragma mark -

@@ -38,7 +38,7 @@
   // In Xcode 6 `sim` doesn't set `CFFIXED_USER_HOME` if simulator is not launched
   // but this environment is used, for example, by NSHomeDirectory().
   // To avoid similar situations in future let's copy all simulator environments
-  if (ToolchainIsXcode6OrBetter() && [_buildSettings[Xcode_SDK_NAME] hasPrefix:@"iphonesimulator"]) {
+  if ([_buildSettings[Xcode_SDK_NAME] hasPrefix:@"iphonesimulator"]) {
     SimDevice *device = [(SimulatorInfoXcode6 *)self.simulatorInfo simulatedDevice];
     NSDictionary *simulatorEnvironment = [device environment];
     if (simulatorEnvironment) {

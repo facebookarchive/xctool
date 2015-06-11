@@ -6,8 +6,7 @@
 
 @class SimDeviceNotificationManager, SimServiceConnectionManager;
 
-@protocol SimDeviceSet <NSObject>
-@optional
+@interface SimDeviceSet : NSObject
 
 + (id)defaultSet;
 + (id)defaultSetPath;
@@ -47,14 +46,3 @@
 - (void)updateDefaultDevices;
 
 @end
-
-#if XCODE_VERSION < 0600
-@interface SimDeviceSetStub : NSObject<SimDeviceSet>
-@end
-#else
-@interface SimDeviceSet : NSObject<SimDeviceSet>
-@end
-@interface SimDeviceSetStub : SimDeviceSet
-@end
-#endif
-

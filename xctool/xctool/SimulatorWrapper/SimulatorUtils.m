@@ -150,7 +150,7 @@ BOOL VerifySimulators(NSString **errorMessage)
   }
 
   NSError *error = nil;
-  BOOL result = [[SimVerifierStub sharedVerifier] verifyAllWithError:&error];
+  BOOL result = [[SimVerifier sharedVerifier] verifyAllWithError:&error];
   if (!result || error) {
     *errorMessage = [NSString stringWithFormat:@"%@; %@.",
                      error.localizedDescription ?: @"Unknown error.",
@@ -176,38 +176,3 @@ BOOL ShutdownSimulator(SimulatorInfo *simulatorInfo, NSString **errorMessage)
   }
   return YES;
 }
-
-/*
- *  In order to make xctool linkable in Xcode 5 we need to provide stub implementations
- *  of iOS simulator private classes used in xctool and defined in
- *  the CoreSimulator framework (introduced in Xcode 6).
- *
- *  But xctool, when built with Xcode 5 but running in Xcode 6, should use the
- *  implementations of those classes from CoreSimulator framework rather than the stub
- *  implementations. That is why we need to create stubs and forward all selector
- *  invocations to the original implementation of the class if it exists.
- */
-
-#if XCODE_VERSION < 0600
-
-@implementation SimVerifierStub
-+ (id)forwardingTargetForSelector:(SEL)aSelector
-{
-  Class class = NSClassFromString(@"SimVerifier");
-  NSAssert(class, @"Class SimVerifier wasn't found though it was expected to exist.");
-  return class;
-}
-@end
-
-#else
-
-/*
- *  If xctool is built using Xcode 6 then we just need to provide empty implementations
- *  of the stubs because they simply inherit original CoreSimulator private classes in
- *  that case.
- */
-
-@implementation SimVerifierStub
-@end
-
-#endif

@@ -4,8 +4,7 @@
 //     class-dump is Copyright (C) 1997-1998, 2000-2001, 2004-2013 by Steve Nygard.
 //
 
-@protocol SimDeviceType <NSObject>
-@optional
+@interface SimDeviceType : NSObject
 
 + (id)supportedDeviceTypes;
 + (id)supportedDeviceTypesByAlias;
@@ -50,14 +49,3 @@
 - (BOOL)supportsFeatureConditionally:(id)arg1;
 
 @end
-
-#if XCODE_VERSION < 0600
-@interface SimDeviceTypeStub : NSObject<SimDeviceType>
-@end
-#else
-@interface SimDeviceType : NSObject<SimDeviceType>
-@end
-@interface SimDeviceTypeStub : SimDeviceType
-@end
-#endif
-

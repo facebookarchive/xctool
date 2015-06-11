@@ -17,11 +17,11 @@
 #import "SimulatorInfo.h"
 
 @class SimDevice;
-@class SimRuntimeStub;
+@class SimRuntime;
 
 @interface SimulatorInfoXcode6 : SimulatorInfo
 
 - (SimDevice *)simulatedDevice;
-- (SimRuntimeStub *)simulatedRuntime;
+- (SimRuntime *)simulatedRuntime;
 
 @end

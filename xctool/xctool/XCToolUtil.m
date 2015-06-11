@@ -686,27 +686,26 @@ NSString *SystemPaths()
 
 /**
  SenTesting.framework location:
- - Xcode 5, Xcode 6: Contents/Developer/Library/Frameworks directory
+ - Xcode 6: Contents/Developer/Library/Frameworks directory
  XCTest.framework location:
- - Xcode 5: Contents/Developer/Library/Frameworks directory
  - Xcode 6: Contents/Developer/Platforms/{iPhoneSimulator.platform/MacOSX}/Developer/Library/Frameworks
  */
 NSString *IOSTestFrameworkDirectories()
 {
-  NSString *directories = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"];
-  if (ToolchainIsXcode6OrBetter()) {
-    directories = [directories stringByAppendingFormat:@":%@", [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks"]];
-  }
-  return directories;
+  NSArray *directories = @[
+    [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"],
+    [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks"],
+  ];
+  return [directories componentsJoinedByString:@":"];
 }
 
 NSString *OSXTestFrameworkDirectories()
 {
-  NSString *directories = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"];
-  if (ToolchainIsXcode6OrBetter()) {
-    directories = [directories stringByAppendingFormat:@":%@", [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/MacOSX.platform/Developer/Library/Frameworks"]];
-  }
-  return directories;
+  NSArray *directories = @[
+    [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"],
+    [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/MacOSX.platform/Developer/Library/Frameworks"],
+  ];
+  return [directories componentsJoinedByString:@":"];
 }
 
 NSMutableDictionary *IOSTestEnvironment(NSDictionary *buildSettings)
@@ -746,12 +745,12 @@ NSString *XcodebuildVersion()
   return DTXcode;
 }
 
-BOOL ToolchainIsXcode6OrBetter(void)
+BOOL ToolchainIsXcode7OrBetter(void)
 {
   static BOOL result;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    NSComparisonResult cmpResult = [XcodebuildVersion() compare:@"0600"];
+    NSComparisonResult cmpResult = [XcodebuildVersion() compare:@"0700"];
     result = (cmpResult != NSOrderedAscending);
   });
   return result;

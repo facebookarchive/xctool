@@ -27,15 +27,15 @@
 static const NSInteger KProductTypeIphone = 1;
 static const NSInteger KProductTypeIpad = 2;
 
-@interface SimRuntimeStub (Latest)
-+ (SimRuntimeStub *)latest;
+@interface SimRuntime (Latest)
++ (SimRuntime *)latest;
 @end
 
-@implementation SimRuntimeStub (Latest)
+@implementation SimRuntime (Latest)
 
-+ (SimRuntimeStub *)latest
++ (SimRuntime *)latest
 {
-  NSArray *sorted = [[SimRuntimeStub supportedRuntimes] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"version" ascending:YES]]];
+  NSArray *sorted = [[SimRuntime supportedRuntimes] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"version" ascending:YES]]];
   return [sorted lastObject];
 }
 
@@ -43,7 +43,7 @@ static const NSInteger KProductTypeIpad = 2;
 
 @interface SimulatorInfoXcode6 ()
 @property (nonatomic, retain) SimDevice *simulatedDevice;
-@property (nonatomic, retain) SimRuntimeStub *simulatedRuntime;
+@property (nonatomic, retain) SimRuntime *simulatedRuntime;
 @end
 
 @implementation SimulatorInfoXcode6
@@ -97,10 +97,10 @@ static const NSInteger KProductTypeIpad = 2;
   }
 
   // return lowest device that has configuration with simulated sdk where lowest is defined
-  // by the order in the returned array of devices from `-[SimDeviceSetStub availableDevices]`
-  SimRuntimeStub *runtime = systemRoot.runtime;
+  // by the order in the returned array of devices from `-[SimDeviceSet availableDevices]`
+  SimRuntime *runtime = systemRoot.runtime;
   NSMutableArray *supportedDeviceTypes = [NSMutableArray array];
-  for (SimDevice *device in [[SimDeviceSetStub defaultSet] availableDevices]) {
+  for (SimDevice *device in [[SimDeviceSet defaultSet] availableDevices]) {
     if ([device.runtime isEqual:runtime]) {
       if (_cpuType == CPU_TYPE_ANY) {
         [supportedDeviceTypes addObject:device.deviceType];
@@ -115,7 +115,7 @@ static const NSInteger KProductTypeIpad = 2;
     }
   }
 
-  NSAssert([supportedDeviceTypes count] > 0, @"There are no available devices that support provided sdk: %@. Supported devices: %@", [systemRoot sdkVersion], [[SimDeviceTypeStub supportedDevices] valueForKeyPath:@"name"]);
+  NSAssert([supportedDeviceTypes count] > 0, @"There are no available devices that support provided sdk: %@. Supported devices: %@", [systemRoot sdkVersion], [[SimDeviceType supportedDevices] valueForKeyPath:@"name"]);
   _deviceName = [supportedDeviceTypes[0] name];
   return _deviceName;
 }
@@ -143,7 +143,7 @@ static const NSInteger KProductTypeIpad = 2;
 {
   if (_OSVersion) {
     if ([_OSVersion isEqualTo:@"latest"]) {
-      return [[SimRuntimeStub latest] versionString];
+      return [[SimRuntime latest] versionString];
     } else {
       return _OSVersion;
     }
@@ -178,11 +178,11 @@ static const NSInteger KProductTypeIpad = 2;
 #pragma mark -
 #pragma mark v6 methods
 
-- (SimRuntimeStub *)simulatedRuntime
+- (SimRuntime *)simulatedRuntime
 {
   if (!_simulatedRuntime) {
     _simulatedRuntime = [[self systemRootForSimulatedSdk] runtime];
-    NSAssert(_simulatedRuntime != nil, @"Unable to find simulated runtime for simulated sdk of version %@ at path %@. Supported runtimes: %@", [[self systemRootForSimulatedSdk] sdkVersion], [[self systemRootForSimulatedSdk] sdkRootPath], [SimRuntimeStub supportedRuntimes]);
+    NSAssert(_simulatedRuntime != nil, @"Unable to find simulated runtime for simulated sdk of version %@ at path %@. Supported runtimes: %@", [[self systemRootForSimulatedSdk] sdkVersion], [[self systemRootForSimulatedSdk] sdkRootPath], [SimRuntime supportedRuntimes]);
   }
   return _simulatedRuntime;
 }
@@ -190,10 +190,10 @@ static const NSInteger KProductTypeIpad = 2;
 - (SimDevice *)simulatedDevice
 {
   if (!_simulatedDevice) {
-    SimRuntimeStub *runtime = [self simulatedRuntime];
-    SimDeviceTypeStub *deviceType = [SimDeviceTypeStub supportedDeviceTypesByAlias][[self simulatedDeviceInfoName]];
-    NSAssert(deviceType != nil, @"Unable to find SimDeviceTypeStub for the device with name \"%@\". Available device names: %@", [self simulatedDeviceInfoName], [[SimDeviceTypeStub supportedDeviceTypesByAlias] allKeys]);
-    for (SimDevice *device in [[SimDeviceSetStub defaultSet] availableDevices]) {
+    SimRuntime *runtime = [self simulatedRuntime];
+    SimDeviceType *deviceType = [SimDeviceType supportedDeviceTypesByAlias][[self simulatedDeviceInfoName]];
+    NSAssert(deviceType != nil, @"Unable to find SimDeviceType for the device with name \"%@\". Available device names: %@", [self simulatedDeviceInfoName], [[SimDeviceType supportedDeviceTypesByAlias] allKeys]);
+    for (SimDevice *device in [[SimDeviceSet defaultSet] availableDevices]) {
       if ([device.deviceType isEqual:deviceType] &&
           [device.runtime isEqual:runtime]) {
         _simulatedDevice = device;
@@ -211,24 +211,24 @@ static const NSInteger KProductTypeIpad = 2;
 
 + (NSArray *)availableDevices
 {
-  return [[SimDeviceTypeStub supportedDeviceTypesByName] allKeys];
+  return [[SimDeviceType supportedDeviceTypesByName] allKeys];
 }
 
 + (BOOL)isDeviceAvailableWithAlias:(NSString *)deviceName
 {
-  return [SimDeviceTypeStub supportedDeviceTypesByAlias][deviceName] != nil;
+  return [SimDeviceType supportedDeviceTypesByAlias][deviceName] != nil;
 }
 
 + (NSString *)deviceNameForAlias:(NSString *)deviceAlias
 {
-  SimDeviceTypeStub *deviceType = [SimDeviceTypeStub supportedDeviceTypesByAlias][deviceAlias];
+  SimDeviceType *deviceType = [SimDeviceType supportedDeviceTypesByAlias][deviceAlias];
   return [deviceType name];
 }
 
 + (BOOL)isSdkVersion:(NSString *)sdkVersion supportedByDevice:(NSString *)deviceName
 {
-  SimDeviceTypeStub *deviceType = [SimDeviceTypeStub supportedDeviceTypesByAlias][deviceName];
-  SimRuntimeStub *runtime = [self _runtimeForSdkVersion:sdkVersion];
+  SimDeviceType *deviceType = [SimDeviceType supportedDeviceTypesByAlias][deviceName];
+  SimRuntime *runtime = [self _runtimeForSdkVersion:sdkVersion];
 
   return [runtime supportsDeviceType:deviceType];
 }
@@ -236,7 +236,7 @@ static const NSInteger KProductTypeIpad = 2;
 + (NSString *)sdkVersionForOSVersion:(NSString *)osVersion
 {
   if ([osVersion isEqualToString:@"latest"]) {
-    return [[SimRuntimeStub latest] versionString];
+    return [[SimRuntime latest] versionString];
   } else {
     return [[self _runtimeForSdkVersion:osVersion] versionString];
   }
@@ -244,7 +244,7 @@ static const NSInteger KProductTypeIpad = 2;
 
 + (NSArray *)availableSdkVersions
 {
-  return [[SimRuntimeStub supportedRuntimes] valueForKeyPath:@"versionString"];
+  return [[SimRuntime supportedRuntimes] valueForKeyPath:@"versionString"];
 }
 
 + (NSArray *)sdksSupportedByDevice:(NSString *)deviceName
@@ -255,7 +255,7 @@ static const NSInteger KProductTypeIpad = 2;
 
 + (cpu_type_t)cpuTypeForDevice:(NSString *)deviceName
 {
-  SimDeviceTypeStub *deviceType = [SimDeviceTypeStub supportedDeviceTypesByAlias][deviceName];
+  SimDeviceType *deviceType = [SimDeviceType supportedDeviceTypesByAlias][deviceName];
   if ([deviceType.supportedArchs containsObject:@(CPU_TYPE_X86_64)]) {
     return CPU_TYPE_X86_64;
   } else {
@@ -279,9 +279,9 @@ static const NSInteger KProductTypeIpad = 2;
 + (NSMutableArray *)_runtimesSupportedByDevice:(NSString *)deviceName
 {
   NSMutableArray *supportedRuntimes = [NSMutableArray array];
-  SimDeviceTypeStub *deviceType = [SimDeviceTypeStub supportedDeviceTypesByAlias][deviceName];
-  NSAssert(deviceType != nil, @"Unable to find SimDeviceTypeStub for the device with name \"%@\". Available device names: %@", deviceName, [[SimDeviceTypeStub supportedDeviceTypesByAlias] allKeys]);
-  for (SimRuntimeStub *runtime in [SimRuntimeStub supportedRuntimes]) {
+  SimDeviceType *deviceType = [SimDeviceType supportedDeviceTypesByAlias][deviceName];
+  NSAssert(deviceType != nil, @"Unable to find SimDeviceType for the device with name \"%@\". Available device names: %@", deviceName, [[SimDeviceType supportedDeviceTypesByAlias] allKeys]);
+  for (SimRuntime *runtime in [SimRuntime supportedRuntimes]) {
     if ([runtime supportsDeviceType:deviceType]) {
       [supportedRuntimes addObject:runtime];
     }
@@ -289,11 +289,11 @@ static const NSInteger KProductTypeIpad = 2;
   return supportedRuntimes;
 }
 
-+ (SimRuntimeStub *)_runtimeForSdkVersion:(NSString *)sdkVersion
++ (SimRuntime *)_runtimeForSdkVersion:(NSString *)sdkVersion
 {
   NSAssert(sdkVersion != nil, @"Sdk version shouldn't be nil.");
-  NSArray *runtimes = [SimRuntimeStub supportedRuntimes];
-  for (SimRuntimeStub *runtime in runtimes) {
+  NSArray *runtimes = [SimRuntime supportedRuntimes];
+  for (SimRuntime *runtime in runtimes) {
     if ([runtime.versionString hasPrefix:sdkVersion]) {
       return runtime;
     }
@@ -301,7 +301,7 @@ static const NSInteger KProductTypeIpad = 2;
   return nil;
 }
 
-+ (SimRuntimeStub *)_runtimeForSDKPath:(NSString *)sdkPath
++ (SimRuntime *)_runtimeForSDKPath:(NSString *)sdkPath
 {
   DTiPhoneSimulatorSystemRoot *root = [SimulatorInfoXcode6 _systemRootWithSDKPath:sdkPath];
   return [root runtime];
@@ -310,7 +310,7 @@ static const NSInteger KProductTypeIpad = 2;
 + (NSArray *)_availableDeviceConfigurationsInHumanReadableFormat
 {
   NSMutableArray *configs = [NSMutableArray array];
-  for (SimDevice *device in [[SimDeviceSetStub defaultSet] availableDevices]) {
+  for (SimDevice *device in [[SimDeviceSet defaultSet] availableDevices]) {
     [configs addObject:[NSString stringWithFormat:@"%@: %@", device.name, device.runtime.versionString]];
   }
   return configs;

@@ -194,19 +194,10 @@
   NSString *testSpecifierToFile = nil;
   BOOL invertScope = NO;
 
-  if ((!ToolchainIsXcode6OrBetter() || TestableSettingsIndicatesApplicationTest(_buildSettings)) &&
-      [focusedSet isEqualToSet:allSet]) {
-
-    if (TestableSettingsIndicatesApplicationTest(_buildSettings)) {
-      // Xcode.app will always pass 'All' when running all tests in an
-      // application test bundle.
-      testSpecifier = @"All";
-    } else {
-      // Xcode.app will always pass 'Self' when running all tests in an
-      // logic test bundle.
-      testSpecifier = @"Self";
-    }
-
+  if (TestableSettingsIndicatesApplicationTest(_buildSettings) && [focusedSet isEqualToSet:allSet]) {
+    // Xcode.app will always pass 'All' when running all tests in an
+    // application test bundle.
+    testSpecifier = @"All";
     invertScope = NO;
   } else {
     // When running a specific subset of tests, Xcode.app will always pass the

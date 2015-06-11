@@ -25,11 +25,7 @@
 
 + (Class)classBasedOnCurrentVersionOfXcode
 {
-  if (ToolchainIsXcode6OrBetter()) {
-    return [SimulatorInfoXcode6 class];
-  } else {
-    return [SimulatorInfoXcode5 class];
-  }
+  return [SimulatorInfoXcode6 class];
 }
 
 + (SimulatorInfo *)infoForCurrentVersionOfXcode

@@ -6,8 +6,12 @@
 
 typedef void (^CDUnknownFunctionPointerType)(void);
 
-@protocol SimRuntime <NSObject>
-@optional
+
+@protocol SimRuntimeDVTAdditions <NSObject>
++ (id)dvt_runtimeFromSDKRoot:(id)arg1;
+@end
+
+@interface SimRuntime : NSObject<SimRuntimeDVTAdditions>
 
 + (id)supportedRuntimes;
 + (id)supportedRuntimesByAlias;
@@ -64,20 +68,3 @@ typedef void (^CDUnknownFunctionPointerType)(void);
 - (CDUnknownFunctionPointerType)launch_sim_waitpid;
 
 @end
-
-@protocol SimRuntimeDVTAdditions <NSObject>
-@optional
-
-+ (id)dvt_runtimeFromSDKRoot:(id)arg1;
-
-@end
-
-#if XCODE_VERSION < 0600
-@interface SimRuntimeStub : NSObject<SimRuntime, SimRuntimeDVTAdditions>
-@end
-#else
-@interface SimRuntime : NSObject<SimRuntime, SimRuntimeDVTAdditions>
-@end
-@interface SimRuntimeStub : SimRuntime
-@end
-#endif
