@@ -793,12 +793,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   // As a workaround for this, we're going to call `-showBuildSettings` with
   // a few different actions until we get one that works.  For our limited purposes,
   // it doesn't really matter which one works.
-  NSArray *actionsToTry;
-  if (ToolchainIsXcode5OrBetter()) {
-    actionsToTry = @[@"build", @"test", @"analyze"];
-  } else {
-    actionsToTry = @[@"build"];
-  }
+  NSArray *actionsToTry = @[@"build", @"test", @"analyze"];
 
   NSString *errors = @" Errors above occured while running xcodebuild -showBuildSettings:\n";
   BOOL errored = NO;

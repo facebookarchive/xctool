@@ -92,11 +92,6 @@ BOOL IsRunningUnderTest();
 NSString *XcodebuildVersion();
 
 /**
- Returns YES if we're running with Xcode 5 or better.
- */
-BOOL ToolchainIsXcode5OrBetter(void);
-
-/**
  Returns YES if we're running with Xcode 6 or better.
  */
 BOOL ToolchainIsXcode6OrBetter(void);

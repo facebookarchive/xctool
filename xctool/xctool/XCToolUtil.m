@@ -746,17 +746,6 @@ NSString *XcodebuildVersion()
   return DTXcode;
 }
 
-BOOL ToolchainIsXcode5OrBetter(void)
-{
-  static BOOL result;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    NSComparisonResult cmpResult = [XcodebuildVersion() compare:@"0500"];
-    result = (cmpResult != NSOrderedAscending);
-  });
-  return result;
-}
-
 BOOL ToolchainIsXcode6OrBetter(void)
 {
   static BOOL result;
