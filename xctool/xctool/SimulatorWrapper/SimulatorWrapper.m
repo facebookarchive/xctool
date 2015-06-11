@@ -16,7 +16,6 @@
 
 #import "SimulatorWrapper.h"
 #import "SimulatorWrapperInternal.h"
-#import "SimulatorWrapperXcode5.h"
 #import "SimulatorWrapperXcode6.h"
 
 #import "DTiPhoneSimulatorRemoteClient.h"

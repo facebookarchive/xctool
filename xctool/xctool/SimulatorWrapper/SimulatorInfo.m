@@ -16,7 +16,6 @@
 
 #import "SimulatorInfo.h"
 
-#import "SimulatorInfoXcode5.h"
 #import "SimulatorInfoXcode6.h"
 #import "XcodeBuildSettings.h"
 #import "XCToolUtil.h"
