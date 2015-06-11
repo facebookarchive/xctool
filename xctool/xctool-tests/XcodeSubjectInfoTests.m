@@ -324,10 +324,6 @@
 
 - (void)testShouldTryToFetchBuildSettingsFromMultipleActionsOnXcode5
 {
-  if (!ToolchainIsXcode5OrBetter()) {
-    return;
-  }
-
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     NSArray *handlers = @[[LaunchHandlers handlerForShowBuildSettingsWithAction:@"build"
                                                                         project:TEST_DATA @"ProjectWithOnlyATestTarget/ProjectWithOnlyATestTarget.xcodeproj"

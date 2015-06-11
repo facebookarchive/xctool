@@ -292,25 +292,14 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                        @"test",
                        @"-showBuildSettings",
                        ]));
-    if (ToolchainIsXcode6OrBetter()) {
-      assertThat([launchedTasks[1] arguments],
-                 containsArray(@[
-                                 @"-NSTreatUnknownArgumentsAsOpen", @"NO",
-                                 @"-ApplePersistenceIgnoreState", @"YES",
-                                 @"-SenTestInvertScope", @"YES",
-                                 @"-SenTest", @"",
-                                 @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
-                                 ]));
-    } else {
-      assertThat([launchedTasks[1] arguments],
-                 containsArray(@[
-                                 @"-NSTreatUnknownArgumentsAsOpen", @"NO",
-                                 @"-ApplePersistenceIgnoreState", @"YES",
-                                 @"-SenTestInvertScope", @"NO",
-                                 @"-SenTest", @"Self",
-                                 @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
-                                 ]));
-    }
+    assertThat([launchedTasks[1] arguments],
+               containsArray(@[
+                               @"-NSTreatUnknownArgumentsAsOpen", @"NO",
+                               @"-ApplePersistenceIgnoreState", @"YES",
+                               @"-SenTestInvertScope", @"YES",
+                               @"-SenTest", @"",
+                               @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
+                               ]));
     assertThatInt(tool.exitStatus, equalToInt(1));
   }];
 }
@@ -424,26 +413,14 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                        @"test",
                        @"-showBuildSettings",
                        ]));
-    // in Xcode 6 we are always inverting scope
-    if (ToolchainIsXcode6OrBetter()) {
-      assertThat([launchedTasks[1] arguments],
-                 containsArray(@[
-                                 @"-NSTreatUnknownArgumentsAsOpen", @"NO",
-                                 @"-ApplePersistenceIgnoreState", @"YES",
-                                 @"-SenTestInvertScope", @"YES",
-                                 @"-SenTest", @"",
-                                 @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
-                                 ]));
-    } else {
-      assertThat([launchedTasks[1] arguments],
-                 containsArray(@[
-                                 @"-NSTreatUnknownArgumentsAsOpen", @"NO",
-                                 @"-ApplePersistenceIgnoreState", @"YES",
-                                 @"-SenTestInvertScope", @"NO",
-                                 @"-SenTest", @"Self",
-                                 @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
-                                 ]));
-    }
+    assertThat([launchedTasks[1] arguments],
+               containsArray(@[
+                               @"-NSTreatUnknownArgumentsAsOpen", @"NO",
+                               @"-ApplePersistenceIgnoreState", @"YES",
+                               @"-SenTestInvertScope", @"YES",
+                               @"-SenTest", @"",
+                               @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
+                               ]));
     assertThatInt(tool.exitStatus, equalToInt(1));
   }];
 }

@@ -367,14 +367,8 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
 
   OCUnitTestRunner *runner = TestRunnerWithTestList([OCUnitTestRunner class], testSettings, @[@"Cls1/testA", @"Cls2/testB"]);
 
-  // in Xcode 6 we are always inverting scope
-  if (ToolchainIsXcode6OrBetter()) {
-    assertThat([runner testArguments], containsArray(@[@"-SenTest", @""]));
-    assertThat([runner testArguments], containsArray(@[@"-SenTestInvertScope", @"YES"]));
-  } else {
-    assertThat([runner testArguments], containsArray(@[@"-SenTest", @"Self"]));
-    assertThat([runner testArguments], containsArray(@[@"-SenTestInvertScope", @"NO"]));
-  }
+  assertThat([runner testArguments], containsArray(@[@"-SenTest", @""]));
+  assertThat([runner testArguments], containsArray(@[@"-SenTestInvertScope", @"YES"]));
 }
 
 - (void)testTestSpecifierIsAllWhenRunningAllTestsInApplicationTestBundle
