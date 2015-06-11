@@ -397,9 +397,6 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
       }
     }
     [self setDeviceName:destInfo[@"name"]];
-    if (_deviceName) {
-      _cpuType = [SimulatorInfo cpuTypeForDevice:_deviceName];
-    }
     [self setOSVersion:destInfo[@"OS"]];
   }
 
