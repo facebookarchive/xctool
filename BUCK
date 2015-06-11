@@ -341,32 +341,6 @@ genrule(
     cmd = 'lipo $SRCS -create -output $OUT',
 )
 
-apple_resource(
-    name = 'mobile-installation-helper-resources',
-    files = glob(['mobile-installation-helper/*.png']),
-    dirs = [],
-)
-
-apple_binary(
-    name = 'mobile-installation-helper-bin',
-    srcs = [
-        'mobile-installation-helper/mobile-installation-helper/main.m',
-    ],
-    frameworks = [
-        '$SDKROOT/System/Library/Frameworks/CoreGraphics.framework',
-        '$SDKROOT/System/Library/Frameworks/Foundation.framework',
-        '$SDKROOT/System/Library/Frameworks/UIKit.framework',
-    ],
-    deps = [':mobile-installation-helper-resources'],
-)
-
-apple_bundle(
-    name = 'mobile-installation-helper',
-    binary = ':mobile-installation-helper-bin',
-    extension = 'app',
-    info_plist = 'mobile-installation-helper/mobile-installation-helper/mobile-installation-helper-Info.plist',
-)
-
 genrule(
     name = 'xctool-zip',
     deps = [
@@ -379,7 +353,6 @@ genrule(
         ':json-stream#macosx-x86_64',
         ':user-notifications#macosx-x86_64',
         ':teamcity#macosx-x86_64',
-        ':mobile-installation-helper#iphonesimulator-i386',
         ':otest-query-ios',
         ':otest-query-osx',
         ':otest-query-lib-ios',
@@ -403,8 +376,6 @@ genrule(
         # Libexecs
         '-x $(location :otest-query-ios):' +
            '$(location :otest-query-osx) ' +
-        # Mobile installation helper app (only used for the 32-bit simulator)
-        '-m $(location :mobile-installation-helper#iphonesimulator-i386) ' +
         # Reporters
         '-r $(location :pretty#macosx-x86_64):' +
            '$(location :plain#macosx-x86_64):' +
@@ -420,8 +391,7 @@ genrule(
     visibility = ['PUBLIC'],
 )
 
-# Minimal xctool which doesn't include mobile-installation-helper.app (only needed for Xcode 5)
-# and only includes the json-stream reporter
+# Minimal xctool only includes the json-stream reporter
 genrule(
     name = 'xctool-minimal-zip',
     deps = [

@@ -14,9 +14,6 @@ while getopts "b:l:x:r:m:o:" opt; do
         l)
             libs=$OPTARG
             ;;
-        m)
-            mobile_installation_helper_app=$OPTARG
-            ;;
         x)
             libexecs=$OPTARG
             ;;
@@ -29,7 +26,7 @@ while getopts "b:l:x:r:m:o:" opt; do
     esac
 done
 
-mkdir -p out/bin out/lib out/libexec out/libexec/mobile-installation-helper.app out/reporters
+mkdir -p out/bin out/lib out/libexec out/reporters
 cp "$binary" out/bin/xctool
 
 for lib in ${libs//:/ }; do
@@ -39,10 +36,6 @@ done
 for libexec in ${libexecs//:/ }; do
     cp "$libexec" out/libexec/$(basename $libexec \#$PLATFORM)
 done
-
-if [[ "$mobile_installation_helper_app" ]]; then
-    cp -a "$mobile_installation_helper_app" out/libexec
-fi
 
 for reporter in ${reporters//:/ }; do
     cp "$reporter" out/reporters/$(basename $reporter \#$PLATFORM)

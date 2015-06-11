@@ -126,20 +126,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "283EA65916C6F9A0009CE8D3"
-               BuildableName = "mobile-installation-helper.app"
-               BlueprintName = "mobile-installation-helper"
-               ReferencedContainer = "container:../mobile-installation-helper/mobile-installation-helper.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "28AF3212182716E20051F658"
                BuildableName = "sim-shim.dylib"
                BlueprintName = "sim-shim"
@@ -379,6 +365,15 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "CD9048FD1756C5B1006CF16D"
+            BuildableName = "otest-query-ios"
+            BlueprintName = "otest-query-ios"
+            ReferencedContainer = "container:../otest-query/otest-query.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
