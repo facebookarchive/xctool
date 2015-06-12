@@ -16,13 +16,15 @@
 
 @class DTiPhoneSimulatorSystemRoot, SimDevice, SimRuntime;
 
-@interface SimulatorInfo : NSObject
+@interface SimulatorInfo : NSObject <NSCopying>
 
 @property (nonatomic, copy) NSDictionary *buildSettings;
-@property (nonatomic, assign) cpu_type_t cpuType;
-@property (nonatomic, copy) NSString *deviceName;
-@property (nonatomic, copy) NSString *OSVersion;
 
+- (void)setCpuType:(cpu_type_t) cpuType;
+- (void)setDeviceName:(NSString *)deviceName;
+- (void)setOSVersion:(NSString *)OSVersion;
+
+- (cpu_type_t)simulatedCpuType;
 - (NSString *)simulatedArchitecture;
 - (NSNumber *)simulatedDeviceFamily;
 - (NSString *)simulatedDeviceInfoName;
@@ -33,11 +35,15 @@
 - (NSString *)simulatedSdkVersion;
 - (NSString *)simulatedSdkShortVersion;
 - (NSString *)simulatedSdkRootPath;
+- (NSString *)simulatedSdkName;
 - (NSNumber *)launchTimeout;
 
 - (DTiPhoneSimulatorSystemRoot *)systemRootForSimulatedSdk;
 
-- (NSDictionary *)simulatorLaunchEnvironment;
+- (NSMutableDictionary *)simulatorLaunchEnvironment;
+
+- (NSString *)testHostPath;
+- (NSString *)productBundlePath;
 
 + (NSArray *)availableDevices;
 + (NSString *)deviceNameForAlias:(NSString *)deviceAlias;

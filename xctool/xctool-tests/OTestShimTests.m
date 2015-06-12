@@ -38,13 +38,13 @@ static NSArray *AllTestCasesInTestBundle(NSString *sdkName,
   NSString *latestSDK = GetAvailableSDKsAndAliases()[sdkName];
   NSString *builtProductsDir = [bundlePath stringByDeletingLastPathComponent];
   NSString *fullProductName = [bundlePath lastPathComponent];
-  NSDictionary *buildSettings = @{
-                                  Xcode_BUILT_PRODUCTS_DIR : builtProductsDir,
-                                  Xcode_FULL_PRODUCT_NAME : fullProductName,
-                                  Xcode_SDK_NAME : latestSDK,
-                                  };
-  OCUnitTestQueryRunner *runner = [[testQueryClass alloc] initWithBuildSettings:buildSettings
-                                                                     withCpuType:CPU_TYPE_ANY];
+  SimulatorInfo *simulatorInfo = [[SimulatorInfo alloc] init];
+  simulatorInfo.buildSettings = @{
+    Xcode_BUILT_PRODUCTS_DIR : builtProductsDir,
+    Xcode_FULL_PRODUCT_NAME : fullProductName,
+    Xcode_SDK_NAME : latestSDK,
+  };
+  OCUnitTestQueryRunner *runner = [[testQueryClass alloc] initWithSimulatorInfo:simulatorInfo];
   NSArray *allTests = [runner runQueryWithError:&error];
   NSCAssert(error == nil, @"Error while querying test cases: %@", error);
 
@@ -104,6 +104,7 @@ static NSTask *OtestShimTask(NSString *platformName,
 
   // set up an OCUnitIOSLogicTestRunner
   OCUnitIOSLogicTestRunner *runner = [[testRunnerClass alloc] initWithBuildSettings:targetSettings
+                                                                      simulatorInfo:[[SimulatorInfo alloc] init]
                                                                    focusedTestCases:focusedTests
                                                                        allTestCases:allTests
                                                                           arguments:@[]

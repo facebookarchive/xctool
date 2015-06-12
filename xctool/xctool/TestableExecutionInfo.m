@@ -20,6 +20,7 @@
 #import "OCUnitIOSLogicTestQueryRunner.h"
 #import "OCUnitOSXAppTestQueryRunner.h"
 #import "OCUnitOSXLogicTestQueryRunner.h"
+#import "SimulatorInfo.h"
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
@@ -29,15 +30,16 @@
 
 + (instancetype)infoForTestable:(Testable *)testable
                   buildSettings:(NSDictionary *)buildSettings
-                        cpuType:(cpu_type_t)cpuType
+                  simulatorInfo:(SimulatorInfo *)simulatorInfo
 {
   TestableExecutionInfo *info = [[TestableExecutionInfo alloc] init];
   info.testable = testable;
   info.buildSettings = buildSettings;
+  info.simulatorInfo = simulatorInfo;
+  info.simulatorInfo.buildSettings = buildSettings;
 
   NSString *otestQueryError = nil;
-  NSArray *testCases = [[self class] queryTestCasesWithBuildSettings:info.buildSettings
-                                                             cpuType:cpuType
+  NSArray *testCases = [[self class] queryTestCasesWithSimulatorInfo:info.simulatorInfo
                                                                error:&otestQueryError];
   if (testCases) {
     info.testCases = testCases;
@@ -135,12 +137,11 @@
  * Use otest-query-[ios|osx] to get a list of all SenTestCase classes in the
  * test bundle.
  */
-+ (NSArray *)queryTestCasesWithBuildSettings:(NSDictionary *)testableBuildSettings
-                                     cpuType:(cpu_type_t)cpuType
++ (NSArray *)queryTestCasesWithSimulatorInfo:(SimulatorInfo *)simulatorInfo
                                        error:(NSString **)error
 {
-  NSString *sdkName = testableBuildSettings[Xcode_SDK_NAME];
-  BOOL isApplicationTest = TestableSettingsIndicatesApplicationTest(testableBuildSettings);
+  NSString *sdkName = simulatorInfo.buildSettings[Xcode_SDK_NAME];
+  BOOL isApplicationTest = TestableSettingsIndicatesApplicationTest(simulatorInfo.buildSettings);
 
   Class runnerClass = {0};
   if ([sdkName hasPrefix:@"macosx"]) {
@@ -160,8 +161,7 @@
       runnerClass = [OCUnitIOSLogicTestQueryRunner class];
     }
   }
-  OCUnitTestQueryRunner *runner = [[runnerClass alloc] initWithBuildSettings:testableBuildSettings
-                                                                  withCpuType:cpuType];
+  OCUnitTestQueryRunner *runner = [[runnerClass alloc] initWithSimulatorInfo:simulatorInfo];
   return [runner runQueryWithError:error];
 }
 

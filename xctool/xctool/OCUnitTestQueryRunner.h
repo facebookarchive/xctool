@@ -16,21 +16,17 @@
 
 #import <Foundation/Foundation.h>
 
+@class SimulatorInfo;
+
 @interface OCUnitTestQueryRunner : NSObject
 {
-@private
-  cpu_type_t _cpuType;
 @protected
-  NSDictionary *_buildSettings;
+  SimulatorInfo *_simulatorInfo;
 }
 
-- (instancetype)initWithBuildSettings:(NSDictionary *)buildSettings
-                          withCpuType:(cpu_type_t)cpuType;
+- (instancetype)initWithSimulatorInfo:(SimulatorInfo *)simulatorInfo;
 - (NSTask *)createTaskForQuery NS_RETURNS_RETAINED;
 - (void)prepareToRunQuery;
 - (NSArray *)runQueryWithError:(NSString **)error;
-- (NSString *)bundlePath;
-- (NSString *)testHostPath;
-- (cpu_type_t)cpuType;
 
 @end

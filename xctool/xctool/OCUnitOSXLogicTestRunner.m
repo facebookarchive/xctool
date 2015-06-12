@@ -24,7 +24,7 @@
 
 @implementation OCUnitOSXLogicTestRunner
 
-- (NSDictionary *)environmentOverrides
+- (NSMutableDictionary *)environmentOverrides
 {
   NSMutableDictionary *environment = OSXTestEnvironment(_buildSettings);
   [environment addEntriesFromDictionary:@{
@@ -36,10 +36,12 @@
 - (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath
 {
   NSTask *task = CreateTaskInSameProcessGroup();
+
   [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:_framework[kTestingFrameworkOSXTestrunnerName]]];
+
   // When invoking otest directly, the last arg needs to be the the test bundle.
   [task setArguments:[[self testArguments] arrayByAddingObject:testBundlePath]];
-  NSMutableDictionary *env = [[self environmentOverrides] mutableCopy];
+  NSMutableDictionary *env = [self environmentOverrides];
   env[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-osx.dylib"];
   [task setEnvironment:[self otestEnvironmentWithOverrides:env]];
   return task;
@@ -51,7 +53,7 @@
 {
   NSAssert([_buildSettings[Xcode_SDK_NAME] hasPrefix:@"macosx"], @"Should be a macosx SDK.");
 
-  NSString *testBundlePath = [self testBundlePath];
+  NSString *testBundlePath = [_simulatorInfo productBundlePath];
   BOOL bundleExists = [[NSFileManager defaultManager] fileExistsAtPath:testBundlePath];
 
   if (IsRunningUnderTest()) {

@@ -16,8 +16,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import "OCUnitIOSTestRunner.h"
+#import "OCUnitTestRunner.h"
 
-@interface OCUnitIOSAppTestRunner : OCUnitIOSTestRunner
+@interface OCUnitIOSAppTestRunner : OCUnitTestRunner
 
 @end

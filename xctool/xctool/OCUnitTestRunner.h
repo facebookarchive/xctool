@@ -16,16 +16,17 @@
 
 #import <Foundation/Foundation.h>
 
+#import "SimulatorInfo.h"
 #import "TestRunState.h"
 #import "TestingFramework.h"
 
 @interface OCUnitTestRunner : NSObject {
 @protected
   NSDictionary *_buildSettings;
+  SimulatorInfo *_simulatorInfo;
   NSArray *_focusedTestCases;
   NSArray *_allTestCases;
   NSArray *_arguments;
-  cpu_type_t _cpuType;
   NSDictionary *_environment;
   BOOL _garbageCollection;
   BOOL _freshSimulator;
@@ -36,7 +37,6 @@
   NSDictionary *_framework;
 }
 
-@property (nonatomic, assign) cpu_type_t cpuType;
 @property (nonatomic, copy, readonly) NSArray *reporters;
 
 /**
@@ -53,20 +53,20 @@
                        error:(NSString **)error;
 
 - (instancetype)initWithBuildSettings:(NSDictionary *)buildSettings
-           focusedTestCases:(NSArray *)focusedTestCases
-               allTestCases:(NSArray *)allTestCases
-                  arguments:(NSArray *)arguments
-                environment:(NSDictionary *)environment
-             freshSimulator:(BOOL)freshSimulator
-             resetSimulator:(BOOL)resetSimulator
-               freshInstall:(BOOL)freshInstall
-                testTimeout:(NSInteger)testTimeout
-                  reporters:(NSArray *)reporters;
+                        simulatorInfo:(SimulatorInfo *)simulatorInfo
+                     focusedTestCases:(NSArray *)focusedTestCases
+                         allTestCases:(NSArray *)allTestCases
+                            arguments:(NSArray *)arguments
+                          environment:(NSDictionary *)environment
+                       freshSimulator:(BOOL)freshSimulator
+                       resetSimulator:(BOOL)resetSimulator
+                         freshInstall:(BOOL)freshInstall
+                          testTimeout:(NSInteger)testTimeout
+                            reporters:(NSArray *)reporters;
 
 - (BOOL)runTests;
 
 - (NSArray *)testArguments;
 - (NSMutableDictionary *)otestEnvironmentWithOverrides:(NSDictionary *)overrides;
-- (NSString *)testBundlePath;
 
 @end

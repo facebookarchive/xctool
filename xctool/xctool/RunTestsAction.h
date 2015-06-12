@@ -58,11 +58,8 @@ typedef NS_ENUM(NSInteger, BucketBy) {
 @property (nonatomic, assign) BOOL parallelize;
 @property (nonatomic, assign) BOOL failOnEmptyTestBundles;
 @property (nonatomic, assign) BOOL listTestsOnly;
-@property (nonatomic, assign) cpu_type_t cpuType;
 @property (nonatomic, copy) NSString *testSDK;
 @property (nonatomic, strong) NSMutableArray *onlyList;
-@property (nonatomic, copy) NSString *deviceName;
-@property (nonatomic, copy) NSString *OSVersion;
 @property (nonatomic, strong) NSMutableArray *logicTests;
 @property (nonatomic, strong) NSMutableDictionary *appTests;
 @property (nonatomic, copy) NSString *targetedDeviceFamily;

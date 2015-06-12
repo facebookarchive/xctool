@@ -62,7 +62,6 @@ static const NSInteger kMaxRunTestsAttempts = 3;
   // Triggers some global state to be initialized - we must do this before
   // interacting with DTiPhoneSimulatorRemoteClient.
   [SimulatorLauncher loadAllPlatforms];
-  [self updateSimulatorInfo];
 
   void (^prepareSimulator)(BOOL freshSimulator, BOOL resetSimulator) = ^(BOOL freshSimulator, BOOL resetSimulator) {
     if (freshSimulator || resetSimulator) {
@@ -84,7 +83,7 @@ static const NSInteger kMaxRunTestsAttempts = 3;
                                REPORTER_MESSAGE_INFO,
                                @"Shutting down iOS Simulator...");
       NSString *shutdownError = nil;
-      if (ShutdownSimulator(self.simulatorInfo, &shutdownError)) {
+      if (ShutdownSimulator(_simulatorInfo, &shutdownError)) {
         ReportStatusMessageEnd(_reporters,
                                REPORTER_MESSAGE_INFO,
                                @"Shut down iOS Simulator...");
@@ -111,7 +110,7 @@ static const NSInteger kMaxRunTestsAttempts = 3;
                                @"Resetting iOS simulator content and settings...");
       NSString *removedPath = nil;
       NSString *removeError = nil;
-      if (RemoveSimulatorContentAndSettings(self.simulatorInfo, &removedPath, &removeError)) {
+      if (RemoveSimulatorContentAndSettings(_simulatorInfo, &removedPath, &removeError)) {
         if (removedPath) {
           ReportStatusMessageEnd(_reporters,
                                  REPORTER_MESSAGE_INFO,
@@ -137,7 +136,7 @@ static const NSInteger kMaxRunTestsAttempts = 3;
 
     if (_freshInstall) {
       if (![SimulatorWrapper uninstallTestHostBundleID:testHostBundleID
-                                         simulatorInfo:self.simulatorInfo
+                                         simulatorInfo:_simulatorInfo
                                              reporters:_reporters
                                                  error:startupError]) {
         return NO;
@@ -156,7 +155,7 @@ static const NSInteger kMaxRunTestsAttempts = 3;
     // is always set correctly.
     if (![SimulatorWrapper installTestHostBundleID:testHostBundleID
                                     fromBundlePath:testHostAppPath
-                                     simulatorInfo:self.simulatorInfo
+                                     simulatorInfo:_simulatorInfo
                                          reporters:_reporters
                                              error:startupError]) {
       return NO;
@@ -207,9 +206,9 @@ static const NSInteger kMaxRunTestsAttempts = 3;
   for (NSInteger remainingAttempts = kMaxRunTestsAttempts - 1; remainingAttempts >= 0; --remainingAttempts) {
     NSError *error = nil;
     BOOL infraSucceeded = [SimulatorWrapper runHostAppTests:testHostAppPath
-                                              simulatorInfo:self.simulatorInfo
+                                              simulatorInfo:_simulatorInfo
                                               appLaunchArgs:[self testArguments]
-                                       appLaunchEnvironment:[self otestEnvironmentWithOverrides:[self.simulatorInfo simulatorLaunchEnvironment]]
+                                       appLaunchEnvironment:[self otestEnvironmentWithOverrides:[_simulatorInfo simulatorLaunchEnvironment]]
                                           feedOutputToBlock:outputLineBlock
                                                       error:&error];
 

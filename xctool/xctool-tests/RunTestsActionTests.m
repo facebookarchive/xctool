@@ -32,6 +32,10 @@
 #import "XCToolUtil.h"
 #import "XcodeSubjectInfo.h"
 
+@interface OCUnitTestRunner ()
+@property (nonatomic, copy) SimulatorInfo *simulatorInfo;
+@end
+
 static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2, NSArray *keys)
 {
   NSArray *output1Array = [[output1 stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] componentsSeparatedByString:@"\n"];
@@ -314,17 +318,17 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
 
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
-                                                              // Make sure -showBuildSettings returns some data
-                                                              [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
-                                                                                                              scheme:@"TestProject-Library"
-                                                                                                        settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
-                                                              // We're going to call -showBuildSettings on the test target.
-                                                              [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
-                                                                                                              target:@"TestProject-LibraryTests"
-                                                                                                        settingsPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings.txt"
-                                                                                                                hide:NO],
-                                                              [LaunchHandlers handlerForOtestQueryReturningTestList:testList],
-                                                              ]];
+      // Make sure -showBuildSettings returns some data
+      [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
+                                                      scheme:@"TestProject-Library"
+                                                settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
+      // We're going to call -showBuildSettings on the test target.
+      [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
+                                                      target:@"TestProject-LibraryTests"
+                                                settingsPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings.txt"
+                                                        hide:NO],
+      [LaunchHandlers handlerForOtestQueryReturningTestList:testList],
+    ]];
 
     XCTool *tool = [[XCTool alloc] init];
 
@@ -343,7 +347,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                                                               encoding:NSUTF8StringEncoding
                                                                  error:nil];
     NSString *stdoutString = result[@"stdout"];
-    assertThatBool(areEqualJsonOutputsIgnoringKeys(stdoutString, listTestsOnlyOutput, @[@"timestamp", @"duration"]), equalToBool(YES));
+    assertThatBool(areEqualJsonOutputsIgnoringKeys(stdoutString, listTestsOnlyOutput, @[@"timestamp", @"duration", @"deviceName", @"sdkName"]), equalToBool(YES));
   }];
 }
 
@@ -1055,7 +1059,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
        [TestUtil runWithFakeStreams:tool];
 
        assertThat(runner, notNilValue());
-       assertThat([runner testBundlePath], equalTo(TEST_DATA @"tests-ios-test-bundle/TestProject-LibraryTests.octest"));
+       assertThat([runner.simulatorInfo productBundlePath], equalTo(TEST_DATA @"tests-ios-test-bundle/TestProject-LibraryTests.octest"));
      }];
   }];
 }
@@ -1069,7 +1073,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
 
     XCTool *tool = [[XCTool alloc] init];
 
-    tool.arguments = @[@"-sdk", @"iphonesimulator6.1",
+    tool.arguments = @[@"-sdk", @"iphonesimulator",
                        @"run-tests",
                        @"-logicTest", TEST_DATA @"tests-ios-test-bundle/TestProject-LibraryTests.octest",
                       ];
@@ -1090,7 +1094,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
        [TestUtil runWithFakeStreams:tool];
 
        assertThat(runner, notNilValue());
-       assertThatInteger([runner cpuType], equalToInteger(CPU_TYPE_I386));
+       assertThatInteger([runner.simulatorInfo simulatedCpuType], equalToInteger(CPU_TYPE_I386));
      }];
   }];
 }
@@ -1125,7 +1129,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
        [TestUtil runWithFakeStreams:tool];
 
        assertThat(runner, notNilValue());
-       assertThatInteger([runner cpuType], equalToInteger(CPU_TYPE_X86_64));
+       assertThatInteger([runner.simulatorInfo simulatedCpuType], equalToInteger(CPU_TYPE_X86_64));
      }];
   }];
 }
@@ -1160,7 +1164,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
        [TestUtil runWithFakeStreams:tool];
 
        assertThat(runner, notNilValue());
-       assertThatInteger([runner cpuType], equalToInteger(CPU_TYPE_ANY));
+       assertThatInteger([runner.simulatorInfo simulatedCpuType], equalToInteger(CPU_TYPE_ANY));
      }];
   }];
 }
@@ -1197,7 +1201,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
        [TestUtil runWithFakeStreams:tool];
 
        assertThat(runner, notNilValue());
-       assertThatInteger([runner cpuType], equalToInteger(CPU_TYPE_X86_64));
+       assertThatInteger([runner.simulatorInfo simulatedCpuType], equalToInteger(CPU_TYPE_X86_64));
      }];
   }];
 }
@@ -1235,7 +1239,121 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
        [TestUtil runWithFakeStreams:tool];
 
        assertThat(runner, notNilValue());
-       assertThatInteger([runner cpuType], equalToInteger(CPU_TYPE_I386));
+       assertThatInteger([runner.simulatorInfo simulatedCpuType], equalToInteger(CPU_TYPE_I386));
+     }];
+  }];
+}
+
+- (void)testTestHostArchitectureIsUsedWhenTestBundleArchitectureIsDifferent
+{
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+      [LaunchHandlers handlerForOtestQueryWithTestHost:TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/TestProject-App-OSX.app/Contents/MacOS/TestProject-App-OSX"
+                                     returningTestList:@[@"FakeTest/TestA", @"FakeTest/TestB"]],
+    ]];
+
+    XCTool *tool = [[XCTool alloc] init];
+
+    tool.arguments = @[
+      @"-sdk", @"iphonesimulator",
+      @"run-tests",
+      @"-appTest",
+      TEST_DATA @"tests-ios-test-bundle/TestProject-LibraryTests.octest:" TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/TestProject-App-OSX.app/Contents/MacOS/TestProject-App-OSX",
+    ];
+
+    __block OCUnitTestRunner *runner = nil;
+
+    [Swizzler whileSwizzlingSelector:@selector(runTests)
+                 forInstancesOfClass:[OCUnitTestRunner class]
+                           withBlock:
+     ^(id self, SEL sel){
+       // Don't actually run anything and just save a reference to the runner.
+       runner = self;
+       // Pretend tests succeeded.
+       return YES;
+     }
+                            runBlock:
+     ^{
+       [TestUtil runWithFakeStreams:tool];
+
+       assertThat(runner, notNilValue());
+       assertThatInteger([runner.simulatorInfo simulatedCpuType], equalToInteger(CPU_TYPE_X86_64));
+     }];
+  }];
+}
+
+- (void)testTestHostArchitectureIsUsedWhenTestBundleArchitectureIsSame
+{
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+      [LaunchHandlers handlerForOtestQueryWithTestHost:TEST_DATA @"FakeApp.app/FakeApp"
+                                     returningTestList:@[@"FakeTest/TestA", @"FakeTest/TestB"]],
+    ]];
+
+    XCTool *tool = [[XCTool alloc] init];
+
+    tool.arguments = @[
+      @"-sdk", @"iphonesimulator",
+      @"run-tests",
+      @"-appTest",
+      TEST_DATA @"tests-ios-test-bundle/TestProject-LibraryTests.octest:" TEST_DATA @"FakeApp.app/FakeApp",
+    ];
+
+    __block OCUnitTestRunner *runner = nil;
+
+    [Swizzler whileSwizzlingSelector:@selector(runTests)
+                 forInstancesOfClass:[OCUnitTestRunner class]
+                           withBlock:
+     ^(id self, SEL sel){
+       // Don't actually run anything and just save a reference to the runner.
+       runner = self;
+       // Pretend tests succeeded.
+       return YES;
+     }
+                            runBlock:
+     ^{
+       [TestUtil runWithFakeStreams:tool];
+
+       assertThat(runner, notNilValue());
+       assertThatInteger([runner.simulatorInfo simulatedCpuType], equalToInteger(CPU_TYPE_I386));
+     }];
+  }];
+}
+
+- (void)testTestBundleArchitectureIsUsedWhenTestHostIsUniversal
+{
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+      [LaunchHandlers handlerForOtestQueryWithTestHost:TEST_DATA @"TestProject64bit/TestProject64bit.app/TestProject64bit"
+                                     returningTestList:@[@"FakeTest/TestA", @"FakeTest/TestB"]],
+    ]];
+
+    XCTool *tool = [[XCTool alloc] init];
+
+    tool.arguments = @[
+      @"-sdk", @"iphonesimulator",
+      @"run-tests",
+      @"-appTest",
+      TEST_DATA @"tests-ios-test-bundle/TestProject-LibraryTests.octest:" TEST_DATA @"TestProject64bit/TestProject64bit.app/TestProject64bit",
+    ];
+
+    __block OCUnitTestRunner *runner = nil;
+
+    [Swizzler whileSwizzlingSelector:@selector(runTests)
+                 forInstancesOfClass:[OCUnitTestRunner class]
+                           withBlock:
+     ^(id self, SEL sel){
+       // Don't actually run anything and just save a reference to the runner.
+       runner = self;
+       // Pretend tests succeeded.
+       return YES;
+     }
+                            runBlock:
+     ^{
+       [TestUtil runWithFakeStreams:tool];
+
+       assertThat(runner, notNilValue());
+       assertThatInteger([runner.simulatorInfo simulatedCpuType], equalToInteger(CPU_TYPE_I386));
      }];
   }];
 }
@@ -1272,7 +1390,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
        [TestUtil runWithFakeStreams:tool];
 
        assertThat(runner, notNilValue());
-       assertThat([runner testBundlePath], equalTo(TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/TestProject-App-OSXTests.octest"));
+       assertThat([runner.simulatorInfo productBundlePath], equalTo(TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/TestProject-App-OSXTests.octest"));
      }];
   }];
 }

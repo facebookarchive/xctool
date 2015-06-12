@@ -16,6 +16,7 @@
 
 #import "OCUnitOSXLogicTestQueryRunner.h"
 
+#import "SimulatorInfo.h"
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
@@ -36,7 +37,7 @@
 
 - (NSTask *)createTaskForQuery
 {
-  NSMutableDictionary *environment = OSXTestEnvironment(_buildSettings);
+  NSMutableDictionary *environment = OSXTestEnvironment(_simulatorInfo.buildSettings);
   [environment addEntriesFromDictionary:@{
     // Specifying `NSArgumentDomain` forces XCTest/SenTestingKit frameworks to use values
     // of otest-query-osx `NSUserDefaults` which are changed in otest-query to manipulate
@@ -48,7 +49,7 @@
 
   NSTask *task = CreateTaskInSameProcessGroup();
   [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-osx"]];
-  [task setArguments:@[ [self bundlePath] ]];
+  [task setArguments:@[ [_simulatorInfo productBundlePath] ]];
   [task setEnvironment:environment];
 
   return task;

@@ -44,44 +44,116 @@ static const NSInteger KProductTypeIpad = 2;
 @end
 
 @interface SimulatorInfo ()
+@property (nonatomic, assign) cpu_type_t cpuType;
+@property (nonatomic, copy) NSString *deviceName;
+@property (nonatomic, copy) NSString *OSVersion;
+
 @property (nonatomic, strong) SimDevice *simulatedDevice;
 @property (nonatomic, strong) SimRuntime *simulatedRuntime;
+
+@property (nonatomic, copy) NSString *testHostPath;
+@property (nonatomic, copy) NSString *productBundlePath;
+@property (nonatomic, assign) cpu_type_t testHostPathCpuType;
+@property (nonatomic, assign) cpu_type_t productBundlePathCpuType;
+@property (nonatomic, assign) cpu_type_t simulatedCpuType;
 @end
 
 @implementation SimulatorInfo
 
+- (instancetype)init
+{
+  self = [super init];
+  if (self) {
+    _cpuType = CPU_TYPE_ANY;
+    _testHostPathCpuType = 0;
+    _productBundlePathCpuType = 0;
+    _simulatedCpuType = 0;
+  }
+  return self;
+}
+
+- (instancetype)copyWithZone:(NSZone *)zone
+{
+  SimulatorInfo *copy = [[SimulatorInfo allocWithZone:zone] init];
+  if (copy) {
+    copy.buildSettings = _buildSettings;
+    copy.cpuType = _cpuType;
+    copy.deviceName = _deviceName;
+    copy.OSVersion = _OSVersion;
+  }
+  return copy;
+}
+
+#pragma mark - Internal Methods
+
+- (void)setBuildSettings:(NSDictionary *)buildSettings
+{
+  if (_buildSettings == buildSettings || [_buildSettings isEqual:buildSettings]) {
+    return;
+  }
+
+  _buildSettings = [buildSettings copy];
+  _testHostPath = nil;
+  _productBundlePath = nil;
+  _testHostPathCpuType = 0;
+  _productBundlePathCpuType = 0;
+  _simulatedCpuType = 0;
+}
+
+- (NSString *)testHostPath
+{
+  if (!_testHostPath) {
+    _testHostPath = TestHostPathForBuildSettings(_buildSettings);
+  }
+  return _testHostPath;
+}
+
+- (NSString *)productBundlePath
+{
+  if (!_productBundlePath) {
+    _productBundlePath = ProductBundlePathForBuildSettings(_buildSettings);
+  }
+  return _productBundlePath;
+}
+
+- (cpu_type_t)testHostPathCpuType
+{
+  if (_testHostPathCpuType == 0) {
+    _testHostPathCpuType = CpuTypeForTestBundleAtPath([self testHostPath]);
+  }
+  return _testHostPathCpuType;
+}
+
+- (cpu_type_t)productBundlePathCpuType
+{
+  if (_productBundlePathCpuType == 0) {
+    _productBundlePathCpuType = CpuTypeForTestBundleAtPath([self productBundlePath]);
+  }
+  return _productBundlePathCpuType;
+}
+
 #pragma mark -
 #pragma mark Public methods
 
-- (NSNumber *)launchTimeout
+- (cpu_type_t)simulatedCpuType
 {
-  NSString *launchTimeoutString = _buildSettings[Xcode_LAUNCH_TIMEOUT];
-  if (launchTimeoutString) {
-    return @(launchTimeoutString.intValue);
+  if (_cpuType != CPU_TYPE_ANY) {
+    return _cpuType;
   }
-  return @30;
-}
 
-- (NSDictionary *)simulatorLaunchEnvironment
-{
-  // Sometimes the TEST_HOST will be wrapped in double quotes.
-  NSString *testHostPath = [_buildSettings[Xcode_TEST_HOST] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
-  NSString *testBundlePath = [NSString stringWithFormat:@"%@/%@", _buildSettings[Xcode_BUILT_PRODUCTS_DIR], _buildSettings[Xcode_FULL_PRODUCT_NAME]];
-  NSString *ideBundleInjectionLibPath = @"/../../Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection";
-  NSArray *librariesToInsert = @[
-    [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"],
-    ideBundleInjectionLibPath,
-  ];
+  if (_simulatedCpuType == 0) {
+    /*
+     * We use architecture of test host rather than product bundle one
+     * if they don't match and test host doesn't support all architectures.
+     */
+    if ([self testHostPathCpuType] == CPU_TYPE_ANY) {
+      _simulatedCpuType = [self productBundlePathCpuType];
+    } else {
+      _simulatedCpuType = [self testHostPathCpuType];
+    }
+  }
 
-  NSMutableDictionary *environment = IOSTestEnvironment(_buildSettings);
-  [environment addEntriesFromDictionary:@{
-    @"DYLD_INSERT_LIBRARIES" : [librariesToInsert componentsJoinedByString:@":"],
-    @"NSUnbufferedIO" : @"YES",
-    @"XCInjectBundle" : testBundlePath,
-    @"XCInjectBundleInto" : testHostPath,
-  }];
-
-  return environment;
+  return _simulatedCpuType;
 }
 
 - (NSNumber *)simulatedDeviceFamily
@@ -97,7 +169,7 @@ static const NSInteger KProductTypeIpad = 2;
 
   switch ([[self simulatedDeviceFamily] integerValue]) {
     case KProductTypeIphone:
-      if (_cpuType == CPU_TYPE_I386) {
+      if ([self simulatedCpuType] == CPU_TYPE_I386) {
         _deviceName = @"iPhone 4s";
       } else {
         // CPU_TYPE_X86_64 or CPU_TYPE_ANY
@@ -106,7 +178,7 @@ static const NSInteger KProductTypeIpad = 2;
       break;
 
     case KProductTypeIpad:
-      if (_cpuType == CPU_TYPE_I386) {
+      if ([self simulatedCpuType] == CPU_TYPE_I386) {
         _deviceName = @"iPad 2";
       } else {
         // CPU_TYPE_X86_64 or CPU_TYPE_ANY
@@ -125,17 +197,15 @@ static const NSInteger KProductTypeIpad = 2;
   SimRuntime *runtime = systemRoot.runtime;
   NSMutableArray *supportedDeviceTypes = [NSMutableArray array];
   for (SimDevice *device in [[SimDeviceSet defaultSet] availableDevices]) {
-    if ([device.runtime isEqual:runtime]) {
-      if (_cpuType == CPU_TYPE_ANY) {
-        [supportedDeviceTypes addObject:device.deviceType];
-      } else {
-        for (NSNumber *supportedArch in [[device deviceType] supportedArchs]) {
-          if (([supportedArch longLongValue] & _cpuType) == _cpuType) {
-            [supportedDeviceTypes addObject:device.deviceType];
-            break;
-          }
-        }
-      }
+    if (![device.runtime isEqual:runtime]) {
+      continue;
+    }
+
+    if ([self simulatedCpuType] == CPU_TYPE_ANY ||
+        [[[device deviceType] supportedArchs] containsObject:@([self simulatedCpuType])]) {
+      [supportedDeviceTypes addObject:device.deviceType];
+      // we need only first one
+      break;
     }
   }
 
@@ -146,7 +216,7 @@ static const NSInteger KProductTypeIpad = 2;
 
 - (NSString *)simulatedArchitecture
 {
-  switch (_cpuType) {
+  switch ([self simulatedCpuType]) {
     case CPU_TYPE_I386:
       return @"i386";
 
@@ -186,6 +256,17 @@ static const NSInteger KProductTypeIpad = 2;
   return [[[self systemRootForSimulatedSdk] runtime] versionString];
 }
 
+- (NSString *)simulatedSdkName
+{
+  if ([_buildSettings[Xcode_SDK_NAME] hasPrefix:@"macosx"]) {
+    return _buildSettings[Xcode_SDK_NAME];
+  }
+
+  DTiPhoneSimulatorSystemRoot *systemRoot = [self systemRootForSimulatedSdk];
+  NSString *platformName = [[[[[systemRoot runtime] platformPath] lastPathComponent] stringByDeletingPathExtension] lowercaseString];
+  return [platformName stringByAppendingString:[self simulatedSdkVersion]];
+}
+
 - (DTiPhoneSimulatorSystemRoot *)systemRootForSimulatedSdk
 {
   NSString *sdkVersion = [self simulatedSdkVersion];
@@ -198,9 +279,6 @@ static const NSInteger KProductTypeIpad = 2;
   NSAssert(systemRoot != nil, @"Unable to instantiate DTiPhoneSimulatorSystemRoot for sdk version: %@. Available roots: %@", sdkVersion, [DTiPhoneSimulatorSystemRoot knownRoots]);
   return systemRoot;
 }
-
-#pragma mark -
-#pragma mark v6 methods
 
 - (SimRuntime *)simulatedRuntime
 {
@@ -228,6 +306,39 @@ static const NSInteger KProductTypeIpad = 2;
     NSAssert(_simulatedDevice != nil, @"Simulator with name \"%@\" doesn't have configuration with sdk version \"%@\". Available configurations: %@.", [self simulatedDeviceInfoName], runtime.versionString, [SimulatorInfo _availableDeviceConfigurationsInHumanReadableFormat]);
   }
   return _simulatedDevice;
+}
+
+- (NSNumber *)launchTimeout
+{
+  NSString *launchTimeoutString = _buildSettings[Xcode_LAUNCH_TIMEOUT];
+  if (launchTimeoutString) {
+    return @(launchTimeoutString.intValue);
+  }
+  return @30;
+}
+
+- (NSMutableDictionary *)simulatorLaunchEnvironment
+{
+  NSString *sdkName = _buildSettings[Xcode_SDK_NAME];
+  NSString *ideBundleInjectionLibPath = [_buildSettings[Xcode_PLATFORM_DIR] stringByAppendingPathComponent:@"Developer/Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection"];
+  NSMutableDictionary *environment = nil;
+  NSMutableArray *librariesToInsert = [NSMutableArray arrayWithObject:ideBundleInjectionLibPath];
+  if ([sdkName hasPrefix:@"macosx"]) {
+    environment = OSXTestEnvironment(_buildSettings);
+    [librariesToInsert addObject:[XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-osx.dylib"]];
+  } else {
+    environment = IOSTestEnvironment(_buildSettings);
+    [librariesToInsert addObject:[XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"]];
+  }
+
+  [environment addEntriesFromDictionary:@{
+    @"DYLD_INSERT_LIBRARIES" : [librariesToInsert componentsJoinedByString:@":"],
+    @"NSUnbufferedIO" : @"YES",
+    @"XCInjectBundle" : [self productBundlePath],
+    @"XCInjectBundleInto" : [self testHostPath],
+  }];
+
+  return environment;
 }
 
 #pragma mark -

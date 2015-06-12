@@ -17,7 +17,4 @@
 #import "Action.h"
 
 @interface TestAction : Action
-
-- (void)setDeviceName:(NSString *)deviceName;
-
 @end

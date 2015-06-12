@@ -26,6 +26,7 @@
 
 @interface OCUnitTestRunner ()
 @property (nonatomic, copy) NSDictionary *buildSettings;
+@property (nonatomic, copy) SimulatorInfo *simulatorInfo;
 @property (nonatomic, copy) NSArray *focusedTestCases;
 @property (nonatomic, copy) NSArray *allTestCases;
 @property (nonatomic, copy) NSArray *arguments;
@@ -103,6 +104,7 @@
 }
 
 - (instancetype)initWithBuildSettings:(NSDictionary *)buildSettings
+                        simulatorInfo:(SimulatorInfo *)simulatorInfo
                      focusedTestCases:(NSArray *)focusedTestCases
                          allTestCases:(NSArray *)allTestCases
                             arguments:(NSArray *)arguments
@@ -115,6 +117,8 @@
 {
   if (self = [super init]) {
     _buildSettings = [buildSettings copy];
+    _simulatorInfo = [simulatorInfo copy];
+    _simulatorInfo.buildSettings = buildSettings;
     _focusedTestCases = [focusedTestCases copy];
     _allTestCases = [allTestCases copy];
     _arguments = [arguments copy];
@@ -124,9 +128,7 @@
     _freshInstall = freshInstall;
     _testTimeout = testTimeout;
     _reporters = [reporters copy];
-    NSString *testBundlePath = [self testBundlePath];
-    _framework = [FrameworkInfoForTestBundleAtPath(testBundlePath) copy];
-    _cpuType = CpuTypeForTestBundleAtPath(testBundlePath);
+    _framework = FrameworkInfoForTestBundleAtPath([_simulatorInfo productBundlePath]);
   }
   return self;
 }
@@ -319,11 +321,6 @@
   }
 
   return env;
-}
-
-- (NSString *)testBundlePath
-{
-  return [_buildSettings[Xcode_BUILT_PRODUCTS_DIR] stringByAppendingPathComponent:_buildSettings[Xcode_FULL_PRODUCT_NAME]];
 }
 
 @end

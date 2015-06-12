@@ -20,6 +20,10 @@
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
 
+@interface OCUnitTestRunner ()
+@property (nonatomic, copy) SimulatorInfo *simulatorInfo;
+@end
+
 static id TestRunnerWithTestLists(Class cls, NSDictionary *settings, NSArray *focusedTestCases, NSArray *allTestCases)
 {
   NSArray *arguments = @[@"-SomeArg", @"SomeVal"];
@@ -28,15 +32,16 @@ static id TestRunnerWithTestLists(Class cls, NSDictionary *settings, NSArray *fo
   EventBuffer *eventBuffer = [[EventBuffer alloc] init];
 
   return [[cls alloc] initWithBuildSettings:settings
-                            focusedTestCases:focusedTestCases
-                                allTestCases:allTestCases
-                                   arguments:arguments
-                                 environment:environment
-                              freshSimulator:NO
-                              resetSimulator:NO
-                                freshInstall:NO
-                                 testTimeout:30
-                                   reporters:@[eventBuffer]];
+                              simulatorInfo:[[SimulatorInfo alloc] init]
+                           focusedTestCases:focusedTestCases
+                               allTestCases:allTestCases
+                                  arguments:arguments
+                                environment:environment
+                             freshSimulator:NO
+                             resetSimulator:NO
+                               freshInstall:NO
+                                testTimeout:30
+                                  reporters:@[eventBuffer]];
 }
 
 static id TestRunnerWithTestList(Class cls, NSDictionary *settings, NSArray *testList)
@@ -156,7 +161,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
   NSArray *launchedTasks;
 
   OCUnitTestRunner *runner = TestRunner([OCUnitIOSLogicTestRunner class], testSettings);
-  runner.cpuType = CPU_TYPE_I386;
+  runner.simulatorInfo.cpuType = CPU_TYPE_I386;
   [self runTestsForRunner:runner
            andReturnTasks:&launchedTasks];
 
@@ -274,6 +279,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
     Xcode_BUILT_PRODUCTS_DIR: TEST_DATA @"TestProject-App-OSX/Build/Products/Debug",
     Xcode_FULL_PRODUCT_NAME: @"TestProject-App-OSXTests.octest",
     Xcode_TEST_HOST: TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/TestProject-App-OSX.app/Contents/MacOS/TestProject-App-OSX",
+    Xcode_PLATFORM_DIR: @"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/",
   };
 
   NSArray *launchedTasks = nil;

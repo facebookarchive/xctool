@@ -16,9 +16,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "OCUnitIOSTestRunner.h"
+#import "OCUnitTestRunner.h"
 
-@interface OCUnitIOSLogicTestRunner : OCUnitIOSTestRunner
+@interface OCUnitIOSLogicTestRunner : OCUnitTestRunner
 
 - (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath;
 

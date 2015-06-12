@@ -16,6 +16,7 @@
 
 #import "OCUnitIOSAppTestQueryRunner.h"
 
+#import "SimulatorInfo.h"
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
@@ -24,20 +25,20 @@
 
 - (NSTask *)createTaskForQuery
 {
-  NSString *version = [_buildSettings[Xcode_SDK_NAME] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
-  NSMutableDictionary *environment = IOSTestEnvironment(_buildSettings);
+  NSString *version = [_simulatorInfo.buildSettings[Xcode_SDK_NAME] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
+  NSMutableDictionary *environment = IOSTestEnvironment(_simulatorInfo.buildSettings);
   [environment addEntriesFromDictionary:@{
     @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"otest-query-lib-ios.dylib"],
     // The test bundle that we want to query from, as loaded by otest-query-lib-ios.dylib.
-    @"OtestQueryBundlePath" : [self bundlePath],
+    @"OtestQueryBundlePath" : [_simulatorInfo productBundlePath],
     @"__CFPREFERENCES_AVOID_DAEMON" : @"YES",
   }];
 
   return CreateTaskForSimulatorExecutable(
-    _buildSettings[Xcode_SDK_NAME],
-    [self cpuType],
+    _simulatorInfo.buildSettings[Xcode_SDK_NAME],
+    [_simulatorInfo simulatedCpuType],
     version,
-    [self testHostPath],
+    [_simulatorInfo testHostPath],
     @[],
     environment
   );

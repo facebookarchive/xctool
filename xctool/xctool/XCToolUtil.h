@@ -236,3 +236,13 @@ NSString *HashForString(NSString *string);
  * or crashes if none of the above applies to bundle's executable.
  */
 cpu_type_t CpuTypeForTestBundleAtPath(NSString *testBundlePath);
+
+/**
+ * Returns test host path specified in build settings or nil.
+ */
+NSString *TestHostPathForBuildSettings(NSDictionary *buildSettings);
+
+/**
+ * Returns product bundle path specified in build settings.
+ */
+NSString *ProductBundlePathForBuildSettings(NSDictionary *buildSettings);

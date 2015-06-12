@@ -16,48 +16,24 @@
 
 #import "OCUnitTestQueryRunner.h"
 
+#import "SimulatorInfo.h"
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
 
 @interface OCUnitTestQueryRunner ()
-@property (nonatomic, copy) NSDictionary *buildSettings;
-@property (nonatomic, assign) cpu_type_t cpuType;
+@property (nonatomic, copy) SimulatorInfo *simulatorInfo;
 @end
 
 @implementation OCUnitTestQueryRunner
 
 // Designated initializer.
-- (instancetype)initWithBuildSettings:(NSDictionary *)buildSettings
-                          withCpuType:(cpu_type_t)cpuType
+- (instancetype)initWithSimulatorInfo:(SimulatorInfo *)simulatorInfo
 {
   if (self = [super init]) {
-    _buildSettings = [buildSettings copy];
-    _cpuType = cpuType;
+    _simulatorInfo = [simulatorInfo copy];
   }
   return self;
-}
-
-
-- (NSString *)bundlePath
-{
-  NSString *builtProductsDir = _buildSettings[Xcode_BUILT_PRODUCTS_DIR];
-  NSString *fullProductName = _buildSettings[Xcode_FULL_PRODUCT_NAME];
-  NSString *bundlePath = [builtProductsDir stringByAppendingPathComponent:fullProductName];
-  return bundlePath;
-}
-
-- (NSString *)testHostPath
-{
-  // TEST_HOST will sometimes be wrapped in "quotes".
-  NSString *testHost = [_buildSettings[Xcode_TEST_HOST]
-                        stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
-  return testHost;
-}
-
-- (cpu_type_t)cpuType
-{
-  return _cpuType != CPU_TYPE_ANY ? _cpuType : CpuTypeForTestBundleAtPath([self bundlePath]);
 }
 
 - (NSTask *)createTaskForQuery NS_RETURNS_RETAINED
@@ -72,15 +48,15 @@
 - (NSArray *)runQueryWithError:(NSString **)error
 {
   BOOL bundleIsDir = NO;
-  BOOL bundleExists = [[NSFileManager defaultManager] fileExistsAtPath:[self bundlePath] isDirectory:&bundleIsDir];
+  BOOL bundleExists = [[NSFileManager defaultManager] fileExistsAtPath:[_simulatorInfo productBundlePath] isDirectory:&bundleIsDir];
   if (!IsRunningUnderTest() && !(bundleExists && bundleIsDir)) {
-    *error = [NSString stringWithFormat:@"Test bundle not found at: %@", [self bundlePath]];
+    *error = [NSString stringWithFormat:@"Test bundle not found at: %@", [_simulatorInfo productBundlePath]];
     return nil;
   }
 
-  if ([self testHostPath]) {
-    if (![[NSFileManager defaultManager] isExecutableFileAtPath:[self testHostPath]]) {
-      *error = [NSString stringWithFormat:@"The test host executable is missing: '%@'", [self testHostPath]];
+  if ([_simulatorInfo testHostPath]) {
+    if (![[NSFileManager defaultManager] isExecutableFileAtPath:[_simulatorInfo testHostPath]]) {
+      *error = [NSString stringWithFormat:@"The test host executable is missing: '%@'", [_simulatorInfo testHostPath]];
       return nil;
     }
   }

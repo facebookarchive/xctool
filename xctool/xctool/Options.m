@@ -550,6 +550,7 @@
     // to 'iphoneos6.1'.
     _sdk = sdksAndAliases[_sdk];
     _sdkPath = sdkInfo[_sdk][@"Path"];
+    _platformPath = sdkInfo[_sdk][@"PlatformPath"];
 
     // Xcode 5's xcodebuild has a bug where it won't build targets for the
     // iphonesimulator SDK.  It fails with...

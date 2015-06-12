@@ -112,15 +112,9 @@
   return self;
 }
 
-
-- (void)setDeviceName:(NSString *)deviceName
-{
-  [_runTestsAction setDeviceName:deviceName];
-}
-
 - (void)setTestSDK:(NSString *)testSDK
 {
-  _runTestsAction.testSDK = testSDK;
+  [_runTestsAction setTestSDK:testSDK];
 }
 
 - (void)setFreshSimulator:(BOOL)freshSimulator

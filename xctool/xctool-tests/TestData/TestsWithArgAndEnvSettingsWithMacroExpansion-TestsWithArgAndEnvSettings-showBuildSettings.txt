@@ -260,6 +260,7 @@ Build settings for action build and target TestsWithArgAndEnvSettings:
     TARGET_BUILD_DIR = /Users/fpotter/Library/Developer/Xcode/DerivedData/TestsWithArgAndEnvSettings-cprxhrvmfnbptxcxfgvnocmxhgla/Build/Products/Debug
     TARGET_NAME = TestsWithArgAndEnvSettings
     TARGET_TEMP_DIR = /Users/fpotter/Library/Developer/Xcode/DerivedData/TestsWithArgAndEnvSettings-cprxhrvmfnbptxcxfgvnocmxhgla/Build/Intermediates/TestsWithArgAndEnvSettings.build/Debug/TestsWithArgAndEnvSettings.build
+    TARGETED_DEVICE_FAMILY = 1
     TEMP_DIR = /Users/fpotter/Library/Developer/Xcode/DerivedData/TestsWithArgAndEnvSettings-cprxhrvmfnbptxcxfgvnocmxhgla/Build/Intermediates/TestsWithArgAndEnvSettings.build/Debug/TestsWithArgAndEnvSettings.build
     TEMP_FILES_DIR = /Users/fpotter/Library/Developer/Xcode/DerivedData/TestsWithArgAndEnvSettings-cprxhrvmfnbptxcxfgvnocmxhgla/Build/Intermediates/TestsWithArgAndEnvSettings.build/Debug/TestsWithArgAndEnvSettings.build
     TEMP_FILE_DIR = /Users/fpotter/Library/Developer/Xcode/DerivedData/TestsWithArgAndEnvSettings-cprxhrvmfnbptxcxfgvnocmxhgla/Build/Intermediates/TestsWithArgAndEnvSettings.build/Debug/TestsWithArgAndEnvSettings.build

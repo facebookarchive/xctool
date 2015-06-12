@@ -841,11 +841,28 @@ NSString *HashForString(NSString *string)
 
 cpu_type_t CpuTypeForTestBundleAtPath(NSString *testBundlePath)
 {
-  NSBundle *testBundle = [NSBundle bundleWithPath:testBundlePath];
-  if (!testBundle) {
+  if (![[NSFileManager defaultManager] fileExistsAtPath:testBundlePath]) {
     // Many unit tests specify a nonexistent bundle.
     return CPU_TYPE_ANY;
   }
+
+  NSBundle *testBundle = [NSBundle bundleWithPath:testBundlePath];
+  if (!testBundle) {
+    // path could be directly to the executable and not to the bundle
+    NSArray *bundleExtensions = @[@"app", @"octest", @"xctest"];
+    for (NSString *extension in bundleExtensions) {
+      NSRange range = [testBundlePath rangeOfString:[@"." stringByAppendingString:extension] options:NSBackwardsSearch];
+      if (range.location == NSNotFound) {
+        continue;
+      }
+
+      testBundlePath = [testBundlePath substringToIndex:range.location + range.length];
+      testBundle = [NSBundle bundleWithPath:testBundlePath];
+      break;
+    }
+  }
+
+  NSCAssert(testBundle, @"Cannot read bundle at path: %@", testBundlePath);
 
   NSArray *archs = [testBundle executableArchitectures];
 
@@ -870,4 +887,17 @@ cpu_type_t CpuTypeForTestBundleAtPath(NSString *testBundlePath)
     return CPU_TYPE_I386;
   }
   return CPU_TYPE_ANY;
+}
+
+NSString *TestHostPathForBuildSettings(NSDictionary *buildSettings)
+{
+  // TEST_HOST will sometimes be wrapped in "quotes".
+  return [buildSettings[Xcode_TEST_HOST] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
+}
+
+NSString *ProductBundlePathForBuildSettings(NSDictionary *buildSettings)
+{
+  NSString *builtProductsDir = buildSettings[Xcode_BUILT_PRODUCTS_DIR];
+  NSString *fullProductName = buildSettings[Xcode_FULL_PRODUCT_NAME];
+  return [builtProductsDir stringByAppendingPathComponent:fullProductName];
 }

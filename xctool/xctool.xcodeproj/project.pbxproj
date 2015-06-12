@@ -125,8 +125,6 @@
 		C9D5B98A1733CC2500011C1F /* ArchiveAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D5B9881733CC2100011C1F /* ArchiveAction.m */; };
 		CC229B0F1946396600E11C30 /* SimulatorUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = CC229B0E1946396600E11C30 /* SimulatorUtils.m */; };
 		CC229B1019463B2B00E11C30 /* SimulatorUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = CC229B0E1946396600E11C30 /* SimulatorUtils.m */; };
-		CC229B1719463FE000E11C30 /* OCUnitIOSTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = CC229B1619463FE000E11C30 /* OCUnitIOSTestRunner.m */; };
-		CC229B1D1946544C00E11C30 /* OCUnitIOSTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = CC229B1619463FE000E11C30 /* OCUnitIOSTestRunner.m */; };
 		CC84C94C18ECE161001F6094 /* FakeOCUnitTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = CC84C94B18ECE161001F6094 /* FakeOCUnitTestRunner.m */; };
 		CCC55AD2195BCD7D0051A50B /* SimulatorWrapperXcode6.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC55AD1195BCD7D0051A50B /* SimulatorWrapperXcode6.m */; };
 		CCC55AD6195BCDD90051A50B /* SimulatorWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC55AD5195BCDD90051A50B /* SimulatorWrapper.m */; };
@@ -330,8 +328,6 @@
 		CC229B0D1946396600E11C30 /* SimulatorUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimulatorUtils.h; path = xctool/SimulatorWrapper/SimulatorUtils.h; sourceTree = "<group>"; };
 		CC229B0E1946396600E11C30 /* SimulatorUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimulatorUtils.m; path = xctool/SimulatorWrapper/SimulatorUtils.m; sourceTree = "<group>"; };
 		CC229B1219463D2D00E11C30 /* SimulatorWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimulatorWrapper.h; path = xctool/SimulatorWrapper/SimulatorWrapper.h; sourceTree = "<group>"; };
-		CC229B1519463FE000E11C30 /* OCUnitIOSTestRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCUnitIOSTestRunner.h; sourceTree = "<group>"; };
-		CC229B1619463FE000E11C30 /* OCUnitIOSTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCUnitIOSTestRunner.m; sourceTree = "<group>"; };
 		CC229B181946413400E11C30 /* SimulatorInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimulatorInfo.h; path = xctool/SimulatorWrapper/SimulatorInfo.h; sourceTree = "<group>"; };
 		CC84C94A18ECE161001F6094 /* FakeOCUnitTestRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeOCUnitTestRunner.h; sourceTree = "<group>"; };
 		CC84C94B18ECE161001F6094 /* FakeOCUnitTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeOCUnitTestRunner.m; sourceTree = "<group>"; };
@@ -636,8 +632,6 @@
 				28B714541760767D00BB016A /* OCUnitIOSDeviceTestRunner.m */,
 				28E9B9D316C3275200A52E4D /* OCUnitIOSLogicTestRunner.h */,
 				28E9B9D416C3275200A52E4D /* OCUnitIOSLogicTestRunner.m */,
-				CC229B1519463FE000E11C30 /* OCUnitIOSTestRunner.h */,
-				CC229B1619463FE000E11C30 /* OCUnitIOSTestRunner.m */,
 				288B9FBA171A5509008F0BDF /* OCUnitOSXAppTestRunner.h */,
 				288B9FBB171A5509008F0BDF /* OCUnitOSXAppTestRunner.m */,
 				288B9FB6171A50C1008F0BDF /* OCUnitOSXLogicTestRunner.h */,
@@ -863,7 +857,6 @@
 				2864A3FA1734E52800BBF3B1 /* Version.m in Sources */,
 				C9D5B9891733CC2100011C1F /* ArchiveAction.m in Sources */,
 				AA318BEF17E9BA3500BF159E /* TestingFramework.m in Sources */,
-				CC229B1719463FE000E11C30 /* OCUnitIOSTestRunner.m in Sources */,
 				CD522EC217471D6300048AF9 /* SchemeGenerator.m in Sources */,
 				CDD81F51174EAFDC00F42111 /* EventBuffer.m in Sources */,
 				28B714551760767D00BB016A /* OCUnitIOSDeviceTestRunner.m in Sources */,
@@ -890,7 +883,6 @@
 				CCEB0F26195F2D9E00878E25 /* SimulatorInfo.m in Sources */,
 				CCEB0F28195F2D9E00878E25 /* SimulatorWrapper.m in Sources */,
 				CCEB0F29195F2D9E00878E25 /* SimulatorWrapperXcode6.m in Sources */,
-				CC229B1D1946544C00E11C30 /* OCUnitIOSTestRunner.m in Sources */,
 				CC229B1019463B2B00E11C30 /* SimulatorUtils.m in Sources */,
 				2878E7DE184EA4BC00FF4354 /* XcodeRequiredVersion.m in Sources */,
 				EE37291617E28A3000554867 /* TestRunState.m in Sources */,

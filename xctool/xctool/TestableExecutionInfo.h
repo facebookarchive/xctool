@@ -18,7 +18,7 @@
 
 #import "Testable.h"
 
-@class XcodeSubjectInfo;
+@class SimulatorInfo, XcodeSubjectInfo;
 
 /**
  * TestableExecutionInfo holds all the extra information we have to collect
@@ -35,6 +35,11 @@
  * The key/value pairs from `-showBuildSettings` for this testable.
  */
 @property (nonatomic, copy) NSDictionary *buildSettings;
+
+/**
+ * Simulator info used to run the testable.
+ */
+@property (nonatomic, copy) SimulatorInfo *simulatorInfo;
 
 /**
  * Will contain an error message if retrieving build settings with xcodebuild have failed
@@ -82,6 +87,6 @@
  */
 + (instancetype)infoForTestable:(Testable *)testable
                   buildSettings:(NSDictionary *)buildSettings
-                        cpuType:(cpu_type_t)cpuType;
+                  simulatorInfo:(SimulatorInfo *)simulatorInfo;
 
 @end

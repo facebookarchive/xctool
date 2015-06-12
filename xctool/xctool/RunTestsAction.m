@@ -95,6 +95,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
 }
 
 @interface RunTestsAction ()
+@property (nonatomic, strong) SimulatorInfo *simulatorInfo;
 @property (nonatomic, assign) int logicTestBucketSize;
 @property (nonatomic, assign) int appTestBucketSize;
 @property (nonatomic, assign) BucketBy bucketBy;
@@ -249,6 +250,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
                               appTests:(NSDictionary *)appTests
                                sdkName:(NSString *)sdkName
                                sdkPath:(NSString *)sdkPath
+                          platformPath:(NSString *)platformPath
                   targetedDeviceFamily:(NSString *)targetedDeviceFamily
 {
   NSAssert(sdkName, @"Sdk name should be specified using -sdk option");
@@ -257,6 +259,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
   *defaultTestableBuildSettings = @{
     Xcode_SDK_NAME: sdkName,
     Xcode_SDKROOT: sdkPath,
+    Xcode_PLATFORM_DIR: platformPath,
     Xcode_TARGETED_DEVICE_FAMILY: targetedDeviceFamily ?: @"1", // Default to iPhone simulator
   };
 
@@ -291,7 +294,6 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
     _appTestBucketSize = 0;
     _bucketBy = BucketByTestCase;
     _testTimeout = 0;
-    _cpuType = CPU_TYPE_ANY;
     _rawAppTestArgs = [[NSMutableArray alloc] init];
     _logicTests = [[NSMutableArray alloc] init];
     _appTests = [[NSMutableDictionary alloc] init];
@@ -378,6 +380,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
     [self setTestSDK:[options sdk]];
   }
 
+  _simulatorInfo = [[SimulatorInfo alloc] init];
   if ([options destination]) {
 
     // If the destination was supplied, pull out the device name
@@ -391,13 +394,13 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
 
     if (destInfo[@"arch"] != nil) {
       if ([destInfo[@"arch"] isEqual:@"i386"]) {
-        _cpuType = CPU_TYPE_I386;
+        [_simulatorInfo setCpuType:CPU_TYPE_I386];
       } else {
-        _cpuType = CPU_TYPE_X86_64;
+        [_simulatorInfo setCpuType:CPU_TYPE_X86_64];
       }
     }
-    [self setDeviceName:destInfo[@"name"]];
-    [self setOSVersion:destInfo[@"OS"]];
+    [_simulatorInfo setDeviceName:destInfo[@"name"]];
+    [_simulatorInfo setOSVersion:destInfo[@"OS"]];
   }
 
   for (NSDictionary *only in [self onlyListAsTargetsAndSenTestList]) {
@@ -532,10 +535,10 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
     BOOL isApplicationTest = TestableSettingsIndicatesApplicationTest(testableExecutionInfo.buildSettings);
 
     result[kReporter_BeginOCUnit_TestTypeKey] = isApplicationTest ? @"application-test" : @"logic-test";
-    result[kReporter_BeginOCUnit_SDKNameKey] = action.OSVersion?:testableExecutionInfo.buildSettings[Xcode_SDK_NAME];
+    result[kReporter_BeginOCUnit_SDKNameKey] = [testableExecutionInfo.simulatorInfo simulatedSdkName] ?: testableExecutionInfo.buildSettings[Xcode_SDK_NAME];
     result[kReporter_BeginOCUnit_BundleNameKey] = testableExecutionInfo.buildSettings[Xcode_FULL_PRODUCT_NAME];
-    if (action.deviceName) {
-      result[kReporter_BeginOCUnit_DeviceNameKey] = action.deviceName;
+    if ([testableExecutionInfo.simulatorInfo simulatedDeviceInfoName]) {
+      result[kReporter_BeginOCUnit_DeviceNameKey] = [testableExecutionInfo.simulatorInfo simulatedDeviceInfoName];
     }
   }
 
@@ -605,34 +608,17 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                   testRunnerClass:(Class)testRunnerClass
 {
   return [^(NSArray *reporters) {
-    OCUnitTestRunner *testRunner = [[testRunnerClass alloc]
-                                     initWithBuildSettings:testableExecutionInfo.buildSettings
-                                     focusedTestCases:focusedTestCases
-                                     allTestCases:allTestCases
-                                     arguments:arguments
-                                     environment:environment
-                                     freshSimulator:_freshSimulator
-                                     resetSimulator:_resetSimulator
-                                     freshInstall:_freshInstall
-                                     testTimeout:_testTimeout
-                                     reporters:reporters];
-    if (_cpuType != CPU_TYPE_ANY) {
-      [testRunner setCpuType:_cpuType];
-    }
-
-    if ([testRunner isKindOfClass:[OCUnitIOSAppTestRunner class]]) {
-      if (_deviceName) {
-        [(OCUnitIOSAppTestRunner *)testRunner setDeviceName:_deviceName];
-      }
-      if (_OSVersion) {
-        [(OCUnitIOSAppTestRunner *)testRunner setOSVersion:_OSVersion];
-      }
-    }
-    if ([testRunner isKindOfClass:[OCUnitIOSLogicTestRunner class]]) {
-      if (_OSVersion) {
-        [(OCUnitIOSLogicTestRunner *)testRunner setOSVersion:_OSVersion];
-      }
-    }
+    OCUnitTestRunner *testRunner = [[testRunnerClass alloc] initWithBuildSettings:testableExecutionInfo.buildSettings
+                                                                    simulatorInfo:_simulatorInfo
+                                                                 focusedTestCases:focusedTestCases
+                                                                     allTestCases:allTestCases
+                                                                        arguments:arguments
+                                                                      environment:environment
+                                                                   freshSimulator:_freshSimulator
+                                                                   resetSimulator:_resetSimulator
+                                                                     freshInstall:_freshInstall
+                                                                      testTimeout:_testTimeout
+                                                                        reporters:reporters];
 
     PublishEventToReporters(reporters,
                             [[self class] eventForBeginOCUnitFromTestableExecutionInfo:testableExecutionInfo action:self]);
@@ -697,6 +683,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                                             appTests:_appTests
                                              sdkName:options.sdk
                                              sdkPath:options.sdkPath
+                                        platformPath:options.platformPath
                                 targetedDeviceFamily:_targetedDeviceFamily];
         NSMutableDictionary *settings = [defaultTestableBuildSettings mutableCopy];
         [settings addEntriesFromDictionary:perTargetTestableBuildSettings[testable.target]];
@@ -717,7 +704,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
       if (testableBuildSettings) {
         info = [TestableExecutionInfo infoForTestable:testable
                                         buildSettings:testableBuildSettings
-                                              cpuType:_cpuType];
+                                        simulatorInfo:_simulatorInfo];
       } else {
         info = [[TestableExecutionInfo alloc] init];
         info.testable = testable;

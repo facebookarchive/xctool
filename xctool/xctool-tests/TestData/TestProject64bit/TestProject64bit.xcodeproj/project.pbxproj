@@ -395,6 +395,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TestProject64bit/TestProject64bit-Prefix.pch";
 				INFOPLIST_FILE = "TestProject64bit/TestProject64bit-Info.plist";
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -470,6 +471,7 @@
 				AAC1E09C181117A5005A4FD5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		AAC1E09D181117A5005A4FD5 /* Build configuration list for PBXNativeTarget "TestProject64bitTests" */ = {
 			isa = XCConfigurationList;
@@ -478,6 +480,7 @@
 				AAC1E09F181117A5005A4FD5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

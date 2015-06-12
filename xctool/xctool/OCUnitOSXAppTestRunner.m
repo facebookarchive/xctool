@@ -33,8 +33,7 @@
   NSString *sdkName = _buildSettings[Xcode_SDK_NAME];
   NSAssert([sdkName hasPrefix:@"macosx"], @"Unexpected SDK: %@", sdkName);
 
-  NSString *testHostPath = _buildSettings[Xcode_TEST_HOST];
-  if (![[NSFileManager defaultManager] isExecutableFileAtPath:testHostPath]) {
+  if (![[NSFileManager defaultManager] isExecutableFileAtPath:[_simulatorInfo testHostPath]]) {
     // It's conceivable that isExecutableFileAtPath is wrong; for example, maybe we're on
     // a wonky FS, or running as root, or running with differing real/effective UIDs.
     // Unfortunately, there's no way to be sure without actually running TEST_HOST, and
@@ -42,26 +41,18 @@
     // us. It's better to fail usefully for obviously wrong TEST_HOSTs than support
     // incredibly odd configs.
     ReportStatusMessage(_reporters, REPORTER_MESSAGE_ERROR,
-                        @"Your TEST_HOST '%@' does not appear to be an executable.", testHostPath);
+                        @"Your TEST_HOST '%@' does not appear to be an executable.", [_simulatorInfo testHostPath]);
     *startupError = @"TEST_HOST not executable.";
     return;
   }
 
-  NSArray *libraries = @[
-    [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-osx.dylib"],
-    [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection"],
-  ];
-
-  NSMutableDictionary *environment = OSXTestEnvironment(_buildSettings);
+  NSMutableDictionary *environment = [_simulatorInfo simulatorLaunchEnvironment];
   [environment addEntriesFromDictionary:@{
-    @"DYLD_INSERT_LIBRARIES" : [libraries componentsJoinedByString:@":"],
     @"OBJC_DISABLE_GC" : !_garbageCollection ? @"YES" : @"NO",
-    @"XCInjectBundle" : [_buildSettings[Xcode_BUILT_PRODUCTS_DIR] stringByAppendingPathComponent:_buildSettings[Xcode_FULL_PRODUCT_NAME]],
-    @"XCInjectBundleInto" : testHostPath,
   }];
 
   NSTask *task = CreateTaskInSameProcessGroup();
-  [task setLaunchPath:testHostPath];
+  [task setLaunchPath:[_simulatorInfo testHostPath]];
   [task setArguments:[self testArguments]];
   [task setEnvironment:[self otestEnvironmentWithOverrides:environment]];
   // For OSX test bundles only, Xcode will chdir to the project's directory.

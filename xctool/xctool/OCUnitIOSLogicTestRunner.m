@@ -38,7 +38,7 @@
   // but this environment is used, for example, by NSHomeDirectory().
   // To avoid similar situations in future let's copy all simulator environments
   if ([_buildSettings[Xcode_SDK_NAME] hasPrefix:@"iphonesimulator"]) {
-    SimDevice *device = [[self simulatorInfo] simulatedDevice];
+    SimDevice *device = [_simulatorInfo simulatedDevice];
     NSDictionary *simulatorEnvironment = [device environment];
     if (simulatorEnvironment) {
       [env addEntriesFromDictionary:simulatorEnvironment];
@@ -60,8 +60,8 @@
   env = [self otestEnvironmentWithOverrides:env];
 
   return CreateTaskForSimulatorExecutable(_buildSettings[Xcode_SDK_NAME],
-                                          _cpuType,
-                                          [SimulatorInfo baseVersionForSDKShortVersion:[self.simulatorInfo simulatedSdkVersion]],
+                                          [_simulatorInfo simulatedCpuType],
+                                          [SimulatorInfo baseVersionForSDKShortVersion:[_simulatorInfo simulatedSdkVersion]],
                                           launchPath,
                                           args,
                                           env);
@@ -71,9 +71,7 @@
                    startupError:(NSString **)startupError
                     otherErrors:(NSString **)otherErrors
 {
-  [self updateSimulatorInfo];
-
-  NSString *testBundlePath = [self testBundlePath];
+  NSString *testBundlePath = [_simulatorInfo productBundlePath];
   BOOL bundleExists = [[NSFileManager defaultManager] fileExistsAtPath:testBundlePath];
 
   if (IsRunningUnderTest()) {

@@ -16,6 +16,7 @@
 
 #import "OCUnitOSXAppTestQueryRunner.h"
 
+#import "SimulatorInfo.h"
 #import "TaskUtil.h"
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
@@ -24,17 +25,17 @@
 
 - (NSTask *)createTaskForQuery
 {
-  NSMutableDictionary *environment = OSXTestEnvironment(_buildSettings);
+  NSMutableDictionary *environment = OSXTestEnvironment(_simulatorInfo.buildSettings);
   [environment addEntriesFromDictionary:@{
     @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"otest-query-lib-osx.dylib"],
     // The test bundle that we want to query from, as loaded by otest-query-lib-osx.dylib.
-    @"OtestQueryBundlePath" : [self bundlePath],
+    @"OtestQueryBundlePath" : [_simulatorInfo productBundlePath],
     @"OBJC_DISABLE_GC" : @"YES",
     @"__CFPREFERENCES_AVOID_DAEMON" : @"YES",
   }];
 
   NSTask *task = CreateTaskInSameProcessGroup();
-  [task setLaunchPath:[self testHostPath]];
+  [task setLaunchPath:[_simulatorInfo testHostPath]];
   [task setArguments:@[]];
   [task setEnvironment:environment];
 
