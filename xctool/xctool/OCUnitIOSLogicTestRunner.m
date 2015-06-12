@@ -19,7 +19,6 @@
 #import "NSConcreteTask.h"
 #import "SimDevice.h"
 #import "SimulatorInfo.h"
-#import "SimulatorInfoXcode6.h"
 #import "TaskUtil.h"
 #import "TestingFramework.h"
 #import "XCToolUtil.h"
@@ -39,7 +38,7 @@
   // but this environment is used, for example, by NSHomeDirectory().
   // To avoid similar situations in future let's copy all simulator environments
   if ([_buildSettings[Xcode_SDK_NAME] hasPrefix:@"iphonesimulator"]) {
-    SimDevice *device = [(SimulatorInfoXcode6 *)self.simulatorInfo simulatedDevice];
+    SimDevice *device = [[self simulatorInfo] simulatedDevice];
     NSDictionary *simulatorEnvironment = [device environment];
     if (simulatorEnvironment) {
       [env addEntriesFromDictionary:simulatorEnvironment];

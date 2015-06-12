@@ -20,7 +20,7 @@
 #import "SimDeviceSet.h"
 #import "SimDeviceType.h"
 #import "SimRuntime.h"
-#import "SimulatorInfoXcode6.h"
+#import "SimulatorInfo.h"
 #import "SimulatorLauncher.h"
 #import "SimulatorWrapperInternal.h"
 #import "XCToolUtil.h"
@@ -30,7 +30,7 @@
 #pragma mark -
 #pragma mark Internal
 
-+ (DTiPhoneSimulatorSessionConfig *)sessionConfigForRunningTestsOnSimulator:(SimulatorInfoXcode6 *)simInfo
++ (DTiPhoneSimulatorSessionConfig *)sessionConfigForRunningTestsOnSimulator:(SimulatorInfo *)simInfo
                                                       applicationLaunchArgs:(NSArray *)launchArgs
                                                applicationLaunchEnvironment:(NSDictionary *)launchEnvironment
                                                                  outputPath:(NSString *)outputPath
@@ -53,7 +53,7 @@
 #pragma mark -
 #pragma mark Helpers
 
-+ (BOOL)prepareSimulatorWithSimulatorInfo:(SimulatorInfoXcode6 *)simInfo
++ (BOOL)prepareSimulatorWithSimulatorInfo:(SimulatorInfo *)simInfo
                                     error:(NSError **)error
 {
   if (![simInfo simulatedDevice].available) {
@@ -96,7 +96,7 @@
 #pragma mark Main Methods
 
 + (BOOL)uninstallTestHostBundleID:(NSString *)testHostBundleID
-                    simulatorInfo:(SimulatorInfoXcode6 *)simInfo
+                    simulatorInfo:(SimulatorInfo *)simInfo
                         reporters:(NSArray *)reporters
                             error:(NSString **)error
 {
@@ -128,7 +128,7 @@
 
 + (BOOL)installTestHostBundleID:(NSString *)testHostBundleID
                  fromBundlePath:(NSString *)testHostBundlePath
-                  simulatorInfo:(SimulatorInfoXcode6 *)simInfo
+                  simulatorInfo:(SimulatorInfo *)simInfo
                       reporters:(NSArray *)reporters
                           error:(NSString **)error
 {

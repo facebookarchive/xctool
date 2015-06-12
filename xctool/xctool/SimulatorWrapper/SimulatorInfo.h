@@ -14,29 +14,21 @@
 // limitations under the License.
 //
 
-#import <Foundation/Foundation.h>
-
-@class DTiPhoneSimulatorSystemRoot;
+@class DTiPhoneSimulatorSystemRoot, SimDevice, SimRuntime;
 
 @interface SimulatorInfo : NSObject
-{
-@protected
-  NSDictionary *_buildSettings;
-  cpu_type_t _cpuType;
-  NSString *_deviceName;
-  NSString *_OSVersion;
-}
 
 @property (nonatomic, copy) NSDictionary *buildSettings;
 @property (nonatomic, assign) cpu_type_t cpuType;
 @property (nonatomic, copy) NSString *deviceName;
 @property (nonatomic, copy) NSString *OSVersion;
 
-+ (SimulatorInfo *)infoForCurrentVersionOfXcode;
-
 - (NSString *)simulatedArchitecture;
 - (NSNumber *)simulatedDeviceFamily;
 - (NSString *)simulatedDeviceInfoName;
+
+- (SimDevice *)simulatedDevice;
+- (SimRuntime *)simulatedRuntime;
 
 - (NSString *)simulatedSdkVersion;
 - (NSString *)simulatedSdkShortVersion;

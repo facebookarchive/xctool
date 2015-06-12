@@ -20,7 +20,6 @@
 
 #import "SimDevice.h"
 #import "SimulatorInfo.h"
-#import "SimulatorInfoXcode6.h"
 #import "SimVerifier.h"
 #import "XCToolUtil.h"
 
@@ -125,20 +124,16 @@ BOOL RemoveSimulatorContentAndSettingsFolder(NSString *simulatorVersion, cpu_typ
 
 BOOL RemoveSimulatorContentAndSettings(SimulatorInfo *simulatorInfo, NSString **removedPath, NSString **errorMessage)
 {
-  if ([simulatorInfo isKindOfClass:[SimulatorInfoXcode6 class]]) {
-    SimDevice *simulatedDevice = [(SimulatorInfoXcode6 *)simulatorInfo simulatedDevice];
-    NSError *error = nil;
-    *removedPath = [simulatedDevice dataPath];
-    if ([simulatedDevice eraseContentsAndSettingsWithError:&error]) {
-      return YES;
-    } else {
-      *errorMessage = [NSString stringWithFormat:@"%@; %@.",
-                       error.localizedDescription ?: @"Unknown error.",
-                       [error.userInfo[NSUnderlyingErrorKey] localizedDescription] ?: @""];
-      return NO;
-    }
+  SimDevice *simulatedDevice = [simulatorInfo simulatedDevice];
+  NSError *error = nil;
+  *removedPath = [simulatedDevice dataPath];
+  if ([simulatedDevice eraseContentsAndSettingsWithError:&error]) {
+    return YES;
   } else {
-    return RemoveSimulatorContentAndSettingsFolder([simulatorInfo simulatedSdkShortVersion], [simulatorInfo cpuType], removedPath, errorMessage);
+    *errorMessage = [NSString stringWithFormat:@"%@; %@.",
+                     error.localizedDescription ?: @"Unknown error.",
+                     [error.userInfo[NSUnderlyingErrorKey] localizedDescription] ?: @""];
+    return NO;
   }
 }
 
@@ -161,17 +156,15 @@ BOOL VerifySimulators(NSString **errorMessage)
 
 BOOL ShutdownSimulator(SimulatorInfo *simulatorInfo, NSString **errorMessage)
 {
-  if ([simulatorInfo isKindOfClass:[SimulatorInfoXcode6 class]]) {
-    SimDevice *simulatedDevice = [(SimulatorInfoXcode6 *)simulatorInfo simulatedDevice];
-    NSError *error = nil;
+  SimDevice *simulatedDevice = [simulatorInfo simulatedDevice];
+  NSError *error = nil;
 
-    if (simulatedDevice.state != SimDeviceStateShutdown) {
-      if (![simulatedDevice shutdownWithError:&error]) {
-        *errorMessage = [NSString stringWithFormat:@"Tried to shutdown the simulator but failed: %@; %@.",
-                         error.localizedDescription ?: @"Unknown error.",
-                         [error.userInfo[NSUnderlyingErrorKey] localizedDescription] ?: @""];
-        return NO;
-      }
+  if (simulatedDevice.state != SimDeviceStateShutdown) {
+    if (![simulatedDevice shutdownWithError:&error]) {
+      *errorMessage = [NSString stringWithFormat:@"Tried to shutdown the simulator but failed: %@; %@.",
+                       error.localizedDescription ?: @"Unknown error.",
+                       [error.userInfo[NSUnderlyingErrorKey] localizedDescription] ?: @""];
+      return NO;
     }
   }
   return YES;
