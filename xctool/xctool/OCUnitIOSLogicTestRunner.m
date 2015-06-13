@@ -60,8 +60,7 @@
   env = [self otestEnvironmentWithOverrides:env];
 
   return CreateTaskForSimulatorExecutable(_buildSettings[Xcode_SDK_NAME],
-                                          [_simulatorInfo simulatedCpuType],
-                                          [SimulatorInfo baseVersionForSDKShortVersion:[_simulatorInfo simulatedSdkVersion]],
+                                          _simulatorInfo,
                                           launchPath,
                                           args,
                                           env);

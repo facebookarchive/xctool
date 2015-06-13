@@ -25,7 +25,6 @@
 
 - (NSTask *)createTaskForQuery
 {
-  NSString *version = [_simulatorInfo.buildSettings[Xcode_SDK_NAME] stringByReplacingOccurrencesOfString:@"iphonesimulator" withString:@""];
   NSMutableDictionary *environment = IOSTestEnvironment(_simulatorInfo.buildSettings);
   [environment addEntriesFromDictionary:@{
     @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"otest-query-lib-ios.dylib"],
@@ -36,8 +35,7 @@
 
   return CreateTaskForSimulatorExecutable(
     _simulatorInfo.buildSettings[Xcode_SDK_NAME],
-    [_simulatorInfo simulatedCpuType],
-    version,
+    _simulatorInfo,
     [XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-ios"],
     @[],
     environment

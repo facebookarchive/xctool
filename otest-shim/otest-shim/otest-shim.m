@@ -417,7 +417,7 @@ static void UpdateTestScope()
 
   NSError *readError = nil;
   NSString *testList = [NSString stringWithContentsOfFile:testListFilePath encoding:NSUTF8StringEncoding error:&readError];
-  NSCAssert(testList, @"Couldn't read file at path %@", testListFilePath);
+  NSCAssert(testList, @"Failed to read file at path %@ with error %@", testListFilePath, readError);
   [defaults setValue:testList forKey:testingFrameworkFilterTestArgsKey];
 
   __testScope = [testList retain];

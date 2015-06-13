@@ -19,6 +19,8 @@
 #import <poll.h>
 
 #import "NSConcreteTask.h"
+#import "SimDevice.h"
+#import "SimulatorInfo.h"
 #import "Swizzle.h"
 #import "XCToolUtil.h"
 
@@ -384,8 +386,7 @@ void LaunchTaskAndMaybeLogCommand(NSTask *task, NSString *description)
 }
 
 NSTask *CreateTaskForSimulatorExecutable(NSString *sdkName,
-                                         cpu_type_t cpuType,
-                                         NSString *sdkVersion,
+                                         SimulatorInfo *simulatorInfo,
                                          NSString *launchPath,
                                          NSArray *arguments,
                                          NSDictionary *environment)
@@ -395,23 +396,26 @@ NSTask *CreateTaskForSimulatorExecutable(NSString *sdkName,
   NSMutableDictionary *taskEnv = [NSMutableDictionary dictionary];
 
   if ([sdkName hasPrefix:@"iphonesimulator"]) {
-    [taskArgs addObjectsFromArray:@[[@"--arch=" stringByAppendingString:(cpuType == CPU_TYPE_X86_64) ? @"64" : @"32"],
-                                    [@"--sdk=" stringByAppendingString:sdkVersion],
-                                    @"--environment=merge",
-                                    ]];
+    [taskArgs addObjectsFromArray:@[
+      @"spawn",
+      [[[simulatorInfo simulatedDevice] UDID] UUIDString],
+    ]];
     [taskArgs addObject:launchPath];
     [taskArgs addObjectsFromArray:arguments];
 
-    taskEnv[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"sim-shim.dylib"];
-
     [environment enumerateKeysAndObjectsUsingBlock:^(id key, id val, BOOL *stop){
-      // sim-shim.dylib will look for all vars prefixed with SIMSHIM_ and add them
+      // simctl has a bug where it hangs if an empty child environment variable is set.
+      if ([val length] == 0) {
+        return;
+      }
+
+      // simctl will look for all vars prefixed with SIMCTL_CHILD_ and add them
       // to the spawned process's environment (with the prefix removed).
-      NSString *newKey = [@"SIMSHIM_" stringByAppendingString:key];
+      NSString *newKey = [@"SIMCTL_CHILD_" stringByAppendingString:key];
       taskEnv[newKey] = val;
     }];
 
-    [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/usr/bin/sim"]];
+    [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:@"usr/bin/simctl"]];
   } else {
     [task setLaunchPath:launchPath];
     [taskArgs addObjectsFromArray:arguments];

@@ -268,8 +268,17 @@
         NSAssert(NO, @"Couldn't save list of tests to run to a file at path %@; error: %@", testListFilePath, writeError);
       }
       [args addObjectsFromArray:@[
+        // in otest-shim we are swizzling `+[SenTestProbe testScope]` and
+        // returning list of tests saved in the file specified below
         @"-OTEST_TESTLIST_FILE", testListFilePath,
         @"-OTEST_FILTER_TEST_ARGS_KEY", _framework[kTestingFrameworkFilterTestArgsKey],
+        // it looks like `simctl` polute `NSUserDefaults` of SenTesting framework during
+        // test querying and set `SenTest` value to `None`. That tells SenTesting
+        // framework to skip test running and as a result swizzled in `otest-shim` method
+        // isn't called. To force the framework to call it we are passing fake value
+        // of `SenTest` and then returning real list of tests to run from that method.
+        [@"-" stringByAppendingString:_framework[kTestingFrameworkFilterTestArgsKey]],
+        @"XCTOOL_FAKE_LIST_OF_TESTS",
       ]];
     }
   }

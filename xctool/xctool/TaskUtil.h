@@ -16,7 +16,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class NSConcreteTask;
+@class NSConcreteTask, SimulatorInfo;
 
 /**
  * Launchs a task, waits for exit, and returns a dictionary like
@@ -70,8 +70,7 @@ void LaunchTaskAndMaybeLogCommand(NSTask *task, NSString *description);
  * iPhoneSimulator.platform/usr/bin/sim launcher.
  */
 NSTask *CreateTaskForSimulatorExecutable(NSString *sdkName,
-                                         cpu_type_t cpuType,
-                                         NSString *sdkVersion,
+                                         SimulatorInfo *simulatorInfo,
                                          NSString *launchPath,
                                          NSArray *arguments,
                                          NSDictionary *environment);

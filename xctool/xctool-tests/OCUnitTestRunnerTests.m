@@ -171,9 +171,9 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
              containsArray(@[@"-SomeArg",
                              @"SomeVal",
                              ]));
-  assertThat([launchedTasks[0] environment][@"SIMSHIM_SomeEnvKey"],
+  assertThat([launchedTasks[0] environment][@"SIMCTL_CHILD_SomeEnvKey"],
              equalTo(@"SomeEnvValue"));
-  assertThat([launchedTasks[0] environment][@"SIMSHIM_OTEST_SHIM_TEST_TIMEOUT"],
+  assertThat([launchedTasks[0] environment][@"SIMCTL_CHILD_OTEST_SHIM_TEST_TIMEOUT"],
              equalTo(@"30"));
 }
 

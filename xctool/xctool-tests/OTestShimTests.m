@@ -36,13 +36,14 @@ static NSArray *AllTestCasesInTestBundle(NSString *sdkName,
 {
   NSString *error = nil;
   NSString *latestSDK = GetAvailableSDKsAndAliases()[sdkName];
-  NSString *builtProductsDir = [bundlePath stringByDeletingLastPathComponent];
+  NSString *builtProductsDir = [[[NSFileManager defaultManager] currentDirectoryPath] stringByAppendingPathComponent:[bundlePath stringByDeletingLastPathComponent]];
   NSString *fullProductName = [bundlePath lastPathComponent];
   SimulatorInfo *simulatorInfo = [[SimulatorInfo alloc] init];
   simulatorInfo.buildSettings = @{
     Xcode_BUILT_PRODUCTS_DIR : builtProductsDir,
     Xcode_FULL_PRODUCT_NAME : fullProductName,
     Xcode_SDK_NAME : latestSDK,
+    Xcode_TARGETED_DEVICE_FAMILY : @"1",
   };
   OCUnitTestQueryRunner *runner = [[testQueryClass alloc] initWithSimulatorInfo:simulatorInfo];
   NSArray *allTests = [runner runQueryWithError:&error];
@@ -114,7 +115,8 @@ static NSTask *OtestShimTask(NSString *platformName,
                                                                        freshInstall:NO
                                                                         testTimeout:1
                                                                           reporters:@[]];
-
+  // We should pass full path to the test bundle
+  bundlePath = [[[NSFileManager defaultManager] currentDirectoryPath] stringByAppendingPathComponent:bundlePath];
   NSTask *task = [runner otestTaskWithTestBundle: bundlePath];
 
   // Make sure launch path is accessible.

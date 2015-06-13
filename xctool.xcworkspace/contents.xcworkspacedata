@@ -16,9 +16,6 @@
    <FileRef
       location = "group:otest-shim/otest-shim.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:sim-shim/sim-shim.xcodeproj">
-   </FileRef>
    <Group
       location = "group:Common"
       name = "Common">

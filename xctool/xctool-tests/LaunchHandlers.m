@@ -174,8 +174,8 @@ BOOL IsOtestTask(NSTask *task)
 
     BOOL isOtestQuery = NO;
 
-    if ([[task launchPath] hasSuffix:@"usr/bin/sim"]) {
-      // iOS tests get queried through the 'sim' launcher.
+    if ([[task launchPath] hasSuffix:@"usr/bin/simctl"]) {
+      // iOS tests get queried through the 'simctl' launcher.
       for (NSString *arg in [task arguments]) {
         if ([arg hasSuffix:@"otest-query-ios"]) {
           isOtestQuery = YES;
@@ -203,9 +203,9 @@ BOOL IsOtestTask(NSTask *task)
 
     BOOL isOtestQuery = NO;
 
-    if ([[task launchPath] hasSuffix:@"usr/bin/sim"]) {
-      // iOS tests get queried through the 'sim' launcher.
-      if ([task environment][@"SIMSHIM_OtestQueryBundlePath"]) {
+    if ([[task launchPath] hasSuffix:@"usr/bin/simctl"]) {
+      // iOS tests get queried through the 'simctl' launcher.
+      if ([task environment][@"SIMCTL_CHILD_OtestQueryBundlePath"]) {
         for (NSString *arg in [task arguments]) {
           if ([arg hasSuffix:testHost]) {
             isOtestQuery = YES;

@@ -256,35 +256,6 @@ genrule(
 )
 
 apple_library(
-    name = 'sim-shim-lib',
-    srcs = [
-        'Common/Swizzle.m',
-        'Common/XcodeRequiredVersion.m',
-    ] + glob([
-        'sim-shim/sim-shim/**/*.m',
-    ]),
-    headers = [
-        'Common/Swizzle.h',
-        'Common/dyld-interposing.h',
-        'Common/dyld_priv.h',
-    ],
-    preprocessor_flags = ['-mmacosx-version-min=10.7'],
-    frameworks = [
-        '$SDKROOT/System/Library/Frameworks/Cocoa.framework',
-    ],
-)
-
-genrule(
-    name = 'sim-shim',
-    srcs = [
-        ':sim-shim-lib#macosx-i386,shared',
-        ':sim-shim-lib#macosx-x86_64,shared',
-    ],
-    out = 'sim-shim.dylib',
-    cmd = 'lipo $SRCS -create -output $OUT',
-)
-
-apple_library(
     name = 'otest-shim',
     srcs = COMMON_OTEST_SRCS + glob([
         'otest-shim/otest-shim/**/*.m',
@@ -359,7 +330,6 @@ genrule(
         ':otest-query-lib-osx',
         ':otest-shim-ios',
         ':otest-shim-osx',
-        ':sim-shim',
     ],
     srcs = [
         'scripts/create_xctool_zip.sh',
@@ -371,8 +341,7 @@ genrule(
         '-l $(location :otest-query-lib-ios):' +
            '$(location :otest-query-lib-osx):' +
            '$(location :otest-shim-ios):' +
-           '$(location :otest-shim-osx):' +
-           '$(location :sim-shim) ' +
+           '$(location :otest-shim-osx) ' +
         # Libexecs
         '-x $(location :otest-query-ios):' +
            '$(location :otest-query-osx) ' +
@@ -403,7 +372,6 @@ genrule(
         ':otest-query-lib-osx',
         ':otest-shim-ios',
         ':otest-shim-osx',
-        ':sim-shim',
     ],
     srcs = [
         'scripts/create_xctool_zip.sh',
@@ -415,8 +383,7 @@ genrule(
         '-l $(location :otest-query-lib-ios):' +
            '$(location :otest-query-lib-osx):' +
            '$(location :otest-shim-ios):' +
-           '$(location :otest-shim-osx):' +
-           '$(location :sim-shim) ' +
+           '$(location :otest-shim-osx) ' +
         # Libexecs
         '-x $(location :otest-query-ios):' +
            '$(location :otest-query-osx) ' +

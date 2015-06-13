@@ -126,20 +126,6 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "28AF3212182716E20051F658"
-               BuildableName = "sim-shim.dylib"
-               BlueprintName = "sim-shim"
-               ReferencedContainer = "container:../sim-shim/sim-shim.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "283CCA4116C2EA3700F2E343"
                BuildableName = "xctool"
                BlueprintName = "xctool"
