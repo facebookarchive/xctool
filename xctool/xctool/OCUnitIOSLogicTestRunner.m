@@ -28,11 +28,20 @@
 
 - (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath
 {
-  NSString *launchPath = [NSString stringWithFormat:@"%@/Developer/%@",
-                          _buildSettings[Xcode_SDKROOT],
-                          _framework[kTestingFrameworkIOSTestrunnerName]];
-  NSArray *args = [[self testArguments] arrayByAddingObject:testBundlePath];
+  NSString *launchPath = [NSString pathWithComponents:@[
+    _buildSettings[Xcode_SDKROOT],
+    @"Developer",
+    _framework[kTestingFrameworkIOSTestrunnerName],
+  ]];
+
+  NSArray *args = nil;
   NSMutableDictionary *env = [NSMutableDictionary dictionary];
+  if (ToolchainIsXcode7OrBetter()) {
+    args = [self commonTestArguments];
+    env = [[self testEnvironmentWithSpecifiedTestConfiguration] mutableCopy];
+  } else {
+    args = [[self testArgumentsWithSpecifiedTestsToRun] arrayByAddingObject:testBundlePath];
+  }
 
   // In Xcode 6 `sim` doesn't set `CFFIXED_USER_HOME` if simulator is not launched
   // but this environment is used, for example, by NSHomeDirectory().

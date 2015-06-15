@@ -42,6 +42,16 @@ void StopAndRemoveLaunchdJob(NSString *job)
 
 static NSArray *GetLaunchdJobsForSimulator()
 {
+  NSArray *strings = @[
+    @"UIKitApplication",
+    @"SimulatorBridge",
+    @"Simulator",
+  ];
+
+  NSArray *ignoreStrings = @[
+    @"CoreSimulator",
+  ];
+
   launch_data_t getJobsMessage = launch_data_new_string(LAUNCH_KEY_GETJOBS);
   launch_data_t response = launch_msg(getJobsMessage);
 
@@ -55,19 +65,23 @@ static NSArray *GetLaunchdJobsForSimulator()
                            {
                              NSString *key = @(keyCString);
 
-                             NSArray *strings = @[@"com.apple.iphonesimulator",
-                                                  @"UIKitApplication",
-                                                  @"SimulatorBridge",
-                                                  @"iOS Simulator",
-                                                  ];
-
-                             BOOL matches = NO;
-                             for (NSString *str in strings) {
-                               if ([key rangeOfString:str options:NSCaseInsensitiveSearch].length > 0) {
+                             __block BOOL matches = NO;
+                             [ignoreStrings enumerateObjectsUsingBlock:^(NSString *string, NSUInteger idx, BOOL *stop) {
+                               if ([key rangeOfString:string options:NSCaseInsensitiveSearch].length > 0) {
                                  matches = YES;
-                                 break;
+                                 *stop = YES;
                                }
+                             }];
+                             if (matches) {
+                               return;
                              }
+
+                             [strings enumerateObjectsUsingBlock:^(NSString *string, NSUInteger idx, BOOL *stop) {
+                               if ([key rangeOfString:string options:NSCaseInsensitiveSearch].length > 0) {
+                                 matches = YES;
+                                 *stop = YES;
+                               }
+                             }];
 
                              if (matches) {
                                [jobs addObject:key];

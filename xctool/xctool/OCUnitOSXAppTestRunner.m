@@ -51,9 +51,16 @@
     @"OBJC_DISABLE_GC" : !_garbageCollection ? @"YES" : @"NO",
   }];
 
+  NSMutableArray *args = [@[] mutableCopy];
+  if (ToolchainIsXcode7OrBetter()) {
+    [environment addEntriesFromDictionary:[self testEnvironmentWithSpecifiedTestConfiguration]];
+  } else {
+    [args addObjectsFromArray:[self testArgumentsWithSpecifiedTestsToRun]];
+  }
+
   NSTask *task = CreateTaskInSameProcessGroup();
   [task setLaunchPath:[_simulatorInfo testHostPath]];
-  [task setArguments:[self testArguments]];
+  [task setArguments:args];
   [task setEnvironment:[self otestEnvironmentWithOverrides:environment]];
   // For OSX test bundles only, Xcode will chdir to the project's directory.
   NSString *projectDir = _buildSettings[Xcode_PROJECT_DIR];

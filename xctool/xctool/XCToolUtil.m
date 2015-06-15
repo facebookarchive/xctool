@@ -708,20 +708,34 @@ NSString *OSXTestFrameworkDirectories()
   return [directories componentsJoinedByString:@":"];
 }
 
+NSString *AllFrameworkAndLiraryPathsInBuildSettings(NSDictionary *buildSettings)
+{
+  NSMutableSet *set = [NSMutableSet set];
+  for (NSString *pathKey in @[Xcode_BUILT_PRODUCTS_DIR, Xcode_PRODUCT_TYPE_FRAMEWORK_SEARCH_PATHS, Xcode_TEST_FRAMEWORK_SEARCH_PATHS]) {
+    NSString *pathExists = buildSettings[pathKey];
+    if (pathExists) {
+      [set addObject:[pathExists stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
+    }
+  }
+  return [[set allObjects] componentsJoinedByString:@":"];
+}
+
 NSMutableDictionary *IOSTestEnvironment(NSDictionary *buildSettings)
 {
+  NSString *paths = AllFrameworkAndLiraryPathsInBuildSettings(buildSettings);
   return [@{
-    @"DYLD_FRAMEWORK_PATH" : buildSettings[Xcode_BUILT_PRODUCTS_DIR] ?: @"",
-    @"DYLD_LIBRARY_PATH" : buildSettings[Xcode_BUILT_PRODUCTS_DIR] ?: @"",
+    @"DYLD_FRAMEWORK_PATH" : paths,
+    @"DYLD_LIBRARY_PATH" : paths,
     @"DYLD_FALLBACK_FRAMEWORK_PATH" : IOSTestFrameworkDirectories(),
   } mutableCopy];
 }
 
 NSMutableDictionary *OSXTestEnvironment(NSDictionary *buildSettings)
 {
+  NSString *paths = AllFrameworkAndLiraryPathsInBuildSettings(buildSettings);
   return [@{
-    @"DYLD_FRAMEWORK_PATH" : buildSettings[Xcode_BUILT_PRODUCTS_DIR] ?: @"",
-    @"DYLD_LIBRARY_PATH" : buildSettings[Xcode_BUILT_PRODUCTS_DIR] ?: @"",
+    @"DYLD_FRAMEWORK_PATH" : paths,
+    @"DYLD_LIBRARY_PATH" : paths,
     @"DYLD_FALLBACK_FRAMEWORK_PATH" : OSXTestFrameworkDirectories(),
     @"NSUnbufferedIO" : @"YES",
   } mutableCopy];
@@ -790,13 +804,7 @@ static BOOL IsMachOExecutable(NSString *path)
 
 BOOL TestableSettingsIndicatesApplicationTest(NSDictionary *settings)
 {
-  NSString *testHostPath = settings[@"TEST_HOST"];
-
-  // Sometimes the TEST_HOST is wrapped in double quotes - not sure if our
-  // projects are misconfigured or if these are funky Xcode defaults.
-  testHostPath = [testHostPath stringByTrimmingCharactersInSet:
-                  [NSCharacterSet characterSetWithCharactersInString:@"\""]];
-
+  NSString *testHostPath = TestHostPathForBuildSettings(settings);
   return (testHostPath != nil &&
           [[NSFileManager defaultManager] isExecutableFileAtPath:testHostPath] &&
           IsMachOExecutable(testHostPath));

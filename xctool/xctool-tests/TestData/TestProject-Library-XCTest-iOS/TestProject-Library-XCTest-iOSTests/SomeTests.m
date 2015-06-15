@@ -74,4 +74,14 @@
   sleep(15);
 }
 
+- (void)testCrash
+{
+  [NSException raise:NSInternalInconsistencyException format:@"Test exception"];
+}
+
+- (void)testExits
+{
+  exit(1);
+}
+
 @end

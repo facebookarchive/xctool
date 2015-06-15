@@ -60,12 +60,14 @@ int main(int argc, const char * argv[])
       }
 
       [fallbackFrameworkPaths addObjectsFromArray:@[
-        // The path to CoreSimulator.framework for Xcode 6 and better.
+        // Path to CoreSimulator.framework for Xcode 6 and better.
         [developerDirPath stringByAppendingPathComponent:@"Library/PrivateFrameworks"],
+        // Path to XCTest.framework for Xcode 7 and better.
+        [developerDirPath stringByAppendingPathComponent:@"Platforms/MacOSX.platform/Developer/Library/Frameworks"],
         // Paths to other dependencies
         [developerDirPath stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks"],
         [developerDirPath stringByAppendingPathComponent:@"../OtherFrameworks"],
-        [developerDirPath stringByAppendingPathComponent:@"../SharedFrameworks"]
+        [developerDirPath stringByAppendingPathComponent:@"../SharedFrameworks"],
       ]];
 
       NSString *fallbackFrameworkPath = [fallbackFrameworkPaths componentsJoinedByString:@":"];

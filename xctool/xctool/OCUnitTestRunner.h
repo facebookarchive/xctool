@@ -66,7 +66,10 @@
 
 - (BOOL)runTests;
 
-- (NSArray *)testArguments;
+- (NSMutableArray *)commonTestArguments;
+- (NSArray *)testArgumentsWithSpecifiedTestsToRun;
+- (NSDictionary *)testEnvironmentWithSpecifiedTestConfiguration;
+
 - (NSMutableDictionary *)otestEnvironmentWithOverrides:(NSDictionary *)overrides;
 
 @end

@@ -14,15 +14,15 @@
 // limitations under the License.
 //
 
-#import "OCUnitTestRunner.h"
-#import "OCUnitTestRunnerInternal.h"
-
 #import <QuartzCore/QuartzCore.h>
 
+#import "OCUnitTestRunner.h"
+#import "OCUnitTestRunnerInternal.h"
 #import "ReportStatus.h"
 #import "TestRunState.h"
-#import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
+#import "XCTestConfiguration.h"
+#import "XCToolUtil.h"
 
 @interface OCUnitTestRunner ()
 @property (nonatomic, copy) NSDictionary *buildSettings;
@@ -187,20 +187,26 @@
   return allTestsPassed;
 }
 
-- (NSArray *)testArguments
+- (NSMutableArray *)commonTestArguments
+{
+  // Add any argments that might have been specifed in the scheme.
+  NSMutableArray *args = [_arguments ?: @[] mutableCopy];
+  [args addObjectsFromArray:@[
+    // Not sure exactly what this does...
+    @"-NSTreatUnknownArgumentsAsOpen", @"NO",
+    // Not sure exactly what this does...
+    @"-ApplePersistenceIgnoreState", @"YES",
+  ]];
+  return args;
+}
+
+- (NSArray *)testCasesToSkip
 {
   NSSet *focusedSet = [NSSet setWithArray:_focusedTestCases];
   NSSet *allSet = [NSSet setWithArray:_allTestCases];
 
-  NSString *testSpecifier = nil;
-  NSString *testSpecifierToFile = nil;
-  BOOL invertScope = NO;
-
-  if (TestableSettingsIndicatesApplicationTest(_buildSettings) && [focusedSet isEqualToSet:allSet]) {
-    // Xcode.app will always pass 'All' when running all tests in an
-    // application test bundle.
-    testSpecifier = @"All";
-    invertScope = NO;
+  if ((TestableSettingsIndicatesApplicationTest(_buildSettings)) && [focusedSet isEqualToSet:allSet]) {
+    return nil;
   } else {
     // When running a specific subset of tests, Xcode.app will always pass the
     // the list of excluded tests and enable the InvertScope option.
@@ -219,54 +225,63 @@
     NSMutableSet *invertedSet = [NSMutableSet setWithSet:allSet];
     [invertedSet minusSet:focusedSet];
 
-    NSArray *invertedTestCases = [[invertedSet allObjects] sortedArrayUsingSelector:@selector(compare:)];
-    if ([invertedTestCases count]) {
-      testSpecifierToFile = [invertedTestCases componentsJoinedByString:@","];
-    } else {
-      testSpecifier = @"";
-    }
-
-    invertScope = YES;
+    return [[invertedSet allObjects] sortedArrayUsingSelector:@selector(compare:)];
   }
+}
 
-  // These are the same arguments Xcode would use when invoking otest.  To capture these, we
-  // just ran a test case from Xcode that dumped 'argv'.  It's a little tricky to do that outside
-  // of the 'main' function, but you can use _NSGetArgc and _NSGetArgv.  See --
-  // http://unixjunkie.blogspot.com/2006/07/access-argc-and-argv-from-anywhere.html
-  NSMutableArray *args = [NSMutableArray arrayWithArray:@[
-           // Not sure exactly what this does...
-           @"-NSTreatUnknownArgumentsAsOpen", @"NO",
-           // Not sure exactly what this does...
-           @"-ApplePersistenceIgnoreState", @"YES",
-           // Optionally inverts whatever SenTest / XCTest would normally select.
-           [@"-" stringByAppendingString:_framework[kTestingFrameworkInvertScopeKey]], invertScope ? @"YES" : @"NO",
+- (NSArray *)testArgumentsWithSpecifiedTestsToRun
+{
+  NSArray *testCasesToSkip = [self testCasesToSkip];
+  BOOL invertScope = testCasesToSkip ? YES : NO;
+  NSMutableArray *args = [self commonTestArguments];
+
+  // Optionally inverts whatever SenTest / XCTest would normally select.
+  [args addObjectsFromArray:@[
+    [@"-" stringByAppendingString:_framework[kTestingFrameworkInvertScopeKey]],
+    invertScope ? @"YES" : @"NO",
   ]];
-  if (testSpecifier) {
+
+  if ([testCasesToSkip count] == 0) {
     // SenTest / XCTest is one of Self, All, None,
     // or TestClassName[/testCaseName][,TestClassName2]
-    [args addObjectsFromArray:@[
-      [@"-" stringByAppendingString:_framework[kTestingFrameworkFilterTestArgsKey]],
-      testSpecifier
-    ]];
-  } else if (testSpecifierToFile) {
-    NSString *testListFilePath = MakeTempFileWithPrefix([NSString stringWithFormat:@"otest_test_list_%@", HashForString(testSpecifierToFile)]);
+    [args addObject:[@"-" stringByAppendingString:_framework[kTestingFrameworkFilterTestArgsKey]]];
+    // Xcode.app will always pass 'All' when running all tests in an
+    // application test bundle.
+    [args addObject:testCasesToSkip ? @"" : @"All"];
+  } else {
+    NSString *testScope = [testCasesToSkip componentsJoinedByString:@","];
+    NSString *testListFilePath = MakeTempFileWithPrefix([NSString stringWithFormat:@"otest_test_list_%@", HashForString(testScope)]);
     NSError *writeError = nil;
+    BOOL writeResult;
+    /*
+     * Since number of test cases to skip or run is unlimited we need to pass them through a file
+     * because length of a command line string is limited.
+     *
+     * In XCTest framework there is a built-in feature that allows us to do that:
+     *   test configuration could be saved into a file in plist format path to which should be
+     *   passed in arguments with `-XCTestScopeFile` option.
+     *
+     * In SenTesting framework there is no such built-in feature. Since we are injecting otest-shim
+     *   library we could swizzle `+[SenTestProbe testScope]` method and return list of test cases
+     *   to skip or run there. In that case we could read list of test cases from a file and that is
+     *   what we are doing below using `-OTEST_TESTLIST_FILE` option.
+     */
     if ([_framework[kTestingFrameworkFilterTestArgsKey] isEqual:@"XCTest"]) {
       testListFilePath = [testListFilePath stringByAppendingPathExtension:@"plist"];
-      NSData *data = [NSPropertyListSerialization dataWithPropertyList:@{@"XCTestScope": @[testSpecifierToFile],
+      NSData *data = [NSPropertyListSerialization dataWithPropertyList:@{@"XCTestScope": @[testScope],
                                                                          @"XCTestInvertScope": @(invertScope),}
                                                                 format:NSPropertyListXMLFormat_v1_0
                                                                options:0
                                                                  error:&writeError];
-      NSAssert(data, @"Couldn't convert to property list format: %@, error: %@", testSpecifierToFile, writeError);
-      [data writeToFile:testListFilePath atomically:YES];
+      NSAssert(data, @"Couldn't convert to property list format: %@, error: %@", testScope, writeError);
+      writeResult = [data writeToFile:testListFilePath atomically:YES];
+      NSAssert(writeResult, @"Couldn't save list of tests to run to a file at path %@", testListFilePath);
       [args addObjectsFromArray:@[
         @"-XCTestScopeFile", testListFilePath,
       ]];
     } else {
-      if (![testSpecifierToFile writeToFile:testListFilePath atomically:NO encoding:NSUTF8StringEncoding error:&writeError]) {
-        NSAssert(NO, @"Couldn't save list of tests to run to a file at path %@; error: %@", testListFilePath, writeError);
-      }
+      writeResult = [testScope writeToFile:testListFilePath atomically:YES encoding:NSUTF8StringEncoding error:&writeError];
+      NSAssert(writeResult, @"Couldn't save list of tests to run to a file at path %@; error: %@", testListFilePath, writeError);
       [args addObjectsFromArray:@[
         // in otest-shim we are swizzling `+[SenTestProbe testScope]` and
         // returning list of tests saved in the file specified below
@@ -283,10 +298,38 @@
     }
   }
 
-  // Add any argments that might have been specifed in the scheme.
-  [args addObjectsFromArray:_arguments];
-
   return args;
+}
+
+- (NSDictionary *)testEnvironmentWithSpecifiedTestConfiguration
+{
+  NSArray *testCasesToSkip = [self testCasesToSkip];
+
+  Class XCTestConfigurationClass = NSClassFromString(@"XCTestConfiguration");
+  NSAssert(XCTestConfigurationClass, @"XCTestConfiguration isn't available");
+
+  XCTestConfiguration *configuration = [[XCTestConfigurationClass alloc] init];
+  [configuration setProductModuleName:_buildSettings[Xcode_PRODUCT_MODULE_NAME]];
+  [configuration setTestBundleURL:[NSURL fileURLWithPath:[_simulatorInfo productBundlePath]]];
+  [configuration setTestsToSkip:[NSSet setWithArray:testCasesToSkip]];
+  if ([testCasesToSkip count] == 0) {
+    [configuration setTestsToSkip:nil];
+    [configuration setTestsToRun:[NSSet setWithArray:_allTestCases]];
+  }
+  [configuration setReportResultsToIDE:NO];
+
+  NSString *XCTestConfigurationFilename = [NSString stringWithFormat:@"%@-%@", _buildSettings[Xcode_PRODUCT_NAME], [configuration.sessionIdentifier UUIDString]];
+  NSString *XCTestConfigurationFilePath = [MakeTempFileWithPrefix(XCTestConfigurationFilename) stringByAppendingPathExtension:@"xctestconfiguration"];
+  if ([[NSFileManager defaultManager] fileExistsAtPath:XCTestConfigurationFilePath]) {
+    [[NSFileManager defaultManager] removeItemAtPath:XCTestConfigurationFilePath error:nil];
+  }
+  if (![NSKeyedArchiver archiveRootObject:configuration toFile:XCTestConfigurationFilePath]) {
+    NSAssert(NO, @"Couldn't archive XCTestConfiguration to file at path %@", XCTestConfigurationFilePath);
+  }
+
+  return @{
+    @"XCTestConfigurationFilePath": XCTestConfigurationFilePath,
+  };
 }
 
 - (NSMutableDictionary *)otestEnvironmentWithOverrides:(NSDictionary *)overrides

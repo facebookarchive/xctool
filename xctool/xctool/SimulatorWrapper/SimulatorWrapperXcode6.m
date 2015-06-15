@@ -66,7 +66,12 @@
     return NO;
   }
 
-  NSURL *iOSSimulatorURL = [NSURL fileURLWithPath:[NSString pathWithComponents:@[XcodeDeveloperDirPath(), @"Applications/iOS Simulator.app"]]];
+  NSURL *iOSSimulatorURL = nil;
+  if (ToolchainIsXcode7OrBetter()) {
+    iOSSimulatorURL = [NSURL fileURLWithPath:[NSString pathWithComponents:@[XcodeDeveloperDirPath(), @"Applications/Simulator.app"]]];
+  } else {
+    iOSSimulatorURL = [NSURL fileURLWithPath:[NSString pathWithComponents:@[XcodeDeveloperDirPath(), @"Applications/iOS Simulator.app"]]];
+  }
   NSDictionary *configuration = @{NSWorkspaceLaunchConfigurationArguments: @[@"-CurrentDeviceUDID", [[[simInfo simulatedDevice] UDID] UUIDString]]};
   NSError *launchError = nil;
   NSRunningApplication *app = [[NSWorkspace sharedWorkspace] launchApplicationAtURL:iOSSimulatorURL

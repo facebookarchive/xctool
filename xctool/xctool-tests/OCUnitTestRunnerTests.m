@@ -328,7 +328,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
   OCUnitTestRunner *runner = TestRunner([OCUnitTestRunner class], testSettings);
 
   // Xcode.app always passes these...
-  assertThat([runner testArguments],
+  assertThat([runner testArgumentsWithSpecifiedTestsToRun],
              containsArray(@[@"-NSTreatUnknownArgumentsAsOpen",
                                @"NO",
                                @"-ApplePersistenceIgnoreState",
@@ -346,8 +346,8 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
 
   OCUnitTestRunner *runner = TestRunner([OCUnitIOSAppTestRunner class], testSettings);
 
-  assertThat([runner testArguments], containsArray(@[@"-SenTest"]));
-  assertThat([runner testArguments], containsArray(@[@"-SenTestInvertScope"]));
+  assertThat([runner testArgumentsWithSpecifiedTestsToRun], containsArray(@[@"-SenTest"]));
+  assertThat([runner testArgumentsWithSpecifiedTestsToRun], containsArray(@[@"-SenTestInvertScope"]));
 }
 
 - (void)testCorrectTestSpecifierArgumentsAreUsedForXCTest
@@ -359,8 +359,8 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
   NSDictionary *testSettings = allSettings[@"TestProject-Library-XCTest-OSXTests"];
 
   OCUnitTestRunner *runner = TestRunner([OCUnitTestRunner class], testSettings);
-  assertThat([runner testArguments], containsArray(@[@"-XCTest"]));
-  assertThat([runner testArguments], containsArray(@[@"-XCTestInvertScope"]));
+  assertThat([runner testArgumentsWithSpecifiedTestsToRun], containsArray(@[@"-XCTest"]));
+  assertThat([runner testArgumentsWithSpecifiedTestsToRun], containsArray(@[@"-XCTestInvertScope"]));
 }
 
 - (void)testTestSpecifierIsSelfWhenRunningAllTestsInLogicTestBundle
@@ -373,8 +373,8 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
 
   OCUnitTestRunner *runner = TestRunnerWithTestList([OCUnitTestRunner class], testSettings, @[@"Cls1/testA", @"Cls2/testB"]);
 
-  assertThat([runner testArguments], containsArray(@[@"-SenTest", @""]));
-  assertThat([runner testArguments], containsArray(@[@"-SenTestInvertScope", @"YES"]));
+  assertThat([runner testArgumentsWithSpecifiedTestsToRun], containsArray(@[@"-SenTest", @""]));
+  assertThat([runner testArgumentsWithSpecifiedTestsToRun], containsArray(@[@"-SenTestInvertScope", @"YES"]));
 }
 
 - (void)testTestSpecifierIsAllWhenRunningAllTestsInApplicationTestBundle
@@ -387,8 +387,8 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
 
   OCUnitTestRunner *runner = TestRunnerWithTestList([OCUnitTestRunner class], testSettings, @[@"Cls1/testA", @"Cls2/testB"]);
 
-  assertThat([runner testArguments], containsArray(@[@"-SenTest", @"All"]));
-  assertThat([runner testArguments], containsArray(@[@"-SenTestInvertScope", @"NO"]));
+  assertThat([runner testArgumentsWithSpecifiedTestsToRun], containsArray(@[@"-SenTest", @"All"]));
+  assertThat([runner testArgumentsWithSpecifiedTestsToRun], containsArray(@[@"-SenTestInvertScope", @"NO"]));
 }
 
 - (void)testTestSpecifierIsInvertedTestListWhenRunningSpecificTests
@@ -403,11 +403,11 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
                                                      testSettings,
                                                      @[@"Cls1/testA"],
                                                      @[@"Cls1/testA", @"Cls2/testB"]);
-  assertThat([runner testArguments], containsArray(@[@"-OTEST_TESTLIST_FILE"]));
-  assertThat([runner testArguments], containsArray(@[@"-OTEST_FILTER_TEST_ARGS_KEY", @"SenTest"]));
-  assertThat([runner testArguments], containsArray(@[@"-SenTestInvertScope", @"YES"]));
+  assertThat([runner testArgumentsWithSpecifiedTestsToRun], containsArray(@[@"-OTEST_TESTLIST_FILE"]));
+  assertThat([runner testArgumentsWithSpecifiedTestsToRun], containsArray(@[@"-OTEST_FILTER_TEST_ARGS_KEY", @"SenTest"]));
+  assertThat([runner testArgumentsWithSpecifiedTestsToRun], containsArray(@[@"-SenTestInvertScope", @"YES"]));
 
-  NSString *testListFilePath = [runner testArguments][([[runner testArguments] indexOfObject:@"-OTEST_TESTLIST_FILE"] + 1)];
+  NSString *testListFilePath = [runner testArgumentsWithSpecifiedTestsToRun][([[runner testArgumentsWithSpecifiedTestsToRun] indexOfObject:@"-OTEST_TESTLIST_FILE"] + 1)];
   NSString *testList = [NSString stringWithContentsOfFile:testListFilePath encoding:NSUTF8StringEncoding error:nil];
   assertThat(testList, equalTo(@"Cls2/testB"));
 }

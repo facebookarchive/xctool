@@ -201,14 +201,25 @@ static const NSInteger kMaxRunTestsAttempts = 3;
                       REPORTER_MESSAGE_INFO,
                       @"Launching test host and running tests ...");
 
+  NSArray *appLaunchArgs = nil;
+  NSMutableDictionary *appLaunchEnvironment = [_simulatorInfo simulatorLaunchEnvironment];
+  if (ToolchainIsXcode7OrBetter()) {
+    appLaunchArgs = [self commonTestArguments];
+
+    [appLaunchEnvironment addEntriesFromDictionary:[self testEnvironmentWithSpecifiedTestConfiguration]];
+  } else {
+    appLaunchArgs = [self testArgumentsWithSpecifiedTestsToRun];
+  }
+  appLaunchEnvironment = [self otestEnvironmentWithOverrides:appLaunchEnvironment];
+
   // Sometimes simulator or test host app fails to run.
   // Let's try several times to run before reporting about failure to callers.
   for (NSInteger remainingAttempts = kMaxRunTestsAttempts - 1; remainingAttempts >= 0; --remainingAttempts) {
     NSError *error = nil;
     BOOL infraSucceeded = [SimulatorWrapper runHostAppTests:testHostAppPath
                                               simulatorInfo:_simulatorInfo
-                                              appLaunchArgs:[self testArguments]
-                                       appLaunchEnvironment:[self otestEnvironmentWithOverrides:[_simulatorInfo simulatorLaunchEnvironment]]
+                                              appLaunchArgs:appLaunchArgs
+                                       appLaunchEnvironment:appLaunchEnvironment
                                           feedOutputToBlock:outputLineBlock
                                                       error:&error];
 

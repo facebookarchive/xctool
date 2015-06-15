@@ -340,6 +340,7 @@
 		CCC55AD4195BCDA30051A50B /* SimulatorWrapperXcode6.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SimulatorWrapperXcode6.h; path = xctool/SimulatorWrapper/SimulatorWrapperXcode6.h; sourceTree = "<group>"; };
 		CCC55AD5195BCDD90051A50B /* SimulatorWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimulatorWrapper.m; path = xctool/SimulatorWrapper/SimulatorWrapper.m; sourceTree = "<group>"; };
 		CCC55AD7195BD13F0051A50B /* SimulatorWrapperInternal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SimulatorWrapperInternal.h; path = xctool/SimulatorWrapper/SimulatorWrapperInternal.h; sourceTree = "<group>"; };
+		CCC647DD1B2F8F4C006609FC /* XCTestConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCTestConfiguration.h; sourceTree = "<group>"; };
 		CCE14EA01ACB5B8100B76996 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		CCF50B5519DC9E8C00A1044E /* SimVerifier.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimVerifier.h; sourceTree = "<group>"; };
 		CCF6EE48195BA918005BA335 /* SimulatorInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimulatorInfo.m; path = xctool/SimulatorWrapper/SimulatorInfo.m; sourceTree = "<group>"; };
@@ -429,6 +430,7 @@
 			children = (
 				28E9B98316C2F2D900A52E4D /* xctool.xcconfig */,
 				287E0DC417CD60B00088A264 /* xctool-tests.xcconfig */,
+				CCC55ABE195BB1E80051A50B /* Headers */,
 				CC229B0C194638CC00E11C30 /* Simulator API */,
 				28897FCD173E6215004BA024 /* Common */,
 				283CCA4716C2EA3800F2E343 /* xctool */,
@@ -663,7 +665,6 @@
 		CC229B0C194638CC00E11C30 /* Simulator API */ = {
 			isa = PBXGroup;
 			children = (
-				CCC55ABE195BB1E80051A50B /* Headers */,
 				CCF6EE4A195BA9DC005BA335 /* SimulatorInfo */,
 				CCDC41BF195BDE3300BD5A1A /* SimulatorUtils */,
 				CCC55ACE195BCD370051A50B /* SimulatorWrapper */,
@@ -676,6 +677,7 @@
 			children = (
 				CCC55ABF195BB1E80051A50B /* CoreSimulator */,
 				CCC55AC8195BB1E80051A50B /* iPhoneSimulatorRemoteClient */,
+				CCC647DC1B2F8F4C006609FC /* XCTest */,
 			);
 			path = Headers;
 			sourceTree = "<group>";
@@ -718,6 +720,14 @@
 				CCC55AD1195BCD7D0051A50B /* SimulatorWrapperXcode6.m */,
 			);
 			name = "Xcode 6";
+			sourceTree = "<group>";
+		};
+		CCC647DC1B2F8F4C006609FC /* XCTest */ = {
+			isa = PBXGroup;
+			children = (
+				CCC647DD1B2F8F4C006609FC /* XCTestConfiguration.h */,
+			);
+			path = XCTest;
 			sourceTree = "<group>";
 		};
 		CCDC41BF195BDE3300BD5A1A /* SimulatorUtils */ = {

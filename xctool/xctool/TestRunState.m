@@ -248,24 +248,29 @@
 - (NSArray *)collectCrashReportPaths
 {
   NSFileManager *fm = [NSFileManager defaultManager];
-  NSString *diagnosticReportsPath = [@"~/Library/Logs/DiagnosticReports" stringByStandardizingPath];
-
-  BOOL isDirectory = NO;
-  BOOL fileExists = [fm fileExistsAtPath:diagnosticReportsPath
-                             isDirectory:&isDirectory];
-  if (!fileExists || !isDirectory) {
-    return @[];
-  }
+  NSArray *diagnosticReportsPaths = @[
+    [@"~/Library/Logs/DiagnosticReports" stringByStandardizingPath],
+    @"/Library/Logs/DiagnosticReports",
+  ];
 
   NSMutableArray *matchingContents = [NSMutableArray array];
-  NSDirectoryEnumerator *enumerator = [fm enumeratorAtURL:[NSURL fileURLWithPath:diagnosticReportsPath]
-                               includingPropertiesForKeys:nil
-                                                  options:NSDirectoryEnumerationSkipsHiddenFiles
-                                             errorHandler:nil];
-  NSURL *fileUrl = nil;
-  while ((fileUrl = [enumerator nextObject])) {
-    if ([[fileUrl pathExtension] isEqualToString:@"crash"]) {
-      [matchingContents addObject:fileUrl];
+  for (NSString *diagnosticReportsPath in diagnosticReportsPaths) {
+    BOOL isDirectory = NO;
+    BOOL fileExists = [fm fileExistsAtPath:diagnosticReportsPath
+                               isDirectory:&isDirectory];
+    if (!fileExists || !isDirectory) {
+      continue;
+    }
+
+    NSDirectoryEnumerator *enumerator = [fm enumeratorAtURL:[NSURL fileURLWithPath:diagnosticReportsPath]
+                                 includingPropertiesForKeys:nil
+                                                    options:NSDirectoryEnumerationSkipsHiddenFiles
+                                               errorHandler:nil];
+    NSURL *fileUrl = nil;
+    while ((fileUrl = [enumerator nextObject])) {
+      if ([[fileUrl pathExtension] isEqualToString:@"crash"]) {
+        [matchingContents addObject:fileUrl];
+      }
     }
   }
 
