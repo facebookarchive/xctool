@@ -284,7 +284,7 @@
 
   NSMutableDictionary *internalEnvironment = [NSMutableDictionary dictionary];
   if (_testTimeout > 0) {
-    internalEnvironment[@"OTEST_SHIM_TEST_TIMEOUT"] = @(_testTimeout);
+    internalEnvironment[@"OTEST_SHIM_TEST_TIMEOUT"] = [@(_testTimeout) stringValue];
   }
 
   NSArray *layers = @[

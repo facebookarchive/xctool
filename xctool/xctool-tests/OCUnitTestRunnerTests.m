@@ -109,7 +109,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
   assertThat([config simulatedApplicationLaunchEnvironment][@"SomeEnvKey"],
              equalTo(@"SomeEnvValue"));
   assertThat([config simulatedApplicationLaunchEnvironment][@"OTEST_SHIM_TEST_TIMEOUT"],
-             equalTo(@30));
+             equalTo(@"30"));
 
 }
 
@@ -169,7 +169,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
   assertThat([launchedTasks[0] environment][@"SIMSHIM_SomeEnvKey"],
              equalTo(@"SomeEnvValue"));
   assertThat([launchedTasks[0] environment][@"SIMSHIM_OTEST_SHIM_TEST_TIMEOUT"],
-             equalTo(@30));
+             equalTo(@"30"));
 }
 
 #pragma mark OSX Tests
@@ -207,7 +207,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
   assertThat([launchedTasks[0] environment][@"SomeEnvKey"],
              equalTo(@"SomeEnvValue"));
   assertThat([launchedTasks[0] environment][@"OTEST_SHIM_TEST_TIMEOUT"],
-             equalTo(@30));
+             equalTo(@"30"));
 }
 
 - (void)testOSXApplicationTestWithBadTesthostFails
@@ -263,7 +263,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
   assertThat([launchedTasks[0] environment][@"SomeEnvKey"],
              equalTo(@"SomeEnvValue"));
   assertThat([launchedTasks[0] environment][@"OTEST_SHIM_TEST_TIMEOUT"],
-             equalTo(@30));
+             equalTo(@"30"));
 }
 
 - (void)testOSXAppTestWorksWithNoProjectPath
