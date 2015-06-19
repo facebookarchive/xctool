@@ -152,7 +152,7 @@ static void AnnounceBeginSection(IDEActivityLogSection *section)
     PrintJSON(EventDictionaryWithNameAndContent(
       kReporter_Events_BeginBuildCommand, @{
         kReporter_BeginBuildCommand_TitleKey : section.title,
-        kReporter_BeginBuildCommand_CommandKey : section.commandDetailDescription,
+        kReporter_BeginBuildCommand_CommandKey : section.commandDetailDescription ?: @"",
       }));
   } else if ([sectionTypeString hasPrefix:kDomainTypeProductItemPrefix]) {
     NSString *project = nil;
@@ -228,22 +228,6 @@ static void HandleEndSection(IDEActivityLogSection *section)
   }
 }
 
-static void Xcode3CommandLineBuildLogRecorder__emitSection(id self, SEL cmd, IDEActivityLogSection *section)
-{
-  // Call through to the original implementation.
-  objc_msgSend(self, sel_getUid("__Xcode3CommandLineBuildLogRecorder__emitSection:"), section);
-
-  HandleBeginSection(section);
-}
-
-static void Xcode3CommandLineBuildLogRecorder__finishEmittingClosedSection(id self, SEL sel, IDEActivityLogSection *section)
-{
-  // Call through to the original implementation.
-  objc_msgSend(self, sel_getUid("__Xcode3CommandLineBuildLogRecorder__finishEmittingClosedSection:"), section);
-
-  HandleEndSection(section);
-}
-
 static void IDECommandLineBuildLogRecorder__emitSection_inSupersection(id self,
                                                                        SEL sel,
                                                                        IDEActivityLogSection *section,
@@ -299,11 +283,9 @@ __attribute__((constructor)) static void EntryPoint()
   __begunLogSections = [[NSMutableSet alloc] initWithCapacity:0];
   __endedLogSections = [[NSMutableSet alloc] initWithCapacity:0];
 
-  BOOL isXcode5 = (NSClassFromString(@"IDECommandLineBuildLogRecorder") != NULL);
-  BOOL isXcode4 = (NSClassFromString(@"Xcode3CommandLineBuildLogRecorder") != NULL);
+  BOOL isXcode5OrLater = (NSClassFromString(@"IDECommandLineBuildLogRecorder") != NULL);
 
-  // For each log item, Xcode will call a begin and end method.  (The naming of
-  // these methods is slightly different betwen Xcode 4 and 5.)
+  // For each log item, Xcode will call a begin and end method.
   //
   // This begin method is meant to announce the action that will be done. e.g.,
   // this would get called to print out the clang command that's about to be
@@ -312,20 +294,13 @@ __attribute__((constructor)) static void EntryPoint()
   // The end method is called once for every line item in the log, and is meant
   // to announce the result of something.  e.g., this would print out the error
   // text (if any) from a clang command that just ran.
-  if (isXcode5) {
+  if (isXcode5OrLater) {
     XTSwizzleSelectorForFunction(NSClassFromString(@"IDECommandLineBuildLogRecorder"),
                                  @selector(_emitSection:inSupersection:),
                                  (IMP)IDECommandLineBuildLogRecorder__emitSection_inSupersection);
     XTSwizzleSelectorForFunction(NSClassFromString(@"IDECommandLineBuildLogRecorder"),
                                  @selector(_cleanupClosedSection:inSupersection:),
                                  (IMP)IDECommandLineBuildLogRecorder__cleanupClosedSection_inSupersection);
-  } else if (isXcode4) {
-    XTSwizzleSelectorForFunction(NSClassFromString(@"Xcode3CommandLineBuildLogRecorder"),
-                                 @selector(_emitSection:),
-                                 (IMP)Xcode3CommandLineBuildLogRecorder__emitSection);
-    XTSwizzleSelectorForFunction(NSClassFromString(@"Xcode3CommandLineBuildLogRecorder"),
-                                 @selector(_finishEmittingClosedSection:),
-                                 (IMP)Xcode3CommandLineBuildLogRecorder__finishEmittingClosedSection);
   } else {
     NSCAssert(NO,
               @"Hrm. We're running in a version of xcodebuild which seems "
