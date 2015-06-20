@@ -403,16 +403,6 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
     [_simulatorInfo setOSVersion:destInfo[@"OS"]];
   }
 
-  for (NSDictionary *only in [self onlyListAsTargetsAndSenTestList]) {
-    if ([[self class] _matchingTestableForTarget:only[@"target"]
-                                      logicTests:_logicTests
-                                        appTests:_appTests
-                                xcodeSubjectInfo:xcodeSubjectInfo] == nil) {
-      *errorMessage = [NSString stringWithFormat:@"run-tests: '%@' is not a testing target in this scheme.", only[@"target"]];
-      return NO;
-    }
-  }
-
   for (NSString *logicTestPath in _logicTests) {
     if (!IsDirectory(logicTestPath)) {
       *errorMessage = [NSString stringWithFormat:@"run-tests: Logic test at path '%@' does not exist or is not a directory", logicTestPath];
@@ -450,6 +440,16 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
     }
 
     _appTests[testBundle] = hostApp;
+  }
+
+  for (NSDictionary *only in [self onlyListAsTargetsAndSenTestList]) {
+    if ([[self class] _matchingTestableForTarget:only[@"target"]
+                                      logicTests:_logicTests
+                                        appTests:_appTests
+                                xcodeSubjectInfo:xcodeSubjectInfo] == nil) {
+      *errorMessage = [NSString stringWithFormat:@"run-tests: '%@' is not a testing target in this scheme.", only[@"target"]];
+      return NO;
+    }
   }
 
   return YES;
