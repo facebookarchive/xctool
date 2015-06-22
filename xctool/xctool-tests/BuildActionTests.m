@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "Action.h"
 #import "FakeTask.h"
@@ -29,7 +29,7 @@
 
 void _CFAutoreleasePoolPrintPools();
 
-@interface BuildActionTests : SenTestCase
+@interface BuildActionTests : XCTestCase
 @end
 
 @implementation BuildActionTests

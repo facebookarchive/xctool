@@ -26,7 +26,6 @@
 		283479B916E3EBE5003C3B77 /* TestUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 283479B816E3EBE5003C3B77 /* TestUtil.m */; };
 		283479BC16E3FC0F003C3B77 /* BuildTestsActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 283479BB16E3FC0E003C3B77 /* BuildTestsActionTests.m */; };
 		283CCA4616C2EA3800F2E343 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283CCA4516C2EA3800F2E343 /* Foundation.framework */; };
-		283CCAC316C2EE9900F2E343 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283CCA5916C2EA8B00F2E343 /* SenTestingKit.framework */; };
 		283CCAC416C2EE9900F2E343 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 283CCA5B16C2EA8B00F2E343 /* Cocoa.framework */; };
 		283CCACA16C2EE9900F2E343 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 283CCAC816C2EE9900F2E343 /* InfoPlist.strings */; };
 		283CCACD16C2EE9900F2E343 /* XCToolTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCACC16C2EE9900F2E343 /* XCToolTests.m */; };
@@ -52,7 +51,6 @@
 		287BF04D16F1A6EB00590E06 /* XcodeSubjectInfoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 287BF04C16F1A6EB00590E06 /* XcodeSubjectInfoTests.m */; };
 		287BF08416F1A97900590E06 /* XcodeSubjectInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 287BF08316F1A97900590E06 /* XcodeSubjectInfo.m */; };
 		287BF08516F1A97900590E06 /* XcodeSubjectInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 287BF08316F1A97900590E06 /* XcodeSubjectInfo.m */; };
-		28869AFC178CEA7600DED56A /* Initializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 28869AFB178CEA7600DED56A /* Initializer.m */; };
 		28897FBD173E4C74004BA024 /* FakeTaskManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28897FBA173E4C73004BA024 /* FakeTaskManagerTests.m */; };
 		28897FD0173E6215004BA024 /* Swizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = 28897FCF173E6215004BA024 /* Swizzle.m */; };
 		288980601742B675004BA024 /* FakeTaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2889805F1742B675004BA024 /* FakeTaskManager.m */; };
@@ -209,12 +207,11 @@
 		283CCA4516C2EA3800F2E343 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		283CCA4816C2EA3800F2E343 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		283CCA4B16C2EA3800F2E343 /* xctool-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "xctool-Prefix.pch"; sourceTree = "<group>"; };
-		283CCA5916C2EA8B00F2E343 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		283CCA5B16C2EA8B00F2E343 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		283CCA5E16C2EA8B00F2E343 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		283CCA5F16C2EA8B00F2E343 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		283CCA6016C2EA8B00F2E343 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		283CCAC216C2EE9900F2E343 /* xctool-tests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "xctool-tests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		283CCAC216C2EE9900F2E343 /* xctool-tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "xctool-tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		283CCAC716C2EE9900F2E343 /* xctool-tests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "xctool-tests-Info.plist"; sourceTree = "<group>"; };
 		283CCAC916C2EE9900F2E343 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		283CCACC16C2EE9900F2E343 /* XCToolTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = XCToolTests.m; sourceTree = "<group>"; };
@@ -241,7 +238,6 @@
 		287BF08216F1A97900590E06 /* XcodeSubjectInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XcodeSubjectInfo.h; sourceTree = "<group>"; };
 		287BF08316F1A97900590E06 /* XcodeSubjectInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodeSubjectInfo.m; sourceTree = "<group>"; };
 		287E0DC417CD60B00088A264 /* xctool-tests.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "xctool-tests.xcconfig"; sourceTree = "<group>"; };
-		28869AFB178CEA7600DED56A /* Initializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Initializer.m; sourceTree = "<group>"; };
 		28897FBA173E4C73004BA024 /* FakeTaskManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeTaskManagerTests.m; sourceTree = "<group>"; };
 		28897FCE173E6215004BA024 /* Swizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Swizzle.h; sourceTree = "<group>"; };
 		28897FCF173E6215004BA024 /* Swizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Swizzle.m; sourceTree = "<group>"; };
@@ -388,7 +384,6 @@
 				28FFB00516FF5A21000CCE2A /* QuartzCore.framework in Frameworks */,
 				28E9B98E16C2FE4800A52E4D /* OCHamcrest.framework in Frameworks */,
 				28E9B98B16C2FDA700A52E4D /* OCMockito.framework in Frameworks */,
-				283CCAC316C2EE9900F2E343 /* SenTestingKit.framework in Frameworks */,
 				283CCAC416C2EE9900F2E343 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -447,7 +442,7 @@
 			isa = PBXGroup;
 			children = (
 				283CCA4216C2EA3800F2E343 /* xctool */,
-				283CCAC216C2EE9900F2E343 /* xctool-tests.octest */,
+				283CCAC216C2EE9900F2E343 /* xctool-tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -460,7 +455,6 @@
 				28E9B98D16C2FE4800A52E4D /* OCHamcrest.framework */,
 				28E9B98A16C2FDA700A52E4D /* OCMockito.framework */,
 				283CCA4516C2EA3800F2E343 /* Foundation.framework */,
-				283CCA5916C2EA8B00F2E343 /* SenTestingKit.framework */,
 				283CCA5B16C2EA8B00F2E343 /* Cocoa.framework */,
 				283CCA5D16C2EA8B00F2E343 /* Other Frameworks */,
 			);
@@ -561,7 +555,6 @@
 				2889805E1742B675004BA024 /* FakeTaskManager.h */,
 				2889805F1742B675004BA024 /* FakeTaskManager.m */,
 				28897FBA173E4C73004BA024 /* FakeTaskManagerTests.m */,
-				28869AFB178CEA7600DED56A /* Initializer.m */,
 				AAF334451806A46F00928A00 /* LaunchHandlers.h */,
 				AAF334461806A46F00928A00 /* LaunchHandlers.m */,
 				EEB31CEC17C6867300CFB0E1 /* OCEventStateTests.m */,
@@ -783,8 +776,8 @@
 			);
 			name = "xctool-tests";
 			productName = "xctool-tests";
-			productReference = 283CCAC216C2EE9900F2E343 /* xctool-tests.octest */;
-			productType = "com.apple.product-type.bundle.ocunit-test";
+			productReference = 283CCAC216C2EE9900F2E343 /* xctool-tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -960,7 +953,6 @@
 				28BB043E17C7FF43004F6C13 /* Buildable.m in Sources */,
 				CDEE9EA1176950DC0026D278 /* BuildStateParserTests.m in Sources */,
 				40623EBF190EA61B004FB374 /* InstallAction.m in Sources */,
-				28869AFC178CEA7600DED56A /* Initializer.m in Sources */,
 				AAF334521806A48A00928A00 /* OCUnitTestRunnerTests.m in Sources */,
 				CC84C94C18ECE161001F6094 /* FakeOCUnitTestRunner.m in Sources */,
 				28E28FBD1797099E0072376C /* ReporterTask.m in Sources */,
@@ -1074,12 +1066,12 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
 					"\"$(SRCROOT)/../Vendor\"",
+					"$(inherited)",
 				);
 				GCC_PREFIX_HEADER = "xctool-tests/xctool-tests-Prefix.pch";
 				INFOPLIST_FILE = "xctool-tests/xctool-tests-Info.plist";
 				PRODUCT_NAME = "xctool-tests";
 				SKIP_INSTALL = YES;
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -1091,12 +1083,12 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
 					"\"$(SRCROOT)/../Vendor\"",
+					"$(inherited)",
 				);
 				GCC_PREFIX_HEADER = "xctool-tests/xctool-tests-Prefix.pch";
 				INFOPLIST_FILE = "xctool-tests/xctool-tests-Info.plist";
 				PRODUCT_NAME = "xctool-tests";
 				SKIP_INSTALL = YES;
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};

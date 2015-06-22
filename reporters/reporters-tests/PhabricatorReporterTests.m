@@ -14,12 +14,12 @@
 // limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "PhabricatorReporter.h"
 #import "Reporter+Testing.h"
 
-@interface PhabricatorReporterTests : SenTestCase
+@interface PhabricatorReporterTests : XCTestCase
 @end
 
 @implementation PhabricatorReporterTests

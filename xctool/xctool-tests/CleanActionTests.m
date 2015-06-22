@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "Action.h"
 #import "FakeTask.h"
@@ -30,7 +30,7 @@
 #import "XCToolUtil.h"
 #import "xcodeSubjectInfo.h"
 
-@interface CleanActionTests : SenTestCase
+@interface CleanActionTests : XCTestCase
 @end
 
 @implementation CleanActionTests

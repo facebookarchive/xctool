@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "Action.h"
 #import "BuildTestsAction.h"
@@ -38,7 +38,7 @@ static NSString *kTestWorkspaceTestProjectLibraryTestsTargetID  = @"28A33CE016CF
 static NSString *kTestWorkspaceTestProjectLibraryTests2TargetID = @"28ADB42416E40E23006301ED";
 static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E42E9A006301ED";
 
-@interface BuildTestsActionTests : SenTestCase
+@interface BuildTestsActionTests : XCTestCase
 @end
 
 @implementation BuildTestsActionTests

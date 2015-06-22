@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "EventSink.h"
 #import "EventBuffer.h"
@@ -41,7 +41,7 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
                                     reporters:@[sink]];
 }
 
-@interface TestRunStateTests : SenTestCase {
+@interface TestRunStateTests : XCTestCase {
 }
 @end
 

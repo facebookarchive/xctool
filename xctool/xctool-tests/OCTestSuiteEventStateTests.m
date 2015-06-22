@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "EventBuffer.h"
 #import "EventGenerator.h"
@@ -35,7 +35,7 @@ static NSDictionary *EndEventForTestSuiteWithTestName(NSString * testName)
                                            @{kReporter_EndTestSuite_SuiteKey:testName});
 }
 
-@interface OCTestSuiteEventStateTests : SenTestCase
+@interface OCTestSuiteEventStateTests : XCTestCase
 
 @end
 

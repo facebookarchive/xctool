@@ -1,8 +1,8 @@
 #import "TaskUtil.h"
 #import "FakeTask.h"
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
-@interface TaskUtilTests : SenTestCase
+@interface TaskUtilTests : XCTestCase
 @end
 
 @implementation TaskUtilTests
@@ -30,10 +30,10 @@
       if ([str hasPrefix:@"a"]) {
         str = [str substringFromIndex:1];
       }
-      STAssertTrue([str isEqualToString:longLine], @"output lines should be equal to input lines");
+      XCTAssertTrue([str isEqualToString:longLine], @"output lines should be equal to input lines");
       lineCount++;
     });
-    STAssertEquals(lineCount, 3, @"should have emitted 3 lines");
+    XCTAssertEqual(lineCount, 3, @"should have emitted 3 lines");
   }
 }
 

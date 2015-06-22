@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		285C16D317CD1788007FFC0C /* OCHamcrest.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 28F48A01179742CA00068E00 /* OCHamcrest.framework */; };
 		285C16D417CD1788007FFC0C /* OCMockito.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 28F48A02179742CA00068E00 /* OCMockito.framework */; };
-		2893A95017960CD400EFBD28 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2893A94F17960CD400EFBD28 /* SenTestingKit.framework */; };
 		2893A95217960CD400EFBD28 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2893A95117960CD400EFBD28 /* Cocoa.framework */; };
 		2893A95C17960CD400EFBD28 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2893A95A17960CD400EFBD28 /* InfoPlist.strings */; };
 		2893A96B17960D2000EFBD28 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2893A96A17960D2000EFBD28 /* Foundation.framework */; };
@@ -167,8 +166,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		2893A94C17960CD400EFBD28 /* reporters-tests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "reporters-tests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2893A94F17960CD400EFBD28 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		2893A94C17960CD400EFBD28 /* reporters-tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "reporters-tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2893A95117960CD400EFBD28 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		2893A95417960CD400EFBD28 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		2893A95517960CD400EFBD28 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -236,7 +234,6 @@
 			files = (
 				28F48A03179742CA00068E00 /* OCHamcrest.framework in Frameworks */,
 				28F48A04179742CA00068E00 /* OCMockito.framework in Frameworks */,
-				2893A95017960CD400EFBD28 /* SenTestingKit.framework in Frameworks */,
 				2893A95217960CD400EFBD28 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -330,7 +327,7 @@
 		2893A94D17960CD400EFBD28 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2893A94C17960CD400EFBD28 /* reporters-tests.octest */,
+				2893A94C17960CD400EFBD28 /* reporters-tests.xctest */,
 				2893A96917960D2000EFBD28 /* pretty */,
 				28F489ED1797362400068E00 /* plain */,
 				28F48A09179743AE00068E00 /* phabricator */,
@@ -348,7 +345,6 @@
 			children = (
 				28F48A01179742CA00068E00 /* OCHamcrest.framework */,
 				28F48A02179742CA00068E00 /* OCMockito.framework */,
-				2893A94F17960CD400EFBD28 /* SenTestingKit.framework */,
 				2893A95117960CD400EFBD28 /* Cocoa.framework */,
 				2893A96A17960D2000EFBD28 /* Foundation.framework */,
 				2893A95317960CD400EFBD28 /* Other Frameworks */,
@@ -504,8 +500,8 @@
 			);
 			name = "reporters-tests";
 			productName = "reporters-tests";
-			productReference = 2893A94C17960CD400EFBD28 /* reporters-tests.octest */;
-			productType = "com.apple.product-type.bundle.ocunit-test";
+			productReference = 2893A94C17960CD400EFBD28 /* reporters-tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		2893A96817960D2000EFBD28 /* pretty */ = {
 			isa = PBXNativeTarget;
@@ -853,6 +849,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
 					"\"$(SRCROOT)/../Vendor\"",
+					"$(inherited)",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -873,7 +870,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -894,6 +890,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
 					"\"$(SRCROOT)/../Vendor\"",
+					"$(inherited)",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -906,7 +903,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};

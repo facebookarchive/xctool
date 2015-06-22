@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "XCToolUtil.h"
 #import "Swizzler.h"
@@ -22,7 +22,7 @@
 #import "FakeTaskManager.h"
 #import "FakeTask.h"
 
-@interface XCToolUtilTests : SenTestCase
+@interface XCToolUtilTests : XCTestCase
 @end
 
 @implementation XCToolUtilTests

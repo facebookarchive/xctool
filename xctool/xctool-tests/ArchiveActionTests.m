@@ -1,5 +1,5 @@
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "FakeTask.h"
 #import "FakeTaskManager.h"
@@ -7,7 +7,7 @@
 #import "TestUtil.h"
 #import "XCTool.h"
 
-@interface ArchiveActionTests : SenTestCase
+@interface ArchiveActionTests : XCTestCase
 @end
 
 @implementation ArchiveActionTests

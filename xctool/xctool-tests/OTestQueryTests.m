@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "OCUnitIOSAppTestQueryRunner.h"
 #import "OCUnitIOSLogicTestQueryRunner.h"
@@ -38,7 +38,7 @@
 }
 @end
 
-@interface OTestQueryTests : SenTestCase
+@interface OTestQueryTests : XCTestCase
 @end
 
 @implementation OTestQueryTests

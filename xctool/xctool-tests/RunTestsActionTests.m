@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "Action.h"
 #import "ContainsArray.h"
@@ -59,7 +59,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
   return YES;
 }
 
-@interface RunTestsActionTests : SenTestCase
+@interface RunTestsActionTests : XCTestCase
 @end
 
 @implementation RunTestsActionTests

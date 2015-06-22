@@ -16,7 +16,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "ContainsArray.h"
 #import "FakeTask.h"
@@ -28,7 +28,7 @@
 #import "XcodeSubjectInfo.h"
 #import "XcodeTargetMatch.h"
 
-@interface XcodeSubjectInfoTests : SenTestCase
+@interface XcodeSubjectInfoTests : XCTestCase
 @end
 
 @implementation XcodeSubjectInfoTests

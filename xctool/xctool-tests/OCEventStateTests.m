@@ -14,7 +14,7 @@
 // limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "EventBuffer.h"
 #import "EventSink.h"
@@ -22,7 +22,7 @@
 #import "ReporterEvents.h"
 #import "TestUtil.h"
 
-@interface OCEventStateTests : SenTestCase
+@interface OCEventStateTests : XCTestCase
 @end
 
 @implementation OCEventStateTests
@@ -30,7 +30,7 @@
 - (void)testParseEvent
 {
   OCEventState *state = [[OCEventState alloc] initWithReporters: @[]];
-  STAssertEqualObjects([state reporters], @[], @"Reporters are not equal");
+  XCTAssertEqualObjects([state reporters], @[], @"Reporters are not equal");
 }
 
 - (void)testPublishWithEvent

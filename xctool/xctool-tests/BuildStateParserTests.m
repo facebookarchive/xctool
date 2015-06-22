@@ -14,11 +14,11 @@
 // limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "BuildStateParser.h"
 
-@interface BuildStateParserTests : SenTestCase
+@interface BuildStateParserTests : XCTestCase
 @end
 
 @implementation BuildStateParserTests
