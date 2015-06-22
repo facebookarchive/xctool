@@ -7,10 +7,14 @@ void ParseClassAndMethodFromTestName(NSString **className, NSString **methodName
   NSCAssert(methodName, @"methodName should be non-nil");
   NSCAssert(testName, @"testName should be non-nil");
 
-  NSRegularExpression *testNameRegex =
-  [NSRegularExpression regularExpressionWithPattern:@"^-\\[([\\w.]+) (\\w+)\\]$"
-                                            options:0
-                                              error:nil];
+  static dispatch_once_t onceToken;
+  static NSRegularExpression *testNameRegex;
+  dispatch_once(&onceToken, ^{
+    testNameRegex = [[NSRegularExpression alloc] initWithPattern:@"^-\\[([\\w.]+) (\\w+)\\]$"
+                                                         options:0
+                                                           error:nil];
+  });
+
   NSTextCheckingResult *match =
   [testNameRegex firstMatchInString:testName
                             options:0

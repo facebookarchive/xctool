@@ -114,10 +114,14 @@ static dispatch_queue_t EventQueue()
 // those codes as well was not necessary
 static NSString *StripAnsi(NSString *inputString)
 {
-  NSRegularExpression *regex =
-    [NSRegularExpression regularExpressionWithPattern:@"\\e\\[(\\d;)??(\\d{1,2}[mHfABCDJhI])"
-                                              options:0
-                                                error:nil];
+  static dispatch_once_t onceToken;
+  static NSRegularExpression *regex;
+  dispatch_once(&onceToken, ^{
+    regex = [[NSRegularExpression alloc] initWithPattern:@"\\e\\[(\\d;)??(\\d{1,2}[mHfABCDJhI])"
+                                                 options:0
+                                                   error:nil];
+  });
+
   NSString *outputString = [regex stringByReplacingMatchesInString:inputString
                                                            options:0
                                                              range:NSMakeRange(0, [inputString length])
