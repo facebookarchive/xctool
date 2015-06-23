@@ -40,6 +40,7 @@
   NSMutableArray *args = [@[] mutableCopy];
   NSMutableDictionary *env = [self environmentOverrides];
   if (ToolchainIsXcode7OrBetter()) {
+    [args addObjectsFromArray:[self commonTestArguments]];
     [env addEntriesFromDictionary:[self testEnvironmentWithSpecifiedTestConfiguration]];
   } else {
     [args addObjectsFromArray:[self testArgumentsWithSpecifiedTestsToRun]];

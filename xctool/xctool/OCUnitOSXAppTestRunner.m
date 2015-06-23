@@ -51,11 +51,12 @@
     @"OBJC_DISABLE_GC" : !_garbageCollection ? @"YES" : @"NO",
   }];
 
-  NSMutableArray *args = [@[] mutableCopy];
+  NSArray *args = nil;
   if (ToolchainIsXcode7OrBetter()) {
+    args = [self commonTestArguments];
     [environment addEntriesFromDictionary:[self testEnvironmentWithSpecifiedTestConfiguration]];
   } else {
-    [args addObjectsFromArray:[self testArgumentsWithSpecifiedTestsToRun]];
+    args = [self testArgumentsWithSpecifiedTestsToRun];
   }
 
   NSTask *task = CreateTaskInSameProcessGroup();
