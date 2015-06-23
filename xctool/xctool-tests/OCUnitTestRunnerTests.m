@@ -19,6 +19,8 @@
 #import "TestUtil.h"
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
+#import "XCTestConfiguration.h"
+#import "XCTestConfigurationUnarchiver.h"
 
 @interface OCUnitTestRunner ()
 @property (nonatomic, copy) SimulatorInfo *simulatorInfo;
@@ -261,7 +263,8 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
 
   assertThatInteger([launchedTasks count], equalToInteger(1));
 
-  assertThat([launchedTasks[0] arguments],
+  NSArray *arguments = [launchedTasks[0] arguments];
+  assertThat(arguments,
              containsArray(@[@"-SomeArg",
                              @"SomeVal",
                              ]));
@@ -303,6 +306,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
     Xcode_SDKROOT: @"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk",
     Xcode_BUILT_PRODUCTS_DIR: TEST_DATA @"tests-osx-test-bundle",
     Xcode_FULL_PRODUCT_NAME: @"TestProject-Library-XCTest-OSXTests.xctest",
+    Xcode_PRODUCT_MODULE_NAME: @"TestProject-Library",
   };
 
   NSArray *launchedTasks = nil;
@@ -313,8 +317,17 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
 
   assertThatInteger([launchedTasks count], equalToInteger(1));
 
-  assertThat([launchedTasks[0] arguments],
-             containsArray(@[TEST_DATA @"tests-osx-test-bundle/TestProject-Library-XCTest-OSXTests.xctest"]));
+  NSString *testBundlePath = TEST_DATA @"tests-osx-test-bundle/TestProject-Library-XCTest-OSXTests.xctest";
+  if (ToolchainIsXcode7OrBetter()) {
+    NSString *XCTestConfigurationFilePath = [launchedTasks[0] environment][@"XCTestConfigurationFilePath"];
+    XCTAssertNotNil(XCTestConfigurationFilePath, @"Unepxected environment: %@", [launchedTasks[0] environment]);
+    XCTestConfiguration *configuration = [XCTestConfigurationUnarchiver unarchiveFromFile:XCTestConfigurationFilePath];
+    XCTAssertNotNil(configuration, @"Couldn't read configuration file at path: %@", XCTestConfigurationFilePath);
+    assertThat(configuration.productModuleName, equalTo(@"TestProject-Library"));
+    XCTAssert([[configuration.testBundleURL path] hasSuffix:testBundlePath]);
+  } else {
+    assertThat([launchedTasks[0] arguments], containsArray(@[testBundlePath]));
+  }
 }
 
 - (void)testTestArgumentsAlwaysIncludesCommonItems

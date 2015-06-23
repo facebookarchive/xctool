@@ -103,6 +103,14 @@ static NSTask *OtestShimTask(NSString *platformName,
   // the latest available SDK.
   targetSettings[Xcode_SDK_NAME] = GetAvailableSDKsAndAliases()[[platformName lowercaseString]];
 
+  // We should pass full path to the test bundle
+  bundlePath = [[[NSFileManager defaultManager] currentDirectoryPath] stringByAppendingPathComponent:bundlePath];
+
+  if (ToolchainIsXcode7OrBetter()) {
+    targetSettings[Xcode_BUILT_PRODUCTS_DIR] = [bundlePath stringByDeletingLastPathComponent];
+    targetSettings[Xcode_FULL_PRODUCT_NAME] = [bundlePath lastPathComponent];
+  }
+
   // set up an OCUnitIOSLogicTestRunner
   OCUnitIOSLogicTestRunner *runner = [[testRunnerClass alloc] initWithBuildSettings:targetSettings
                                                                       simulatorInfo:[[SimulatorInfo alloc] init]
@@ -115,8 +123,6 @@ static NSTask *OtestShimTask(NSString *platformName,
                                                                        freshInstall:NO
                                                                         testTimeout:1
                                                                           reporters:@[]];
-  // We should pass full path to the test bundle
-  bundlePath = [[[NSFileManager defaultManager] currentDirectoryPath] stringByAppendingPathComponent:bundlePath];
   NSTask *task = [runner otestTaskWithTestBundle: bundlePath];
 
   // Make sure launch path is accessible.
@@ -200,6 +206,11 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
 
 - (void)testSenTestingKitAssertionFailuresInIOSLogicTestsAreNotSilent
 {
+  if (ToolchainIsXcode7OrBetter()) {
+    // octest isn't supported in Xcode 7
+    return;
+  }
+
   NSString *bundlePath = TEST_DATA @"tests-ios-test-bundle/SenTestingKit_Assertion.octest";
   NSString *targetName = @"SenTestingKit_Assertion";
   NSString *settingsPath = TEST_DATA @"TestProject-Assertion-SenTestingKit_Assertion-showBuildSettings.txt";
@@ -250,6 +261,11 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
 
 - (void)testSenTestingKitExpectedAssertionFailuresInIOSLogicTestsAreSilent
 {
+  if (ToolchainIsXcode7OrBetter()) {
+    // octest isn't supported in Xcode 7
+    return;
+  }
+
   NSString *bundlePath = TEST_DATA @"tests-ios-test-bundle/SenTestingKit_Assertion.octest";
   NSString *targetName = @"SenTestingKit_Assertion";
   NSString *settingsPath = TEST_DATA @"TestProject-Assertion-SenTestingKit_Assertion-showBuildSettings.txt";
@@ -296,6 +312,11 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
 
 - (void)testSenTestingKitMissingExpectedAssertionsAreNotSilent
 {
+  if (ToolchainIsXcode7OrBetter()) {
+    // octest isn't supported in Xcode 7
+    return;
+  }
+
   NSString *bundlePath = TEST_DATA @"tests-ios-test-bundle/SenTestingKit_Assertion.octest";
   NSString *targetName = @"SenTestingKit_Assertion";
   NSString *settingsPath = TEST_DATA @"TestProject-Assertion-SenTestingKit_Assertion-showBuildSettings.txt";
@@ -342,6 +363,12 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
 
 - (void)testOutputBeforeTestBundleStartsIsCaptured
 {
+  if (ToolchainIsXcode7OrBetter()) {
+    // octest isn't supported in Xcode 7
+    // TODO: Rewrite test to test xctest bundles.
+    return;
+  }
+
   NSString *bundlePath = TEST_DATA @"TestThatThrowsExceptionOnStart/Build/Products/Debug/TestThatThrowsExceptionOnStart.octest";
   NSString *targetName = @"TestThatThrowsExceptionOnStart";
   NSString *settingsPath = TEST_DATA @"TestThatThrowsExceptionOnStart/TestThatThrowsExceptionOnStart-showBuildSettings.txt";
@@ -359,6 +386,11 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
 
 - (void)testSenTestingKitExceptionIsThrownWhenTestTimeoutIsHit
 {
+  if (ToolchainIsXcode7OrBetter()) {
+    // octest isn't supported in Xcode 7
+    return;
+  }
+
   NSString *bundlePath = TEST_DATA @"tests-ios-test-bundle/TestProject-LibraryTests.octest";
   NSString *targetName = @"TestProject-LibraryTests";
   NSString *settingsPath = TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings.txt";

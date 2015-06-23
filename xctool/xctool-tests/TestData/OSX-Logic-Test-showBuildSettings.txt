@@ -205,6 +205,7 @@ Build settings for action build and target TestProject-Library-OSXTests:
     PRESERVE_DEAD_CODE_INITS_AND_TERMS = NO
     PRIVATE_HEADERS_FOLDER_PATH = TestProject-Library-OSXTests.octest/Contents/PrivateHeaders
     PRODUCT_NAME = TestProject-Library-OSXTests
+    PRODUCT_MODULE_NAME = TestProject-Library-OSXTests
     PRODUCT_SETTINGS_PATH = /Users/fpotter/xctool/xctool/xctool-tests/TestData/TestProject-Library-OSX/TestProject-Library-OSXTests/TestProject-Library-OSXTests-Info.plist
     PRODUCT_TYPE = com.apple.product-type.bundle
     PROFILING_CODE = NO

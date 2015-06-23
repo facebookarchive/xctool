@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
    LastUpgradeVersion = "0700"
-   version = "1.3">
+   version = "1.8">
    <BuildAction
       parallelizeBuildables = "NO"
       buildImplicitDependencies = "NO">
@@ -253,7 +253,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2893A94B17960CD400EFBD28"
-               BuildableName = "reporters-tests.octest"
+               BuildableName = "reporters-tests.xctest"
                BlueprintName = "reporters-tests"
                ReferencedContainer = "container:../reporters/reporters.xcodeproj">
             </BuildableReference>
@@ -267,7 +267,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "283CCAC116C2EE9900F2E343"
-               BuildableName = "xctool-tests.octest"
+               BuildableName = "xctool-tests.xctest"
                BlueprintName = "xctool-tests"
                ReferencedContainer = "container:xctool.xcodeproj">
             </BuildableReference>
@@ -285,7 +285,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "283CCAC116C2EE9900F2E343"
-               BuildableName = "xctool-tests.octest"
+               BuildableName = "xctool-tests.xctest"
                BlueprintName = "xctool-tests"
                ReferencedContainer = "container:xctool.xcodeproj">
             </BuildableReference>
@@ -295,7 +295,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2893A94B17960CD400EFBD28"
-               BuildableName = "reporters-tests.octest"
+               BuildableName = "reporters-tests.xctest"
                BlueprintName = "reporters-tests"
                ReferencedContainer = "container:../reporters/reporters.xcodeproj">
             </BuildableReference>

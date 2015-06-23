@@ -45,6 +45,11 @@
 
 - (void)testCanQueryClassesFromOSXBundle
 {
+  if (ToolchainIsXcode7OrBetter()) {
+    // octest isn't supported in Xcode 7
+    return;
+  }
+
   NSString *error = nil;
   NSDictionary *buildSettings = @{
     Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"tests-osx-test-bundle"),
@@ -64,6 +69,12 @@
 
 - (void)testCanQueryClassesFromOSXBundle_AppTests
 {
+  if (ToolchainIsXcode7OrBetter()) {
+    // octest isn't supported in Xcode 7
+    // TODO: Rewrite test to test xctest bundles.
+    return;
+  }
+
   NSString *error = nil;
   NSDictionary *buildSettings = @{
                                   Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"TestProject-App-OSX/Build/Products/Debug"),
@@ -106,6 +117,11 @@
 
 - (void)testCanQueryClassesFromIOSBundle
 {
+  if (ToolchainIsXcode7OrBetter()) {
+    // octest isn't supported in Xcode 7
+    return;
+  }
+
   NSString *error = nil;
   NSString *latestSDK = GetAvailableSDKsAndAliases()[@"iphonesimulator"];
   NSDictionary *buildSettings = @{
@@ -163,6 +179,11 @@
 
 - (void)testCanQueryTestCasesForIOSKiwiBundle_OCUnit
 {
+  if (ToolchainIsXcode7OrBetter()) {
+    // octest isn't supported in Xcode 7
+    return;
+  }
+
   NSString *error = nil;
   NSDictionary *buildSettings = @{
                                   Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"KiwiTests/Build/Products/Debug-iphonesimulator"),
@@ -229,6 +250,11 @@
 
 - (void)testCanQueryTestCasesForIOSKiwiBundle_OCUnit_AppTests
 {
+  if (ToolchainIsXcode7OrBetter()) {
+    // octest isn't supported in Xcode 7
+    return;
+  }
+
   NSString *error = nil;
   NSDictionary *buildSettings = @{
                                   Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"KiwiTests/Build/Products/Debug-iphonesimulator"),

@@ -31,6 +31,7 @@
 #import "XCTool.h"
 #import "XCToolUtil.h"
 #import "XcodeSubjectInfo.h"
+#import "XCTestConfiguration.h"
 
 @interface OCUnitTestRunner ()
 @property (nonatomic, copy) SimulatorInfo *simulatorInfo;
@@ -234,6 +235,12 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
 
 - (void)testRunTestsAction
 {
+  if (ToolchainIsXcode7OrBetter()) {
+    // octest isn't supported in Xcode 7
+    // TODO: Rewrite test to test xctest bundles.
+    return;
+  }
+
   NSArray *testList = @[@"TestProject_LibraryTests/testOutputMerging",
                         @"TestProject_LibraryTests/testPrintSDK",
                         @"TestProject_LibraryTests/testStream",
@@ -278,6 +285,8 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
 
     [TestUtil runWithFakeStreams:tool];
 
+    NSString *action = ToolchainIsXcode7OrBetter() ? @"build" : @"test";
+
     NSArray *launchedTasks = [[FakeTaskManager sharedManager] launchedTasks];
     assertThatInteger([launchedTasks count], equalToInteger(2));
     assertThat([launchedTasks[0] arguments],
@@ -293,7 +302,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                        @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products",
                        @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates/PrecompiledHeaders",
                        @"TARGETED_DEVICE_FAMILY=1",
-                       @"test",
+                       action,
                        @"-showBuildSettings",
                        ]));
     assertThat([launchedTasks[0] environment][@"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET"], equalTo(@"TestProject-LibraryTests"));
@@ -354,6 +363,12 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
 
 - (void)testCanRunTestsAgainstDifferentTestSDK
 {
+  if (ToolchainIsXcode7OrBetter()) {
+    // octest isn't supported in Xcode 7
+    // TODO: Rewrite test to test xctest bundles.
+    return;
+  }
+
   NSArray *testList = @[@"TestProject_LibraryTests/testBacktraceOutputIsCaptured",
                         @"TestProject_LibraryTests/testOutputMerging",
                         @"TestProject_LibraryTests/testPrintSDK",
@@ -402,6 +417,8 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
 
     NSArray *launchedTasks = [[FakeTaskManager sharedManager] launchedTasks];
 
+    NSString *action = ToolchainIsXcode7OrBetter() ? @"build" : @"test";
+
     assertThatInteger([launchedTasks count], equalToInteger(2));
     assertThat([launchedTasks[0] arguments],
                equalTo(@[
@@ -416,7 +433,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                        @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products",
                        @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Intermediates/PrecompiledHeaders",
                        @"TARGETED_DEVICE_FAMILY=1",
-                       @"test",
+                       action,
                        @"-showBuildSettings",
                        ]));
     assertThat([launchedTasks[0] environment][@"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET"], equalTo(@"TestProject-LibraryTests"));
@@ -434,6 +451,12 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
 
 - (void)testCanSelectSpecificTestClassOrTestMethodWithOnly
 {
+  if (ToolchainIsXcode7OrBetter()) {
+    // octest isn't supported in Xcode 7
+    // TODO: Rewrite test to test xctest bundles.
+    return;
+  }
+
   NSArray *testList = @[@"OtherTests/testSomething",
                         @"SomeTests/testBacktraceOutputIsCaptured",
                         @"SomeTests/testOutputMerging",
@@ -445,17 +468,17 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
   void (^runWithOnlyArgumentAndExpectSenTestToBe)(NSString *, NSString *) = ^(NSString *onlyArgument, NSString *expectedSenTest) {
     [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
       [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
-                                                                // Make sure -showBuildSettings returns some data
-                                                                [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
-                                                                                                                scheme:@"TestProject-Library"
-                                                                                                          settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
-                                                                // We're going to call -showBuildSettings on the test target.
-                                                                [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
-                                                                                                                target:@"TestProject-LibraryTests"
-                                                                                                          settingsPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings-5.0.txt"
-                                                                                                                  hide:NO],
-                                                                [LaunchHandlers handlerForOtestQueryReturningTestList:testList],
-                                                                [^(FakeTask *task){
+        // Make sure -showBuildSettings returns some data
+        [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
+                                                        scheme:@"TestProject-Library"
+                                                  settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
+        // We're going to call -showBuildSettings on the test target.
+        [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
+                                                        target:@"TestProject-LibraryTests"
+                                                  settingsPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings-5.0.txt"
+                                                          hide:NO],
+        [LaunchHandlers handlerForOtestQueryReturningTestList:testList],
+        [^(FakeTask *task){
         if (IsOtestTask(task)) {
           [task pretendTaskReturnsStandardOutput:
            [NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results-notests.txt"
@@ -486,11 +509,15 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
         @"-NSTreatUnknownArgumentsAsOpen", @"NO",
         @"-ApplePersistenceIgnoreState", @"YES",
         @"-SenTestInvertScope", @"YES"]));
+      assertThat(arguments, containsArray(@[@"-OTEST_TESTLIST_FILE"]));
+      assertThat(arguments, containsArray(@[
+        @"-OTEST_FILTER_TEST_ARGS_KEY", @"SenTest",
+        @"-SenTest", @"XCTOOL_FAKE_LIST_OF_TESTS",
+      ]));
+
       assertThat(arguments, containsArray(@[
         @"/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-amxcwsnetnrvhrdeikqmcczcgmwn/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
       ]));
-      assertThat(arguments, containsArray(@[@"-OTEST_TESTLIST_FILE"]));
-      assertThat(arguments, containsArray(@[@"-OTEST_FILTER_TEST_ARGS_KEY", @"SenTest"]));
     }];
   };
 
@@ -720,6 +747,8 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
 
     [TestUtil runWithFakeStreams:tool];
 
+    NSString *action = ToolchainIsXcode7OrBetter() ? @"build" : @"test";
+
     assertThat([[[FakeTaskManager sharedManager] launchedTasks][0] arguments],
                equalTo(@[
                        @"-configuration",
@@ -739,7 +768,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                        @"SYMROOT=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-dcmgtqlclwxdzqevoakcspwlrpfm/Build/Products",
                        @"SHARED_PRECOMPS_DIR=/Users/fpotter/Library/Developer/Xcode/DerivedData/TestProject-Library-dcmgtqlclwxdzqevoakcspwlrpfm/Build/Intermediates/PrecompiledHeaders",
                        @"TARGETED_DEVICE_FAMILY=1",
-                       @"test",
+                       action,
                        @"-showBuildSettings",
                        ]));
     assertThat([[[FakeTaskManager sharedManager] launchedTasks][0] environment][@"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET"], equalTo(@"TestProject-LibraryTests"));
