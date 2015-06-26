@@ -1,5 +1,5 @@
 //
-// Copyright 2013 Facebook
+// Copyright 2004-present Facebook. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -931,7 +931,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   _sharedPrecompsDir = targetSettings[Xcode_SHARED_PRECOMPS_DIR];
   _effectivePlatformName = targetSettings[Xcode_EFFECTIVE_PLATFORM_NAME];
   _targetedDeviceFamily = targetSettings[Xcode_TARGETED_DEVICE_FAMILY];
-  
+
   NSString *matchingSchemePath = nil;
 
   if (_subjectWorkspace) {

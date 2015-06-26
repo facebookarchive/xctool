@@ -1,5 +1,5 @@
 //
-// Copyright 2013 Facebook
+// Copyright 2004-present Facebook. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -440,7 +440,7 @@
     *errorMessage = [NSString stringWithFormat:@"Project must end in .xcodeproj: %@", _project];
     return NO;
   }
-  
+
   if (_resultBundlePath) {
     BOOL isDirectory = NO;
     BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:_resultBundlePath isDirectory:&isDirectory];
@@ -674,7 +674,7 @@
   if (_resultBundlePath) {
     [arguments addObjectsFromArray:@[@"-resultBundlePath", _resultBundlePath]];
   }
-    
+
   [_buildSettings enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop){
     [arguments addObject:[NSString stringWithFormat:@"%@=%@", key, obj]];
   }];

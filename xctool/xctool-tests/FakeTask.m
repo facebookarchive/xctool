@@ -1,5 +1,5 @@
 //
-// Copyright 2013 Facebook
+// Copyright 2004-present Facebook. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ static void writeAll(int fildes, const void *buf, size_t nbyte) {
 }
 
 @interface FakeTask ()
-@property (assign, readwrite) int terminationStatus;
+@property (atomic, assign, readwrite) int terminationStatus;
 @end
 
 @implementation FakeTask {
@@ -212,8 +212,7 @@ static void writeAll(int fildes, const void *buf, size_t nbyte) {
   // This is part of NSConcreteTask - we're fine if it's a no-op in tests.
 }
 
-#pragma mark - 
-#pragma mark Setters & Getters
+#pragma mark - Setters & Getters
 
 - (NSTaskTerminationReason)terminationReason
 {

@@ -1,5 +1,5 @@
 //
-// Copyright 2013 Facebook
+// Copyright 2004-present Facebook. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -79,9 +79,9 @@
                               @"iphonesimulator": @"iphonesimulator7.0"};
     // Ensure that the two returned dictionaries are equal in terms of content
     BOOL result = [expected isEqualToDictionary:actual];
-    
+
     assertThatBool(result, equalToBool(YES));
-    
+
   } withDefaultLaunchHandlers:NO];
 }
 
@@ -100,7 +100,7 @@
       }
     }
                                                                ]];
-    
+
     NSDictionary *actual = GetAvailableSDKsInfo();
     NSDictionary *expected = @{@"macosx10.8": @{@"SDK": @"macosx10.8",
                                 @"SDKVersion": @"10.8",
@@ -175,9 +175,9 @@
                                 }};
     // Ensure that the two returned dictionaries are equal in terms of content
     BOOL result = [expected isEqualToDictionary:actual];
-    
+
     assertThatBool(result, equalToBool(YES));
-    
+
   } withDefaultLaunchHandlers:NO];
 }
 

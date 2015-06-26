@@ -1,5 +1,5 @@
 //
-// Copyright 2013 Facebook
+// Copyright 2004-present Facebook. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -298,7 +298,7 @@ NSDictionary *GetAvailableSDKsInfo()
 
     // Pull the SDK value from our capturing group
     NSString *sdkVersion = [str substringWithRange:[match[0] rangeAtIndex:1]];
-    
+
     AddSDKToDictionary(versionsAvailable, scanner, sdkVersion);
   }
 
@@ -829,7 +829,7 @@ NSString *LatestXcodebuildCrashReportPath()
       [crashReports addObject:[directory stringByAppendingPathComponent:file]];
     }
   }
-  
+
   return [crashReports lastObject];
 }
 

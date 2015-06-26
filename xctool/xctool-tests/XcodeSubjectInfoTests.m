@@ -1,5 +1,5 @@
 //
-// Copyright 2013 Facebook
+// Copyright 2004-present Facebook. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -341,12 +341,12 @@
     Options *options = [Options optionsFrom:@[@"-project", TEST_DATA @"ProjectWithOnlyATestTarget/ProjectWithOnlyATestTarget.xcodeproj",
                                               @"-scheme", @"ProjectWithOnlyATestTarget",
                                               ]];
-    
+
     XcodeSubjectInfo *subjectInfo = [[XcodeSubjectInfo alloc] init];
     [subjectInfo setSubjectProject:[options project]];
     [subjectInfo setSubjectScheme:[options scheme]];
     [subjectInfo setSubjectXcodeBuildArguments:[options xcodeBuildArgumentsForSubject]];
-    
+
     [subjectInfo loadSubjectInfo];
 
     NSArray *launchedTasks = [[FakeTaskManager sharedManager] launchedTasks];

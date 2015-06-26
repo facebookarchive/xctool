@@ -236,4 +236,3 @@ struct __va_list_tag {
 @interface NSValue (XCTestAdditions)
 - (id)xct_contentDescription;
 @end
-

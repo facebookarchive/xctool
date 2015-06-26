@@ -1,5 +1,5 @@
 //
-// Copyright 2013 Facebook
+// Copyright 2004-present Facebook. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 
 @interface OCTestSuiteEventState ()
 @property (nonatomic, assign) double totalDuration;
-@property (nonatomic, strong) NSDictionary *beginTestSuiteInfo;
+@property (nonatomic, copy) NSDictionary *beginTestSuiteInfo;
 @end
 
 @implementation OCTestSuiteEventState
@@ -47,7 +47,7 @@
 {
   NSAssert(!_isStarted, @"Test should not have started yet.");
   _isStarted = true;
-  _beginTestSuiteInfo = event;
+  _beginTestSuiteInfo = [event copy];
 
   [self publishWithEvent:event];
 }
@@ -124,8 +124,7 @@
   [_tests makeObjectsPerformSelector:@selector(setReporters:) withObject:reporters];
 }
 
-#pragma mark -
-#pragma mark Test Manipulation Methods
+#pragma mark - Test Manipulation Methods
 
 - (void)insertTest:(OCTestEventState *)test atIndex:(NSUInteger)index
 {
@@ -147,8 +146,7 @@
   }];
 }
 
-#pragma mark -
-#pragma mark Query Test Methods
+#pragma mark - Query Test Methods
 
 - (OCTestEventState *)runningTest
 {
@@ -197,8 +195,7 @@
   }
 }
 
-#pragma mark -
-#pragma mark Counter Methods
+#pragma mark - Counter Methods
 
 - (double)testDuration
 {
