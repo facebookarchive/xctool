@@ -256,6 +256,16 @@ genrule(
 )
 
 apple_library(
+    name = 'otest-shim-sentestingkit',
+    header_path_prefix = 'SenTestingKit',
+    exported_headers = glob(['otest-shim/SenTestingKit/*.h']),
+    exported_preprocessor_flags = ['-DSENTEST_IGNORE_DEPRECATION_WARNING'],
+    frameworks = [
+        '$SDKROOT/System/Library/Frameworks/Foundation.framework',
+    ],
+)
+
+apple_library(
     name = 'otest-shim',
     srcs = COMMON_OTEST_SRCS + glob([
         'otest-shim/otest-shim/**/*.m',
@@ -271,25 +281,20 @@ apple_library(
         'Common/ReporterEvents.h',
         'Common/XCTest.h',
     ],
-    preprocessor_flags = [
-        '-DSENTEST_IGNORE_DEPRECATION_WARNING',
-        '-F$SDKROOT/Developer/Library/Frameworks',
-        '-F$DEVELOPER_DIR/Library/Frameworks',
-    ],
     compiler_flags = [
         # otest-shim/otest-shim/otest-shim.m:118:69: warning: trigraph ignored [-Wtrigraphs]
         # [NSRegularExpression regularExpressionWithPattern:@"\\e\\[(\\d;)??(\\d{1,2}[mHfABCDJhI])"
         '-Wno-trigraphs',
     ],
-    linker_flags = [
-        '-F$SDKROOT/Developer/Library/Frameworks',
-        '-F$DEVELOPER_DIR/Library/Frameworks',
-    ],
+    # this shouldn't be needed as soon as Buck is fixed
+    # it comes from `otest-shim-sentestingkit`'s `exported_preprocessor_flags`
+    preprocessor_flags = ['-DSENTEST_IGNORE_DEPRECATION_WARNING'],
     frameworks = [
         '$SDKROOT/System/Library/Frameworks/Foundation.framework',
-        '$PLATFORM_DIR/Developer/Library/Frameworks/XCTest.framework',
-        '$SDKROOT/Developer/Library/Frameworks/SenTestingKit.framework',
     ],
+    deps = [
+        ':otest-shim-sentestingkit',
+    ]
 )
 
 genrule(
