@@ -1,5 +1,5 @@
 //
-// Copyright 2013 Facebook
+// Copyright 2004-present Facebook. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -113,12 +113,19 @@ static dispatch_queue_t EventQueue()
 // The regex here will identify all screen oriented ANSI escape codes, but will not identify Keyboard String codes.
 // Since Keyboard String codes make no sense in this context, the added complexity of having a regex try to identify
 // those codes as well was not necessary
-static NSString *StripAnsi(NSString *inputString)
+NSString *StripAnsi(NSString *inputString)
 {
   static dispatch_once_t onceToken;
   static NSRegularExpression *regex;
   dispatch_once(&onceToken, ^{
-    regex = [[NSRegularExpression alloc] initWithPattern:@"\\e\\[(\\d;)??(\\d{1,2}[mHfABCDJhI])"
+    NSString *pattern =
+      @"\\\e\\[("          // Esc[
+      @"\\d+;\\d+[Hf]|"    // Esc[Line;ColumnH | Esc[Line;Columnf
+      @"\\d+[ABCD]|"       // Esc[ValueA | Esc[ValueB | Esc[ValueC | Esc[ValueD
+      @"([suKm]|2J)|"      // Esc[s | Esc[u | Esc[2J | Esc[K | Esc[m
+      @"\\=\\d+[hI]|"      // Esc[=Valueh | Esc[=ValueI
+      @"(\\d+;)*(\\d+)m)"; // Esc[Value;...;Valuem
+    regex = [[NSRegularExpression alloc] initWithPattern:pattern
                                                  options:0
                                                    error:nil];
   });

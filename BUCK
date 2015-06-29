@@ -281,11 +281,6 @@ apple_library(
         'Common/ReporterEvents.h',
         'Common/XCTest.h',
     ],
-    compiler_flags = [
-        # otest-shim/otest-shim/otest-shim.m:118:69: warning: trigraph ignored [-Wtrigraphs]
-        # [NSRegularExpression regularExpressionWithPattern:@"\\e\\[(\\d;)??(\\d{1,2}[mHfABCDJhI])"
-        '-Wno-trigraphs',
-    ],
     # this shouldn't be needed as soon as Buck is fixed
     # it comes from `otest-shim-sentestingkit`'s `exported_preprocessor_flags`
     preprocessor_flags = ['-DSENTEST_IGNORE_DEPRECATION_WARNING'],

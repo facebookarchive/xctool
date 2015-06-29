@@ -49,6 +49,10 @@
 		90F7485718E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F7485318E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.m */; };
 		AA318BEA17E9B43000BF159E /* XCTest.h in Headers */ = {isa = PBXBuildFile; fileRef = AA318BE917E9B43000BF159E /* XCTest.h */; };
 		AA318BEB17E9B43000BF159E /* XCTest.h in Headers */ = {isa = PBXBuildFile; fileRef = AA318BE917E9B43000BF159E /* XCTest.h */; };
+		CC839AB81B433F7C007A4EC1 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CC839AB61B433F7C007A4EC1 /* Info.plist */; };
+		CC839AB91B433F7C007A4EC1 /* OtestShimTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CC839AB71B433F7C007A4EC1 /* OtestShimTests.m */; };
+		CC839ABC1B434074007A4EC1 /* otest-shim.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCA9916C2EE4C00F2E343 /* otest-shim.m */; };
+		CC839ABD1B4344BF007A4EC1 /* otest-shim-osx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 282BFE19171602C60022F9FF /* otest-shim-osx.dylib */; };
 		CC8D7759196623160035CC60 /* NSInvocationInSetFix.h in Headers */ = {isa = PBXBuildFile; fileRef = CC8D7757196623160035CC60 /* NSInvocationInSetFix.h */; };
 		CC8D775A196623160035CC60 /* NSInvocationInSetFix.h in Headers */ = {isa = PBXBuildFile; fileRef = CC8D7757196623160035CC60 /* NSInvocationInSetFix.h */; };
 		CC8D775B196623160035CC60 /* NSInvocationInSetFix.m in Sources */ = {isa = PBXBuildFile; fileRef = CC8D7758196623160035CC60 /* NSInvocationInSetFix.m */; };
@@ -88,9 +92,13 @@
 		90F7485218E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SenIsSuperclassOfClassPerformanceFix.h; sourceTree = "<group>"; };
 		90F7485318E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SenIsSuperclassOfClassPerformanceFix.m; sourceTree = "<group>"; };
 		AA318BE917E9B43000BF159E /* XCTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCTest.h; sourceTree = "<group>"; };
+		CC839AB61B433F7C007A4EC1 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CC839AB71B433F7C007A4EC1 /* OtestShimTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OtestShimTests.m; sourceTree = "<group>"; };
+		CC839ABB1B433FB4007A4EC1 /* otest-shim.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "otest-shim.h"; sourceTree = "<group>"; };
 		CC8D7757196623160035CC60 /* NSInvocationInSetFix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSInvocationInSetFix.h; sourceTree = "<group>"; };
 		CC8D7758196623160035CC60 /* NSInvocationInSetFix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSInvocationInSetFix.m; sourceTree = "<group>"; };
 		CC98B9981B3E10CB009DCE15 /* otest-shim.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "otest-shim.xcconfig"; sourceTree = "<group>"; };
+		CCFC5E201B433C1B00C03A8A /* otest-shim-tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "otest-shim-tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +115,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				28E9B9DF16C32E9A00A52E4D /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CCFC5E1D1B433C1B00C03A8A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC839ABD1B4344BF007A4EC1 /* otest-shim-osx.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -131,6 +147,7 @@
 				282BFE29171602F80022F9FF /* otest-shim-osx.xcconfig */,
 				28897FC6173E50F9004BA024 /* Common */,
 				283CCA9516C2EE4C00F2E343 /* otest-shim */,
+				CC839AB51B433F7C007A4EC1 /* otest-shim-tests */,
 				283CCA8E16C2EE4C00F2E343 /* Frameworks */,
 				283CCA8D16C2EE4C00F2E343 /* Products */,
 			);
@@ -141,6 +158,7 @@
 			children = (
 				283CCA8C16C2EE4C00F2E343 /* otest-shim-ios.dylib */,
 				282BFE19171602C60022F9FF /* otest-shim-osx.dylib */,
+				CCFC5E201B433C1B00C03A8A /* otest-shim-tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -201,6 +219,24 @@
 			);
 			name = Common;
 			path = ../Common;
+			sourceTree = "<group>";
+		};
+		CC839AB51B433F7C007A4EC1 /* otest-shim-tests */ = {
+			isa = PBXGroup;
+			children = (
+				CC839ABB1B433FB4007A4EC1 /* otest-shim.h */,
+				CC839AB71B433F7C007A4EC1 /* OtestShimTests.m */,
+				CC839ABA1B433F86007A4EC1 /* Supporting Files */,
+			);
+			path = "otest-shim-tests";
+			sourceTree = "<group>";
+		};
+		CC839ABA1B433F86007A4EC1 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				CC839AB61B433F7C007A4EC1 /* Info.plist */,
+			);
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -281,6 +317,23 @@
 			productReference = 283CCA8C16C2EE4C00F2E343 /* otest-shim-ios.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
+		CCFC5E1F1B433C1B00C03A8A /* otest-shim-tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CCFC5E291B433C1B00C03A8A /* Build configuration list for PBXNativeTarget "otest-shim-tests" */;
+			buildPhases = (
+				CCFC5E1C1B433C1B00C03A8A /* Sources */,
+				CCFC5E1D1B433C1B00C03A8A /* Frameworks */,
+				CCFC5E1E1B433C1B00C03A8A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "otest-shim-tests";
+			productName = "otest-shim-osx-tests";
+			productReference = CCFC5E201B433C1B00C03A8A /* otest-shim-tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -289,6 +342,11 @@
 			attributes = {
 				LastUpgradeCheck = 0630;
 				ORGANIZATIONNAME = "Facebook, Inc.";
+				TargetAttributes = {
+					CCFC5E1F1B433C1B00C03A8A = {
+						CreatedOnToolsVersion = 6.3.2;
+					};
+				};
 			};
 			buildConfigurationList = 283CCA8716C2EE4C00F2E343 /* Build configuration list for PBXProject "otest-shim" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -304,9 +362,21 @@
 			targets = (
 				283CCA8B16C2EE4C00F2E343 /* otest-shim-ios */,
 				282BFE18171602C60022F9FF /* otest-shim-osx */,
+				CCFC5E1F1B433C1B00C03A8A /* otest-shim-tests */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CCFC5E1E1B433C1B00C03A8A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC839AB81B433F7C007A4EC1 /* Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
 		28AA034F18564F1D00854B0E /* Run Script (assert_universal) */ = {
@@ -375,6 +445,15 @@
 				28E44D541811024F00211BD5 /* ParseTestName.m in Sources */,
 				28EC2602184EABF50061C3B2 /* XcodeRequiredVersion.m in Sources */,
 				28897FCB173E50F9004BA024 /* Swizzle.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CCFC5E1C1B433C1B00C03A8A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC839ABC1B434074007A4EC1 /* otest-shim.m in Sources */,
+				CC839AB91B433F7C007A4EC1 /* OtestShimTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -483,6 +562,57 @@
 			};
 			name = Release;
 		};
+		CCFC5E2A1B433C1B00C03A8A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CC98B9981B3E10CB009DCE15 /* otest-shim.xcconfig */;
+			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "otest-shim-tests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		CCFC5E2B1B433C1B00C03A8A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CC98B9981B3E10CB009DCE15 /* otest-shim.xcconfig */;
+			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				INFOPLIST_FILE = "otest-shim-tests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -509,6 +639,15 @@
 			buildConfigurations = (
 				283CCA9E16C2EE4C00F2E343 /* Debug */,
 				283CCA9F16C2EE4C00F2E343 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CCFC5E291B433C1B00C03A8A /* Build configuration list for PBXNativeTarget "otest-shim-tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CCFC5E2A1B433C1B00C03A8A /* Debug */,
+				CCFC5E2B1B433C1B00C03A8A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

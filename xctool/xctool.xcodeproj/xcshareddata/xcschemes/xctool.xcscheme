@@ -272,6 +272,20 @@
                ReferencedContainer = "container:xctool.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CCFC5E1F1B433C1B00C03A8A"
+               BuildableName = "otest-shim-tests.xctest"
+               BlueprintName = "otest-shim-tests"
+               ReferencedContainer = "container:../otest-shim/otest-shim.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -298,6 +312,16 @@
                BuildableName = "reporters-tests.xctest"
                BlueprintName = "reporters-tests"
                ReferencedContainer = "container:../reporters/reporters.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CCFC5E1F1B433C1B00C03A8A"
+               BuildableName = "otest-shim-tests.xctest"
+               BlueprintName = "otest-shim-tests"
+               ReferencedContainer = "container:../otest-shim/otest-shim.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
