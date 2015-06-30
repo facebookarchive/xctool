@@ -636,6 +636,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   NSArray *testableReferenceNodes = [doc nodesForXPath:@"//TestableReference" error:nil];
 
   NSMutableArray *testables = [NSMutableArray array];
+
   for (NSXMLElement *node in testableReferenceNodes) {
     BOOL skipped =
       [[[node attributeForName:@"skipped"] stringValue] isEqualToString:@"YES"] ? YES : NO;
@@ -852,7 +853,6 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   NSArray *buildables = [[self class] buildablesInSchemePath:schemePath
                                                     basePath:BasePathFromSchemePath(schemePath)];
 
-
   // It's possible that the scheme references projects that aren't part of the workspace.  When
   // Xcode encounters these, it just skips them so we'll do the same.
   NSSet *projectPathsInWorkspace = [NSSet setWithArray:[XcodeSubjectInfo projectPathsInWorkspace:_subjectWorkspace]];
@@ -877,6 +877,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
                          ^BOOL(Buildable *obj, NSUInteger idx, BOOL *stop) {
                            return (workspaceContainsProject(obj) && obj.buildForTesting);
                          }]];
+
 }
 
 - (void)populateBuildablesAndTestablesForProjectWithSchemePath:(NSString *)schemePath
@@ -924,6 +925,9 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   // First we need to know the OBJROOT and SYMROOT settings for the project we're testing.
   NSDictionary *settings = [self buildSettingsForATarget];
   NSDictionary *targetSettings = [settings allValues][0];
+
+  _environmentForScripts = [targetSettings copy];
+
   // The following control where our build output goes - we need to make sure we build the tests
   // in the same places as we built the original products - this is what Xcode does.
   _objRoot = targetSettings[Xcode_OBJROOT];
@@ -939,6 +943,12 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   } else {
     matchingSchemePath = [self matchingSchemePathForProject];
   }
+
+  NSError *error = nil;
+  _actionScripts = [[ActionScripts alloc] initWithSchemePath:matchingSchemePath
+                                                 environment:_environmentForScripts
+                                                       error:&error];
+  NSAssert(!error, @"Error parsing Action Scripts: %@", error);
 
   if (_subjectWorkspace) {
     [self populateBuildablesAndTestablesForWorkspaceWithSchemePath:matchingSchemePath];

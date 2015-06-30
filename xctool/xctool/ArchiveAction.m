@@ -19,6 +19,7 @@
 #import "BuildAction.h"
 #import "Options.h"
 #import "XCToolUtil.h"
+#import "XcodeSubjectInfo.h"
 
 @interface ArchiveAction ()
 
@@ -45,10 +46,16 @@
     [arguments addObjectsFromArray:@[@"-archivePath", _archivePath]];
   }
 
-  return RunXcodebuildAndFeedEventsToReporters(arguments,
-                                               @"archive",
-                                               [options scheme],
-                                               [options reporters]);
+  [xcodeSubjectInfo.actionScripts preArchiveWithOptions:options];
+
+  BOOL ret = RunXcodebuildAndFeedEventsToReporters(arguments,
+                                                   @"archive",
+                                                   [options scheme],
+                                                   [options reporters]);
+
+  [xcodeSubjectInfo.actionScripts postArchiveWithOptions:options];
+
+  return ret;
 }
 
 + (NSArray *)options

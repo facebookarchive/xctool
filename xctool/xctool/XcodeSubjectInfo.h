@@ -16,6 +16,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "ActionScripts.h"
+
 @class Testable;
 @class XcodeTargetMatch;
 
@@ -36,6 +38,8 @@
 @property (nonatomic, copy) NSString *effectivePlatformName;
 @property (nonatomic, copy) NSString *targetedDeviceFamily;
 @property (nonatomic, copy) NSArray *testables;
+@property (nonatomic, strong) ActionScripts *actionScripts;
+@property (nonatomic, copy) NSDictionary *environmentForScripts;
 // Everything in the scheme marked as Build for Test
 @property (nonatomic, copy) NSArray *buildablesForTest;
 @property (nonatomic, assign) BOOL parallelizeBuildables;

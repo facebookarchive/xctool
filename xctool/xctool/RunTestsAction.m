@@ -496,13 +496,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
     testables = newTestables;
   }
 
-  if (![self runTestables:testables
-                  options:options
-         xcodeSubjectInfo:xcodeSubjectInfo]) {
-    return NO;
-  }
-
-  return YES;
+  return [self runTestables:testables options:options xcodeSubjectInfo:xcodeSubjectInfo];
 }
 
 - (Class)testRunnerClassForBuildSettings:(NSDictionary *)testableBuildSettings
@@ -726,6 +720,8 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
     return [self listTestsInTestableExecutionInfos:testableExecutionInfos options:options];
   }
 
+  [xcodeSubjectInfo.actionScripts preTestWithOptions:options];
+
   for (TestableExecutionInfo *info in testableExecutionInfos) {
     if (info.buildSettingsError) {
       TestableBlock block = [self blockToAdvertiseMessage:info.buildSettingsError
@@ -889,6 +885,8 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
   dispatch_release(group);
   dispatch_release(queueLimiter);
   dispatch_release(q);
+
+  [xcodeSubjectInfo.actionScripts postTestWithOptions:options];
 
   return succeeded;
 }
