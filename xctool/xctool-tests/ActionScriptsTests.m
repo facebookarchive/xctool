@@ -28,11 +28,6 @@
 
 @implementation ActionScriptsTests
 
-- (void)setUp
-{
-  [super setUp];
-}
-
 static NSArray *GetArgs(NSString *action)
 {
   return @[@"-project", TEST_DATA @"TestProject-Library-OSX/TestProject-Library-OSX.xcodeproj",
@@ -44,46 +39,58 @@ static NSArray *GetArgs(NSString *action)
            ];
 }
 
-- (void)checkOuput:(NSDictionary *)output actions:(NSArray *)actions
+- (void)checkOutput:(NSDictionary *)outputs actions:(NSArray *)actions
 {
-  XCTAssertEqual([output[@"stderr"] length], 0, @"stderr is not empty");
+  XCTAssertEqual([outputs[@"stderr"] length], 0, @"stderr is not empty");
 
-  NSString *out = output[@"stdout"];
+  NSString *output = outputs[@"stdout"];
 
   for (NSString *action in actions) {
-    NSRange range = [out rangeOfString:[NSString stringWithFormat:@"[Info] Running PreAction %@ Scripts...", action]];
+    NSRange range = [output rangeOfString:[NSString stringWithFormat:@"[Info] Running PreAction %@ Scripts...", action]];
     XCTAssertNotEqual(range.location, NSNotFound, @"Failed to match action pattern");
-    range = [out rangeOfString:[NSString stringWithFormat:@"[Info] Running PostAction %@ Scripts...", action]];
+    range = [output rangeOfString:[NSString stringWithFormat:@"[Info] Running PostAction %@ Scripts...", action]];
     XCTAssertNotEqual(range.location, NSNotFound, @"Failed to match action pattern");
   }
 }
 
-- (void)testActionScripts
+- (void)runTestForTestTuple:(NSArray *)test
 {
+  NSString *action = test[0];
+  XCTool *tool = [[XCTool alloc] init];
+  tool.arguments = GetArgs(action);
 
-  NSArray *testTuple = @[
-                         @[@"build", @[@"build"]],
-                         @[@"build-tests", @[@"build"]],
-                         @[@"run-tests", @[@"test"]],
-                         @[@"test", @[@"build", @"test"]],
-                         @[@"archive", @[@"archive"]],
-                         @[@"analyze", @[@"analyze"]]
-                         ];
-
-  for (NSArray *test in testTuple) {
-
-    NSString *action = test[0];
-    XCTool *tool = [[XCTool alloc] init];
-    tool.arguments = GetArgs(action);
-
-    NSDictionary *out = [TestUtil runWithFakeStreams:tool];
-    [self checkOuput:out actions:test[1]];
-  }
+  NSDictionary *output = [TestUtil runWithFakeStreams:tool];
+  [self checkOutput:output actions:test[1]];
 }
 
-- (void) tearDown
+- (void)testActionScriptsWithBuildAction
 {
-  [super tearDown];
+  [self runTestForTestTuple:@[@"build", @[@"build"]]];
+}
+
+- (void)testActionScriptsWithBuildTestsAction
+{
+  [self runTestForTestTuple:@[@"build-tests", @[@"build"]]];
+}
+
+- (void)testActionScriptsWithRunTestsAction
+{
+  [self runTestForTestTuple:@[@"run-tests", @[@"test"]]];
+}
+
+- (void)testActionScriptsWithTestAction
+{
+  [self runTestForTestTuple:@[@"test", @[@"build", @"test"]]];
+}
+
+- (void)testActionScriptsWithArchiveAction
+{
+  [self runTestForTestTuple:@[@"archive", @[@"archive"]]];
+}
+
+- (void)testActionScriptsWithAnalyzeAction
+{
+  [self runTestForTestTuple:@[@"analyze", @[@"analyze"]]];
 }
 
 @end
