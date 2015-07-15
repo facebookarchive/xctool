@@ -69,7 +69,16 @@
           matched = YES;
         }
       } else {
-        NSString *matchingPrefix = [specifier stringByAppendingString:@"/"];
+        NSString *matchingPrefix = nil;
+        if ([specifier length] > 0 &&
+            [specifier characterAtIndex:specifier.length-1] == '*') {
+          // Wild card prefix - remove * and do not append /
+          matchingPrefix = [specifier substringToIndex:specifier.length-1];
+        } else {
+          // Regular case - strict matching
+          matchingPrefix = [specifier stringByAppendingString:@"/"];
+        }
+        
         for (NSString *testCase in testCases) {
           if ([testCase hasPrefix:matchingPrefix]) {
             [matchingSet addObject:testCase];
