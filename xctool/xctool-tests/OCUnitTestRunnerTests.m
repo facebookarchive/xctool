@@ -512,6 +512,10 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
                          @"Cls2/test1",
                          @"Cls2/test2",
                          @"Cls3/test1",
+                         @"OtherClass1/test1",
+                         @"OtherClass2/test1",
+                         @"OtherClass2/test2",
+                         @"OtherNonmatching/test1",
                          ];
   NSString *error = nil;
   assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"All" senTestInvertScope:NO error:&error],
@@ -529,6 +533,10 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
                      @"Cls2/test1",
                      @"Cls2/test2",
                      @"Cls3/test1",
+                     @"OtherClass1/test1",
+                     @"OtherClass2/test1",
+                     @"OtherClass2/test2",
+                     @"OtherNonmatching/test1",
                      ]));
   XCTAssertNil(error, @"Error shouldn't be set");
   assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Cls1,Cls2/test1,Cls3" senTestInvertScope:NO error:&error],
@@ -543,7 +551,40 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
   assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Cls1,Cls2/test1,Cls3" senTestInvertScope:YES error:&error],
              equalTo(@[
                      @"Cls2/test2",
+                     @"OtherClass1/test1",
+                     @"OtherClass2/test1",
+                     @"OtherClass2/test2",
+                     @"OtherNonmatching/test1",
                      ]));
+  XCTAssertNil(error, @"Error shouldn't be set");
+  
+  // Prefix cases
+  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Other*" senTestInvertScope:NO error:&error],
+             equalTo(@[
+                       @"OtherClass1/test1",
+                       @"OtherClass2/test1",
+                       @"OtherClass2/test2",
+                       @"OtherNonmatching/test1"
+                       ]));
+  XCTAssertNil(error, @"Error shouldn't be set");
+
+  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Cls*" senTestInvertScope:NO error:&error],
+             equalTo(@[
+                       @"Cls1/test1",
+                       @"Cls1/test2",
+                       @"Cls1/test3",
+                       @"Cls2/test1",
+                       @"Cls2/test2",
+                       @"Cls3/test1"
+                       ]));
+  XCTAssertNil(error, @"Error shouldn't be set");
+
+  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"OtherC*" senTestInvertScope:NO error:&error],
+             equalTo(@[
+                       @"OtherClass1/test1",
+                       @"OtherClass2/test1",
+                       @"OtherClass2/test2"
+                       ]));
   XCTAssertNil(error, @"Error shouldn't be set");
 }
 
