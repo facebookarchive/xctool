@@ -149,6 +149,15 @@ path/to/xctool.sh \
   test -only SomeTestTarget:SomeTestClass/testSomeMethod
 ```
 
+You can also specify prefix matching for classes or test methods:
+
+```bash
+path/to/xctool.sh \
+  -workspace YourWorkspace.xcworkspace \
+  -scheme YourScheme \
+  test -only SomeTestTarget:SomeTestClassPrefix*,SomeTestClass/testSomeMethodPrefix*
+```
+
 You can also run tests against a different SDK:
 
 ```bash

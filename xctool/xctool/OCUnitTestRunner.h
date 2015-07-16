@@ -43,7 +43,7 @@
  * Filters a list of test class names to only those that match the
  * senTestList and senTestInvertScope constraints.
  *
- * @param testCases An array of test cases ('ClassA/test1', 'ClassB/test2')
+ * @param testCases An array of test cases ('ClassA/test1', 'ClassB/test2', 'Class*', 'Class', 'ClassA/test*')
  * @param senTestList SenTestList string.  e.g. "All", "None", "ClsA,ClsB"
  * @param senTestInvertScope YES if scope should be inverted.
  */

@@ -121,7 +121,8 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
                            mapTo:@selector(setTestSDK:)],
     [Action actionOptionWithName:@"only"
                          aliases:nil
-                     description:@"SPEC is TARGET[:Class/case[,Class2/case2]]"
+                     description:
+     @"SPEC is TARGET[:Class/case[,Class2/case2]]; use * when specifying class or case prefix."
                        paramName:@"SPEC"
                            mapTo:@selector(addOnly:)],
     [Action actionOptionWithName:@"freshSimulator"
