@@ -41,6 +41,22 @@
 
 @implementation OCUnitTestRunner
 
+/**
+ * Helper to check if the string is a prefix wildcard string,
+ * which is a string ending with a star character "*".
+ * If this is the case, a string with the star character is returned, otherwise 'nil'
+ *
+ * @param specifier The string to check
+ */
++ (NSString*)wildcardPrefixFrom:(NSString*)specifier {
+  NSString *resultPrefix = nil;
+  if ([specifier length] > 0 &&
+      [specifier characterAtIndex:specifier.length-1] == '*') {
+    resultPrefix = [specifier substringToIndex:specifier.length-1];
+  }
+  return resultPrefix;
+}
+
 + (NSArray *)filterTestCases:(NSArray *)testCases
              withSenTestList:(NSString *)senTestList
           senTestInvertScope:(BOOL)senTestInvertScope
@@ -62,23 +78,22 @@
 
       // If we have a slash, assume it's in the form of "SomeClass/testMethod"
       BOOL hasClassAndMethod = [specifier rangeOfString:@"/"].length > 0;
-
-      if (hasClassAndMethod) {
+      NSString *matchingPrefix = [self wildcardPrefixFrom:specifier];
+      
+      if (hasClassAndMethod && !matchingPrefix) {
+        // "SomeClass/testMethod"
+        // Use the set for a fast strict matching for this one test
         if ([originalSet containsObject:specifier]) {
           [matchingSet addObject:specifier];
           matched = YES;
         }
       } else {
-        NSString *matchingPrefix = nil;
-        if ([specifier length] > 0 &&
-            [specifier characterAtIndex:specifier.length-1] == '*') {
-          // Wild card prefix - remove * and do not append /
-          matchingPrefix = [specifier substringToIndex:specifier.length-1];
-        } else {
-          // Regular case - strict matching
+        // "SomeClass", or "SomeClassPrefix*", or "SomeClass/testPrefix*"
+        if (!matchingPrefix) {
+          // Regular case - strict matching, append "/" to limit results to all tests for this one class
           matchingPrefix = [specifier stringByAppendingString:@"/"];
         }
-        
+
         for (NSString *testCase in testCases) {
           if ([testCase hasPrefix:matchingPrefix]) {
             [matchingSet addObject:testCase];

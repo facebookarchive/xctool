@@ -45,7 +45,8 @@
                            mapTo:@selector(setTestSDK:)],
     [Action actionOptionWithName:@"only"
                          aliases:nil
-                     description:@"SPEC is TARGET[:Class/case[,Class2/case2]], or TEST:ClassPrefix*"
+                     description:
+     @"SPEC is TARGET[:Class/case[,Class2/case2]], or TARGET:ClassPrefix*, or TARGET:Class/casePrefix*"
                        paramName:@"SPEC"
                            mapTo:@selector(addOnly:)],
     [Action actionOptionWithName:@"skip-deps"
