@@ -48,7 +48,7 @@
  *
  * @param specifier The string to check
  */
-+ (NSString*)wildcardPrefixFrom:(NSString*)specifier {
++ (NSString *)wildcardPrefixFrom:(NSString *)specifier {
   NSString *resultPrefix = nil;
   if ([specifier length] > 0 &&
       [specifier characterAtIndex:specifier.length-1] == '*') {
