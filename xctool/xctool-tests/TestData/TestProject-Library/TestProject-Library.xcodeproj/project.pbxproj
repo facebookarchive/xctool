@@ -18,6 +18,14 @@
 		2828294216B11F0F00426B92 /* SomeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2828294116B11F0F00426B92 /* SomeTests.m */; };
 		28A33D1316CF4FFD00C5EE2A /* OtherTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A33D1216CF4FFD00C5EE2A /* OtherTests.m */; };
 		28B3C3AF1731B33C00EC75E5 /* DisabledTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28B3C3AE1731B33C00EC75E5 /* DisabledTests.m */; };
+		CC169F021B66F9F200C431D5 /* SomeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2828294116B11F0F00426B92 /* SomeTests.m */; };
+		CC169F031B66F9F200C431D5 /* OtherTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A33D1216CF4FFD00C5EE2A /* OtherTests.m */; };
+		CC169F041B66F9F200C431D5 /* DisabledTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28B3C3AE1731B33C00EC75E5 /* DisabledTests.m */; };
+		CC169F061B66F9F200C431D5 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2828293216B11F0F00426B92 /* SenTestingKit.framework */; };
+		CC169F071B66F9F200C431D5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2828293416B11F0F00426B92 /* UIKit.framework */; };
+		CC169F081B66F9F200C431D5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2828292316B11F0F00426B92 /* Foundation.framework */; };
+		CC169F091B66F9F200C431D5 /* libTestProject-Library.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2828292016B11F0F00426B92 /* libTestProject-Library.a */; };
+		CC169F0B1B66F9F200C431D5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2828293D16B11F0F00426B92 /* InfoPlist.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -50,6 +58,8 @@
 		28A33D1216CF4FFD00C5EE2A /* OtherTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OtherTests.m; sourceTree = "<group>"; };
 		28B3C3AD1731B33C00EC75E5 /* DisabledTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisabledTests.h; sourceTree = "<group>"; };
 		28B3C3AE1731B33C00EC75E5 /* DisabledTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisabledTests.m; sourceTree = "<group>"; };
+		CC169F101B66F9F200C431D5 /* Target-Name-With-Spaces.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Target-Name-With-Spaces.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC169F111B66F9F200C431D5 /* TestProject-Target-Name-With-Spaces-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "TestProject-Target-Name-With-Spaces-Info.plist"; path = "/Users/nekto/Projects/xctool/xctool/xctool-tests/TestData/TestProject-Library/TestProject-Target-Name-With-Spaces-Info.plist"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +82,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CC169F051B66F9F200C431D5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC169F061B66F9F200C431D5 /* SenTestingKit.framework in Frameworks */,
+				CC169F071B66F9F200C431D5 /* UIKit.framework in Frameworks */,
+				CC169F081B66F9F200C431D5 /* Foundation.framework in Frameworks */,
+				CC169F091B66F9F200C431D5 /* libTestProject-Library.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -90,6 +111,7 @@
 			children = (
 				2828292016B11F0F00426B92 /* libTestProject-Library.a */,
 				2828293116B11F0F00426B92 /* TestProject-LibraryTests.octest */,
+				CC169F101B66F9F200C431D5 /* Target-Name-With-Spaces.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -139,6 +161,7 @@
 		2828293B16B11F0F00426B92 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				CC169F111B66F9F200C431D5 /* TestProject-Target-Name-With-Spaces-Info.plist */,
 				2828293C16B11F0F00426B92 /* TestProject-LibraryTests-Info.plist */,
 				2828293D16B11F0F00426B92 /* InfoPlist.strings */,
 			);
@@ -183,6 +206,24 @@
 			productReference = 2828293116B11F0F00426B92 /* TestProject-LibraryTests.octest */;
 			productType = "com.apple.product-type.bundle.ocunit-test";
 		};
+		CC169F001B66F9F200C431D5 /* Target Name With Spaces */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CC169F0D1B66F9F200C431D5 /* Build configuration list for PBXNativeTarget "Target Name With Spaces" */;
+			buildPhases = (
+				CC169F011B66F9F200C431D5 /* Sources */,
+				CC169F051B66F9F200C431D5 /* Frameworks */,
+				CC169F0A1B66F9F200C431D5 /* Resources */,
+				CC169F0C1B66F9F200C431D5 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Target Name With Spaces";
+			productName = "TestProject-LibraryTests";
+			productReference = CC169F101B66F9F200C431D5 /* Target-Name-With-Spaces.octest */;
+			productType = "com.apple.product-type.bundle.ocunit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -205,6 +246,7 @@
 			targets = (
 				2828291F16B11F0F00426B92 /* TestProject-Library */,
 				2828293016B11F0F00426B92 /* TestProject-LibraryTests */,
+				CC169F001B66F9F200C431D5 /* Target Name With Spaces */,
 			);
 		};
 /* End PBXProject section */
@@ -218,10 +260,31 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CC169F0A1B66F9F200C431D5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC169F0B1B66F9F200C431D5 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
 		2828292F16B11F0F00426B92 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+		CC169F0C1B66F9F200C431D5 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -252,6 +315,16 @@
 				2828294216B11F0F00426B92 /* SomeTests.m in Sources */,
 				28A33D1316CF4FFD00C5EE2A /* OtherTests.m in Sources */,
 				28B3C3AF1731B33C00EC75E5 /* DisabledTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CC169F011B66F9F200C431D5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC169F021B66F9F200C431D5 /* SomeTests.m in Sources */,
+				CC169F031B66F9F200C431D5 /* OtherTests.m in Sources */,
+				CC169F041B66F9F200C431D5 /* DisabledTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -377,6 +450,46 @@
 			};
 			name = Release;
 		};
+		CC169F0E1B66F9F200C431D5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					armv7,
+					armv7s,
+				);
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TestProject-Library/TestProject-Library-Prefix.pch";
+				INFOPLIST_FILE = "TestProject-Target-Name-With-Spaces-Info.plist";
+				PRODUCT_NAME = "Target-Name-With-Spaces";
+				VALID_ARCHS = "armv7 armv7s";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		CC169F0F1B66F9F200C431D5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					armv7,
+					armv7s,
+				);
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "TestProject-Library/TestProject-Library-Prefix.pch";
+				INFOPLIST_FILE = "TestProject-Target-Name-With-Spaces-Info.plist";
+				PRODUCT_NAME = "Target-Name-With-Spaces";
+				VALID_ARCHS = "armv7 armv7s";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -403,6 +516,15 @@
 			buildConfigurations = (
 				2828294916B11F0F00426B92 /* Debug */,
 				2828294A16B11F0F00426B92 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CC169F0D1B66F9F200C431D5 /* Build configuration list for PBXNativeTarget "Target Name With Spaces" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CC169F0E1B66F9F200C431D5 /* Debug */,
+				CC169F0F1B66F9F200C431D5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

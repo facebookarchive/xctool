@@ -70,18 +70,13 @@
     }
     ]];
     NSDictionary *actual = GetAvailableSDKsAndAliases();
-    NSDictionary *expected = @{@"macosx10.8": @"macosx10.8",
-                              @"macosx": @"macosx10.9",
-                              @"macosx10.9": @"macosx10.9",
-                              @"iphoneos7.0": @"iphoneos7.0",
-                              @"iphoneos": @"iphoneos7.0",
-                              @"iphonesimulator7.0": @"iphonesimulator7.0",
-                              @"iphonesimulator": @"iphonesimulator7.0"};
-    // Ensure that the two returned dictionaries are equal in terms of content
-    BOOL result = [expected isEqualToDictionary:actual];
-
-    assertThatBool(result, equalToBool(YES));
-
+    assertThat(actual, equalTo(@{@"macosx10.10": @"macosx10.10",
+                                 @"macosx": @"macosx10.10",
+                                 @"macosx10.9": @"macosx10.9",
+                                 @"iphoneos8.4": @"iphoneos8.4",
+                                 @"iphoneos": @"iphoneos8.4",
+                                 @"iphonesimulator8.4": @"iphonesimulator8.4",
+                                 @"iphonesimulator": @"iphonesimulator8.4"}));
   } withDefaultLaunchHandlers:NO];
 }
 
@@ -102,82 +97,87 @@
                                                                ]];
 
     NSDictionary *actual = GetAvailableSDKsInfo();
-    NSDictionary *expected = @{@"macosx10.8": @{@"SDK": @"macosx10.8",
-                                @"SDKVersion": @"10.8",
-                                @"Path": @"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk",
-                                @"PlatformVersion": @"1.1",
-                                @"PlatformPath": @"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform",
-                                @"ProductBuildVersion": @"12F37",
-                                @"ProductCopyright": @"1983-2013 Apple Inc.",
-                                @"ProductName": @"Mac OS X",
-                                @"ProductUserVisibleVersion": @"10.8.5",
-                                @"ProductVersion": @"10.8.5"
-                                },
-                              @"macosx": @{@"SDK": @"macosx10.9",
-                                @"SDKVersion": @"10.9",
-                                @"Path": @"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk",
-                                @"PlatformVersion": @"1.1",
-                                @"PlatformPath": @"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform",
-                                @"ProductBuildVersion": @"13A595",
-                                @"ProductCopyright": @"1983-2013 Apple Inc.",
-                                @"ProductName": @"Mac OS X",
-                                @"ProductUserVisibleVersion": @"10.9",
-                                @"ProductVersion": @"10.9"
-                                },
-                              @"macosx10.9": @{@"SDK": @"macosx10.9",
-                                @"SDKVersion": @"10.9",
-                                @"Path": @"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk",
-                                @"PlatformVersion": @"1.1",
-                                @"PlatformPath": @"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform",
-                                @"ProductBuildVersion": @"13A595",
-                                @"ProductCopyright": @"1983-2013 Apple Inc.",
-                                @"ProductName": @"Mac OS X",
-                                @"ProductUserVisibleVersion": @"10.9",
-                                @"ProductVersion": @"10.9"
-                                },
-                              @"iphoneos7.0": @{@"SDK": @"iphoneos7.0",
-                                @"SDKVersion": @"7.0",
-                                @"Path": @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk",
-                                @"PlatformVersion": @"7.0",
-                                @"PlatformPath": @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform",
-                                @"ProductBuildVersion": @"11B508",
-                                @"ProductCopyright": @"1983-2013 Apple Inc.",
-                                @"ProductName": @"iPhone OS",
-                                @"ProductVersion": @"7.0.3"
-                                },
-                              @"iphoneos": @{@"SDK": @"iphoneos7.0",
-                                @"SDKVersion": @"7.0",
-                                @"Path": @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk",
-                                @"PlatformVersion": @"7.0",
-                                @"PlatformPath": @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform",
-                                @"ProductBuildVersion": @"11B508",
-                                @"ProductCopyright": @"1983-2013 Apple Inc.",
-                                @"ProductName": @"iPhone OS",
-                                @"ProductVersion": @"7.0.3"
-                                },
-                              @"iphonesimulator7.0": @{@"SDK": @"iphonesimulator7.0",
-                                @"SDKVersion": @"7.0",
-                                @"Path": @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.0.sdk",
-                                @"PlatformPath": @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform",
-                                @"ProductBuildVersion": @"11B508",
-                                @"ProductCopyright": @"1983-2013 Apple Inc.",
-                                @"ProductName": @"iPhone OS",
-                                @"ProductVersion": @"7.0.3"
-                                },
-                              @"iphonesimulator": @{@"SDK": @"iphonesimulator7.0",
-                                @"SDKVersion": @"7.0",
-                                @"Path": @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.0.sdk",
-                                @"PlatformPath": @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform",
-                                @"ProductBuildVersion": @"11B508",
-                                @"ProductCopyright": @"1983-2013 Apple Inc.",
-                                @"ProductName": @"iPhone OS",
-                                @"ProductVersion": @"7.0.3"
-                                }};
-    // Ensure that the two returned dictionaries are equal in terms of content
-    BOOL result = [expected isEqualToDictionary:actual];
-
-    assertThatBool(result, equalToBool(YES));
-
+    assertThat(actual, equalTo(@{
+       @"iphoneos": @{
+            @"SDK": @"iphoneos8.4",
+            @"SDKVersion": @"8.4",
+            @"Path": @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.4.sdk",
+            @"PlatformVersion": @"8.4",
+            @"PlatformPath": @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform",
+            @"ProductBuildVersion": @"12H141",
+            @"ProductCopyright": @"1983-2015 Apple Inc.",
+            @"ProductName": @"iPhone OS",
+            @"ProductVersion": @"8.4"
+       },
+       @"iphoneos8.4": @{
+            @"SDK": @"iphoneos8.4",
+            @"SDKVersion": @"8.4",
+            @"Path": @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.4.sdk",
+            @"PlatformVersion": @"8.4",
+            @"PlatformPath": @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform",
+            @"ProductBuildVersion": @"12H141",
+            @"ProductCopyright": @"1983-2015 Apple Inc.",
+            @"ProductName": @"iPhone OS",
+            @"ProductVersion": @"8.4"
+       },
+       @"iphonesimulator": @{
+            @"SDK": @"iphonesimulator8.4",
+            @"SDKVersion": @"8.4",
+            @"Path": @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator8.4.sdk",
+            @"PlatformVersion": @"8.4",
+            @"PlatformPath": @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform",
+            @"ProductBuildVersion": @"12H141",
+            @"ProductCopyright": @"1983-2015 Apple Inc.",
+            @"ProductName": @"iPhone OS",
+            @"ProductVersion": @"8.4"
+       },
+       @"iphonesimulator8.4": @{
+            @"SDK": @"iphonesimulator8.4",
+            @"SDKVersion": @"8.4",
+            @"Path": @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator8.4.sdk",
+            @"PlatformVersion": @"8.4",
+            @"PlatformPath": @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform",
+            @"ProductBuildVersion": @"12H141",
+            @"ProductCopyright": @"1983-2015 Apple Inc.",
+            @"ProductName": @"iPhone OS",
+            @"ProductVersion": @"8.4"
+       },
+       @"macosx": @{
+           @"SDK": @"macosx10.10",
+           @"SDKVersion": @"10.10",
+           @"Path": @"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk",
+           @"PlatformVersion": @"1.1",
+           @"PlatformPath": @"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform",
+           @"ProductBuildVersion": @"14D125",
+           @"ProductCopyright": @"1983-2015 Apple Inc.",
+           @"ProductName": @"Mac OS X",
+           @"ProductUserVisibleVersion": @"10.10.3",
+           @"ProductVersion": @"10.10.3"
+           },
+       @"macosx10.10": @{
+           @"SDK": @"macosx10.10",
+           @"SDKVersion": @"10.10",
+           @"Path": @"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk",
+           @"PlatformVersion": @"1.1",
+           @"PlatformPath": @"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform",
+           @"ProductBuildVersion": @"14D125",
+           @"ProductCopyright": @"1983-2015 Apple Inc.",
+           @"ProductName": @"Mac OS X",
+           @"ProductUserVisibleVersion": @"10.10.3",
+           @"ProductVersion": @"10.10.3"
+           },
+       @"macosx10.9": @{
+           @"SDK": @"macosx10.9",
+           @"SDKVersion": @"10.9",
+           @"Path": @"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk",
+           @"PlatformVersion": @"1.1",
+           @"PlatformPath": @"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform",
+           @"ProductBuildVersion": @"13F34",
+           @"ProductCopyright": @"1983-2014 Apple Inc.",
+           @"ProductName": @"Mac OS X",
+           @"ProductUserVisibleVersion": @"10.9.5",
+           @"ProductVersion": @"10.9.5"
+           }}));
   } withDefaultLaunchHandlers:NO];
 }
 

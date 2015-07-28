@@ -113,7 +113,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
                                                     encoding:NSUTF8StringEncoding
                                                        error:nil]);
 
-  NSMutableDictionary *testSettings = [allSettings[@"TestProject-LibraryTests2"] mutableCopy];
+  NSMutableDictionary *testSettings = [allSettings[@"TestProjectApplicationTests"] mutableCopy];
   testSettings[@"TEST_HOST"] = TEST_DATA @"FakeApp.app/FakeApp";
 
   DTiPhoneSimulatorSessionConfig *config;
@@ -142,7 +142,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
                                                     encoding:NSUTF8StringEncoding
                                                        error:nil]);
 
-  NSMutableDictionary *testSettings = [allSettings[@"TestProject-LibraryTests2"] mutableCopy];
+  NSMutableDictionary *testSettings = [allSettings[@"TestProjectApplicationTests"] mutableCopy];
   testSettings[@"TEST_HOST"] = @"/var/empty/whee";
 
   DTiPhoneSimulatorSessionConfig *config;

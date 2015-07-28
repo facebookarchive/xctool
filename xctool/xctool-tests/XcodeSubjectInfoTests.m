@@ -52,7 +52,10 @@
 - (void)testCanGetAllSchemesInAProject
 {
   NSArray *schemes = [XcodeSubjectInfo schemePathsInContainer:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"];
-  assertThat(schemes, equalTo(@[TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj/xcshareddata/xcschemes/TestProject-Library.xcscheme"]));
+  assertThat(schemes, equalTo(@[
+    TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj/xcshareddata/xcschemes/Target Name With Spaces.xcscheme",
+    TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj/xcshareddata/xcschemes/TestProject-Library.xcscheme",
+  ]));
 }
 
 - (void)testCanGetAllSchemesInAWorkspace_ProjectContainers
@@ -167,8 +170,6 @@
   Testable *testable = testables[0];
   assertThat(testable.arguments, equalTo(@[]));
   assertThat(testable.environment, equalTo(@{}));
-  assertThat(testable.macroExpansionProjectPath, equalTo(nil));
-  assertThat(testable.macroExpansionTarget, equalTo(nil));
   assertThat(testable.executable, equalTo(@"TestProject-LibraryTests.octest"));
   assertThat(testable.projectPath, equalTo(@"xctool-tests/TestData/TestProject-Library/TestProject-Library.xcodeproj"));
   assertThatBool(testable.senTestInvertScope, equalToBool(YES));
@@ -279,7 +280,7 @@
      // Make sure -showBuildSettings returns some data
      [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj"
                                                      scheme:@"TestProject-Library"
-                                               settingsPath:TEST_DATA @"TestProject-Library-WithDifferentConfigurations-showBuildSettings.txt"],
+                                               settingsPath:TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"],
      ]];
 
     Options *options = [Options optionsFrom:@[

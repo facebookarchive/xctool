@@ -537,7 +537,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   NSAssert(error == nil, @"Failed to get nodes: %@", [error localizedFailureReason]);
 
   NSArray *macroExpansionBuildableReferenceNodes =
-    [doc nodesForXPath:[NSString stringWithFormat:@"//%@//MacroExpansion//BuildableReference",
+    [doc nodesForXPath:[NSString stringWithFormat:@"//%@//MacroExpansion/BuildableReference",
                         searchAction]
                  error:&error];
   NSAssert(error == nil, @"Failed to get nodes: %@", [error localizedFailureReason]);

@@ -1,43 +1,44 @@
-MacOSX10.8.sdk - OS X 10.8 (macosx10.8)
-SDKVersion: 10.8
-Path: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk
-PlatformVersion: 1.1
-PlatformPath: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform
-ProductBuildVersion: 12F37
-ProductCopyright: 1983-2013 Apple Inc.
-ProductName: Mac OS X
-ProductUserVisibleVersion: 10.8.5
-ProductVersion: 10.8.5
-
 MacOSX10.9.sdk - OS X 10.9 (macosx10.9)
 SDKVersion: 10.9
 Path: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk
 PlatformVersion: 1.1
 PlatformPath: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform
-ProductBuildVersion: 13A595
-ProductCopyright: 1983-2013 Apple Inc.
+ProductBuildVersion: 13F34
+ProductCopyright: 1983-2014 Apple Inc.
 ProductName: Mac OS X
-ProductUserVisibleVersion: 10.9
-ProductVersion: 10.9
+ProductUserVisibleVersion: 10.9.5
+ProductVersion: 10.9.5
 
-iPhoneOS7.0.sdk - iOS 7.0 (iphoneos7.0)
-SDKVersion: 7.0
-Path: /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk
-PlatformVersion: 7.0
+MacOSX10.10.sdk - OS X 10.10 (macosx10.10)
+SDKVersion: 10.10
+Path: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk
+PlatformVersion: 1.1
+PlatformPath: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform
+ProductBuildVersion: 14D125
+ProductCopyright: 1983-2015 Apple Inc.
+ProductName: Mac OS X
+ProductUserVisibleVersion: 10.10.3
+ProductVersion: 10.10.3
+
+iPhoneOS8.4.sdk - iOS 8.4 (iphoneos8.4)
+SDKVersion: 8.4
+Path: /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.4.sdk
+PlatformVersion: 8.4
 PlatformPath: /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform
-ProductBuildVersion: 11B508
-ProductCopyright: 1983-2013 Apple Inc.
+ProductBuildVersion: 12H141
+ProductCopyright: 1983-2015 Apple Inc.
 ProductName: iPhone OS
-ProductVersion: 7.0.3
+ProductVersion: 8.4
 
-iPhoneSimulator7.0.sdk - Simulator - iOS 7.0 (iphonesimulator7.0)
-SDKVersion: 7.0
-Path: /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator7.0.sdk
+iPhoneSimulator8.4.sdk - Simulator - iOS 8.4 (iphonesimulator8.4)
+SDKVersion: 8.4
+Path: /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator8.4.sdk
+PlatformVersion: 8.4
 PlatformPath: /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform
-ProductBuildVersion: 11B508
-ProductCopyright: 1983-2013 Apple Inc.
+ProductBuildVersion: 12H141
+ProductCopyright: 1983-2015 Apple Inc.
 ProductName: iPhone OS
-ProductVersion: 7.0.3
+ProductVersion: 8.4
 
-Xcode 5.0.1
-Build version 5A2053
+Xcode 6.4
+Build version 6E35b
