@@ -73,7 +73,7 @@
                                @"-help",
                                ]];
   FakeAction *action = [[FakeAction alloc] init];
-  assertThatBool(action.showHelp, equalToBool(NO));
+  assertThatBool(action.showHelp, isFalse());
 
   NSString *errorMessage = nil;
   NSUInteger consumed = [action consumeArguments:arguments errorMessage:&errorMessage];
@@ -81,7 +81,7 @@
 
   assertThatInteger(consumed, equalToInteger(1));
   assertThatInteger(arguments.count, equalToInteger(0));
-  assertThatBool(action.showHelp, equalToBool(YES));
+  assertThatBool(action.showHelp, isTrue());
 }
 
 - (void)testAliasesAreRespected
@@ -90,7 +90,7 @@
                                @"-h",
                                ]];
   FakeAction *action = [[FakeAction alloc] init];
-  assertThatBool(action.showHelp, equalToBool(NO));
+  assertThatBool(action.showHelp, isFalse());
 
   NSString *errorMessage = nil;
   NSUInteger consumed = [action consumeArguments:arguments errorMessage:&errorMessage];
@@ -98,7 +98,7 @@
 
   assertThatInteger(consumed, equalToInteger(1));
   assertThatInteger(arguments.count, equalToInteger(0));
-  assertThatBool(action.showHelp, equalToBool(YES));
+  assertThatBool(action.showHelp, isTrue());
 }
 
 - (void)testMapOptionSetsValue

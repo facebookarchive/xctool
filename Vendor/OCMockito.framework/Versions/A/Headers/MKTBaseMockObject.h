@@ -1,10 +1,5 @@
-//
-//  OCMockito - MKTBaseMockObject.h
-//  Copyright 2012 Jonathan M. Reid. See LICENSE.txt
-//
-//  Created by: Jon Reid, http://qualitycoding.org/
-//  Source: https://github.com/jonreid/OCMockito
-//
+//  OCMockito by Jon Reid, http://qualitycoding.org/about/
+//  Copyright 2015 Jonathan M. Reid. See LICENSE.txt
 
 #import <Foundation/Foundation.h>
 #import "MKTPrimitiveArgumentMatching.h"
@@ -12,6 +7,7 @@
 
 @interface MKTBaseMockObject : NSProxy <MKTPrimitiveArgumentMatching>
 
-- (id)init;
+- (instancetype)init;
+- (void)reset;
 
 @end

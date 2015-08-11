@@ -357,7 +357,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                                                               encoding:NSUTF8StringEncoding
                                                                  error:nil];
     NSString *stdoutString = result[@"stdout"];
-    assertThatBool(areEqualJsonOutputsIgnoringKeys(stdoutString, listTestsOnlyOutput, @[@"timestamp", @"duration", @"deviceName", @"sdkName"]), equalToBool(YES));
+    assertThatBool(areEqualJsonOutputsIgnoringKeys(stdoutString, listTestsOnlyOutput, @[@"timestamp", @"duration", @"deviceName", @"sdkName"]), isTrue());
   }];
 }
 
@@ -850,7 +850,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
           ]];
       id testRunning = options.actions[0];
       assertThat(testRunning, conformsTo(@protocol(TestRunning)));
-      assertThatBool([testRunning testsPresentInOptions], equalToBool(NO));
+      assertThatBool([testRunning testsPresentInOptions], isFalse());
   }];
 }
 
@@ -864,7 +864,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
             ]] assertOptionsValidate];
       id testRunning = options.actions[0];
       assertThat(testRunning, conformsTo(@protocol(TestRunning)));
-      assertThatBool([testRunning testsPresentInOptions], equalToBool(YES));
+      assertThatBool([testRunning testsPresentInOptions], isTrue());
   }];
 }
 
@@ -880,7 +880,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
             ]] assertOptionsValidate];
       id testRunning = options.actions[0];
       assertThat(testRunning, conformsTo(@protocol(TestRunning)));
-      assertThatBool([testRunning testsPresentInOptions], equalToBool(YES));
+      assertThatBool([testRunning testsPresentInOptions], isTrue());
   }];
 }
 

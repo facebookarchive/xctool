@@ -124,7 +124,7 @@
   @try {
     [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
       assertThatBool([[FakeTaskManager sharedManager] fakeTasksAreEnabled],
-                     equalToBool(YES));
+                     isTrue());
 
       [NSException raise:NSGenericException format:@"An exception."];
     }];
@@ -138,7 +138,7 @@
   // runBlockWithFakeTasks: should still make sure fake tasks get disabled when
   // the block finishes, even if there is an exception.
   assertThatBool([[FakeTaskManager sharedManager] fakeTasksAreEnabled],
-                 equalToBool(NO));
+                 isFalse());
 }
 
 - (void)testCanSetLaunchHandlerBlocksToTickleFakeTasks

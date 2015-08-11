@@ -63,13 +63,13 @@ static NSDictionary *EndEventForTestSuiteWithTestName(NSString * testName)
   OCTestSuiteEventState *state =
   [[OCTestSuiteEventState alloc] initWithName:@"ATestSuite" reporters:@[eventBuffer]];
 
-  assertThatBool(state.isStarted, equalToBool(NO));
-  assertThatBool(state.isFinished, equalToBool(NO));
+  assertThatBool(state.isStarted, isFalse());
+  assertThatBool(state.isFinished, isFalse());
 
   [state beginTestSuite:BeginEventForTestSuiteWithTestName(state.testName)];
 
-  assertThatBool(state.isStarted, equalToBool(YES));
-  assertThatBool(state.isFinished, equalToBool(NO));
+  assertThatBool(state.isStarted, isTrue());
+  assertThatBool(state.isFinished, isFalse());
 
   [state publishEvents];
   NSArray *events = eventBuffer.events;
@@ -86,8 +86,8 @@ static NSDictionary *EndEventForTestSuiteWithTestName(NSString * testName)
                    closeTo([events[1][kReporter_EndTestSuite_TotalDurationKey] doubleValue], 0.01f));
   assertThat(events[1][kReporter_EndTestSuite_TestDurationKey], is(@([state testDuration])));
 
-  assertThatBool(state.isStarted, equalToBool(YES));
-  assertThatBool(state.isFinished, equalToBool(YES));
+  assertThatBool(state.isStarted, isTrue());
+  assertThatBool(state.isFinished, isTrue());
 }
 
 - (void)testPublishFromNotStarted
@@ -96,8 +96,8 @@ static NSDictionary *EndEventForTestSuiteWithTestName(NSString * testName)
   OCTestSuiteEventState *state =
     [[OCTestSuiteEventState alloc] initWithName:@"ATestSuite" reporters:@[eventBuffer]];
 
-  assertThatBool(state.isStarted, equalToBool(NO));
-  assertThatBool(state.isFinished, equalToBool(NO));
+  assertThatBool(state.isStarted, isFalse());
+  assertThatBool(state.isFinished, isFalse());
 
   [state publishEvents];
   NSArray *events = eventBuffer.events;
@@ -114,8 +114,8 @@ static NSDictionary *EndEventForTestSuiteWithTestName(NSString * testName)
                    closeTo([events[1][kReporter_EndTestSuite_TotalDurationKey] doubleValue], 0.01f));
   assertThat(events[1][kReporter_EndTestSuite_TestDurationKey], is(@([state testDuration])));
 
-  assertThatBool(state.isStarted, equalToBool(YES));
-  assertThatBool(state.isFinished, equalToBool(YES));
+  assertThatBool(state.isStarted, isTrue());
+  assertThatBool(state.isFinished, isTrue());
 }
 
 - (void)testFromFinished
@@ -124,8 +124,8 @@ static NSDictionary *EndEventForTestSuiteWithTestName(NSString * testName)
   OCTestSuiteEventState *state =
     [[OCTestSuiteEventState alloc] initWithName:@"ATestSuite"];
 
-  assertThatBool(state.isStarted, equalToBool(NO));
-  assertThatBool(state.isFinished, equalToBool(NO));
+  assertThatBool(state.isStarted, isFalse());
+  assertThatBool(state.isFinished, isFalse());
 
   [state beginTestSuite:BeginEventForTestSuiteWithTestName(state.testName)];
   [state endTestSuite:EndEventForTestSuiteWithTestName(state.testName)];
@@ -270,7 +270,7 @@ static NSDictionary *EndEventForTestSuiteWithTestName(NSString * testName)
   assertThat(suiteEventEnd[kReporter_EndTestSuite_TotalDurationKey],
              closeTo([testAState duration] + [testBState duration], 0.1f));
 
-  assertThat(testEvent[kReporter_EndTest_SucceededKey], equalToBool(NO));
+  assertThat(testEvent[kReporter_EndTest_SucceededKey], isFalse());
   assertThat(testEvent[kReporter_EndTest_ResultKey], is(@"error"));
 }
 

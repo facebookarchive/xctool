@@ -75,7 +75,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                       TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
                       ];
   BuildTestsAction *action = options.actions[0];
-  assertThatBool(action.skipDependencies, equalToBool(YES));
+  assertThatBool(action.skipDependencies, isTrue());
 }
 
 - (void)testOnlyListRequiresValidTarget

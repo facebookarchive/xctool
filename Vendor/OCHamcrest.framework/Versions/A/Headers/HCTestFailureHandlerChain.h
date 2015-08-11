@@ -1,12 +1,14 @@
-#import <Foundation/Foundation.h>
-#import <objc/objc-api.h>
+//  OCHamcrest by Jon Reid, http://qualitycoding.org/about/
+//  Copyright 2014 hamcrest.org. See LICENSE.txt
 
-@protocol HCTestFailureHandler;
+#import <Foundation/Foundation.h>
+
+@class HCTestFailureHandler;
 
 
 /**
-    Returns chain of test failure handlers.
- 
-    @ingroup integration
+ Returns chain of test failure handlers.
+
+ @ingroup integration
  */
-OBJC_EXPORT id <HCTestFailureHandler> HC_testFailureHandlerChain(void);
+FOUNDATION_EXPORT HCTestFailureHandler *HC_testFailureHandlerChain(void);

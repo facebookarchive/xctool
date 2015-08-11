@@ -35,7 +35,7 @@
   BOOL opened = [rt openWithStandardOutput:[NSFileHandle fileHandleForWritingAtPath:fakeStandardOutputPath]
                              standardError:[NSFileHandle fileHandleWithStandardError]
                                      error:&error];
-  assertThatBool(opened, equalToBool(YES));
+  assertThatBool(opened, isTrue());
 
   PublishEventToReporters(@[rt], @{@"event":@"some-fake-event"});
 
@@ -58,7 +58,7 @@
   BOOL opened = [rt openWithStandardOutput:[NSFileHandle fileHandleForWritingAtPath:fakeStandardOutputPath]
                              standardError:[NSFileHandle fileHandleWithStandardError]
                                      error:&error];
-  assertThatBool(opened, equalToBool(YES));
+  assertThatBool(opened, isTrue());
 
   PublishEventToReporters(@[rt], @{@"event":@"some-fake-event"});
 

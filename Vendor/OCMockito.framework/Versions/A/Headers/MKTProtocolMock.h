@@ -1,20 +1,20 @@
-//
-//  OCMockito - MKTProtocolMock.h
-//  Copyright 2012 Jonathan M. Reid. See LICENSE.txt
-//
-//  Created by: Jon Reid, http://qualitycoding.org/
-//  Source: https://github.com/jonreid/OCMockito
-//
+//  OCMockito by Jon Reid, http://qualitycoding.org/about/
+//  Copyright 2015 Jonathan M. Reid. See LICENSE.txt
 
 #import "MKTBaseMockObject.h"
 
 
 /**
-    Mock object implementing a given protocol.
+ Mock object implementing a given protocol.
  */
 @interface MKTProtocolMock : MKTBaseMockObject
 
-+ (id)mockForProtocol:(Protocol *)aProtocol;
-- (id)initWithProtocol:(Protocol *)aProtocol;
+@property (readonly, nonatomic, strong) Protocol *mockedProtocol;
+
++ (instancetype)mockForProtocol:(Protocol *)aProtocol;
++ (instancetype)mockForProtocol:(Protocol *)aProtocol includeOptionalMethods:(BOOL)includeOptionalMethods;
+
+- (instancetype)initWithProtocol:(Protocol *)aProtocol;
+- (instancetype)initWithProtocol:(Protocol *)aProtocol includeOptionalMethods:(BOOL)includeOptionalMethods;
 
 @end

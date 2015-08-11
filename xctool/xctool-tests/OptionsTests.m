@@ -36,8 +36,8 @@
 
 - (void)testHelpOptionSetsFlag
 {
-  assertThatBool([[Options optionsFrom:@[@"-h"]] showHelp], equalToBool(YES));
-  assertThatBool([[Options optionsFrom:@[@"-help"]] showHelp], equalToBool(YES));
+  assertThatBool([[Options optionsFrom:@[@"-h"]] showHelp], isTrue());
+  assertThatBool([[Options optionsFrom:@[@"-help"]] showHelp], isTrue());
 }
 
 - (void)testOptionsPassThrough
@@ -395,8 +395,8 @@
 
 - (void)testHelpOptionSetsPrintUsage
 {
-  assertThatBool([Options optionsFrom:@[@"-help"]].showHelp, equalToBool(YES));
-  assertThatBool([Options optionsFrom:@[@"-h"]].showHelp, equalToBool(YES));
+  assertThatBool([Options optionsFrom:@[@"-help"]].showHelp, isTrue());
+  assertThatBool([Options optionsFrom:@[@"-h"]].showHelp, isTrue());
 }
 
 - (void)testActionsAreRecorded

@@ -50,13 +50,13 @@
   OCTestEventState *state = [[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod"
                                                                reporters:@[eventBuffer]];
 
-  assertThatBool(state.isStarted, equalToBool(NO));
-  assertThatBool(state.isFinished, equalToBool(NO));
+  assertThatBool(state.isStarted, isFalse());
+  assertThatBool(state.isFinished, isFalse());
 
   [state stateBeginTest];
 
-  assertThatBool(state.isStarted, equalToBool(YES));
-  assertThatBool(state.isFinished, equalToBool(NO));
+  assertThatBool(state.isStarted, isTrue());
+  assertThatBool(state.isFinished, isFalse());
 
   [state publishEvents];
   NSArray *events = eventBuffer.events;
@@ -66,8 +66,8 @@
   assertThat(events[0][kReporter_EndTest_SucceededKey], is(@NO));
   assertThat(events[0][kReporter_EndTest_ResultKey], is(@"error"));
 
-  assertThatBool(state.isStarted, equalToBool(YES));
-  assertThatBool(state.isFinished, equalToBool(YES));
+  assertThatBool(state.isStarted, isTrue());
+  assertThatBool(state.isFinished, isTrue());
 }
 
 - (void)testPublishFromNotStarted
@@ -77,8 +77,8 @@
   [[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod"
                                      reporters:@[eventBuffer]];
 
-  assertThatBool(state.isStarted, equalToBool(NO));
-  assertThatBool(state.isFinished, equalToBool(NO));
+  assertThatBool(state.isStarted, isFalse());
+  assertThatBool(state.isFinished, isFalse());
 
   [state publishEvents];
   NSArray *events = eventBuffer.events;
@@ -94,8 +94,8 @@
   assertThat(events[1][kReporter_EndTest_SucceededKey], is(@NO));
   assertThat(events[1][kReporter_EndTest_ResultKey], is(@"error"));
 
-  assertThatBool(state.isStarted, equalToBool(YES));
-  assertThatBool(state.isFinished, equalToBool(YES));
+  assertThatBool(state.isStarted, isTrue());
+  assertThatBool(state.isFinished, isTrue());
 }
 
 - (void)testStates
@@ -103,25 +103,25 @@
   OCTestEventState *state =
   [[OCTestEventState alloc] initWithInputName:@"ATestClass/aTestMethod"];
 
-  assertThatBool(state.isStarted, equalToBool(NO));
-  assertThatBool(state.isFinished, equalToBool(NO));
-  assertThatBool(state.isSuccessful, equalToBool(NO));
-  assertThatBool([state isRunning], equalToBool(NO));
+  assertThatBool(state.isStarted, isFalse());
+  assertThatBool(state.isFinished, isFalse());
+  assertThatBool(state.isSuccessful, isFalse());
+  assertThatBool([state isRunning], isFalse());
   assertThat(state.result, is(@"error"));
 
   [state stateBeginTest];
 
-  assertThatBool(state.isStarted, equalToBool(YES));
-  assertThatBool(state.isFinished, equalToBool(NO));
-  assertThatBool(state.isSuccessful, equalToBool(NO));
-  assertThatBool([state isRunning], equalToBool(YES));
+  assertThatBool(state.isStarted, isTrue());
+  assertThatBool(state.isFinished, isFalse());
+  assertThatBool(state.isSuccessful, isFalse());
+  assertThatBool([state isRunning], isTrue());
 
   [state stateEndTest:YES result: @"success"];
 
-  assertThatBool(state.isStarted, equalToBool(YES));
-  assertThatBool(state.isFinished, equalToBool(YES));
-  assertThatBool(state.isSuccessful, equalToBool(YES));
-  assertThatBool([state isRunning], equalToBool(NO));
+  assertThatBool(state.isStarted, isTrue());
+  assertThatBool(state.isFinished, isTrue());
+  assertThatBool(state.isSuccessful, isTrue());
+  assertThatBool([state isRunning], isFalse());
   assertThat(state.result, is(@"success"));
 
   state =
@@ -129,10 +129,10 @@
   [state stateBeginTest];
   [state stateEndTest:NO result: @"failure"];
 
-  assertThatBool(state.isStarted, equalToBool(YES));
-  assertThatBool(state.isFinished, equalToBool(YES));
-  assertThatBool(state.isSuccessful, equalToBool(NO));
-  assertThatBool([state isRunning], equalToBool(NO));
+  assertThatBool(state.isStarted, isTrue());
+  assertThatBool(state.isFinished, isTrue());
+  assertThatBool(state.isSuccessful, isFalse());
+  assertThatBool([state isRunning], isFalse());
   assertThat(state.result, is(@"failure"));
 }
 

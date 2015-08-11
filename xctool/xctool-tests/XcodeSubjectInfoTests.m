@@ -104,7 +104,7 @@
                               inDirectory:TEST_DATA @"TestWorkspace-Library/TestProject-Library"
                              excludePaths:@[]
                           bestTargetMatch:&match];
-  assertThatBool(ret, equalToBool(YES));
+  assertThatBool(ret, isTrue());
   assertThat(match.workspacePath, equalTo(nil));
   assertThat(
     match.projectPath,
@@ -119,7 +119,7 @@
                               inDirectory:TEST_DATA @"TestWorkspace-Library"
                              excludePaths:@[]
                           bestTargetMatch:&match];
-  assertThatBool(ret, equalToBool(YES));
+  assertThatBool(ret, isTrue());
   assertThat(
     match.workspacePath,
     containsString(@"TestWorkspace-Library/TestWorkspace-Library.xcworkspace"));
@@ -144,7 +144,7 @@
                                                encoding:NSUTF8StringEncoding
                                                   error:nil];
   NSDictionary *settings = BuildSettingsFromOutput(output);
-  assertThatBool([[settings allKeys] count] > 0, equalToBool(YES));
+  assertThatBool([[settings allKeys] count] > 0, isTrue());
 }
 
 - (void)testCanParseBuildSettingsWithConfigurationFile
@@ -172,9 +172,9 @@
   assertThat(testable.environment, equalTo(@{}));
   assertThat(testable.executable, equalTo(@"TestProject-LibraryTests.octest"));
   assertThat(testable.projectPath, equalTo(@"xctool-tests/TestData/TestProject-Library/TestProject-Library.xcodeproj"));
-  assertThatBool(testable.senTestInvertScope, equalToBool(YES));
+  assertThatBool(testable.senTestInvertScope, isTrue());
   assertThat(testable.senTestList, equalTo(@"DisabledTests"));
-  assertThatBool(testable.skipped, equalToBool(NO));
+  assertThatBool(testable.skipped, isFalse());
   assertThat(testable.target, equalTo(@"TestProject-LibraryTests"));
   assertThat(testable.targetID, equalTo(@"2828293016B11F0F00426B92"));
 }
@@ -201,9 +201,9 @@
   assertThat(testable.macroExpansionTarget, equalTo(nil));
   assertThat(testable.executable, equalTo(@"TestsWithArgAndEnvSettingsTests.octest"));
   assertThat(testable.projectPath, equalTo(@"xctool-tests/TestData/TestsWithArgAndEnvSettingsInRunAction/TestsWithArgAndEnvSettings.xcodeproj"));
-  assertThatBool(testable.senTestInvertScope, equalToBool(NO));
+  assertThatBool(testable.senTestInvertScope, isFalse());
   assertThat(testable.senTestList, equalTo(@"All"));
-  assertThatBool(testable.skipped, equalToBool(NO));
+  assertThatBool(testable.skipped, isFalse());
   assertThat(testable.target, equalTo(@"TestsWithArgAndEnvSettingsTests"));
   assertThat(testable.targetID, equalTo(@"288DD482173B7C9800F1093C"));
 }
@@ -231,9 +231,9 @@
   assertThat(testable.macroExpansionTarget, equalTo(nil));
   assertThat(testable.executable, equalTo(@"TestsWithArgAndEnvSettingsTests.octest"));
   assertThat(testable.projectPath, equalTo(@"xctool-tests/TestData/TestsWithArgAndEnvSettingsInTestAction/TestsWithArgAndEnvSettings.xcodeproj"));
-  assertThatBool(testable.senTestInvertScope, equalToBool(NO));
+  assertThatBool(testable.senTestInvertScope, isFalse());
   assertThat(testable.senTestList, equalTo(@"All"));
-  assertThatBool(testable.skipped, equalToBool(NO));
+  assertThatBool(testable.skipped, isFalse());
   assertThat(testable.target, equalTo(@"TestsWithArgAndEnvSettingsTests"));
   assertThat(testable.targetID, equalTo(@"288DD482173B7C9800F1093C"));
 }
@@ -264,9 +264,9 @@
   assertThat(testable.macroExpansionTarget, equalTo(@"TestsWithArgAndEnvSettings"));
   assertThat(testable.executable, equalTo(@"TestsWithArgAndEnvSettingsTests.octest"));
   assertThat(testable.projectPath, equalTo(@"xctool-tests/TestData/TestsWithArgAndEnvSettingsWithMacroExpansion/TestsWithArgAndEnvSettings.xcodeproj"));
-  assertThatBool(testable.senTestInvertScope, equalToBool(NO));
+  assertThatBool(testable.senTestInvertScope, isFalse());
   assertThat(testable.senTestList, equalTo(@"All"));
-  assertThatBool(testable.skipped, equalToBool(NO));
+  assertThatBool(testable.skipped, isFalse());
   assertThat(testable.target, equalTo(@"TestsWithArgAndEnvSettingsTests"));
   assertThat(testable.targetID, equalTo(@"288DD482173B7C9800F1093C"));
 }
@@ -319,8 +319,8 @@
   [self xcodeSubjectInfoPopulatedWithProject:TEST_DATA @"TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj"
                                       scheme:@"TestProject-Library"];
 
-  assertThatBool(subjectInfo.parallelizeBuildables, equalToBool(YES));
-  assertThatBool(subjectInfo.buildImplicitDependencies, equalToBool(YES));
+  assertThatBool(subjectInfo.parallelizeBuildables, isTrue());
+  assertThatBool(subjectInfo.buildImplicitDependencies, isTrue());
 }
 
 - (void)testShouldTryToFetchBuildSettingsFromMultipleActionsOnXcode5

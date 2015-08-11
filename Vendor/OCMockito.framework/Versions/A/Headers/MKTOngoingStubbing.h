@@ -1,10 +1,5 @@
-//
-//  OCMockito - MKTOngoingStubbing.h
-//  Copyright 2012 Jonathan M. Reid. See LICENSE.txt
-//
-//  Created by: Jon Reid, http://qualitycoding.org/
-//  Source: https://github.com/jonreid/OCMockito
-//
+//  OCMockito by Jon Reid, http://qualitycoding.org/about/
+//  Copyright 2015 Jonathan M. Reid. See LICENSE.txt
 
 #import <Foundation/Foundation.h>
 #import "MKTPrimitiveArgumentMatching.h"
@@ -13,58 +8,77 @@
 
 
 /**
-    Methods to invoke on @c given(methodCall) to return stubbed values.
+ Methods to invoke on @c given(methodCall) to return stubbed values.
+
+ The methods return the MKTOngoingStubbing object to allow stubbing consecutive calls.
  */
 @interface MKTOngoingStubbing : NSObject <MKTPrimitiveArgumentMatching>
 
-- (id)initWithInvocationContainer:(MKTInvocationContainer *)invocationContainer;
+- (instancetype)initWithInvocationContainer:(MKTInvocationContainer *)invocationContainer;
 
-/// Stubs given object as return value.
+/// Sets an object to be returned when the method is called.
 - (MKTOngoingStubbing *)willReturn:(id)object;
 
-/// Stubs given @c BOOL as return value.
+/**
+ Sets a struct to be returned when the method is called.
+
+ The @c type should match the Objective-C type of @c value.
+ Type should be created with the Objective-C \@encode() compiler directive.
+*/
+- (MKTOngoingStubbing *)willReturnStruct:(const void *)value objCType:(const char *)type;
+
+/// Sets a @c BOOL to be returned when the method is called.
 - (MKTOngoingStubbing *)willReturnBool:(BOOL)value;
 
-/// Stubs given @c char as return value.
+/// Sets a @c char to be returned when the method is called.
 - (MKTOngoingStubbing *)willReturnChar:(char)value;
 
-/// Stubs given @c int as return value.
+/// Sets an @c int to be returned when the method is called.
 - (MKTOngoingStubbing *)willReturnInt:(int)value;
 
-/// Stubs given @c short as return value.
+/// Sets a @c short to be returned when the method is called.
 - (MKTOngoingStubbing *)willReturnShort:(short)value;
 
-/// Stubs given @c long as return value.
+/// Sets a @c long to be returned when the method is called.
 - (MKTOngoingStubbing *)willReturnLong:(long)value;
 
-/// Stubs given <code>long long</code> as return value.
+/// Sets a <code>long long</code> to be returned when the method is called.
 - (MKTOngoingStubbing *)willReturnLongLong:(long long)value;
 
-/// Stubs given @c NSInteger as return value.
+/// Sets an @c NSInteger to be returned when the method is called.
 - (MKTOngoingStubbing *)willReturnInteger:(NSInteger)value;
 
-/// Stubs given <code>unsigned char</code> as return value.
+/// Sets given <code>unsigned char</code> as return value.
 - (MKTOngoingStubbing *)willReturnUnsignedChar:(unsigned char)value;
 
-/// Stubs given <code>unsigned int</code> as return value.
+/// Sets given <code>unsigned int</code> as return value.
 - (MKTOngoingStubbing *)willReturnUnsignedInt:(unsigned int)value;
 
-/// Stubs given <code>unsigned short</code> as return value.
+/// Sets an <code>unsigned short</code> to be returned when the method is called.
 - (MKTOngoingStubbing *)willReturnUnsignedShort:(unsigned short)value;
 
-/// Stubs given <code>unsigned long</code> as return value.
+/// Sets an <code>unsigned long</code> to be returned when the method is called.
 - (MKTOngoingStubbing *)willReturnUnsignedLong:(unsigned long)value;
 
-/// Stubs given <code>unsigned long long</code> as return value.
+/// Sets an <code>unsigned long long</code> to be returned when the method is called.
 - (MKTOngoingStubbing *)willReturnUnsignedLongLong:(unsigned long long)value;
 
-/// Stubs given @c NSUInteger as return value.
+/// Sets an @c NSUInteger to be returned when the method is called.
 - (MKTOngoingStubbing *)willReturnUnsignedInteger:(NSUInteger)value;
 
-/// Stubs given @c float as return value.
+/// Sets a @c float to be returned when the method is called.
 - (MKTOngoingStubbing *)willReturnFloat:(float)value;
 
-/// Stubs given @c double as return value.
+/// Sets a @c double to be returned when the method is called.
 - (MKTOngoingStubbing *)willReturnDouble:(double)value;
+
+/// Sets @c NSException to be thrown when the method is called.
+- (MKTOngoingStubbing *)willThrow:(NSException *)exception;
+
+/** Sets block to be executed when the method is called.
+
+ The return value of block is returned when the method is called.
+ */
+- (MKTOngoingStubbing *)willDo:(id (^)(NSInvocation *))block;
 
 @end

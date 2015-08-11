@@ -81,7 +81,7 @@
                       TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
                       ];
   TestAction *action = options.actions[0];
-  assertThatBool(action.skipDependencies, equalToBool(YES));
+  assertThatBool(action.skipDependencies, isTrue());
 }
 
 - (void)testOnlyParsing
