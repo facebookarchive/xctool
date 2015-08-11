@@ -16,30 +16,19 @@
 
 @implementation TestProject_App_XCTest_OSXTests
 
-- (void)setUp
+- (void)testWillPass
 {
-  [super setUp];
-  
-  // Set-up code here.
-}
-
-- (void)tearDown
-{
-  // Tear-down code here.
-  
-  [super tearDown];
-}
-
-- (void)testWillPass {
-  
+  NSLog(@"%@", [[NSProcessInfo processInfo] environment]);
   XCTAssertEqual(1, 1, @"Equal!");
 }
 
-- (void)testWillFail {
+- (void)testWillFail
+{
   XCTAssertEqual(1, 2, @"Not Equal!");
 }
 
-- (void)testOutput {
+- (void)testOutput
+{
   // Generate output in all the different ways we know of...
   fprintf(stdout, "stdout\n");
   fprintf(stderr, "stderr\n");

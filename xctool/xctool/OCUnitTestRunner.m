@@ -366,14 +366,17 @@
   }
 
   NSArray *layers = @[
-                      // Any special environment vars set in the scheme.
-                      _environment ?: @{},
-                      // Internal environment that should be passed to xctool libs
-                      internalEnvironment,
-                      // Whatever values we need to make the test run at all for
-                      // ios/mac or logic/application tests.
-                      overrides,
-                      ];
+    // Xcode will let your regular environment pass-thru to
+    // the test.
+    [[_simulatorInfo simulatedSdkName] hasPrefix:@"macosx"] ? [[NSProcessInfo processInfo] environment] : @{},
+    // Any special environment vars set in the scheme.
+    _environment ?: @{},
+    // Internal environment that should be passed to xctool libs
+    internalEnvironment,
+    // Whatever values we need to make the test run at all for
+    // ios/mac or logic/application tests.
+    overrides,
+  ];
   for (NSDictionary *layer in layers) {
     [layer enumerateKeysAndObjectsUsingBlock:^(id key, id val, BOOL *stop){
       if ([key isEqualToString:@"DYLD_INSERT_LIBRARIES"] ||

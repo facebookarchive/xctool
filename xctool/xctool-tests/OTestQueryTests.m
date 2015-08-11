@@ -349,6 +349,7 @@
 
   assertThat(classes, equalTo(nil));
   assertThat(error, containsString(@"no suitable image found."));
+  assertThat(error, containsString(@"not built for iOS simulator"));
 }
 
 - (void)testIOSAppTestQueryFailsWhenTestHostExecutableIsMissing

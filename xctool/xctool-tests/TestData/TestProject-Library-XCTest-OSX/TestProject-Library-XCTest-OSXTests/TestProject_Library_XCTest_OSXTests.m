@@ -16,27 +16,19 @@
 
 @implementation TestProject_Library_XCTest_OSXTests
 
-- (void)setUp
+- (void)testWillPass
 {
-    [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
-}
-
-- (void)tearDown
-{
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    [super tearDown];
-}
-
-- (void)testWillPass {
+  NSLog(@"%@", [[NSProcessInfo processInfo] environment]);
   XCTAssertEqual(1, 1, @"Equal!");
 }
 
-- (void)testWillFail {
+- (void)testWillFail
+{
   XCTAssertEqual(1, 2, @"Not Equal!");
 }
 
-- (void)testOutput {
+- (void)testOutput
+{
   // Generate output in all the different ways we know of...
   fprintf(stdout, "stdout\n");
   fprintf(stderr, "stderr\n");

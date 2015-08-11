@@ -47,5 +47,8 @@
       <FileRef
          location = "group:Project.xcconfig">
       </FileRef>
+      <FileRef
+         location = "group:Tests.xcconfig">
+      </FileRef>
    </Group>
 </Workspace>

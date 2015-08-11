@@ -96,9 +96,11 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
 - (void)testBuildTestsAction
 {
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    NSString *projectPath = TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj";
+
     [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
      // Make sure -showBuildSettings returns some data
-     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:projectPath
                                                      scheme:@"TestProject-Library"
                                                settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
      ]];
@@ -111,7 +113,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
     XCTool *tool = [[XCTool alloc] init];
 
     tool.arguments = @[
-                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-project", projectPath,
                        @"-scheme", @"TestProject-Library",
                        @"-configuration", @"Debug",
                        @"-sdk", @"iphonesimulator6.0",
@@ -140,8 +142,6 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                        @"build",
                        ]));
     assertThatInt(tool.exitStatus, equalToInt(0));
-
-    NSString *projectPath = TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj";
 
     [verify(mockSchemeGenerator) setParallelizeBuildables:YES];
     [verify(mockSchemeGenerator) setBuildImplicitDependencies:YES];

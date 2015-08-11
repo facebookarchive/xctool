@@ -14,6 +14,8 @@
 // limitations under the License.
 //
 
+#include "../Configurations/Tests.xcconfig"
+
 DEVELOPER_PRIVATE_FRAMEWORKS_DIR = $(DEVELOPER_DIR)/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks
 SHARED_FRAMEWORKS_DIR = $(DEVELOPER_DIR)/../SharedFrameworks
 PRIVATE_FRAMEWORKS_DIR = $(DEVELOPER_DIR)/Library/PrivateFrameworks
@@ -25,5 +27,3 @@ XCTOOL_VENDOR_DIR = $(SRCROOT)/../Vendor
 OTHER_LDFLAGS_0600 = -F$(SHARED_FRAMEWORKS_DIR) -F$(PRIVATE_FRAMEWORKS_DIR) -framework DVTFoundation -framework DVTiPhoneSimulatorRemoteClient -framework CoreSimulator -Wl,-rpath -Wl,$(SHARED_FRAMEWORKS_DIR) -Wl,-rpath -Wl,$(PRIVATE_FRAMEWORKS_DIR)
 
 OTHER_LDFLAGS = $(OTHER_LDFLAGS_$(XCODE_VERSION_MAJOR))
-
-GCC_PREPROCESSOR_DEFINITIONS = XCODE_VERSION=$(XCODE_VERSION_MAJOR)

@@ -14,12 +14,12 @@
 
 - (void)testWillPass
 {
-  STAssertEquals(1, 1, @"Equal!");
+  XCTAssertEqualObjects(@"1", @"1", @"Equal!");
 }
 
 - (void)testWillFail
 {
-  STAssertEquals(1, 2, @"Not Equal!");
+  XCTAssertEqual(1, 2, @"Not Equal!");
 }
 
 - (void)testOutput

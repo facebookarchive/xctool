@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		282BFDED1715E8520022F9FF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 282BFDEC1715E8520022F9FF /* Cocoa.framework */; };
 		282BFDF71715E8520022F9FF /* TestProject_Library_OSX.m in Sources */ = {isa = PBXBuildFile; fileRef = 282BFDF61715E8520022F9FF /* TestProject_Library_OSX.m */; };
-		282BFDFF1715E8520022F9FF /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 282BFDFE1715E8520022F9FF /* SenTestingKit.framework */; };
 		282BFE001715E8520022F9FF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 282BFDEC1715E8520022F9FF /* Cocoa.framework */; };
 		282BFE031715E8520022F9FF /* TestProject-Library-OSX.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 282BFDE91715E8520022F9FF /* TestProject-Library-OSX.dylib */; };
 		282BFE091715E8520022F9FF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 282BFE071715E8520022F9FF /* InfoPlist.strings */; };
@@ -35,8 +34,7 @@
 		282BFDF41715E8520022F9FF /* TestProject-Library-OSX-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestProject-Library-OSX-Prefix.pch"; sourceTree = "<group>"; };
 		282BFDF51715E8520022F9FF /* TestProject_Library_OSX.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestProject_Library_OSX.h; sourceTree = "<group>"; };
 		282BFDF61715E8520022F9FF /* TestProject_Library_OSX.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestProject_Library_OSX.m; sourceTree = "<group>"; };
-		282BFDFD1715E8520022F9FF /* TestProject-Library-OSXTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TestProject-Library-OSXTests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		282BFDFE1715E8520022F9FF /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		282BFDFD1715E8520022F9FF /* TestProject-Library-OSXTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TestProject-Library-OSXTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		282BFE061715E8520022F9FF /* TestProject-Library-OSXTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TestProject-Library-OSXTests-Info.plist"; sourceTree = "<group>"; };
 		282BFE081715E8520022F9FF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		282BFE0A1715E8520022F9FF /* TestProject_Library_OSXTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestProject_Library_OSXTests.h; sourceTree = "<group>"; };
@@ -56,7 +54,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				282BFDFF1715E8520022F9FF /* SenTestingKit.framework in Frameworks */,
 				282BFE001715E8520022F9FF /* Cocoa.framework in Frameworks */,
 				282BFE031715E8520022F9FF /* TestProject-Library-OSX.dylib in Frameworks */,
 			);
@@ -79,7 +76,7 @@
 			isa = PBXGroup;
 			children = (
 				282BFDE91715E8520022F9FF /* TestProject-Library-OSX.dylib */,
-				282BFDFD1715E8520022F9FF /* TestProject-Library-OSXTests.octest */,
+				282BFDFD1715E8520022F9FF /* TestProject-Library-OSXTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -88,7 +85,6 @@
 			isa = PBXGroup;
 			children = (
 				282BFDEC1715E8520022F9FF /* Cocoa.framework */,
-				282BFDFE1715E8520022F9FF /* SenTestingKit.framework */,
 				282BFDEE1715E8520022F9FF /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -187,8 +183,8 @@
 			);
 			name = "TestProject-Library-OSXTests";
 			productName = "TestProject-Library-OSXTests";
-			productReference = 282BFDFD1715E8520022F9FF /* TestProject-Library-OSXTests.octest */;
-			productType = "com.apple.product-type.bundle";
+			productReference = 282BFDFD1715E8520022F9FF /* TestProject-Library-OSXTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -366,12 +362,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(inherited)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TestProject-Library-OSX/TestProject-Library-OSX-Prefix.pch";
 				INFOPLIST_FILE = "TestProject-Library-OSXTests/TestProject-Library-OSXTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -379,12 +377,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(inherited)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TestProject-Library-OSX/TestProject-Library-OSX-Prefix.pch";
 				INFOPLIST_FILE = "TestProject-Library-OSXTests/TestProject-Library-OSXTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};
@@ -407,6 +407,7 @@
 				282BFE111715E8520022F9FF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		282BFE121715E8520022F9FF /* Build configuration list for PBXNativeTarget "TestProject-Library-OSXTests" */ = {
 			isa = XCConfigurationList;
@@ -415,6 +416,7 @@
 				282BFE141715E8520022F9FF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

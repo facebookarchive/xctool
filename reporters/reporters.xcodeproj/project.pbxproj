@@ -210,6 +210,7 @@
 		28F48A56179750A600068E00 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		3892D74E1815A13400E68652 /* EventGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventGenerator.h; path = ../Common/EventGenerator.h; sourceTree = "<group>"; };
 		3892D74F1815A13400E68652 /* EventGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EventGenerator.m; path = ../Common/EventGenerator.m; sourceTree = "<group>"; };
+		CC43C4711B79725500AEDFB5 /* reporters-tests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "reporters-tests.xcconfig"; sourceTree = "<group>"; };
 		CC8AA20518F368EE00D9F322 /* user-notifications-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "user-notifications-Info.plist"; path = "user-notifications/user-notifications-Info.plist"; sourceTree = "<group>"; };
 		CCC0AAED18EC8A1F004FD861 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = "user-notifications/main.m"; sourceTree = "<group>"; };
 		CCC0AAF218EC8A92004FD861 /* UserNotificationsReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserNotificationsReporter.h; path = "user-notifications/UserNotificationsReporter.h"; sourceTree = "<group>"; };
@@ -309,6 +310,7 @@
 			isa = PBXGroup;
 			children = (
 				2893A96417960CFD00EFBD28 /* reporters.xcconfig */,
+				CC43C4711B79725500AEDFB5 /* reporters-tests.xcconfig */,
 				2893A97E179614D400EFBD28 /* Common */,
 				28F489CF179725C400068E00 /* reporters */,
 				2893A95717960CD400EFBD28 /* reporters-tests */,
@@ -835,6 +837,7 @@
 		};
 		2893A96117960CD400EFBD28 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CC43C4711B79725500AEDFB5 /* reporters-tests.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -875,6 +878,7 @@
 		};
 		2893A96217960CD400EFBD28 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CC43C4711B79725500AEDFB5 /* reporters-tests.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";

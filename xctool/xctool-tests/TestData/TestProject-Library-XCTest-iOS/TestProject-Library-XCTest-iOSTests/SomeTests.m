@@ -42,6 +42,7 @@
 
 - (void)testWillFail
 {
+  NSLog(@"%@", [[NSProcessInfo processInfo] environment]);
   XCTAssertEqualObjects(@"a", @"b", @"Strings aren't equal");
 }
 

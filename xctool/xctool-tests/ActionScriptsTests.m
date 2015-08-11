@@ -47,9 +47,9 @@ static NSArray *GetArgs(NSString *action)
 
   for (NSString *action in actions) {
     NSRange range = [output rangeOfString:[NSString stringWithFormat:@"[Info] Running PreAction %@ Scripts...", action]];
-    XCTAssertNotEqual(range.location, NSNotFound, @"Failed to match action pattern");
+    XCTAssertNotEqual(range.location, NSNotFound, @"Failed to match action pattern for action \"%@\" in actions \"%@\"; output: %@", action, actions, output);
     range = [output rangeOfString:[NSString stringWithFormat:@"[Info] Running PostAction %@ Scripts...", action]];
-    XCTAssertNotEqual(range.location, NSNotFound, @"Failed to match action pattern");
+    XCTAssertNotEqual(range.location, NSNotFound, @"Failed to match action pattern for action \"%@\" in actions \"%@\"; output: %@", action, actions, output);
   }
 }
 

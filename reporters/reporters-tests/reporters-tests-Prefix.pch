@@ -11,5 +11,5 @@
   #define MOCKITO_SHORTHAND
   #import <OCMockito/OCMockito.h>
 
-  #define TEST_DATA @"../xctool/xctool-tests/TestData/"
+  #define TEST_DATA @XCTOOL_SRCROOT "../xctool/xctool-tests/TestData/"
 #endif

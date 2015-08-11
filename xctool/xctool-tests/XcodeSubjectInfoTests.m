@@ -171,7 +171,7 @@
   assertThat(testable.arguments, equalTo(@[]));
   assertThat(testable.environment, equalTo(@{}));
   assertThat(testable.executable, equalTo(@"TestProject-LibraryTests.octest"));
-  assertThat(testable.projectPath, equalTo(@"xctool-tests/TestData/TestProject-Library/TestProject-Library.xcodeproj"));
+  assertThat(testable.projectPath, endsWith(@"xctool-tests/TestData/TestProject-Library/TestProject-Library.xcodeproj"));
   assertThatBool(testable.senTestInvertScope, isTrue());
   assertThat(testable.senTestList, equalTo(@"DisabledTests"));
   assertThatBool(testable.skipped, isFalse());
@@ -200,7 +200,7 @@
   assertThat(testable.macroExpansionProjectPath, equalTo(nil));
   assertThat(testable.macroExpansionTarget, equalTo(nil));
   assertThat(testable.executable, equalTo(@"TestsWithArgAndEnvSettingsTests.octest"));
-  assertThat(testable.projectPath, equalTo(@"xctool-tests/TestData/TestsWithArgAndEnvSettingsInRunAction/TestsWithArgAndEnvSettings.xcodeproj"));
+  assertThat(testable.projectPath, endsWith(@"xctool-tests/TestData/TestsWithArgAndEnvSettingsInRunAction/TestsWithArgAndEnvSettings.xcodeproj"));
   assertThatBool(testable.senTestInvertScope, isFalse());
   assertThat(testable.senTestList, equalTo(@"All"));
   assertThatBool(testable.skipped, isFalse());
@@ -230,7 +230,7 @@
   assertThat(testable.macroExpansionProjectPath, equalTo(nil));
   assertThat(testable.macroExpansionTarget, equalTo(nil));
   assertThat(testable.executable, equalTo(@"TestsWithArgAndEnvSettingsTests.octest"));
-  assertThat(testable.projectPath, equalTo(@"xctool-tests/TestData/TestsWithArgAndEnvSettingsInTestAction/TestsWithArgAndEnvSettings.xcodeproj"));
+  assertThat(testable.projectPath, endsWith(@"xctool-tests/TestData/TestsWithArgAndEnvSettingsInTestAction/TestsWithArgAndEnvSettings.xcodeproj"));
   assertThatBool(testable.senTestInvertScope, isFalse());
   assertThat(testable.senTestList, equalTo(@"All"));
   assertThatBool(testable.skipped, isFalse());
@@ -260,10 +260,10 @@
                                              @"ARCHS" : @"$(ARCHS)",
                                              @"DYLD_INSERT_LIBRARIES" : @"ThisShouldNotGetOverwrittenByOtestShim",
                                              }));
-  assertThat(testable.macroExpansionProjectPath, equalTo(@"xctool-tests/TestData/TestsWithArgAndEnvSettingsWithMacroExpansion/TestsWithArgAndEnvSettings.xcodeproj"));
+  assertThat(testable.macroExpansionProjectPath, endsWith(@"xctool-tests/TestData/TestsWithArgAndEnvSettingsWithMacroExpansion/TestsWithArgAndEnvSettings.xcodeproj"));
   assertThat(testable.macroExpansionTarget, equalTo(@"TestsWithArgAndEnvSettings"));
   assertThat(testable.executable, equalTo(@"TestsWithArgAndEnvSettingsTests.octest"));
-  assertThat(testable.projectPath, equalTo(@"xctool-tests/TestData/TestsWithArgAndEnvSettingsWithMacroExpansion/TestsWithArgAndEnvSettings.xcodeproj"));
+  assertThat(testable.projectPath, endsWith(@"xctool-tests/TestData/TestsWithArgAndEnvSettingsWithMacroExpansion/TestsWithArgAndEnvSettings.xcodeproj"));
   assertThatBool(testable.senTestInvertScope, isFalse());
   assertThat(testable.senTestList, equalTo(@"All"));
   assertThatBool(testable.skipped, isFalse());

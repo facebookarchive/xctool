@@ -356,7 +356,8 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
     NSString *listTestsOnlyOutput = [NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-run-test-results-listtestonly.txt"
                                                               encoding:NSUTF8StringEncoding
                                                                  error:nil];
-    NSString *stdoutString = result[@"stdout"];
+    NSString *escapedTestDataPath = [TEST_DATA stringByReplacingOccurrencesOfString:@"/" withString:@"\\/"];
+    NSString *stdoutString = [result[@"stdout"] stringByReplacingOccurrencesOfString:escapedTestDataPath withString:@"xctool-tests\\/TestData\\/"];
     assertThatBool(areEqualJsonOutputsIgnoringKeys(stdoutString, listTestsOnlyOutput, @[@"timestamp", @"duration", @"deviceName", @"sdkName"]), isTrue());
   }];
 }
@@ -600,6 +601,71 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
 /**
  Optionally, Xcode can also run your tests with specific args or environment
  vars that you've configured for your Test action in the scheme editor.
+ Also we are verifying that process environment isn't passed to iOS tests.
+ */
+- (void)testSchemeArgsAndEnvForTestActionArePassedToTestRunner_iOS
+{
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    NSString *projectPath = TEST_DATA @"TestProject-Library-XCTest-iOS/TestProject-Library-XCTest-iOS.xcodeproj";
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+      // Make sure -showBuildSettings returns some data
+      [LaunchHandlers handlerForShowBuildSettingsWithProject:projectPath
+                                                      scheme:@"TestProject-Library-XCTest-iOS"
+                                                settingsPath:TEST_DATA @"TestProject-Library-XCTest-iOS-showBuildSettings.txt"],
+      // We're going to call -showBuildSettings on the test target.
+      [LaunchHandlers handlerForShowBuildSettingsWithProject:projectPath
+                                                      target:@"TestProject-Library-XCTest-iOSTests"
+                                                settingsPath:TEST_DATA @"TestProject-Library-XCTest-iOS-TestProject-Library-XCTest-iOSTests-showBuildSettings-iphoneos.txt"
+                                                        hide:NO],
+      [LaunchHandlers handlerForOtestQueryReturningTestList:@[@"FakeTest/TestA", @"FakeTest/TestB"]],
+    ]];
+
+    XCTool *tool = [[XCTool alloc] init];
+
+    tool.arguments = @[@"-project", projectPath,
+                       @"-scheme", @"TestProject-Library-XCTest-iOS",
+                       @"run-tests",
+                       @"-reporter", @"plain",
+                       ];
+
+    __block OCUnitTestRunner *runner = nil;
+
+    [Swizzler whileSwizzlingSelector:@selector(runTests)
+                 forInstancesOfClass:[OCUnitTestRunner class]
+                           withBlock:
+     ^(id self, SEL sel){
+       // Don't actually run anything and just save a reference to the runner.
+       runner = self;
+       // Pretend tests succeeded.
+       return YES;
+     }
+                            runBlock:
+     ^{
+       [TestUtil runWithFakeStreams:tool];
+
+       NSMutableDictionary *expectedEnv = [@{
+         @"TestEnvKey" : @"TestEnvValue",
+       } mutableCopy];
+
+       assertThat(runner, notNilValue());
+       assertThat([runner valueForKey:@"arguments"],
+                  equalTo(@[@"-TestArg", @"TestArgValue"]));
+       assertThat([runner valueForKey:@"environment"],
+                  equalTo(expectedEnv));
+
+       NSString *pathToOtestShimDylib = @"/pretend/this/is/otest-shim-osx.dylib";
+       expectedEnv[@"DYLD_INSERT_LIBRARIES"] = pathToOtestShimDylib;
+
+       assertThat([runner otestEnvironmentWithOverrides:@{@"DYLD_INSERT_LIBRARIES" : pathToOtestShimDylib}],
+                  equalTo(expectedEnv));
+     }];
+    
+  }];
+}
+
+/**
+ Optionally, Xcode can also run your tests with specific args or environment
+ vars that you've configured for your Test action in the scheme editor.
  */
 - (void)testSchemeArgsAndEnvForTestActionArePassedToTestRunner
 {
@@ -653,6 +719,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
 /**
  Xcode will let you use macros like $(SOMEVAR) in the arguments or environment
  variables specified in your scheme.
+ Also we are verifying that process environment is passed to OS X tests.
  */
 - (void)testSchemeArgsAndEnvCanUseMacroExpansion
 {
@@ -693,10 +760,11 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
      ^{
        [TestUtil runWithFakeStreams:tool];
 
-       NSMutableDictionary *expectedEnv = [NSMutableDictionary dictionary];
-       expectedEnv[@"DYLD_INSERT_LIBRARIES"] = @"ThisShouldNotGetOverwrittenByOtestShim";
-       expectedEnv[@"RunEnvKey"] = @"RunEnvValue";
-       expectedEnv[@"ARCHS"] = @"x86_64";
+       NSMutableDictionary *expectedEnv = [@{
+         @"DYLD_INSERT_LIBRARIES": @"ThisShouldNotGetOverwrittenByOtestShim",
+         @"RunEnvKey": @"RunEnvValue",
+         @"ARCHS": @"x86_64",
+       } mutableCopy];
 
        assertThat(runner, notNilValue());
        assertThat([runner valueForKey:@"arguments"],
@@ -704,9 +772,10 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
        assertThat([runner valueForKey:@"environment"],
                   equalTo(expectedEnv));
 
-       NSString *pathToOtestShimDylib = @"/pretend/this/is/otest-shim.dylib";
+       NSString *pathToOtestShimDylib = @"/pretend/this/is/otest-shim-osx.dylib";
        expectedEnv[@"DYLD_INSERT_LIBRARIES"] = [@[expectedEnv[@"DYLD_INSERT_LIBRARIES"], pathToOtestShimDylib] componentsJoinedByString:@":"];
 
+       [expectedEnv addEntriesFromDictionary:[[NSProcessInfo processInfo] environment]];
        assertThat([runner otestEnvironmentWithOverrides:@{@"DYLD_INSERT_LIBRARIES" : pathToOtestShimDylib}],
                   equalTo(expectedEnv));
      }];
@@ -757,7 +826,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                        @"-destination-timeout", @"10",
                        @"PLATFORM_NAME=iphonesimulator",
                        @"-project",
-                       @"xctool-tests/TestData/TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj",
+                       TEST_DATA @"TestProject-Library-WithDifferentConfigurations/TestProject-Library.xcodeproj",
                        @"-target",
                        @"TestProject-LibraryTests",
                        @"OBJROOT=/Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-Library-frruszglismbfoceinskphldzhci/Build/Intermediates",

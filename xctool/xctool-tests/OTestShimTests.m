@@ -36,7 +36,7 @@ static NSArray *AllTestCasesInTestBundle(NSString *sdkName,
 {
   NSString *error = nil;
   NSString *latestSDK = GetAvailableSDKsAndAliases()[sdkName];
-  NSString *builtProductsDir = [[[NSFileManager defaultManager] currentDirectoryPath] stringByAppendingPathComponent:[bundlePath stringByDeletingLastPathComponent]];
+  NSString *builtProductsDir = [bundlePath stringByDeletingLastPathComponent];
   NSString *fullProductName = [bundlePath lastPathComponent];
   SimulatorInfo *simulatorInfo = [[SimulatorInfo alloc] init];
   simulatorInfo.buildSettings = @{
@@ -102,9 +102,6 @@ static NSTask *OtestShimTask(NSString *platformName,
   // Regardless of whatever is in the build settings, let's pretend and use
   // the latest available SDK.
   targetSettings[Xcode_SDK_NAME] = GetAvailableSDKsAndAliases()[[platformName lowercaseString]];
-
-  // We should pass full path to the test bundle
-  bundlePath = [[[NSFileManager defaultManager] currentDirectoryPath] stringByAppendingPathComponent:bundlePath];
 
   if (ToolchainIsXcode7OrBetter()) {
     targetSettings[Xcode_BUILT_PRODUCTS_DIR] = [bundlePath stringByDeletingLastPathComponent];

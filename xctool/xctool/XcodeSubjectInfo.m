@@ -35,6 +35,8 @@ static NSString *StringByStandardizingPath(NSString *path)
     } else if ([component isEqualToString:@".."] && stack.count > 0 && ![[stack lastObject] isEqualToString:@".."]) {
       [stack removeLastObject];
       continue;
+    } else if ([component isEqualToString:@"/"]) {
+      [stack addObject:@""];
     } else {
       [stack addObject:component];
     }
