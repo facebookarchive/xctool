@@ -144,8 +144,8 @@ static NSDictionary *BuildConfigurationsByActionForSchemePath(NSString *schemePa
   NSURL *URL = [NSURL fileURLWithPath:path];
   NSError *error = nil;
   NSXMLDocument *doc = [[NSXMLDocument alloc] initWithContentsOfURL:URL
-                                                             options:0
-                                                               error:&error];
+                                                            options:0
+                                                              error:&error];
   if (error != nil) {
     NSLog(@"Error in parsing: %@: %@", workspacePath, error);
     abort();
@@ -867,36 +867,16 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 
 - (void)populateBuildablesAndTestablesForWorkspaceWithSchemePath:(NSString *)schemePath
 {
-  NSArray *testables = [[self class] testablesInSchemePath:schemePath
-                                                  basePath:BasePathFromSchemePath(schemePath)];
-  NSArray *buildables = [[self class] buildablesInSchemePath:schemePath
-                                                    basePath:BasePathFromSchemePath(schemePath)];
+  _testables = [[self class] testablesInSchemePath:schemePath
+                                          basePath:BasePathFromSchemePath(schemePath)];
+  _buildables = [[self class] buildablesInSchemePath:schemePath
+                                            basePath:BasePathFromSchemePath(schemePath)];
 
-  // It's possible that the scheme references projects that aren't part of the workspace.  When
-  // Xcode encounters these, it just skips them so we'll do the same.
-  NSSet *projectPathsInWorkspace = [NSSet setWithArray:[XcodeSubjectInfo projectPathsInWorkspace:_subjectWorkspace]];
-  BOOL (^workspaceContainsProject)(Buildable *) = ^(Buildable *item) {
-    return [projectPathsInWorkspace containsObject:item.projectPath];
-  };
-
-  _testables = [testables objectsAtIndexes:
-                [testables indexesOfObjectsPassingTest:
-                 ^BOOL(Buildable *obj, NSUInteger idx, BOOL *stop) {
-                   return workspaceContainsProject(obj);
-                 }]];
-
-  _buildables = [buildables objectsAtIndexes:
-                 [buildables indexesOfObjectsPassingTest:
-                  ^BOOL(Buildable *obj, NSUInteger idx, BOOL *stop) {
-                    return workspaceContainsProject(obj);
-                  }]];
-
-  _buildablesForTest = [buildables objectsAtIndexes:
-                        [buildables indexesOfObjectsPassingTest:
+  _buildablesForTest = [_buildables objectsAtIndexes:
+                        [_buildables indexesOfObjectsPassingTest:
                          ^BOOL(Buildable *obj, NSUInteger idx, BOOL *stop) {
-                           return (workspaceContainsProject(obj) && obj.buildForTesting);
+                           return obj.buildForTesting;
                          }]];
-
 }
 
 - (void)populateBuildablesAndTestablesForProjectWithSchemePath:(NSString *)schemePath
