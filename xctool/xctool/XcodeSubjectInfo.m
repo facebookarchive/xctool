@@ -44,7 +44,8 @@ static NSString *StringByStandardizingPath(NSString *path)
   return [stack componentsJoinedByString:@"/"];
 }
 
-static NSString *BasePathFromSchemePath(NSString *schemePath) {
+static NSString *BasePathFromSchemePath(NSString *schemePath)
+{
   for (;;) {
     assert(schemePath.length > 0);
 
@@ -61,6 +62,28 @@ static NSString *BasePathFromSchemePath(NSString *schemePath) {
   }
 
   return schemePath;
+}
+
+static NSString *FullPathForBasePathAndRelativePath(NSString *basePath, NSString *relativePath)
+{
+  NSString *fullPath = [basePath stringByAppendingPathComponent:relativePath];
+  NSArray *relativePathComponenets = [relativePath pathComponents];
+  for (NSUInteger l=[relativePathComponenets count]; l>0; l--) {
+    NSString *substring = [NSString pathWithComponents:[relativePathComponenets subarrayWithRange:NSMakeRange(0, l)]];
+    if ([basePath hasSuffix:substring]) {
+      fullPath = [basePath stringByAppendingPathComponent:[relativePath substringFromIndex:[substring length]]];
+      break;
+    }
+  }
+  return fullPath;
+}
+
+static NSString *StandardizedContainerPath(NSString *container, NSString *basePath)
+{
+  static NSString * const kContainerReference = @"container:";
+  assert([container hasPrefix:kContainerReference]);
+  NSString *containerPath = [container substringFromIndex:kContainerReference.length];
+  return StringByStandardizingPath(FullPathForBasePathAndRelativePath(basePath, containerPath));
 }
 
 static NSDictionary *BuildConfigurationsByActionForSchemePath(NSString *schemePath)
@@ -584,9 +607,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
     NSString *macroExpansionProjectReferencedContainer =
       [[macroExpansionBuildableReferenceNodes[0] attributeForName:@"ReferencedContainer"] stringValue];
 
-    NSString *projectPath =
-      StringByStandardizingPath([basePath stringByAppendingPathComponent:
-                                 [macroExpansionProjectReferencedContainer substringFromIndex:@"container:".length]]);
+    NSString *projectPath = StandardizedContainerPath(macroExpansionProjectReferencedContainer, basePath);
     if ([[NSFileManager defaultManager] fileExistsAtPath:projectPath]) {
       macroExpansionProjectPath = projectPath;
       macroExpansionTarget = [[macroExpansionBuildableReferenceNodes[0]
@@ -604,9 +625,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 
     NSString *referencedContainer =
       [[buildableProductRunnableRefNodes[0] attributeForName:@"ReferencedContainer"] stringValue];
-    NSString *projectPath =
-      StringByStandardizingPath([basePath stringByAppendingPathComponent:
-                                 [referencedContainer substringFromIndex:@"container:".length]]);
+    NSString *projectPath = StandardizedContainerPath(referencedContainer, basePath);
     if ([[NSFileManager defaultManager] fileExistsAtPath:projectPath]) {
       macroExpansionProjectPath = projectPath;
       macroExpansionTarget = [[buildableProductRunnableRefNodes[0] attributeForName:@"BlueprintName"] stringValue];
@@ -648,9 +667,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
     NSXMLElement *buildableReference = buildableReferences[0];
 
     NSString *referencedContainer = [[buildableReference attributeForName:@"ReferencedContainer"] stringValue];
-    assert([referencedContainer hasPrefix:@"container:"]);
-
-    NSString *projectPath = StringByStandardizingPath([basePath stringByAppendingPathComponent:[referencedContainer substringFromIndex:@"container:".length]]);
+    NSString *projectPath = StandardizedContainerPath(referencedContainer, basePath);
     if (![[NSFileManager defaultManager] fileExistsAtPath:projectPath]) {
       NSLog(@"Error: Scheme %@ base %@ contains reference to non-existent project: %@", schemePath, basePath,projectPath);
       abort();
@@ -720,9 +737,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
     NSXMLElement *buildableReference = buildableReferences[0];
 
     NSString *referencedContainer = [[buildableReference attributeForName:@"ReferencedContainer"] stringValue];
-    assert([referencedContainer hasPrefix:@"container:"]);
-
-    NSString *projectPath = StringByStandardizingPath([basePath stringByAppendingPathComponent:[referencedContainer substringFromIndex:@"container:".length]]);
+    NSString *projectPath = StandardizedContainerPath(referencedContainer, basePath);
     if (![[NSFileManager defaultManager] fileExistsAtPath:projectPath]) {
       NSLog(@"Error: Scheme %@ base %@ contains reference to non-existent project: %@", schemePath, basePath, projectPath);
       abort();
