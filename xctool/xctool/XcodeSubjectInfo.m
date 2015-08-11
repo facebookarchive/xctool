@@ -498,7 +498,9 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   for (NSString *schemePath in schemePaths) {
     NSArray *testables = [self testablesInSchemePath:schemePath
                                             basePath:BasePathFromSchemePath(schemePath)];
-    for (Testable *testable in testables) {
+    NSArray *buildables = [self buildablesInSchemePath:schemePath
+                                              basePath:BasePathFromSchemePath(schemePath)];
+    for (Testable *testable in [testables arrayByAddingObjectsFromArray:buildables]) {
       if ([testable.target isEqualToString:target]) {
         found = YES;
         XcodeTargetMatch *match = [[XcodeTargetMatch alloc] init];
