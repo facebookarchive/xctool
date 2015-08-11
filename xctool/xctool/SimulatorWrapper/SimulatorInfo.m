@@ -317,6 +317,9 @@ static const NSInteger KProductTypeIpad = 2;
   return @30;
 }
 
+/*
+ * Passing the same simulator environment as Xcode 6.4.
+ */
 - (NSMutableDictionary *)simulatorLaunchEnvironment
 {
   NSString *sdkName = _buildSettings[Xcode_SDK_NAME];
@@ -336,6 +339,8 @@ static const NSInteger KProductTypeIpad = 2;
     @"NSUnbufferedIO" : @"YES",
     @"XCInjectBundle" : [self productBundlePath],
     @"XCInjectBundleInto" : [self testHostPath],
+    @"AppTargetLocation": [self testHostPath],
+    @"TestBundleLocation": [self productBundlePath],
   }];
 
   return environment;

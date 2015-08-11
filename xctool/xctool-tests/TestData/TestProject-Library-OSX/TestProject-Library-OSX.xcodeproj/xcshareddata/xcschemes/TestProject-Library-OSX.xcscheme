@@ -49,6 +49,22 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "282BFDE81715E8520022F9FF"
+            BuildableName = "TestProject-Library-OSX.dylib"
+            BlueprintName = "TestProject-Library-OSX"
+            ReferencedContainer = "container:TestProject-Library-OSX.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "OBJC_DISABLE_GC"
+            value = "YES"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>

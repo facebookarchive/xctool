@@ -20,7 +20,7 @@
 
 @property (nonatomic, copy) NSDictionary *buildSettings;
 
-- (void)setCpuType:(cpu_type_t) cpuType;
+- (void)setCpuType:(cpu_type_t)cpuType;
 - (void)setDeviceName:(NSString *)deviceName;
 - (void)setOSVersion:(NSString *)OSVersion;
 

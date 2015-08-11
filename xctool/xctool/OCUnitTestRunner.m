@@ -366,9 +366,6 @@
   }
 
   NSArray *layers = @[
-                      // Xcode will let your regular environment pass-thru to
-                      // the test.
-                      [[NSProcessInfo processInfo] environment],
                       // Any special environment vars set in the scheme.
                       _environment ?: @{},
                       // Internal environment that should be passed to xctool libs

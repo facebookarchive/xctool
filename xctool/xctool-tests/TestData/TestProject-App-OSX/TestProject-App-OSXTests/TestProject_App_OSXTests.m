@@ -14,29 +14,18 @@
 
 @implementation TestProject_App_OSXTests
 
-- (void)setUp
+- (void)testWillPass
 {
-    [super setUp];
-
-    // Set-up code here.
-}
-
-- (void)tearDown
-{
-    // Tear-down code here.
-
-    [super tearDown];
-}
-
-- (void)testWillPass {
   STAssertEquals(1, 1, @"Equal!");
 }
 
-- (void)testWillFail {
+- (void)testWillFail
+{
   STAssertEquals(1, 2, @"Not Equal!");
 }
 
-- (void)testOutput {
+- (void)testOutput
+{
   // Generate output in all the different ways we know of...
   fprintf(stdout, "stdout\n");
   fprintf(stderr, "stderr\n");
@@ -53,6 +42,20 @@
   // test bundle doesn't load, it will mean that we're not properly loading the
   // test bundle inside of the running TEST_HOST.
   Something *something = [[Something alloc] init];
+  NSLog(@"Something: %@", something);
+}
+
+- (void)testStandardDirectories
+{
+  NSLog(@"\n"\
+        "============================================================\n" \
+        "   NSHomeDirectory:\n     %@\n" \
+        "   NSTemporaryDirectory:\n     %@\n" \
+        "   Documents:\n     %@\n" \
+        "============================================================\n",
+        NSHomeDirectory(),
+        NSTemporaryDirectory(),
+        [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]);
 }
 
 @end

@@ -31,6 +31,19 @@
   NSLog(@"SDK: %@", [UIDevice currentDevice].systemVersion);
 }
 
+- (void)testStandardDirectories
+{
+  NSLog(@"\n"\
+        "============================================================\n" \
+        "   NSHomeDirectory:\n     %@\n" \
+        "   NSTemporaryDirectory:\n     %@\n" \
+        "   Documents:\n     %@\n" \
+        "============================================================\n",
+        NSHomeDirectory(),
+        NSTemporaryDirectory(),
+        [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]);
+}
+
 - (void)testWillPass
 {
   STAssertTrue(YES, nil);

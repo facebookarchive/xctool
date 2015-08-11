@@ -693,25 +693,21 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
      ^{
        [TestUtil runWithFakeStreams:tool];
 
+       NSMutableDictionary *expectedEnv = [NSMutableDictionary dictionary];
+       expectedEnv[@"DYLD_INSERT_LIBRARIES"] = @"ThisShouldNotGetOverwrittenByOtestShim";
+       expectedEnv[@"RunEnvKey"] = @"RunEnvValue";
+       expectedEnv[@"ARCHS"] = @"x86_64";
+
        assertThat(runner, notNilValue());
        assertThat([runner valueForKey:@"arguments"],
                   equalTo(@[]));
        assertThat([runner valueForKey:@"environment"],
-                  equalTo(@{
-                          @"RunEnvKey" : @"RunEnvValue",
-                          @"ARCHS" : @"x86_64",
-                          @"DYLD_INSERT_LIBRARIES" : @"ThisShouldNotGetOverwrittenByOtestShim",
-                          }));
+                  equalTo(expectedEnv));
 
+       NSString *pathToOtestShimDylib = @"/pretend/this/is/otest-shim.dylib";
+       expectedEnv[@"DYLD_INSERT_LIBRARIES"] = [@[expectedEnv[@"DYLD_INSERT_LIBRARIES"], pathToOtestShimDylib] componentsJoinedByString:@":"];
 
-       NSMutableDictionary *expectedEnv = [NSMutableDictionary dictionary];
-       [expectedEnv addEntriesFromDictionary:[[NSProcessInfo processInfo] environment]];
-       expectedEnv[@"DYLD_INSERT_LIBRARIES"] = @"ThisShouldNotGetOverwrittenByOtestShim:/pretend/this/is/otest-shim.dylib";
-       expectedEnv[@"RunEnvKey"] = @"RunEnvValue";
-       expectedEnv[@"ARCHS"] = @"x86_64";
-
-       assertThat([runner otestEnvironmentWithOverrides:@{
-                   @"DYLD_INSERT_LIBRARIES" : @"/pretend/this/is/otest-shim.dylib"}],
+       assertThat([runner otestEnvironmentWithOverrides:@{@"DYLD_INSERT_LIBRARIES" : pathToOtestShimDylib}],
                   equalTo(expectedEnv));
      }];
 

@@ -24,6 +24,10 @@
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
 
+static NSString * const XCTOOL_CFFIXED_USER_HOME = @"CFFIXED_USER_HOME";
+static NSString * const XCTOOL_HOME = @"HOME";
+static NSString * const XCTOOL_TMPDIR = @"TMPDIR";
+
 @implementation OCUnitIOSLogicTestRunner
 
 - (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath
@@ -45,16 +49,25 @@
 
   // In Xcode 6 `sim` doesn't set `CFFIXED_USER_HOME` if simulator is not launched
   // but this environment is used, for example, by NSHomeDirectory().
-  // To avoid similar situations in future let's copy all simulator environments
+  // Let's pass that environment along with `HOME` and `TMPDIR`.
   if ([_buildSettings[Xcode_SDK_NAME] hasPrefix:@"iphonesimulator"]) {
     SimDevice *device = [_simulatorInfo simulatedDevice];
-    NSDictionary *simulatorEnvironment = [device environment];
-    if (simulatorEnvironment) {
-      [env addEntriesFromDictionary:simulatorEnvironment];
+    NSDictionary *deviceEnvironment = [device environment];
+    NSString *deviceDataPath = [device dataPath];
+    if (deviceEnvironment[XCTOOL_CFFIXED_USER_HOME]) {
+      env[XCTOOL_CFFIXED_USER_HOME] = deviceEnvironment[XCTOOL_CFFIXED_USER_HOME];
+    } else if (deviceDataPath) {
+      env[XCTOOL_CFFIXED_USER_HOME] = deviceDataPath;
     }
-    NSString *fixedUserHome = simulatorEnvironment[@"CFFIXED_USER_HOME"];
-    if (!fixedUserHome && [device dataPath]) {
-      env[@"CFFIXED_USER_HOME"] = [device dataPath];
+    if (deviceEnvironment[XCTOOL_HOME]) {
+      env[XCTOOL_HOME] = deviceEnvironment[XCTOOL_HOME];
+    } else if (deviceDataPath) {
+      env[XCTOOL_HOME] = deviceDataPath;
+    }
+    if (deviceEnvironment[XCTOOL_TMPDIR]) {
+      env[XCTOOL_TMPDIR] = deviceEnvironment[XCTOOL_TMPDIR];
+    } else if (deviceDataPath) {
+      env[XCTOOL_TMPDIR] = [NSString pathWithComponents:@[deviceDataPath, @"tmp"]];
     }
   }
 

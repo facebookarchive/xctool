@@ -36,4 +36,17 @@
   STAssertEquals(2, 2, @"2 == 2");
 }
 
+- (void)testStandardDirectories
+{
+  NSLog(@"\n"\
+        "============================================================\n" \
+        "   NSHomeDirectory:\n     %@\n" \
+        "   NSTemporaryDirectory:\n     %@\n" \
+        "   Documents:\n     %@\n" \
+        "============================================================\n",
+        NSHomeDirectory(),
+        NSTemporaryDirectory(),
+        [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject]);
+}
+
 @end

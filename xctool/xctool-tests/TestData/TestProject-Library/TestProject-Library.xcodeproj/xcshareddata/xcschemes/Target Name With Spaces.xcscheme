@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "CC169F001B66F9F200C431D5"
-               BuildableName = "TestProject-LibraryTests copy.octest"
+               BuildableName = "Target-Name-With-Spaces.octest"
                BlueprintName = "Target Name With Spaces"
                ReferencedContainer = "container:TestProject-Library.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "CC169F001B66F9F200C431D5"
-               BuildableName = "TestProject-LibraryTests copy.octest"
+               BuildableName = "Target-Name-With-Spaces.octest"
                BlueprintName = "Target Name With Spaces"
                ReferencedContainer = "container:TestProject-Library.xcodeproj">
             </BuildableReference>
@@ -43,7 +43,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "CC169F001B66F9F200C431D5"
-            BuildableName = "TestProject-LibraryTests copy.octest"
+            BuildableName = "Target-Name-With-Spaces.octest"
             BlueprintName = "Target Name With Spaces"
             ReferencedContainer = "container:TestProject-Library.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "CC169F001B66F9F200C431D5"
-            BuildableName = "TestProject-LibraryTests copy.octest"
+            BuildableName = "Target-Name-With-Spaces.octest"
             BlueprintName = "Target Name With Spaces"
             ReferencedContainer = "container:TestProject-Library.xcodeproj">
          </BuildableReference>
@@ -80,7 +80,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "CC169F001B66F9F200C431D5"
-            BuildableName = "TestProject-LibraryTests copy.octest"
+            BuildableName = "Target-Name-With-Spaces.octest"
             BlueprintName = "Target Name With Spaces"
             ReferencedContainer = "container:TestProject-Library.xcodeproj">
          </BuildableReference>
