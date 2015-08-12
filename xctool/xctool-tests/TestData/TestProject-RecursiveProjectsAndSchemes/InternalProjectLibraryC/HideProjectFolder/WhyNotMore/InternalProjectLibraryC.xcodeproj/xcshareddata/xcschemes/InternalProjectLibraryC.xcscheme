@@ -17,21 +17,21 @@
                BlueprintIdentifier = "CC2BE2ED1B7B1A8F008FBC50"
                BuildableName = "libInternalProjectLibraryC.a"
                BlueprintName = "InternalProjectLibraryC"
-               ReferencedContainer = "container:InternalProjectLibraryC.xcodeproj">
+               ReferencedContainer = "container:HideProjectFolder/WhyNotMore/InternalProjectLibraryC.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
             buildForTesting = "YES"
             buildForRunning = "YES"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "CC2BE2F81B7B1A8F008FBC50"
                BuildableName = "InternalProjectLibraryCTests.xctest"
                BlueprintName = "InternalProjectLibraryCTests"
-               ReferencedContainer = "container:InternalProjectLibraryC.xcodeproj">
+               ReferencedContainer = "container:HideProjectFolder/WhyNotMore/InternalProjectLibraryC.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -49,19 +49,10 @@
                BlueprintIdentifier = "CC2BE2F81B7B1A8F008FBC50"
                BuildableName = "InternalProjectLibraryCTests.xctest"
                BlueprintName = "InternalProjectLibraryCTests"
-               ReferencedContainer = "container:InternalProjectLibraryC.xcodeproj">
+               ReferencedContainer = "container:HideProjectFolder/WhyNotMore/InternalProjectLibraryC.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CC2BE2ED1B7B1A8F008FBC50"
-            BuildableName = "libInternalProjectLibraryC.a"
-            BlueprintName = "InternalProjectLibraryC"
-            ReferencedContainer = "container:InternalProjectLibraryC.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </TestAction>
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
@@ -78,7 +69,7 @@
             BlueprintIdentifier = "CC2BE2ED1B7B1A8F008FBC50"
             BuildableName = "libInternalProjectLibraryC.a"
             BlueprintName = "InternalProjectLibraryC"
-            ReferencedContainer = "container:InternalProjectLibraryC.xcodeproj">
+            ReferencedContainer = "container:HideProjectFolder/WhyNotMore/InternalProjectLibraryC.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -90,15 +81,6 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CC2BE2ED1B7B1A8F008FBC50"
-            BuildableName = "libInternalProjectLibraryC.a"
-            BlueprintName = "InternalProjectLibraryC"
-            ReferencedContainer = "container:InternalProjectLibraryC.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

@@ -17,3 +17,5 @@
 #import <Foundation/Foundation.h>
 
 NSSet * ProjectFilesReferencedInProjectAtPath(NSString *filePath);
+
+NSString * ProjectBaseDirectoryPath(NSString *projectPath);

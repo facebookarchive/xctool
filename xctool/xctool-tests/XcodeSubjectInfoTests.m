@@ -28,6 +28,10 @@
 #import "XcodeSubjectInfo.h"
 #import "XcodeTargetMatch.h"
 
+@interface XcodeSubjectInfo (Testing)
+- (void)populateBuildablesAndTestablesForWorkspaceWithSchemePath:(NSString *)schemePath;
+@end
+
 @interface XcodeSubjectInfoTests : XCTestCase
 @end
 
@@ -77,6 +81,22 @@
   // we can't be sure about order because PbxprojReader returns sets.
   assertThatInteger(schemes.count, equalToInteger(6));
   assertThat([NSSet setWithArray:schemes], equalTo([NSSet setWithArray:@[
+    TEST_DATA "TestProject-RecursiveProjectsAndSchemes/TestProject-RecursiveProjectsAndSchemes.xcodeproj/xcshareddata/xcschemes/TestProject-RecursiveProjectsAndSchemes.xcscheme",
+    TEST_DATA "TestProject-RecursiveProjectsAndSchemes/TestProject-RecursiveProjectsAndSchemes.xcodeproj/xcshareddata/xcschemes/TestProject-RecursiveProjectsAndSchemes-InternalTests.xcscheme",
+    TEST_DATA "TestProject-RecursiveProjectsAndSchemes/InternalProjectLibraryA/InternalProjectLibraryA.xcodeproj/xcshareddata/xcschemes/InternalProjectLibraryA.xcscheme",
+    TEST_DATA "TestProject-RecursiveProjectsAndSchemes/TestProject-RecursiveProjectsAndSchemes/OtherProjects/InternalProjectLibraryB/InternalProjectLibraryB.xcodeproj/xcshareddata/xcschemes/InternalProjectLibraryB.xcscheme",
+    TEST_DATA "TestProject-RecursiveProjectsAndSchemes/InternalProjectLibraryC/HideProjectFolder/WhyNotMore/InternalProjectLibraryC.xcodeproj/xcshareddata/xcschemes/InternalProjectLibraryC.xcscheme",
+    TEST_DATA "TestProject-RecursiveProjectsAndSchemes/InternalProjectLibraryC/HideProjectFolder/WhyNotMore/InternalProjectLibraryC.xcodeproj/xcshareddata/xcschemes/InternalProjectLibraryTests.xcscheme",
+  ]]));
+}
+
+- (void)testCanGetAllSchemesInAWorkspaceWithNestedProjects
+{
+  NSArray *schemes = [XcodeSubjectInfo schemePathsInWorkspace:TEST_DATA "TestProject-RecursiveProjectsAndSchemes/TestProject-RecursiveProjectsAndSchemes.xcworkspace"];
+  // we can't be sure about order because PbxprojReader returns sets.
+  assertThatInteger(schemes.count, equalToInteger(7));
+  assertThat([NSSet setWithArray:schemes], equalTo([NSSet setWithArray:@[
+    TEST_DATA "TestProject-RecursiveProjectsAndSchemes/TestProject-RecursiveProjectsAndSchemes.xcworkspace/xcshareddata/xcschemes/WorkspaceInternalProjectLibraryTests.xcscheme",
     TEST_DATA "TestProject-RecursiveProjectsAndSchemes/TestProject-RecursiveProjectsAndSchemes.xcodeproj/xcshareddata/xcschemes/TestProject-RecursiveProjectsAndSchemes.xcscheme",
     TEST_DATA "TestProject-RecursiveProjectsAndSchemes/TestProject-RecursiveProjectsAndSchemes.xcodeproj/xcshareddata/xcschemes/TestProject-RecursiveProjectsAndSchemes-InternalTests.xcscheme",
     TEST_DATA "TestProject-RecursiveProjectsAndSchemes/InternalProjectLibraryA/InternalProjectLibraryA.xcodeproj/xcshareddata/xcschemes/InternalProjectLibraryA.xcscheme",
@@ -389,6 +409,112 @@
     assertThat([launchedTasks[1] arguments],
                containsArray(@[@"test", @"-showBuildSettings"]));
   }];
+}
+
+- (void)testBuildableAndTestableAreCorrectlyReadWhenSchemeReferencesNestedProject
+{
+  XcodeSubjectInfo *subjectInfo = [[XcodeSubjectInfo alloc] init];
+  NSString *schemePath = TEST_DATA "TestProject-RecursiveProjectsAndSchemes/TestProject-RecursiveProjectsAndSchemes.xcodeproj/xcshareddata/xcschemes/TestProject-RecursiveProjectsAndSchemes-InternalTests.xcscheme";
+  [subjectInfo populateBuildablesAndTestablesForWorkspaceWithSchemePath:schemePath];
+
+  assertThat([subjectInfo.testables valueForKeyPath:@"target"], equalTo(@[
+    @"InternalProjectLibraryATests",
+    @"InternalProjectLibraryBTests",
+    @"InternalProjectLibraryCTests",
+  ]));
+  assertThat([subjectInfo.buildables valueForKeyPath:@"target"], equalTo(@[
+    @"InternalProjectLibraryATests",
+    @"InternalProjectLibraryBTests",
+    @"InternalProjectLibraryCTests",
+  ]));
+  assertThat([subjectInfo.buildablesForTest valueForKeyPath:@"target"], equalTo(@[
+    @"InternalProjectLibraryATests",
+    @"InternalProjectLibraryBTests",
+    @"InternalProjectLibraryCTests",
+  ]));
+
+  schemePath = TEST_DATA "TestProject-RecursiveProjectsAndSchemes/InternalProjectLibraryA/InternalProjectLibraryA.xcodeproj/xcshareddata/xcschemes/InternalProjectLibraryA.xcscheme";
+  [subjectInfo populateBuildablesAndTestablesForWorkspaceWithSchemePath:schemePath];
+
+  assertThat([subjectInfo.testables valueForKeyPath:@"target"], equalTo(@[
+    @"InternalProjectLibraryATests",
+  ]));
+  assertThat([subjectInfo.buildables valueForKeyPath:@"target"], equalTo(@[
+    @"InternalProjectLibraryA",
+    @"InternalProjectLibraryATests",
+  ]));
+  assertThat([subjectInfo.buildablesForTest valueForKeyPath:@"target"], equalTo(@[
+    @"InternalProjectLibraryA",
+    @"InternalProjectLibraryATests",
+  ]));
+
+  schemePath = TEST_DATA "TestProject-RecursiveProjectsAndSchemes/TestProject-RecursiveProjectsAndSchemes/OtherProjects/InternalProjectLibraryB/InternalProjectLibraryB.xcodeproj/xcshareddata/xcschemes/InternalProjectLibraryB.xcscheme";
+  [subjectInfo populateBuildablesAndTestablesForWorkspaceWithSchemePath:schemePath];
+
+  assertThat([subjectInfo.testables valueForKeyPath:@"target"], equalTo(@[
+    @"InternalProjectLibraryBTests",
+  ]));
+  assertThat([subjectInfo.buildables valueForKeyPath:@"target"], equalTo(@[
+    @"InternalProjectLibraryB",
+    @"InternalProjectLibraryBTests",
+  ]));
+  assertThat([subjectInfo.buildablesForTest valueForKeyPath:@"target"], equalTo(@[
+    @"InternalProjectLibraryB",
+    @"InternalProjectLibraryBTests",
+  ]));
+
+  schemePath = TEST_DATA "TestProject-RecursiveProjectsAndSchemes/InternalProjectLibraryC/HideProjectFolder/WhyNotMore/InternalProjectLibraryC.xcodeproj/xcshareddata/xcschemes/InternalProjectLibraryC.xcscheme";
+  [subjectInfo populateBuildablesAndTestablesForWorkspaceWithSchemePath:schemePath];
+
+  assertThat([subjectInfo.testables valueForKeyPath:@"target"], equalTo(@[
+    @"InternalProjectLibraryCTests",
+  ]));
+  assertThat([subjectInfo.buildables valueForKeyPath:@"target"], equalTo(@[
+    @"InternalProjectLibraryC",
+    @"InternalProjectLibraryCTests",
+  ]));
+  assertThat([subjectInfo.buildablesForTest valueForKeyPath:@"target"], equalTo(@[
+    @"InternalProjectLibraryC",
+    @"InternalProjectLibraryCTests",
+  ]));
+
+  schemePath = TEST_DATA "TestProject-RecursiveProjectsAndSchemes/InternalProjectLibraryC/HideProjectFolder/WhyNotMore/InternalProjectLibraryC.xcodeproj/xcshareddata/xcschemes/InternalProjectLibraryTests.xcscheme";
+  [subjectInfo populateBuildablesAndTestablesForWorkspaceWithSchemePath:schemePath];
+
+  assertThat([subjectInfo.testables valueForKeyPath:@"target"], equalTo(@[
+    @"InternalProjectLibraryATests",
+    @"InternalProjectLibraryBTests",
+    @"InternalProjectLibraryCTests",
+  ]));
+  assertThat([subjectInfo.buildables valueForKeyPath:@"target"], equalTo(@[
+    @"InternalProjectLibraryA",
+    @"InternalProjectLibraryB",
+    @"InternalProjectLibraryC",
+  ]));
+  assertThat([subjectInfo.buildablesForTest valueForKeyPath:@"target"], equalTo(@[
+    @"InternalProjectLibraryA",
+    @"InternalProjectLibraryB",
+    @"InternalProjectLibraryC",
+  ]));
+
+  schemePath = TEST_DATA "TestProject-RecursiveProjectsAndSchemes/TestProject-RecursiveProjectsAndSchemes.xcworkspace/xcshareddata/xcschemes/WorkspaceInternalProjectLibraryTests.xcscheme";
+  [subjectInfo populateBuildablesAndTestablesForWorkspaceWithSchemePath:schemePath];
+
+  assertThat([subjectInfo.testables valueForKeyPath:@"target"], equalTo(@[
+    @"InternalProjectLibraryATests",
+    @"InternalProjectLibraryBTests",
+    @"InternalProjectLibraryCTests",
+  ]));
+  assertThat([subjectInfo.buildables valueForKeyPath:@"target"], equalTo(@[
+    @"InternalProjectLibraryA",
+    @"InternalProjectLibraryB",
+    @"InternalProjectLibraryC",
+  ]));
+  assertThat([subjectInfo.buildablesForTest valueForKeyPath:@"target"], equalTo(@[
+    @"InternalProjectLibraryA",
+    @"InternalProjectLibraryB",
+    @"InternalProjectLibraryC",
+  ]));
 }
 
 @end

@@ -74,3 +74,19 @@ NSSet * ProjectFilesReferencedInProjectAtPath(NSString *filePath)
   }
   return [NSSet setWithArray:[projects valueForKeyPath:PBXFullPathKey]];
 }
+
+NSString * ProjectBaseDirectoryPath(NSString *filePath)
+{
+  NSDictionary *contents = [[NSDictionary alloc] initWithContentsOfFile:[filePath stringByAppendingPathComponent:@"project.pbxproj"]];
+  NSDictionary *objects = contents[PBXObjects];
+  __block NSDictionary *mainProject = nil;
+  [objects enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSDictionary *obj, BOOL *stop) {
+    if ([obj[PBXIsa] isEqualToString:@"PBXProject"]) {
+      mainProject = obj;
+      *stop = YES;
+    }
+  }];
+  NSString *mainProjectPath = [[filePath stringByDeletingLastPathComponent] stringByAppendingPathComponent:mainProject[PBXProjectDirPath] ?: @""];
+  return mainProjectPath;
+}
+

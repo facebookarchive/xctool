@@ -45,13 +45,12 @@ static NSString *StringByStandardizingPath(NSString *path)
   return [stack componentsJoinedByString:@"/"];
 }
 
-static NSString *BasePathFromSchemePath(NSString *schemePath)
+static NSString *ProjectPathFromSchemePath(NSString *schemePath)
 {
   for (;;) {
     assert(schemePath.length > 0);
 
     if ([schemePath hasSuffix:@".xcodeproj"] || [schemePath hasSuffix:@".xcworkspace"]) {
-      schemePath = [schemePath stringByDeletingLastPathComponent];
       break;
     }
 
@@ -84,7 +83,12 @@ static NSString *StandardizedContainerPath(NSString *container, NSString *basePa
   static NSString * const kContainerReference = @"container:";
   assert([container hasPrefix:kContainerReference]);
   NSString *containerPath = [container substringFromIndex:kContainerReference.length];
-  return StringByStandardizingPath(FullPathForBasePathAndRelativePath(basePath, containerPath));
+  return StringByStandardizingPath([basePath stringByAppendingPathComponent:containerPath]);
+}
+
+static NSString *SchemeProjectDirectoryPath(NSString *schemePath)
+{
+  return ProjectBaseDirectoryPath(ProjectPathFromSchemePath(schemePath));
 }
 
 static NSDictionary *BuildConfigurationsByActionForSchemePath(NSString *schemePath)
@@ -511,9 +515,9 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 
   for (NSString *schemePath in schemePaths) {
     NSArray *testables = [self testablesInSchemePath:schemePath
-                                            basePath:BasePathFromSchemePath(schemePath)];
+                                            basePath:SchemeProjectDirectoryPath(schemePath)];
     NSArray *buildables = [self buildablesInSchemePath:schemePath
-                                              basePath:BasePathFromSchemePath(schemePath)];
+                                              basePath:SchemeProjectDirectoryPath(schemePath)];
     for (Testable *testable in [testables arrayByAddingObjectsFromArray:buildables]) {
       if ([testable.target isEqualToString:target]) {
         found = YES;
@@ -882,9 +886,9 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 - (void)populateBuildablesAndTestablesForWorkspaceWithSchemePath:(NSString *)schemePath
 {
   _testables = [[self class] testablesInSchemePath:schemePath
-                                          basePath:BasePathFromSchemePath(schemePath)];
+                                          basePath:SchemeProjectDirectoryPath(schemePath)];
   _buildables = [[self class] buildablesInSchemePath:schemePath
-                                            basePath:BasePathFromSchemePath(schemePath)];
+                                            basePath:SchemeProjectDirectoryPath(schemePath)];
 
   _buildablesForTest = [_buildables objectsAtIndexes:
                         [_buildables indexesOfObjectsPassingTest:
@@ -896,10 +900,10 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 - (void)populateBuildablesAndTestablesForProjectWithSchemePath:(NSString *)schemePath
 {
   _testables = [[self class] testablesInSchemePath:schemePath
-                                          basePath:BasePathFromSchemePath(schemePath)];
+                                          basePath:SchemeProjectDirectoryPath(schemePath)];
 
   _buildables = [[self class] buildablesInSchemePath:schemePath
-                                            basePath:BasePathFromSchemePath(schemePath)];
+                                            basePath:SchemeProjectDirectoryPath(schemePath)];
   _buildablesForTest = [_buildables objectsAtIndexes:
                         [_buildables indexesOfObjectsPassingTest:
                          ^BOOL(Buildable *obj, NSUInteger idx, BOOL *stop) {
