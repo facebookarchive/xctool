@@ -126,6 +126,9 @@
 		C9D5B98A1733CC2500011C1F /* ArchiveAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D5B9881733CC2100011C1F /* ArchiveAction.m */; };
 		CC229B0F1946396600E11C30 /* SimulatorUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = CC229B0E1946396600E11C30 /* SimulatorUtils.m */; };
 		CC229B1019463B2B00E11C30 /* SimulatorUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = CC229B0E1946396600E11C30 /* SimulatorUtils.m */; };
+		CC2BE2111B7ADE8D008FBC50 /* PbxprojReader.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2BE2101B7ADE8D008FBC50 /* PbxprojReader.m */; };
+		CC2BE23E1B7AE2AF008FBC50 /* PbxprojReader.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2BE2101B7ADE8D008FBC50 /* PbxprojReader.m */; };
+		CC2BE33A1B7B1BE7008FBC50 /* PbxprojReaderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2BE3391B7B1BE7008FBC50 /* PbxprojReaderTests.m */; };
 		CC84C94C18ECE161001F6094 /* FakeOCUnitTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = CC84C94B18ECE161001F6094 /* FakeOCUnitTestRunner.m */; };
 		CCC55AD2195BCD7D0051A50B /* SimulatorWrapperXcode6.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC55AD1195BCD7D0051A50B /* SimulatorWrapperXcode6.m */; };
 		CCC55AD6195BCDD90051A50B /* SimulatorWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC55AD5195BCDD90051A50B /* SimulatorWrapper.m */; };
@@ -332,6 +335,9 @@
 		CC229B0E1946396600E11C30 /* SimulatorUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimulatorUtils.m; path = xctool/SimulatorWrapper/SimulatorUtils.m; sourceTree = "<group>"; };
 		CC229B1219463D2D00E11C30 /* SimulatorWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimulatorWrapper.h; path = xctool/SimulatorWrapper/SimulatorWrapper.h; sourceTree = "<group>"; };
 		CC229B181946413400E11C30 /* SimulatorInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimulatorInfo.h; path = xctool/SimulatorWrapper/SimulatorInfo.h; sourceTree = "<group>"; };
+		CC2BE20F1B7ADE8D008FBC50 /* PbxprojReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PbxprojReader.h; sourceTree = "<group>"; };
+		CC2BE2101B7ADE8D008FBC50 /* PbxprojReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PbxprojReader.m; sourceTree = "<group>"; };
+		CC2BE3391B7B1BE7008FBC50 /* PbxprojReaderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PbxprojReaderTests.m; sourceTree = "<group>"; };
 		CC84C94A18ECE161001F6094 /* FakeOCUnitTestRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeOCUnitTestRunner.h; sourceTree = "<group>"; };
 		CC84C94B18ECE161001F6094 /* FakeOCUnitTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeOCUnitTestRunner.m; sourceTree = "<group>"; };
 		CCC55AC0195BB1E80051A50B /* SimDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimDevice.h; sourceTree = "<group>"; };
@@ -495,6 +501,8 @@
 				EEB31CF817C6D57B00CFB0E1 /* OCTestSuiteEventState.m */,
 				AA3E57FA1812262B008B9644 /* OCUnitTestQueryRunner */,
 				AA3E57F91812261B008B9644 /* OCUnitTestRunner */,
+				CC2BE20F1B7ADE8D008FBC50 /* PbxprojReader.h */,
+				CC2BE2101B7ADE8D008FBC50 /* PbxprojReader.m */,
 				28E28FBA1797099E0072376C /* ReporterTask.h */,
 				28E28FBB1797099E0072376C /* ReporterTask.m */,
 				28E28FB61796926A0072376C /* ReportStatus.h */,
@@ -595,6 +603,7 @@
 				CD0CFBD71992E32C0028F69B /* TaskUtilTests.m */,
 				CCF980311B38D1C900E4E0B0 /* XCTestConfigurationUnarchiver.h */,
 				CCF980321B38D1C900E4E0B0 /* XCTestConfigurationUnarchiver.m */,
+				CC2BE3391B7B1BE7008FBC50 /* PbxprojReaderTests.m */,
 			);
 			path = "xctool-tests";
 			sourceTree = "<group>";
@@ -881,6 +890,7 @@
 				CD56770F1766782C003B727C /* BuildStateParser.mm in Sources */,
 				CCC55AD2195BCD7D0051A50B /* SimulatorWrapperXcode6.m in Sources */,
 				28E28FB81796926A0072376C /* ReportStatus.m in Sources */,
+				CC2BE2111B7ADE8D008FBC50 /* PbxprojReader.m in Sources */,
 				28E28FBC1797099E0072376C /* ReporterTask.m in Sources */,
 				28F489FC17973BF900068E00 /* NSFileHandle+Print.m in Sources */,
 				28404ADF17C7E16F00CB436A /* Testable.m in Sources */,
@@ -898,6 +908,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC2BE23E1B7AE2AF008FBC50 /* PbxprojReader.m in Sources */,
 				CCEB0F26195F2D9E00878E25 /* SimulatorInfo.m in Sources */,
 				CCEB0F28195F2D9E00878E25 /* SimulatorWrapper.m in Sources */,
 				CCEB0F29195F2D9E00878E25 /* SimulatorWrapperXcode6.m in Sources */,
@@ -945,6 +956,7 @@
 				287BF08516F1A97900590E06 /* XcodeSubjectInfo.m in Sources */,
 				4DD0C68A1B25E25E005FFF7F /* ActionScriptsTests.m in Sources */,
 				28ACFC8416FBA888004BAF33 /* TaskUtil.m in Sources */,
+				CC2BE33A1B7B1BE7008FBC50 /* PbxprojReaderTests.m in Sources */,
 				288B9FB9171A50C1008F0BDF /* OCUnitOSXLogicTestRunner.m in Sources */,
 				288B9FBD171A5509008F0BDF /* OCUnitOSXAppTestRunner.m in Sources */,
 				324BB4C61725BDA20073A862 /* XcodeTargetMatch.m in Sources */,

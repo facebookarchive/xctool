@@ -49,6 +49,19 @@
                      TEST_DATA @"WorkspacePathTest/NestedDir/SomeProject/SomeProject.xcodeproj"]));
 }
 
+- (void)testCanGetProjectPathsInProjectWithNestedProjects
+{
+  NSArray *paths = [XcodeSubjectInfo projectPathsInWorkspace:TEST_DATA "TestProject-RecursiveProjectsAndSchemes/TestProject-RecursiveProjectsAndSchemes.xcodeproj/project.xcworkspace"];
+  // we can't be sure about order because PbxprojReader returns sets.
+  assertThatInteger(paths.count, equalToInteger(4));
+  assertThat([NSSet setWithArray:paths], equalTo([NSSet setWithArray:@[
+    TEST_DATA "TestProject-RecursiveProjectsAndSchemes/InternalProjectLibraryA/InternalProjectLibraryA.xcodeproj",
+    TEST_DATA "TestProject-RecursiveProjectsAndSchemes/TestProject-RecursiveProjectsAndSchemes/OtherProjects/InternalProjectLibraryB/InternalProjectLibraryB.xcodeproj",
+    TEST_DATA "TestProject-RecursiveProjectsAndSchemes/InternalProjectLibraryC/HideProjectFolder/WhyNotMore/InternalProjectLibraryC.xcodeproj",
+    TEST_DATA "TestProject-RecursiveProjectsAndSchemes/TestProject-RecursiveProjectsAndSchemes.xcodeproj",
+  ]]));
+}
+
 - (void)testCanGetAllSchemesInAProject
 {
   NSArray *schemes = [XcodeSubjectInfo schemePathsInContainer:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"];
@@ -56,6 +69,21 @@
     TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj/xcshareddata/xcschemes/Target Name With Spaces.xcscheme",
     TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj/xcshareddata/xcschemes/TestProject-Library.xcscheme",
   ]));
+}
+
+- (void)testCanGetAllSchemesInAProjectWithNestedProjects
+{
+  NSArray *schemes = [XcodeSubjectInfo schemePathsInWorkspace:TEST_DATA "TestProject-RecursiveProjectsAndSchemes/TestProject-RecursiveProjectsAndSchemes.xcodeproj/project.xcworkspace"];
+  // we can't be sure about order because PbxprojReader returns sets.
+  assertThatInteger(schemes.count, equalToInteger(6));
+  assertThat([NSSet setWithArray:schemes], equalTo([NSSet setWithArray:@[
+    TEST_DATA "TestProject-RecursiveProjectsAndSchemes/TestProject-RecursiveProjectsAndSchemes.xcodeproj/xcshareddata/xcschemes/TestProject-RecursiveProjectsAndSchemes.xcscheme",
+    TEST_DATA "TestProject-RecursiveProjectsAndSchemes/TestProject-RecursiveProjectsAndSchemes.xcodeproj/xcshareddata/xcschemes/TestProject-RecursiveProjectsAndSchemes-InternalTests.xcscheme",
+    TEST_DATA "TestProject-RecursiveProjectsAndSchemes/InternalProjectLibraryA/InternalProjectLibraryA.xcodeproj/xcshareddata/xcschemes/InternalProjectLibraryA.xcscheme",
+    TEST_DATA "TestProject-RecursiveProjectsAndSchemes/TestProject-RecursiveProjectsAndSchemes/OtherProjects/InternalProjectLibraryB/InternalProjectLibraryB.xcodeproj/xcshareddata/xcschemes/InternalProjectLibraryB.xcscheme",
+    TEST_DATA "TestProject-RecursiveProjectsAndSchemes/InternalProjectLibraryC/HideProjectFolder/WhyNotMore/InternalProjectLibraryC.xcodeproj/xcshareddata/xcschemes/InternalProjectLibraryC.xcscheme",
+    TEST_DATA "TestProject-RecursiveProjectsAndSchemes/InternalProjectLibraryC/HideProjectFolder/WhyNotMore/InternalProjectLibraryC.xcodeproj/xcshareddata/xcschemes/InternalProjectLibraryTests.xcscheme",
+  ]]));
 }
 
 - (void)testCanGetAllSchemesInAWorkspace_ProjectContainers

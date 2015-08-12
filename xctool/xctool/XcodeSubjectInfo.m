@@ -17,6 +17,7 @@
 #import "XcodeSubjectInfo.h"
 
 #import "Buildable.h"
+#import "PbxprojReader.h"
 #import "TaskUtil.h"
 #import "Testable.h"
 #import "XCToolUtil.h"
@@ -184,16 +185,29 @@ static NSDictionary *BuildConfigurationsByActionForSchemePath(NSString *schemePa
   };
 
   NSArray *fileRefNodes = [doc nodesForXPath:@"//FileRef" error:nil];
-  NSMutableArray *projectFiles = [NSMutableArray array];
+  NSMutableArray *rootProjectFiles = [NSMutableArray array];
   for (NSXMLElement *node in fileRefNodes) {
     NSString *location = [[node attributeForName:@"location"] stringValue];
 
     if ([location hasSuffix:@".xcodeproj"]) {
-      [projectFiles addObject:StringByStandardizingPath(fullLocation(node, workspaceBasePath))];
+      [rootProjectFiles addObject:StringByStandardizingPath(fullLocation(node, workspaceBasePath))];
     }
   }
+  NSMutableSet *projectFiles = [NSMutableSet setWithArray:rootProjectFiles];
+  for (NSString *projectFilePath in rootProjectFiles) {
+    [projectFiles unionSet:[self projectPathsInProject:projectFilePath]];
+  }
 
-  return projectFiles;
+  return [projectFiles allObjects];
+}
+
++ (NSSet *)projectPathsInProject:(NSString *)projectPath
+{
+  NSMutableSet *projects = [ProjectFilesReferencedInProjectAtPath(projectPath) mutableCopy];
+  for (NSString *innerProjectPath in [projects allObjects]) {
+    [projects unionSet:[self projectPathsInProject:innerProjectPath]];
+  }
+  return projects;
 }
 
 + (NSArray *)schemePathsInWorkspace:(NSString *)workspace
