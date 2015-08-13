@@ -70,13 +70,19 @@
     }
     ]];
     NSDictionary *actual = GetAvailableSDKsAndAliases();
-    assertThat(actual, equalTo(@{@"macosx10.10": @"macosx10.10",
-                                 @"macosx": @"macosx10.10",
-                                 @"macosx10.9": @"macosx10.9",
-                                 @"iphoneos8.4": @"iphoneos8.4",
-                                 @"iphoneos": @"iphoneos8.4",
-                                 @"iphonesimulator8.4": @"iphonesimulator8.4",
-                                 @"iphonesimulator": @"iphonesimulator8.4"}));
+    assertThat(actual, equalTo(@{
+      @"macosx10.10": @"macosx10.10",
+      @"macosx": @"macosx10.10",
+      @"macosx10.9": @"macosx10.9",
+      @"iphoneos8.4": @"iphoneos8.4",
+      @"iphoneos": @"iphoneos8.4",
+      @"iphonesimulator8.4": @"iphonesimulator8.4",
+      @"iphonesimulator": @"iphonesimulator8.4",
+      @"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk": @"macosx10.10",
+      @"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk": @"macosx10.9",
+      @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.4.sdk": @"iphoneos8.4",
+      @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator8.4.sdk": @"iphonesimulator8.4",
+    }));
   } withDefaultLaunchHandlers:NO];
 }
 

@@ -178,17 +178,23 @@
     NSDictionary *sdksAndAliases = GetAvailableSDKsAndAliases();
     assertThat(sdksAndAliases,
                equalTo(@{
-                       @"iphoneos" : @"iphoneos6.1",
-                       @"iphoneos6.1" : @"iphoneos6.1",
-                       @"iphonesimulator" : @"iphonesimulator6.1",
-                       @"iphonesimulator5.0" : @"iphonesimulator5.0",
-                       @"iphonesimulator5.1" : @"iphonesimulator5.1",
-                       @"iphonesimulator6.0" : @"iphonesimulator6.0",
-                       @"iphonesimulator6.1" : @"iphonesimulator6.1",
-                       @"macosx" : @"macosx10.8",
-                       @"macosx10.7" : @"macosx10.7",
-                       @"macosx10.8" : @"macosx10.8",
-                       }));
+      @"iphoneos" : @"iphoneos6.1",
+      @"iphoneos6.1" : @"iphoneos6.1",
+      @"iphonesimulator" : @"iphonesimulator6.1",
+      @"iphonesimulator5.0" : @"iphonesimulator5.0",
+      @"iphonesimulator5.1" : @"iphonesimulator5.1",
+      @"iphonesimulator6.0" : @"iphonesimulator6.0",
+      @"iphonesimulator6.1" : @"iphonesimulator6.1",
+      @"macosx" : @"macosx10.8",
+      @"macosx10.7" : @"macosx10.7",
+      @"macosx10.8" : @"macosx10.8",
+      @"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk": @"macosx10.7",
+      @"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk": @"macosx10.8",
+      @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk": @"iphoneos6.1",
+      @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.1.sdk": @"iphonesimulator5.1",
+      @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.0.sdk": @"iphonesimulator6.0",
+      @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk": @"iphonesimulator5.0",
+    }));
 
     // Both of the above should be in the allLaunchedTasks list.  Since XcodeDeveloperDirPath()
     // is called by GetAvailableSDKsAndAliases(), it will show up twice.

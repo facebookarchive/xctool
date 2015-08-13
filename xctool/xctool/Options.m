@@ -96,8 +96,8 @@
                            mapTo:@selector(setFindTargetExcludePathsFromString:)],
     [Action actionOptionWithName:@"sdk"
                          aliases:nil
-                     description:@"sdk to use for building (e.g. 6.0, 6.1)"
-                       paramName:@"VERSION"
+                     description:@"alias or path to sdk to use for building (e.g. iphonesimulator, iphonesimulator8.4)"
+                       paramName:@"ALIAS"
                            mapTo:@selector(setSdk:)],
     [Action actionOptionWithName:@"configuration"
                          aliases:nil

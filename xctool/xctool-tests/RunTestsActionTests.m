@@ -364,7 +364,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
       @"-reporter", @"plain",
     ];
 
-    NSLog(@"%@", [TestUtil runWithFakeStreams:tool]);
+    [TestUtil runWithFakeStreams:tool];
 
     NSString *action = ToolchainIsXcode7OrBetter() ? @"build" : @"test";
 

@@ -305,14 +305,14 @@ NSDictionary *GetAvailableSDKsInfo()
   return versionsAvailable;
 }
 
-NSDictionary *GetAvailableSDKsAndAliasesWithSDKInfo(NSDictionary *sdkInfo)
+NSDictionary *GetAvailableSDKsAndAliasesWithSDKInfo(NSDictionary *sdksInfo)
 {
   NSMutableDictionary *versionsAvailable = [NSMutableDictionary dictionary];
 
-  NSArray *keys = [sdkInfo allKeys];
-
-  for (NSString *key in keys) {
-    versionsAvailable[key] = sdkInfo[key][@"SDK"];
+  for (NSString *sdkAlias in sdksInfo) {
+    NSDictionary *sdkInfo = sdksInfo[sdkAlias];
+    versionsAvailable[sdkAlias] = sdkInfo[@"SDK"];
+    versionsAvailable[sdkInfo[@"Path"]] = sdkInfo[@"SDK"];
   }
 
   return versionsAvailable;
