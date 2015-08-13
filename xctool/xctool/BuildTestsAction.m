@@ -190,15 +190,14 @@
 {
   NSArray *buildableList = [self buildableList:[xcodeSubjectInfo testablesAndBuildablesForTest]
                                matchingTargets:_onlyList];
-
-  if (![BuildTestsAction buildTestables:buildableList
-                                command:@"build"
-                                options:options
-                       xcodeSubjectInfo:xcodeSubjectInfo]) {
-    return NO;
+  if (!buildableList.count) {
+    return YES;
   }
 
-  return YES;
+  return [BuildTestsAction buildTestables:buildableList
+                                  command:@"build"
+                                  options:options
+                         xcodeSubjectInfo:xcodeSubjectInfo];
 }
 
 @end
