@@ -66,13 +66,68 @@
   ]]));
 }
 
-- (void)testCanGetAllSchemesInAProject
+- (void)testCanGetAllSchemesInAProjectIncludingCurrentlyLoggedInUserOne
 {
-  NSArray *schemes = [XcodeSubjectInfo schemePathsInContainer:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"];
+  NSString *projectPath = TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj";
+  // create a scheme for a currently logged in user
+  NSString *schemePath = [NSString pathWithComponents:@[
+    projectPath,
+    @"xcuserdata",
+    [NSUserName() stringByAppendingPathExtension:@"xcuserdatad"],
+    @"xcschemes",
+    @"XCTOOL_TEST_SCHEME.xcscheme",
+  ]];
+  NSError *error = nil;
+  // create directories if needed
+  BOOL schemeCreated = [[NSFileManager defaultManager] createDirectoryAtPath:[schemePath stringByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:&error];
+  XCTAssert(schemeCreated, @"Test scheme creation failed with error: %@", error);
+  // remove scheme if it was created previously
+  [[NSFileManager defaultManager] removeItemAtPath:schemePath error:&error];
+  // create a new test scheme
+  schemeCreated = [[NSFileManager defaultManager] createFileAtPath:schemePath contents:[@"" dataUsingEncoding:NSUTF8StringEncoding] attributes:nil];
+  XCTAssert(schemeCreated, @"Test scheme creation failed.");
+
+  NSArray *schemes = [XcodeSubjectInfo schemePathsInContainer:projectPath];
   assertThat(schemes, equalTo(@[
     TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj/xcshareddata/xcschemes/Target Name With Spaces.xcscheme",
     TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj/xcshareddata/xcschemes/TestProject-Library.xcscheme",
+    schemePath,
   ]));
+
+  // remove a test scheme
+  schemeCreated = [[NSFileManager defaultManager] removeItemAtPath:schemePath error:&error];
+  XCTAssert(schemeCreated, @"Failed to remove test scheme at path: %@ with error: %@", schemePath, error);
+}
+
+- (void)testCanGetAllSchemesInAWorkspaceIgnoringNotCurrentlyLoggedUserSchemes
+{
+  NSString *workspacePath = TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace";
+  // create a scheme for a currently logged in user
+  NSString *schemePath = [NSString pathWithComponents:@[
+    workspacePath,
+    @"xcuserdata",
+    [[NSUserName() stringByAppendingString:@"_xctool"] stringByAppendingPathExtension:@"xcuserdatad"],
+    @"xcschemes",
+    @"XCTOOL_TEST_SCHEME.xcscheme",
+  ]];
+  NSError *error = nil;
+  // create directories if needed
+  BOOL schemeCreated = [[NSFileManager defaultManager] createDirectoryAtPath:[schemePath stringByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:&error];
+  XCTAssert(schemeCreated, @"Test scheme creation failed with error: %@", error);
+  // remove scheme if it was created previously
+  [[NSFileManager defaultManager] removeItemAtPath:schemePath error:&error];
+  // create a new test scheme
+  schemeCreated = [[NSFileManager defaultManager] createFileAtPath:schemePath contents:[@"" dataUsingEncoding:NSUTF8StringEncoding] attributes:nil];
+  XCTAssert(schemeCreated, @"Test scheme creation failed.");
+
+  NSArray *schemes = [XcodeSubjectInfo schemePathsInWorkspace:workspacePath];
+  assertThat(schemes, equalTo(@[
+    TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj/xcshareddata/xcschemes/TestProject-Library.xcscheme",
+  ]));
+
+  // remove test scheme
+  schemeCreated = [[NSFileManager defaultManager] removeItemAtPath:schemePath error:&error];
+  XCTAssert(schemeCreated, @"Failed to remove test scheme at path: %@ with error: %@", schemePath, error);
 }
 
 - (void)testCanGetAllSchemesInAProjectWithNestedProjects

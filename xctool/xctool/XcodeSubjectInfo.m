@@ -245,20 +245,16 @@ static NSDictionary *BuildConfigurationsByActionForSchemePath(NSString *schemePa
   }
 
   // Collect user-specific schemes.
-  NSString *userdataPath = [project stringByAppendingPathComponent:@"xcuserdata"];
-  NSArray *userContents = [fm contentsOfDirectoryAtPath:userdataPath
-                                                  error:nil];
-  if (userContents != nil) {
-    for (NSString *file in userContents) {
-      if ([file hasSuffix:@".xcuserdatad"]) {
-        NSString *userSchemesPath = [[userdataPath stringByAppendingPathComponent:file] stringByAppendingPathComponent:@"xcschemes"];
-        NSArray *userSchemesContents = [fm contentsOfDirectoryAtPath:userSchemesPath error:nil];
-
-        for (NSString *file in userSchemesContents) {
-          if ([file hasSuffix:@".xcscheme"]) {
-            [schemes addObject:[userSchemesPath stringByAppendingPathComponent:file]];
-          }
-        }
+  NSString *currentlyLoggedInUserSchemesPath = [NSString pathWithComponents:@[
+    [project stringByAppendingPathComponent:@"xcuserdata"],
+    [NSUserName() stringByAppendingPathExtension:@"xcuserdatad"],
+    @"xcschemes"
+  ]];
+  if ([fm fileExistsAtPath:currentlyLoggedInUserSchemesPath]) {
+    NSArray *userSchemesContents = [fm contentsOfDirectoryAtPath:currentlyLoggedInUserSchemesPath error:nil];
+    for (NSString *file in userSchemesContents) {
+      if ([file hasSuffix:@".xcscheme"]) {
+        [schemes addObject:[currentlyLoggedInUserSchemesPath stringByAppendingPathComponent:file]];
       }
     }
   }
