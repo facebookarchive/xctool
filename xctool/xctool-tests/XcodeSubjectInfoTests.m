@@ -572,4 +572,23 @@
   ]));
 }
 
+- (void)testBuildableAndTestableInSchemeAreIgnoredForNonExistingProjects
+{
+  XcodeSubjectInfo *subjectInfo = [[XcodeSubjectInfo alloc] init];
+  NSString *schemePath = TEST_DATA "TestProject-WithNonExistingTargetInScheme/TestProject-WithNonExistingTargetInScheme.xcodeproj/xcshareddata/xcschemes/TestProject-WithNonExistingTargetInScheme.xcscheme";
+  [subjectInfo populateBuildablesAndTestablesForWorkspaceWithSchemePath:schemePath];
+
+  assertThat([subjectInfo.testables valueForKeyPath:@"target"], equalTo(@[
+    @"TestProject-WithNonExistingTargetInSchemeTests",
+  ]));
+  assertThat([subjectInfo.buildables valueForKeyPath:@"target"], equalTo(@[
+    @"TestProject-WithNonExistingTargetInScheme",
+    @"TestProject-WithNonExistingTargetInSchemeTests",
+  ]));
+  assertThat([subjectInfo.buildablesForTest valueForKeyPath:@"target"], equalTo(@[
+    @"TestProject-WithNonExistingTargetInScheme",
+    @"TestProject-WithNonExistingTargetInSchemeTests",
+  ]));
+}
+
 @end

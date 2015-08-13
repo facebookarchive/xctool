@@ -85,6 +85,14 @@ xcodebuild build -showBuildSettings -sdk iphoneos -project TestProject-Library-X
 OUTFILE='TestProject-Library-XCTest-OSX-showBuildSettings.txt'
 xcodebuild build -showBuildSettings -sdk macosx -project TestProject-Library-XCTest-OSX/TestProject-Library-XCTest-OSX.xcodeproj -target TestProject-Library-XCTest-OSXTests > $OUTFILE
 
+# TestProject-WithNonExistingTargetInScheme-showBuildSettings.txt
+OUTFILE='TestProject-WithNonExistingTargetInScheme-showBuildSettings.txt'
+xcodebuild build -showBuildSettings -sdk iphonesimulator -project TestProject-WithNonExistingTargetInScheme/TestProject-WithNonExistingTargetInScheme.xcodeproj -scheme TestProject-WithNonExistingTargetInScheme > $OUTFILE
+
+# TestProject-WithNonExistingTargetInScheme-TestProject-WithNonExistingTargetInSchemeTests-showBuildSettings.txt
+OUTFILE='TestProject-WithNonExistingTargetInScheme-TestProject-WithNonExistingTargetInSchemeTests-showBuildSettings.txt'
+xcodebuild build -showBuildSettings -sdk iphonesimulator -project TestProject-WithNonExistingTargetInScheme/TestProject-WithNonExistingTargetInScheme.xcodeproj -target TestProject-WithNonExistingTargetInSchemeTests > $OUTFILE
+
 # TestProjectWithSchemeThatReferencesNonExistentTestTarget-showBuildSettings.txt
 OUTFILE='TestProjectWithSchemeThatReferencesNonExistentTestTarget-showBuildSettings.txt'
 xcodebuild build -showBuildSettings -project TestProjectWithSchemeThatReferencesNonExistentTestTarget/TestProject-Library.xcodeproj -scheme TestProject-Library > $OUTFILE

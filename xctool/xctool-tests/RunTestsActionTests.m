@@ -318,6 +318,85 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
   }];
 }
 
+- (void)testRunTestsActionAgainstProjectWithNonExistingTargetInScheme
+{
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    NSString *projectPath = TEST_DATA "TestProject-WithNonExistingTargetInScheme/TestProject-WithNonExistingTargetInScheme.xcodeproj";
+    NSString *scheme = @"TestProject-WithNonExistingTargetInScheme";
+    NSString *testTarget = @"TestProject-WithNonExistingTargetInSchemeTests";
+    NSArray *testList = @[
+      @"TestProject_WithNonExistingTargetInSchemeTests/testExample",
+      @"TestProject_WithNonExistingTargetInSchemeTests/testPerformanceExample",
+    ];
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+     // Make sure -showBuildSettings returns some data
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:projectPath
+                                                     scheme:scheme
+                                               settingsPath:TEST_DATA @"TestProject-WithNonExistingTargetInScheme-showBuildSettings.txt"],
+     // We're going to call -showBuildSettings on the test target.
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:projectPath
+                                                     target:testTarget
+                                               settingsPath:TEST_DATA @"TestProject-WithNonExistingTargetInScheme-TestProject-WithNonExistingTargetInSchemeTests-showBuildSettings.txt"
+                                                       hide:NO],
+     [LaunchHandlers handlerForOtestQueryReturningTestList:testList],
+     [^(FakeTask *task){
+      if (IsOtestTask(task)) {
+        // Pretend the tests fail, which should make xctool return an overall
+        // status of 1.
+        [task pretendExitStatusOf:1];
+        [task pretendTaskReturnsStandardOutput:
+         [NSString stringWithContentsOfFile:TEST_DATA @"TestProject-WithNonExistingTargetInScheme-showBuildSettings-run-tests-output.txt"
+                                   encoding:NSUTF8StringEncoding
+                                      error:nil]];
+      }
+    } copy],
+     ]];
+
+    XCTool *tool = [[XCTool alloc] init];
+
+    tool.arguments = @[
+      @"-project", projectPath,
+      @"-scheme", scheme,
+      @"-configuration", @"Debug",
+      @"-sdk", @"iphonesimulator",
+      @"-destination", @"arch=i386",
+      @"run-tests",
+      @"-reporter", @"plain",
+    ];
+
+    NSLog(@"%@", [TestUtil runWithFakeStreams:tool]);
+
+    NSString *action = ToolchainIsXcode7OrBetter() ? @"build" : @"test";
+
+    NSArray *launchedTasks = [[FakeTaskManager sharedManager] launchedTasks];
+    assertThatInteger([launchedTasks count], equalToInteger(2));
+    assertThat([launchedTasks[0] arguments], equalTo(@[
+      @"-configuration", @"Debug",
+      @"-sdk", @"iphonesimulator6.1",
+      @"-destination", @"arch=i386",
+      @"-destination-timeout", @"10",
+      @"PLATFORM_NAME=iphonesimulator",
+      @"-project", projectPath,
+      @"-target", testTarget,
+      @"OBJROOT=/Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-WithNonExistingTargetInScheme-firogdnnjipxwgadvqtehztcfdio/Build/Intermediates",
+      @"SYMROOT=/Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-WithNonExistingTargetInScheme-firogdnnjipxwgadvqtehztcfdio/Build/Products",
+      @"SHARED_PRECOMPS_DIR=/Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-WithNonExistingTargetInScheme-firogdnnjipxwgadvqtehztcfdio/Build/Intermediates/PrecompiledHeaders",
+      @"TARGETED_DEVICE_FAMILY=1",
+      action,
+      @"-showBuildSettings",
+    ]));
+    assertThat([launchedTasks[0] environment][@"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET"], equalTo(testTarget));
+    assertThat([launchedTasks[1] arguments], containsArray(@[
+      @"-NSTreatUnknownArgumentsAsOpen", @"NO",
+      @"-ApplePersistenceIgnoreState", @"YES",
+      @"-XCTestInvertScope", @"YES",
+      @"-XCTest", @"",
+      @"/Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-WithNonExistingTargetInScheme-firogdnnjipxwgadvqtehztcfdio/Build/Products/Release-iphonesimulator/TestProject-WithNonExistingTargetInSchemeTests.xctest",
+    ]));
+    assertThatInt(tool.exitStatus, equalToInt(1));
+  }];
+}
+
 - (void)testRunTestsActionWithListTestsOnlyOption
 {
   NSArray *testList = @[@"TestProject_LibraryTests/testOutputMerging",

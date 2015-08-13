@@ -685,8 +685,8 @@ containsFilesModifiedSince:(NSDate *)sinceDate
     NSString *referencedContainer = [[buildableReference attributeForName:@"ReferencedContainer"] stringValue];
     NSString *projectPath = StandardizedContainerPath(referencedContainer, basePath);
     if (![[NSFileManager defaultManager] fileExistsAtPath:projectPath]) {
-      NSLog(@"Error: Scheme %@ base %@ contains reference to non-existent project: %@", schemePath, basePath,projectPath);
-      abort();
+      // Skipping reference to a non-existing project same way as xcodebuild does
+      continue;
     }
 
     NSString *executable = [[buildableReference attributeForName:@"BuildableName"] stringValue];
@@ -755,8 +755,8 @@ containsFilesModifiedSince:(NSDate *)sinceDate
     NSString *referencedContainer = [[buildableReference attributeForName:@"ReferencedContainer"] stringValue];
     NSString *projectPath = StandardizedContainerPath(referencedContainer, basePath);
     if (![[NSFileManager defaultManager] fileExistsAtPath:projectPath]) {
-      NSLog(@"Error: Scheme %@ base %@ contains reference to non-existent project: %@", schemePath, basePath, projectPath);
-      abort();
+      // Skipping reference to a non-existing project same way as xcodebuild does
+      continue;
     }
 
     NSString *target = [[buildableReference attributeForName:@"BlueprintName"] stringValue];
