@@ -66,7 +66,7 @@ static FILE *__stderr;
 
 static BOOL __testIsRunning = NO;
 static NSMutableArray *__testExceptions = nil;
-static NSMutableString *__testOutput = nil;
+static NSMutableData *__testOutput = nil;
 static int __testSuiteDepth = 0;
 
 static BOOL __testBundleHasStartedRunning = NO;
@@ -129,6 +129,10 @@ NSString *StripAnsi(NSString *inputString)
                                                  options:0
                                                    error:nil];
   });
+
+  if (inputString == nil) {
+    return @"";
+  }
 
   NSString *outputString = [regex stringByReplacingMatchesInString:inputString
                                                            options:0
@@ -264,7 +268,7 @@ static void XCToolLog_testCaseDidStart(NSString *fullTestName)
     [__testExceptions release];
     __testExceptions = [[NSMutableArray alloc] init];
     __testIsRunning = YES;
-    __testOutput = [[NSMutableString string] retain];
+    __testOutput = [[NSMutableData dataWithCapacity:0] retain];
   });
 }
 
@@ -303,6 +307,22 @@ static void XCToolLog_testCaseDidStop(NSString *fullTestName, NSNumber *unexpect
       succeeded = YES;
     }
 
+    NSString *testOutput = [[NSString alloc] initWithData:__testOutput encoding:NSUTF8StringEncoding];
+
+    // print all unprinted test output bytes in case `__testOutput` doesn't end with "\n"
+    if (![testOutput hasSuffix:@"\n"]) {
+      NSRange range = [testOutput rangeOfString:@"\n" options:NSBackwardsSearch];
+      if (range.length == 0) {
+        range.location = 0;
+      }
+      NSString *line = [testOutput substringFromIndex:NSMaxRange(range)];
+      PrintJSON(EventDictionaryWithNameAndContent(
+        kReporter_Events_TestOuput,
+        @{kReporter_TestOutput_OutputKey: StripAnsi(line)}
+      ));
+    }
+
+    // report test results
     NSArray *retExceptions = [__testExceptions copy];
     NSDictionary *json = EventDictionaryWithNameAndContent(
       kReporter_Events_EndTest, @{
@@ -312,7 +332,7 @@ static void XCToolLog_testCaseDidStop(NSString *fullTestName, NSNumber *unexpect
         kReporter_EndTest_SucceededKey: @(succeeded),
         kReporter_EndTest_ResultKey : result,
         kReporter_EndTest_TotalDurationKey : totalDuration,
-        kReporter_EndTest_OutputKey : StripAnsi(__testOutput),
+        kReporter_EndTest_OutputKey : StripAnsi(testOutput),
         kReporter_EndTest_ExceptionsKey : retExceptions,
     });
     [retExceptions release];
@@ -437,6 +457,49 @@ static void UpdateTestScope()
 
 #pragma mark -
 
+static void ProcessTestOutputWriteBytes(const void *buf, size_t nbyte)
+{
+  static NSData *newlineData = nil;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    newlineData = [[NSData alloc] initWithBytes:"\n" length:1];
+  });
+
+  // search for the last "\n" w/o new buffer
+  NSRange previousNewlineRange = [__testOutput rangeOfData:newlineData
+                                                   options:NSDataSearchBackwards
+                                                     range:NSMakeRange(0, __testOutput.length)];
+  NSUInteger offset = previousNewlineRange.length != 0 ? NSMaxRange(previousNewlineRange) : 0;
+
+  // append new bytes
+  [__testOutput appendBytes:buf length:nbyte];
+
+  // check if "\n" is in the buf
+  NSRange newlineRange = [__testOutput rangeOfData:newlineData
+                                           options:NSDataSearchBackwards
+                                             range:NSMakeRange(offset, __testOutput.length - offset)];
+  if (newlineRange.length == 0) {
+    return;
+  }
+
+  NSData *lineData = [__testOutput subdataWithRange:NSMakeRange(offset, NSMaxRange(newlineRange) - offset)];
+  NSString *line = [[NSString alloc] initWithData:lineData encoding:NSUTF8StringEncoding];
+  PrintJSON(EventDictionaryWithNameAndContent(
+    kReporter_Events_TestOuput,
+    @{kReporter_TestOutput_OutputKey: StripAnsi(line)}
+  ));
+  [line release];
+}
+
+static void ProcessBeforeTestRunWriteBytes(const void *buf, size_t nbyte)
+{
+  NSString *output = [[NSString alloc] initWithBytes:buf length:nbyte encoding:NSUTF8StringEncoding];
+  PrintJSON(EventDictionaryWithNameAndContent(kReporter_Events_OutputBeforeTestBundleStarts,
+                                              @{kReporter_OutputBeforeTestBundleStarts_OutputKey: StripAnsi(output)}
+                                              ));
+  [output release];
+}
+
 // From /usr/lib/system/libsystem_kernel.dylib - output from printf/fprintf/fwrite will flow to
 // __write_nonancel just before it does the system call.
 ssize_t __write_nocancel(int fildes, const void *buf, size_t nbyte);
@@ -445,19 +508,9 @@ static ssize_t ___write_nocancel(int fildes, const void *buf, size_t nbyte)
   if (__enableWriteInterception && (fildes == STDOUT_FILENO || fildes == STDERR_FILENO)) {
     dispatch_sync(EventQueue(), ^{
       if (__testIsRunning && nbyte > 0) {
-        NSString *output = [[NSString alloc] initWithBytes:buf length:nbyte encoding:NSUTF8StringEncoding];
-        PrintJSON(EventDictionaryWithNameAndContent(
-          kReporter_Events_TestOuput,
-          @{kReporter_TestOutput_OutputKey: StripAnsi(output)}
-        ));
-        [__testOutput appendString:output];
-        [output release];
+        ProcessTestOutputWriteBytes(buf, nbyte);
       } else if (!__testBundleHasStartedRunning && nbyte > 0) {
-        NSString *output = [[NSString alloc] initWithBytes:buf length:nbyte encoding:NSUTF8StringEncoding];
-        PrintJSON(EventDictionaryWithNameAndContent(kReporter_Events_OutputBeforeTestBundleStarts,
-                                                    @{kReporter_OutputBeforeTestBundleStarts_OutputKey: StripAnsi(output)}
-                                                    ));
-        [output release];
+        ProcessBeforeTestRunWriteBytes(buf, nbyte);
       }
     });
     return nbyte;
@@ -473,19 +526,9 @@ static ssize_t __write(int fildes, const void *buf, size_t nbyte)
   if (__enableWriteInterception && (fildes == STDOUT_FILENO || fildes == STDERR_FILENO)) {
     dispatch_sync(EventQueue(), ^{
       if (__testIsRunning && nbyte > 0) {
-        NSString *output = [[NSString alloc] initWithBytes:buf length:nbyte encoding:NSUTF8StringEncoding];
-        PrintJSON(EventDictionaryWithNameAndContent(
-          kReporter_Events_TestOuput,
-          @{kReporter_TestOutput_OutputKey: StripAnsi(output)}
-        ));
-        [__testOutput appendString:output];
-        [output release];
+        ProcessTestOutputWriteBytes(buf, nbyte);
       } else if (!__testBundleHasStartedRunning && nbyte > 0) {
-        NSString *output = [[NSString alloc] initWithBytes:buf length:nbyte encoding:NSUTF8StringEncoding];
-        PrintJSON(EventDictionaryWithNameAndContent(kReporter_Events_OutputBeforeTestBundleStarts,
-                                                    @{kReporter_OutputBeforeTestBundleStarts_OutputKey: StripAnsi(output)}
-                                                    ));
-        [output release];
+        ProcessBeforeTestRunWriteBytes(buf, nbyte);
       }
     });
     return nbyte;
@@ -495,7 +538,7 @@ static ssize_t __write(int fildes, const void *buf, size_t nbyte)
 }
 DYLD_INTERPOSE(__write, write);
 
-static NSString *CreateStringFromIOV(const struct iovec *iov, int iovcnt) {
+static NSData *CreateDataFromIOV(const struct iovec *iov, int iovcnt) {
   NSMutableData *buffer = [[NSMutableData alloc] initWithCapacity:0];
 
   for (int i = 0; i < iovcnt; i++) {
@@ -517,12 +560,9 @@ static NSString *CreateStringFromIOV(const struct iovec *iov, int iovcnt) {
 
   [bufferWithoutNulls setLength:offset];
 
-  NSString *str = [[NSString alloc] initWithData:bufferWithoutNulls encoding:NSUTF8StringEncoding];
-
   [buffer release];
-  [bufferWithoutNulls release];
 
-  return str;
+  return bufferWithoutNulls;
 }
 
 // From /usr/lib/system/libsystem_kernel.dylib - output from writev$NOCANCEL$UNIX2003 will flow
@@ -533,19 +573,13 @@ static ssize_t ___writev_nocancel(int fildes, const struct iovec *iov, int iovcn
   if (__enableWriteInterception && (fildes == STDOUT_FILENO || fildes == STDERR_FILENO)) {
     dispatch_sync(EventQueue(), ^{
       if (__testIsRunning && iovcnt > 0) {
-        NSString *buffer = CreateStringFromIOV(iov, iovcnt);
-        PrintJSON(EventDictionaryWithNameAndContent(
-          kReporter_Events_TestOuput,
-          @{kReporter_TestOutput_OutputKey: StripAnsi(buffer)}
-        ));
-        [__testOutput appendString:buffer];
-        [buffer release];
+        NSData *data = CreateDataFromIOV(iov, iovcnt);
+        ProcessTestOutputWriteBytes(data.bytes, data.length);
+        [data release];
       } else if (!__testBundleHasStartedRunning && iovcnt > 0) {
-        NSString *buffer = CreateStringFromIOV(iov, iovcnt);
-        PrintJSON(EventDictionaryWithNameAndContent(kReporter_Events_OutputBeforeTestBundleStarts,
-                                                    @{kReporter_OutputBeforeTestBundleStarts_OutputKey: StripAnsi(buffer)}
-                                                    ));
-        [buffer release];
+        NSData *data = CreateDataFromIOV(iov, iovcnt);
+        ProcessBeforeTestRunWriteBytes(data.bytes, data.length);
+        [data release];
       }
     });
     return iovcnt;
@@ -561,19 +595,13 @@ static ssize_t __writev(int fildes, const struct iovec *iov, int iovcnt)
   if (__enableWriteInterception && (fildes == STDOUT_FILENO || fildes == STDERR_FILENO)) {
     dispatch_sync(EventQueue(), ^{
       if (__testIsRunning && iovcnt > 0) {
-        NSString *buffer = CreateStringFromIOV(iov, iovcnt);
-        PrintJSON(EventDictionaryWithNameAndContent(
-          kReporter_Events_TestOuput,
-          @{kReporter_TestOutput_OutputKey: StripAnsi(buffer)}
-        ));
-        [__testOutput appendString:buffer];
-        [buffer release];
+        NSData *data = CreateDataFromIOV(iov, iovcnt);
+        ProcessTestOutputWriteBytes(data.bytes, data.length);
+        [data release];
       } else if (!__testBundleHasStartedRunning && iovcnt > 0) {
-        NSString *buffer = CreateStringFromIOV(iov, iovcnt);
-        PrintJSON(EventDictionaryWithNameAndContent(kReporter_Events_OutputBeforeTestBundleStarts,
-                                                    @{kReporter_OutputBeforeTestBundleStarts_OutputKey: StripAnsi(buffer)}
-                                                    ));
-        [buffer release];
+        NSData *data = CreateDataFromIOV(iov, iovcnt);
+        ProcessBeforeTestRunWriteBytes(data.bytes, data.length);
+        [data release];
       }
     });
 

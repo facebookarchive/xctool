@@ -738,7 +738,6 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
        assertThat([runner otestEnvironmentWithOverrides:@{@"DYLD_INSERT_LIBRARIES" : pathToOtestShimDylib}],
                   equalTo(expectedEnv));
      }];
-    
   }];
 }
 

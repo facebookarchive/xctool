@@ -245,7 +245,7 @@
   assertThat(schemes, containsArray(@[
     sharedSchemePath,
     TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj/xcshareddata/xcschemes/Target Name With Spaces.xcscheme",
-    TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj/xcshareddata/xcschemes/TestProject-Library.xcscheme",    
+    TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj/xcshareddata/xcschemes/TestProject-Library.xcscheme",
     userSchemePath
   ]));
 

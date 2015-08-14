@@ -89,4 +89,3 @@ NSString * ProjectBaseDirectoryPath(NSString *filePath)
   NSString *mainProjectPath = [[filePath stringByDeletingLastPathComponent] stringByAppendingPathComponent:mainProject[PBXProjectDirPath] ?: @""];
   return mainProjectPath;
 }
-

@@ -30,6 +30,24 @@
   [super tearDown];
 }
 
+- (void)testHandlingOfUnicodeStrings
+{
+  fprintf(stdout, "---");
+  [NSThread sleepForTimeInterval:0.25];
+  fprintf(stdout, "\342");
+  [NSThread sleepForTimeInterval:0.25];
+  fprintf(stdout, "---\n");
+  [NSThread sleepForTimeInterval:0.25];
+  fprintf(stdout, "");
+  fprintf(stdout, "---");
+  [NSThread sleepForTimeInterval:0.25];
+  fprintf(stdout, "0");
+  [NSThread sleepForTimeInterval:0.25];
+  fprintf(stdout, "---\n------\n");
+  fprintf(stdout, "\n\n");
+  fprintf(stdout, "");
+}
+
 - (void)testPrintSDK
 {
   NSLog(@"SDK: %@", [UIDevice currentDevice].systemVersion);

@@ -693,13 +693,17 @@ static NSString *abbreviatePath(NSString *string) {
 }
 
 - (void)testOutput:(NSDictionary *)event {
+  if ([event[kReporter_TestOutput_OutputKey] length] == 0) {
+    return;
+  }
+
   if (!_testHadOutput) {
     [_reportWriter printNewline];
     [self printDivider];
   }
 
   [_reportWriter disableIndent];
-  [_reportWriter printString:@"<faint>%@<reset>", event[@"output"]];
+  [_reportWriter printString:@"<faint>%@<reset>", event[kReporter_TestOutput_OutputKey]];
   [_reportWriter enableIndent];
 
   _testHadOutput = YES;
@@ -813,6 +817,13 @@ static NSString *abbreviatePath(NSString *string) {
       }
     }
 
+    [_reportWriter enableIndent];
+    [self printDividerWithDownLine:YES];
+  } else if (_testHadOutput) {
+    [_reportWriter disableIndent];
+    if (!_testOutputEndsInNewline) {
+      [_reportWriter printNewline];
+    }
     [_reportWriter enableIndent];
     [self printDividerWithDownLine:YES];
   }

@@ -565,7 +565,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
                      @"OtherNonmatching/testTwo",
                      ]));
   XCTAssertNil(error, @"Error shouldn't be set");
-  
+
   // Class prefix cases
   assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Other*" senTestInvertScope:NO error:&error],
              equalTo(@[
@@ -596,7 +596,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
                        @"OtherClass2/test2"
                        ]));
   XCTAssertNil(error, @"Error shouldn't be set");
-  
+
   // Test prefix cases
   assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"OtherClass1/test*" senTestInvertScope:NO error:&error],
              equalTo(@[
@@ -618,7 +618,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
                        @"Cls1/test3",
                        ]));
   XCTAssertNil(error, @"Error shouldn't be set");
-  
+
   assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"OtherNonmatching/*" senTestInvertScope:NO error:&error],
              equalTo(@[
                        @"OtherNonmatching/testOne",

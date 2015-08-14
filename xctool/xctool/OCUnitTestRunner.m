@@ -79,7 +79,7 @@
       // If we have a slash, assume it's in the form of "SomeClass/testMethod"
       BOOL hasClassAndMethod = [specifier rangeOfString:@"/"].length > 0;
       NSString *matchingPrefix = [self wildcardPrefixFrom:specifier];
-      
+
       if (hasClassAndMethod && !matchingPrefix) {
         // "SomeClass/testMethod"
         // Use the set for a fast strict matching for this one test
