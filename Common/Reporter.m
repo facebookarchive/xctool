@@ -23,26 +23,26 @@
 static void ReadFileDescriptorAndOutputLinesToBlock(int inputFD,
                                                     void (^block)(NSString *line))
 {
-  NSMutableString *buffer = [[NSMutableString alloc] initWithCapacity:0];
+  NSMutableData *buffer = [NSMutableData dataWithCapacity:0];
 
   // Split whatever content we have in 'buffer' into lines.
   void (^processBuffer)(void) = ^{
     NSUInteger offset = 0;
-
+    NSData *newlineData = [NSData dataWithBytes:"\n" length:1];
     for (;;) {
-      NSRange newlineRange = [buffer rangeOfString:@"\n"
-                                           options:0
-                                             range:NSMakeRange(offset, [buffer length] - offset)];
+      NSRange newlineRange = [buffer rangeOfData:newlineData
+                                         options:0
+                                           range:NSMakeRange(offset, [buffer length] - offset)];
       if (newlineRange.length == 0) {
         break;
       } else {
-        NSString *line = [buffer substringWithRange:NSMakeRange(offset, newlineRange.location - offset)];
-        block(line);
+        NSData *line = [buffer subdataWithRange:NSMakeRange(offset, newlineRange.location - offset)];
+        block([[NSString alloc] initWithData:line encoding:NSUTF8StringEncoding]);
         offset = newlineRange.location + 1;
       }
     }
 
-    [buffer replaceCharactersInRange:NSMakeRange(0, offset) withString:@""];
+    [buffer replaceBytesInRange:NSMakeRange(0, offset) withBytes:NULL length:0];
   };
 
   const int readBufferSize = 32768;
@@ -55,8 +55,7 @@ static void ReadFileDescriptorAndOutputLinesToBlock(int inputFD,
 
     if (bytesRead > 0) {
       @autoreleasepool {
-        NSString *str = [[NSString alloc] initWithBytes:readBuffer length:bytesRead encoding:NSUTF8StringEncoding];
-        [buffer appendString:str];
+        [buffer appendBytes:readBuffer length:bytesRead];
 
         processBuffer();
       }
