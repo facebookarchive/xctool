@@ -1,4 +1,4 @@
-// Copyright 2014-present AutoScout24. All Rights Reserved.
+// Copyright 2004-present Facebook. All Rights Reserved.
 
 #import "TeamCityStatusMessageGenerator.h"
 
