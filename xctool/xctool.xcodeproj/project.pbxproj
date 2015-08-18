@@ -129,6 +129,7 @@
 		CC2BE2111B7ADE8D008FBC50 /* PbxprojReader.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2BE2101B7ADE8D008FBC50 /* PbxprojReader.m */; };
 		CC2BE23E1B7AE2AF008FBC50 /* PbxprojReader.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2BE2101B7ADE8D008FBC50 /* PbxprojReader.m */; };
 		CC2BE33A1B7B1BE7008FBC50 /* PbxprojReaderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2BE3391B7B1BE7008FBC50 /* PbxprojReaderTests.m */; };
+		CC4AB1FB1B82C57F00543A42 /* TestableExecutionInfoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CC4AB1FA1B82C57F00543A42 /* TestableExecutionInfoTests.m */; };
 		CC84C94C18ECE161001F6094 /* FakeOCUnitTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = CC84C94B18ECE161001F6094 /* FakeOCUnitTestRunner.m */; };
 		CCC55AD2195BCD7D0051A50B /* SimulatorWrapperXcode6.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC55AD1195BCD7D0051A50B /* SimulatorWrapperXcode6.m */; };
 		CCC55AD6195BCDD90051A50B /* SimulatorWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC55AD5195BCDD90051A50B /* SimulatorWrapper.m */; };
@@ -338,6 +339,7 @@
 		CC2BE20F1B7ADE8D008FBC50 /* PbxprojReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PbxprojReader.h; sourceTree = "<group>"; };
 		CC2BE2101B7ADE8D008FBC50 /* PbxprojReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PbxprojReader.m; sourceTree = "<group>"; };
 		CC2BE3391B7B1BE7008FBC50 /* PbxprojReaderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PbxprojReaderTests.m; sourceTree = "<group>"; };
+		CC4AB1FA1B82C57F00543A42 /* TestableExecutionInfoTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestableExecutionInfoTests.m; sourceTree = "<group>"; };
 		CC84C94A18ECE161001F6094 /* FakeOCUnitTestRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeOCUnitTestRunner.h; sourceTree = "<group>"; };
 		CC84C94B18ECE161001F6094 /* FakeOCUnitTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeOCUnitTestRunner.m; sourceTree = "<group>"; };
 		CCC55AC0195BB1E80051A50B /* SimDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimDevice.h; sourceTree = "<group>"; };
@@ -586,6 +588,7 @@
 				28AC9E2F16DB3478009E5B9A /* OptionsTests.m */,
 				2804514417C410F100D16420 /* OTestQueryTests.m */,
 				AA6C88F61808C2C5006A3581 /* OTestShimTests.m */,
+				CC2BE3391B7B1BE7008FBC50 /* PbxprojReaderTests.m */,
 				28E28FBF1797193F0072376C /* ReporterTaskTests.m */,
 				28C81A62175562050072DDB8 /* ReportStatusTests.m */,
 				283479A416E1B242003C3B77 /* RunTestsActionTests.m */,
@@ -593,17 +596,17 @@
 				28A5A8EB1746D2AA001733A9 /* Swizzler.h */,
 				28A5A8EC1746D2AA001733A9 /* Swizzler.m */,
 				28A5A8EF1746D2B9001733A9 /* SwizzlerTests.m */,
+				CD0CFBD71992E32C0028F69B /* TaskUtilTests.m */,
+				CC4AB1FA1B82C57F00543A42 /* TestableExecutionInfoTests.m */,
 				32707EE11725FE7F00AF2F53 /* TestActionTests.m */,
 				AAF3344D1806A48A00928A00 /* TestRunStateTests.m */,
 				283479B716E3EBE5003C3B77 /* TestUtil.h */,
 				283479B816E3EBE5003C3B77 /* TestUtil.m */,
 				287BF04C16F1A6EB00590E06 /* XcodeSubjectInfoTests.m */,
-				283CCACC16C2EE9900F2E343 /* XCToolTests.m */,
-				2862C1B5180DE7BA00E5F58B /* XCToolUtilTests.m */,
-				CD0CFBD71992E32C0028F69B /* TaskUtilTests.m */,
 				CCF980311B38D1C900E4E0B0 /* XCTestConfigurationUnarchiver.h */,
 				CCF980321B38D1C900E4E0B0 /* XCTestConfigurationUnarchiver.m */,
-				CC2BE3391B7B1BE7008FBC50 /* PbxprojReaderTests.m */,
+				283CCACC16C2EE9900F2E343 /* XCToolTests.m */,
+				2862C1B5180DE7BA00E5F58B /* XCToolUtilTests.m */,
 			);
 			path = "xctool-tests";
 			sourceTree = "<group>";
@@ -974,6 +977,7 @@
 				AAF334481806A46F00928A00 /* LaunchHandlers.m in Sources */,
 				CDD81F52174EAFDC00F42111 /* EventBuffer.m in Sources */,
 				AAC1E0BE18121071005A4FD5 /* OCUnitIOSLogicTestQueryRunner.m in Sources */,
+				CC4AB1FB1B82C57F00543A42 /* TestableExecutionInfoTests.m in Sources */,
 				28C81A63175562050072DDB8 /* ReportStatusTests.m in Sources */,
 				28302E1E175A8B6900C997B2 /* ArchiveActionTests.m in Sources */,
 				4DC2180A1B238AD3000C9AA6 /* ActionScripts.m in Sources */,

@@ -172,19 +172,40 @@
   return [runner runQueryWithError:error];
 }
 
+/**
+ * Xcode 6.4 behavior:
+ * $(KNOWN_MACRO) -> "MACRO_REPLACEMENT"
+ * $KNOWN_MACRO -> "MACRO_REPLACEMENT"
+ * $(UNKNOWN_MACRO) -> ""
+ * $UNKNOWN_MACRO -> "$UNKNOWN_MACRO"
+ */
 + (NSString *)stringWithMacrosExpanded:(NSString *)str
                      fromBuildSettings:(NSDictionary *)settings
 {
   NSMutableString *result = [NSMutableString stringWithString:str];
-
-  [settings enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *val, BOOL *stop){
-    NSString *macroStr = [[NSString alloc] initWithFormat:@"$(%@)", key];
-    [result replaceOccurrencesOfString:macroStr
-                            withString:val
-                               options:0
-                                 range:NSMakeRange(0, [result length])];
-  }];
-
+  NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:@"\\$\\(?(\\w+)\\)?"
+                                                                    options:NSRegularExpressionCaseInsensitive
+                                                                      error:nil];
+  BOOL replaced = YES;
+  while (replaced) {
+    replaced = NO;
+    NSArray *matches = [regex matchesInString:result options:0 range:NSMakeRange(0, result.length)];
+    for (NSTextCheckingResult *match in matches) {
+      NSRange macroRange = [match rangeAtIndex:1];
+      if (macroRange.location == NSNotFound) {
+        continue;
+      }
+      NSString *matchedKeyword = [result substringWithRange:macroRange];
+      if (settings[matchedKeyword]) {
+        [result replaceCharactersInRange:match.range withString:settings[matchedKeyword]];
+        replaced = YES;
+      } else if (match.range.length == macroRange.length + 3) {
+        [result replaceCharactersInRange:match.range withString:@""];
+        replaced = YES;
+      }
+      break;
+    }
+  }
   return result;
 }
 
