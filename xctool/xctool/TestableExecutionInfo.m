@@ -50,10 +50,14 @@
   // In Xcode, you can optionally include variables in your args or environment
   // variables.  i.e. "$(ARCHS)" gets transformed into "armv7".
   if (testable.macroExpansionProjectPath != nil) {
+    // Override any settings that are defined in the environment
+    NSMutableDictionary *settingsAndProcessEnvironment = [info.buildSettings mutableCopy];
+    [settingsAndProcessEnvironment addEntriesFromDictionary:[[NSProcessInfo processInfo] environment]];
+    
     info.expandedArguments = [self argumentsWithMacrosExpanded:testable.arguments
-                                             fromBuildSettings:info.buildSettings];
+                        fromBuildSettingsAndProcessEnvironment:settingsAndProcessEnvironment];
     info.expandedEnvironment = [self enviornmentWithMacrosExpanded:testable.environment
-                                    fromBuildSettings:info.buildSettings];
+                            fromBuildSettingsAndProcessEnvironment:settingsAndProcessEnvironment];
   } else {
     info.expandedArguments = testable.arguments;
     info.expandedEnvironment = testable.environment;
@@ -180,7 +184,7 @@
  * $UNKNOWN_MACRO -> "$UNKNOWN_MACRO"
  */
 + (NSString *)stringWithMacrosExpanded:(NSString *)str
-                     fromBuildSettings:(NSDictionary *)settings
+fromBuildSettingsAndProcessEnvironment:(NSDictionary *)settings
 {
   NSMutableString *result = [NSMutableString stringWithString:str];
   NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:@"\\$\\(?(\\w+)\\)?"
@@ -210,28 +214,28 @@
 }
 
 + (NSArray *)argumentsWithMacrosExpanded:(NSArray *)arr
-                       fromBuildSettings:(NSDictionary *)settings
+  fromBuildSettingsAndProcessEnvironment:(NSDictionary *)settings
 {
   NSMutableArray *result = [NSMutableArray arrayWithCapacity:[arr count]];
 
   for (NSString *str in arr) {
     [result addObject:[[self class] stringWithMacrosExpanded:str
-                                           fromBuildSettings:settings]];
+                      fromBuildSettingsAndProcessEnvironment:settings]];
   }
 
   return result;
 }
 
 + (NSDictionary *)enviornmentWithMacrosExpanded:(NSDictionary *)dict
-                              fromBuildSettings:(NSDictionary *)settings
+         fromBuildSettingsAndProcessEnvironment:(NSDictionary *)settings
 {
   NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:[dict count]];
 
   for (NSString *key in [dict allKeys]) {
     NSString *keyExpanded = [[self class] stringWithMacrosExpanded:key
-                                                 fromBuildSettings:settings];
+                            fromBuildSettingsAndProcessEnvironment:settings];
     NSString *valExpanded = [[self class] stringWithMacrosExpanded:dict[key]
-                                                 fromBuildSettings:settings];
+                            fromBuildSettingsAndProcessEnvironment:settings];
     result[keyExpanded] = valExpanded;
   }
 
