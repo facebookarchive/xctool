@@ -26,8 +26,8 @@ typedef NS_ENUM(NSInteger, XCToolExitStatus) {
   XCToolReporterInitializationFailed = 6,
   XCToolXcodeInfoValidationFailed = 7,
 
-  XCToolHelpShown = 100,
-  XCToolVersionShown = 101,
+  XCToolHelpShown = 0,
+  XCToolVersionShown = 0,
 };
 
 @interface XCTool : NSObject

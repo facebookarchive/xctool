@@ -44,11 +44,6 @@ fi
   -workspace "$XCTOOL_DIR"/xctool.xcworkspace \
   -scheme xctool \
   -configuration Release \
-  -IDEBuildLocationStyle=Custom \
-  -IDECustomBuildLocationType=Absolute \
-  -IDECustomBuildProductsPath="$BUILD_OUTPUT_DIR/Products" \
-  -IDECustomBuildIntermediatesPath="$BUILD_OUTPUT_DIR/Intermediates" \
-  XT_INSTALL_ROOT="$RELEASE_OUTPUT_DIR" \
   test
 
 XCTOOL_VERSION=$("$RELEASE_OUTPUT_DIR"/bin/xctool -version)

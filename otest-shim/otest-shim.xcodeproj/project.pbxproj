@@ -49,7 +49,6 @@
 		90F7485718E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.m in Sources */ = {isa = PBXBuildFile; fileRef = 90F7485318E4FAFF00600D5C /* SenIsSuperclassOfClassPerformanceFix.m */; };
 		AA318BEA17E9B43000BF159E /* XCTest.h in Headers */ = {isa = PBXBuildFile; fileRef = AA318BE917E9B43000BF159E /* XCTest.h */; };
 		AA318BEB17E9B43000BF159E /* XCTest.h in Headers */ = {isa = PBXBuildFile; fileRef = AA318BE917E9B43000BF159E /* XCTest.h */; };
-		CC839AB81B433F7C007A4EC1 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CC839AB61B433F7C007A4EC1 /* Info.plist */; };
 		CC839AB91B433F7C007A4EC1 /* OtestShimTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CC839AB71B433F7C007A4EC1 /* OtestShimTests.m */; };
 		CC839ABC1B434074007A4EC1 /* otest-shim.m in Sources */ = {isa = PBXBuildFile; fileRef = 283CCA9916C2EE4C00F2E343 /* otest-shim.m */; };
 		CC839ABD1B4344BF007A4EC1 /* otest-shim-osx.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 282BFE19171602C60022F9FF /* otest-shim-osx.dylib */; };
@@ -372,7 +371,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CC839AB81B433F7C007A4EC1 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
