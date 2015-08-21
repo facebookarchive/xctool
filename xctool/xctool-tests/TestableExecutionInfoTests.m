@@ -19,7 +19,7 @@
 #import "TestableExecutionInfo.h"
 
 @interface TestableExecutionInfo ()
-+ (NSString *)stringWithMacrosExpanded:(NSString *)str fromBuildSettings:(NSDictionary *)settings;
++ (NSString *)stringWithMacrosExpanded:(NSString *)str fromBuildSettingsAndProcessEnvironment:(NSDictionary *)settings;
 @end
 
 @interface TestableExecutionInfoTests : XCTestCase
@@ -45,25 +45,25 @@
   expectedResult = [NSString stringWithFormat:@"%@/suffix1/suffix2", buildSettings[@"PROJECT"]];
   XCTAssertEqualObjects(expectedResult,
     [TestableExecutionInfo stringWithMacrosExpanded:@"$PROJECT/suffix1/suffix2"
-                                  fromBuildSettings:buildSettings]);
+             fromBuildSettingsAndProcessEnvironment:buildSettings]);
 
   // with prefix and suffix
   expectedResult = [NSString stringWithFormat:@"prefix/%@/suffix", buildSettings[@"PROJECT"]];
   XCTAssertEqualObjects(expectedResult,
     [TestableExecutionInfo stringWithMacrosExpanded:@"prefix/$PROJECT/suffix"
-                                  fromBuildSettings:buildSettings]);
+             fromBuildSettingsAndProcessEnvironment:buildSettings]);
 
   // only macro match
   expectedResult = [NSString stringWithFormat:@"%@", buildSettings[@"PROJECT_DIR"]];
   XCTAssertEqualObjects(expectedResult,
                 [TestableExecutionInfo stringWithMacrosExpanded:@"$PROJECT_DIR"
-                                              fromBuildSettings:buildSettings]);
+                         fromBuildSettingsAndProcessEnvironment:buildSettings]);
 
   // without suffix, with prefix
   expectedResult = [NSString stringWithFormat:@"prefix/%@", buildSettings[@"PROJECT"]];
   XCTAssertEqualObjects(expectedResult,
     [TestableExecutionInfo stringWithMacrosExpanded:@"prefix/$PROJECT"
-                                  fromBuildSettings:buildSettings]);
+             fromBuildSettingsAndProcessEnvironment:buildSettings]);
 
   /**
    * Known macro with brackets
@@ -72,25 +72,25 @@
   expectedResult = [NSString stringWithFormat:@"%@/suffix1/suffix2", buildSettings[@"PROJECT"]];
   XCTAssertEqualObjects(expectedResult,
     [TestableExecutionInfo stringWithMacrosExpanded:@"$(PROJECT)/suffix1/suffix2"
-                                  fromBuildSettings:buildSettings]);
+             fromBuildSettingsAndProcessEnvironment:buildSettings]);
 
   // without prefix, with suffix
   expectedResult = [NSString stringWithFormat:@"prefix/%@/suffix", buildSettings[@"PROJECT"]];
   XCTAssertEqualObjects(expectedResult,
     [TestableExecutionInfo stringWithMacrosExpanded:@"prefix/$(PROJECT)/suffix"
-                                  fromBuildSettings:buildSettings]);
+             fromBuildSettingsAndProcessEnvironment:buildSettings]);
 
   // only macro match
   expectedResult = [NSString stringWithFormat:@"%@", buildSettings[@"PROJECT_DIR"]];
   XCTAssertEqualObjects(expectedResult,
                 [TestableExecutionInfo stringWithMacrosExpanded:@"$(PROJECT_DIR)"
-                                              fromBuildSettings:buildSettings]);
+                         fromBuildSettingsAndProcessEnvironment:buildSettings]);
 
   // without suffix, with prefix
   expectedResult = [NSString stringWithFormat:@"prefix/%@", buildSettings[@"PROJECT"]];
   XCTAssertEqualObjects(expectedResult,
     [TestableExecutionInfo stringWithMacrosExpanded:@"prefix/$(PROJECT)"
-                                  fromBuildSettings:buildSettings]);
+             fromBuildSettingsAndProcessEnvironment:buildSettings]);
 
   /**
    * Multiple macro replacement
@@ -98,34 +98,34 @@
   expectedResult = [NSString stringWithFormat:@"%@/%@/%@", buildSettings[@"PROJECT"], buildSettings[@"PROJECT"], buildSettings[@"ANOTHER"]];
   XCTAssertEqualObjects(expectedResult,
                 [TestableExecutionInfo stringWithMacrosExpanded:@"$PROJECT/$PROJECT/$ANOTHER"
-                                              fromBuildSettings:buildSettings]);
+                         fromBuildSettingsAndProcessEnvironment:buildSettings]);
   XCTAssertEqualObjects(expectedResult,
                 [TestableExecutionInfo stringWithMacrosExpanded:@"$PROJECT/$(PROJECT)/$(ANOTHER)"
-                                              fromBuildSettings:buildSettings]);
+                         fromBuildSettingsAndProcessEnvironment:buildSettings]);
 
   expectedResult = [NSString stringWithFormat:@"%@/%@", buildSettings[@"PROJECT_DIR"], buildSettings[@"SOME_MACRO"]];
   XCTAssertEqualObjects(expectedResult,
                 [TestableExecutionInfo stringWithMacrosExpanded:@"$PROJECT_DIR/$(SOME_MACRO)"
-                                              fromBuildSettings:buildSettings]);
+                         fromBuildSettingsAndProcessEnvironment:buildSettings]);
   XCTAssertEqualObjects(expectedResult,
                 [TestableExecutionInfo stringWithMacrosExpanded:@"$(PROJECT_DIR)/$(SOME_MACRO)"
-                                              fromBuildSettings:buildSettings]);
+                         fromBuildSettingsAndProcessEnvironment:buildSettings]);
 
 
   expectedResult = [NSString stringWithFormat:@"prefix/%@/%@", buildSettings[@"PROJECT_DIR"], buildSettings[@"SOME_MACRO"]];
   XCTAssertEqualObjects(expectedResult,
                 [TestableExecutionInfo stringWithMacrosExpanded:@"prefix/$PROJECT_DIR/$(SOME_MACRO)"
-                                              fromBuildSettings:buildSettings]);
+                         fromBuildSettingsAndProcessEnvironment:buildSettings]);
 
   expectedResult = [NSString stringWithFormat:@"%@/%@/suffix", buildSettings[@"PROJECT_DIR"], buildSettings[@"SOME_MACRO"]];
   XCTAssertEqualObjects(expectedResult,
                 [TestableExecutionInfo stringWithMacrosExpanded:@"$(PROJECT_DIR)/$(SOME_MACRO)/suffix"
-                                              fromBuildSettings:buildSettings]);
+                         fromBuildSettingsAndProcessEnvironment:buildSettings]);
 
   expectedResult = [NSString stringWithFormat:@"prefix/%@/%@/suffix", buildSettings[@"PROJECT_DIR"], buildSettings[@"SOME_MACRO"]];
   XCTAssertEqualObjects(expectedResult,
                 [TestableExecutionInfo stringWithMacrosExpanded:@"prefix/$(PROJECT_DIR)/$(SOME_MACRO)/suffix"
-                                              fromBuildSettings:buildSettings]);
+                         fromBuildSettingsAndProcessEnvironment:buildSettings]);
 
   /**
    * Unknown macro not replaced
@@ -134,37 +134,37 @@
   expectedResult = @"$project";
   XCTAssertEqualObjects(expectedResult,
     [TestableExecutionInfo stringWithMacrosExpanded:@"$project"
-                                  fromBuildSettings:buildSettings]);
+             fromBuildSettingsAndProcessEnvironment:buildSettings]);
 
   // unknown macro within a string
   expectedResult = @"prefix/$project/suffix";
   XCTAssertEqualObjects(expectedResult,
     [TestableExecutionInfo stringWithMacrosExpanded:@"prefix/$project/suffix"
-                                  fromBuildSettings:buildSettings]);
+             fromBuildSettingsAndProcessEnvironment:buildSettings]);
 
   // unknown macro with a prefix
   expectedResult = @"prefix/$project";
   XCTAssertEqualObjects(expectedResult,
     [TestableExecutionInfo stringWithMacrosExpanded:@"prefix/$project"
-                                  fromBuildSettings:buildSettings]);
+             fromBuildSettingsAndProcessEnvironment:buildSettings]);
 
   // unknown macro with a suffix
   expectedResult = @"$project/suffix";
   XCTAssertEqualObjects(expectedResult,
     [TestableExecutionInfo stringWithMacrosExpanded:@"$project/suffix"
-                                  fromBuildSettings:buildSettings]);
+             fromBuildSettingsAndProcessEnvironment:buildSettings]);
 
   // macro with extra character
   expectedResult = [NSString stringWithFormat:@"$PROJECT1/suffix"];
   XCTAssertEqualObjects(expectedResult,
                 [TestableExecutionInfo stringWithMacrosExpanded:@"$PROJECT1/suffix"
-                                              fromBuildSettings:buildSettings]);
+                         fromBuildSettingsAndProcessEnvironment:buildSettings]);
 
   // macro but case insensitive
   expectedResult = @"suffix/$PROJEcT";
   XCTAssertEqualObjects(expectedResult,
                 [TestableExecutionInfo stringWithMacrosExpanded:@"suffix/$PROJEcT"
-                                              fromBuildSettings:buildSettings]);
+                         fromBuildSettingsAndProcessEnvironment:buildSettings]);
 
   /**
    * Unknown macro replaced with empty string
@@ -173,37 +173,37 @@
   expectedResult = @"";
   XCTAssertEqualObjects(expectedResult,
     [TestableExecutionInfo stringWithMacrosExpanded:@"$(project)"
-                                  fromBuildSettings:buildSettings]);
+             fromBuildSettingsAndProcessEnvironment:buildSettings]);
 
   // unknown macro within a string
   expectedResult = @"prefix//suffix";
   XCTAssertEqualObjects(expectedResult,
     [TestableExecutionInfo stringWithMacrosExpanded:@"prefix/$(project)/suffix"
-                                  fromBuildSettings:buildSettings]);
+             fromBuildSettingsAndProcessEnvironment:buildSettings]);
 
   // unknown macro with a prefix
   expectedResult = @"prefix/";
   XCTAssertEqualObjects(expectedResult,
     [TestableExecutionInfo stringWithMacrosExpanded:@"prefix/$(project)"
-                                  fromBuildSettings:buildSettings]);
+             fromBuildSettingsAndProcessEnvironment:buildSettings]);
 
   // unknown macro with a suffix
   expectedResult = @"/suffix";
   XCTAssertEqualObjects(expectedResult,
     [TestableExecutionInfo stringWithMacrosExpanded:@"$(project)/suffix"
-                                  fromBuildSettings:buildSettings]);
+             fromBuildSettingsAndProcessEnvironment:buildSettings]);
 
   // macro with extra character
   expectedResult = [NSString stringWithFormat:@"/suffix"];
   XCTAssertEqualObjects(expectedResult,
                 [TestableExecutionInfo stringWithMacrosExpanded:@"$(PROJECT1)/suffix"
-                                              fromBuildSettings:buildSettings]);
+                         fromBuildSettingsAndProcessEnvironment:buildSettings]);
 
   // macro but case insensitive
   expectedResult = @"suffix/";
   XCTAssertEqualObjects(expectedResult,
                 [TestableExecutionInfo stringWithMacrosExpanded:@"suffix/$(PROJEcT)"
-                                              fromBuildSettings:buildSettings]);
+                         fromBuildSettingsAndProcessEnvironment:buildSettings]);
 
   /**
    * Match failures
@@ -221,7 +221,7 @@
     expectedResult = string;
     XCTAssertEqualObjects(expectedResult,
       [TestableExecutionInfo stringWithMacrosExpanded:expectedResult
-                                    fromBuildSettings:buildSettings]);
+               fromBuildSettingsAndProcessEnvironment:buildSettings]);
   }
 }
 
