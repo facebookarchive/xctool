@@ -138,7 +138,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                        @"OBJROOT=/Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-Library-frruszglismbfoceinskphldzhci/Build/Intermediates",
                        @"SYMROOT=/Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-Library-frruszglismbfoceinskphldzhci/Build/Products",
                        @"SHARED_PRECOMPS_DIR=/Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-Library-frruszglismbfoceinskphldzhci/Build/Intermediates/PrecompiledHeaders",
-                       [NSString stringWithFormat:@"-IDECustomDerivedDataLocation=%@xctool_temp_UNDERTEST/DerivedData", NSTemporaryDirectory()],
+                       [NSString stringWithFormat:@"-IDECustomDerivedDataLocation=%@xctool_temp_UNDERTEST_%d/DerivedData", NSTemporaryDirectory(), [[NSProcessInfo processInfo] processIdentifier]],
                        @"build",
                        ]));
     assertThatInt(tool.exitStatus, equalToInt(0));
@@ -197,7 +197,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                        @"OBJROOT=/Users/nekto/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-asazjpviwiufbaajaofbmyqmmghn/Build/Intermediates",
                        @"SYMROOT=/Users/nekto/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-asazjpviwiufbaajaofbmyqmmghn/Build/Products",
                        @"SHARED_PRECOMPS_DIR=/Users/nekto/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-asazjpviwiufbaajaofbmyqmmghn/Build/Intermediates/PrecompiledHeaders",
-                       [NSString stringWithFormat:@"-IDECustomDerivedDataLocation=%@xctool_temp_UNDERTEST/DerivedData", NSTemporaryDirectory()],
+                       [NSString stringWithFormat:@"-IDECustomDerivedDataLocation=%@xctool_temp_UNDERTEST_%d/DerivedData", NSTemporaryDirectory(), [[NSProcessInfo processInfo] processIdentifier]],
                        @"build",
                        ]));
     assertThatInt(tool.exitStatus, equalToInt(0));
@@ -266,7 +266,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                        @"OBJROOT=/Users/nekto/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-asazjpviwiufbaajaofbmyqmmghn/Build/Intermediates",
                        @"SYMROOT=/Users/nekto/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-asazjpviwiufbaajaofbmyqmmghn/Build/Products",
                        @"SHARED_PRECOMPS_DIR=/Users/nekto/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-asazjpviwiufbaajaofbmyqmmghn/Build/Intermediates/PrecompiledHeaders",
-                       [NSString stringWithFormat:@"-IDECustomDerivedDataLocation=%@xctool_temp_UNDERTEST/DerivedData", NSTemporaryDirectory()],
+                       [NSString stringWithFormat:@"-IDECustomDerivedDataLocation=%@xctool_temp_UNDERTEST_%d/DerivedData", NSTemporaryDirectory(), [[NSProcessInfo processInfo] processIdentifier]],
                        @"build",
                        ]));
     assertThatInt(tool.exitStatus, equalToInt(0));
@@ -332,7 +332,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                        @"OBJROOT=/Users/nekto/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-asazjpviwiufbaajaofbmyqmmghn/Build/Intermediates",
                        @"SYMROOT=/Users/nekto/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-asazjpviwiufbaajaofbmyqmmghn/Build/Products",
                        @"SHARED_PRECOMPS_DIR=/Users/nekto/Library/Developer/Xcode/DerivedData/TestWorkspace-Library-asazjpviwiufbaajaofbmyqmmghn/Build/Intermediates/PrecompiledHeaders",
-                       [NSString stringWithFormat:@"-IDECustomDerivedDataLocation=%@xctool_temp_UNDERTEST/DerivedData", NSTemporaryDirectory()],
+                       [NSString stringWithFormat:@"-IDECustomDerivedDataLocation=%@xctool_temp_UNDERTEST_%d/DerivedData", NSTemporaryDirectory(), [[NSProcessInfo processInfo] processIdentifier]],
                        @"build",
                        ]));
     assertThatInt(tool.exitStatus, equalToInt(0));
@@ -387,7 +387,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                        @"OBJROOT=/Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-Library-frruszglismbfoceinskphldzhci/Build/Intermediates",
                        @"SYMROOT=/Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-Library-frruszglismbfoceinskphldzhci/Build/Products",
                        @"SHARED_PRECOMPS_DIR=/Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-Library-frruszglismbfoceinskphldzhci/Build/Intermediates/PrecompiledHeaders",
-                       [NSString stringWithFormat:@"-IDECustomDerivedDataLocation=%@xctool_temp_UNDERTEST/DerivedData", NSTemporaryDirectory()],
+                       [NSString stringWithFormat:@"-IDECustomDerivedDataLocation=%@xctool_temp_UNDERTEST_%d/DerivedData", NSTemporaryDirectory(), [[NSProcessInfo processInfo] processIdentifier]],
                        @"build"
                        ]));
   }];

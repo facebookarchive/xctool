@@ -48,7 +48,7 @@ static NSString *StringByStandardizingPath(NSString *path)
 static NSString *ProjectPathFromSchemePath(NSString *schemePath)
 {
   for (;;) {
-    assert(schemePath.length > 0);
+    NSCAssert(schemePath.length > 0, @"Scheme path length should be more then 0: %@", schemePath);
 
     if ([schemePath hasSuffix:@".xcodeproj"] || [schemePath hasSuffix:@".xcworkspace"]) {
       break;
@@ -81,7 +81,7 @@ static NSString *FullPathForBasePathAndRelativePath(NSString *basePath, NSString
 static NSString *StandardizedContainerPath(NSString *container, NSString *basePath)
 {
   static NSString * const kContainerReference = @"container:";
-  assert([container hasPrefix:kContainerReference]);
+  NSCAssert([container hasPrefix:kContainerReference], @"Container has unexpected prefix: %@; expected: %@", container, kContainerReference);
   NSString *containerPath = [container substringFromIndex:kContainerReference.length];
   return StringByStandardizingPath([basePath stringByAppendingPathComponent:containerPath]);
 }
@@ -679,7 +679,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
       [[[node attributeForName:@"skipped"] stringValue] isEqualToString:@"YES"] ? YES : NO;
     NSArray *buildableReferences = [node nodesForXPath:@"BuildableReference" error:nil];
 
-    assert(buildableReferences.count == 1);
+    NSAssert(buildableReferences.count == 1, @"Number of buildable references should be 1: %@", buildableReferences);
     NSXMLElement *buildableReference = buildableReferences[0];
 
     NSString *referencedContainer = [[buildableReference attributeForName:@"ReferencedContainer"] stringValue];
@@ -749,7 +749,7 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   for (NSXMLElement *node in buildActionEntryNodes) {
     NSArray *buildableReferences = [node nodesForXPath:@"BuildableReference" error:nil];
 
-    assert(buildableReferences.count == 1);
+    NSAssert(buildableReferences.count == 1, @"Number of buildable references should be 1: %@", buildableReferences);
     NSXMLElement *buildableReference = buildableReferences[0];
 
     NSString *referencedContainer = [[buildableReference attributeForName:@"ReferencedContainer"] stringValue];
@@ -931,9 +931,9 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 
 - (void)loadSubjectInfo
 {
-  assert(_subjectXcodeBuildArguments);
-  assert(_subjectScheme);
-  assert(_subjectWorkspace || _subjectProject);
+  NSAssert(_subjectXcodeBuildArguments, @"Subject xcode build arguments should be defined.");
+  NSAssert(_subjectScheme, @"Subject scheme should be defined.");
+  NSAssert(_subjectWorkspace || _subjectProject, @"Subject workspace or project should be defined.");
 
   // First we need to know the OBJROOT and SYMROOT settings for the project we're testing.
   NSDictionary *settings = [self buildSettingsForATarget];

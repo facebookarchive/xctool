@@ -55,7 +55,7 @@ static NSArray *GetLaunchdJobsForSimulator()
   launch_data_t getJobsMessage = launch_data_new_string(LAUNCH_KEY_GETJOBS);
   launch_data_t response = launch_msg(getJobsMessage);
 
-  assert(launch_data_get_type(response) == LAUNCH_DATA_DICTIONARY);
+  NSCAssert(launch_data_get_type(response) == LAUNCH_DATA_DICTIONARY, @"Response is of unexpected type: %d", launch_data_get_type(response));
 
   NSMutableArray *jobs = [NSMutableArray array];
 

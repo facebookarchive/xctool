@@ -72,7 +72,7 @@ static NSString *abbreviatePath(NSString *string) {
 
 - (void)decreaseIndent
 {
-  assert(_indent > 0);
+  NSAssert(_indent > 0, @"Indent should be increased before being decreased");
   _indent--;
 }
 

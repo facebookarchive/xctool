@@ -193,7 +193,7 @@ NSString *MakeTempFileWithPrefix(NSString *prefix)
   strcpy(tempPath, template);
 
   int handle = mkstemp(tempPath);
-  assert(handle != -1);
+  NSCAssert(handle != -1, @"Failed to make temporary file name for template %s, error: %d", template, handle);
   close(handle);
 
   return [NSString stringWithFormat:@"%s", tempPath];
@@ -615,7 +615,7 @@ NSString *TemporaryDirectoryForAction()
     // Let our names be consistent while under test - we don't want our tests
     // to have to match against random values.
     if (IsRunningUnderTest()) {
-      nameTemplate = @"xctool_temp_UNDERTEST";
+      nameTemplate = [NSString stringWithFormat:@"xctool_temp_UNDERTEST_%d", [[NSProcessInfo processInfo] processIdentifier]];
     } else {
       nameTemplate = @"xctool_temp_XXXXXX";
     }
@@ -668,7 +668,7 @@ NSArray *AvailableReporters()
 NSString *AbsolutePathFromRelative(NSString *path)
 {
   char absolutePath[PATH_MAX] = {0};
-  assert(realpath((const char *)[path UTF8String], absolutePath) != NULL);
+  NSCAssert(realpath((const char *)[path UTF8String], absolutePath) != NULL, @"Failed to resolve the path: %s", absolutePath);
 
   return @(absolutePath);
 }
