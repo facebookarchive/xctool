@@ -54,6 +54,20 @@
   assertThat(([action onlyList]), equalTo(@[@"TestProject-LibraryTests"]));
 }
 
+- (void)testOmitListIsCollected
+{
+  Options *options = [[Options optionsFrom:@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-sdk", @"iphonesimulator6.1",
+                       @"test", @"-omit", @"TestProject-LibraryTests",
+                       ]] assertOptionsValidateWithBuildSettingsFromFile:
+                      TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                      ];
+  TestAction *action = options.actions[0];
+  assertThat(([action omitList]), equalTo(@[@"TestProject-LibraryTests"]));
+}
+
 - (void)testOnlyListRequiresValidTarget
 {
   [[Options optionsFrom:@[
@@ -95,6 +109,19 @@
                       ];
   assertThat([options.actions[0] buildTestsAction].onlyList, equalTo(@[@"TestProject-LibraryTests"]));
   assertThat([options.actions[0] runTestsAction].onlyList, equalTo(@[@"TestProject-LibraryTests:ClassName/methodName"]));
+}
+
+- (void)testOmitParsing
+{
+  Options *options = [[Options optionsFrom:@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"test", @"-omit", @"TestProject-LibraryTests:ClassName/methodName"
+                       ]] assertOptionsValidateWithBuildSettingsFromFile:
+                      TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                      ];
+  assertThat([options.actions[0] buildTestsAction].omitList, equalTo(@[@"TestProject-LibraryTests"]));
+  assertThat([options.actions[0] runTestsAction].omitList, equalTo(@[@"TestProject-LibraryTests:ClassName/methodName"]));
 }
 
 @end

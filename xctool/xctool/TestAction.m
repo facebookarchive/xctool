@@ -49,6 +49,12 @@
      @"SPEC is TARGET[:Class/case[,Class2/case2]]; use * when specifying class or case prefix."
                        paramName:@"SPEC"
                            mapTo:@selector(addOnly:)],
+    [Action actionOptionWithName:@"omit"
+                         aliases:nil
+                     description:
+     @"SPEC is TARGET[:Class/case[,Class2/case2]]; use * when specifying class or case prefix."
+                       paramName:@"SPEC"
+                           mapTo:@selector(addOmit:)],
     [Action actionOptionWithName:@"skip-deps"
                          aliases:nil
                      description:@"Only build the target, not its dependencies"
@@ -181,9 +187,22 @@
   [_runTestsAction.onlyList addObject:argument];
 }
 
+- (void)addOmit:(NSString *)argument
+{
+  // build-tests takes only a target argument, where run-tests takes Target:Class/method.
+  NSString *buildTestsOmitArg = [argument componentsSeparatedByString:@":"][0];
+  [_buildTestsAction.omitList addObject:buildTestsOmitArg];
+  [_runTestsAction.omitList addObject:argument];
+}
+
 - (NSArray *)onlyList
 {
   return _buildTestsAction.onlyList;
+}
+
+- (NSArray *)omitList
+{
+  return _buildTestsAction.omitList;
 }
 
 - (BOOL)skipDependencies

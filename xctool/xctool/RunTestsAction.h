@@ -60,6 +60,7 @@ typedef NS_ENUM(NSInteger, BucketBy) {
 @property (nonatomic, assign) BOOL listTestsOnly;
 @property (nonatomic, copy) NSString *testSDK;
 @property (nonatomic, strong) NSMutableArray *onlyList;
+@property (nonatomic, strong) NSMutableArray *omitList;
 @property (nonatomic, strong) NSMutableArray *logicTests;
 @property (nonatomic, strong) NSMutableDictionary *appTests;
 @property (nonatomic, copy) NSString *targetedDeviceFamily;

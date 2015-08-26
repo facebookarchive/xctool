@@ -21,6 +21,7 @@
 @interface TestAction (Internal)
 
 - (NSArray *)onlyList;
+- (NSArray *)omitList;
 - (BuildTestsAction *)buildTestsAction;
 - (RunTestsAction *)runTestsAction;
 - (BOOL)skipDependencies;
