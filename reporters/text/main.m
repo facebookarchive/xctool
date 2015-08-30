@@ -27,7 +27,7 @@ int main(int argc, const char * argv[])
       if (isatty(STDOUT_FILENO) || NSProcessInfo.processInfo.environment[@"XCTOOL_FORCE_TTY"]) {
         cls = [PrettyTextReporter class];
       } else {
-        cls = [PlainTextReporter class];
+        cls = [NoOverwritePrettyTextReporter class];
       }
     } else {
       cls = [PlainTextReporter class];

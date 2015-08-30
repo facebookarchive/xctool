@@ -38,5 +38,8 @@
 @interface PrettyTextReporter : TextReporter
 @end
 
+@interface NoOverwritePrettyTextReporter : TextReporter
+@end
+
 @interface PlainTextReporter : TextReporter
 @end

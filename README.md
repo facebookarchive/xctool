@@ -318,11 +318,11 @@ Started](http://about.travis-ci.org/docs/user/getting-started/) page.
 xctool has reporters that output build and test results in different
 formats.  If you do not specify any reporters yourself, xctool uses
 the `pretty` and `user-notifications` reporters by default.
-The `plain` reporter is used in place of the `pretty` reporter
-when xctool does not detect a TTY. This can be overridden by
-setting `XCTOOL_FORCE_TTY` in the environment. The `user-notifications`
-reporter will not be used if xctool detects that the build is 
-being run by Travis CI, i.e. `TRAVIS=true` in the environment.
+Overwrite is disabled on the `pretty` reporter when xctool does not
+detect a TTY. This can be overridden by setting `XCTOOL_FORCE_TTY` in
+the environment. The `user-notifications` reporter will not be used
+if xctool detects that the build is being run by Travis CI,
+i.e. `TRAVIS=true` in the environment.
 
 You can choose your own reporters with the `-reporter` option:
 
