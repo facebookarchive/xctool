@@ -91,11 +91,11 @@
 - (void)testCanGetProjectPathsInWorkspaceWhenPathsAreRelativeToGroups
 {
   // In contents.xcworkspacedata, FileRefs can have paths relative to the groups they're within.
-  NSArray *paths = [XcodeSubjectInfo projectPathsInWorkspace:TEST_DATA @"WorkspacePathTest/NestedDir/SomeWorkspace.xcworkspace"];
+  NSSet *paths = [NSSet setWithArray:[XcodeSubjectInfo projectPathsInWorkspace:TEST_DATA @"WorkspacePathTest/NestedDir/SomeWorkspace.xcworkspace"]];
   assertThat(paths,
-             equalTo(@[
+             equalTo([NSSet setWithArray:@[
                      TEST_DATA @"WorkspacePathTest/OtherNestedDir/OtherProject/OtherProject.xcodeproj",
-                     TEST_DATA @"WorkspacePathTest/NestedDir/SomeProject/SomeProject.xcodeproj"]));
+                     TEST_DATA @"WorkspacePathTest/NestedDir/SomeProject/SomeProject.xcodeproj"]]));
 }
 
 - (void)testCanGetProjectPathsInProjectWithNestedProjects
@@ -120,12 +120,12 @@
                                                       shared:NO
                                                     username:nil];
 
-  NSArray *schemes = [XcodeSubjectInfo schemePathsInContainer:projectPath];
-  assertThat(schemes, equalTo(@[
+  NSSet *schemes = [NSSet setWithArray:[XcodeSubjectInfo schemePathsInContainer:projectPath]];
+  assertThat(schemes, equalTo([NSSet setWithArray:@[
     TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj/xcshareddata/xcschemes/Target Name With Spaces.xcscheme",
     TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj/xcshareddata/xcschemes/TestProject-Library.xcscheme",
     schemePath,
-  ]));
+  ]]));
 
   // remove a test scheme
   [XcodeSubjectInfoTests removeSchemeAtPath:schemePath];
