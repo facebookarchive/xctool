@@ -18,7 +18,6 @@
 
 #import "ReportStatus.h"
 #import "SimulatorInfo.h"
-#import "SimulatorLauncher.h"
 #import "SimulatorUtils.h"
 #import "SimulatorWrapper.h"
 #import "XcodeBuildSettings.h"
@@ -58,10 +57,6 @@ static const NSInteger kMaxRunTestsAttempts = 3;
 
   NSString *testHostBundleID = testHostInfoPlist[@"CFBundleIdentifier"];
   NSAssert(testHostBundleID != nil, @"Missing 'CFBundleIdentifier' in Info.plist");
-
-  // Triggers some global state to be initialized - we must do this before
-  // interacting with DTiPhoneSimulatorRemoteClient.
-  [SimulatorLauncher loadAllPlatforms];
 
   void (^prepareSimulator)(BOOL freshSimulator, BOOL resetSimulator) = ^(BOOL freshSimulator, BOOL resetSimulator) {
     if (freshSimulator || resetSimulator) {
@@ -136,7 +131,7 @@ static const NSInteger kMaxRunTestsAttempts = 3;
 
     if (_freshInstall) {
       if (![SimulatorWrapper uninstallTestHostBundleID:testHostBundleID
-                                         simulatorInfo:_simulatorInfo
+                                                device:[_simulatorInfo simulatedDevice]
                                              reporters:_reporters
                                                  error:startupError]) {
         return NO;
@@ -155,7 +150,7 @@ static const NSInteger kMaxRunTestsAttempts = 3;
     // is always set correctly.
     if (![SimulatorWrapper installTestHostBundleID:testHostBundleID
                                     fromBundlePath:testHostAppPath
-                                     simulatorInfo:_simulatorInfo
+                                            device:[_simulatorInfo simulatedDevice]
                                          reporters:_reporters
                                              error:startupError]) {
       return NO;
@@ -216,10 +211,10 @@ static const NSInteger kMaxRunTestsAttempts = 3;
   // Let's try several times to run before reporting about failure to callers.
   for (NSInteger remainingAttempts = kMaxRunTestsAttempts - 1; remainingAttempts >= 0; --remainingAttempts) {
     NSError *error = nil;
-    BOOL infraSucceeded = [SimulatorWrapper runHostAppTests:testHostAppPath
-                                              simulatorInfo:_simulatorInfo
-                                              appLaunchArgs:appLaunchArgs
-                                       appLaunchEnvironment:appLaunchEnvironment
+    BOOL infraSucceeded = [SimulatorWrapper runHostAppTests:testHostBundleID
+                                                     device:[_simulatorInfo simulatedDevice]
+                                                  arguments:appLaunchArgs
+                                                environment:appLaunchEnvironment
                                           feedOutputToBlock:outputLineBlock
                                                       error:&error];
 

@@ -173,6 +173,23 @@ BOOL ShutdownSimulator(SimulatorInfo *simulatorInfo, NSString **errorMessage)
   SimDevice *simulatedDevice = [simulatorInfo simulatedDevice];
   NSError *error = nil;
 
+  /*
+   * In Xcode 6 there is a `simBridgeDistantObject` property
+   * value of which comes from `[NSConnection rootProxy]`.
+   * When we kill the Simulator.app this object and/or connection
+   * becomes invalid: it crashes when accessed with
+   * "[NSMachPort sendBeforeDate:] destination port invalid".
+   * Since value of this property is created lazily and is cached
+   * a workaround here is to reset that object so it is recreated
+   * along with `NSConnection` next time it is used.
+   * In Xcode 7 there is no such property apparently but luckily
+   * it handles Simulator.app kills more gracefully and doesn't
+   * require xctool to reset device states.
+   */
+  if ([simulatedDevice respondsToSelector:@selector(setSimBridgeDistantObject:)]) {
+    [simulatedDevice setSimBridgeDistantObject:nil];
+  }
+
   if (simulatedDevice.state != SimDeviceStateShutdown) {
     if (![simulatedDevice shutdownWithError:&error]) {
       *errorMessage = [NSString stringWithFormat:@"Tried to shutdown the simulator but failed: %@; %@.",

@@ -16,41 +16,23 @@
 
 #import "SimulatorWrapperXcode6.h"
 
+#import <AppKit/AppKit.h>
+
 #import "SimDevice.h"
 #import "SimDeviceSet.h"
 #import "SimDeviceType.h"
 #import "SimRuntime.h"
-#import "SimulatorInfo.h"
-#import "SimulatorLauncher.h"
-#import "SimulatorWrapperInternal.h"
 #import "XCToolUtil.h"
 
 @implementation SimulatorWrapperXcode6
 
 #pragma mark -
-#pragma mark Internal
-
-+ (DTiPhoneSimulatorSessionConfig *)sessionConfigForRunningTestsOnSimulator:(SimulatorInfo *)simInfo
-                                                      applicationLaunchArgs:(NSArray *)launchArgs
-                                               applicationLaunchEnvironment:(NSDictionary *)launchEnvironment
-                                                                 outputPath:(NSString *)outputPath
-{
-  DTiPhoneSimulatorSessionConfig *sessionConfig = [SimulatorWrapper sessionConfigForRunningTestsOnSimulator:simInfo applicationLaunchArgs:launchArgs applicationLaunchEnvironment:launchEnvironment outputPath:outputPath];
-
-  [sessionConfig setDevice:[simInfo simulatedDevice]];
-  [sessionConfig setRuntime:[simInfo simulatedRuntime]];
-
-  return sessionConfig;
-}
-
-#pragma mark -
 #pragma mark Helpers
 
-+ (BOOL)prepareSimulatorWithSimulatorInfo:(SimulatorInfo *)simInfo
-                                    error:(NSError **)error
++ (BOOL)prepareSimulator:(SimDevice *)device error:(NSError **)error
 {
-  if (![simInfo simulatedDevice].available) {
-    NSString *errorDesc = [NSString stringWithFormat: @"Simulator '%@' is not available", [simInfo simulatedDevice].name];
+  if (!device.available) {
+    NSString *errorDesc = [NSString stringWithFormat: @"Simulator '%@' is not available", device.name];
     if (error) {
       *error = [NSError errorWithDomain:@"com.apple.iOSSimulator"
                                    code:0
@@ -65,7 +47,7 @@
   } else {
     iOSSimulatorURL = [NSURL fileURLWithPath:[NSString pathWithComponents:@[XcodeDeveloperDirPath(), @"Applications/iOS Simulator.app"]]];
   }
-  NSDictionary *configuration = @{NSWorkspaceLaunchConfigurationArguments: @[@"-CurrentDeviceUDID", [[[simInfo simulatedDevice] UDID] UUIDString]]};
+  NSDictionary *configuration = @{NSWorkspaceLaunchConfigurationArguments: @[@"-CurrentDeviceUDID", [device.UDID UUIDString]]};
   NSError *launchError = nil;
   NSRunningApplication *app = [[NSWorkspace sharedWorkspace] launchApplicationAtURL:iOSSimulatorURL
                                                                             options:NSWorkspaceLaunchAsync | NSWorkspaceLaunchWithoutActivation | NSWorkspaceLaunchAndHide
@@ -82,7 +64,7 @@
   }
 
   int attempts = 30;
-  while ([[simInfo simulatedDevice] state] != SimDeviceStateBooted && attempts > 0) {
+  while (device.state != SimDeviceStateBooted && attempts > 0) {
     [NSThread sleepForTimeInterval:0.1];
     --attempts;
   }
@@ -94,17 +76,16 @@
 #pragma mark Main Methods
 
 + (BOOL)uninstallTestHostBundleID:(NSString *)testHostBundleID
-                    simulatorInfo:(SimulatorInfo *)simInfo
+                           device:(SimDevice *)device
                         reporters:(NSArray *)reporters
                             error:(NSString **)error
 {
   NSError *localError = nil;
-  SimDevice *device = [simInfo simulatedDevice];
 
-  if (![self prepareSimulatorWithSimulatorInfo:simInfo error:&localError]) {
+  if (![self prepareSimulator:device error:&localError]) {
     *error = [NSString stringWithFormat:
               @"Simulator '%@' was not prepared: %@",
-              [simInfo simulatedDevice].name, localError.localizedDescription ?: @"Failed for unknown reason."];
+              device.name, localError.localizedDescription ?: @"Failed for unknown reason."];
     return NO;
   }
 
@@ -126,18 +107,17 @@
 
 + (BOOL)installTestHostBundleID:(NSString *)testHostBundleID
                  fromBundlePath:(NSString *)testHostBundlePath
-                  simulatorInfo:(SimulatorInfo *)simInfo
+                         device:(SimDevice *)device
                       reporters:(NSArray *)reporters
                           error:(NSString **)error
 {
   NSError *localError = nil;
-  SimDevice *device = [simInfo simulatedDevice];
   NSURL *appURL = [NSURL fileURLWithPath:testHostBundlePath];
 
-  if (![self prepareSimulatorWithSimulatorInfo:simInfo error:&localError]) {
+  if (![self prepareSimulator:device error:&localError]) {
     *error = [NSString stringWithFormat:
               @"Simulator '%@' was not prepared: %@",
-              [simInfo simulatedDevice].name, localError.localizedDescription ?: @"Failed for unknown reason."];
+              device.name, localError.localizedDescription ?: @"Failed for unknown reason."];
     return NO;
   }
 

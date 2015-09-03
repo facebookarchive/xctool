@@ -16,37 +16,40 @@
 
 #import <Foundation/Foundation.h>
 
-@class SimulatorInfo;
+@class SimDevice;
 
 @interface SimulatorWrapper : NSObject
 
 /**
- * Use the DTiPhoneSimulatorRemoteClient framework to start the app in the sim,
+ * Use the CoreSimulator framework to start the app in the simulator,
  * inject otest-shim into the app as it starts, and feed line-by-line output to
  * the `feedOutputToBlock`.
  *
- * @param testHostAppPath Path to the .app
- * @param feedOutputToBlock The block is called once for every line of output
- * @param testsSucceeded If all tests ran and passed, this will be set to YES.
- *   the tests, this will be set to YES.  Note that this will be YES even if
- *   some tests failed.
-  @return YES, if we succeeded in launching the app
+ * @param testHostAppID      Bundle ID of the test host app.
+ * @param device             Device on which to run tests.
+ * @param arguments          Arguments to pass to the test host app.
+ * @param environment        Environment to set of the test host app.
+ * @param feedOutputToBlock  The block is called once for every line of output.
+ * @param testsSucceeded     If all tests ran and passed, this will be set to YES.
+ *                           the tests, this will be set to YES.  Note that this
+ *                           will be YES even if some tests failed.
+ * @return YES, if we succeeded in launching the app.
  */
-+ (BOOL)runHostAppTests:(NSString *)testHostAppPath
-          simulatorInfo:(SimulatorInfo *)simInfo
-          appLaunchArgs:(NSArray *)launchArgs
-   appLaunchEnvironment:(NSDictionary *)launchEnvironment
++ (BOOL)runHostAppTests:(NSString *)testHostBundleID
+                 device:(SimDevice *)device
+              arguments:(NSArray *)arguments
+            environment:(NSDictionary *)environment
       feedOutputToBlock:(void (^)(NSString *))feedOutputToBlock
                   error:(NSError **)error;
 
 + (BOOL)uninstallTestHostBundleID:(NSString *)testHostBundleID
-                    simulatorInfo:(SimulatorInfo *)simInfo
+                           device:(SimDevice *)device
                         reporters:(NSArray *)reporters
                             error:(NSString **)error;
 
 + (BOOL)installTestHostBundleID:(NSString *)testHostBundleID
                  fromBundlePath:(NSString *)testHostBundlePath
-                  simulatorInfo:(SimulatorInfo *)simInfo
+                         device:(SimDevice *)device
                       reporters:(NSArray *)reporters
                           error:(NSString **)error;
 

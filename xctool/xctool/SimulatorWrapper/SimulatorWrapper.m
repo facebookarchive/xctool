@@ -15,65 +15,24 @@
 //
 
 #import "SimulatorWrapper.h"
-#import "SimulatorWrapperInternal.h"
 #import "SimulatorWrapperXcode6.h"
 
-#import "DTiPhoneSimulatorRemoteClient.h"
 #import "LineReader.h"
 #import "ReportStatus.h"
+#import "SimDevice.h"
 #import "SimulatorInfo.h"
-#import "SimulatorLauncher.h"
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
 
 static const NSString * kOtestShimStdoutFilePath = @"OTEST_SHIM_STDOUT_FILE";
 static const NSString * kOtestShimStderrFilePath __unused = @"OTEST_SHIM_STDERR_FILE";
 
+static const NSString * kOptionsArgumentsKey = @"arguments";
+static const NSString * kOptionsEnvironmentKey = @"environment";
+static const NSString * kOptionsStderrKey = @"stderr";
+static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
+
 @implementation SimulatorWrapper
-
-#pragma mark -
-#pragma mark Internal
-
-+ (DTiPhoneSimulatorSessionConfig *)sessionConfigForRunningTestsOnSimulator:(SimulatorInfo *)simInfo
-                                                      applicationLaunchArgs:(NSArray *)launchArgs
-                                               applicationLaunchEnvironment:(NSDictionary *)launchEnvironment
-                                                                 outputPath:(NSString *)outputPath
-{
-  // Sometimes the TEST_HOST will be wrapped in double quotes.
-  NSString *testHostPath = [simInfo.buildSettings[Xcode_TEST_HOST] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
-  NSString *testHostAppPath = [testHostPath stringByDeletingLastPathComponent];
-
-  DTiPhoneSimulatorSystemRoot *systemRoot = [simInfo systemRootForSimulatedSdk];
-
-  DTiPhoneSimulatorApplicationSpecifier *appSpec =
-  [DTiPhoneSimulatorApplicationSpecifier specifierWithApplicationPath:testHostAppPath];
-
-  NSMutableDictionary *launchEnvironmentEdited = [launchEnvironment mutableCopy];
-  launchEnvironmentEdited[kOtestShimStdoutFilePath] = outputPath;
-
-  DTiPhoneSimulatorSessionConfig *sessionConfig = [[DTiPhoneSimulatorSessionConfig alloc] init];
-  [sessionConfig setApplicationToSimulateOnStart:appSpec];
-  [sessionConfig setSimulatedApplicationLaunchArgs:launchArgs];
-  [sessionConfig setSimulatedApplicationLaunchEnvironment:launchEnvironmentEdited];
-  [sessionConfig setSimulatedApplicationShouldWaitForDebugger:NO];
-  [sessionConfig setSimulatedArchitecture:[simInfo simulatedArchitecture]];
-  [sessionConfig setSimulatedDeviceFamily:[simInfo simulatedDeviceFamily]];
-  [sessionConfig setSimulatedDeviceInfoName:[simInfo simulatedDeviceInfoName]];
-  [sessionConfig setSimulatedSystemRoot:systemRoot];
-  [sessionConfig setLocalizedClientName:@"xctool"];
-
-  // Don't let anything from STDERR get in our stream.  Normally, once
-  // otest-shim gets loaded, we don't have to worry about whatever is coming
-  // over STDERR since the shim will redirect all output (including STDERR) into
-  // JSON outout on STDOUT.
-  //
-  // But, even before otest-shim loads, there's a chance something else may spew
-  // into STDERR.  This happened in --
-  // https://github.com/facebook/xctool/issues/224#issuecomment-29288004
-  [sessionConfig setSimulatedApplicationStdErrPath:@"/dev/null"];
-
-  return sessionConfig;
-}
 
 #pragma mark -
 #pragma mark Helpers
@@ -84,12 +43,12 @@ static const NSString * kOtestShimStderrFilePath __unused = @"OTEST_SHIM_STDERR_
 }
 
 #pragma mark -
-#pragma mark Main Methods
+#pragma mark Running App Methods
 
-+ (BOOL)runHostAppTests:(NSString *)testHostAppPath
-          simulatorInfo:(SimulatorInfo *)simInfo
-          appLaunchArgs:(NSArray *)launchArgs
-   appLaunchEnvironment:(NSDictionary *)launchEnvironment
++ (BOOL)runHostAppTests:(NSString *)testHostBundleID
+                 device:(SimDevice *)device
+              arguments:(NSArray *)arguments
+            environment:(NSDictionary *)environment
       feedOutputToBlock:(void (^)(NSString *))feedOutputToBlock
                   error:(NSError **)error
 {
@@ -99,30 +58,60 @@ static const NSString * kOtestShimStderrFilePath __unused = @"OTEST_SHIM_STDERR_
   LineReader *reader = [[LineReader alloc] initWithFileHandle:outputHandle];
   reader.didReadLineBlock = feedOutputToBlock;
 
-  DTiPhoneSimulatorSessionConfig *sessionConfig =
-    [[self classBasedOnCurrentVersionOfXcode] sessionConfigForRunningTestsOnSimulator:simInfo
-                                                                applicationLaunchArgs:launchArgs
-                                                         applicationLaunchEnvironment:launchEnvironment
-                                                                           outputPath:outputPath];
+  NSMutableDictionary *environmentEdited = [environment mutableCopy];
+  environmentEdited[kOtestShimStdoutFilePath] = outputPath;
 
-  SimulatorLauncher *launcher = [[SimulatorLauncher alloc] initWithSessionConfig:sessionConfig
-                                                                      deviceName:[simInfo simulatedDeviceInfoName]];
-  launcher.launchTimeout = [simInfo launchTimeout];
+  /*
+   * Passing the same set of arguments and environment as Xcode 6.4.
+   */
+  NSError *launchError = nil;
+  NSDictionary *options = @{
+    kOptionsArgumentsKey: arguments,
+    kOptionsEnvironmentKey: environmentEdited,
+    // Don't let anything from STDERR get in our stream.  Normally, once
+    // otest-shim gets loaded, we don't have to worry about whatever is coming
+    // over STDERR since the shim will redirect all output (including STDERR) into
+    // JSON outout on STDOUT.
+    //
+    // But, even before otest-shim loads, there's a chance something else may spew
+    // into STDERR.  This happened in --
+    // https://github.com/facebook/xctool/issues/224#issuecomment-29288004
+    kOptionsStderrKey: @"/dev/null",
+    kOptionsWaitForDebuggerKey: @"1",
+  };
+
+  pid_t appPID = [device launchApplicationWithID:testHostBundleID
+                                         options:options
+                                           error:&launchError];
+  if (appPID == -1) {
+    *error = launchError;
+    return NO;
+  }
+
+  dispatch_source_t source = dispatch_source_create(DISPATCH_SOURCE_TYPE_PROC, appPID, DISPATCH_PROC_EXIT, dispatch_get_main_queue());
+  dispatch_source_set_event_handler(source, ^{
+    dispatch_source_cancel(source);
+  });
+  dispatch_source_set_cancel_handler(source, ^{
+    CFRunLoopStop(CFRunLoopGetCurrent());
+  });
+  dispatch_resume(source);
 
   [reader startReading];
 
-  BOOL simStartedSuccessfully = [launcher launchAndWaitForExit];
-  if (!simStartedSuccessfully && error) {
-    *error = launcher.launchError;
+  while (dispatch_source_testcancel(source) == 0) {
+    CFRunLoopRun();
   }
 
   [reader stopReading];
   [reader finishReadingToEndOfFile];
-  return  simStartedSuccessfully;
+  return  YES;
 }
 
+#pragma mark Installation Methods
+
 + (BOOL)uninstallTestHostBundleID:(NSString *)testHostBundleID
-                    simulatorInfo:(SimulatorInfo *)simInfo
+                           device:(SimDevice *)device
                         reporters:(NSArray *)reporters
                             error:(NSString **)error
 {
@@ -132,7 +121,7 @@ static const NSString * kOtestShimStderrFilePath __unused = @"OTEST_SHIM_STDERR_
                            testHostBundleID);
 
   BOOL uninstalled = [[self classBasedOnCurrentVersionOfXcode] uninstallTestHostBundleID:testHostBundleID
-                                                                           simulatorInfo:simInfo
+                                                                                  device:device
                                                                                reporters:reporters
                                                                                    error:error];
   if (uninstalled) {
@@ -151,7 +140,7 @@ static const NSString * kOtestShimStderrFilePath __unused = @"OTEST_SHIM_STDERR_
 
 + (BOOL)installTestHostBundleID:(NSString *)testHostBundleID
                  fromBundlePath:(NSString *)testHostBundlePath
-                  simulatorInfo:(SimulatorInfo *)simInfo
+                         device:(SimDevice *)device
                       reporters:(NSArray *)reporters
                           error:(NSString **)error
 {
@@ -162,7 +151,7 @@ static const NSString * kOtestShimStderrFilePath __unused = @"OTEST_SHIM_STDERR_
 
   BOOL installed = [[self classBasedOnCurrentVersionOfXcode] installTestHostBundleID:testHostBundleID
                                                                       fromBundlePath:testHostBundlePath
-                                                                       simulatorInfo:simInfo
+                                                                              device:device
                                                                            reporters:reporters
                                                                                error:error];
   if (installed) {

@@ -350,7 +350,6 @@
 		CCC55AD1195BCD7D0051A50B /* SimulatorWrapperXcode6.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimulatorWrapperXcode6.m; path = xctool/SimulatorWrapper/SimulatorWrapperXcode6.m; sourceTree = "<group>"; };
 		CCC55AD4195BCDA30051A50B /* SimulatorWrapperXcode6.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SimulatorWrapperXcode6.h; path = xctool/SimulatorWrapper/SimulatorWrapperXcode6.h; sourceTree = "<group>"; };
 		CCC55AD5195BCDD90051A50B /* SimulatorWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimulatorWrapper.m; path = xctool/SimulatorWrapper/SimulatorWrapper.m; sourceTree = "<group>"; };
-		CCC55AD7195BD13F0051A50B /* SimulatorWrapperInternal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SimulatorWrapperInternal.h; path = xctool/SimulatorWrapper/SimulatorWrapperInternal.h; sourceTree = "<group>"; };
 		CCC647DD1B2F8F4C006609FC /* XCTestConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCTestConfiguration.h; sourceTree = "<group>"; };
 		CCE14EA01ACB5B8100B76996 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		CCF50B5519DC9E8C00A1044E /* SimVerifier.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimVerifier.h; sourceTree = "<group>"; };
@@ -726,7 +725,6 @@
 			children = (
 				CC229B1219463D2D00E11C30 /* SimulatorWrapper.h */,
 				CCC55AD5195BCDD90051A50B /* SimulatorWrapper.m */,
-				CCC55AD7195BD13F0051A50B /* SimulatorWrapperInternal.h */,
 				CCC55AD0195BCD550051A50B /* Xcode 6 */,
 			);
 			name = SimulatorWrapper;

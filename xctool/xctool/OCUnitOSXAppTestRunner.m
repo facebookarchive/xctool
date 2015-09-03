@@ -18,7 +18,6 @@
 
 #import "LineReader.h"
 #import "ReportStatus.h"
-#import "SimulatorLauncher.h"
 #import "TaskUtil.h"
 #import "TestingFramework.h"
 #import "XCToolUtil.h"

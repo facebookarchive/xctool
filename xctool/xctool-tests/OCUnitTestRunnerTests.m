@@ -17,7 +17,6 @@
 #import <XCTest/XCTest.h>
 
 #import "ContainsArray.h"
-#import "DTiPhoneSimulatorRemoteClient.h"
 #import "EventBuffer.h"
 #import "FakeOCUnitTestRunner.h"
 #import "FakeTask.h"
@@ -29,6 +28,7 @@
 #import "OCUnitTestQueryRunner.h"
 #import "OCUnitTestRunner.h"
 #import "ReporterEvents.h"
+#import "SimDevice.h"
 #import "SimulatorLauncher.h"
 #import "Swizzler.h"
 #import "TestUtil.h"
@@ -89,16 +89,15 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
 
 #pragma mark iOS Tests
 
-- (void)runTestsForRunner:(OCUnitTestRunner *)runner
-   andReturnSessionConfig:(DTiPhoneSimulatorSessionConfig **)sessionConfig
+- (void)runTestsForRunner:(OCUnitTestRunner *)runner andReturnLaunchOptions:(NSDictionary **)outOptions
 {
-  [Swizzler whileSwizzlingSelector:@selector(launchAndWaitForExit)
-               forInstancesOfClass:[SimulatorLauncher class]
+  [Swizzler whileSwizzlingSelector:@selector(launchApplicationWithID:options:error:)
+               forInstancesOfClass:[SimDevice class]
                          withBlock:
-   ^(SimulatorLauncher *self, SEL sel) {
-     // Pretend it launched and succeeded, but save the config so we can check it.
-     *sessionConfig = [[self valueForKey:@"session"] sessionConfig];
-     return YES;
+   ^(SimDevice *m_self, NSString *bundleId, NSDictionary *options, NSError **err) {
+     // Pretend it failed, but save the options so we can check it.
+     *outOptions = [options copy];
+     return -1;
    }
                           runBlock:
    ^{
@@ -116,21 +115,21 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
   NSMutableDictionary *testSettings = [allSettings[@"TestProjectApplicationTests"] mutableCopy];
   testSettings[@"TEST_HOST"] = TEST_DATA @"FakeApp.app/FakeApp";
 
-  DTiPhoneSimulatorSessionConfig *config;
-
   OCUnitTestRunner *runner = TestRunner([OCUnitIOSAppTestRunner class], testSettings);
 
-  [self runTestsForRunner:runner
-   andReturnSessionConfig:&config];
+  NSDictionary *options = nil;
+  [self runTestsForRunner:runner andReturnLaunchOptions:&options];
 
-  assertThat(config, notNilValue());
-  assertThat([config simulatedApplicationLaunchArgs],
+  NSLog(@"%@", options);
+
+  assertThat(options, notNilValue());
+  assertThat(options[@"arguments"],
              containsArray(@[@"-SomeArg",
                              @"SomeVal",
                              ]));
-  assertThat([config simulatedApplicationLaunchEnvironment][@"SomeEnvKey"],
+  assertThat(options[@"environment"][@"SomeEnvKey"],
              equalTo(@"SomeEnvValue"));
-  assertThat([config simulatedApplicationLaunchEnvironment][@"OTEST_SHIM_TEST_TIMEOUT"],
+  assertThat(options[@"environment"][@"OTEST_SHIM_TEST_TIMEOUT"],
              equalTo(@"30"));
 
 }
@@ -145,14 +144,12 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
   NSMutableDictionary *testSettings = [allSettings[@"TestProjectApplicationTests"] mutableCopy];
   testSettings[@"TEST_HOST"] = @"/var/empty/whee";
 
-  DTiPhoneSimulatorSessionConfig *config;
-
   OCUnitTestRunner *runner = TestRunner([OCUnitIOSAppTestRunner class], testSettings);
 
-  [self runTestsForRunner:runner
-   andReturnSessionConfig:&config];
+  NSDictionary *options = nil;
+  [self runTestsForRunner:runner andReturnLaunchOptions:&options];
 
-  assertThat(config, nilValue());
+  assertThat(options, nilValue());
 
   EventBuffer *eventBuffer = runner.reporters[0];
   NSArray *events = [eventBuffer events];

@@ -53,7 +53,7 @@
     // Override any settings that are defined in the environment
     NSMutableDictionary *settingsAndProcessEnvironment = [info.buildSettings mutableCopy];
     [settingsAndProcessEnvironment addEntriesFromDictionary:[[NSProcessInfo processInfo] environment]];
-    
+
     info.expandedArguments = [self argumentsWithMacrosExpanded:testable.arguments
                         fromBuildSettingsAndProcessEnvironment:settingsAndProcessEnvironment];
     info.expandedEnvironment = [self enviornmentWithMacrosExpanded:testable.environment
