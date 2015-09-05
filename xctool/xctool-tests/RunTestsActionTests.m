@@ -389,10 +389,16 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
     assertThat([launchedTasks[1] arguments], containsArray(@[
       @"-NSTreatUnknownArgumentsAsOpen", @"NO",
       @"-ApplePersistenceIgnoreState", @"YES",
-      @"-XCTestInvertScope", @"YES",
-      @"-XCTest", @"",
-      @"/Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-WithNonExistingTargetInScheme-firogdnnjipxwgadvqtehztcfdio/Build/Products/Release-iphonesimulator/TestProject-WithNonExistingTargetInSchemeTests.xctest",
     ]));
+    if (ToolchainIsXcode7OrBetter()) {
+      assertThat([launchedTasks[1] environment][@"SIMCTL_CHILD_XCTestConfigurationFilePath"], isNot(nilValue()));
+    } else {
+      assertThat([launchedTasks[1] arguments], containsArray(@[
+        @"-XCTestInvertScope", @"YES",
+        @"-XCTest", @"",
+        @"/Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-WithNonExistingTargetInScheme-firogdnnjipxwgadvqtehztcfdio/Build/Products/Release-iphonesimulator/TestProject-WithNonExistingTargetInSchemeTests.xctest",
+      ]));
+    }
     assertThatInt(tool.exitStatus, equalToInt(1));
   }];
 }

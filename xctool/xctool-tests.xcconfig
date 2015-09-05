@@ -24,6 +24,4 @@ XCTOOL_VENDOR_DIR = $(SRCROOT)/../Vendor
 
 // xctool-tests will strongly link these frameworks - we don't need
 // the same dynamic loading magic that the main 'xctool' executable needs.
-OTHER_LDFLAGS_0600 = -F$(SHARED_FRAMEWORKS_DIR) -F$(PRIVATE_FRAMEWORKS_DIR) -framework DVTFoundation -framework DVTiPhoneSimulatorRemoteClient -framework CoreSimulator -Wl,-rpath -Wl,$(SHARED_FRAMEWORKS_DIR) -Wl,-rpath -Wl,$(PRIVATE_FRAMEWORKS_DIR)
-
-OTHER_LDFLAGS = $(OTHER_LDFLAGS_$(XCODE_VERSION_MAJOR))
+OTHER_LDFLAGS = -F$(SHARED_FRAMEWORKS_DIR) -F$(PRIVATE_FRAMEWORKS_DIR) -framework DVTFoundation -framework DVTiPhoneSimulatorRemoteClient -framework CoreSimulator -Wl,-rpath -Wl,$(SHARED_FRAMEWORKS_DIR) -Wl,-rpath -Wl,$(PRIVATE_FRAMEWORKS_DIR)

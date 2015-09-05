@@ -29,7 +29,6 @@
 #import "OCUnitTestRunner.h"
 #import "ReporterEvents.h"
 #import "SimDevice.h"
-#import "SimulatorLauncher.h"
 #import "Swizzler.h"
 #import "TestUtil.h"
 #import "XCToolUtil.h"
@@ -119,8 +118,6 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
 
   NSDictionary *options = nil;
   [self runTestsForRunner:runner andReturnLaunchOptions:&options];
-
-  NSLog(@"%@", options);
 
   assertThat(options, notNilValue());
   assertThat(options[@"arguments"],

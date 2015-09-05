@@ -45,8 +45,6 @@
 		2878E7DD184EA4BC00FF4354 /* XcodeRequiredVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 2878E7DC184EA4BC00FF4354 /* XcodeRequiredVersion.m */; };
 		2878E7DE184EA4BC00FF4354 /* XcodeRequiredVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 2878E7DC184EA4BC00FF4354 /* XcodeRequiredVersion.m */; };
 		287A37DE16C711AF00319E81 /* LineReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A37DD16C711AE00319E81 /* LineReader.m */; };
-		287A37E116C711E000319E81 /* SimulatorLauncher.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A37E016C711E000319E81 /* SimulatorLauncher.m */; };
-		287A37E216C711E000319E81 /* SimulatorLauncher.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A37E016C711E000319E81 /* SimulatorLauncher.m */; };
 		287A37E716C749D500319E81 /* LineReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 287A37DD16C711AE00319E81 /* LineReader.m */; };
 		287BF04D16F1A6EB00590E06 /* XcodeSubjectInfoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 287BF04C16F1A6EB00590E06 /* XcodeSubjectInfoTests.m */; };
 		287BF08416F1A97900590E06 /* XcodeSubjectInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 287BF08316F1A97900590E06 /* XcodeSubjectInfo.m */; };
@@ -240,8 +238,6 @@
 		2878E7DC184EA4BC00FF4354 /* XcodeRequiredVersion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodeRequiredVersion.m; sourceTree = "<group>"; };
 		287A37DC16C711AE00319E81 /* LineReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LineReader.h; sourceTree = "<group>"; };
 		287A37DD16C711AE00319E81 /* LineReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LineReader.m; sourceTree = "<group>"; };
-		287A37DF16C711E000319E81 /* SimulatorLauncher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimulatorLauncher.h; sourceTree = "<group>"; };
-		287A37E016C711E000319E81 /* SimulatorLauncher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimulatorLauncher.m; sourceTree = "<group>"; };
 		287BF04C16F1A6EB00590E06 /* XcodeSubjectInfoTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodeSubjectInfoTests.m; sourceTree = "<group>"; };
 		287BF08216F1A97900590E06 /* XcodeSubjectInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XcodeSubjectInfo.h; sourceTree = "<group>"; };
 		287BF08316F1A97900590E06 /* XcodeSubjectInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XcodeSubjectInfo.m; sourceTree = "<group>"; };
@@ -510,8 +506,6 @@
 				28E28FB71796926A0072376C /* ReportStatus.m */,
 				CD522EC017471D6300048AF9 /* SchemeGenerator.h */,
 				CD522EC117471D6300048AF9 /* SchemeGenerator.m */,
-				287A37DF16C711E000319E81 /* SimulatorLauncher.h */,
-				287A37E016C711E000319E81 /* SimulatorLauncher.m */,
 				283CCA4A16C2EA3800F2E343 /* Supporting Files */,
 				28ACFC8116FBA888004BAF33 /* TaskUtil.h */,
 				28ACFC8216FBA888004BAF33 /* TaskUtil.m */,
@@ -859,7 +853,6 @@
 				28E9B9DB16C3275200A52E4D /* OCUnitTestRunner.m in Sources */,
 				287A37DE16C711AF00319E81 /* LineReader.m in Sources */,
 				AAC1E0B51811F5E3005A4FD5 /* OCUnitOSXLogicTestQueryRunner.m in Sources */,
-				287A37E116C711E000319E81 /* SimulatorLauncher.m in Sources */,
 				28046D2C16D7603B000AA15C /* Action.m in Sources */,
 				2834799416E199A2003C3B77 /* BuildAction.m in Sources */,
 				285E35D918456BAA009E9BFD /* XcodeBuildSettings.m in Sources */,
@@ -936,7 +929,6 @@
 				CCF980331B38D1C900E4E0B0 /* XCTestConfigurationUnarchiver.m in Sources */,
 				28E9B9DA16C3275200A52E4D /* OCUnitIOSLogicTestRunner.m in Sources */,
 				28E9B9DC16C3275200A52E4D /* OCUnitTestRunner.m in Sources */,
-				287A37E216C711E000319E81 /* SimulatorLauncher.m in Sources */,
 				28046D2D16D7603B000AA15C /* Action.m in Sources */,
 				2862C1B6180DE7BA00E5F58B /* XCToolUtilTests.m in Sources */,
 				AAC1E0C218121AC6005A4FD5 /* OCUnitIOSAppTestQueryRunner.m in Sources */,
