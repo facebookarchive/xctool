@@ -336,6 +336,7 @@ static void XCToolLog_testCaseDidStop(NSString *fullTestName, NSNumber *unexpect
         kReporter_EndTest_ExceptionsKey : retExceptions,
     });
     [retExceptions release];
+    [testOutput release];
 
     PrintJSON(json);
 
@@ -484,19 +485,24 @@ static void ProcessTestOutputWriteBytes(const void *buf, size_t nbyte)
 
   NSData *lineData = [__testOutput subdataWithRange:NSMakeRange(offset, NSMaxRange(newlineRange) - offset)];
   NSString *line = [[NSString alloc] initWithData:lineData encoding:NSUTF8StringEncoding];
-  PrintJSON(EventDictionaryWithNameAndContent(
-    kReporter_Events_TestOuput,
-    @{kReporter_TestOutput_OutputKey: StripAnsi(line)}
-  ));
+  dispatch_async(EventQueue(), ^{
+    PrintJSON(EventDictionaryWithNameAndContent(
+      kReporter_Events_TestOuput,
+      @{kReporter_TestOutput_OutputKey: StripAnsi(line)}
+    ));
+  });
   [line release];
 }
 
 static void ProcessBeforeTestRunWriteBytes(const void *buf, size_t nbyte)
 {
   NSString *output = [[NSString alloc] initWithBytes:buf length:nbyte encoding:NSUTF8StringEncoding];
-  PrintJSON(EventDictionaryWithNameAndContent(kReporter_Events_OutputBeforeTestBundleStarts,
-                                              @{kReporter_OutputBeforeTestBundleStarts_OutputKey: StripAnsi(output)}
-                                              ));
+  dispatch_async(EventQueue(), ^{
+    PrintJSON(EventDictionaryWithNameAndContent(
+      kReporter_Events_OutputBeforeTestBundleStarts,
+      @{kReporter_OutputBeforeTestBundleStarts_OutputKey: StripAnsi(output)}
+    ));
+  });
   [output release];
 }
 
@@ -506,16 +512,14 @@ ssize_t __write_nocancel(int fildes, const void *buf, size_t nbyte);
 static ssize_t ___write_nocancel(int fildes, const void *buf, size_t nbyte)
 {
   if (__enableWriteInterception && (fildes == STDOUT_FILENO || fildes == STDERR_FILENO)) {
-    dispatch_sync(EventQueue(), ^{
-      if (__testIsRunning && nbyte > 0) {
-        ProcessTestOutputWriteBytes(buf, nbyte);
-      } else if (!__testBundleHasStartedRunning && nbyte > 0) {
-        ProcessBeforeTestRunWriteBytes(buf, nbyte);
-      }
-    });
+    if (__testIsRunning && nbyte > 0) {
+      ProcessTestOutputWriteBytes(buf, nbyte);
+    } else if (!__testBundleHasStartedRunning && nbyte > 0) {
+      ProcessBeforeTestRunWriteBytes(buf, nbyte);
+    }
     return nbyte;
   } else {
-    return write(fildes, buf, nbyte);
+    return __write_nocancel(fildes, buf, nbyte);
   }
 }
 DYLD_INTERPOSE(___write_nocancel, __write_nocancel);
@@ -524,13 +528,11 @@ static ssize_t __write(int fildes, const void *buf, size_t nbyte);
 static ssize_t __write(int fildes, const void *buf, size_t nbyte)
 {
   if (__enableWriteInterception && (fildes == STDOUT_FILENO || fildes == STDERR_FILENO)) {
-    dispatch_sync(EventQueue(), ^{
-      if (__testIsRunning && nbyte > 0) {
-        ProcessTestOutputWriteBytes(buf, nbyte);
-      } else if (!__testBundleHasStartedRunning && nbyte > 0) {
-        ProcessBeforeTestRunWriteBytes(buf, nbyte);
-      }
-    });
+    if (__testIsRunning && nbyte > 0) {
+      ProcessTestOutputWriteBytes(buf, nbyte);
+    } else if (!__testBundleHasStartedRunning && nbyte > 0) {
+      ProcessBeforeTestRunWriteBytes(buf, nbyte);
+    }
     return nbyte;
   } else {
     return write(fildes, buf, nbyte);
@@ -571,17 +573,15 @@ ssize_t __writev_nocancel(int fildes, const struct iovec *iov, int iovcnt);
 static ssize_t ___writev_nocancel(int fildes, const struct iovec *iov, int iovcnt)
 {
   if (__enableWriteInterception && (fildes == STDOUT_FILENO || fildes == STDERR_FILENO)) {
-    dispatch_sync(EventQueue(), ^{
-      if (__testIsRunning && iovcnt > 0) {
-        NSData *data = CreateDataFromIOV(iov, iovcnt);
-        ProcessTestOutputWriteBytes(data.bytes, data.length);
-        [data release];
-      } else if (!__testBundleHasStartedRunning && iovcnt > 0) {
-        NSData *data = CreateDataFromIOV(iov, iovcnt);
-        ProcessBeforeTestRunWriteBytes(data.bytes, data.length);
-        [data release];
-      }
-    });
+    if (__testIsRunning && iovcnt > 0) {
+      NSData *data = CreateDataFromIOV(iov, iovcnt);
+      ProcessTestOutputWriteBytes(data.bytes, data.length);
+      [data release];
+    } else if (!__testBundleHasStartedRunning && iovcnt > 0) {
+      NSData *data = CreateDataFromIOV(iov, iovcnt);
+      ProcessBeforeTestRunWriteBytes(data.bytes, data.length);
+      [data release];
+    }
     return iovcnt;
   } else {
     return __writev_nocancel(fildes, iov, iovcnt);
@@ -593,24 +593,40 @@ DYLD_INTERPOSE(___writev_nocancel, __writev_nocancel);
 static ssize_t __writev(int fildes, const struct iovec *iov, int iovcnt)
 {
   if (__enableWriteInterception && (fildes == STDOUT_FILENO || fildes == STDERR_FILENO)) {
-    dispatch_sync(EventQueue(), ^{
-      if (__testIsRunning && iovcnt > 0) {
-        NSData *data = CreateDataFromIOV(iov, iovcnt);
-        ProcessTestOutputWriteBytes(data.bytes, data.length);
-        [data release];
-      } else if (!__testBundleHasStartedRunning && iovcnt > 0) {
-        NSData *data = CreateDataFromIOV(iov, iovcnt);
-        ProcessBeforeTestRunWriteBytes(data.bytes, data.length);
-        [data release];
-      }
-    });
-
+    if (__testIsRunning && iovcnt > 0) {
+      NSData *data = CreateDataFromIOV(iov, iovcnt);
+      ProcessTestOutputWriteBytes(data.bytes, data.length);
+      [data release];
+    } else if (!__testBundleHasStartedRunning && iovcnt > 0) {
+      NSData *data = CreateDataFromIOV(iov, iovcnt);
+      ProcessBeforeTestRunWriteBytes(data.bytes, data.length);
+      [data release];
+    }
     return iovcnt;
   } else {
     return writev(fildes, iov, iovcnt);
   }
 }
 DYLD_INTERPOSE(__writev, writev);
+
+
+static void __exit(int code);
+static void __exit(int code)
+{
+  // send all events on EventQueue() before exiting.
+  dispatch_sync(EventQueue(), ^{});
+  exit(code);
+}
+DYLD_INTERPOSE(__exit, exit);
+
+static void __abort(void);
+static void __abort(void)
+{
+  // send all events on EventQueue() before aborting.
+  dispatch_sync(EventQueue(), ^{});
+  abort();
+}
+DYLD_INTERPOSE(__abort, abort);
 
 static const char *DyldImageStateChangeHandler(enum dyld_image_states state,
                                                uint32_t infoCount,
@@ -714,4 +730,10 @@ __attribute__((constructor)) static void EntryPoint()
   unsetenv("DYLD_INSERT_LIBRARIES");
 
   __enableWriteInterception = YES;
+}
+
+__attribute__((destructor)) static void ExitPoint()
+{
+  // send all events on EventQueue() before quiting.
+  dispatch_sync(EventQueue(), ^{});
 }
