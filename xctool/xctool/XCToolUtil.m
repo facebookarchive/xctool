@@ -19,6 +19,7 @@
 #import <CommonCrypto/CommonDigest.h>
 
 #import <mach-o/dyld.h>
+#import <limits.h>
 
 #import "EventGenerator.h"
 #import "EventSink.h"
@@ -340,7 +341,7 @@ BOOL LaunchXcodebuildTaskAndFeedEventsToReporters(NSTask *task,
                                                   long long *errorCodeOut)
 {
   __block NSString *errorMessage = nil;
-  __block long long errorCode = LONG_LONG_MIN;
+  __block long long errorCode = LLONG_MIN;
   __block BOOL hadFailingBuildCommand = NO;
 
   LaunchTaskAndFeedOuputLinesToBlock(task,
