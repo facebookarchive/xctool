@@ -1,4 +1,4 @@
-COMMON_PREPROCESSOR_FLAGS = ['-fobjc-arc', '-mmacosx-version-min=10.7']
+COMMON_PREPROCESSOR_FLAGS = ['-fobjc-arc', '-mmacosx-version-min=10.7', '-Wno-deprecated-declarations']
 
 COMMON_OTEST_SRCS = [
     'Common/DuplicateTestNameFix.m',
