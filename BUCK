@@ -53,14 +53,18 @@ apple_binary(
     ]),
     linker_flags = [
         '-F$DEVELOPER_DIR/Platforms/iPhoneSimulator.platform/Developer/Library/PrivateFrameworks',
+        '-F$DEVELOPER_DIR/Platforms/MacOSX.platform/Developer/Library/Frameworks',
         '-F$DEVELOPER_DIR/../SharedFrameworks',
         '-F$DEVELOPER_DIR/Library/PrivateFrameworks',
+        '-F$DEVELOPER_DIR/Library/MigrationFrameworks',
         '-weak_framework',
         'DVTFoundation',
         '-weak_framework',
         'DVTiPhoneSimulatorRemoteClient',
         '-weak_framework',
         'CoreSimulator',
+        '-weak_framework',
+        'XCTest',
     ],
     preprocessor_flags = COMMON_PREPROCESSOR_FLAGS + [
         '-DXCODE_VERSION=0630',
