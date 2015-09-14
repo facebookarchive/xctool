@@ -318,23 +318,6 @@ genrule(
 
 genrule(
     name = 'xctool-zip',
-    deps = [
-      ':json-compilation-database#macosx-x86_64',
-      ':json-stream#macosx-x86_64',
-      ':junit#macosx-x86_64',
-      ':otest-query-ios',
-      ':otest-query-lib-ios',
-      ':otest-query-lib-osx',
-      ':otest-query-osx',
-      ':otest-shim-ios',
-      ':otest-shim-osx',
-      ':phabricator#macosx-x86_64',
-      ':plain#macosx-x86_64',
-      ':pretty#macosx-x86_64',
-      ':teamcity#macosx-x86_64',
-      ':user-notifications#macosx-x86_64',
-      ':xctool-bin#macosx-x86_64',
-    ],
     srcs = [
         'scripts/create_xctool_zip.sh',
     ],
@@ -367,16 +350,6 @@ genrule(
 # Minimal xctool only includes the json-stream reporter
 genrule(
     name = 'xctool-minimal-zip',
-    deps = [
-      ':json-stream#macosx-x86_64',
-      ':otest-query-ios',
-      ':otest-query-lib-ios',
-      ':otest-query-lib-osx',
-      ':otest-query-osx',
-      ':otest-shim-ios',
-      ':otest-shim-osx',
-      ':xctool-bin#macosx-x86_64',
-    ],
     srcs = [
         'scripts/create_xctool_zip.sh',
     ],
