@@ -138,10 +138,52 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
     @"run-tests", @"-only", @"BOGUS_TARGET",
     ]]
    assertOptionsFailToValidateWithError:
-   @"run-tests: 'BOGUS_TARGET' is not a testing target in this scheme."
+   @"run-tests: 'BOGUS_TARGET' does not match a testing target in this scheme."
    withBuildSettingsFromFile:
    TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
    ];
+}
+
+- (void)testOnlyListIsCollectedWithWildcardTarget
+{
+  Options *options = [[Options optionsFrom:@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-sdk", @"iphonesimulator6.1",
+                       @"run-tests", @"-only", @"TestProject*",
+                       ]] assertOptionsValidateWithBuildSettingsFromFile:
+                      TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                      ];
+  RunTestsAction *action = options.actions[0];
+  assertThat((action.onlyList), equalTo(@[@"TestProject*"]));
+}
+
+- (void)testOnlyListIsCollectedWithWildcardTargetOnly
+{
+  Options *options = [[Options optionsFrom:@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-sdk", @"iphonesimulator6.1",
+                       @"run-tests", @"-only", @"*",
+                       ]] assertOptionsValidateWithBuildSettingsFromFile:
+                      TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                      ];
+  RunTestsAction *action = options.actions[0];
+  assertThat((action.onlyList), equalTo(@[@"*"]));
+}
+
+- (void)testOmitListIsCollectedWithWildcardTargetOnly
+{
+  Options *options = [[Options optionsFrom:@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-sdk", @"iphonesimulator6.1",
+                       @"run-tests", @"-omit", @"*",
+                       ]] assertOptionsValidateWithBuildSettingsFromFile:
+                      TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                      ];
+  RunTestsAction *action = options.actions[0];
+  assertThat((action.omitList), equalTo(@[@"*"]));
 }
 
 - (void)testWillComplainWhenSchemeReferencesNonExistentTestTarget
@@ -654,6 +696,18 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                                @"TestProject-LibraryTests:SomeTests/testWillFail"], NO);
   runWithArguments(@"-only", @[@"TestProject-LibraryTests:SomeTests/testWillPass",
                                @"TestProject-LibraryTests"], NO);
+  runWithArguments(@"-only", @[@"TestProject*:SomeTests/testOutputMerging"], NO);
+  runWithArguments(@"-only", @[@"*:SomeTests/testOutputMerging"], NO);
+  runWithArguments(@"-only", @[@"*:SomeTests/testOutputMerging",
+                               @"*:SomeTests/testWillPass"], NO);
+  runWithArguments(@"-only", @[@"TestProject*:SomeTests/testOutputMerging",
+                               @"*:SomeTests/testWillPass"], NO);
+  runWithArguments(@"-only", @[@"TestProject*:SomeTests/testOutputMerging",
+                               @"TestProject*:SomeTests/testWillPass"], NO);
+  runWithArguments(@"-only", @[@"TestProject-LibraryTests:SomeTests/testOutputMerging",
+                               @"TestProject*:SomeTests/testWillPass"], NO);
+  runWithArguments(@"-only", @[@"TestProject*:SomeTests/testOutputMerging",
+                               @"TestProject-LibraryTests:SomeTests/testWillPass"], NO);
   runWithArguments(@"-omit", @[@"TestProject-LibraryTests:SomeTests/testOutputMerging"], NO);
   runWithArguments(@"-omit", @[@"TestProject-LibraryTests:SomeTests/testWillPass"], NO);
   runWithArguments(@"-omit", @[@"TestProject-LibraryTests:SomeTests/testWillPass,OtherTests/testSomething"], NO);
@@ -663,6 +717,18 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                                @"TestProject-LibraryTests:SomeTests/testWillFail,SomeTests/testOutputMerging"], YES);
   runWithArguments(@"-omit", @[@"TestProject-LibraryTests:SomeTests/testWillPass",
                                @"TestProject-LibraryTests"], YES);
+  runWithArguments(@"-omit", @[@"TestProject*:SomeTests/testOutputMerging"], NO);
+  runWithArguments(@"-omit", @[@"*:SomeTests/testOutputMerging"], NO);
+  runWithArguments(@"-omit", @[@"*:SomeTests/testOutputMerging",
+                               @"*:SomeTests/testWillPass"], NO);
+  runWithArguments(@"-omit", @[@"TestProject*:SomeTests/testOutputMerging",
+                               @"*:SomeTests/testWillPass"], NO);
+  runWithArguments(@"-omit", @[@"TestProject*:SomeTests/testOutputMerging",
+                               @"TestProject*:SomeTests/testWillPass"], NO);
+  runWithArguments(@"-omit", @[@"TestProject-LibraryTests:SomeTests/testOutputMerging",
+                               @"TestProject*:SomeTests/testWillPass"], NO);
+  runWithArguments(@"-omit", @[@"TestProject*:SomeTests/testOutputMerging",
+                               @"TestProject-LibraryTests:SomeTests/testWillPass"], NO);
 }
 
 /**

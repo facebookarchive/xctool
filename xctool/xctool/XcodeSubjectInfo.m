@@ -985,6 +985,25 @@ containsFilesModifiedSince:(NSDate *)sinceDate
   return nil;
 }
 
+- (NSArray *)testablesMatchingTarget:(NSString *)target
+{
+  NSMutableArray *testables = [NSMutableArray array];
+  for (Testable *testable in _testables) {
+    if ([XcodeSubjectInfo looselyMatchesTarget:testable.target match:target]) {
+      [testables addObject:testable];
+    }
+  }
+  return testables;
+}
+
++ (BOOL)looselyMatchesTarget:(NSString *)target match:(NSString *)match
+{
+  BOOL loose = [match hasSuffix:@"*"];
+  NSString *loose_match = loose ? [match substringToIndex:match.length-1] : match;
+  return ([target isEqualToString:match] ||
+          (loose && (loose_match.length == 0 || [target hasPrefix:loose_match])));
+}
+
 - (NSArray *)testablesAndBuildablesForTest
 {
   NSMutableSet *targetsAdded = [NSMutableSet set];

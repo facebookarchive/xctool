@@ -93,7 +93,14 @@
       excludePaths:(NSArray *)excludePaths
    bestTargetMatch:(XcodeTargetMatch **)bestTargetMatchOut;
 
++ (BOOL)looselyMatchesTarget:(NSString *)target match:(NSString *)match;
+
 - (Testable *)testableWithTarget:(NSString *)target;
+
+/*
+ * Returns the first testable that matches the string target, where target may include a wildcard prefix.
+ */
+- (NSArray *)testablesMatchingTarget:(NSString *)target;
 
 - (NSString *)configurationNameForAction:(NSString *)action;
 

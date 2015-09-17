@@ -117,10 +117,66 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
     @"build-tests", @"-only", @"BOGUS_TARGET",
     ]]
    assertOptionsFailToValidateWithError:
-   @"build-tests: 'BOGUS_TARGET' is not a testing target in this scheme."
+   @"build-tests: 'BOGUS_TARGET' does not match a testing target in this scheme."
    withBuildSettingsFromFile:
    TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
    ];
+}
+
+- (void)testOnlyListIsCollectedForWildcardTarget
+{
+  Options *options = [[Options optionsFrom:@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-sdk", @"iphonesimulator6.1",
+                       @"build-tests", @"-only", @"TestProject*",
+                       ]] assertOptionsValidateWithBuildSettingsFromFile:
+                      TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                      ];
+  BuildTestsAction *action = options.actions[0];
+  assertThat((action.onlyList), equalTo(@[@"TestProject*"]));
+}
+
+- (void)testOmitListIsCollectedForWildcardTarget
+{
+  Options *options = [[Options optionsFrom:@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-sdk", @"iphonesimulator6.1",
+                       @"build-tests", @"-omit", @"TestProject*",
+                       ]] assertOptionsValidateWithBuildSettingsFromFile:
+                      TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                      ];
+  BuildTestsAction *action = options.actions[0];
+  assertThat((action.omitList), equalTo(@[@"TestProject*"]));
+}
+
+- (void)testOnlyListIsCollectedForWildcardTargetOnly
+{
+  Options *options = [[Options optionsFrom:@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-sdk", @"iphonesimulator6.1",
+                       @"build-tests", @"-only", @"*",
+                       ]] assertOptionsValidateWithBuildSettingsFromFile:
+                      TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                      ];
+  BuildTestsAction *action = options.actions[0];
+  assertThat((action.onlyList), equalTo(@[@"*"]));
+}
+
+- (void)testOmitListIsCollectedForWildcardTargetOnly
+{
+  Options *options = [[Options optionsFrom:@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-sdk", @"iphonesimulator6.1",
+                       @"build-tests", @"-omit", @"*",
+                       ]] assertOptionsValidateWithBuildSettingsFromFile:
+                      TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                      ];
+  BuildTestsAction *action = options.actions[0];
+  assertThat((action.omitList), equalTo(@[@"*"]));
 }
 
 - (void)testBuildTestsAction
