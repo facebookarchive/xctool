@@ -69,6 +69,11 @@
                      description:
      @"Reset simulator content and settings and restart it before running every app test run."
                          setFlag:@selector(setResetSimulator:)],
+    [Action actionOptionWithName:@"noResetSimulatorOnFailure"
+                         aliases:nil
+                     description:
+     @"Do not reset simulator content and settings if running failed."
+                         setFlag:@selector(setNoResetSimulatorOnFailure:)],
     [Action actionOptionWithName:@"freshInstall"
                          aliases:nil
                      description:
@@ -132,6 +137,11 @@
 - (void)setResetSimulator:(BOOL)resetSimulator
 {
   [_runTestsAction setResetSimulator:resetSimulator];
+}
+
+- (void)setNoResetSimulatorOnFailure:(BOOL)noResetSimulatorOnFailure
+{
+  [_runTestsAction setNoResetSimulatorOnFailure:noResetSimulatorOnFailure];
 }
 
 - (void)setFreshInstall:(BOOL)freshInstall

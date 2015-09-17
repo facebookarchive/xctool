@@ -34,6 +34,7 @@
 @property (nonatomic, assign) BOOL garbageCollection;
 @property (nonatomic, assign) BOOL freshSimulator;
 @property (nonatomic, assign) BOOL resetSimulator;
+@property (nonatomic, assign) BOOL noResetSimulatorOnFailure;
 @property (nonatomic, assign) BOOL freshInstall;
 @property (nonatomic, copy, readwrite) NSArray *reporters;
 @property (nonatomic, copy) NSDictionary *framework;
@@ -135,6 +136,7 @@
                           environment:(NSDictionary *)environment
                        freshSimulator:(BOOL)freshSimulator
                        resetSimulator:(BOOL)resetSimulator
+            noResetSimulatorOnFailure:(BOOL)noResetSimulatorOnFailure
                          freshInstall:(BOOL)freshInstall
                           testTimeout:(NSInteger)testTimeout
                             reporters:(NSArray *)reporters
@@ -149,6 +151,7 @@
     _environment = [environment copy];
     _freshSimulator = freshSimulator;
     _resetSimulator = resetSimulator;
+    _noResetSimulatorOnFailure = noResetSimulatorOnFailure;
     _freshInstall = freshInstall;
     _testTimeout = testTimeout;
     _reporters = [reporters copy];

@@ -183,7 +183,7 @@ static const NSInteger kMaxRunTestsAttempts = 3;
 
     // we will reset iOS simulator contents and settings now if it is not done in `prepTestEnv`
     if (!_resetSimulator) {
-      prepareSimulator(YES, YES);
+      prepareSimulator(YES, !_noResetSimulatorOnFailure);
     }
 
     // Sometimes, the test host app installation retries are starting and

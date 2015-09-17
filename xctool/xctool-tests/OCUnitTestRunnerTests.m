@@ -55,6 +55,7 @@ static id TestRunnerWithTestLists(Class cls, NSDictionary *settings, NSArray *fo
                                 environment:environment
                              freshSimulator:NO
                              resetSimulator:NO
+                  noResetSimulatorOnFailure:NO
                                freshInstall:NO
                                 testTimeout:30
                                   reporters:@[eventBuffer]];
