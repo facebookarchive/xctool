@@ -84,6 +84,23 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
   assertThat((action.testSDK), equalTo(@"iphonesimulator6.0"));
 }
 
+- (void)testOnlyListAndOmitListCannotBothBeSpecified
+{
+  [[Options optionsFrom:@[
+    @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+    @"-scheme", @"TestProject-Library",
+    @"-sdk", @"iphonesimulator6.1",
+    @"run-tests",
+    @"-only", @"TestProject-LibraryTests",
+    @"-omit", @"TestProject-LibraryTests",
+    ]]
+   assertOptionsFailToValidateWithError:
+   @"run-tests: -only and -omit cannot both be specified."
+   withBuildSettingsFromFile:
+   TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+   ];
+}
+
 - (void)testOnlyListIsCollected
 {
   Options *options = [[Options optionsFrom:@[
@@ -96,6 +113,20 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                       ];
   RunTestsAction *action = options.actions[0];
   assertThat((action.onlyList), equalTo(@[@"TestProject-LibraryTests"]));
+}
+
+- (void)testOmitListIsCollected
+{
+  Options *options = [[Options optionsFrom:@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-sdk", @"iphonesimulator6.1",
+                       @"run-tests", @"-omit", @"TestProject-LibraryTests",
+                       ]] assertOptionsValidateWithBuildSettingsFromFile:
+                      TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                      ];
+  RunTestsAction *action = options.actions[0];
+  assertThat((action.omitList), equalTo(@[@"TestProject-LibraryTests"]));
 }
 
 - (void)testOnlyListRequiresValidTarget
@@ -535,7 +566,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
   }];
 }
 
-- (void)testCanSelectSpecificTestClassOrTestMethodWithOnly
+- (void)testCanSelectSpecificTestClassOrTestMethodsWithOnlyAndOmit
 {
   if (ToolchainIsXcode7OrBetter()) {
     // octest isn't supported in Xcode 7
@@ -551,7 +582,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                         @"SomeTests/testWillFail",
                         @"SomeTests/testWillPass"];
 
-  void (^runWithOnlyArgumentAndExpectSenTestToBe)(NSString *, NSString *) = ^(NSString *onlyArgument, NSString *expectedSenTest) {
+  void (^runWithArguments)(NSString *, NSArray *, BOOL) = ^(NSString *argument, NSArray *values, BOOL skipTarget) {
     [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
       [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
         // Make sure -showBuildSettings returns some data
@@ -576,58 +607,62 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                                                                 ]];
 
       XCTool *tool = [[XCTool alloc] init];
-
-      tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                         @"-scheme", @"TestProject-Library",
-                         @"-configuration", @"Debug",
-                         @"-sdk", @"iphonesimulator6.0",
-                         @"-destination", @"arch=i386",
-                         @"run-tests", @"-only", onlyArgument,
-                         @"-reporter", @"plain",
-                         ];
+      NSMutableArray *args = [@[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                                @"-scheme", @"TestProject-Library",
+                                @"-configuration", @"Debug",
+                                @"-sdk", @"iphonesimulator6.0",
+                                @"-destination", @"arch=i386",
+                                @"run-tests"] mutableCopy];
+      for (NSString *value in values) {
+        [args addObject:argument];
+        [args addObject:value];
+      }
+      [args addObjectsFromArray:@[@"-reporter", @"plain"]];
+      tool.arguments = args;
 
       [TestUtil runWithFakeStreams:tool];
 
       NSArray *launchedTasks = [[FakeTaskManager sharedManager] launchedTasks];
-      assertThatInteger([launchedTasks count], equalToInteger(2));
-      NSArray *arguments = [launchedTasks[1] arguments];
-      assertThat(arguments, containsArray(@[
-        @"-NSTreatUnknownArgumentsAsOpen", @"NO",
-        @"-ApplePersistenceIgnoreState", @"YES",
-        @"-SenTestInvertScope", @"YES"]));
-      assertThat(arguments, containsArray(@[@"-OTEST_TESTLIST_FILE"]));
-      assertThat(arguments, containsArray(@[
-        @"-OTEST_FILTER_TEST_ARGS_KEY", @"SenTest",
-        @"-SenTest", @"XCTOOL_FAKE_LIST_OF_TESTS",
-      ]));
-
-      assertThat(arguments, containsArray(@[
-        @"/Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-Library-frruszglismbfoceinskphldzhci/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
-      ]));
+      if (skipTarget) {
+        assertThatInteger([launchedTasks count], equalToInteger(0));
+      } else {
+        assertThatInteger([launchedTasks count], equalToInteger(2));
+        NSArray *arguments = [launchedTasks[1] arguments];
+        assertThat(arguments, containsArray(@[
+                                              @"-NSTreatUnknownArgumentsAsOpen", @"NO",
+                                              @"-ApplePersistenceIgnoreState", @"YES",
+                                              @"-SenTestInvertScope", @"YES"]));
+        assertThat(arguments, containsArray(@[@"-OTEST_TESTLIST_FILE"]));
+        assertThat(arguments, containsArray(@[
+                                              @"-OTEST_FILTER_TEST_ARGS_KEY", @"SenTest",
+                                              @"-SenTest", @"XCTOOL_FAKE_LIST_OF_TESTS",
+                                              ]));
+        
+        assertThat(arguments, containsArray(@[
+                                              @"/Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-Library-frruszglismbfoceinskphldzhci/Build/Products/Debug-iphonesimulator/TestProject-LibraryTests.octest",
+                                              ]));
+      }
     }];
   };
 
-  runWithOnlyArgumentAndExpectSenTestToBe(@"TestProject-LibraryTests:SomeTests/testOutputMerging",
-                                          @"OtherTests/testSomething,"
-                                          @"SomeTests/testBacktraceOutputIsCaptured,"
-                                          @"SomeTests/testPrintSDK,"
-                                          @"SomeTests/testStream,"
-                                          @"SomeTests/testWillFail,"
-                                          @"SomeTests/testWillPass");
-  runWithOnlyArgumentAndExpectSenTestToBe(@"TestProject-LibraryTests:SomeTests/testWillPass",
-                                          @"OtherTests/testSomething,"
-                                          @"SomeTests/testBacktraceOutputIsCaptured,"
-                                          @"SomeTests/testOutputMerging,"
-                                          @"SomeTests/testPrintSDK,"
-                                          @"SomeTests/testStream,"
-                                          @"SomeTests/testWillFail");
-  runWithOnlyArgumentAndExpectSenTestToBe(@"TestProject-LibraryTests:SomeTests/testWillPass,OtherTests/testSomething",
-                                          // The ordering will be alphabetized.
-                                          @"SomeTests/testBacktraceOutputIsCaptured,"
-                                          @"SomeTests/testOutputMerging,"
-                                          @"SomeTests/testPrintSDK,"
-                                          @"SomeTests/testStream,"
-                                          @"SomeTests/testWillFail");
+  runWithArguments(@"-only", @[@"TestProject-LibraryTests:SomeTests/testOutputMerging"], NO);
+  runWithArguments(@"-only", @[@"TestProject-LibraryTests:SomeTests/testWillPass"], NO);
+  runWithArguments(@"-only", @[@"TestProject-LibraryTests:SomeTests/testWillPass,OtherTests/testSomething"], NO);
+  runWithArguments(@"-only", @[@"TestProject-LibraryTests:SomeTests/testWillPass",
+                               @"TestProject-LibraryTests:SomeTests/testWillFail"], NO);
+  runWithArguments(@"-only", @[@"TestProject-LibraryTests",
+                               @"TestProject-LibraryTests:SomeTests/testWillFail"], NO);
+  runWithArguments(@"-only", @[@"TestProject-LibraryTests:SomeTests/testWillPass",
+                               @"TestProject-LibraryTests"], NO);
+  runWithArguments(@"-omit", @[@"TestProject-LibraryTests:SomeTests/testOutputMerging"], NO);
+  runWithArguments(@"-omit", @[@"TestProject-LibraryTests:SomeTests/testWillPass"], NO);
+  runWithArguments(@"-omit", @[@"TestProject-LibraryTests:SomeTests/testWillPass,OtherTests/testSomething"], NO);
+  runWithArguments(@"-omit", @[@"TestProject-LibraryTests:SomeTests/testWillPass",
+                               @"TestProject-LibraryTests:SomeTests/testWillFail,SomeTests/testOutputMerging"], NO);
+  runWithArguments(@"-omit", @[@"TestProject-LibraryTests",
+                               @"TestProject-LibraryTests:SomeTests/testWillFail,SomeTests/testOutputMerging"], YES);
+  runWithArguments(@"-omit", @[@"TestProject-LibraryTests:SomeTests/testWillPass",
+                               @"TestProject-LibraryTests"], YES);
 }
 
 /**

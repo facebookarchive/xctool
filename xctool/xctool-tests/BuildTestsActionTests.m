@@ -48,6 +48,23 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
   [super setUp];
 }
 
+- (void)testOnlyListAndOmitListCannotBothBeSpecified
+{
+  [[Options optionsFrom:@[
+    @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+    @"-scheme", @"TestProject-Library",
+    @"-sdk", @"iphonesimulator6.1",
+    @"build-tests",
+    @"-only", @"TestProject-LibraryTests",
+    @"-omit", @"TestProject-LibraryTests",
+    ]]
+   assertOptionsFailToValidateWithError:
+   @"build-tests: -only and -omit cannot both be specified."
+   withBuildSettingsFromFile:
+   TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+   ];
+}
+
 - (void)testOnlyListIsCollected
 {
   Options *options = [[Options optionsFrom:@[
@@ -62,6 +79,19 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
   assertThat((action.onlyList), equalTo(@[@"TestProject-LibraryTests"]));
 }
 
+- (void)testOmitListIsCollected
+{
+  Options *options = [[Options optionsFrom:@[
+                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                       @"-scheme", @"TestProject-Library",
+                       @"-sdk", @"iphonesimulator6.1",
+                       @"build-tests", @"-omit", @"TestProject-LibraryTests",
+                       ]] assertOptionsValidateWithBuildSettingsFromFile:
+                      TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
+                      ];
+  BuildTestsAction *action = options.actions[0];
+  assertThat((action.omitList), equalTo(@[@"TestProject-LibraryTests"]));
+}
 
 - (void)testSkipDependenciesIsCollected
 {

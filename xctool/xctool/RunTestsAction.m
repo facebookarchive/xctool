@@ -125,6 +125,12 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
      @"SPEC is TARGET[:Class/case[,Class2/case2]]; use * when specifying class or case prefix."
                        paramName:@"SPEC"
                            mapTo:@selector(addOnly:)],
+    [Action actionOptionWithName:@"omit"
+                         aliases:nil
+                     description:
+     @"SPEC is TARGET[:Class/case[,Class2/case2]]; use * when specifying class or case prefix."
+                       paramName:@"SPEC"
+                           mapTo:@selector(addOmit:)],
     [Action actionOptionWithName:@"freshSimulator"
                          aliases:nil
                      description:
@@ -201,7 +207,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
       Testable *testable = [[Testable alloc] init];
       testable.target = logicTestBundle;
 
-      // Will be overridden later if -only is passed
+      // Will be overridden later if -only or -omit is passed
       testable.senTestList = @"All";
       [result addObject:testable];
     }
@@ -291,6 +297,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
 {
   if (self = [super init]) {
     _onlyList = [[NSMutableArray alloc] init];
+    _omitList = [[NSMutableArray alloc] init];
     _logicTestBucketSize = 0;
     _appTestBucketSize = 0;
     _bucketBy = BucketByTestCase;
@@ -306,6 +313,11 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
 - (void)addOnly:(NSString *)argument
 {
   [_onlyList addObject:argument];
+}
+
+- (void)addOmit:(NSString *)argument
+{
+  [_omitList addObject:argument];
 }
 
 - (void)setLogicTestBucketSizeValue:(NSString *)str
@@ -347,28 +359,53 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
   return (_logicTests.count > 0) || (_rawAppTestArgs.count > 0) || (_appTests.count > 0);
 }
 
-- (NSArray *)onlyListAsTargetsAndSenTestList
+- (NSDictionary *)onlyListAsTargetsAndSenTestList
 {
-  NSMutableArray *results = [NSMutableArray array];
-
-  for (NSString *only in _onlyList) {
-    NSRange colonRange = [only rangeOfString:@":"];
+  NSMutableDictionary *results = [NSMutableDictionary dictionary];
+  for (NSString *item in _onlyList) {
+    NSRange colonRange = [item rangeOfString:@":"];
     NSString *target = nil;
     NSString *senTestList = nil;
-
     if (colonRange.length > 0) {
-      target = [only substringToIndex:colonRange.location];
-      senTestList = [only substringFromIndex:colonRange.location + 1];
+      target = [item substringToIndex:colonRange.location];
+      senTestList = [item substringFromIndex:colonRange.location + 1];
     } else {
-      target = only;
+      target = item;
     }
-
-    [results addObject:@{
-     @"target": target,
-     @"senTestList": senTestList ? senTestList : [NSNull null]
-     }];
+    // Prefer applying the setting to the more specific list rather than the target
+    // if multiple -only are specified and one is a target while the other is a list
+    if (results[target] == nil || [results[target] isEqualTo:[NSNull null]]) {
+      results[target] = senTestList ? [@[senTestList] mutableCopy] : [NSNull null];
+    } else if (senTestList != nil) {
+      [results[target] addObject:senTestList];
+    }
   }
+  return results;
+}
 
+- (NSDictionary *)omitListAsTargetsAndSenTestList
+{
+  NSMutableDictionary *results = [NSMutableDictionary dictionary];
+  for (NSString *item in _omitList) {
+    NSRange colonRange = [item rangeOfString:@":"];
+    NSString *target = nil;
+    NSString *senTestList = nil;
+    if (colonRange.length > 0) {
+      target = [item substringToIndex:colonRange.location];
+      senTestList = [item substringFromIndex:colonRange.location + 1];
+    } else {
+      target = item;
+    }
+    if (results[target] == nil) {
+      results[target] = senTestList ? [@[senTestList] mutableCopy] : [NSNull null];
+    } else {
+      if (senTestList == nil || [results[target] isEqualTo:[NSNull null]]) {
+        results[target] = [NSNull null];
+      } else {
+        [results[target] addObject:senTestList];
+      }
+    }
+  }
   return results;
 }
 
@@ -443,12 +480,16 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
     _appTests[testBundle] = hostApp;
   }
 
-  for (NSDictionary *only in [self onlyListAsTargetsAndSenTestList]) {
-    if ([[self class] _matchingTestableForTarget:only[@"target"]
+  if (_onlyList.count > 0 && _omitList.count > 0) {
+    *errorMessage = @"run-tests: -only and -omit cannot both be specified.";
+    return NO;
+  }
+  for (NSString *target in [self onlyListAsTargetsAndSenTestList]) {
+    if ([[self class] _matchingTestableForTarget:target
                                       logicTests:_logicTests
                                         appTests:_appTests
                                 xcodeSubjectInfo:xcodeSubjectInfo] == nil) {
-      *errorMessage = [NSString stringWithFormat:@"run-tests: '%@' is not a testing target in this scheme.", only[@"target"]];
+      *errorMessage = [NSString stringWithFormat:@"run-tests: '%@' is not a testing target in this scheme.", target];
       return NO;
     }
   }
@@ -461,13 +502,28 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
   NSArray *testables = nil;
 
   if (_onlyList.count == 0) {
-    // Use whatever we found in the scheme, except for skipped tests.
+    // Use whatever we found in the scheme, except for skipped tests in the scheme, and
+    // tests omitted via the command line.
     NSMutableArray *unskipped = [NSMutableArray array];
     NSArray *allTestables = [[self class] _allTestablesForLogicTests:_logicTests
                                                             appTests:_appTests
                                                     xcodeSubjectInfo:xcodeSubjectInfo];
-
+    NSDictionary *omit = [self omitListAsTargetsAndSenTestList];
     for (Testable *testable in allTestables) {
+      if (omit[testable.target] != nil) {
+        // Set tests omitted via command line as skipped.  Tests omitted via the scheme are
+        // already set to skipped.
+        if (testable.skipped || omit[testable.target] == [NSNull null]) {
+          testable.skipped = true;
+        } else {
+          if (testable.senTestInvertScope) {
+            // We're already omitting some tests so append
+            [omit[testable.target] addObject:testable.senTestList];
+          }
+          testable.senTestList = [omit[testable.target] componentsJoinedByString:@","];
+          testable.senTestInvertScope = YES;
+        }
+      }
       if (!testable.skipped) {
         [unskipped addObject:testable];
       }
@@ -476,9 +532,10 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
   } else {
     // Munge the list of testables from the scheme to only include those given.
     NSMutableArray *newTestables = [NSMutableArray array];
-    for (NSDictionary *only in [self onlyListAsTargetsAndSenTestList]) {
+    NSDictionary *onlyTargets = [self onlyListAsTargetsAndSenTestList];
+    for (NSString *only in onlyTargets) {
       Testable *matchingTestable =
-        [[self class] _matchingTestableForTarget:only[@"target"]
+        [[self class] _matchingTestableForTarget:only
                                       logicTests:_logicTests
                                         appTests:_appTests
                                 xcodeSubjectInfo:xcodeSubjectInfo];
@@ -486,8 +543,8 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
       if (matchingTestable) {
         Testable *newTestable = [matchingTestable copy];
 
-        if (only[@"senTestList"] != [NSNull null]) {
-          newTestable.senTestList = only[@"senTestList"];
+        if (onlyTargets[only] != [NSNull null]) {
+          newTestable.senTestList = [onlyTargets[only] componentsJoinedByString:@","];
           newTestable.senTestInvertScope = NO;
         }
 
