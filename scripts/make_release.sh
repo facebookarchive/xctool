@@ -2,20 +2,22 @@
 #
 # Steps for making a new xctool release --
 #
-# 0.  Run ./make_release.sh to make sure it builds and tests pass; do some
+# 0.  Run `git status` to make sure you're working on a clean copy of master.
+# 1.  Run ./make_release.sh to make sure it builds and tests pass; do some
 #     QA on the version of xctool that it installs.
-# 1.  Run `git status` to make sure you're working on a clean copy of master.
-# 2.  Bump the version in xctool/xctool/Version.m; commit your change.
-# 3.  Tag the branch; e.g. `git tag v0.1.6`
-# 4.  Push the version bump; e.g. `git push origin master`
-# 5.  Push the tag; e.g. `git push --tags origin`
-# 6.  Run ./make_release.sh again to produce the final binary distribution.
-# 7.  Go to https://github.com/facebook/xctool/releases/; find the new tag.
-# 8.  Click 'Draft release notes and downloads'.
-# 9.  Upload the ZIP file produced from make_release.sh.
-# 10. Write some release notes - use the compare view to find what's changed.
-#     https://github.com/facebook/xctool/compare/v0.1.5...v0.1.6
-# 11. Publish!
+# 2.  Go to https://github.com/facebook/xctool/releases/.
+#     Click 'Draft release notes and downloads'.
+# 3.  Fill tag version with current xctool version: `./bin/xctool --version`
+# 4.  Upload the ZIP file produced from make_release.sh.
+# 5.  Write some release notes - use the compare view to find what's changed.
+#     https://github.com/facebook/xctool/compare/v0.2.5...master
+# 6.  Publish!
+# 7.  Bump the version in xctool/xctool/Version.m; commit your change.
+# 8.  Push the version bump; e.g. `git push origin master`
+# 9.  Make a new release on homebrew:
+#     - Edit url and sha256 (`shasum -a 256`) in `Library/Formula/xctool.rb`.
+#       Predownload tar.gz archive from Github.
+#     - Submit new PR to bump xctool version.
 
 set -e
 
