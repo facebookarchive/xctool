@@ -576,7 +576,25 @@
   if (_destination) {
     NSDictionary *destInfo = ParseDestinationString(_destination, errorMessage);
 
+    NSString *deviceID = destInfo[@"id"];
     NSString *deviceName = destInfo[@"name"];
+    NSString *deviceOS = destInfo[@"OS"];
+
+    if (deviceID) {
+      NSUUID *udid = [[NSUUID alloc] initWithUUIDString:deviceID];
+      if ([SimulatorInfo deviceWithUDID:udid]) {
+        if (deviceName || deviceOS) {
+          *errorMessage = @"If device id is specified, name or OS must not be specified.";
+          return NO;
+        } else {
+          return YES;
+        }
+      } else {
+        *errorMessage = [NSString stringWithFormat:@"'%@' isn't a valid device id.", deviceID];
+        return NO;
+      }
+    }
+
     if (deviceName) {
       NSString *deviceSystemName = [SimulatorInfo deviceNameForAlias:deviceName];
       if (![deviceName isEqual:deviceSystemName] &&
@@ -593,12 +611,13 @@
         return NO;
       }
     }
-    if (destInfo[@"OS"]) {
-      NSString *osVersion = [SimulatorInfo sdkVersionForOSVersion:destInfo[@"OS"]];
+
+    if (deviceOS) {
+      NSString *osVersion = [SimulatorInfo sdkVersionForOSVersion:deviceOS];
       if (!osVersion) {
         *errorMessage = [NSString stringWithFormat:
                          @"'%@' isn't a valid iOS version. The valid iOS versions are: %@.",
-                         destInfo[@"OS"], [SimulatorInfo availableSdkVersions]];
+                         deviceOS, [SimulatorInfo availableSdkVersions]];
         return NO;
       }
       if (deviceName) {
