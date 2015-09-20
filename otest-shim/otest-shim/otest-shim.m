@@ -39,6 +39,8 @@
 #import "TestingFramework.h"
 #import "XCTest.h"
 
+static NSString *const kEventQueueLabel = @"xctool.events";
+
 @interface XCToolAssertionHandler : NSAssertionHandler
 @end
 
@@ -100,7 +102,7 @@ static dispatch_queue_t EventQueue()
     // stdout and generating 'test-output' events.  We have a global variable
     // '__testIsRunning' that we can check to see if we're in the middle of a
     // running test, but there can be race conditions with multiple threads.
-    eventQueue = dispatch_queue_create("xctool.events", DISPATCH_QUEUE_SERIAL);
+    eventQueue = dispatch_queue_create([kEventQueueLabel UTF8String], DISPATCH_QUEUE_SERIAL);
   });
 
   return eventQueue;
@@ -157,6 +159,11 @@ static void PrintJSON(id JSONObject)
   fwrite([data bytes], 1, [data length], __stdout);
   fputs("\n", __stdout);
   fflush(__stdout);
+}
+
+static BOOL IsOnEventQueue()
+{
+  return strcmp(dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL), [kEventQueueLabel UTF8String]) == 0;
 }
 
 #pragma mark - XCToolLog function declarations
@@ -613,8 +620,10 @@ DYLD_INTERPOSE(__writev, writev);
 static void __exit(int code);
 static void __exit(int code)
 {
-  // send all events on EventQueue() before exiting.
-  dispatch_sync(EventQueue(), ^{});
+  if (!IsOnEventQueue()) {
+    // send all events on EventQueue() before exiting.
+    dispatch_sync(EventQueue(), ^{});
+  }
   exit(code);
 }
 DYLD_INTERPOSE(__exit, exit);
@@ -622,8 +631,10 @@ DYLD_INTERPOSE(__exit, exit);
 static void __abort(void);
 static void __abort(void)
 {
-  // send all events on EventQueue() before aborting.
-  dispatch_sync(EventQueue(), ^{});
+  if (!IsOnEventQueue()) {
+    // send all events on EventQueue() before aborting.
+    dispatch_sync(EventQueue(), ^{});
+  }
   abort();
 }
 DYLD_INTERPOSE(__abort, abort);
