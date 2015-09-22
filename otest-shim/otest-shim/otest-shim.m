@@ -434,6 +434,12 @@ static void XCTestCase_performTest(id self, SEL sel, id arg1)
   XCPerformTestWithSuppressedExpectedAssertionFailures(self, originalSelector, arg1);
 }
 
+#pragma mark - _enableSymbolication
+static BOOL XCTestCase__enableSymbolication(id self, SEL sel)
+{
+  return NO;
+}
+
 #pragma mark - Test Scope
 
 static NSString * SenTestProbe_testScope(Class cls, SEL cmd)
@@ -701,6 +707,12 @@ static const char *DyldImageStateChangeHandler(enum dyld_image_states state,
       XTSwizzleSelectorForFunction(NSClassFromString(@"XCTestCase"),
                                    @selector(performTest:),
                                    (IMP)XCTestCase_performTest);
+      if ([NSClassFromString(@"XCTestCase") respondsToSelector:@selector(_enableSymbolication)]) {
+        // Disable symbolication thing on xctest 7 because it sometimes takes forever.
+        XTSwizzleClassSelectorForFunction(NSClassFromString(@"XCTestCase"),
+                                          @selector(_enableSymbolication),
+                                          (IMP)XCTestCase__enableSymbolication);
+      }
       NSDictionary *frameworkInfo = FrameworkInfoForExtension(@"xctest");
       ApplyDuplicateTestNameFix([frameworkInfo objectForKey:kTestingFrameworkTestProbeClassName],
                                 [frameworkInfo objectForKey:kTestingFrameworkTestSuiteClassName]);
