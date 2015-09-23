@@ -45,6 +45,7 @@ static NSString *abbreviatePath(NSString *string) {
 @property (nonatomic, assign) NSInteger indent;
 @property (nonatomic, assign) NSInteger savedIndent;
 @property (nonatomic, assign) BOOL useColorOutput;
+@property (nonatomic, assign) BOOL useOverwrite;
 @property (nonatomic, strong) NSFileHandle *outputHandle;
 @property (nonatomic, copy) NSString *lastLineUpdate;
 
@@ -128,7 +129,7 @@ static NSString *abbreviatePath(NSString *string) {
 
 - (void)printNewline
 {
-  if (_lastLineUpdate != nil && !_useColorOutput) {
+  if (_lastLineUpdate != nil && !(_useColorOutput && _useOverwrite)) {
     [_outputHandle writeData:[_lastLineUpdate dataUsingEncoding:NSUTF8StringEncoding]];
     _lastLineUpdate = nil;
   }
@@ -139,7 +140,7 @@ static NSString *abbreviatePath(NSString *string) {
 {
   NSString *line = [self formattedStringWithFormat:format arguments:argList];;
 
-  if (_useColorOutput) {
+  if (_useColorOutput && _useOverwrite) {
     [_outputHandle writeData:[@"\r" dataUsingEncoding:NSUTF8StringEncoding]];
     [_outputHandle writeData:[line dataUsingEncoding:NSUTF8StringEncoding]];
   } else {
@@ -168,6 +169,7 @@ static NSString *abbreviatePath(NSString *string) {
 
 @interface TextReporter ()
 @property (nonatomic, assign) BOOL isPretty;
+@property (nonatomic, assign) BOOL canOverwrite;
 @property (nonatomic, strong) TestResultCounter *resultCounter;
 @property (nonatomic, copy) NSDictionary *currentStatusEvent;
 @property (nonatomic, copy) NSDictionary *currentBuildCommandEvent;
@@ -199,6 +201,7 @@ static NSString *abbreviatePath(NSString *string) {
 {
   _reportWriter = [[ReportWriter alloc] initWithOutputHandle:_outputHandle];
   _reportWriter.useColorOutput = _isPretty;
+  _reportWriter.useOverwrite = _canOverwrite;
 }
 
 - (void)didFinishReporting
@@ -912,6 +915,19 @@ static NSString *abbreviatePath(NSString *string) {
 @end
 
 @implementation PrettyTextReporter
+
+- (instancetype)init
+{
+  if (self = [super init]) {
+    self.isPretty = YES;
+    self.canOverwrite = YES;
+  }
+  return self;
+}
+
+@end
+
+@implementation NoOverwritePrettyTextReporter
 
 - (instancetype)init
 {
