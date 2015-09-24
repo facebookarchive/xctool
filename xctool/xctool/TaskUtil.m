@@ -25,6 +25,16 @@
 #import "XCToolUtil.h"
 
 static NSArray *readOutputs(int *fildes, int sz) {
+static NSString *StringFromDispatchData(dispatch_data_t data)
+{
+  const void *dataPtr;
+  size_t dataSz;
+  dispatch_data_t contig = dispatch_data_create_map(data, &dataPtr, &dataSz);
+  NSString *str = [[NSString alloc] initWithBytes:dataPtr length:dataSz encoding:NSUTF8StringEncoding];
+  dispatch_release(contig);
+  return str;
+}
+
   NSMutableArray *outputs = [NSMutableArray arrayWithCapacity:sz];
   struct pollfd fds[sz];
   dispatch_data_t data[sz];
@@ -85,15 +95,9 @@ static NSArray *readOutputs(int *fildes, int sz) {
   }
 
   for (int i = 0; i < sz; i++) {
-    const void *dataPtr;
-    size_t dataSz;
-    dispatch_data_t contig = dispatch_data_create_map(data[i], &dataPtr, &dataSz);
-
-    NSString *str = [[NSString alloc] initWithBytes:dataPtr length:dataSz encoding:NSUTF8StringEncoding];
+    NSString *str = StringFromDispatchData(data[i]);
     [outputs addObject:str];
-
     dispatch_release(data[i]);
-    dispatch_release(contig);
   }
 
   return outputs;
