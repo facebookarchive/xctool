@@ -498,34 +498,32 @@ static void ProcessTestOutputWriteBytes(NSData *data)
 
   NSData *lineData = [__testOutput subdataWithRange:NSMakeRange(offset, NSMaxRange(newlineRange) - offset)];
   NSString *line = [[NSString alloc] initWithData:lineData encoding:NSUTF8StringEncoding];
-  dispatch_async(EventQueue(), ^{
-    PrintJSON(EventDictionaryWithNameAndContent(
-      kReporter_Events_TestOuput,
-      @{kReporter_TestOutput_OutputKey: StripAnsi(line)}
-    ));
-  });
+  PrintJSON(EventDictionaryWithNameAndContent(
+    kReporter_Events_TestOuput,
+    @{kReporter_TestOutput_OutputKey: StripAnsi(line)}
+  ));
   [line release];
 }
 
 static void ProcessBeforeTestRunWriteBytes(NSData *data)
 {
   NSString *output = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-  dispatch_async(EventQueue(), ^{
-    PrintJSON(EventDictionaryWithNameAndContent(
-      kReporter_Events_OutputBeforeTestBundleStarts,
-      @{kReporter_OutputBeforeTestBundleStarts_OutputKey: StripAnsi(output)}
-    ));
-  });
+  PrintJSON(EventDictionaryWithNameAndContent(
+    kReporter_Events_OutputBeforeTestBundleStarts,
+    @{kReporter_OutputBeforeTestBundleStarts_OutputKey: StripAnsi(output)}
+  ));
   [output release];
 }
 
 static void ProcessOutputWriteBytes(NSData *data)
 {
-  if (__testIsRunning) {
-    ProcessTestOutputWriteBytes(data);
-  } else if (!__testBundleHasStartedRunning) {
-    ProcessBeforeTestRunWriteBytes(data);
-  }
+  dispatch_async(EventQueue(), ^{
+    if (__testIsRunning) {
+      ProcessTestOutputWriteBytes(data);
+    } else if (!__testBundleHasStartedRunning) {
+      ProcessBeforeTestRunWriteBytes(data);
+    }
+  });
 }
 
 static BOOL ShouldInterceptWriteForFildes(int fildes)
