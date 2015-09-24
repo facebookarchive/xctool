@@ -519,24 +519,29 @@ static void ProcessBeforeTestRunWriteBytes(NSData *data)
   [output release];
 }
 
+static void ProcessOutputWriteBytes(NSData *data)
+{
+  if (__testIsRunning) {
+    ProcessTestOutputWriteBytes(data);
+  } else if (!__testBundleHasStartedRunning) {
+    ProcessBeforeTestRunWriteBytes(data);
+  }
+}
+
 static BOOL ShouldInterceptWriteForFildes(int fildes)
 {
   return (fildes == STDOUT_FILENO || fildes == STDERR_FILENO);
 }
 
 // From /usr/lib/system/libsystem_kernel.dylib - output from printf/fprintf/fwrite will flow to
-// __write_nonancel just before it does the system call.
+// __write_nocancel just before it does the system call.
 ssize_t __write_nocancel(int fildes, const void *buf, size_t nbyte);
 static ssize_t ___write_nocancel(int fildes, const void *buf, size_t nbyte)
 {
   if (ShouldInterceptWriteForFildes(fildes)) {
     if (nbyte > 0 && __enableWriteInterception) {
       NSData *data = [NSData dataWithBytes:buf length:nbyte];
-      if (__testIsRunning) {
-        ProcessTestOutputWriteBytes(data);
-      } else if (!__testBundleHasStartedRunning) {
-        ProcessBeforeTestRunWriteBytes(data);
-      }
+      ProcessOutputWriteBytes(data);
     }
     return nbyte;
   } else {
@@ -545,17 +550,12 @@ static ssize_t ___write_nocancel(int fildes, const void *buf, size_t nbyte)
 }
 DYLD_INTERPOSE(___write_nocancel, __write_nocancel);
 
-static ssize_t __write(int fildes, const void *buf, size_t nbyte);
 static ssize_t __write(int fildes, const void *buf, size_t nbyte)
 {
   if (ShouldInterceptWriteForFildes(fildes)) {
     if (nbyte > 0 && __enableWriteInterception) {
       NSData *data = [NSData dataWithBytes:buf length:nbyte];
-      if (__testIsRunning) {
-        ProcessTestOutputWriteBytes(data);
-      } else if (!__testBundleHasStartedRunning) {
-        ProcessBeforeTestRunWriteBytes(data);
-      }
+      ProcessOutputWriteBytes(data);
     }
     return nbyte;
   } else {
@@ -599,11 +599,7 @@ static ssize_t ___writev_nocancel(int fildes, const struct iovec *iov, int iovcn
   if (ShouldInterceptWriteForFildes(fildes)) {
     if (iovcnt > 0 && __enableWriteInterception) {
       NSData *data = CreateDataFromIOV(iov, iovcnt);
-      if (__testIsRunning) {
-        ProcessTestOutputWriteBytes(data);
-      } else if (!__testBundleHasStartedRunning) {
-        ProcessBeforeTestRunWriteBytes(data);
-      }
+      ProcessOutputWriteBytes(data);
       [data release];
     }
     return iovcnt;
@@ -619,11 +615,7 @@ static ssize_t __writev(int fildes, const struct iovec *iov, int iovcnt)
   if (ShouldInterceptWriteForFildes(fildes)) {
     if (iovcnt > 0 && __enableWriteInterception) {
       NSData *data = CreateDataFromIOV(iov, iovcnt);
-      if (__testIsRunning && iovcnt > 0) {
-        ProcessTestOutputWriteBytes(data);
-      } else if (!__testBundleHasStartedRunning) {
-        ProcessBeforeTestRunWriteBytes(data);
-      }
+      ProcessOutputWriteBytes(data);
       [data release];
     }
     return iovcnt;
@@ -633,8 +625,6 @@ static ssize_t __writev(int fildes, const struct iovec *iov, int iovcnt)
 }
 DYLD_INTERPOSE(__writev, writev);
 
-
-static void __exit(int code);
 static void __exit(int code)
 {
   if (!IsOnEventQueue()) {
@@ -645,7 +635,6 @@ static void __exit(int code)
 }
 DYLD_INTERPOSE(__exit, exit);
 
-static void __abort(void);
 static void __abort(void)
 {
   if (!IsOnEventQueue()) {
