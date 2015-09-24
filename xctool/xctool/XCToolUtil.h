@@ -79,6 +79,11 @@ NSDictionary *GetAvailableSDKsInfo();
 NSDictionary *GetAvailableSDKsAndAliases();
 NSDictionary *GetAvailableSDKsAndAliasesWithSDKInfo(NSDictionary *sdkInfo);
 
+/**
+ Returns YES if runing on Travis or TeamCity
+ */
+BOOL IsRunningOnCISystem();
+
 BOOL IsRunningUnderTest();
 
 /**

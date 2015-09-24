@@ -328,6 +328,13 @@ NSDictionary *GetAvailableSDKsAndAliases()
   return GetAvailableSDKsAndAliasesWithSDKInfo(sdkInfo);
 }
 
+BOOL IsRunningOnCISystem()
+{
+  NSDictionary *environment = [[NSProcessInfo processInfo] environment];
+  return ([environment[@"TRAVIS"] isEqualToString:@"true"] ||
+          [environment[@"TEAMCITY_VERSION"] length] > 0);
+}
+
 BOOL IsRunningUnderTest()
 {
   NSString *processName = [[NSProcessInfo processInfo] processName];

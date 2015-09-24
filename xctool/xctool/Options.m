@@ -304,8 +304,7 @@
                                      outputPath:@"-"];
     [_reporters addObject:reporterTask];
 
-    if (![[[NSProcessInfo processInfo] environment][@"TRAVIS"] isEqualToString:@"true"] &&
-        !IsRunningUnderTest()) {
+    if (!IsRunningOnCISystem() && !IsRunningUnderTest()) {
       ReporterTask *userNotificationsReporterTask =
       [[ReporterTask alloc] initWithReporterPath:[XCToolReportersPath() stringByAppendingPathComponent:@"user-notifications"]
                                        outputPath:@"-"];
