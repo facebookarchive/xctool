@@ -519,12 +519,17 @@ static void ProcessBeforeTestRunWriteBytes(const void *buf, size_t nbyte)
   [output release];
 }
 
+static BOOL ShouldInterceptWriteForFildes(int fildes)
+{
+  return (fildes == STDOUT_FILENO || fildes == STDERR_FILENO);
+}
+
 // From /usr/lib/system/libsystem_kernel.dylib - output from printf/fprintf/fwrite will flow to
 // __write_nonancel just before it does the system call.
 ssize_t __write_nocancel(int fildes, const void *buf, size_t nbyte);
 static ssize_t ___write_nocancel(int fildes, const void *buf, size_t nbyte)
 {
-  if ((fildes == STDOUT_FILENO || fildes == STDERR_FILENO)) {
+  if (ShouldInterceptWriteForFildes(fildes)) {
     if (!__enableWriteInterception) {
       return nbyte;
     }
@@ -543,7 +548,7 @@ DYLD_INTERPOSE(___write_nocancel, __write_nocancel);
 static ssize_t __write(int fildes, const void *buf, size_t nbyte);
 static ssize_t __write(int fildes, const void *buf, size_t nbyte)
 {
-  if ((fildes == STDOUT_FILENO || fildes == STDERR_FILENO)) {
+  if (ShouldInterceptWriteForFildes(fildes)) {
     if (!__enableWriteInterception) {
       return nbyte;
     }
@@ -591,7 +596,7 @@ static NSData *CreateDataFromIOV(const struct iovec *iov, int iovcnt) {
 ssize_t __writev_nocancel(int fildes, const struct iovec *iov, int iovcnt);
 static ssize_t ___writev_nocancel(int fildes, const struct iovec *iov, int iovcnt)
 {
-  if ((fildes == STDOUT_FILENO || fildes == STDERR_FILENO)) {
+  if (ShouldInterceptWriteForFildes(fildes)) {
     if (!__enableWriteInterception) {
       return iovcnt;
     }
@@ -614,7 +619,7 @@ DYLD_INTERPOSE(___writev_nocancel, __writev_nocancel);
 // Output from NSLog flows through writev
 static ssize_t __writev(int fildes, const struct iovec *iov, int iovcnt)
 {
-  if ((fildes == STDOUT_FILENO || fildes == STDERR_FILENO)) {
+  if (ShouldInterceptWriteForFildes(fildes)) {
     if (!__enableWriteInterception) {
       return iovcnt;
     }
