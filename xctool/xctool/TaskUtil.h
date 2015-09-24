@@ -18,6 +18,21 @@
 
 @class NSConcreteTask, SimulatorInfo;
 
+typedef void (^ReporterEventFeedBlock)(NSString *);
+typedef void (^FdOutputLineFeedBlock)(NSString *);
+
+/**
+ *  Returns array of NSString's with contents read from fildes.
+ *
+ *  Size of the returned array is equal to `sz`.
+ *  If `block` is provided then function dynamically and asynchronously
+ *  feeds lines to a block on the provided queue. Ensure that
+ *  provided queue is serial otherwise order of lines could be wrong.
+ *  If not queue is provided then block is synchronously invoked on
+ *  the current queue.
+ */
+NSArray *ReadOutputsAndFeedOuputLinesToBlockOnQueue(int * const fildes, const int sz, FdOutputLineFeedBlock block, dispatch_queue_t blockDispatchQueue);
+
 /**
  * Launchs a task, waits for exit, and returns a dictionary like
  * { @"stdout": "...", @"stderr": "..." }
@@ -33,7 +48,7 @@ NSString *LaunchTaskAndCaptureOutputInCombinedStream(NSTask *task, NSString *des
 /**
  * Launchs a task, waits for exit, and feeds lines from standard out to a block.
  */
-void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, void (^block)(NSString *));
+void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, ReporterEventFeedBlock block);
 
 /**
  * Returns an NSTask that is configured NOT to start a new process group.  This

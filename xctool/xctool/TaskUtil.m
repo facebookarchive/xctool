@@ -24,7 +24,6 @@
 #import "Swizzle.h"
 #import "XCToolUtil.h"
 
-static NSArray *readOutputs(int *fildes, int sz) {
 static NSString *StringFromDispatchData(dispatch_data_t data)
 {
   const void *dataPtr;
@@ -35,15 +34,56 @@ static NSString *StringFromDispatchData(dispatch_data_t data)
   return str;
 }
 
+static NSArray *readOutputs(int *fildes, int sz)
+{
+  return ReadOutputsAndFeedOuputLinesToBlockOnQueue(fildes, sz, nil, NULL);
+}
+
+NSArray *ReadOutputsAndFeedOuputLinesToBlockOnQueue(
+  int * const fildes,
+  const int sz,
+  FdOutputLineFeedBlock block,
+  dispatch_queue_t queue)
+{
   NSMutableArray *outputs = [NSMutableArray arrayWithCapacity:sz];
   struct pollfd fds[sz];
   dispatch_data_t data[sz];
+  size_t processedBytes[sz];
+
+  size_t (^feedUnprocessedLinesToBlock)(dispatch_data_t, BOOL) = ^(dispatch_data_t unprocessedPart, BOOL forceUntilTheEnd) {
+    NSString *string = StringFromDispatchData(unprocessedPart);
+    dispatch_release(unprocessedPart);
+    size_t processedStringLength = string.length;
+    NSMutableArray *lines = [[string componentsSeparatedByString:@"\n"] mutableCopy];
+    // if not forced to feed bytes until the end then skip lines not having "\n" suffix
+    if (!forceUntilTheEnd && ![string hasSuffix:@"\n"]) {
+      NSString *skippedLine = [lines lastObject];
+      if (skippedLine) {
+        [lines removeLastObject];
+        processedStringLength -= skippedLine.length;
+      }
+    }
+    for (NSString *lineToFeed in lines) {
+      if (lineToFeed.length == 0) {
+        continue;
+      }
+      if (queue == NULL) {
+        block(lineToFeed);
+      } else {
+        dispatch_async(queue, ^{
+          block(lineToFeed);
+        });
+      }
+    }
+    return processedStringLength;
+  };
 
   for (int i = 0; i < sz; i++) {
     fds[i].fd = fildes[i];
     fds[i].events = POLLIN;
     fds[i].revents = 0;
     data[i] = dispatch_data_empty;
+    processedBytes[i] = 0;
   }
 
   int remaining = sz;
@@ -66,29 +106,38 @@ static NSString *StringFromDispatchData(dispatch_data_t data)
       NSCAssert(false, @"impossible, polling without timeout");
     } else {
       for (int i = 0; i < sz; i++) {
-        if (fds[i].revents & (POLLIN | POLLHUP)) {
-          uint8_t buf[4096] = {0};
-          ssize_t readResult = read(fds[i].fd, buf, (sizeof(buf) / sizeof(uint8_t)));
+        if (!(fds[i].revents & (POLLIN | POLLHUP))) {
+          continue;
+        }
 
-          if (readResult > 0) {  // some bytes read
-            dispatch_data_t part =
-              dispatch_data_create(buf,
-                                   readResult,
-                                   dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
-                                   // copy data from the buffer
-                                   DISPATCH_DATA_DESTRUCTOR_DEFAULT);
-            dispatch_data_t combined = dispatch_data_create_concat(data[i], part);
-            dispatch_release(part);
-            dispatch_release(data[i]);
-            data[i] = combined;
-          } else if (readResult == 0) {  // eof
-            remaining--;
-            fds[i].fd = -1;
-            fds[i].events = 0;
-          } else if (errno != EINTR) {
-            NSLog(@"error during read: %@", [NSError errorWithDomain:NSPOSIXErrorDomain code:errno userInfo:@{}]);
-            abort();
-          }
+        uint8_t buf[4096] = {0};
+        ssize_t readResult = read(fds[i].fd, buf, (sizeof(buf) / sizeof(uint8_t)));
+
+        if (readResult > 0) {  // some bytes read
+          dispatch_data_t part =
+            dispatch_data_create(buf,
+                                 readResult,
+                                 dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
+                                 // copy data from the buffer
+                                 DISPATCH_DATA_DESTRUCTOR_DEFAULT);
+          dispatch_data_t combined = dispatch_data_create_concat(data[i], part);
+          dispatch_release(part);
+          dispatch_release(data[i]);
+          data[i] = combined;
+        } else if (readResult == 0) {  // eof
+          remaining--;
+          fds[i].fd = -1;
+          fds[i].events = 0;
+        } else if (errno != EINTR) {
+          NSLog(@"error during read: %@", [NSError errorWithDomain:NSPOSIXErrorDomain code:errno userInfo:@{}]);
+          abort();
+        }
+        if (block) {
+          // feed to block unprocessed lines
+          size_t offset = processedBytes[i];
+          size_t size = dispatch_data_get_size(data[i]);
+          dispatch_data_t unprocessedPart = dispatch_data_create_subrange(data[i], offset, size - offset);
+          processedBytes[i] += feedUnprocessedLinesToBlock(unprocessedPart, fds[i].fd == -1);
         }
       }
     }
@@ -150,7 +199,7 @@ NSString *LaunchTaskAndCaptureOutputInCombinedStream(NSTask *task, NSString *des
   return outputs[0];
 }
 
-void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, void (^block)(NSString *))
+void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, ReporterEventFeedBlock block)
 {
   NSPipe *stdoutPipe = [NSPipe pipe];
   int stdoutReadFD = [[stdoutPipe fileHandleForReading] fileDescriptor];
@@ -159,58 +208,7 @@ void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, voi
   NSCAssert(fcntl(stdoutReadFD, F_SETFL, flags | O_NONBLOCK) != -1,
             @"Failed to set O_NONBLOCK: %s", strerror(errno));
 
-  NSMutableData *buffer = [[NSMutableData alloc] initWithCapacity:0];
-
-  // Split whatever content we have in 'buffer' into lines.
-  void (^processBuffer)(void) = ^{
-    NSUInteger offset = 0;
-    NSData *newlineData = [NSData dataWithBytes:"\n" length:1];
-    for (;;) {
-      NSRange newlineRange = [buffer rangeOfData:newlineData
-                                         options:0
-                                           range:NSMakeRange(offset, [buffer length] - offset)];
-      if (newlineRange.length == 0) {
-        break;
-      } else {
-        NSData *line = [buffer subdataWithRange:NSMakeRange(offset, newlineRange.location - offset)];
-        block([[NSString alloc] initWithData:line encoding:NSUTF8StringEncoding]);
-        offset = newlineRange.location + 1;
-      }
-    }
-
-    [buffer replaceBytesInRange:NSMakeRange(0, offset) withBytes:NULL length:0];
-  };
-
-  // Uses poll() to block until data (or EOF) is available.
-  BOOL (^pollForData)(int fd) = ^(int fd) {
-    for (;;) {
-      struct pollfd fds[1] = {0};
-      fds[0].fd = fd;
-      fds[0].events = (POLLIN | POLLHUP);
-
-      int result = poll(fds,
-                        sizeof(fds) / sizeof(fds[0]),
-                        // wait as long as 1 second.
-                        1000);
-
-      if (result > 0) {
-        // Data ready or EOF!
-        return YES;
-      } else if (result == 0) {
-        // No data available.
-        return NO;
-      } else if (result == -1 && errno == EAGAIN) {
-        // It could work next time.
-        continue;
-      } else if (result == -1 && errno == EINTR) {
-        // Poll was interrupted. It could work next time.
-        continue;
-      } else {
-        fprintf(stderr, "poll() failed with: %s\n", strerror(errno));
-        abort();
-      }
-    }
-  };
+  int fildes[1] = {stdoutReadFD};
 
   // NSTask will automatically close the write-side of the pipe in our process, so only the new
   // process will have an open handle.  That means when that process exits, we'll automatically
@@ -221,35 +219,7 @@ void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, voi
 
   LaunchTaskAndMaybeLogCommand(task, description);
 
-  uint8_t readBuffer[32768] = {0};
-  BOOL keepPolling = YES;
-
-  while (keepPolling) {
-    pollForData(stdoutReadFD);
-
-    // Read whatever we can get.
-    for (;;) {
-      ssize_t bytesRead = read(stdoutReadFD, readBuffer, sizeof(readBuffer));
-      if (bytesRead > 0) {
-        @autoreleasepool {
-          [buffer appendBytes:readBuffer length:bytesRead];
-          processBuffer();
-        }
-      } else if ((bytesRead == 0) ||
-                 (![task isRunning] && bytesRead == -1 && errno == EAGAIN)) {
-        // We got an EOF - OR - we're calling it quits because the process has exited and it
-        // appears there's no data left to be read.
-        keepPolling = NO;
-        break;
-      } else if (bytesRead == -1 && errno == EAGAIN) {
-        // Nothing left to read - poll() until more comes.
-        break;
-      } else if (bytesRead == -1) {
-        fprintf(stderr, "read() failed with: %s\n", strerror(errno));
-        abort();
-      }
-    }
-  }
+  ReadOutputsAndFeedOuputLinesToBlockOnQueue(fildes, 1, block, NULL);
 
   [task waitUntilExit];
 }
