@@ -69,16 +69,10 @@
 
 - (void)testCanQueryClassesFromOSXBundle_AppTests
 {
-  if (ToolchainIsXcode7OrBetter()) {
-    // octest isn't supported in Xcode 7
-    // TODO: Rewrite test to test xctest bundles.
-    return;
-  }
-
   NSString *error = nil;
   NSDictionary *buildSettings = @{
                                   Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"TestProject-App-OSX/Build/Products/Debug"),
-                                  Xcode_FULL_PRODUCT_NAME : @"TestProject-App-OSXTests.octest",
+                                  Xcode_FULL_PRODUCT_NAME : @"TestProject-App-OSXTests.xctest",
                                   Xcode_SDK_NAME : GetAvailableSDKsAndAliases()[@"macosx"],
                                   Xcode_TEST_HOST : AbsolutePathFromRelative(TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/TestProject-App-OSX.app/Contents/MacOS/TestProject-App-OSX"),
                                   Xcode_TARGETED_DEVICE_FAMILY : @"1",
@@ -89,6 +83,7 @@
   assertThat(classes,
              equalTo(@[@"TestProject_App_OSXTests/testCanUseSymbolsFromTestHost",
                        @"TestProject_App_OSXTests/testOutput",
+                       @"TestProject_App_OSXTests/testStandardDirectories",
                        @"TestProject_App_OSXTests/testWillFail",
                        @"TestProject_App_OSXTests/testWillPass",
                        ]));

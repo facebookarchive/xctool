@@ -13,7 +13,6 @@
 		284AF0C91719F0D300935238 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 284AF0C71719F0D300935238 /* Credits.rtf */; };
 		284AF0CC1719F0D300935238 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 284AF0CB1719F0D300935238 /* AppDelegate.m */; };
 		284AF0CF1719F0D300935238 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 284AF0CD1719F0D300935238 /* MainMenu.xib */; };
-		284AF0D71719F0D300935238 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 284AF0D61719F0D300935238 /* SenTestingKit.framework */; };
 		284AF0D81719F0D300935238 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 284AF0B81719F0D300935238 /* Cocoa.framework */; };
 		284AF0E01719F0D300935238 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 284AF0DE1719F0D300935238 /* InfoPlist.strings */; };
 		284AF0E31719F0D300935238 /* TestProject_App_OSXTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 284AF0E21719F0D300935238 /* TestProject_App_OSXTests.m */; };
@@ -44,8 +43,7 @@
 		284AF0CA1719F0D300935238 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		284AF0CB1719F0D300935238 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		284AF0CE1719F0D300935238 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		284AF0D51719F0D300935238 /* TestProject-App-OSXTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TestProject-App-OSXTests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		284AF0D61719F0D300935238 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		284AF0D51719F0D300935238 /* TestProject-App-OSXTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TestProject-App-OSXTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		284AF0DD1719F0D300935238 /* TestProject-App-OSXTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TestProject-App-OSXTests-Info.plist"; sourceTree = "<group>"; };
 		284AF0DF1719F0D300935238 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		284AF0E11719F0D300935238 /* TestProject_App_OSXTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestProject_App_OSXTests.h; sourceTree = "<group>"; };
@@ -67,7 +65,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				284AF0D71719F0D300935238 /* SenTestingKit.framework in Frameworks */,
 				284AF0D81719F0D300935238 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -89,7 +86,7 @@
 			isa = PBXGroup;
 			children = (
 				284AF0B51719F0D300935238 /* TestProject-App-OSX.app */,
-				284AF0D51719F0D300935238 /* TestProject-App-OSXTests.octest */,
+				284AF0D51719F0D300935238 /* TestProject-App-OSXTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -98,7 +95,6 @@
 			isa = PBXGroup;
 			children = (
 				284AF0B81719F0D300935238 /* Cocoa.framework */,
-				284AF0D61719F0D300935238 /* SenTestingKit.framework */,
 				284AF0BA1719F0D300935238 /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -194,8 +190,8 @@
 			);
 			name = "TestProject-App-OSXTests";
 			productName = "TestProject-App-OSXTests";
-			productReference = 284AF0D51719F0D300935238 /* TestProject-App-OSXTests.octest */;
-			productType = "com.apple.product-type.bundle";
+			productReference = 284AF0D51719F0D300935238 /* TestProject-App-OSXTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -412,13 +408,15 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TestProject-App-OSX.app/Contents/MacOS/TestProject-App-OSX";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(inherited)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TestProject-App-OSX/TestProject-App-OSX-Prefix.pch";
 				INFOPLIST_FILE = "TestProject-App-OSXTests/TestProject-App-OSXTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -427,13 +425,15 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/TestProject-App-OSX.app/Contents/MacOS/TestProject-App-OSX";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(inherited)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TestProject-App-OSX/TestProject-App-OSX-Prefix.pch";
 				INFOPLIST_FILE = "TestProject-App-OSXTests/TestProject-App-OSXTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};

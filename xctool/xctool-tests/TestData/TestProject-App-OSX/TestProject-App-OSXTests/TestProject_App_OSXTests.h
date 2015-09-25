@@ -6,8 +6,8 @@
 //  Copyright (c) 2013 Fred Potter. All rights reserved.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
-@interface TestProject_App_OSXTests : SenTestCase
+@interface TestProject_App_OSXTests : XCTestCase
 
 @end

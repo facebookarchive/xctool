@@ -10,7 +10,6 @@
 		2828292416B11F0F00426B92 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2828292316B11F0F00426B92 /* Foundation.framework */; };
 		2828292916B11F0F00426B92 /* TestProject_Library.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2828292816B11F0F00426B92 /* TestProject_Library.h */; };
 		2828292B16B11F0F00426B92 /* TestProject_Library.m in Sources */ = {isa = PBXBuildFile; fileRef = 2828292A16B11F0F00426B92 /* TestProject_Library.m */; };
-		2828293316B11F0F00426B92 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2828293216B11F0F00426B92 /* SenTestingKit.framework */; };
 		2828293516B11F0F00426B92 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2828293416B11F0F00426B92 /* UIKit.framework */; };
 		2828293616B11F0F00426B92 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2828292316B11F0F00426B92 /* Foundation.framework */; };
 		2828293916B11F0F00426B92 /* libTestProject-Library.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2828292016B11F0F00426B92 /* libTestProject-Library.a */; };
@@ -21,7 +20,6 @@
 		CC169F021B66F9F200C431D5 /* SomeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2828294116B11F0F00426B92 /* SomeTests.m */; };
 		CC169F031B66F9F200C431D5 /* OtherTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A33D1216CF4FFD00C5EE2A /* OtherTests.m */; };
 		CC169F041B66F9F200C431D5 /* DisabledTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 28B3C3AE1731B33C00EC75E5 /* DisabledTests.m */; };
-		CC169F061B66F9F200C431D5 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2828293216B11F0F00426B92 /* SenTestingKit.framework */; };
 		CC169F071B66F9F200C431D5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2828293416B11F0F00426B92 /* UIKit.framework */; };
 		CC169F081B66F9F200C431D5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2828292316B11F0F00426B92 /* Foundation.framework */; };
 		CC169F091B66F9F200C431D5 /* libTestProject-Library.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2828292016B11F0F00426B92 /* libTestProject-Library.a */; };
@@ -47,8 +45,7 @@
 		2828292716B11F0F00426B92 /* TestProject-Library-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TestProject-Library-Prefix.pch"; sourceTree = "<group>"; };
 		2828292816B11F0F00426B92 /* TestProject_Library.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestProject_Library.h; sourceTree = "<group>"; };
 		2828292A16B11F0F00426B92 /* TestProject_Library.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestProject_Library.m; sourceTree = "<group>"; };
-		2828293116B11F0F00426B92 /* TestProject-LibraryTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TestProject-LibraryTests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2828293216B11F0F00426B92 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		2828293116B11F0F00426B92 /* TestProject-LibraryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TestProject-LibraryTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2828293416B11F0F00426B92 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		2828293C16B11F0F00426B92 /* TestProject-LibraryTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TestProject-LibraryTests-Info.plist"; sourceTree = "<group>"; };
 		2828293E16B11F0F00426B92 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -75,7 +72,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2828293316B11F0F00426B92 /* SenTestingKit.framework in Frameworks */,
 				2828293516B11F0F00426B92 /* UIKit.framework in Frameworks */,
 				2828293616B11F0F00426B92 /* Foundation.framework in Frameworks */,
 				2828293916B11F0F00426B92 /* libTestProject-Library.a in Frameworks */,
@@ -86,7 +82,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CC169F061B66F9F200C431D5 /* SenTestingKit.framework in Frameworks */,
 				CC169F071B66F9F200C431D5 /* UIKit.framework in Frameworks */,
 				CC169F081B66F9F200C431D5 /* Foundation.framework in Frameworks */,
 				CC169F091B66F9F200C431D5 /* libTestProject-Library.a in Frameworks */,
@@ -110,7 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				2828292016B11F0F00426B92 /* libTestProject-Library.a */,
-				2828293116B11F0F00426B92 /* TestProject-LibraryTests.octest */,
+				2828293116B11F0F00426B92 /* TestProject-LibraryTests.xctest */,
 				CC169F101B66F9F200C431D5 /* Target-Name-With-Spaces.octest */,
 			);
 			name = Products;
@@ -120,7 +115,6 @@
 			isa = PBXGroup;
 			children = (
 				2828292316B11F0F00426B92 /* Foundation.framework */,
-				2828293216B11F0F00426B92 /* SenTestingKit.framework */,
 				2828293416B11F0F00426B92 /* UIKit.framework */,
 			);
 			name = Frameworks;
@@ -203,8 +197,8 @@
 			);
 			name = "TestProject-LibraryTests";
 			productName = "TestProject-LibraryTests";
-			productReference = 2828293116B11F0F00426B92 /* TestProject-LibraryTests.octest */;
-			productType = "com.apple.product-type.bundle.ocunit-test";
+			productReference = 2828293116B11F0F00426B92 /* TestProject-LibraryTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		CC169F001B66F9F200C431D5 /* Target Name With Spaces */ = {
 			isa = PBXNativeTarget;
@@ -420,13 +414,13 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(inherited)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TestProject-Library/TestProject-Library-Prefix.pch";
 				INFOPLIST_FILE = "TestProject-LibraryTests/TestProject-LibraryTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "armv7 armv7s";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -440,13 +434,13 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(inherited)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TestProject-Library/TestProject-Library-Prefix.pch";
 				INFOPLIST_FILE = "TestProject-LibraryTests/TestProject-LibraryTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "armv7 armv7s";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};

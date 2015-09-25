@@ -103,10 +103,8 @@ static NSTask *OtestShimTask(NSString *platformName,
   // the latest available SDK.
   targetSettings[Xcode_SDK_NAME] = GetAvailableSDKsAndAliases()[[platformName lowercaseString]];
 
-  if (ToolchainIsXcode7OrBetter()) {
-    targetSettings[Xcode_BUILT_PRODUCTS_DIR] = [bundlePath stringByDeletingLastPathComponent];
-    targetSettings[Xcode_FULL_PRODUCT_NAME] = [bundlePath lastPathComponent];
-  }
+  targetSettings[Xcode_BUILT_PRODUCTS_DIR] = [bundlePath stringByDeletingLastPathComponent];
+  targetSettings[Xcode_FULL_PRODUCT_NAME] = [bundlePath lastPathComponent];
 
   // set up an OCUnitIOSLogicTestRunner
   OCUnitIOSLogicTestRunner *runner = [[testRunnerClass alloc] initWithBuildSettings:targetSettings
@@ -361,13 +359,7 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
 
 - (void)testOutputBeforeTestBundleStartsIsCaptured
 {
-  if (ToolchainIsXcode7OrBetter()) {
-    // octest isn't supported in Xcode 7
-    // TODO: Rewrite test to test xctest bundles.
-    return;
-  }
-
-  NSString *bundlePath = TEST_DATA @"TestThatThrowsExceptionOnStart/Build/Products/Debug/TestThatThrowsExceptionOnStart.octest";
+  NSString *bundlePath = TEST_DATA @"TestThatThrowsExceptionOnStart/Build/Products/Debug/TestThatThrowsExceptionOnStart.xctest";
   NSString *targetName = @"TestThatThrowsExceptionOnStart";
   NSString *settingsPath = TEST_DATA @"TestThatThrowsExceptionOnStart/TestThatThrowsExceptionOnStart-showBuildSettings.txt";
   NSArray *testList = @[ @"TestThatThrowsExceptionOnStart/testExample" ];

@@ -10,14 +10,7 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "echo `date -u +%s` &gt; ${BUILD_DIR}/ActionScripts-pre-build.out&#10;">
-            </ActionContent>
-         </ExecutionAction>
-         <ExecutionAction
-            ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
-            <ActionContent
-               title = "Run Script"
-               scriptText = "env | sort &gt;&gt; ${BUILD_DIR}/ActionScripts-pre-build.out">
+               scriptText = "echo `date -u +%s` &gt; /tmp/ActionScripts-pre-build.out&#10;">
             </ActionContent>
          </ExecutionAction>
       </PreActions>
@@ -26,14 +19,7 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "echo `date -u +%s` &gt; ${BUILD_DIR}/ActionScripts-post-build.out">
-            </ActionContent>
-         </ExecutionAction>
-         <ExecutionAction
-            ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
-            <ActionContent
-               title = "Run Script"
-               scriptText = "env | sort &gt;&gt; ${BUILD_DIR}/ActionScripts-post-build.out">
+               scriptText = "echo `date -u +%s` &gt; /tmp/ActionScripts-post-build.out">
             </ActionContent>
          </ExecutionAction>
       </PostActions>
@@ -55,10 +41,10 @@
       </BuildActionEntries>
    </BuildAction>
    <TestAction
+      buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES"
-      buildConfiguration = "Debug">
+      shouldUseLaunchSchemeArgsEnv = "YES">
       <PreActions>
          <ExecutionAction
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
@@ -99,21 +85,24 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "282BFDFC1715E8520022F9FF"
-               BuildableName = "TestProject-Library-OSXTests.octest"
+               BuildableName = "TestProject-Library-OSXTests.xctest"
                BlueprintName = "TestProject-Library-OSXTests"
                ReferencedContainer = "container:TestProject-Library-OSX.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
+      <AdditionalOptions>
+      </AdditionalOptions>
    </TestAction>
    <LaunchAction
+      buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
-      buildConfiguration = "Debug"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
+      debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
       <MacroExpansion>
          <BuildableReference
@@ -128,10 +117,10 @@
       </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
+      buildConfiguration = "Release"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
-      buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
    </ProfileAction>
    <AnalyzeAction
@@ -145,14 +134,7 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "echo `date -u +%s` &gt; ${BUILD_DIR}/ActionScripts-pre-archive.out&#10;">
-            </ActionContent>
-         </ExecutionAction>
-         <ExecutionAction
-            ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
-            <ActionContent
-               title = "Run Script"
-               scriptText = "env | sort &gt;&gt; ${BUILD_DIR}/ActionScripts-pre-archive.out">
+               scriptText = "echo `date -u +%s` &gt; /tmp/ActionScripts-pre-archive.out&#10;">
             </ActionContent>
          </ExecutionAction>
       </PreActions>
@@ -161,14 +143,7 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "echo `date -u +%s` &gt; ${BUILD_DIR}/ActionScripts-post-archive.out&#10;">
-            </ActionContent>
-         </ExecutionAction>
-         <ExecutionAction
-            ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
-            <ActionContent
-               title = "Run Script"
-               scriptText = "env | sort &gt;&gt; ${BUILD_DIR}/ActionScripts-post-archive.out">
+               scriptText = "echo `date -u +%s` &gt; /tmp/ActionScripts-post-archive.out&#10;">
             </ActionContent>
          </ExecutionAction>
       </PostActions>

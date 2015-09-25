@@ -7,14 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2839BE50183F44B5000D7BEC /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2839BE4F183F44B5000D7BEC /* SenTestingKit.framework */; };
 		2839BE56183F44B5000D7BEC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2839BE54183F44B5000D7BEC /* InfoPlist.strings */; };
 		2839BE58183F44B6000D7BEC /* TestThatThrowsExceptionOnStart.m in Sources */ = {isa = PBXBuildFile; fileRef = 2839BE57183F44B6000D7BEC /* TestThatThrowsExceptionOnStart.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2839BE4C183F44B5000D7BEC /* TestThatThrowsExceptionOnStart.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TestThatThrowsExceptionOnStart.octest; sourceTree = BUILT_PRODUCTS_DIR; };
-		2839BE4F183F44B5000D7BEC /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		2839BE4C183F44B5000D7BEC /* TestThatThrowsExceptionOnStart.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TestThatThrowsExceptionOnStart.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2839BE53183F44B5000D7BEC /* TestThatThrowsExceptionOnStart-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TestThatThrowsExceptionOnStart-Info.plist"; sourceTree = "<group>"; };
 		2839BE55183F44B5000D7BEC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2839BE57183F44B6000D7BEC /* TestThatThrowsExceptionOnStart.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestThatThrowsExceptionOnStart.m; sourceTree = "<group>"; };
@@ -26,7 +24,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2839BE50183F44B5000D7BEC /* SenTestingKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -45,7 +42,7 @@
 		2839BE4D183F44B5000D7BEC /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2839BE4C183F44B5000D7BEC /* TestThatThrowsExceptionOnStart.octest */,
+				2839BE4C183F44B5000D7BEC /* TestThatThrowsExceptionOnStart.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -53,7 +50,6 @@
 		2839BE4E183F44B5000D7BEC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				2839BE4F183F44B5000D7BEC /* SenTestingKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -94,8 +90,8 @@
 			);
 			name = TestThatThrowsExceptionOnStart;
 			productName = TestThatThrowsExceptionOnStart;
-			productReference = 2839BE4C183F44B5000D7BEC /* TestThatThrowsExceptionOnStart.octest */;
-			productType = "com.apple.product-type.bundle";
+			productReference = 2839BE4C183F44B5000D7BEC /* TestThatThrowsExceptionOnStart.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -210,7 +206,6 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -250,7 +245,6 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};
