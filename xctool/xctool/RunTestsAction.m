@@ -351,7 +351,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
 
 - (void)addLogicTest:(NSString *)argument
 {
-  [_logicTests addObject:argument];
+  [_logicTests addObject:[argument stringByStandardizingPath]];
 }
 
 - (void)addAppTest:(NSString *)argument
@@ -461,8 +461,8 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
       return NO;
     }
 
-    NSString *testBundle = [rawAppTestArg substringToIndex:colonRange.location];
-    NSString *hostApp = [rawAppTestArg substringFromIndex:colonRange.location + 1];
+    NSString *testBundle = [[rawAppTestArg substringToIndex:colonRange.location] stringByStandardizingPath];
+    NSString *hostApp = [[rawAppTestArg substringFromIndex:colonRange.location + 1] stringByStandardizingPath];
     NSString *existingHostAppForTestBundle = _appTests[testBundle];
 
     if (existingHostAppForTestBundle) {
