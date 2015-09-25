@@ -205,6 +205,7 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
                        kReporter_Events_TestOuput,
                        kReporter_Events_EndTest,
                        kReporter_Events_BeginTest,
+                       kReporter_Events_TestOuput,
                        kReporter_Events_EndTest,
                        kReporter_Events_EndTestSuite]));
 
