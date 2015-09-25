@@ -524,7 +524,10 @@ static void ProcessBeforeTestRunWriteBytes(const void *buf, size_t nbyte)
 ssize_t __write_nocancel(int fildes, const void *buf, size_t nbyte);
 static ssize_t ___write_nocancel(int fildes, const void *buf, size_t nbyte)
 {
-  if (__enableWriteInterception && (fildes == STDOUT_FILENO || fildes == STDERR_FILENO)) {
+  if ((fildes == STDOUT_FILENO || fildes == STDERR_FILENO)) {
+    if (!__enableWriteInterception) {
+      return nbyte;
+    }
     if (__testIsRunning && nbyte > 0) {
       ProcessTestOutputWriteBytes(buf, nbyte);
     } else if (!__testBundleHasStartedRunning && nbyte > 0) {
@@ -540,7 +543,10 @@ DYLD_INTERPOSE(___write_nocancel, __write_nocancel);
 static ssize_t __write(int fildes, const void *buf, size_t nbyte);
 static ssize_t __write(int fildes, const void *buf, size_t nbyte)
 {
-  if (__enableWriteInterception && (fildes == STDOUT_FILENO || fildes == STDERR_FILENO)) {
+  if ((fildes == STDOUT_FILENO || fildes == STDERR_FILENO)) {
+    if (!__enableWriteInterception) {
+      return nbyte;
+    }
     if (__testIsRunning && nbyte > 0) {
       ProcessTestOutputWriteBytes(buf, nbyte);
     } else if (!__testBundleHasStartedRunning && nbyte > 0) {
@@ -585,7 +591,10 @@ static NSData *CreateDataFromIOV(const struct iovec *iov, int iovcnt) {
 ssize_t __writev_nocancel(int fildes, const struct iovec *iov, int iovcnt);
 static ssize_t ___writev_nocancel(int fildes, const struct iovec *iov, int iovcnt)
 {
-  if (__enableWriteInterception && (fildes == STDOUT_FILENO || fildes == STDERR_FILENO)) {
+  if ((fildes == STDOUT_FILENO || fildes == STDERR_FILENO)) {
+    if (!__enableWriteInterception) {
+      return iovcnt;
+    }
     if (__testIsRunning && iovcnt > 0) {
       NSData *data = CreateDataFromIOV(iov, iovcnt);
       ProcessTestOutputWriteBytes(data.bytes, data.length);
@@ -605,7 +614,10 @@ DYLD_INTERPOSE(___writev_nocancel, __writev_nocancel);
 // Output from NSLog flows through writev
 static ssize_t __writev(int fildes, const struct iovec *iov, int iovcnt)
 {
-  if (__enableWriteInterception && (fildes == STDOUT_FILENO || fildes == STDERR_FILENO)) {
+  if ((fildes == STDOUT_FILENO || fildes == STDERR_FILENO)) {
+    if (!__enableWriteInterception) {
+      return iovcnt;
+    }
     if (__testIsRunning && iovcnt > 0) {
       NSData *data = CreateDataFromIOV(iov, iovcnt);
       ProcessTestOutputWriteBytes(data.bytes, data.length);
@@ -686,8 +698,7 @@ static const char *DyldImageStateChangeHandler(enum dyld_image_states state,
       XTApplySenTestClassEnumeratorFix();
       XTApplySenTestCaseInvokeTestFix();
       XTApplySenIsSuperclassOfClassPerformanceFix();
-    }
-    else if (strstr(info[i].imageFilePath, "XCTest.framework") != NULL) {
+    } else if (strstr(info[i].imageFilePath, "XCTest.framework") != NULL) {
       // Since the 'XCTestLog' class now exists, we can swizzle it!
       XTSwizzleSelectorForFunction(NSClassFromString(@"XCTestLog"),
                                    @selector(testSuiteDidStart:),
@@ -716,6 +727,9 @@ static const char *DyldImageStateChangeHandler(enum dyld_image_states state,
       NSDictionary *frameworkInfo = FrameworkInfoForExtension(@"xctest");
       ApplyDuplicateTestNameFix([frameworkInfo objectForKey:kTestingFrameworkTestProbeClassName],
                                 [frameworkInfo objectForKey:kTestingFrameworkTestSuiteClassName]);
+    } else if (strstr(info[i].imageFilePath, ".xctest") != NULL ||
+               strstr(info[i].imageFilePath, ".octest") != NULL) {
+      __enableWriteInterception = YES;
     }
   }
 
@@ -751,8 +765,6 @@ __attribute__((constructor)) static void EntryPoint()
 
   // Unset so we don't cascade into any other process that might be spawned.
   unsetenv("DYLD_INSERT_LIBRARIES");
-
-  __enableWriteInterception = YES;
 }
 
 __attribute__((destructor)) static void ExitPoint()

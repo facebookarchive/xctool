@@ -368,10 +368,9 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
   NSTask *task = OtestShimTaskOSX(settingsPath, targetName, bundlePath, testList, allTests);
   NSArray *events = RunOtestAndParseResult(task);
 
-  NSString *output = [SelectEventFields(events, kReporter_Events_OutputBeforeTestBundleStarts, kReporter_OutputBeforeTestBundleStarts_OutputKey)
-                      componentsJoinedByString:@""];
-
-  assertThat(output, containsString(@"Terminating app due to uncaught exception"));
+  assertThat(events, hasCountOf(2));
+  assertThat(events[0][@"event"], is(kReporter_Events_BeginTestSuite));
+  assertThat(events[1][@"event"], is(kReporter_Events_EndTestSuite));
 }
 
 - (void)testSenTestingKitExceptionIsThrownWhenTestTimeoutIsHit

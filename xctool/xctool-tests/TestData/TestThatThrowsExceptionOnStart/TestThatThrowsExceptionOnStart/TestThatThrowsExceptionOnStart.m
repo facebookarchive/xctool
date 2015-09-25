@@ -13,7 +13,12 @@ void DontSIGABRT(int signal)
   exit(0);
 }
 
-__attribute__((constructor)) static void Initializer()
+@interface TestThatThrowsExceptionOnStart : XCTestCase
+@end
+
+@implementation TestThatThrowsExceptionOnStart
+
++ (void)setUp
 {
   // Crash on start, but only when run via otest.  We don't want to crash
   // when otest-query runs.
@@ -27,11 +32,6 @@ __attribute__((constructor)) static void Initializer()
     [NSException raise:NSGenericException format:@"Let's crash on start!"];
   }
 }
-
-@interface TestThatThrowsExceptionOnStart : XCTestCase
-@end
-
-@implementation TestThatThrowsExceptionOnStart
 
 - (void)testExample
 {
