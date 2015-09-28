@@ -164,9 +164,11 @@ void __exit(int code);
   if (forkedPid == 0) {
     if (standardOutputWriteFd != -1) {
       writeAll(standardOutputWriteFd, pretendStandardOutputBytes, pretendStandardOutputLength);
+      close(standardOutputWriteFd);
     }
     if (standardErrorWriteFd != -1) {
       writeAll(standardErrorWriteFd, pretendStandardErrorBytes, pretendStandardErrorLength);
+      close(standardErrorWriteFd);
     }
 
     // call directly to interposed in otest-shim exit.
