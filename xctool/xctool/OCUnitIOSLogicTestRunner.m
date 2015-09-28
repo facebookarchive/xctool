@@ -19,6 +19,7 @@
 #import "NSConcreteTask.h"
 #import "SimDevice.h"
 #import "SimulatorInfo.h"
+#import "SimulatorTaskUtils.h"
 #import "TaskUtil.h"
 #import "TestingFramework.h"
 #import "XCToolUtil.h"

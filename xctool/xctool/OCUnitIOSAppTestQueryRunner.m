@@ -17,7 +17,7 @@
 #import "OCUnitIOSAppTestQueryRunner.h"
 
 #import "SimulatorInfo.h"
-#import "TaskUtil.h"
+#import "SimulatorTaskUtils.h"
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
 

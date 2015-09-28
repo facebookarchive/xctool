@@ -128,6 +128,8 @@
 		CC2BE23E1B7AE2AF008FBC50 /* PbxprojReader.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2BE2101B7ADE8D008FBC50 /* PbxprojReader.m */; };
 		CC2BE33A1B7B1BE7008FBC50 /* PbxprojReaderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2BE3391B7B1BE7008FBC50 /* PbxprojReaderTests.m */; };
 		CC4AB1FB1B82C57F00543A42 /* TestableExecutionInfoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CC4AB1FA1B82C57F00543A42 /* TestableExecutionInfoTests.m */; };
+		CC6A783D1BB9E5D500327F38 /* SimulatorTaskUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6A783C1BB9E5D500327F38 /* SimulatorTaskUtils.m */; settings = {ASSET_TAGS = (); }; };
+		CC76864D1BBEE93D00287D10 /* SimulatorTaskUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6A783C1BB9E5D500327F38 /* SimulatorTaskUtils.m */; };
 		CC84C94C18ECE161001F6094 /* FakeOCUnitTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = CC84C94B18ECE161001F6094 /* FakeOCUnitTestRunner.m */; };
 		CCA8F74C1BD225F90084E131 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CCA8F74B1BD225F90084E131 /* libiconv.dylib */; };
 		CCA8F74D1BD2280A0084E131 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CCA8F74B1BD225F90084E131 /* libiconv.dylib */; };
@@ -338,6 +340,8 @@
 		CC2BE2101B7ADE8D008FBC50 /* PbxprojReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PbxprojReader.m; sourceTree = "<group>"; };
 		CC2BE3391B7B1BE7008FBC50 /* PbxprojReaderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PbxprojReaderTests.m; sourceTree = "<group>"; };
 		CC4AB1FA1B82C57F00543A42 /* TestableExecutionInfoTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestableExecutionInfoTests.m; sourceTree = "<group>"; };
+		CC6A783B1BB9E5D500327F38 /* SimulatorTaskUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimulatorTaskUtils.h; path = xctool/SimulatorWrapper/SimulatorTaskUtils.h; sourceTree = "<group>"; };
+		CC6A783C1BB9E5D500327F38 /* SimulatorTaskUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimulatorTaskUtils.m; path = xctool/SimulatorWrapper/SimulatorTaskUtils.m; sourceTree = "<group>"; };
 		CC84C94A18ECE161001F6094 /* FakeOCUnitTestRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeOCUnitTestRunner.h; sourceTree = "<group>"; };
 		CC84C94B18ECE161001F6094 /* FakeOCUnitTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeOCUnitTestRunner.m; sourceTree = "<group>"; };
 		CCA8F74B1BD225F90084E131 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
@@ -750,6 +754,8 @@
 		CCDC41BF195BDE3300BD5A1A /* SimulatorUtils */ = {
 			isa = PBXGroup;
 			children = (
+				CC6A783B1BB9E5D500327F38 /* SimulatorTaskUtils.h */,
+				CC6A783C1BB9E5D500327F38 /* SimulatorTaskUtils.m */,
 				CC229B0D1946396600E11C30 /* SimulatorUtils.h */,
 				CC229B0E1946396600E11C30 /* SimulatorUtils.m */,
 			);
@@ -853,6 +859,7 @@
 				EE37291317E288AD00554867 /* main.m in Sources */,
 				EE30659B17DEBE6600733D72 /* FakeFileHandle.m in Sources */,
 				283CCAD616C2F10A00F2E343 /* XCTool.m in Sources */,
+				CC6A783D1BB9E5D500327F38 /* SimulatorTaskUtils.m in Sources */,
 				28E9B97F16C2F1C600A52E4D /* XCToolUtil.m in Sources */,
 				28E9B9D716C3275200A52E4D /* OCUnitIOSAppTestRunner.m in Sources */,
 				28E9B9D916C3275200A52E4D /* OCUnitIOSLogicTestRunner.m in Sources */,
@@ -908,6 +915,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC76864D1BBEE93D00287D10 /* SimulatorTaskUtils.m in Sources */,
 				CC2BE23E1B7AE2AF008FBC50 /* PbxprojReader.m in Sources */,
 				CCEB0F26195F2D9E00878E25 /* SimulatorInfo.m in Sources */,
 				CCEB0F28195F2D9E00878E25 /* SimulatorWrapper.m in Sources */,

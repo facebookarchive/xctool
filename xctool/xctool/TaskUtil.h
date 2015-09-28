@@ -101,17 +101,6 @@ NSTask *CreateTaskInSameProcessGroupWithArch(cpu_type_t arch);
 void LaunchTaskAndMaybeLogCommand(NSTask *task, NSString *description);
 
 /**
- * Returns an NSTask that will launch an iOS simulator binary via the
- * iPhoneSimulator.platform/usr/bin/sim launcher.
- */
-NSTask *CreateTaskForSimulatorExecutable(NSString *sdkName,
-                                         SimulatorInfo *simulatorInfo,
-                                         NSString *launchPath,
-                                         NSArray *arguments,
-                                         NSDictionary *environment);
-
-
-/**
  * Returns a command-line expression which includes the environment, launch
  * path, and args to reproduce a given task.
  */
