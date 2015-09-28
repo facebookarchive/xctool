@@ -24,12 +24,12 @@
 #import "EventGenerator.h"
 #import "EventSink.h"
 #import "NSFileHandle+Print.h"
-#import "Options.h"
+//#import "Options.h"
 #import "ReporterEvents.h"
-#import "ReporterTask.h"
+//#import "ReporterTask.h"
 #import "TaskUtil.h"
 #import "XcodeBuildSettings.h"
-#import "XcodeSubjectInfo.h"
+//#import "XcodeSubjectInfo.h"
 
 static NSString *__tempDirectoryForAction = nil;
 

@@ -22,13 +22,21 @@ COMMON_REPORTERS_SRCS = [
     'Common/EventGenerator.m',
     'Common/NSFileHandle+Print.m',
     'Common/Reporter.m',
+    'Common/TaskUtil.m',
+    'Common/XcodeBuildSettings.m',
+    'Common/XCToolUtil.m',
 ]
 
 COMMON_REPORTERS_HEADERS = [
     'Common/EventGenerator.h',
+    'Common/EventSink.h',
+    'Common/NSConcreteTask.h',
     'Common/NSFileHandle+Print.h',
     'Common/Reporter.h',
     'Common/ReporterEvents.h',
+    'Common/TaskUtil.h',
+    'Common/XcodeBuildSettings.h',
+    'Common/XCToolUtil.h',
 ]
 
 TEXT_REPORTERS_SRCS = COMMON_REPORTERS_SRCS + glob(['reporters/text/**/*.m']) + [
@@ -90,6 +98,9 @@ apple_binary(
     frameworks = [
         '$SDKROOT/System/Library/Frameworks/Foundation.framework',
     ],
+    linker_flags = [
+        '-liconv',
+    ],
 )
 
 apple_binary(
@@ -99,6 +110,9 @@ apple_binary(
     preprocessor_flags = COMMON_PREPROCESSOR_FLAGS,
     frameworks = [
         '$SDKROOT/System/Library/Frameworks/Foundation.framework',
+    ],
+    linker_flags = [
+        '-liconv',
     ],
 )
 
@@ -114,6 +128,9 @@ apple_binary(
     frameworks = [
         '$SDKROOT/System/Library/Frameworks/Foundation.framework',
     ],
+    linker_flags = [
+        '-liconv',
+    ],
 )
 
 apple_binary(
@@ -127,6 +144,9 @@ apple_binary(
     preprocessor_flags = COMMON_PREPROCESSOR_FLAGS,
     frameworks = [
         '$SDKROOT/System/Library/Frameworks/Foundation.framework',
+    ],
+    linker_flags = [
+        '-liconv',
     ],
 )
 
@@ -142,6 +162,9 @@ apple_binary(
     frameworks = [
         '$SDKROOT/System/Library/Frameworks/Foundation.framework',
     ],
+    linker_flags = [
+        '-liconv',
+    ],
 )
 
 apple_binary(
@@ -155,6 +178,9 @@ apple_binary(
     preprocessor_flags = COMMON_PREPROCESSOR_FLAGS,
     frameworks = [
         '$SDKROOT/System/Library/Frameworks/Foundation.framework',
+    ],
+    linker_flags = [
+        '-liconv',
     ],
 )
 
@@ -170,6 +196,9 @@ apple_binary(
     frameworks = [
         '$SDKROOT/System/Library/Frameworks/Foundation.framework',
     ],
+    linker_flags = [
+        '-liconv',
+    ],
 )
 
 apple_binary(
@@ -181,6 +210,9 @@ apple_binary(
     preprocessor_flags = COMMON_PREPROCESSOR_FLAGS,
     frameworks = [
         '$SDKROOT/System/Library/Frameworks/Foundation.framework',
+    ],
+    linker_flags = [
+        '-liconv',
     ],
 )
 

@@ -52,6 +52,43 @@
 		3892D7541815A13400E68652 /* EventGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D74F1815A13400E68652 /* EventGenerator.m */; };
 		3892D7551815A13400E68652 /* EventGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D74F1815A13400E68652 /* EventGenerator.m */; };
 		3892D7561815A13400E68652 /* EventGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D74F1815A13400E68652 /* EventGenerator.m */; };
+		CC0743801BB9E9570075E407 /* XCToolUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CC07437F1BB9E9570075E407 /* XCToolUtil.m */; };
+		CC0743811BB9E9570075E407 /* XCToolUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CC07437F1BB9E9570075E407 /* XCToolUtil.m */; };
+		CC0743821BB9E9570075E407 /* XCToolUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CC07437F1BB9E9570075E407 /* XCToolUtil.m */; };
+		CC0743831BB9E9570075E407 /* XCToolUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CC07437F1BB9E9570075E407 /* XCToolUtil.m */; };
+		CC0743841BB9E9570075E407 /* XCToolUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CC07437F1BB9E9570075E407 /* XCToolUtil.m */; };
+		CC0743851BB9E9570075E407 /* XCToolUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CC07437F1BB9E9570075E407 /* XCToolUtil.m */; };
+		CC0743861BB9E9570075E407 /* XCToolUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CC07437F1BB9E9570075E407 /* XCToolUtil.m */; };
+		CC0743871BB9E9570075E407 /* XCToolUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CC07437F1BB9E9570075E407 /* XCToolUtil.m */; };
+		CC0743881BB9E9570075E407 /* XCToolUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CC07437F1BB9E9570075E407 /* XCToolUtil.m */; };
+		CC07438C1BB9EB490075E407 /* XcodeBuildSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = CC07438B1BB9EB490075E407 /* XcodeBuildSettings.m */; };
+		CC07438D1BB9EB490075E407 /* XcodeBuildSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = CC07438B1BB9EB490075E407 /* XcodeBuildSettings.m */; };
+		CC07438E1BB9EB490075E407 /* XcodeBuildSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = CC07438B1BB9EB490075E407 /* XcodeBuildSettings.m */; };
+		CC07438F1BB9EB490075E407 /* XcodeBuildSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = CC07438B1BB9EB490075E407 /* XcodeBuildSettings.m */; };
+		CC0743901BB9EB490075E407 /* XcodeBuildSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = CC07438B1BB9EB490075E407 /* XcodeBuildSettings.m */; };
+		CC0743911BB9EB490075E407 /* XcodeBuildSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = CC07438B1BB9EB490075E407 /* XcodeBuildSettings.m */; };
+		CC0743921BB9EB490075E407 /* XcodeBuildSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = CC07438B1BB9EB490075E407 /* XcodeBuildSettings.m */; };
+		CC0743931BB9EB490075E407 /* XcodeBuildSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = CC07438B1BB9EB490075E407 /* XcodeBuildSettings.m */; };
+		CC0743941BB9EB490075E407 /* XcodeBuildSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = CC07438B1BB9EB490075E407 /* XcodeBuildSettings.m */; };
+		CC07439A1BB9EBA60075E407 /* EventGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D74F1815A13400E68652 /* EventGenerator.m */; };
+		CC46A4F91BD768D5007B8C42 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CC46A4F81BD768D5007B8C42 /* libiconv.dylib */; };
+		CC46A4FA1BD768DA007B8C42 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CC46A4F81BD768D5007B8C42 /* libiconv.dylib */; };
+		CC46A4FB1BD768E5007B8C42 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CC46A4F81BD768D5007B8C42 /* libiconv.dylib */; };
+		CC46A4FC1BD768EA007B8C42 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CC46A4F81BD768D5007B8C42 /* libiconv.dylib */; };
+		CC46A4FD1BD768F0007B8C42 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CC46A4F81BD768D5007B8C42 /* libiconv.dylib */; };
+		CC46A4FE1BD768F5007B8C42 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CC46A4F81BD768D5007B8C42 /* libiconv.dylib */; };
+		CC46A4FF1BD768FB007B8C42 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CC46A4F81BD768D5007B8C42 /* libiconv.dylib */; };
+		CC46A5001BD76900007B8C42 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CC46A4F81BD768D5007B8C42 /* libiconv.dylib */; };
+		CC46A5011BD76907007B8C42 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CC46A4F81BD768D5007B8C42 /* libiconv.dylib */; };
+		CC75C2AB1BB9D95F004315B2 /* TaskUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CC75C2AA1BB9D95F004315B2 /* TaskUtil.m */; };
+		CC75C2AC1BB9DD7F004315B2 /* TaskUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CC75C2AA1BB9D95F004315B2 /* TaskUtil.m */; };
+		CC75C2AD1BB9DD8B004315B2 /* TaskUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CC75C2AA1BB9D95F004315B2 /* TaskUtil.m */; };
+		CC75C2AE1BB9DD8F004315B2 /* TaskUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CC75C2AA1BB9D95F004315B2 /* TaskUtil.m */; };
+		CC75C2AF1BB9DD93004315B2 /* TaskUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CC75C2AA1BB9D95F004315B2 /* TaskUtil.m */; };
+		CC75C2B01BB9DD97004315B2 /* TaskUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CC75C2AA1BB9D95F004315B2 /* TaskUtil.m */; };
+		CC75C2B11BB9DD9B004315B2 /* TaskUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CC75C2AA1BB9D95F004315B2 /* TaskUtil.m */; };
+		CC75C2B21BB9DD9F004315B2 /* TaskUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CC75C2AA1BB9D95F004315B2 /* TaskUtil.m */; };
+		CC75C2B31BB9DDA3004315B2 /* TaskUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = CC75C2AA1BB9D95F004315B2 /* TaskUtil.m */; };
 		CC8AA20618F368EE00D9F322 /* user-notifications-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CC8AA20518F368EE00D9F322 /* user-notifications-Info.plist */; };
 		CCC0AAF418EC8A92004FD861 /* UserNotificationsReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC0AAF318EC8A92004FD861 /* UserNotificationsReporter.m */; };
 		CCC0AAF818EC8AC4004FD861 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE61734617E284DD00F02C91 /* Reporter.m */; };
@@ -210,7 +247,16 @@
 		28F48A56179750A600068E00 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		3892D74E1815A13400E68652 /* EventGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventGenerator.h; path = ../Common/EventGenerator.h; sourceTree = "<group>"; };
 		3892D74F1815A13400E68652 /* EventGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EventGenerator.m; path = ../Common/EventGenerator.m; sourceTree = "<group>"; };
+		CC07437E1BB9E9570075E407 /* XCToolUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XCToolUtil.h; path = ../Common/XCToolUtil.h; sourceTree = "<group>"; };
+		CC07437F1BB9E9570075E407 /* XCToolUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XCToolUtil.m; path = ../Common/XCToolUtil.m; sourceTree = "<group>"; };
+		CC0743891BB9E9FC0075E407 /* EventSink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventSink.h; path = ../Common/EventSink.h; sourceTree = "<group>"; };
+		CC07438A1BB9EB490075E407 /* XcodeBuildSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XcodeBuildSettings.h; path = ../Common/XcodeBuildSettings.h; sourceTree = "<group>"; };
+		CC07438B1BB9EB490075E407 /* XcodeBuildSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XcodeBuildSettings.m; path = ../Common/XcodeBuildSettings.m; sourceTree = "<group>"; };
 		CC43C4711B79725500AEDFB5 /* reporters-tests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "reporters-tests.xcconfig"; sourceTree = "<group>"; };
+		CC46A4F81BD768D5007B8C42 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
+		CC58B4791BB9E3D300E92B42 /* NSConcreteTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSConcreteTask.h; path = ../Common/NSConcreteTask.h; sourceTree = "<group>"; };
+		CC75C2A91BB9D95F004315B2 /* TaskUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TaskUtil.h; path = ../Common/TaskUtil.h; sourceTree = "<group>"; };
+		CC75C2AA1BB9D95F004315B2 /* TaskUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TaskUtil.m; path = ../Common/TaskUtil.m; sourceTree = "<group>"; };
 		CC8AA20518F368EE00D9F322 /* user-notifications-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "user-notifications-Info.plist"; path = "user-notifications/user-notifications-Info.plist"; sourceTree = "<group>"; };
 		CCC0AAED18EC8A1F004FD861 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = "user-notifications/main.m"; sourceTree = "<group>"; };
 		CCC0AAF218EC8A92004FD861 /* UserNotificationsReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserNotificationsReporter.h; path = "user-notifications/UserNotificationsReporter.h"; sourceTree = "<group>"; };
@@ -236,6 +282,7 @@
 				28F48A03179742CA00068E00 /* OCHamcrest.framework in Frameworks */,
 				28F48A04179742CA00068E00 /* OCMockito.framework in Frameworks */,
 				2893A95217960CD400EFBD28 /* Cocoa.framework in Frameworks */,
+				CC46A4F91BD768D5007B8C42 /* libiconv.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,6 +291,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2893A96B17960D2000EFBD28 /* Foundation.framework in Frameworks */,
+				CC46A4FA1BD768DA007B8C42 /* libiconv.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,6 +300,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				28F489E81797362400068E00 /* Foundation.framework in Frameworks */,
+				CC46A4FB1BD768E5007B8C42 /* libiconv.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,6 +309,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				28F48A0A179743AE00068E00 /* Foundation.framework in Frameworks */,
+				CC46A4FC1BD768EA007B8C42 /* libiconv.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,6 +318,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				28F48A2317974D4100068E00 /* Foundation.framework in Frameworks */,
+				CC46A4FD1BD768F0007B8C42 /* libiconv.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -276,6 +327,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				28F48A3C17974EF600068E00 /* Foundation.framework in Frameworks */,
+				CC46A4FE1BD768F5007B8C42 /* libiconv.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -284,6 +336,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				28F48A54179750A600068E00 /* Foundation.framework in Frameworks */,
+				CC46A4FF1BD768FB007B8C42 /* libiconv.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,6 +345,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CCC0AAFB18EC8AC4004FD861 /* Foundation.framework in Frameworks */,
+				CC46A5001BD76900007B8C42 /* libiconv.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,6 +354,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FD023B221959ADA800947C28 /* Foundation.framework in Frameworks */,
+				CC46A5011BD76907007B8C42 /* libiconv.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -345,6 +400,7 @@
 		2893A94E17960CD400EFBD28 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CC46A4F81BD768D5007B8C42 /* libiconv.dylib */,
 				28F48A01179742CA00068E00 /* OCHamcrest.framework */,
 				28F48A02179742CA00068E00 /* OCMockito.framework */,
 				2893A95117960CD400EFBD28 /* Cocoa.framework */,
@@ -391,15 +447,23 @@
 			children = (
 				3892D74E1815A13400E68652 /* EventGenerator.h */,
 				3892D74F1815A13400E68652 /* EventGenerator.m */,
+				CC0743891BB9E9FC0075E407 /* EventSink.h */,
 				28F489F617973B7100068E00 /* FakeFileHandle.h */,
 				28F489F717973B7100068E00 /* FakeFileHandle.m */,
+				CC58B4791BB9E3D300E92B42 /* NSConcreteTask.h */,
 				28F489F417973B7100068E00 /* NSFileHandle+Print.h */,
 				28F489F517973B7100068E00 /* NSFileHandle+Print.m */,
 				EE61734517E2785F00F02C91 /* Reporter.h */,
 				EE61734617E284DD00F02C91 /* Reporter.m */,
 				28F489CE179725BB00068E00 /* ReporterEvents.h */,
+				CC75C2A91BB9D95F004315B2 /* TaskUtil.h */,
+				CC75C2AA1BB9D95F004315B2 /* TaskUtil.m */,
 				EE9E73E117A7323B008A5ED2 /* TestResultCounter.h */,
 				EE9E73E217A7323B008A5ED2 /* TestResultCounter.m */,
+				CC07438A1BB9EB490075E407 /* XcodeBuildSettings.h */,
+				CC07438B1BB9EB490075E407 /* XcodeBuildSettings.m */,
+				CC07437E1BB9E9570075E407 /* XCToolUtil.h */,
+				CC07437F1BB9E9570075E407 /* XCToolUtil.m */,
 			);
 			name = Common;
 			sourceTree = "<group>";
@@ -695,9 +759,11 @@
 				28F489D5179735B700068E00 /* main.m in Sources */,
 				28F489D7179735B700068E00 /* TextReporter.m in Sources */,
 				28F489F01797388400068E00 /* TextReporterTests.m in Sources */,
+				CC07438C1BB9EB490075E407 /* XcodeBuildSettings.m in Sources */,
 				28F489F817973B7100068E00 /* NSFileHandle+Print.m in Sources */,
 				3892D7501815A13400E68652 /* EventGenerator.m in Sources */,
 				28F489F917973B7100068E00 /* FakeFileHandle.m in Sources */,
+				CC0743801BB9E9570075E407 /* XCToolUtil.m in Sources */,
 				28F48A0017973CF600068E00 /* Reporter+Testing.m in Sources */,
 				28F48A17179743C600068E00 /* PhabricatorReporter.m in Sources */,
 				FD3D4AD01959C0D10099B717 /* TeamCityStatusMessageGenerator.m in Sources */,
@@ -707,6 +773,7 @@
 				28F48A3517974EA000068E00 /* JUnitReporterTests.m in Sources */,
 				EE61734717E284DD00F02C91 /* Reporter.m in Sources */,
 				28F48A4A17974F3F00068E00 /* JSONCompilationDatabaseReporter.m in Sources */,
+				CC75C2AB1BB9D95F004315B2 /* TaskUtil.m in Sources */,
 				28F48A4D17974FEB00068E00 /* JSONCompilationDatabaseReporterTests.m in Sources */,
 				EE9E73E317A7323B008A5ED2 /* TestResultCounter.m in Sources */,
 				CCC0AAF418EC8A92004FD861 /* UserNotificationsReporter.m in Sources */,
@@ -717,7 +784,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC0743811BB9E9570075E407 /* XCToolUtil.m in Sources */,
+				CC75C2AC1BB9DD7F004315B2 /* TaskUtil.m in Sources */,
 				EE61734817E284DD00F02C91 /* Reporter.m in Sources */,
+				CC07438D1BB9EB490075E407 /* XcodeBuildSettings.m in Sources */,
 				EE9E73E417A732F0008A5ED2 /* TestResultCounter.m in Sources */,
 				28F489D6179735B700068E00 /* main.m in Sources */,
 				3892D7511815A13400E68652 /* EventGenerator.m in Sources */,
@@ -729,7 +799,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC0743821BB9E9570075E407 /* XCToolUtil.m in Sources */,
+				CC75C2AD1BB9DD8B004315B2 /* TaskUtil.m in Sources */,
 				EE61734917E284DD00F02C91 /* Reporter.m in Sources */,
+				CC07438E1BB9EB490075E407 /* XcodeBuildSettings.m in Sources */,
 				EE9E73E517A73308008A5ED2 /* TestResultCounter.m in Sources */,
 				28F489E31797362400068E00 /* main.m in Sources */,
 				3892D7521815A13400E68652 /* EventGenerator.m in Sources */,
@@ -741,7 +814,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC0743831BB9E9570075E407 /* XCToolUtil.m in Sources */,
+				CC75C2AE1BB9DD8F004315B2 /* TaskUtil.m in Sources */,
 				EE61734A17E284DD00F02C91 /* Reporter.m in Sources */,
+				CC07438F1BB9EB490075E407 /* XcodeBuildSettings.m in Sources */,
 				28F48A191797447200068E00 /* NSFileHandle+Print.m in Sources */,
 				28F48A0D179743AE00068E00 /* main.m in Sources */,
 				3892D7531815A13400E68652 /* EventGenerator.m in Sources */,
@@ -753,7 +829,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC0743841BB9E9570075E407 /* XCToolUtil.m in Sources */,
+				CC75C2AF1BB9DD93004315B2 /* TaskUtil.m in Sources */,
 				EE61734B17E284DD00F02C91 /* Reporter.m in Sources */,
+				CC0743901BB9EB490075E407 /* XcodeBuildSettings.m in Sources */,
 				28F48A2E17974D5400068E00 /* NSFileHandle+Print.m in Sources */,
 				28F48A2617974D4100068E00 /* main.m in Sources */,
 				3892D7541815A13400E68652 /* EventGenerator.m in Sources */,
@@ -765,7 +844,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC0743851BB9E9570075E407 /* XCToolUtil.m in Sources */,
+				CC75C2B01BB9DD97004315B2 /* TaskUtil.m in Sources */,
 				EE61734C17E284DD00F02C91 /* Reporter.m in Sources */,
+				CC0743911BB9EB490075E407 /* XcodeBuildSettings.m in Sources */,
 				28F48A4717974F1000068E00 /* NSFileHandle+Print.m in Sources */,
 				28F48A3F17974EF600068E00 /* main.m in Sources */,
 				3892D7551815A13400E68652 /* EventGenerator.m in Sources */,
@@ -777,7 +859,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC75C2B11BB9DD9B004315B2 /* TaskUtil.m in Sources */,
+				CC0743861BB9E9570075E407 /* XCToolUtil.m in Sources */,
 				3892D7561815A13400E68652 /* EventGenerator.m in Sources */,
+				CC0743921BB9EB490075E407 /* XcodeBuildSettings.m in Sources */,
 				EE61734D17E284DD00F02C91 /* Reporter.m in Sources */,
 				28F48A57179750A600068E00 /* main.m in Sources */,
 			);
@@ -787,8 +872,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC75C2B21BB9DD9F004315B2 /* TaskUtil.m in Sources */,
+				CC0743871BB9E9570075E407 /* XCToolUtil.m in Sources */,
 				CCC0AB0518EC931C004FD861 /* main.m in Sources */,
+				CC0743931BB9EB490075E407 /* XcodeBuildSettings.m in Sources */,
 				CCC0AB0218EC8C6A004FD861 /* UserNotificationsReporter.m in Sources */,
+				CC07439A1BB9EBA60075E407 /* EventGenerator.m in Sources */,
 				CCC0AAF818EC8AC4004FD861 /* Reporter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -797,11 +886,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC75C2B31BB9DDA3004315B2 /* TaskUtil.m in Sources */,
 				FD023B1C1959ADA800947C28 /* Reporter.m in Sources */,
 				FD023B1D1959ADA800947C28 /* NSFileHandle+Print.m in Sources */,
+				CC0743941BB9EB490075E407 /* XcodeBuildSettings.m in Sources */,
 				FD3D4AD11959C0D10099B717 /* TeamCityStatusMessageGenerator.m in Sources */,
 				FD023B1F1959ADA800947C28 /* EventGenerator.m in Sources */,
 				FD023B2D1959ADFC00947C28 /* main.m in Sources */,
+				CC0743881BB9E9570075E407 /* XCToolUtil.m in Sources */,
 				FD023B2F1959ADFC00947C28 /* TeamCityReporter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
