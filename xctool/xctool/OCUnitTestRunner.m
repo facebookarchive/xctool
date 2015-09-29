@@ -339,10 +339,6 @@
   [configuration setProductModuleName:_buildSettings[Xcode_PRODUCT_MODULE_NAME]];
   [configuration setTestBundleURL:[NSURL fileURLWithPath:[_simulatorInfo productBundlePath]]];
   [configuration setTestsToSkip:[NSSet setWithArray:testCasesToSkip]];
-  if ([testCasesToSkip count] == 0) {
-    [configuration setTestsToSkip:nil];
-    [configuration setTestsToRun:[NSSet setWithArray:_allTestCases]];
-  }
   [configuration setReportResultsToIDE:NO];
 
   NSString *XCTestConfigurationFilename = [NSString stringWithFormat:@"%@-%@", _buildSettings[Xcode_PRODUCT_NAME], [configuration.sessionIdentifier UUIDString]];
