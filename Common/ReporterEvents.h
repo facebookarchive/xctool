@@ -15,6 +15,8 @@
 //
 #define kReporter_TimestampKey @"timestamp"
 
+#define kReporter_Event_Key @"event"
+
 #define kReporter_Events_BeginAction @"begin-action"
 #define kReporter_Events_EndAction @"end-action"
 #define kReporter_Events_BeginOCUnit @"begin-ocunit"

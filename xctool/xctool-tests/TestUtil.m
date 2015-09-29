@@ -21,6 +21,7 @@
 #import "XCTool.h"
 #import "XcodeSubjectInfo.h"
 #import "FakeFileHandle.h"
+#import "ReporterEvents.h"
 #import "ReporterTask.h"
 #import "XCToolUtil.h"
 
@@ -115,7 +116,7 @@ NSArray *SelectEventFields(NSArray *events, NSString *eventName, NSString *field
   NSMutableArray *result = [NSMutableArray array];
 
   for (NSDictionary *event in events) {
-    if (eventName == nil || [event[@"event"] isEqual:eventName]) {
+    if (eventName == nil || [event[kReporter_Event_Key] isEqual:eventName]) {
       NSCAssert(event[fieldName],
                 @"Should have value for field '%@' in event '%@': %@",
                 fieldName,

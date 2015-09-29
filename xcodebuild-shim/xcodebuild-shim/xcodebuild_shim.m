@@ -259,7 +259,7 @@ static void IDECommandLineBuildLogRecorder__cleanupClosedSection_inSupersection(
 static void Xcode3CommandLineBuildTool__printErrorString_andFailWithCode(id self, SEL sel, NSString *str, long long code)
 {
   PrintJSON(@{
-            @"event" : @"__xcodebuild-error__",
+            kReporter_Event_Key: @"__xcodebuild-error__",
             @"message" : str,
             @"code" : @(code),
             });

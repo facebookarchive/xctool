@@ -356,7 +356,7 @@ BOOL LaunchXcodebuildTaskAndFeedEventsToReporters(NSTask *task,
               line,
               [error localizedFailureReason]);
 
-    NSString *eventName = event[@"event"];
+    NSString *eventName = event[kReporter_Event_Key];
 
     if ([eventName isEqualToString:@"__xcodebuild-error__"]) {
       // xcodebuild-shim will generate this special event if it sees that

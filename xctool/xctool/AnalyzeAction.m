@@ -49,7 +49,7 @@
                                                           error:&error];
   NSAssert(event != nil, @"Error decoding JSON: %@", [error localizedFailureReason]);
 
-  if ([event[@"event"] isEqualTo:kReporter_Events_BeginBuildTarget]) {
+  if ([event[kReporter_Event_Key] isEqualTo:kReporter_Events_BeginBuildTarget]) {
     [_seenTargets addObject:@{
      @"projectName": event[kReporter_BeginBuildTarget_ProjectKey],
      @"targetName": event[kReporter_BeginBuildTarget_TargetKey],
@@ -122,7 +122,7 @@
 {
   NSMutableArray *result = [NSMutableArray array];
   for (NSDictionary *piece in path) {
-    if ([piece[@"kind"] isEqual:@"event"]) {
+    if ([piece[@"kind"] isEqual:kReporter_Event_Key]) {
       NSDictionary *location = piece[@"location"];
       [result addObject:@{@"file" : files[[location[@"file"] intValue]],
                           @"line" : location[@"line"],

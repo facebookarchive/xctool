@@ -20,6 +20,8 @@
 #import <poll.h>
 #import <sys/stat.h>
 
+#import "ReporterEvents.h"
+
 static void ReadFileDescriptorAndOutputLinesToBlock(int inputFD,
                                                     void (^block)(NSString *line))
 {
@@ -118,7 +120,7 @@ static void ReadFileDescriptorAndOutputLinesToBlock(int inputFD,
 {
   NSAssert(([eventDict count] > 0), @"Event was empty.");
 
-  NSString *event = eventDict[@"event"];
+  NSString *event = eventDict[kReporter_Event_Key];
   NSAssert(event != nil && [event length] > 0, @"Event name was empty for event: %@", eventDict);
 
   NSMutableString *selectorName = [NSMutableString string];

@@ -403,7 +403,7 @@ static NSString *abbreviatePath(NSString *string) {
       for (int failedIndex = 0; failedIndex < [_failedTests count]; failedIndex++) {
         NSDictionary *test = _failedTests[failedIndex];
 
-        NSDictionary *testEvent = test[@"event"];
+        NSDictionary *testEvent = test[kReporter_Event_Key];
 
         [_reportWriter printLine:@"%d) %@ (%@)",
          failedIndex + i,
@@ -842,7 +842,7 @@ static NSString *abbreviatePath(NSString *string) {
     [resultLine appendFormat:@" (%ld)", [_failedTests count]];
 
     // Add the test information to the list of failed tests for printing later.
-    [_failedTests addObject:@{@"bundle": _currentBundle, @"event": event}];
+    [_failedTests addObject:@{@"bundle": _currentBundle, kReporter_Event_Key: event}];
   }
 
   [_reportWriter updateLine:@"%@", resultLine];
