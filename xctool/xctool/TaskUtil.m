@@ -198,6 +198,9 @@ void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, voi
       } else if (result == -1 && errno == EAGAIN) {
         // It could work next time.
         continue;
+      } else if (result == -1 && errno == EINTR) {
+        // Poll was interrupted. It could work next time.
+        continue;
       } else {
         fprintf(stderr, "poll() failed with: %s\n", strerror(errno));
         abort();
