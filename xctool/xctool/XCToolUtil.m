@@ -355,7 +355,7 @@ BOOL LaunchXcodebuildTaskAndFeedEventsToReporters(NSTask *task,
 
   LaunchTaskAndFeedOuputLinesToBlock(task,
                                      @"running xcodebuild",
-                                     ^(NSString *line){
+                                     ^(int fd, NSString *line){
     NSError *error = nil;
     NSDictionary *event = [NSJSONSerialization JSONObjectWithData:[line dataUsingEncoding:NSUTF8StringEncoding]
                                                           options:0

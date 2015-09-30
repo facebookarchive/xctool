@@ -163,7 +163,7 @@ static NSArray *RunOtestAndParseResult(NSTask *task)
 
   LaunchTaskAndFeedOuputLinesToBlock(task,
                                      @"running otest/xctest",
-                                     ^void (NSString *line) {
+                                     ^void (int fd, NSString *line) {
     NSError *error = nil;
 
     if (([line isEqualToString:@""])) {

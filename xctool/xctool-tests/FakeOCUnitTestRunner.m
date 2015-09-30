@@ -16,6 +16,8 @@
 
 #import "FakeOCUnitTestRunner.h"
 
+#import "TaskUtil.h"
+
 @interface FakeOCUnitTestRunner ()
 {
   int lastLineIndex;
@@ -32,7 +34,7 @@
   lastLineIndex = -1;
 }
 
-- (void)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
+- (void)runTestsAndFeedOutputTo:(FdOutputLineFeedBlock)outputLineBlock
                    startupError:(NSString **)startupError
                     otherErrors:(NSString **)otherErrors
 {
@@ -40,7 +42,7 @@
     if ([_outputLines[lastLineIndex] isEqualToString:@"__break__"]) {
       return;
     }
-    outputLineBlock(_outputLines[lastLineIndex]);
+    outputLineBlock(0, _outputLines[lastLineIndex]);
   }
 }
 

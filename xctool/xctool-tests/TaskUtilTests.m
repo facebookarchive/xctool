@@ -42,7 +42,7 @@
     [fakeTask pretendTaskReturnsStandardOutput:fakeInput];
 
     __block int lineCount = 0;
-    LaunchTaskAndFeedOuputLinesToBlock(fakeTask, @"test", ^(NSString *str) {
+    LaunchTaskAndFeedOuputLinesToBlock(fakeTask, @"test", ^(int fd, NSString *str) {
       if ([str hasPrefix:@"a"]) {
         str = [str substringFromIndex:1];
       }

@@ -50,7 +50,7 @@ NSArray *ReadOutputsAndFeedOuputLinesToBlockOnQueue(
   dispatch_data_t data[sz];
   size_t processedBytes[sz];
 
-  size_t (^feedUnprocessedLinesToBlock)(dispatch_data_t, BOOL) = ^(dispatch_data_t unprocessedPart, BOOL forceUntilTheEnd) {
+  size_t (^feedUnprocessedLinesToBlock)(int, dispatch_data_t, BOOL) = ^(int fd, dispatch_data_t unprocessedPart, BOOL forceUntilTheEnd) {
     NSString *string = StringFromDispatchData(unprocessedPart);
     dispatch_release(unprocessedPart);
     size_t processedStringLength = string.length;
@@ -68,10 +68,10 @@ NSArray *ReadOutputsAndFeedOuputLinesToBlockOnQueue(
         continue;
       }
       if (queue == NULL) {
-        block(lineToFeed);
+        block(fd, lineToFeed);
       } else {
         dispatch_async(queue, ^{
-          block(lineToFeed);
+          block(fd, lineToFeed);
         });
       }
     }
@@ -137,7 +137,7 @@ NSArray *ReadOutputsAndFeedOuputLinesToBlockOnQueue(
           size_t offset = processedBytes[i];
           size_t size = dispatch_data_get_size(data[i]);
           dispatch_data_t unprocessedPart = dispatch_data_create_subrange(data[i], offset, size - offset);
-          processedBytes[i] += feedUnprocessedLinesToBlock(unprocessedPart, fds[i].fd == -1);
+          processedBytes[i] += feedUnprocessedLinesToBlock(fildes[i], unprocessedPart, fds[i].fd == -1);
         }
       }
     }
@@ -199,7 +199,7 @@ NSString *LaunchTaskAndCaptureOutputInCombinedStream(NSTask *task, NSString *des
   return outputs[0];
 }
 
-void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, ReporterEventFeedBlock block)
+void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, FdOutputLineFeedBlock block)
 {
   NSPipe *stdoutPipe = [NSPipe pipe];
   int stdoutReadFD = [[stdoutPipe fileHandleForReading] fileDescriptor];

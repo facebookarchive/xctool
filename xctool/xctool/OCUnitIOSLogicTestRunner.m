@@ -86,7 +86,7 @@ static NSString * const XCTOOL_TMPDIR = @"TMPDIR";
                                           env);
 }
 
-- (void)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
+- (void)runTestsAndFeedOutputTo:(FdOutputLineFeedBlock)outputLineBlock
                    startupError:(NSString **)startupError
                     otherErrors:(NSString **)otherErrors
 {

@@ -16,13 +16,15 @@
 
 #import "OCUnitTestRunner.h"
 
+#import "TaskUtil.h"
+
 @interface OCUnitTestRunner (Internal)
 
 /**
  Subclasses of OCUnitTestRunner implement this method to actually
  run the tests.
  */
-- (void)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
+- (void)runTestsAndFeedOutputTo:(FdOutputLineFeedBlock)outputLineBlock
                    startupError:(NSString **)startupError
                     otherErrors:(NSString **)otherErrors;
 

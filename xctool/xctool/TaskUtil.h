@@ -18,8 +18,7 @@
 
 @class NSConcreteTask, SimulatorInfo;
 
-typedef void (^ReporterEventFeedBlock)(NSString *);
-typedef void (^FdOutputLineFeedBlock)(NSString *);
+typedef void (^FdOutputLineFeedBlock)(int fd, NSString *);
 
 /**
  *  Returns array of NSString's with contents read from fildes.
@@ -48,7 +47,7 @@ NSString *LaunchTaskAndCaptureOutputInCombinedStream(NSTask *task, NSString *des
 /**
  * Launchs a task, waits for exit, and feeds lines from standard out to a block.
  */
-void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, ReporterEventFeedBlock block);
+void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, FdOutputLineFeedBlock block);
 
 /**
  * Returns an NSTask that is configured NOT to start a new process group.  This
