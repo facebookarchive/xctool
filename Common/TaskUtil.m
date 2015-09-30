@@ -18,6 +18,9 @@
 
 #import <iconv.h>
 
+#import <sys/stat.h>
+
+#import "EventGenerator.h"
 #import "NSConcreteTask.h"
 #import "Swizzle.h"
 #import "XCToolUtil.h"
@@ -221,6 +224,10 @@ void ReadOutputsAndFeedOuputLinesToBlockOnQueue(
     timeout = dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_MSEC * 500);
   }
   dispatch_group_wait(ioGroup, timeout);
+  // synchronously wait for all events on the feed queue to be processed
+  if (queue) {
+    dispatch_sync(queue, ^{});
+  }
 
   for (int i = 0; i < sz; i++) {
     io_read_info *info = infos+i;
@@ -342,6 +349,64 @@ void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, FdO
     [task waitUntilExit];
     [stdoutHandle closeFile];
   }, YES);
+}
+
+void LaunchTaskAndFeedSimulatorOutputAndOtestShimEventsToBlock(
+  NSTask *task,
+  NSString *description,
+  NSString *otestShimOutputFilePath,
+  FdOutputLineFeedBlock block)
+{
+  // intercept stdout, stderr and post as simulator-output events
+  int stdoutPipefd[2];
+  pipe(stdoutPipefd);
+  NSFileHandle *stdoutHandle = [[NSFileHandle alloc] initWithFileDescriptor:stdoutPipefd[1]];
+  int stdoutReadFd = stdoutPipefd[0];
+
+  // stdout and stderr is forwarded to the same pipe
+  // that way xctool preserves an order of printed lines
+  [task setStandardOutput:stdoutHandle];
+  [task setStandardError:stdoutHandle];
+
+  int mkfifoResult = mkfifo([otestShimOutputFilePath UTF8String], S_IWUSR | S_IRUSR | S_IRGRP);
+  NSCAssert(mkfifoResult == 0, @"Failed to create a fifo at path: %@", otestShimOutputFilePath);
+
+  /*
+   * We need to launch task before trying to open the pipe for reading. Once
+   * otest-shim opens the pipe for writing we will get `otestShimOutputReadFD`.
+   * If open the pipe with `O_NONBLOCK` `dispatch_io_read` returns
+   * `done` immideately.
+   */
+  LaunchTaskAndMaybeLogCommand(task, description);
+
+  // intercept otest-shim events and post as-is
+  int otestShimOutputReadFD = open([otestShimOutputFilePath UTF8String], O_RDONLY);
+
+  int fildes[2] = {stdoutReadFd, otestShimOutputReadFD};
+  NSString *feedQueueName = [NSString stringWithFormat:@"com.facebook.events.feed.queue.%f.%d", [[NSDate date] timeIntervalSince1970], fildes[1]];
+  dispatch_queue_t feedQueue = dispatch_queue_create([feedQueueName UTF8String], DISPATCH_QUEUE_SERIAL);
+  ReadOutputsAndFeedOuputLinesToBlockOnQueue(fildes, 2, ^(int fd, NSString *line) {
+    if (fd != otestShimOutputReadFD) {
+      NSDictionary *event = EventDictionaryWithNameAndContent(
+        kReporter_Events_SimulatorOuput,
+        @{kReporter_SimulatorOutput_OutputKey: StripAnsi([line stringByAppendingString:@"\n"])}
+      );
+      NSData *data = [NSJSONSerialization dataWithJSONObject:event options:0 error:nil];
+      line = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    }
+    if (line) {
+      block(fd, line);
+    }
+  },
+  // all events should be processed serially on the same queue
+  feedQueue,
+  ^{
+    [task waitUntilExit];
+    [stdoutHandle closeFile];
+  },
+  // when xctest aborts it doesn't always close pipes properly so
+  // xctool shouldn't wait for them to be closed after simctl exits
+  NO);
 }
 
 NSTask *CreateTaskInSameProcessGroupWithArch(cpu_type_t arch)

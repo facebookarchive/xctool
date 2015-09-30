@@ -71,6 +71,12 @@ NSString *LaunchTaskAndCaptureOutputInCombinedStream(NSTask *task, NSString *des
 void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, FdOutputLineFeedBlock block);
 
 /**
+ * Launchs a task, waits for exit, and feeds lines from stdout and stderr to a block as simulator output events
+ * and forwards all otest-shim events directly to a feed block.
+ */
+void LaunchTaskAndFeedSimulatorOutputAndOtestShimEventsToBlock(NSTask *task, NSString *description, NSString *otestShimOutputFilePath, FdOutputLineFeedBlock block);
+
+/**
  * Returns an NSTask that is configured NOT to start a new process group.  This
  * way, the child will be killed if the parent is killed (or interrupted).  This
  * is what we want all the time.

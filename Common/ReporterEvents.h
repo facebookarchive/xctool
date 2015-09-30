@@ -36,6 +36,7 @@
 #define kReporter_Events_EndStatus @"end-status"
 #define kReporter_Events_AnalyzerResult @"analyzer-result"
 #define kReporter_Events_OutputBeforeTestBundleStarts @"output-before-test-bundle-starts"
+#define kReporter_Events_SimulatorOuput @"simulator-output"
 
 #define kReporter_BeginAction_NameKey @"name"
 #define kReporter_BeginAction_WorkspaceKey @"workspace"
@@ -135,3 +136,5 @@
 #define kReporter_AnalyzerResult_TypeKey @"type"
 
 #define kReporter_OutputBeforeTestBundleStarts_OutputKey @"output"
+
+#define kReporter_SimulatorOutput_OutputKey @"output"

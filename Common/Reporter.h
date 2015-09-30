@@ -54,6 +54,7 @@
 - (void)beginTest:(NSDictionary *)event;
 - (void)endTest:(NSDictionary *)event;
 - (void)testOutput:(NSDictionary *)event;
+- (void)simulatorOutput:(NSDictionary *)event;
 - (void)beginStatus:(NSDictionary *)event;
 - (void)endStatus:(NSDictionary *)event;
 - (void)analyzerResult:(NSDictionary *)event;
