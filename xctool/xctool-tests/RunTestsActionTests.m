@@ -481,6 +481,22 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
   }];
 }
 
+- (void)testCanRunTestsWithCustomMethodNames
+{
+  XCTool *tool = [[XCTool alloc] init];
+
+  tool.arguments = @[@"-sdk", @"macosx",
+                     @"run-tests",
+                     @"-logicTest", TEST_DATA @"tests-osx-test-bundle/TestProject-Library-XCTest-CustomTests.xctest"
+                     ];
+
+  NSDictionary *output = [TestUtil runWithFakeStreams:tool];
+  assertThatInt(tool.exitStatus, equalToInt(0));
+  assertThat(output[@"stdout"], containsString(@"-[TestProject_Library_XCTest_CustomTests customTest]"));
+  assertThat(output[@"stdout"], containsString(@"-[TestProject_Library_XCTest_CustomTests customTestWithInteger:]"));
+  assertThat(output[@"stdout"], containsString(@"SUCCEEDED"));
+}
+
 - (void)testCanRunTestsAgainstDifferentTestSDK
 {
   NSArray *testList = @[@"TestProject_LibraryTests/testBacktraceOutputIsCaptured",
