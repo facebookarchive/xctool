@@ -44,5 +44,6 @@
 - (void)appendOutput:(NSString *)output;
 - (void)publishOutput;
 - (BOOL)isRunning;
+- (NSString *)outputAlreadyPublished;
 
 @end

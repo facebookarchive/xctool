@@ -115,8 +115,9 @@
   [self publishEventToReporters:event];
 }
 
-- (void)endTest:(NSDictionary *)event
+- (void)endTest:(NSDictionary *)inEvent
 {
+  NSMutableDictionary *event = [inEvent mutableCopy];
   NSAssert(_testSuiteState, @"Ending test without a test suite");
   NSString *testName = event[kReporter_EndTest_TestKey];
   OCTestEventState *state = [_testSuiteState getTestWithTestName:testName];
@@ -124,6 +125,8 @@
   [state stateEndTest:[event[kReporter_EndTest_SucceededKey] intValue]
                result:event[kReporter_EndTest_ResultKey]
              duration:[event[kReporter_EndTest_TotalDurationKey] doubleValue]];
+
+  event[kReporter_EndTest_OutputKey] = [state outputAlreadyPublished];
 
   if (_previousTestState) {
     _previousTestState = nil;

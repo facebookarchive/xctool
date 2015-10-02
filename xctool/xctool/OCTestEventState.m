@@ -150,4 +150,9 @@
   }
 }
 
+- (NSString *)outputAlreadyPublished
+{
+  return [_outputAlreadyPublished copy];
+}
+
 @end
