@@ -65,6 +65,7 @@ apple_binary(
         'CoreSimulator',
         '-weak_framework',
         'XCTest',
+        '-liconv',
     ],
     preprocessor_flags = COMMON_PREPROCESSOR_FLAGS + [
         '-DXCODE_VERSION=0630',

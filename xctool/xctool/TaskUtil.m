@@ -16,6 +16,8 @@
 
 #import "TaskUtil.h"
 
+#import <iconv.h>
+
 #import "NSConcreteTask.h"
 #import "SimDevice.h"
 #import "SimulatorInfo.h"
@@ -29,6 +31,25 @@ typedef struct io_read_info {
   dispatch_data_t data;
   size_t processedBytes;
 } io_read_info;
+
+static NSString *StringFromDispatchDataWithBrokenUTF8Encoding(const char *dataPtr, size_t dataSz)
+{
+  int one = 1;
+  iconv_t cd = iconv_open("UTF-8", "UTF-8");
+  iconvctl(cd, ICONV_SET_DISCARD_ILSEQ, &one);
+  size_t inbytesleft = dataSz;
+  size_t outbytesleft = dataSz;
+  char *inbuf  = (char *)dataPtr;
+  char *outbuf = malloc(sizeof(char) * dataSz);
+  char *outptr = outbuf;
+  NSString *string = nil;
+  if (iconv(cd, &inbuf, &inbytesleft, &outptr, &outbytesleft) != (size_t)-1) {
+    string = [[NSString alloc] initWithBytes:outbuf length:dataSz - outbytesleft encoding:NSUTF8StringEncoding];
+  }
+  free(outbuf);
+  iconv_close(cd);
+  return string;
+}
 
 static NSArray *LinesFromDispatchData(dispatch_data_t data, BOOL omitNewlineCharacters, size_t *convertedSize, BOOL forceUntilTheEnd)
 {
@@ -59,6 +80,11 @@ static NSArray *LinesFromDispatchData(dispatch_data_t data, BOOL omitNewlineChar
     }
 
     NSString *line = [[NSString alloc] initWithBytes:dataPtr length:lineLength encoding:NSUTF8StringEncoding];
+
+    if (!line) {
+      // discard invalid UTF-8 characters in the data
+      line = StringFromDispatchDataWithBrokenUTF8Encoding(dataPtr, lineLength);
+    }
 
     dataPtr = newlineLocation + sizeof(char); // omit newline character
 

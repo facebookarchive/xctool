@@ -129,6 +129,8 @@
 		CC2BE33A1B7B1BE7008FBC50 /* PbxprojReaderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2BE3391B7B1BE7008FBC50 /* PbxprojReaderTests.m */; };
 		CC4AB1FB1B82C57F00543A42 /* TestableExecutionInfoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CC4AB1FA1B82C57F00543A42 /* TestableExecutionInfoTests.m */; };
 		CC84C94C18ECE161001F6094 /* FakeOCUnitTestRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = CC84C94B18ECE161001F6094 /* FakeOCUnitTestRunner.m */; };
+		CCA8F74C1BD225F90084E131 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CCA8F74B1BD225F90084E131 /* libiconv.dylib */; };
+		CCA8F74D1BD2280A0084E131 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CCA8F74B1BD225F90084E131 /* libiconv.dylib */; };
 		CCC55AD2195BCD7D0051A50B /* SimulatorWrapperXcode6.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC55AD1195BCD7D0051A50B /* SimulatorWrapperXcode6.m */; };
 		CCC55AD6195BCDD90051A50B /* SimulatorWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC55AD5195BCDD90051A50B /* SimulatorWrapper.m */; };
 		CCE14EA11ACB5B8100B76996 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCE14EA01ACB5B8100B76996 /* AppKit.framework */; };
@@ -338,6 +340,7 @@
 		CC4AB1FA1B82C57F00543A42 /* TestableExecutionInfoTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestableExecutionInfoTests.m; sourceTree = "<group>"; };
 		CC84C94A18ECE161001F6094 /* FakeOCUnitTestRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeOCUnitTestRunner.h; sourceTree = "<group>"; };
 		CC84C94B18ECE161001F6094 /* FakeOCUnitTestRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeOCUnitTestRunner.m; sourceTree = "<group>"; };
+		CCA8F74B1BD225F90084E131 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		CCC55AC0195BB1E80051A50B /* SimDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimDevice.h; sourceTree = "<group>"; };
 		CCC55AC3195BB1E80051A50B /* SimDeviceSet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimDeviceSet.h; sourceTree = "<group>"; };
 		CCC55AC4195BB1E80051A50B /* SimDeviceType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimDeviceType.h; sourceTree = "<group>"; };
@@ -385,6 +388,7 @@
 				CCE14EA21ACB5BB100B76996 /* AppKit.framework in Frameworks */,
 				28FFB00616FF5A2B000CCE2A /* QuartzCore.framework in Frameworks */,
 				283CCA4616C2EA3800F2E343 /* Foundation.framework in Frameworks */,
+				CCA8F74C1BD225F90084E131 /* libiconv.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -397,6 +401,7 @@
 				28E9B98E16C2FE4800A52E4D /* OCHamcrest.framework in Frameworks */,
 				28E9B98B16C2FDA700A52E4D /* OCMockito.framework in Frameworks */,
 				283CCAC416C2EE9900F2E343 /* Cocoa.framework in Frameworks */,
+				CCA8F74D1BD2280A0084E131 /* libiconv.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -462,6 +467,7 @@
 		283CCA4416C2EA3800F2E343 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CCA8F74B1BD225F90084E131 /* libiconv.dylib */,
 				CCE14EA01ACB5B8100B76996 /* AppKit.framework */,
 				28FFB00416FF5A21000CCE2A /* QuartzCore.framework */,
 				28E9B98D16C2FE4800A52E4D /* OCHamcrest.framework */,
