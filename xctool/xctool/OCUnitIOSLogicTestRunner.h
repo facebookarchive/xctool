@@ -20,6 +20,6 @@
 
 @interface OCUnitIOSLogicTestRunner : OCUnitTestRunner
 
-- (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath;
+- (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath otestShimOutputPath:(NSString **)otestShimOutputPath;
 
 @end

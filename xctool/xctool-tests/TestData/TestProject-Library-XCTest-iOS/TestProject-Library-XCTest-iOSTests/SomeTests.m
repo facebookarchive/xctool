@@ -41,7 +41,7 @@
   fprintf(stdout, "");
   fprintf(stdout, "---");
   [NSThread sleepForTimeInterval:0.25];
-  fprintf(stdout, "0");
+  fprintf(stdout, "0\xe2\x80\x94");
   [NSThread sleepForTimeInterval:0.25];
   fprintf(stdout, "---\n------\n");
   fprintf(stdout, "\n\n");

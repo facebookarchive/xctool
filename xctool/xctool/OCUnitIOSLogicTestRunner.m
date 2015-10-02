@@ -31,7 +31,7 @@ static NSString * const XCTOOL_TMPDIR = @"TMPDIR";
 
 @implementation OCUnitIOSLogicTestRunner
 
-- (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath
+- (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath otestShimOutputPath:(NSString **)otestShimOutputPath
 {
   NSString *launchPath = [NSString pathWithComponents:@[
     _buildSettings[Xcode_SDKROOT],
@@ -77,6 +77,12 @@ static NSString * const XCTOOL_TMPDIR = @"TMPDIR";
     @"NSUnbufferedIO" : @"YES",
   }];
 
+  // specify a path where to write otest-shim events
+  NSString *outputPath = MakeTempFileWithPrefix(@"output");
+  [[NSFileManager defaultManager] removeItemAtPath:outputPath error:nil];
+  env[@"OTEST_SHIM_STDOUT_FILE"] = outputPath;
+  *otestShimOutputPath = outputPath;
+
   // and merging with process environments and `_environment` variable contents
   env = [self otestEnvironmentWithOverrides:env];
 
@@ -100,39 +106,15 @@ static NSString * const XCTOOL_TMPDIR = @"TMPDIR";
   }
 
   if (bundleExists) {
-    NSString *output = nil;
     @autoreleasepool {
-      NSPipe *outputPipe = [NSPipe pipe];
-
-      NSTask *task = [self otestTaskWithTestBundle:testBundlePath];
-
-      // Don't let STDERR pass through.  This silences the warning message that
-      // comes from the 'sim' launcher when the iOS Simulator isn't running:
-      // "Simulator does not seem to be running, or may be running an old SDK."
-      [task setStandardError:outputPipe];
-
-      NSMutableData *outputData = [[NSMutableData alloc] init];
-
-      dispatch_io_t io = dispatch_io_create(DISPATCH_IO_STREAM, outputPipe.fileHandleForReading.fileDescriptor, dispatch_get_main_queue(), NULL);
-      dispatch_io_read(io, 0, SIZE_MAX, dispatch_get_main_queue(), ^(bool done, dispatch_data_t data, int error) {
-        if (data) {
-          dispatch_data_apply(data, ^bool(dispatch_data_t region, size_t offset, const void *buffer, size_t size) {
-            [outputData appendBytes:buffer length:size];
-            return true;
-          });
-        }
-      });
-
-      LaunchTaskAndFeedOuputLinesToBlock(task,
-                                         @"running otest/xctest on test bundle",
-                                         outputLineBlock);
-
-      dispatch_io_close(io, DISPATCH_IO_STOP);
-      dispatch_release(io);
-
-      output = [[NSString alloc] initWithData:outputData encoding:NSUTF8StringEncoding];
+      NSString *otestShimOutputPath = nil;
+      NSTask *task = [self otestTaskWithTestBundle:testBundlePath otestShimOutputPath:&otestShimOutputPath];
+      LaunchTaskAndFeedSimulatorOutputAndOtestShimEventsToBlock(
+        task,
+        @"running otest/xctest on test bundle",
+        otestShimOutputPath,
+        outputLineBlock);
     }
-    *otherErrors = output;
   } else {
     *startupError = [NSString stringWithFormat:@"Test bundle not found at: %@", testBundlePath];
   }
