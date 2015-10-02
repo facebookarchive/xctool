@@ -105,3 +105,8 @@ void LaunchTaskAndMaybeLogCommand(NSTask *task, NSString *description);
  * path, and args to reproduce a given task.
  */
 NSString *CommandLineEquivalentForTask(NSConcreteTask *task);
+
+/**
+ * Strips ANSI escape codes from a string passed to it.
+ */
+NSString *StripAnsi(NSString *inputString);

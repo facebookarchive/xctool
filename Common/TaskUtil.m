@@ -30,6 +30,41 @@ typedef struct io_read_info {
   size_t processedBytes;
 } io_read_info;
 
+// This function will strip ANSI escape codes from a string passed to it
+//
+// Used to clean the output from certain tests which contain ANSI escape codes, and create problems for XML and JSON
+// representations of output data.
+// The regex here will identify all screen oriented ANSI escape codes, but will not identify Keyboard String codes.
+// Since Keyboard String codes make no sense in this context, the added complexity of having a regex try to identify
+// those codes as well was not necessary
+NSString *StripAnsi(NSString *inputString)
+{
+  static dispatch_once_t onceToken;
+  static NSRegularExpression *regex;
+  dispatch_once(&onceToken, ^{
+    NSString *pattern =
+      @"\\\e\\[("          // Esc[
+      @"\\d+;\\d+[Hf]|"    // Esc[Line;ColumnH | Esc[Line;Columnf
+      @"\\d+[ABCD]|"       // Esc[ValueA | Esc[ValueB | Esc[ValueC | Esc[ValueD
+      @"([suKm]|2J)|"      // Esc[s | Esc[u | Esc[2J | Esc[K | Esc[m
+      @"\\=\\d+[hI]|"      // Esc[=Valueh | Esc[=ValueI
+      @"(\\d+;)*(\\d+)m)"; // Esc[Value;...;Valuem
+    regex = [[NSRegularExpression alloc] initWithPattern:pattern
+                                                 options:0
+                                                   error:nil];
+  });
+
+  if (inputString == nil) {
+    return @"";
+  }
+
+  NSString *outputString = [regex stringByReplacingMatchesInString:inputString
+                                                           options:0
+                                                             range:NSMakeRange(0, [inputString length])
+                                                      withTemplate:@""];
+  return outputString;
+}
+
 static NSString *StringFromDispatchDataWithBrokenUTF8Encoding(const char *dataPtr, size_t dataSz)
 {
   int one = 1;

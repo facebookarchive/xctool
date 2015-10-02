@@ -103,4 +103,9 @@
   exit(1);
 }
 
+- (void)testAborts
+{
+  abort();
+}
+
 @end
