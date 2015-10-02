@@ -30,19 +30,47 @@ typedef struct io_read_info {
   size_t processedBytes;
 } io_read_info;
 
-static NSString *StringFromDispatchData(dispatch_data_t data)
+static NSArray *LinesFromDispatchData(dispatch_data_t data, BOOL omitNewlineCharacters, size_t *convertedSize, BOOL forceUntilTheEnd)
 {
-  const void *dataPtr;
+  const char *dataPtr;
   size_t dataSz;
+  size_t processedSize = 0;
 
   if (data == NULL) {
-    return @"";
+    return @[];
   }
 
-  dispatch_data_t contig = dispatch_data_create_map(data, &dataPtr, &dataSz);
-  NSString *str = [[NSString alloc] initWithBytes:dataPtr length:dataSz encoding:NSUTF8StringEncoding];
+  dispatch_data_t contig = dispatch_data_create_map(data, (const void **)&dataPtr, &dataSz);
+  NSMutableArray *lines = [@[] mutableCopy];
+
+  while (processedSize < dataSz) {
+    size_t lineLength;
+    const char *newlineLocation = memchr(dataPtr, '\n', dataSz - processedSize);
+    if (newlineLocation == NULL) {
+      if (!forceUntilTheEnd) {
+        break;
+      }
+      // process remaining bytes
+      lineLength = dataSz - processedSize;
+      processedSize += lineLength;
+    } else {
+      lineLength = newlineLocation - dataPtr + (omitNewlineCharacters ? 0 : sizeof(char));
+      processedSize += lineLength + (omitNewlineCharacters ? sizeof(char) : 0);
+    }
+
+    NSString *line = [[NSString alloc] initWithBytes:dataPtr length:lineLength encoding:NSUTF8StringEncoding];
+
+    dataPtr = newlineLocation + sizeof(char); // omit newline character
+
+    [lines addObject:line];
+  }
+
+  if (convertedSize != NULL) {
+    *convertedSize = processedSize;
+  }
+
   dispatch_release(contig);
-  return str;
+  return lines;
 }
 
 NSArray *ReadOutputsAndFeedOuputLinesToBlockOnQueue(
@@ -54,22 +82,11 @@ NSArray *ReadOutputsAndFeedOuputLinesToBlockOnQueue(
   BOOL waitUntilFdsAreClosed)
 {
   size_t (^feedUnprocessedLinesToBlock)(int, dispatch_data_t, BOOL) = ^(int fd, dispatch_data_t unprocessedPart, BOOL forceUntilTheEnd) {
-    NSString *string = StringFromDispatchData(unprocessedPart);
+    size_t processedSize;
+    NSArray *lines = LinesFromDispatchData(unprocessedPart, YES, &processedSize, forceUntilTheEnd);
     dispatch_release(unprocessedPart);
-    size_t processedStringLength = string.length;
-    NSMutableArray *lines = [[string componentsSeparatedByString:@"\n"] mutableCopy];
-    // if not forced to feed bytes until the end then skip lines not having "\n" suffix
-    if (!forceUntilTheEnd && ![string hasSuffix:@"\n"]) {
-      NSString *skippedLine = [lines lastObject];
-      if (skippedLine) {
-        [lines removeLastObject];
-        processedStringLength -= skippedLine.length;
-      }
-    }
+
     for (NSString *lineToFeed in lines) {
-      if (lineToFeed.length == 0) {
-        continue;
-      }
       if (queue == NULL) {
         block(fd, lineToFeed);
       } else {
@@ -78,7 +95,8 @@ NSArray *ReadOutputsAndFeedOuputLinesToBlockOnQueue(
         });
       }
     }
-    return processedStringLength;
+
+    return processedSize;
   };
 
   io_read_info *infos = calloc(sz, sizeof(io_read_info));
@@ -139,7 +157,7 @@ NSArray *ReadOutputsAndFeedOuputLinesToBlockOnQueue(
   NSMutableArray *outputs = [@[] mutableCopy];
   for (int i = 0; i < sz; i++) {
     io_read_info info = infos[i];
-    NSString *output = StringFromDispatchData(info.data);
+    NSString *output = [LinesFromDispatchData(info.data, NO, NULL, YES) componentsJoinedByString:@""];
     [outputs addObject:output];
     if (info.data != NULL) {
       dispatch_release(info.data);
