@@ -110,6 +110,26 @@
                        @"TestProject_Library_XCTest_OSXTests/testWillPass"]));
 }
 
+- (void)testCanQueryCustomXCTestClasses
+{
+  if (!HasXCTestFramework()) {
+    return;
+  }
+
+  NSString *error = nil;
+  NSDictionary *buildSettings = @{
+    Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"tests-osx-test-bundle"),
+    Xcode_FULL_PRODUCT_NAME : @"TestProject-Library-XCTest-CustomTests.xctest",
+    Xcode_TARGETED_DEVICE_FAMILY : @"1",
+  };
+  OCUnitTestQueryRunner *runner = [[OCUnitOSXLogicTestQueryRunner alloc] initWithSimulatorInfo:[SimulatorInfo simulatorInfoWithBuildSettings:buildSettings]];
+  NSArray *classes = [runner runQueryWithError:&error];
+  assertThat(error, is(nilValue()));
+  assertThat(classes,
+             equalTo(@[@"TestProject_Library_XCTest_CustomTests/customTest",
+                       @"TestProject_Library_XCTest_CustomTests/customTestWithInteger:"]));
+}
+
 - (void)testCanQueryClassesFromIOSBundle
 {
   if (ToolchainIsXcode7OrBetter()) {

@@ -25,7 +25,7 @@ void ParseClassAndMethodFromTestName(NSString **className, NSString **methodName
   static dispatch_once_t onceToken;
   static NSRegularExpression *testNameRegex;
   dispatch_once(&onceToken, ^{
-    testNameRegex = [[NSRegularExpression alloc] initWithPattern:@"^-\\[([\\w.]+) (\\w+)\\]$"
+    testNameRegex = [[NSRegularExpression alloc] initWithPattern:@"^-\\[([\\w.]+) ([\\w\\:]+)\\]$"
                                                          options:0
                                                            error:nil];
   });
