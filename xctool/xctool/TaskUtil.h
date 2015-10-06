@@ -19,18 +19,39 @@
 @class NSConcreteTask, SimulatorInfo;
 
 typedef void (^FdOutputLineFeedBlock)(int fd, NSString *);
+typedef void (^BlockToRunWhileReading)(void);
 
 /**
  *  Returns array of NSString's with contents read from fildes.
  *
- *  Size of the returned array is equal to `sz`.
- *  If `block` is provided then function dynamically and asynchronously
- *  feeds lines to a block on the provided queue. Ensure that
- *  provided queue is serial otherwise order of lines could be wrong.
- *  If not queue is provided then block is synchronously invoked on
- *  the current queue.
+ *  @param fildes                  Array of file descriptors from where to read.
+ *  @param sz                      Size of the `fildes` array.
+ *  @param block                   Callback block which will be called when new
+ *                                 line is read from any of the fd. Optional.
+ *  @param blockDispatchQueue      Queue on which `block` will be dispatched.
+ *                                 Optional.
+ *  @param blockToRunWhileReading  Block which will be executed on the current
+ *                                 thread after fd are prepared to be read from.
+ *                                 Once block execution is completed reading
+ *                                 from fds will be interrupted and function will
+ *                                 return unless `waitUntilFdsAreClosed` is `YES`.
+ *  @param waitUntilFdsAreClosed   If `NO` then function will block current thread
+ *                                 until all fds are closed. Otherwise, read above.
+ *
+ *  @discussion
+ *  If `block` is provided then function dynamically and asynchronously feeds lines
+ *  to a block on the provided queue. Ensure that provided queue is serial otherwise
+ *  order of lines could be wrong. If not queue is provided then block is invoked on
+ *  the background queue.
  */
-NSArray *ReadOutputsAndFeedOuputLinesToBlockOnQueue(int * const fildes, const int sz, FdOutputLineFeedBlock block, dispatch_queue_t blockDispatchQueue);
+NSArray *ReadOutputsAndFeedOuputLinesToBlockOnQueue(
+  int * const fildes,
+  const int sz,
+  FdOutputLineFeedBlock block,
+  dispatch_queue_t blockDispatchQueue,
+  BlockToRunWhileReading blockToRunWhileReading,
+  BOOL waitUntilFdsAreClosed
+);
 
 /**
  * Launchs a task, waits for exit, and returns a dictionary like

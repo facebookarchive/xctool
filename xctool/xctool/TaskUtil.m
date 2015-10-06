@@ -16,40 +16,43 @@
 
 #import "TaskUtil.h"
 
-#import <poll.h>
-
 #import "NSConcreteTask.h"
 #import "SimDevice.h"
 #import "SimulatorInfo.h"
 #import "Swizzle.h"
 #import "XCToolUtil.h"
 
+typedef struct io_read_info {
+  int fd;
+  BOOL done;
+  dispatch_io_t io;
+  dispatch_data_t data;
+  size_t processedBytes;
+} io_read_info;
+
 static NSString *StringFromDispatchData(dispatch_data_t data)
 {
   const void *dataPtr;
   size_t dataSz;
+
+  if (data == NULL) {
+    return @"";
+  }
+
   dispatch_data_t contig = dispatch_data_create_map(data, &dataPtr, &dataSz);
   NSString *str = [[NSString alloc] initWithBytes:dataPtr length:dataSz encoding:NSUTF8StringEncoding];
   dispatch_release(contig);
   return str;
 }
 
-static NSArray *readOutputs(int *fildes, int sz)
-{
-  return ReadOutputsAndFeedOuputLinesToBlockOnQueue(fildes, sz, nil, NULL);
-}
-
 NSArray *ReadOutputsAndFeedOuputLinesToBlockOnQueue(
   int * const fildes,
   const int sz,
   FdOutputLineFeedBlock block,
-  dispatch_queue_t queue)
+  dispatch_queue_t queue,
+  BlockToRunWhileReading blockToRunWhileReading,
+  BOOL waitUntilFdsAreClosed)
 {
-  NSMutableArray *outputs = [NSMutableArray arrayWithCapacity:sz];
-  struct pollfd fds[sz];
-  dispatch_data_t data[sz];
-  size_t processedBytes[sz];
-
   size_t (^feedUnprocessedLinesToBlock)(int, dispatch_data_t, BOOL) = ^(int fd, dispatch_data_t unprocessedPart, BOOL forceUntilTheEnd) {
     NSString *string = StringFromDispatchData(unprocessedPart);
     dispatch_release(unprocessedPart);
@@ -78,76 +81,75 @@ NSArray *ReadOutputsAndFeedOuputLinesToBlockOnQueue(
     return processedStringLength;
   };
 
-  for (int i = 0; i < sz; i++) {
-    fds[i].fd = fildes[i];
-    fds[i].events = POLLIN;
-    fds[i].revents = 0;
-    data[i] = dispatch_data_empty;
-    processedBytes[i] = 0;
+  io_read_info *infos = calloc(sz, sizeof(io_read_info));
+  dispatch_group_t ioGroup = dispatch_group_create();
+  for (int i = 0; i <sz; i++) {
+    dispatch_group_enter(ioGroup);
+    io_read_info *info = infos+i;
+    (*info).fd = fildes[i];
+    (*info).io = dispatch_io_create(DISPATCH_IO_STREAM, (*info).fd, dispatch_get_main_queue(), ^(int error) {
+      if(error) {
+        NSLog(@"[%d] Got an error while creating io for fd", (*info).fd);
+      }
+    });
+    dispatch_io_set_low_water((*info).io, 1);
+    dispatch_io_read((*info).io, 0, SIZE_MAX, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(bool done, dispatch_data_t data, int error) {
+      if (error == ECANCELED) {
+        return;
+      }
+      if (done) {
+        (*info).done = YES;
+      }
+      if (!(*info).done && data != NULL) {
+        if ((*info).data == NULL) {
+          dispatch_retain(data);
+          (*info).data = data;
+        } else {
+          dispatch_data_t combined = dispatch_data_create_concat((*info).data, data);
+          dispatch_release((*info).data);
+          (*info).data = combined;
+        }
+      }
+      if (block && (*info).data != NULL) {
+        // feed to block unprocessed lines
+        size_t offset = (*info).processedBytes;
+        size_t size = dispatch_data_get_size((*info).data);
+        if (offset < size) {
+          dispatch_data_t unprocessedPart = dispatch_data_create_subrange((*info).data, offset, size - offset);
+          (*info).processedBytes += feedUnprocessedLinesToBlock((*info).fd, unprocessedPart, (*info).done);
+        }
+      }
+      if ((*info).done) {
+        dispatch_group_leave(ioGroup);
+      }
+    });
   }
 
-  int remaining = sz;
+  if (blockToRunWhileReading != NULL) {
+    blockToRunWhileReading();
+  }
 
-  while (remaining > 0) {
-    int pollResult = poll(fds, sz, -1);
+  // wait for ios to be closed
+  dispatch_time_t timeout = DISPATCH_TIME_FOREVER;
+  if (!waitUntilFdsAreClosed) {
+    timeout = dispatch_time(DISPATCH_TIME_NOW, NSEC_PER_MSEC * 500);
+  }
+  dispatch_group_wait(ioGroup, timeout);
 
-    if (pollResult == -1) {
-      switch (errno) {
-        case EAGAIN:
-        case EINTR:
-          // poll can be restarted
-          continue;
-        default:
-          NSLog(@"error during poll: %@",
-                [NSError errorWithDomain:NSPOSIXErrorDomain code:errno userInfo:@{}]);
-          abort();
-      }
-    } else if (pollResult == 0) {
-      NSCAssert(false, @"impossible, polling without timeout");
-    } else {
-      for (int i = 0; i < sz; i++) {
-        if (!(fds[i].revents & (POLLIN | POLLHUP))) {
-          continue;
-        }
-
-        uint8_t buf[4096] = {0};
-        ssize_t readResult = read(fds[i].fd, buf, (sizeof(buf) / sizeof(uint8_t)));
-
-        if (readResult > 0) {  // some bytes read
-          dispatch_data_t part =
-            dispatch_data_create(buf,
-                                 readResult,
-                                 dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
-                                 // copy data from the buffer
-                                 DISPATCH_DATA_DESTRUCTOR_DEFAULT);
-          dispatch_data_t combined = dispatch_data_create_concat(data[i], part);
-          dispatch_release(part);
-          dispatch_release(data[i]);
-          data[i] = combined;
-        } else if (readResult == 0) {  // eof
-          remaining--;
-          fds[i].fd = -1;
-          fds[i].events = 0;
-        } else if (errno != EINTR) {
-          NSLog(@"error during read: %@", [NSError errorWithDomain:NSPOSIXErrorDomain code:errno userInfo:@{}]);
-          abort();
-        }
-        if (block) {
-          // feed to block unprocessed lines
-          size_t offset = processedBytes[i];
-          size_t size = dispatch_data_get_size(data[i]);
-          dispatch_data_t unprocessedPart = dispatch_data_create_subrange(data[i], offset, size - offset);
-          processedBytes[i] += feedUnprocessedLinesToBlock(fildes[i], unprocessedPart, fds[i].fd == -1);
-        }
-      }
+  NSMutableArray *outputs = [@[] mutableCopy];
+  for (int i = 0; i < sz; i++) {
+    io_read_info info = infos[i];
+    NSString *output = StringFromDispatchData(info.data);
+    [outputs addObject:output];
+    if (info.data != NULL) {
+      dispatch_release(info.data);
     }
+    close(info.fd);
+    dispatch_io_close(info.io, DISPATCH_IO_STOP);
+    dispatch_release(info.io);
   }
 
-  for (int i = 0; i < sz; i++) {
-    NSString *str = StringFromDispatchData(data[i]);
-    [outputs addObject:str];
-    dispatch_release(data[i]);
-  }
+  free(infos);
 
   return outputs;
 }
@@ -162,13 +164,13 @@ NSDictionary *LaunchTaskAndCaptureOutput(NSTask *task, NSString *description)
 
   [task setStandardOutput:stdoutPipe];
   [task setStandardError:stderrPipe];
-  LaunchTaskAndMaybeLogCommand(task, description);
 
-  int fides[2] = {stdoutHandle.fileDescriptor, stderrHandle.fileDescriptor};
+  int fildes[2] = {stdoutHandle.fileDescriptor, stderrHandle.fileDescriptor};
 
-  NSArray *outputs = readOutputs(fides, 2);
-
-  [task waitUntilExit];
+  NSArray *outputs = ReadOutputsAndFeedOuputLinesToBlockOnQueue(fildes, 2, NULL, NULL, ^{
+    LaunchTaskAndMaybeLogCommand(task, description);
+    [task waitUntilExit];
+  }, NO);
 
   NSCAssert(outputs[0] != nil && outputs[1] != nil,
             @"output should have been populated");
@@ -185,13 +187,13 @@ NSString *LaunchTaskAndCaptureOutputInCombinedStream(NSTask *task, NSString *des
 
   [task setStandardOutput:outputPipe];
   [task setStandardError:outputPipe];
-  LaunchTaskAndMaybeLogCommand(task, description);
 
-  int fides[1] = {outputHandle.fileDescriptor};
+  int fildes[1] = {outputHandle.fileDescriptor};
 
-  NSArray *outputs = readOutputs(fides, 1);
-
-  [task waitUntilExit];
+  NSArray *outputs = ReadOutputsAndFeedOuputLinesToBlockOnQueue(fildes, 1, NULL, NULL, ^{
+    LaunchTaskAndMaybeLogCommand(task, description);
+    [task waitUntilExit];
+  }, NO);
 
   NSCAssert(outputs[0] != nil,
             @"output should have been populated");
@@ -204,24 +206,14 @@ void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, FdO
   NSPipe *stdoutPipe = [NSPipe pipe];
   int stdoutReadFD = [[stdoutPipe fileHandleForReading] fileDescriptor];
 
-  int flags = fcntl(stdoutReadFD, F_GETFL, 0);
-  NSCAssert(fcntl(stdoutReadFD, F_SETFL, flags | O_NONBLOCK) != -1,
-            @"Failed to set O_NONBLOCK: %s", strerror(errno));
+  [task setStandardOutput:stdoutPipe];
 
   int fildes[1] = {stdoutReadFD};
 
-  // NSTask will automatically close the write-side of the pipe in our process, so only the new
-  // process will have an open handle.  That means when that process exits, we'll automatically
-  // see an EOF on the read-side since the last remaining ref to the write-side closed. (Corner
-  // case: the process forks, the parent exits, but the kid keeps running with the FD open. We
-  // handle that with the `[task isRunning]` check below.)
-  [task setStandardOutput:stdoutPipe];
-
-  LaunchTaskAndMaybeLogCommand(task, description);
-
-  ReadOutputsAndFeedOuputLinesToBlockOnQueue(fildes, 1, block, NULL);
-
-  [task waitUntilExit];
+  ReadOutputsAndFeedOuputLinesToBlockOnQueue(fildes, 1, block, NULL, ^{
+    LaunchTaskAndMaybeLogCommand(task, description);
+    [task waitUntilExit];
+  }, NO);
 }
 
 NSTask *CreateTaskInSameProcessGroupWithArch(cpu_type_t arch)
