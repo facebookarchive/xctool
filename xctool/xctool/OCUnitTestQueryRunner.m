@@ -75,20 +75,29 @@
   } else {
     NSString *jsonOutput = output[@"stdout"];
 
-    // If the test bundle (or any frameworks loaded by the test bundle) write to stdout, the expected JSON will
-    // be prepended that output, causing an error. Skip over any such unwanted characters to the our expect
-    // JSON array, by making sure the string we deserialize starts with [".
-    // Note that we are assuming the test query binary returns a JSON array, not a JSON object.
-    NSRange leftBracket = [jsonOutput rangeOfString:@"[\""];
-    
-    if (leftBracket.location != NSNotFound) {
-      jsonOutput = [jsonOutput substringFromIndex:leftBracket.location];
-    }
-    
     NSError *parseError = nil;
     NSArray *list = [NSJSONSerialization JSONObjectWithData:[jsonOutput dataUsingEncoding:NSUTF8StringEncoding]
                                                     options:0
                                                       error:&parseError];
+    if (parseError) {
+
+      // If the test bundle (or any frameworks loaded by the test bundle) write to stdout, the expected JSON will
+      // be prepended with taht output, causing an error. As a workaround, ff we failed above, scan the output
+      // for something that looks like a JSON array, and try again.
+
+      // Note that we are assuming the test query binary returns a JSON array, not a JSON object.
+
+      NSRange leftBracket = [jsonOutput rangeOfString:@"[\""];
+      
+      if (leftBracket.location != NSNotFound) {
+        jsonOutput = [jsonOutput substringFromIndex:leftBracket.location];
+
+        parseError = nil;
+        list = [NSJSONSerialization JSONObjectWithData:[jsonOutput dataUsingEncoding:NSUTF8StringEncoding]
+                                               options:0
+                                                 error:&parseError];
+      }
+    }
     if (list) {
       return list;
     } else {
