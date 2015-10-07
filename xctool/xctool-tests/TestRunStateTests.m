@@ -27,7 +27,7 @@ static NSArray *EventsForFakeRun()
   return @[
     @{@"event" : @"begin-test-suite", @"suite" : kReporter_TestSuite_TopLevelSuiteName},
     @{@"event" : @"begin-test", @"test" : @"-[OtherTests testSomething]"},
-    @{@"event" : @"test-output", @"output" : @"puppies!\n"},
+    @{@"event" : @"simulator-output", @"output" : @"puppies!\n", @"timestamp": @"1447051934.118537"},
     @{@"event" : @"end-test", @"test" : @"-[OtherTests testSomething]", @"succeeded" : @NO, @"output" : @"puppies!\n", @"totalDuration" : @1.0},
     @{@"event" : @"begin-test", @"test" : @"-[OtherTests testAnother]"},
     @{@"event" : @"end-test", @"test" : @"-[OtherTests testAnother]", @"succeeded" : @YES, @"output" : @"", @"totalDuration" : @1.0},
@@ -93,11 +93,11 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
     [[TestRunState alloc] initWithTests:testList
                                     reporters:@[eventBuffer]];
   [state prepareToRun];
-  [self sendEventsFromFile:TEST_DATA @"JSONStreamReporter-runtests.txt"
+  [self sendEventsFromFile:TEST_DATA @"JSONStreamReporter-runtests-for-test-state-tests.txt"
                 toReporter:state];
   [state didFinishRunWithStartupError:nil otherErrors:nil];
 
-  assertThat(eventBuffer.events, hasCountOf(43));
+  assertThat(eventBuffer.events, hasCountOf(88));
   assertThat(SelectEventFields(eventBuffer.events, kReporter_Events_BeginTest, @"event"), hasCountOf(7));
   assertThat(SelectEventFields(eventBuffer.events, kReporter_Events_EndTest, @"event"), hasCountOf(7));
 }
