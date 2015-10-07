@@ -332,6 +332,7 @@ BOOL IsRunningOnCISystem()
 {
   NSDictionary *environment = [[NSProcessInfo processInfo] environment];
   return ([environment[@"TRAVIS"] isEqualToString:@"true"] ||
+          [environment[@"CIRCLECI"] isEqualToString:@"true"] ||
           [environment[@"JENKINS_URL"] length] > 0 ||
           [environment[@"TEAMCITY_VERSION"] length] > 0);
 }

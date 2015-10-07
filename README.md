@@ -324,9 +324,9 @@ has these special rules:
 detect a TTY. This can be overridden by setting `XCTOOL_FORCE_TTY` in
 the environment.
 * The `user-notifications` reporter will not be used
-if xctool detects that the build is being run by Travis CI, TeamCity,
-or Jenkins (i.e. `TRAVIS=true`, `TEAMCITY_VERSION`, or `JENKINS_URL` in the
-environment).
+if xctool detects that the build is being run by Travis CI, CircleCI, TeamCity,
+or Jenkins (i.e. `TRAVIS=true`, `CIRCLECI=true`, `TEAMCITY_VERSION`, or
+`JENKINS_URL` in the environment).
 
 You can choose your own reporters with the `-reporter` option:
 
