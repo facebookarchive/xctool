@@ -16,6 +16,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "TaskUtil.h"
+
 @class SimDevice;
 
 @interface SimulatorWrapper : NSObject
@@ -39,7 +41,7 @@
                  device:(SimDevice *)device
               arguments:(NSArray *)arguments
             environment:(NSDictionary *)environment
-      feedOutputToBlock:(void (^)(NSString *))feedOutputToBlock
+      feedOutputToBlock:(FdOutputLineFeedBlock)feedOutputToBlock
                   error:(NSError **)error;
 
 + (BOOL)uninstallTestHostBundleID:(NSString *)testHostBundleID

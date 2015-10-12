@@ -28,7 +28,7 @@ static const NSInteger kMaxRunTestsAttempts = 3;
 
 @implementation OCUnitIOSAppTestRunner
 
-- (void)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock
+- (void)runTestsAndFeedOutputTo:(FdOutputLineFeedBlock)outputLineBlock
                    startupError:(NSString **)startupError
                     otherErrors:(NSString **)otherErrors
 {

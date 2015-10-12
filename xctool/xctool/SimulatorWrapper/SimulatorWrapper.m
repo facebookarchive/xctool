@@ -49,7 +49,7 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
                  device:(SimDevice *)device
               arguments:(NSArray *)arguments
             environment:(NSDictionary *)environment
-      feedOutputToBlock:(void (^)(NSString *))feedOutputToBlock
+      feedOutputToBlock:(FdOutputLineFeedBlock)feedOutputToBlock
                   error:(NSError **)error
 {
   NSString *outputPath = MakeTempFileWithPrefix(@"output");

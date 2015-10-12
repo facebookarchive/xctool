@@ -16,9 +16,11 @@
 
 #import <Foundation/Foundation.h>
 
+#import "TaskUtil.h"
+
 @interface LineReader : NSObject
 
-@property (nonatomic, copy) void (^didReadLineBlock)(NSString *);
+@property (nonatomic, copy) FdOutputLineFeedBlock didReadLineBlock;
 
 - (instancetype)initWithFileHandle:(NSFileHandle *)fileHandle;
 

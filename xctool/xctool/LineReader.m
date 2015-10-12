@@ -46,7 +46,7 @@
       break;
     } else {
       NSString *line = [_buffer substringWithRange:NSMakeRange(offset, newlineRange.location - offset)];
-      _didReadLineBlock(line);
+      _didReadLineBlock(0, line);
       offset = newlineRange.location + 1;
     }
   }
