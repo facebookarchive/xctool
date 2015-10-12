@@ -99,7 +99,7 @@ static NSArray *LinesFromDispatchData(dispatch_data_t data, BOOL omitNewlineChar
   return lines;
 }
 
-NSArray *ReadOutputsAndFeedOuputLinesToBlockOnQueue(
+void ReadOutputsAndFeedOuputLinesToBlockOnQueue(
   int * const fildes,
   const int sz,
   FdOutputLineFeedBlock block,
@@ -107,19 +107,23 @@ NSArray *ReadOutputsAndFeedOuputLinesToBlockOnQueue(
   BlockToRunWhileReading blockToRunWhileReading,
   BOOL waitUntilFdsAreClosed)
 {
+  void (^callOutputLineFeedBlock)(int, NSString *) = ^(int fd, NSString *lineToFeed) {
+    if (queue == NULL) {
+      block(fd, lineToFeed);
+    } else {
+      dispatch_async(queue, ^{
+        block(fd, lineToFeed);
+      });
+    }
+  };
+
   size_t (^feedUnprocessedLinesToBlock)(int, dispatch_data_t, BOOL) = ^(int fd, dispatch_data_t unprocessedPart, BOOL forceUntilTheEnd) {
     size_t processedSize;
     NSArray *lines = LinesFromDispatchData(unprocessedPart, YES, forceUntilTheEnd, &processedSize);
     dispatch_release(unprocessedPart);
 
     for (NSString *lineToFeed in lines) {
-      if (queue == NULL) {
-        block(fd, lineToFeed);
-      } else {
-        dispatch_async(queue, ^{
-          block(fd, lineToFeed);
-        });
-      }
+      callOutputLineFeedBlock(fd, lineToFeed);
     }
 
     return processedSize;
@@ -180,11 +184,24 @@ NSArray *ReadOutputsAndFeedOuputLinesToBlockOnQueue(
   }
   dispatch_group_wait(ioGroup, timeout);
 
-  NSMutableArray *outputs = [@[] mutableCopy];
   for (int i = 0; i < sz; i++) {
     io_read_info info = infos[i];
-    NSString *output = [LinesFromDispatchData(info.data, NO, YES, NULL) componentsJoinedByString:@""];
-    [outputs addObject:output];
+
+    size_t dataSz = 0;
+    if (info.data != NULL) {
+      dataSz = dispatch_data_get_size(info.data);
+    }
+    if (dataSz > 0) {
+      const char *lastCharPtr;
+      dispatch_data_t data = dispatch_data_create_subrange(info.data, dataSz - 1, 1);
+      dispatch_data_t contig = dispatch_data_create_map(data, (const void **)&lastCharPtr, NULL);
+      if (*lastCharPtr == '\n') {
+        callOutputLineFeedBlock(info.fd, @"");
+      }
+      dispatch_release(data);
+      dispatch_release(contig);
+    }
+
     if (info.data != NULL) {
       dispatch_release(info.data);
     }
@@ -194,8 +211,6 @@ NSArray *ReadOutputsAndFeedOuputLinesToBlockOnQueue(
   }
 
   free(infos);
-
-  return outputs;
 }
 
 NSDictionary *LaunchTaskAndCaptureOutput(NSTask *task, NSString *description)
@@ -211,15 +226,24 @@ NSDictionary *LaunchTaskAndCaptureOutput(NSTask *task, NSString *description)
 
   int fildes[2] = {stdoutHandle.fileDescriptor, stderrHandle.fileDescriptor};
 
-  NSArray *outputs = ReadOutputsAndFeedOuputLinesToBlockOnQueue(fildes, 2, NULL, NULL, ^{
+  NSMutableArray *stdoutArray = [NSMutableArray new];
+  NSMutableArray *stderrArray = [NSMutableArray new];
+
+  ReadOutputsAndFeedOuputLinesToBlockOnQueue(fildes, 2, ^(int fd, NSString *line) {
+    if (fd == stdoutHandle.fileDescriptor) {
+      [stdoutArray addObject:line];
+    } else if (fd == stderrHandle.fileDescriptor) {
+      [stderrArray addObject:line];
+    }
+  }, NULL, ^{
     LaunchTaskAndMaybeLogCommand(task, description);
     [task waitUntilExit];
   }, NO);
 
-  NSCAssert(outputs[0] != nil && outputs[1] != nil,
-            @"output should have been populated");
+  NSString *stdoutOutput = [stdoutArray componentsJoinedByString:@"\n"];
+  NSString *stderrOutput = [stderrArray componentsJoinedByString:@"\n"];
 
-  NSDictionary *output = @{@"stdout" : outputs[0], @"stderr" : outputs[1]};
+  NSDictionary *output = @{@"stdout": stdoutOutput, @"stderr": stderrOutput};
 
   return output;
 }
@@ -234,15 +258,16 @@ NSString *LaunchTaskAndCaptureOutputInCombinedStream(NSTask *task, NSString *des
 
   int fildes[1] = {outputHandle.fileDescriptor};
 
-  NSArray *outputs = ReadOutputsAndFeedOuputLinesToBlockOnQueue(fildes, 1, NULL, NULL, ^{
+  NSMutableArray *lines = [NSMutableArray new];
+
+  ReadOutputsAndFeedOuputLinesToBlockOnQueue(fildes, 1, ^(int fd, NSString *line) {
+    [lines addObject:line];
+  }, NULL, ^{
     LaunchTaskAndMaybeLogCommand(task, description);
     [task waitUntilExit];
   }, NO);
 
-  NSCAssert(outputs[0] != nil,
-            @"output should have been populated");
-
-  return outputs[0];
+  return [lines componentsJoinedByString:@"\n"];
 }
 
 void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, FdOutputLineFeedBlock block)

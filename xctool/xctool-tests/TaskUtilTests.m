@@ -34,7 +34,7 @@
   NSString *multibyteChar = @"\U00010196"; // ROMAN DENARIUS SIGN
   NSString *longLine = [@"" stringByPaddingToLength:lineLength withString:multibyteChar startingAtIndex:0];
 
-  NSString *fakeInput1 = [NSString stringWithFormat:@"%@\n%@\n%@\n", longLine, longLine, longLine];
+  NSString *fakeInput1 = [NSString stringWithFormat:@"%@\n%@\n%@", longLine, longLine, longLine];
   NSString *fakeInput2 = [@"a" stringByAppendingString:fakeInput1];
 
   for (NSString *fakeInput in @[fakeInput1, fakeInput2]) {

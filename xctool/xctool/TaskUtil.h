@@ -44,7 +44,7 @@ typedef void (^BlockToRunWhileReading)(void);
  *  order of lines could be wrong. If not queue is provided then block is invoked on
  *  the background queue.
  */
-NSArray *ReadOutputsAndFeedOuputLinesToBlockOnQueue(
+void ReadOutputsAndFeedOuputLinesToBlockOnQueue(
   int * const fildes,
   const int sz,
   FdOutputLineFeedBlock block,
