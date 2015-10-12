@@ -51,7 +51,7 @@ static NSString *StringFromDispatchDataWithBrokenUTF8Encoding(const char *dataPt
   return string;
 }
 
-static NSArray *LinesFromDispatchData(dispatch_data_t data, BOOL omitNewlineCharacters, size_t *convertedSize, BOOL forceUntilTheEnd)
+static NSArray *LinesFromDispatchData(dispatch_data_t data, BOOL omitNewlineCharacters, BOOL forceUntilTheEnd, size_t *convertedSize)
 {
   const char *dataPtr;
   size_t dataSz;
@@ -62,7 +62,7 @@ static NSArray *LinesFromDispatchData(dispatch_data_t data, BOOL omitNewlineChar
   }
 
   dispatch_data_t contig = dispatch_data_create_map(data, (const void **)&dataPtr, &dataSz);
-  NSMutableArray *lines = [@[] mutableCopy];
+  NSMutableArray *lines = [NSMutableArray new];
 
   while (processedSize < dataSz) {
     size_t lineLength;
@@ -109,7 +109,7 @@ NSArray *ReadOutputsAndFeedOuputLinesToBlockOnQueue(
 {
   size_t (^feedUnprocessedLinesToBlock)(int, dispatch_data_t, BOOL) = ^(int fd, dispatch_data_t unprocessedPart, BOOL forceUntilTheEnd) {
     size_t processedSize;
-    NSArray *lines = LinesFromDispatchData(unprocessedPart, YES, &processedSize, forceUntilTheEnd);
+    NSArray *lines = LinesFromDispatchData(unprocessedPart, YES, forceUntilTheEnd, &processedSize);
     dispatch_release(unprocessedPart);
 
     for (NSString *lineToFeed in lines) {
@@ -127,43 +127,43 @@ NSArray *ReadOutputsAndFeedOuputLinesToBlockOnQueue(
 
   io_read_info *infos = calloc(sz, sizeof(io_read_info));
   dispatch_group_t ioGroup = dispatch_group_create();
-  for (int i = 0; i <sz; i++) {
+  for (int i = 0; i < sz; i++) {
     dispatch_group_enter(ioGroup);
     io_read_info *info = infos+i;
-    (*info).fd = fildes[i];
-    (*info).io = dispatch_io_create(DISPATCH_IO_STREAM, (*info).fd, dispatch_get_main_queue(), ^(int error) {
+    info->fd = fildes[i];
+    info->io = dispatch_io_create(DISPATCH_IO_STREAM, info->fd, dispatch_get_main_queue(), ^(int error) {
       if(error) {
-        NSLog(@"[%d] Got an error while creating io for fd", (*info).fd);
+        NSLog(@"[%d] Got an error while creating io for fd", info->fd);
       }
     });
-    dispatch_io_set_low_water((*info).io, 1);
-    dispatch_io_read((*info).io, 0, SIZE_MAX, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(bool done, dispatch_data_t data, int error) {
+    dispatch_io_set_low_water(info->io, 1);
+    dispatch_io_read(info->io, 0, SIZE_MAX, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(bool done, dispatch_data_t data, int error) {
       if (error == ECANCELED) {
         return;
       }
       if (done) {
-        (*info).done = YES;
+        info->done = YES;
       }
-      if (!(*info).done && data != NULL) {
-        if ((*info).data == NULL) {
+      if (!info->done && data != NULL) {
+        if (info->data == NULL) {
           dispatch_retain(data);
-          (*info).data = data;
+          info->data = data;
         } else {
-          dispatch_data_t combined = dispatch_data_create_concat((*info).data, data);
-          dispatch_release((*info).data);
-          (*info).data = combined;
+          dispatch_data_t combined = dispatch_data_create_concat(info->data, data);
+          dispatch_release(info->data);
+          info->data = combined;
         }
       }
-      if (block && (*info).data != NULL) {
+      if (block && info->data != NULL) {
         // feed to block unprocessed lines
-        size_t offset = (*info).processedBytes;
-        size_t size = dispatch_data_get_size((*info).data);
+        size_t offset = info->processedBytes;
+        size_t size = dispatch_data_get_size(info->data);
         if (offset < size) {
-          dispatch_data_t unprocessedPart = dispatch_data_create_subrange((*info).data, offset, size - offset);
-          (*info).processedBytes += feedUnprocessedLinesToBlock((*info).fd, unprocessedPart, (*info).done);
+          dispatch_data_t unprocessedPart = dispatch_data_create_subrange(info->data, offset, size - offset);
+          info->processedBytes += feedUnprocessedLinesToBlock(info->fd, unprocessedPart, info->done);
         }
       }
-      if ((*info).done) {
+      if (info->done) {
         dispatch_group_leave(ioGroup);
       }
     });
@@ -183,7 +183,7 @@ NSArray *ReadOutputsAndFeedOuputLinesToBlockOnQueue(
   NSMutableArray *outputs = [@[] mutableCopy];
   for (int i = 0; i < sz; i++) {
     io_read_info info = infos[i];
-    NSString *output = [LinesFromDispatchData(info.data, NO, NULL, YES) componentsJoinedByString:@""];
+    NSString *output = [LinesFromDispatchData(info.data, NO, YES, NULL) componentsJoinedByString:@""];
     [outputs addObject:output];
     if (info.data != NULL) {
       dispatch_release(info.data);
