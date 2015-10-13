@@ -83,7 +83,8 @@ static NSString * const XCTOOL_TMPDIR = @"TMPDIR";
                                           _simulatorInfo,
                                           launchPath,
                                           args,
-                                          env);
+                                          env,
+                                          _waitForDebugger);
 }
 
 - (void)runTestsAndFeedOutputTo:(void (^)(NSString *))outputLineBlock

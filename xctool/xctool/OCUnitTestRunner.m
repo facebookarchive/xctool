@@ -138,6 +138,7 @@
                        resetSimulator:(BOOL)resetSimulator
             noResetSimulatorOnFailure:(BOOL)noResetSimulatorOnFailure
                          freshInstall:(BOOL)freshInstall
+                      waitForDebugger:(BOOL)waitForDebugger
                           testTimeout:(NSInteger)testTimeout
                             reporters:(NSArray *)reporters
 {
@@ -153,6 +154,7 @@
     _resetSimulator = resetSimulator;
     _noResetSimulatorOnFailure = noResetSimulatorOnFailure;
     _freshInstall = freshInstall;
+    _waitForDebugger = waitForDebugger;
     _testTimeout = testTimeout;
     _reporters = [reporters copy];
     _framework = FrameworkInfoForTestBundleAtPath([_simulatorInfo productBundlePath]);

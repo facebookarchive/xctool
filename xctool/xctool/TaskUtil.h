@@ -73,7 +73,8 @@ NSTask *CreateTaskForSimulatorExecutable(NSString *sdkName,
                                          SimulatorInfo *simulatorInfo,
                                          NSString *launchPath,
                                          NSArray *arguments,
-                                         NSDictionary *environment);
+                                         NSDictionary *environment,
+                                         BOOL waitForDebugger);
 
 
 /**

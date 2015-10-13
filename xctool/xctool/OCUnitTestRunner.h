@@ -33,6 +33,7 @@
   BOOL _resetSimulator;
   BOOL _noResetSimulatorOnFailure;
   BOOL _freshInstall;
+  BOOL _waitForDebugger;
   NSInteger _testTimeout;
   NSArray *_reporters;
   NSDictionary *_framework;
@@ -63,6 +64,7 @@
                        resetSimulator:(BOOL)resetSimulator
             noResetSimulatorOnFailure:(BOOL)noResetSimulatorOnFailure
                          freshInstall:(BOOL)freshInstall
+                         waitForDebugger:(BOOL)waitForDebugger
                           testTimeout:(NSInteger)testTimeout
                             reporters:(NSArray *)reporters;
 

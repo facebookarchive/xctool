@@ -392,17 +392,19 @@ NSTask *CreateTaskForSimulatorExecutable(NSString *sdkName,
                                          SimulatorInfo *simulatorInfo,
                                          NSString *launchPath,
                                          NSArray *arguments,
-                                         NSDictionary *environment)
+                                         NSDictionary *environment,
+                                         BOOL waitForDebugger)
 {
   NSTask *task = CreateTaskInSameProcessGroup();
   NSMutableArray *taskArgs = [NSMutableArray array];
   NSMutableDictionary *taskEnv = [NSMutableDictionary dictionary];
 
   if ([sdkName hasPrefix:@"iphonesimulator"]) {
-    [taskArgs addObjectsFromArray:@[
-      @"spawn",
-      [[[simulatorInfo simulatedDevice] UDID] UUIDString],
-    ]];
+    [taskArgs addObject:@"spawn"];
+    if (waitForDebugger) {
+      [taskArgs addObject:@"--wait-for-debugger"];
+    }
+    [taskArgs addObject:[[[simulatorInfo simulatedDevice] UDID] UUIDString]];
     [taskArgs addObject:launchPath];
     [taskArgs addObjectsFromArray:arguments];
 

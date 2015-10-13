@@ -38,7 +38,8 @@
     _simulatorInfo,
     [_simulatorInfo testHostPath],
     @[],
-    environment
+    environment,
+    NO
   );
 }
 

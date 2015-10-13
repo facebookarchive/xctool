@@ -38,7 +38,8 @@
     _simulatorInfo,
     [XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-ios"],
     @[],
-    environment
+    environment,
+    NO
   );
 }
 
