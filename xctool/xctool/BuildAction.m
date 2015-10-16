@@ -28,25 +28,49 @@
   return @"build";
 }
 
++ (NSArray *)options
+{
+  return
+  @[
+    [Action actionOptionWithName:@"dry-run"
+                         aliases:@[@"n"]
+                     description:@"print the commands that would be executed, but do not execute them"
+                         setFlag:@selector(setOnlyPrintCommandNames:)]
+    ];
+}
+
 - (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
-
+  
   [xcodeSubjectInfo.actionScripts preBuildWithOptions:options];
-
-
-  NSArray *arguments = [[[options xcodeBuildArgumentsForSubject]
-                         arrayByAddingObjectsFromArray:[options commonXcodeBuildArgumentsForSchemeAction:@"LaunchAction"
-                                                                                        xcodeSubjectInfo:xcodeSubjectInfo]]
-                        arrayByAddingObject:@"build"];
-
+  
+  NSArray *arguments = [self xcodebuildArgumentsForActionWithOptions:options xcodeSubjectInfo:xcodeSubjectInfo];
+  
   BOOL ret = RunXcodebuildAndFeedEventsToReporters(arguments,
-                                               @"build",
-                                               [options scheme],
-                                               [options reporters]);
-
+                                                   @"build",
+                                                   [options scheme],
+                                                   [options reporters]);
+  
   [xcodeSubjectInfo.actionScripts postBuildWithOptions:options];
-
+  
   return ret;
+}
+
+- (NSArray *)xcodebuildArgumentsForActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
+{
+  NSMutableArray *arguments = [NSMutableArray array];
+  
+  [arguments addObjectsFromArray:[options xcodeBuildArgumentsForSubject]];
+  [arguments addObjectsFromArray:[options commonXcodeBuildArgumentsForSchemeAction:@"LaunchAction"
+                                                                  xcodeSubjectInfo:xcodeSubjectInfo]];
+  
+  if (_onlyPrintCommandNames) {
+    [arguments addObject:@"-dry-run"];
+  }
+  
+  [arguments addObject:@"build"];
+  
+  return [NSArray arrayWithArray:arguments];
 }
 
 @end

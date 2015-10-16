@@ -479,4 +479,5 @@
    [NSString stringWithFormat:@"Unable to find projects (.xcodeproj) in directory %@. Please specify with -workspace, -project, or -find-target.",
     options.findProjectPath]];
 }
+
 @end
