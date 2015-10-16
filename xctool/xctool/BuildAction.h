@@ -21,5 +21,6 @@
 @interface BuildAction : Action
 
 @property (nonatomic, assign) BOOL onlyPrintCommandNames;
+@property (nonatomic, assign) BOOL skipUnavailableActions;
 
 @end

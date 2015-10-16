@@ -263,7 +263,6 @@ void _CFAutoreleasePoolPrintPools();
   }];
 }
 
-
 - (void)testDryRunOptionSetsFlag
 {
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
@@ -291,6 +290,38 @@ void _CFAutoreleasePoolPrintPools();
                          @"-scheme", @"ProjectsWithDifferentSDKs",
                          @"-configuration", @"Debug",
                          @"-dry-run",
+                         @"build",
+                         ]));
+  }];
+}
+
+- (void)testSkipUnavailableActionsOptionSetsFlag
+{
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+     // Make sure -showBuildSettings returns some data
+     [LaunchHandlers handlerForShowBuildSettingsWithWorkspace:TEST_DATA @"ProjectsWithDifferentSDKs/ProjectsWithDifferentSDKs.xcworkspace"
+                                                       scheme:@"ProjectsWithDifferentSDKs"
+                                                 settingsPath:TEST_DATA @"ProjectsWithDifferentSDKs-ProjectsWithDifferentSDKs-showBuildSettings.txt"],
+     ]];
+
+    XCTool *tool = [[XCTool alloc] init];
+    
+    tool.arguments = @[@"-workspace", TEST_DATA @"ProjectsWithDifferentSDKs/ProjectsWithDifferentSDKs.xcworkspace",
+                       @"-scheme", @"ProjectsWithDifferentSDKs",
+                       @"build",
+                       @"-skipUnavailableActions",
+                       @"-reporter", @"plain",
+                       ];
+    
+    [TestUtil runWithFakeStreams:tool];
+    
+    assertThat([[[FakeTaskManager sharedManager] launchedTasks][0] arguments],
+               equalTo(@[
+                         @"-workspace", TEST_DATA @"ProjectsWithDifferentSDKs/ProjectsWithDifferentSDKs.xcworkspace",
+                         @"-scheme", @"ProjectsWithDifferentSDKs",
+                         @"-configuration", @"Debug",
+                         @"-skipUnavailableActions",
                          @"build",
                          ]));
   }];

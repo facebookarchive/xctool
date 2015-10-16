@@ -23,6 +23,7 @@
 
 @implementation BuildAction
 
+
 + (NSString *)name
 {
   return @"build";
@@ -35,7 +36,11 @@
     [Action actionOptionWithName:@"dry-run"
                          aliases:@[@"n"]
                      description:@"print the commands that would be executed, but do not execute them"
-                         setFlag:@selector(setOnlyPrintCommandNames:)]
+                         setFlag:@selector(setOnlyPrintCommandNames:)],
+    [Action actionOptionWithName:@"skipUnavailableActions"
+                         aliases:nil
+                     description:@"skip build actions that cannot be performed instead of failing. This option is only honored if -scheme is passed"
+                         setFlag:@selector(setSkipUnavailableActions:)],
     ];
 }
 
@@ -66,6 +71,9 @@
   
   if (_onlyPrintCommandNames) {
     [arguments addObject:@"-dry-run"];
+  }
+  if (_skipUnavailableActions) {
+    [arguments addObject:@"-skipUnavailableActions"];
   }
   
   [arguments addObject:@"build"];
