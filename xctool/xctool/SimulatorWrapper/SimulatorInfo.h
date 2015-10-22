@@ -23,6 +23,7 @@
 - (void)setCpuType:(cpu_type_t)cpuType;
 - (void)setDeviceName:(NSString *)deviceName;
 - (void)setOSVersion:(NSString *)OSVersion;
+- (void)setDeviceUDID:(NSUUID *)deviceUDID;
 
 - (cpu_type_t)simulatedCpuType;
 - (NSString *)simulatedArchitecture;
@@ -54,5 +55,6 @@
 + (NSArray *)sdksSupportedByDevice:(NSString *)deviceName;
 + (cpu_type_t)cpuTypeForDevice:(NSString *)deviceName;
 + (NSString *)baseVersionForSDKShortVersion:(NSString *)shortVersionString;
++ (SimDevice *)deviceWithUDID:(NSUUID *)deviceUDID;
 
 @end

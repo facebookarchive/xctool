@@ -444,6 +444,10 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
     }
     [_simulatorInfo setDeviceName:destInfo[@"name"]];
     [_simulatorInfo setOSVersion:destInfo[@"OS"]];
+    if (destInfo[@"id"] != nil) {
+      NSUUID *udid = [[NSUUID alloc] initWithUUIDString:destInfo[@"id"]];
+      [_simulatorInfo setDeviceUDID:udid];
+    }
   }
 
   for (NSString *logicTestPath in _logicTests) {

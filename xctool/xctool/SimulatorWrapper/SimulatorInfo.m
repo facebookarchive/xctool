@@ -47,6 +47,7 @@ static const NSInteger KProductTypeIpad = 2;
 @property (nonatomic, assign) cpu_type_t cpuType;
 @property (nonatomic, copy) NSString *deviceName;
 @property (nonatomic, copy) NSString *OSVersion;
+@property (nonatomic, copy) NSUUID *deviceUDID;
 
 @property (nonatomic, strong) SimDevice *simulatedDevice;
 @property (nonatomic, strong) SimRuntime *simulatedRuntime;
@@ -80,6 +81,7 @@ static const NSInteger KProductTypeIpad = 2;
     copy.cpuType = _cpuType;
     copy.deviceName = _deviceName;
     copy.OSVersion = _OSVersion;
+    copy.deviceUDID = _deviceUDID;
   }
   return copy;
 }
@@ -293,13 +295,17 @@ static const NSInteger KProductTypeIpad = 2;
 {
   if (!_simulatedDevice) {
     SimRuntime *runtime = [self simulatedRuntime];
-    SimDeviceType *deviceType = [SimDeviceType supportedDeviceTypesByAlias][[self simulatedDeviceInfoName]];
-    NSAssert(deviceType != nil, @"Unable to find SimDeviceType for the device with name \"%@\". Available device names: %@", [self simulatedDeviceInfoName], [[SimDeviceType supportedDeviceTypesByAlias] allKeys]);
-    for (SimDevice *device in [[SimDeviceSet defaultSet] availableDevices]) {
-      if ([device.deviceType isEqual:deviceType] &&
-          [device.runtime isEqual:runtime]) {
-        _simulatedDevice = device;
-        break;
+    if (_deviceUDID) {
+      return [SimulatorInfo deviceWithUDID:_deviceUDID];
+    } else {
+      SimDeviceType *deviceType = [SimDeviceType supportedDeviceTypesByAlias][[self simulatedDeviceInfoName]];
+      NSAssert(deviceType != nil, @"Unable to find SimDeviceType for the device with name \"%@\". Available device names: %@", [self simulatedDeviceInfoName], [[SimDeviceType supportedDeviceTypesByAlias] allKeys]);
+      for (SimDevice *device in [[SimDeviceSet defaultSet] availableDevices]) {
+        if ([device.deviceType isEqual:deviceType] &&
+            [device.runtime isEqual:runtime]) {
+          _simulatedDevice = device;
+          break;
+        }
       }
     }
 
@@ -357,6 +363,16 @@ static const NSInteger KProductTypeIpad = 2;
 + (BOOL)isDeviceAvailableWithAlias:(NSString *)deviceName
 {
   return [SimDeviceType supportedDeviceTypesByAlias][deviceName] != nil;
+}
+
++ (SimDevice *)deviceWithUDID:(NSUUID *)deviceUDID
+{
+  for (SimDevice *device in [[SimDeviceSet defaultSet] availableDevices]) {
+    if ([device.UDID isEqual:deviceUDID]) {
+      return device;
+    }
+  }
+  return nil;
 }
 
 + (NSString *)deviceNameForAlias:(NSString *)deviceAlias
