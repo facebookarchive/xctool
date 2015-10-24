@@ -169,6 +169,10 @@ static const NSInteger KProductTypeIpad = 2;
     return _deviceName;
   }
 
+  if ([_buildSettings[Xcode_SDK_NAME] hasPrefix:@"macosx"]) {
+    return @"My Mac";
+  }
+
   switch ([[self simulatedDeviceFamily] integerValue]) {
     case KProductTypeIphone:
       if ([self simulatedCpuType] == CPU_TYPE_I386) {

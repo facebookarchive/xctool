@@ -30,6 +30,9 @@ static void writeAll(int fildes, const void *buf, size_t nbyte) {
   }
 }
 
+// method defined in otest-shim.
+void __exit(int code);
+
 @interface FakeTask ()
 @property (atomic, assign, readwrite) int terminationStatus;
 @end
@@ -166,9 +169,8 @@ static void writeAll(int fildes, const void *buf, size_t nbyte) {
       writeAll(standardErrorWriteFd, pretendStandardErrorBytes, pretendStandardErrorLength);
     }
 
-    // When the process exits, the last open handles to the write side of the
-    // stdout/stderr pipes will be 'widowed' and the other side will see EOFs.
-    exit(0);
+    // call directly to interposed in otest-shim exit.
+    __exit(0);
   } else {
     // If we're working with pipes, we need to make sure we close the
     // write side in the host process - otherwise the pipe never becomes
