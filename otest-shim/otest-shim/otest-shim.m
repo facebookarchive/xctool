@@ -39,7 +39,7 @@
 #import "TestingFramework.h"
 #import "XCTest.h"
 
-static NSString *const kEventQueueLabel = @"xctool.events";
+static char *const kEventQueueLabel = "xctool.events";
 
 @interface XCToolAssertionHandler : NSAssertionHandler
 @end
@@ -102,7 +102,7 @@ static dispatch_queue_t EventQueue()
     // stdout and generating 'test-output' events.  We have a global variable
     // '__testIsRunning' that we can check to see if we're in the middle of a
     // running test, but there can be race conditions with multiple threads.
-    eventQueue = dispatch_queue_create([kEventQueueLabel UTF8String], DISPATCH_QUEUE_SERIAL);
+    eventQueue = dispatch_queue_create(kEventQueueLabel, DISPATCH_QUEUE_SERIAL);
   });
 
   return eventQueue;
@@ -163,7 +163,7 @@ static void PrintJSON(id JSONObject)
 
 static BOOL IsOnEventQueue()
 {
-  return strcmp(dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL), [kEventQueueLabel UTF8String]) == 0;
+  return strcmp(dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL), kEventQueueLabel) == 0;
 }
 
 #pragma mark - XCToolLog function declarations
