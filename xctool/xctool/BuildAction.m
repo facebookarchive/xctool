@@ -46,38 +46,38 @@
 
 - (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
-  
+
   [xcodeSubjectInfo.actionScripts preBuildWithOptions:options];
-  
+
   NSArray *arguments = [self xcodebuildArgumentsForActionWithOptions:options xcodeSubjectInfo:xcodeSubjectInfo];
-  
+
   BOOL ret = RunXcodebuildAndFeedEventsToReporters(arguments,
                                                    @"build",
                                                    [options scheme],
                                                    [options reporters]);
-  
+
   [xcodeSubjectInfo.actionScripts postBuildWithOptions:options];
-  
+
   return ret;
 }
 
 - (NSArray *)xcodebuildArgumentsForActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   NSMutableArray *arguments = [NSMutableArray array];
-  
+
   [arguments addObjectsFromArray:[options xcodeBuildArgumentsForSubject]];
   [arguments addObjectsFromArray:[options commonXcodeBuildArgumentsForSchemeAction:@"LaunchAction"
                                                                   xcodeSubjectInfo:xcodeSubjectInfo]];
-  
+
   if (_onlyPrintCommandNames) {
     [arguments addObject:@"-dry-run"];
   }
   if (_skipUnavailableActions) {
     [arguments addObject:@"-skipUnavailableActions"];
   }
-  
+
   [arguments addObject:@"build"];
-  
+
   return [NSArray arrayWithArray:arguments];
 }
 

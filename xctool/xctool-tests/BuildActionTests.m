@@ -274,16 +274,16 @@ void _CFAutoreleasePoolPrintPools();
      ]];
 
     XCTool *tool = [[XCTool alloc] init];
-    
+
     tool.arguments = @[@"-workspace", TEST_DATA @"ProjectsWithDifferentSDKs/ProjectsWithDifferentSDKs.xcworkspace",
                        @"-scheme", @"ProjectsWithDifferentSDKs",
                        @"build",
                        @"-dry-run",
                        @"-reporter", @"plain",
                        ];
-    
+
     [TestUtil runWithFakeStreams:tool];
-    
+
     assertThat([[[FakeTaskManager sharedManager] launchedTasks][0] arguments],
                equalTo(@[
                          @"-workspace", TEST_DATA @"ProjectsWithDifferentSDKs/ProjectsWithDifferentSDKs.xcworkspace",
@@ -306,16 +306,16 @@ void _CFAutoreleasePoolPrintPools();
      ]];
 
     XCTool *tool = [[XCTool alloc] init];
-    
+
     tool.arguments = @[@"-workspace", TEST_DATA @"ProjectsWithDifferentSDKs/ProjectsWithDifferentSDKs.xcworkspace",
                        @"-scheme", @"ProjectsWithDifferentSDKs",
                        @"build",
                        @"-skipUnavailableActions",
                        @"-reporter", @"plain",
                        ];
-    
+
     [TestUtil runWithFakeStreams:tool];
-    
+
     assertThat([[[FakeTaskManager sharedManager] launchedTasks][0] arguments],
                equalTo(@[
                          @"-workspace", TEST_DATA @"ProjectsWithDifferentSDKs/ProjectsWithDifferentSDKs.xcworkspace",
