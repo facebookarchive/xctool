@@ -64,16 +64,28 @@
   [self prepareToRunQuery];
 
   NSTask *task = [self createTaskForQuery];
+
+  // specify a path where to write otest-query output
+  NSString *outputPath = MakeTempFileWithPrefix(@"otest-query-output");
+  NSMutableDictionary *taskEnvironment = [task.environment mutableCopy];
+  if ([[task.launchPath lastPathComponent] isEqual:@"simctl"]) {
+    taskEnvironment[@"SIMCTL_CHILD_OTEST_QUERY_OUTPUT_FILE"] = outputPath;
+  } else {
+    taskEnvironment[@"OTEST_QUERY_OUTPUT_FILE"] = outputPath;
+  }
+  task.environment = taskEnvironment;
+
   NSDictionary *output = LaunchTaskAndCaptureOutput(task, @"running otest-query");
 
   int terminationStatus = [task terminationStatus];
   task = nil;
 
   if (terminationStatus != 0) {
-    *error = output[@"stderr"];
+    *error = [NSString stringWithFormat:@"\nstdout:\n%@\nstderr:\n%@", output[@"stdout"], output[@"stderr"]];
     return nil;
   } else {
-    NSString *jsonOutput = output[@"stdout"];
+    NSData *data = [NSData dataWithContentsOfFile:outputPath];
+    NSString *jsonOutput = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 
     NSError *parseError = nil;
     NSArray *list = [NSJSONSerialization JSONObjectWithData:[jsonOutput dataUsingEncoding:NSUTF8StringEncoding]
@@ -82,9 +94,9 @@
     if (list) {
       return list;
     } else {
-      *error = [NSString stringWithFormat:@"Error while parsing JSON: %@: %@",
+      *error = [NSString stringWithFormat:@"Error while parsing JSON: %@: %@.\nstdout:\n%@\nstderr:\n%@",
                 [parseError localizedFailureReason],
-                output];
+                jsonOutput, output[@"stdout"], output[@"stderr"]];
       return nil;
     }
   }

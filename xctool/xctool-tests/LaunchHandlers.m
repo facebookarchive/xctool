@@ -189,25 +189,23 @@ BOOL IsOtestTask(NSTask *task)
 {
   return [^(FakeTask *task){
 
-    BOOL isOtestQuery = NO;
+    NSString *otestQueryOutputFilePath = nil;
 
     if ([[task launchPath] hasSuffix:@"usr/bin/simctl"]) {
       // iOS tests get queried through the 'simctl' launcher.
       for (NSString *arg in [task arguments]) {
         if ([arg hasSuffix:@"otest-query-ios"]) {
-          isOtestQuery = YES;
+          otestQueryOutputFilePath = task.environment[@"SIMCTL_CHILD_OTEST_QUERY_OUTPUT_FILE"];
           break;
         }
       }
     } else if ([[[task launchPath] lastPathComponent] hasPrefix:@"otest-query-"]) {
-      isOtestQuery = YES;
+      otestQueryOutputFilePath = task.environment[@"OTEST_QUERY_OUTPUT_FILE"];
     }
 
-    if (isOtestQuery) {
+    if (otestQueryOutputFilePath) {
       [task pretendExitStatusOf:0];
-      [task pretendTaskReturnsStandardOutput:
-       [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:testList options:0 error:nil]
-                              encoding:NSUTF8StringEncoding]];
+      [[NSJSONSerialization dataWithJSONObject:testList options:0 error:nil] writeToFile:otestQueryOutputFilePath atomically:YES];
       [[FakeTaskManager sharedManager] hideTaskFromLaunchedTasks:task];
     }
   } copy];
@@ -218,27 +216,25 @@ BOOL IsOtestTask(NSTask *task)
 {
   return [^(FakeTask *task){
 
-    BOOL isOtestQuery = NO;
+    NSString *otestQueryOutputFilePath = nil;
 
     if ([[task launchPath] hasSuffix:@"usr/bin/simctl"]) {
       // iOS tests get queried through the 'simctl' launcher.
       if ([task environment][@"SIMCTL_CHILD_OtestQueryBundlePath"]) {
         for (NSString *arg in [task arguments]) {
           if ([arg hasSuffix:testHost]) {
-            isOtestQuery = YES;
+            otestQueryOutputFilePath = task.environment[@"SIMCTL_CHILD_OTEST_QUERY_OUTPUT_FILE"];
             break;
           }
         }
       }
     } else if ([[task launchPath] isEqualToString:testHost]) {
-      isOtestQuery = YES;
+      otestQueryOutputFilePath = task.environment[@"OTEST_QUERY_OUTPUT_FILE"];
     }
 
-    if (isOtestQuery) {
+    if (otestQueryOutputFilePath) {
       [task pretendExitStatusOf:0];
-      [task pretendTaskReturnsStandardOutput:
-       [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:testList options:0 error:nil]
-                              encoding:NSUTF8StringEncoding]];
+      [[NSJSONSerialization dataWithJSONObject:testList options:0 error:nil] writeToFile:otestQueryOutputFilePath atomically:YES];
       [[FakeTaskManager sharedManager] hideTaskFromLaunchedTasks:task];
     }
   } copy];

@@ -52,6 +52,10 @@
 
 + (void)queryTestBundlePath:(NSString *)testBundlePath
 {
+  NSString *outputFile = [NSProcessInfo processInfo].environment[@"OTEST_QUERY_OUTPUT_FILE"];
+  NSAssert(outputFile, @"Output path wasn't set in the enviroment: %@", [NSProcessInfo processInfo].environment);
+  NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:outputFile];
+
   NSBundle *bundle = [NSBundle bundleWithPath:testBundlePath];
   if (!bundle) {
     fprintf(stderr, "Bundle '%s' does not identify an accessible bundle directory.\n",
@@ -129,7 +133,7 @@
   [testNames sortUsingSelector:@selector(compare:)];
 
   NSData *json = [NSJSONSerialization dataWithJSONObject:testNames options:0 error:nil];
-  [(NSFileHandle *)[NSFileHandle fileHandleWithStandardOutput] writeData:json];
+  [fileHandle writeData:json];
   _exit(kSuccess);
 }
 
