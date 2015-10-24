@@ -46,7 +46,10 @@ fi
   -workspace "$XCTOOL_DIR"/xctool.xcworkspace \
   -scheme xctool \
   -configuration Release \
-  test
+  test \
+  -parallelize \
+  -bucketBy class \
+  -logicTestBucketSize 1
 
 XCTOOL_VERSION=$("$RELEASE_OUTPUT_DIR"/bin/xctool -version)
 ZIP_PATH="$OUTPUT_DIR"/xctool-v$XCTOOL_VERSION.zip
