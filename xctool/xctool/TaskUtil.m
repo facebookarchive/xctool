@@ -129,6 +129,8 @@ void ReadOutputsAndFeedOuputLinesToBlockOnQueue(
     return processedSize;
   };
 
+  NSString *ioQueueName = [NSString stringWithFormat:@"com.facebook.xctool.%f.%d", [[NSDate date] timeIntervalSince1970], fildes[0]];
+  dispatch_queue_t ioQueue = dispatch_queue_create([ioQueueName UTF8String], DISPATCH_QUEUE_SERIAL);
   io_read_info *infos = calloc(sz, sizeof(io_read_info));
   dispatch_group_t ioGroup = dispatch_group_create();
   for (int i = 0; i < sz; i++) {
@@ -141,8 +143,11 @@ void ReadOutputsAndFeedOuputLinesToBlockOnQueue(
       }
     });
     dispatch_io_set_low_water(info->io, 1);
-    dispatch_io_read(info->io, 0, SIZE_MAX, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(bool done, dispatch_data_t data, int error) {
+    dispatch_io_read(info->io, 0, SIZE_MAX, ioQueue, ^(bool done, dispatch_data_t data, int error) {
       if (error == ECANCELED) {
+        return;
+      }
+      if (info->done) {
         return;
       }
       if (done) {
@@ -185,60 +190,74 @@ void ReadOutputsAndFeedOuputLinesToBlockOnQueue(
   dispatch_group_wait(ioGroup, timeout);
 
   for (int i = 0; i < sz; i++) {
-    io_read_info info = infos[i];
-
-    size_t dataSz = 0;
-    if (info.data != NULL) {
-      dataSz = dispatch_data_get_size(info.data);
-    }
-    if (dataSz > 0) {
-      const char *lastCharPtr;
-      dispatch_data_t data = dispatch_data_create_subrange(info.data, dataSz - 1, 1);
-      dispatch_data_t contig = dispatch_data_create_map(data, (const void **)&lastCharPtr, NULL);
-      if (*lastCharPtr == '\n') {
-        callOutputLineFeedBlock(info.fd, @"");
+    io_read_info *info = infos+i;
+    dispatch_sync(ioQueue, ^{
+      if (!info->done) {
+        dispatch_group_leave(ioGroup);
+        info->done = YES;
       }
-      dispatch_release(data);
-      dispatch_release(contig);
-    }
 
-    if (info.data != NULL) {
-      dispatch_release(info.data);
-    }
-    close(info.fd);
-    dispatch_io_close(info.io, DISPATCH_IO_STOP);
-    dispatch_release(info.io);
+      size_t dataSz = 0;
+      if (info->data != NULL) {
+        dataSz = dispatch_data_get_size(info->data);
+      }
+      if (dataSz > 0) {
+        const char *lastCharPtr;
+        dispatch_data_t data = dispatch_data_create_subrange(info->data, dataSz - 1, 1);
+        dispatch_data_t contig = dispatch_data_create_map(data, (const void **)&lastCharPtr, NULL);
+        if (*lastCharPtr == '\n') {
+          callOutputLineFeedBlock(info->fd, @"");
+        }
+        dispatch_release(data);
+        dispatch_release(contig);
+      }
+
+      if (info->data != NULL) {
+        dispatch_release(info->data);
+      }
+      close(info->fd);
+      dispatch_io_close(info->io, DISPATCH_IO_STOP);
+      dispatch_release(info->io);
+    });
   }
 
+  dispatch_release(ioGroup);
+  dispatch_release(ioQueue);
   free(infos);
 }
 
 NSDictionary *LaunchTaskAndCaptureOutput(NSTask *task, NSString *description)
 {
-  NSPipe *stdoutPipe = [NSPipe pipe];
-  NSFileHandle *stdoutHandle = [stdoutPipe fileHandleForReading];
+  int stdoutPipefd[2];
+  pipe(stdoutPipefd);
+  NSFileHandle *stdoutHandle = [[NSFileHandle alloc] initWithFileDescriptor:stdoutPipefd[1]];
+  int stdoutReadFd = stdoutPipefd[0];
 
-  NSPipe *stderrPipe = [NSPipe pipe];
-  NSFileHandle *stderrHandle = [stderrPipe fileHandleForReading];
+  int stderrPipefd[2];
+  pipe(stderrPipefd);
+  NSFileHandle *stderrHandle = [[NSFileHandle alloc] initWithFileDescriptor:stderrPipefd[1]];
+  int stderrReadFd = stderrPipefd[0];
 
-  [task setStandardOutput:stdoutPipe];
-  [task setStandardError:stderrPipe];
+  [task setStandardOutput:stdoutHandle];
+  [task setStandardError:stderrHandle];
 
-  int fildes[2] = {stdoutHandle.fileDescriptor, stderrHandle.fileDescriptor};
+  int fildes[2] = {stdoutReadFd, stderrReadFd};
 
   NSMutableArray *stdoutArray = [NSMutableArray new];
   NSMutableArray *stderrArray = [NSMutableArray new];
 
   ReadOutputsAndFeedOuputLinesToBlockOnQueue(fildes, 2, ^(int fd, NSString *line) {
-    if (fd == stdoutHandle.fileDescriptor) {
+    if (fd == stdoutReadFd) {
       [stdoutArray addObject:line];
-    } else if (fd == stderrHandle.fileDescriptor) {
+    } else if (fd == stderrReadFd) {
       [stderrArray addObject:line];
     }
   }, NULL, ^{
     LaunchTaskAndMaybeLogCommand(task, description);
     [task waitUntilExit];
-  }, NO);
+    [stdoutHandle closeFile];
+    [stderrHandle closeFile];
+  }, YES);
 
   NSString *stdoutOutput = [stdoutArray componentsJoinedByString:@"\n"];
   NSString *stderrOutput = [stderrArray componentsJoinedByString:@"\n"];
@@ -250,13 +269,15 @@ NSDictionary *LaunchTaskAndCaptureOutput(NSTask *task, NSString *description)
 
 NSString *LaunchTaskAndCaptureOutputInCombinedStream(NSTask *task, NSString *description)
 {
-  NSPipe *outputPipe = [NSPipe pipe];
-  NSFileHandle *outputHandle = [outputPipe fileHandleForReading];
+  int stdoutPipefd[2];
+  pipe(stdoutPipefd);
+  NSFileHandle *stdoutHandle = [[NSFileHandle alloc] initWithFileDescriptor:stdoutPipefd[1]];
+  int stdoutReadFd = stdoutPipefd[0];
 
-  [task setStandardOutput:outputPipe];
-  [task setStandardError:outputPipe];
+  [task setStandardOutput:stdoutHandle];
+  [task setStandardError:stdoutHandle];
 
-  int fildes[1] = {outputHandle.fileDescriptor};
+  int fildes[1] = {stdoutReadFd};
 
   NSMutableArray *lines = [NSMutableArray new];
 
@@ -265,24 +286,29 @@ NSString *LaunchTaskAndCaptureOutputInCombinedStream(NSTask *task, NSString *des
   }, NULL, ^{
     LaunchTaskAndMaybeLogCommand(task, description);
     [task waitUntilExit];
-  }, NO);
+    [stdoutHandle closeFile];
+  }, YES);
 
   return [lines componentsJoinedByString:@"\n"];
 }
 
 void LaunchTaskAndFeedOuputLinesToBlock(NSTask *task, NSString *description, FdOutputLineFeedBlock block)
 {
-  NSPipe *stdoutPipe = [NSPipe pipe];
-  int stdoutReadFD = [[stdoutPipe fileHandleForReading] fileDescriptor];
+  int stdoutPipefd[2];
+  pipe(stdoutPipefd);
+  NSFileHandle *stdoutHandle = [[NSFileHandle alloc] initWithFileDescriptor:stdoutPipefd[1]];
+  int stdoutReadFd = stdoutPipefd[0];
 
-  [task setStandardOutput:stdoutPipe];
+  [task setStandardError:[NSFileHandle fileHandleWithNullDevice]];
+  [task setStandardOutput:stdoutHandle];
 
-  int fildes[1] = {stdoutReadFD};
+  int fildes[1] = {stdoutReadFd};
 
   ReadOutputsAndFeedOuputLinesToBlockOnQueue(fildes, 1, block, NULL, ^{
     LaunchTaskAndMaybeLogCommand(task, description);
     [task waitUntilExit];
-  }, NO);
+    [stdoutHandle closeFile];
+  }, YES);
 }
 
 NSTask *CreateTaskInSameProcessGroupWithArch(cpu_type_t arch)
