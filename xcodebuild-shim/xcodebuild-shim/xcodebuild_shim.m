@@ -77,6 +77,9 @@ static void XTSwizzleSelectorForFunction(Class cls, SEL sel, IMP newImp)
 // The number of times "error:" appears in the output.
 @property (readonly) NSUInteger totalNumberOfErrors;
 
+// Subsection of the section.
+@property(readonly) NSArray *subsections;
+
 @end
 
 #define kDomainTypeBuildItem @"com.apple.dt.IDE.BuildLogSection"
@@ -206,25 +209,57 @@ static void AnnounceEndSection(IDEActivityLogSection *section)
   }
 }
 
-static void HandleBeginSection(IDEActivityLogSection *section)
+BOOL ShouldCloseSection(IDEActivityLogSection *section)
 {
-  [__begunLogSections addObject:section];
+  if (![__endedLogSections containsObject:section]) {
+    return NO;
+  }
+  for (IDEActivityLogSection *subsection in section.subsections) {
+    if (![__endedLogSections containsObject:subsection]) {
+      return NO;
+    }
+  }
+  return YES;
+}
 
-  if ([__endedLogSections containsObject:section]) {
-    // We've gotten the end message before the begin message.
-    AnnounceBeginSection(section);
-    AnnounceEndSection(section);
-  } else {
-    AnnounceBeginSection(section);
+void CleanSubsectionStatesForSection(IDEActivityLogSection *section)
+{
+  for (IDEActivityLogSection *subsection in section.subsections) {
+    [__begunLogSections removeObject:subsection];
+    [__endedLogSections removeObject:subsection];
   }
 }
 
-static void HandleEndSection(IDEActivityLogSection *section)
+static void HandleBeginSection(IDEActivityLogSection *section, IDEActivityLogSection *supersection)
+{
+  [__begunLogSections addObject:section];
+
+  AnnounceBeginSection(section);
+
+  if ([__endedLogSections containsObject:section]) {
+    // We've gotten the end message before the begin message.
+    if (ShouldCloseSection(section)) {
+      AnnounceEndSection(section);
+      if (ShouldCloseSection(supersection)) {
+        AnnounceEndSection(supersection);
+        CleanSubsectionStatesForSection(supersection);
+      }
+    }
+  }
+}
+
+static void HandleEndSection(IDEActivityLogSection *section, IDEActivityLogSection *supersection)
 {
   [__endedLogSections addObject:section];
 
   if ([__begunLogSections containsObject:section]) {
-    AnnounceEndSection(section);
+    if (ShouldCloseSection(section)) {
+      AnnounceEndSection(section);
+      if (ShouldCloseSection(supersection)) {
+        AnnounceEndSection(supersection);
+        CleanSubsectionStatesForSection(supersection);
+      }
+    }
   }
 }
 
@@ -236,7 +271,7 @@ static void IDECommandLineBuildLogRecorder__emitSection_inSupersection(id self,
   // Call through to the original implementation.
   objc_msgSend(self, sel_getUid("__IDECommandLineBuildLogRecorder__emitSection:inSupersection:"), section, supersection);
 
-  HandleBeginSection(section);
+  HandleBeginSection(section, supersection);
 }
 
 static void IDECommandLineBuildLogRecorder__cleanupClosedSection_inSupersection(id self,
@@ -247,7 +282,7 @@ static void IDECommandLineBuildLogRecorder__cleanupClosedSection_inSupersection(
   // Call through to the original implementation.
   objc_msgSend(self, sel_getUid("__IDECommandLineBuildLogRecorder__cleanupClosedSection:inSupersection:"), section, supersection);
 
-  HandleEndSection(section);
+  HandleEndSection(section, supersection);
 }
 
 /**
