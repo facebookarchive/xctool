@@ -190,8 +190,10 @@
 
       NSString *output = testResult[kReporter_EndTest_OutputKey];
       if (output && output.length > 0) {
+        // make sure we don't create an invalid junit.xml when stdout contains invalid UTF-8
+        NSData *outputData = [output dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
         [testcaseElement addChild:[NSXMLElement elementWithName:@"system-out"
-                                                    stringValue:output]];
+                                                    stringValue:[[NSString alloc] initWithData:outputData encoding:NSUTF8StringEncoding]]];
       }
 
       // Adding NSXMLElement testcase to NSXMLElement testsuite
