@@ -680,7 +680,8 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                                                         noResetSimulatorOnFailure:_noResetSimulatorOnFailure
                                                                      freshInstall:_freshInstall
                                                                       testTimeout:_testTimeout
-                                                                        reporters:reporters];
+                                                                        reporters:reporters
+                                                               processEnvironment:[[NSProcessInfo processInfo] environment]];
 
     PublishEventToReporters(reporters,
                             [[self class] eventForBeginOCUnitFromTestableExecutionInfo:testableExecutionInfo action:self]);

@@ -64,7 +64,8 @@
             noResetSimulatorOnFailure:(BOOL)noResetSimulatorOnFailure
                          freshInstall:(BOOL)freshInstall
                           testTimeout:(NSInteger)testTimeout
-                            reporters:(NSArray *)reporters;
+                            reporters:(NSArray *)reporters
+                   processEnvironment:(NSDictionary *)processEnvironment;
 
 - (BOOL)runTests;
 
