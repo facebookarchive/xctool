@@ -118,7 +118,8 @@ static NSTask *OtestShimTask(NSString *platformName,
                                                           noResetSimulatorOnFailure:NO
                                                                        freshInstall:NO
                                                                         testTimeout:1
-                                                                          reporters:@[]];
+                                                                          reporters:@[]
+                                                                 processEnvironment:@{}];
   NSTask *task = [runner otestTaskWithTestBundle: bundlePath];
 
   // Make sure launch path is accessible.

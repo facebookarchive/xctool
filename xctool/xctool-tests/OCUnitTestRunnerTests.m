@@ -40,7 +40,7 @@
 @property (nonatomic, copy) SimulatorInfo *simulatorInfo;
 @end
 
-static id TestRunnerWithTestLists(Class cls, NSDictionary *settings, NSArray *focusedTestCases, NSArray *allTestCases)
+static id TestRunnerWithTestListsAndProcessEnv(Class cls, NSDictionary *settings, NSArray *focusedTestCases, NSArray *allTestCases, NSDictionary *processEnvironment)
 {
   NSArray *arguments = @[@"-SomeArg", @"SomeVal"];
   NSDictionary *environment = @{@"SomeEnvKey" : @"SomeEnvValue"};
@@ -58,17 +58,24 @@ static id TestRunnerWithTestLists(Class cls, NSDictionary *settings, NSArray *fo
                   noResetSimulatorOnFailure:NO
                                freshInstall:NO
                                 testTimeout:30
-                                  reporters:@[eventBuffer]];
+                                  reporters:@[eventBuffer]
+                         processEnvironment:processEnvironment];
+}
+
+
+static id TestRunnerWithTestLists(Class cls, NSDictionary *settings, NSArray *focusedTestCases, NSArray *allTestCases)
+{
+  return TestRunnerWithTestListsAndProcessEnv(cls, settings, focusedTestCases, allTestCases, @{});
 }
 
 static id TestRunnerWithTestList(Class cls, NSDictionary *settings, NSArray *testList)
 {
-  return TestRunnerWithTestLists(cls, settings, testList, testList);
+  return TestRunnerWithTestListsAndProcessEnv(cls, settings, testList, testList, @{});
 }
 
 static id TestRunner(Class cls, NSDictionary *settings)
 {
-  return TestRunnerWithTestLists(cls, settings, @[], @[]);
+  return TestRunnerWithTestListsAndProcessEnv(cls, settings, @[], @[], @{});
 }
 
 static int NumberOfEntries(NSArray *array, NSObject *target)
@@ -189,6 +196,43 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
              equalTo(@"30"));
 }
 
+- (void)testXctoolTestEnvVarsFromProcessArePassedToIOSLogicTest
+{
+  NSDictionary *allSettings =
+  BuildSettingsFromOutput([NSString stringWithContentsOfFile:TEST_DATA @"iOS-Logic-Test-showBuildSettings.txt"
+                                                    encoding:NSUTF8StringEncoding
+                                                       error:nil]);
+  NSDictionary *testSettings = allSettings[@"TestProject-LibraryTests"];
+
+  NSArray *launchedTasks;
+
+  OCUnitTestRunner *runner = TestRunnerWithTestListsAndProcessEnv(
+    [OCUnitIOSLogicTestRunner class],
+    testSettings,
+    @[],
+    @[],
+    @{
+      @"XCTOOL_TEST_ENV_FOO": @"bar",
+      @"NO_PASS_THROUGH": @"baz",
+    });
+  runner.simulatorInfo.cpuType = CPU_TYPE_I386;
+  [self runTestsForRunner:runner
+           andReturnTasks:&launchedTasks];
+
+  assertThatInteger([launchedTasks count], equalToInteger(1));
+
+  assertThat([launchedTasks[0] environment][@"XCTOOL_TEST_ENV_FOO"],
+             nilValue());
+  assertThat([launchedTasks[0] environment][@"FOO"],
+             nilValue());
+  assertThat([launchedTasks[0] environment][@"SIMCTL_CHILD_FOO"],
+             equalTo(@"bar"));
+  assertThat([launchedTasks[0] environment][@"NO_PASS_THROUGH"],
+             nilValue());
+  assertThat([launchedTasks[0] environment][@"SIMCTL_CHILD_NO_PASS_THROUGH"],
+             nilValue());
+}
+
 #pragma mark OSX Tests
 
 - (void)runTestsForRunner:(OCUnitTestRunner *)runner
@@ -282,6 +326,36 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
              equalTo(@"SomeEnvValue"));
   assertThat([launchedTasks[0] environment][@"OTEST_SHIM_TEST_TIMEOUT"],
              equalTo(@"30"));
+}
+
+- (void)testXctoolTestEnvVarsFromProcessArePassedToOSXLogicTest
+{
+  NSDictionary *allSettings =
+  BuildSettingsFromOutput([NSString stringWithContentsOfFile:TEST_DATA @"OSX-Logic-Test-showBuildSettings.txt"
+                                                    encoding:NSUTF8StringEncoding
+                                                       error:nil]);
+  NSDictionary *testSettings = allSettings[@"TestProject-Library-OSXTests"];
+
+  NSArray *launchedTasks = nil;
+
+  OCUnitTestRunner *runner = TestRunnerWithTestListsAndProcessEnv(
+    [OCUnitOSXLogicTestRunner class],
+    testSettings,
+    @[],
+    @[],
+    @{
+      @"XCTOOL_TEST_ENV_FOO": @"bar",
+      @"OSX_PASS_THROUGH": @"baz",
+    });
+  [self runTestsForRunner:runner
+           andReturnTasks:&launchedTasks];
+
+  assertThatInteger([launchedTasks count], equalToInteger(1));
+
+  assertThat([launchedTasks[0] environment][@"FOO"],
+             equalTo(@"bar"));
+  assertThat([launchedTasks[0] environment][@"OSX_PASS_THROUGH"],
+             equalTo(@"baz"));
 }
 
 - (void)testOSXAppTestWorksWithNoProjectPath

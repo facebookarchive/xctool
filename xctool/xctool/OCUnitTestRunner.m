@@ -24,6 +24,8 @@
 #import "XCTestConfiguration.h"
 #import "XCToolUtil.h"
 
+static NSString * const kEnvVarPassThroughPrefix = @"XCTOOL_TEST_ENV_";
+
 @interface OCUnitTestRunner ()
 @property (nonatomic, copy) NSDictionary *buildSettings;
 @property (nonatomic, copy) SimulatorInfo *simulatorInfo;
@@ -38,6 +40,7 @@
 @property (nonatomic, assign) BOOL freshInstall;
 @property (nonatomic, copy, readwrite) NSArray *reporters;
 @property (nonatomic, copy) NSDictionary *framework;
+@property (nonatomic, copy) NSDictionary *processEnvironment;
 @end
 
 @implementation OCUnitTestRunner
@@ -140,6 +143,7 @@
                          freshInstall:(BOOL)freshInstall
                           testTimeout:(NSInteger)testTimeout
                             reporters:(NSArray *)reporters
+                   processEnvironment:(NSDictionary *)processEnvironment
 {
   if (self = [super init]) {
     _buildSettings = [buildSettings copy];
@@ -156,6 +160,7 @@
     _testTimeout = testTimeout;
     _reporters = [reporters copy];
     _framework = FrameworkInfoForTestBundleAtPath([_simulatorInfo productBundlePath]);
+    _processEnvironment = [processEnvironment copy];
   }
   return self;
 }
@@ -355,6 +360,25 @@
   };
 }
 
+- (NSDictionary *)_filteredProcessEnvironment
+{
+  NSMutableDictionary *filteredProcessEnv = [NSMutableDictionary dictionary];
+  BOOL isMacOSX = [[_simulatorInfo simulatedSdkName] hasPrefix:@"macosx"];
+  for (NSString *envVarName in _processEnvironment) {
+    NSString *value = [_processEnvironment objectForKey:envVarName];
+    if ([envVarName hasPrefix:kEnvVarPassThroughPrefix]) {
+      // Pass through any environment variables with a special prefix, after
+      // stripping the prefix from the name.
+      [filteredProcessEnv setObject:value
+                             forKey:[envVarName substringFromIndex:[kEnvVarPassThroughPrefix length]]];
+    } else if (isMacOSX) {
+      // OS X tests get the entire calling environment.
+      [filteredProcessEnv setObject:value forKey:envVarName];
+    }
+  }
+  return filteredProcessEnv;
+}
+
 - (NSMutableDictionary *)otestEnvironmentWithOverrides:(NSDictionary *)overrides
 {
   NSMutableDictionary *env = [NSMutableDictionary dictionary];
@@ -365,9 +389,7 @@
   }
 
   NSArray *layers = @[
-    // Xcode will let your regular environment pass-thru to
-    // the test.
-    [[_simulatorInfo simulatedSdkName] hasPrefix:@"macosx"] ? [[NSProcessInfo processInfo] environment] : @{},
+    [self _filteredProcessEnvironment],
     // Any special environment vars set in the scheme.
     _environment ?: @{},
     // Internal environment that should be passed to xctool libs
