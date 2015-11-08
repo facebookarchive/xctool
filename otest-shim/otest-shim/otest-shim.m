@@ -384,23 +384,13 @@ static void UpdateTestScope()
  */
 static void PrintNewlineAndCloseFDs()
 {
+  if (__stdout == NULL) {
+    return;
+  }
   fprintf(__stdout, "\n");
   fclose(__stdout);
+  __stdout = NULL;
 }
-
-static void __exit(int code)
-{
-  PrintNewlineAndCloseFDs();
-  exit(code);
-}
-DYLD_INTERPOSE(__exit, exit);
-
-static void __abort(void)
-{
-  PrintNewlineAndCloseFDs();
-  abort();
-}
-DYLD_INTERPOSE(__abort, abort);
 
 #pragma mark - Entry
 
@@ -480,6 +470,11 @@ static const char *DyldImageStateChangeHandler(enum dyld_image_states state,
   return NULL;
 }
 
+void handle_signal(int signal)
+{
+  PrintNewlineAndCloseFDs();
+}
+
 __attribute__((constructor)) static void EntryPoint()
 {
   const char *stdoutFileKey = "OTEST_SHIM_STDOUT_FILE";
@@ -500,6 +495,10 @@ __attribute__((constructor)) static void EntryPoint()
 
   UpdateTestScope();
 
+  struct sigaction sa_abort;
+  sa_abort.sa_handler = &handle_signal;
+  sigaction(SIGABRT, &sa_abort, NULL);
+
   // We need to swizzle SenTestLog (part of SenTestingKit), but the test bundle
   // which links SenTestingKit hasn't been loaded yet.  Let's register to get
   // notified when libraries are initialized and we'll watch for SenTestingKit.
@@ -513,5 +512,5 @@ __attribute__((constructor)) static void EntryPoint()
 
 __attribute__((destructor)) static void ExitPoint()
 {
-  fclose(__stdout);
+  PrintNewlineAndCloseFDs();
 }
