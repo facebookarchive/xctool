@@ -17,7 +17,9 @@
 #import "SimulatorWrapper.h"
 #import "SimulatorWrapperXcode6.h"
 
-#import "LineReader.h"
+#import <sys/stat.h>
+
+#import "EventGenerator.h"
 #import "ReportStatus.h"
 #import "SimDevice.h"
 #import "SimulatorInfo.h"
@@ -30,6 +32,7 @@ static const NSString * kOtestShimStderrFilePath __unused = @"OTEST_SHIM_STDERR_
 static const NSString * kOptionsArgumentsKey = @"arguments";
 static const NSString * kOptionsEnvironmentKey = @"environment";
 static const NSString * kOptionsStderrKey = @"stderr";
+static const NSString * kOptionsStdoutKey = @"stdout";
 static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
 
 @implementation SimulatorWrapper
@@ -52,14 +55,22 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
       feedOutputToBlock:(FdOutputLineFeedBlock)feedOutputToBlock
                   error:(NSError **)error
 {
-  NSString *outputPath = MakeTempFileWithPrefix(@"output");
-  NSFileHandle *outputHandle = [NSFileHandle fileHandleForReadingAtPath:outputPath];
+  int mkfifoResult;
 
-  LineReader *reader = [[LineReader alloc] initWithFileHandle:outputHandle];
-  reader.didReadLineBlock = feedOutputToBlock;
+  NSString *otestShimOutputPath = MakeTempFileWithPrefix(@"otestShimOutput");
+  [[NSFileManager defaultManager] removeItemAtPath:otestShimOutputPath error:nil];
+  mkfifoResult = mkfifo([otestShimOutputPath UTF8String], S_IWUSR | S_IRUSR | S_IRGRP);
+  NSCAssert(mkfifoResult == 0, @"Failed to create a fifo at path: %@", otestShimOutputPath);
+
+  // intercept stdout, stderr and post as simulator-output events
+  NSString *simStdoutPath = MakeTempFileInDirectoryWithPrefix(device.dataPath, @"tmp/stdout_err");
+  NSString *simStdoutRelativePath = [simStdoutPath substringFromIndex:device.dataPath.length];
+  [[NSFileManager defaultManager] removeItemAtPath:simStdoutPath error:nil];
+  mkfifoResult = mkfifo([simStdoutPath UTF8String], S_IWUSR | S_IRUSR | S_IRGRP);
+  NSCAssert(mkfifoResult == 0, @"Failed to create a fifo at path: %@", simStdoutPath);
 
   NSMutableDictionary *environmentEdited = [environment mutableCopy];
-  environmentEdited[kOtestShimStdoutFilePath] = outputPath;
+  environmentEdited[kOtestShimStdoutFilePath] = otestShimOutputPath;
 
   /*
    * Passing the same set of arguments and environment as Xcode 6.4.
@@ -68,15 +79,10 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
   NSDictionary *options = @{
     kOptionsArgumentsKey: arguments,
     kOptionsEnvironmentKey: environmentEdited,
-    // Don't let anything from STDERR get in our stream.  Normally, once
-    // otest-shim gets loaded, we don't have to worry about whatever is coming
-    // over STDERR since the shim will redirect all output (including STDERR) into
-    // JSON outout on STDOUT.
-    //
-    // But, even before otest-shim loads, there's a chance something else may spew
-    // into STDERR.  This happened in --
-    // https://github.com/facebook/xctool/issues/224#issuecomment-29288004
-    kOptionsStderrKey: @"/dev/null",
+    // stdout and stderr is forwarded to the same pipe
+    // that way xctool preserves an order of printed lines
+    kOptionsStdoutKey: simStdoutRelativePath,
+    kOptionsStderrKey: simStdoutRelativePath,
     kOptionsWaitForDebuggerKey: @"1",
   };
 
@@ -97,14 +103,34 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
   });
   dispatch_resume(source);
 
-  [reader startReading];
+  int otestShimOutputReadFD = open([otestShimOutputPath UTF8String], O_RDONLY);
+  int simStdoutReadFD = open([simStdoutPath UTF8String], O_RDONLY);
+  int fildes[2] = {simStdoutReadFD, otestShimOutputReadFD};
+  dispatch_queue_t feedQueue = dispatch_queue_create("com.facebook.simulator_wrapper.feed", DISPATCH_QUEUE_SERIAL);
+  ReadOutputsAndFeedOuputLinesToBlockOnQueue(fildes, 2, ^(int fd, NSString *line) {
+    if (fd != otestShimOutputReadFD) {
+      NSDictionary *event = EventDictionaryWithNameAndContent(
+        kReporter_Events_SimulatorOuput,
+        @{kReporter_SimulatorOutput_OutputKey: StripAnsi([line stringByAppendingString:@"\n"])}
+      );
+      NSData *data = [NSJSONSerialization dataWithJSONObject:event options:0 error:nil];
+      line = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    }
+    if (line) {
+      feedOutputToBlock(fd, line);
+    }
+  },
+  // all events should be processed serially on the same queue
+  feedQueue,
+  ^{
+    while (dispatch_source_testcancel(source) == 0) {
+      CFRunLoopRun();
+    }
+  },
+  // simulator app doesn't close pipes properly so xctool
+  // shouldn't wait for them to be closed after the app exits
+  NO);
 
-  while (dispatch_source_testcancel(source) == 0) {
-    CFRunLoopRun();
-  }
-
-  [reader stopReading];
-  [reader finishReadingToEndOfFile];
   return  YES;
 }
 

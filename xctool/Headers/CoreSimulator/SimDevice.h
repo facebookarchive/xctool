@@ -51,7 +51,7 @@ typedef NS_ENUM(long long, SimDeviceState) {
 
 // getters
 - (id)devicePath;
-- (id)dataPath;
+- (NSString *)dataPath;
 - (id)environment;
 - (id)memoryWarningFilePath;
 - (id)newDeviceNotification;

@@ -21,6 +21,8 @@
 typedef void (^FdOutputLineFeedBlock)(int fd, NSString *);
 typedef void (^BlockToRunWhileReading)(void);
 
+NSString *StripAnsi(NSString *inputString);
+
 /**
  *  Returns array of NSString's with contents read from fildes.
  *

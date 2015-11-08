@@ -16,7 +16,6 @@
 
 #import "OCUnitOSXAppTestRunner.h"
 
-#import "LineReader.h"
 #import "ReportStatus.h"
 #import "TaskUtil.h"
 #import "TestingFramework.h"

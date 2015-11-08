@@ -34,6 +34,7 @@ NSString *XcodeDeveloperDirPath(void);
  */
 NSString *XcodeDeveloperDirPathViaForcedConcreteTask(BOOL forceConcreteTask);
 
+NSString *MakeTempFileInDirectoryWithPrefix(NSString *directory, NSString *prefix);
 NSString *MakeTempFileWithPrefix(NSString *prefix);
 
 /**

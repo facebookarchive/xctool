@@ -186,9 +186,9 @@ NSString *XcodeDeveloperDirPathViaForcedConcreteTask(BOOL forceConcreteTask)
   }
 }
 
-NSString *MakeTempFileWithPrefix(NSString *prefix)
+NSString *MakeTempFileInDirectoryWithPrefix(NSString *directory, NSString *prefix)
 {
-  const char *template = [[TemporaryDirectoryForAction() stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.XXXXXXX", prefix]] UTF8String];
+  const char *template = [[directory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.XXXXXXX", prefix]] UTF8String];
 
   char tempPath[PATH_MAX] = {0};
   strcpy(tempPath, template);
@@ -197,7 +197,12 @@ NSString *MakeTempFileWithPrefix(NSString *prefix)
   NSCAssert(handle != -1, @"Failed to make temporary file name for template %s, error: %d", template, handle);
   close(handle);
 
-  return [NSString stringWithFormat:@"%s", tempPath];
+  return @(tempPath);
+}
+
+NSString *MakeTempFileWithPrefix(NSString *prefix)
+{
+  return MakeTempFileInDirectoryWithPrefix(TemporaryDirectoryForAction(), prefix);
 }
 
 /**
