@@ -33,9 +33,15 @@
   return environment;
 }
 
-- (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath
+- (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath otestShimOutputPath:(NSString **)otestShimOutputPath
 {
   NSTask *task = CreateTaskInSameProcessGroup();
+
+  // For OSX test bundles only, Xcode will chdir to the project's directory.
+  NSString *projectDir = _buildSettings[Xcode_PROJECT_DIR];
+  if (projectDir) {
+    [task setCurrentDirectoryPath:projectDir];
+  }
 
   NSMutableArray *args = [@[] mutableCopy];
   NSMutableDictionary *env = [self environmentOverrides];
@@ -53,6 +59,13 @@
   [task setArguments:args];
 
   env[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-osx.dylib"];
+
+  // specify a path where to write otest-shim events
+  NSString *outputPath = MakeTempFileWithPrefix(@"output");
+  [[NSFileManager defaultManager] removeItemAtPath:outputPath error:nil];
+  env[@"OTEST_SHIM_STDOUT_FILE"] = outputPath;
+  *otestShimOutputPath = outputPath;
+
   [task setEnvironment:[self otestEnvironmentWithOverrides:env]];
   return task;
 }
@@ -73,16 +86,13 @@
 
   if (bundleExists) {
     @autoreleasepool {
-      NSTask *task = [self otestTaskWithTestBundle:testBundlePath];
-      // For OSX test bundles only, Xcode will chdir to the project's directory.
-      NSString *projectDir = _buildSettings[Xcode_PROJECT_DIR];
-      if (projectDir) {
-        [task setCurrentDirectoryPath:projectDir];
-      }
-
-      LaunchTaskAndFeedOuputLinesToBlock(task,
-                                         @"running otest/xctest on test bundle",
-                                         outputLineBlock);
+      NSString *otestShimOutputPath = nil;
+      NSTask *task = [self otestTaskWithTestBundle:testBundlePath otestShimOutputPath:&otestShimOutputPath];
+      LaunchTaskAndFeedSimulatorOutputAndOtestShimEventsToBlock(
+        task,
+        @"running otest/xctest on test bundle",
+        otestShimOutputPath,
+        outputLineBlock);
     }
   } else {
     *startupError = [NSString stringWithFormat:@"Test bundle not found at: %@", testBundlePath];
