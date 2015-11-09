@@ -57,6 +57,11 @@
     args = [self testArgumentsWithSpecifiedTestsToRun];
   }
 
+  // specify a path where to write otest-shim events
+  NSString *outputPath = MakeTempFileWithPrefix(@"output");
+  [[NSFileManager defaultManager] removeItemAtPath:outputPath error:nil];
+  environment[@"OTEST_SHIM_STDOUT_FILE"] = outputPath;
+
   NSTask *task = CreateTaskInSameProcessGroup();
   [task setLaunchPath:[_simulatorInfo testHostPath]];
   [task setArguments:args];
@@ -67,9 +72,12 @@
     [task setCurrentDirectoryPath:projectDir];
   }
 
-  LaunchTaskAndFeedOuputLinesToBlock(task,
-                                     @"running otest/xctest on test bundle",
-                                     outputLineBlock);
+  NSString *otestShimOutputPath = outputPath;
+  LaunchTaskAndFeedSimulatorOutputAndOtestShimEventsToBlock(
+    task,
+    @"running otest/xctest on test bundle",
+    otestShimOutputPath,
+    outputLineBlock);
 }
 
 @end
