@@ -52,6 +52,8 @@
 		3892D7541815A13400E68652 /* EventGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D74F1815A13400E68652 /* EventGenerator.m */; };
 		3892D7551815A13400E68652 /* EventGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D74F1815A13400E68652 /* EventGenerator.m */; };
 		3892D7561815A13400E68652 /* EventGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3892D74F1815A13400E68652 /* EventGenerator.m */; };
+		B9A01C221BF101CC004D0C1A /* NSCharacterSet+XML.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A01C211BF101CC004D0C1A /* NSCharacterSet+XML.m */; };
+		B9DE31BE1BF227E400368FA9 /* NSCharacterSet+XML.m in Sources */ = {isa = PBXBuildFile; fileRef = B9A01C211BF101CC004D0C1A /* NSCharacterSet+XML.m */; };
 		CC8AA20618F368EE00D9F322 /* user-notifications-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CC8AA20518F368EE00D9F322 /* user-notifications-Info.plist */; };
 		CCC0AAF418EC8A92004FD861 /* UserNotificationsReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC0AAF318EC8A92004FD861 /* UserNotificationsReporter.m */; };
 		CCC0AAF818EC8AC4004FD861 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE61734617E284DD00F02C91 /* Reporter.m */; };
@@ -210,6 +212,8 @@
 		28F48A56179750A600068E00 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		3892D74E1815A13400E68652 /* EventGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventGenerator.h; path = ../Common/EventGenerator.h; sourceTree = "<group>"; };
 		3892D74F1815A13400E68652 /* EventGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EventGenerator.m; path = ../Common/EventGenerator.m; sourceTree = "<group>"; };
+		B9A01C201BF101CC004D0C1A /* NSCharacterSet+XML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSCharacterSet+XML.h"; path = "../Common/NSCharacterSet+XML.h"; sourceTree = "<group>"; };
+		B9A01C211BF101CC004D0C1A /* NSCharacterSet+XML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSCharacterSet+XML.m"; path = "../Common/NSCharacterSet+XML.m"; sourceTree = "<group>"; };
 		CC43C4711B79725500AEDFB5 /* reporters-tests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "reporters-tests.xcconfig"; sourceTree = "<group>"; };
 		CC8AA20518F368EE00D9F322 /* user-notifications-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "user-notifications-Info.plist"; path = "user-notifications/user-notifications-Info.plist"; sourceTree = "<group>"; };
 		CCC0AAED18EC8A1F004FD861 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = "user-notifications/main.m"; sourceTree = "<group>"; };
@@ -395,6 +399,8 @@
 				28F489F717973B7100068E00 /* FakeFileHandle.m */,
 				28F489F417973B7100068E00 /* NSFileHandle+Print.h */,
 				28F489F517973B7100068E00 /* NSFileHandle+Print.m */,
+				B9A01C201BF101CC004D0C1A /* NSCharacterSet+XML.h */,
+				B9A01C211BF101CC004D0C1A /* NSCharacterSet+XML.m */,
 				EE61734517E2785F00F02C91 /* Reporter.h */,
 				EE61734617E284DD00F02C91 /* Reporter.m */,
 				28F489CE179725BB00068E00 /* ReporterEvents.h */,
@@ -701,6 +707,7 @@
 				28F48A0017973CF600068E00 /* Reporter+Testing.m in Sources */,
 				28F48A17179743C600068E00 /* PhabricatorReporter.m in Sources */,
 				FD3D4AD01959C0D10099B717 /* TeamCityStatusMessageGenerator.m in Sources */,
+				B9DE31BE1BF227E400368FA9 /* NSCharacterSet+XML.m in Sources */,
 				28F48A1C1797462400068E00 /* PhabricatorReporterTests.m in Sources */,
 				28F48A3217974E3900068E00 /* JUnitReporter.m in Sources */,
 				FD023B2E1959ADFC00947C28 /* TeamCityReporter.m in Sources */,
@@ -756,6 +763,7 @@
 				EE61734B17E284DD00F02C91 /* Reporter.m in Sources */,
 				28F48A2E17974D5400068E00 /* NSFileHandle+Print.m in Sources */,
 				28F48A2617974D4100068E00 /* main.m in Sources */,
+				B9A01C221BF101CC004D0C1A /* NSCharacterSet+XML.m in Sources */,
 				3892D7541815A13400E68652 /* EventGenerator.m in Sources */,
 				28F48A3317974E3900068E00 /* JUnitReporter.m in Sources */,
 			);
