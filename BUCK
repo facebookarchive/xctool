@@ -21,12 +21,14 @@ COMMON_OTEST_HEADERS = [
 COMMON_REPORTERS_SRCS = [
     'Common/EventGenerator.m',
     'Common/NSFileHandle+Print.m',
+    'Common/NSCharacterSet+XML.m',
     'Common/Reporter.m',
 ]
 
 COMMON_REPORTERS_HEADERS = [
     'Common/EventGenerator.h',
     'Common/NSFileHandle+Print.h',
+    'Common/NSCharacterSet+XML.h',
     'Common/Reporter.h',
     'Common/ReporterEvents.h',
 ]

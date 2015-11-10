@@ -17,6 +17,7 @@
 #import "JUnitReporter.h"
 
 #import "ReporterEvents.h"
+#import "NSCharacterSet+XML.h"
 
 #pragma mark Constants
 #define kJUnitReporter_Suite_Event @"event"
@@ -190,10 +191,11 @@
 
       NSString *output = testResult[kReporter_EndTest_OutputKey];
       if (output && output.length > 0) {
-        // make sure we don't create an invalid junit.xml when stdout contains invalid UTF-8
-        NSData *outputData = [output dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+        // Ensure XML is within allowed character ranges
+        NSString *sanitizedOutput = [[output componentsSeparatedByCharactersInSet:[[NSCharacterSet fb_xmlCharacterSet] invertedSet]]
+                                                            componentsJoinedByString:@""];
         [testcaseElement addChild:[NSXMLElement elementWithName:@"system-out"
-                                                    stringValue:[[NSString alloc] initWithData:outputData encoding:NSUTF8StringEncoding]]];
+                                                    stringValue:sanitizedOutput]];
       }
 
       // Adding NSXMLElement testcase to NSXMLElement testsuite
