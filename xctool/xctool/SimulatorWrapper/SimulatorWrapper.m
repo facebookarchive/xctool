@@ -94,12 +94,13 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
     return NO;
   }
 
-  dispatch_source_t source = dispatch_source_create(DISPATCH_SOURCE_TYPE_PROC, appPID, DISPATCH_PROC_EXIT, dispatch_get_main_queue());
+  dispatch_semaphore_t appSemaphore = dispatch_semaphore_create(0);
+  dispatch_source_t source = dispatch_source_create(DISPATCH_SOURCE_TYPE_PROC, appPID, DISPATCH_PROC_EXIT, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0));
   dispatch_source_set_event_handler(source, ^{
     dispatch_source_cancel(source);
   });
   dispatch_source_set_cancel_handler(source, ^{
-    CFRunLoopStop(CFRunLoopGetCurrent());
+    dispatch_semaphore_signal(appSemaphore);
   });
   dispatch_resume(source);
 
@@ -123,9 +124,7 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
   // all events should be processed serially on the same queue
   feedQueue,
   ^{
-    while (dispatch_source_testcancel(source) == 0) {
-      CFRunLoopRun();
-    }
+    dispatch_semaphore_wait(appSemaphore, DISPATCH_TIME_FOREVER);
   },
   // simulator app doesn't close pipes properly so xctool
   // shouldn't wait for them to be closed after the app exits
