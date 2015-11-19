@@ -17,4 +17,12 @@
 
 #import "ReporterEvents.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 NSDictionary *EventDictionaryWithNameAndContent(NSString *name, NSDictionary *content);
+
+#ifdef __cplusplus
+}
+#endif

@@ -16,6 +16,10 @@
 
 #import <Foundation/Foundation.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 NSDictionary *BuildSettingsFromOutput(NSString *output);
 NSString *XCToolLibPath(void);
 NSString *XCToolLibExecPath(void);
@@ -252,3 +256,9 @@ NSString *TestHostPathForBuildSettings(NSDictionary *buildSettings);
  * Returns product bundle path specified in build settings.
  */
 NSString *ProductBundlePathForBuildSettings(NSDictionary *buildSettings);
+
+
+#ifdef __cplusplus
+}
+#endif
+

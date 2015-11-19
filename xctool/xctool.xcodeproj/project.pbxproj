@@ -140,8 +140,8 @@
 		CCEB0F29195F2D9E00878E25 /* SimulatorWrapperXcode6.m in Sources */ = {isa = PBXBuildFile; fileRef = CCC55AD1195BCD7D0051A50B /* SimulatorWrapperXcode6.m */; };
 		CCF6EE49195BA918005BA335 /* SimulatorInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = CCF6EE48195BA918005BA335 /* SimulatorInfo.m */; };
 		CCF980331B38D1C900E4E0B0 /* XCTestConfigurationUnarchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = CCF980321B38D1C900E4E0B0 /* XCTestConfigurationUnarchiver.m */; };
-		CD098A2A175EBD20002E0CAC /* AnalyzeAction.m in Sources */ = {isa = PBXBuildFile; fileRef = CD098A29175EBD20002E0CAC /* AnalyzeAction.m */; };
-		CD098A2B175EBD20002E0CAC /* AnalyzeAction.m in Sources */ = {isa = PBXBuildFile; fileRef = CD098A29175EBD20002E0CAC /* AnalyzeAction.m */; };
+		CD098A2A175EBD20002E0CAC /* AnalyzeAction.mm in Sources */ = {isa = PBXBuildFile; fileRef = CD098A29175EBD20002E0CAC /* AnalyzeAction.mm */; };
+		CD098A2B175EBD20002E0CAC /* AnalyzeAction.mm in Sources */ = {isa = PBXBuildFile; fileRef = CD098A29175EBD20002E0CAC /* AnalyzeAction.mm */; };
 		CD0CFBD81992E32C0028F69B /* TaskUtilTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CD0CFBD71992E32C0028F69B /* TaskUtilTests.m */; };
 		CD522EC217471D6300048AF9 /* SchemeGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = CD522EC117471D6300048AF9 /* SchemeGenerator.m */; };
 		CD56770F1766782C003B727C /* BuildStateParser.mm in Sources */ = {isa = PBXBuildFile; fileRef = CD56770E1766782C003B727C /* BuildStateParser.mm */; };
@@ -149,6 +149,8 @@
 		CDD81F2F174ABA2700F42111 /* SchemeGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = CD522EC117471D6300048AF9 /* SchemeGenerator.m */; };
 		CDD81F51174EAFDC00F42111 /* EventBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = CDD81F50174EAFDC00F42111 /* EventBuffer.m */; };
 		CDD81F52174EAFDC00F42111 /* EventBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = CDD81F50174EAFDC00F42111 /* EventBuffer.m */; };
+		CDE875171BFD808D0028F69B /* DgphFile.mm in Sources */ = {isa = PBXBuildFile; fileRef = CDE875151BFD808D0028F69B /* DgphFile.mm */; };
+		CDE875181BFE81660028F69B /* DgphFile.mm in Sources */ = {isa = PBXBuildFile; fileRef = CDE875151BFD808D0028F69B /* DgphFile.mm */; };
 		CDEE9EA1176950DC0026D278 /* BuildStateParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CDEE9EA0176950DC0026D278 /* BuildStateParserTests.m */; };
 		EE30659B17DEBE6600733D72 /* FakeFileHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F489F217973B6100068E00 /* FakeFileHandle.m */; };
 		EE37291217E2886200554867 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE37291017E2886200554867 /* Reporter.m */; };
@@ -356,7 +358,7 @@
 		CCF980311B38D1C900E4E0B0 /* XCTestConfigurationUnarchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCTestConfigurationUnarchiver.h; sourceTree = "<group>"; };
 		CCF980321B38D1C900E4E0B0 /* XCTestConfigurationUnarchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XCTestConfigurationUnarchiver.m; sourceTree = "<group>"; };
 		CD098A28175EBD20002E0CAC /* AnalyzeAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnalyzeAction.h; sourceTree = "<group>"; };
-		CD098A29175EBD20002E0CAC /* AnalyzeAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnalyzeAction.m; sourceTree = "<group>"; };
+		CD098A29175EBD20002E0CAC /* AnalyzeAction.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AnalyzeAction.mm; sourceTree = "<group>"; };
 		CD0CFBD71992E32C0028F69B /* TaskUtilTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskUtilTests.m; sourceTree = "<group>"; };
 		CD522EC017471D6300048AF9 /* SchemeGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SchemeGenerator.h; sourceTree = "<group>"; };
 		CD522EC117471D6300048AF9 /* SchemeGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SchemeGenerator.m; sourceTree = "<group>"; };
@@ -364,6 +366,8 @@
 		CD56770E1766782C003B727C /* BuildStateParser.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BuildStateParser.mm; sourceTree = "<group>"; };
 		CDD81F4F174EAFDC00F42111 /* EventBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventBuffer.h; sourceTree = "<group>"; };
 		CDD81F50174EAFDC00F42111 /* EventBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventBuffer.m; sourceTree = "<group>"; };
+		CDE875151BFD808D0028F69B /* DgphFile.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DgphFile.mm; sourceTree = "<group>"; };
+		CDE875161BFD808D0028F69B /* DgphFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DgphFile.h; sourceTree = "<group>"; };
 		CDEE9EA0176950DC0026D278 /* BuildStateParserTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuildStateParserTests.m; sourceTree = "<group>"; };
 		EE30658D17DEA92F00733D72 /* TestRunState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestRunState.h; sourceTree = "<group>"; };
 		EE30658E17DEA92F00733D72 /* TestRunState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestRunState.m; sourceTree = "<group>"; };
@@ -414,7 +418,7 @@
 				28046D2A16D7603B000AA15C /* Action.h */,
 				28046D2B16D7603B000AA15C /* Action.m */,
 				CD098A28175EBD20002E0CAC /* AnalyzeAction.h */,
-				CD098A29175EBD20002E0CAC /* AnalyzeAction.m */,
+				CD098A29175EBD20002E0CAC /* AnalyzeAction.mm */,
 				C9D5B9871733CC2100011C1F /* ArchiveAction.h */,
 				C9D5B9881733CC2100011C1F /* ArchiveAction.m */,
 				2834799216E199A2003C3B77 /* BuildAction.h */,
@@ -489,6 +493,8 @@
 				28BB043C17C7FF43004F6C13 /* Buildable.m */,
 				CD56770D1766782C003B727C /* BuildStateParser.h */,
 				CD56770E1766782C003B727C /* BuildStateParser.mm */,
+				CDE875161BFD808D0028F69B /* DgphFile.h */,
+				CDE875151BFD808D0028F69B /* DgphFile.mm */,
 				CDD81F4F174EAFDC00F42111 /* EventBuffer.h */,
 				CDD81F50174EAFDC00F42111 /* EventBuffer.m */,
 				283CCA4816C2EA3800F2E343 /* main.m */,
@@ -849,6 +855,7 @@
 			files = (
 				2878E7DD184EA4BC00FF4354 /* XcodeRequiredVersion.m in Sources */,
 				EE37291517E289A900554867 /* Reporter.m in Sources */,
+				CDE875171BFD808D0028F69B /* DgphFile.mm in Sources */,
 				EE37291417E2898200554867 /* TestRunState.m in Sources */,
 				EE37291317E288AD00554867 /* main.m in Sources */,
 				EE30659B17DEBE6600733D72 /* FakeFileHandle.m in Sources */,
@@ -884,7 +891,7 @@
 				CD522EC217471D6300048AF9 /* SchemeGenerator.m in Sources */,
 				CDD81F51174EAFDC00F42111 /* EventBuffer.m in Sources */,
 				28B714551760767D00BB016A /* OCUnitIOSDeviceTestRunner.m in Sources */,
-				CD098A2A175EBD20002E0CAC /* AnalyzeAction.m in Sources */,
+				CD098A2A175EBD20002E0CAC /* AnalyzeAction.mm in Sources */,
 				CD56770F1766782C003B727C /* BuildStateParser.mm in Sources */,
 				CCC55AD2195BCD7D0051A50B /* SimulatorWrapperXcode6.m in Sources */,
 				28E28FB81796926A0072376C /* ReportStatus.m in Sources */,
@@ -908,6 +915,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CDE875181BFE81660028F69B /* DgphFile.mm in Sources */,
 				CC76864D1BBEE93D00287D10 /* SimulatorTaskUtils.m in Sources */,
 				CC07439B1BB9F18D0075E407 /* TaskUtil.m in Sources */,
 				CC07439C1BB9F18D0075E407 /* XCToolUtil.m in Sources */,
@@ -979,7 +987,7 @@
 				28302E1E175A8B6900C997B2 /* ArchiveActionTests.m in Sources */,
 				4DC2180A1B238AD3000C9AA6 /* ActionScripts.m in Sources */,
 				AA318BF017E9BA3500BF159E /* TestingFramework.m in Sources */,
-				CD098A2B175EBD20002E0CAC /* AnalyzeAction.m in Sources */,
+				CD098A2B175EBD20002E0CAC /* AnalyzeAction.mm in Sources */,
 				CD5677101766782C003B727C /* BuildStateParser.mm in Sources */,
 				28BB043E17C7FF43004F6C13 /* Buildable.m in Sources */,
 				CDEE9EA1176950DC0026D278 /* BuildStateParserTests.m in Sources */,
