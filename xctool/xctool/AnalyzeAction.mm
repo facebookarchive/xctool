@@ -25,6 +25,9 @@
 #import "XCToolUtil.h"
 #import "XcodeSubjectInfo.h"
 
+#include <regex>
+
+
 @interface BuildTargetsCollector : NSObject <EventSink>
 /// Array of @{@"projectName": projectName, @"targetName": targetName}
 @property (nonatomic, strong) NSMutableSet *seenTargets;
@@ -133,21 +136,17 @@
   return result;
 }
 
-+ (void)emitAnalyzerWarningsForProject:(NSString *)projectName
-                                target:(NSString *)targetName
-                               options:(Options *)options
-                      xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
-                           toReporters:(NSArray *)reporters
-                         foundWarnings:(BOOL *)foundWarnings
++ (NSSet *)findAnalyzerPlistPathsForProject:(NSString *)projectName
+                                     target:(NSString *)targetName
+                                    options:(Options *)options
+                           xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
-  static NSRegularExpression *analyzerPlistPathRegex = nil;
-  if (!analyzerPlistPathRegex) {
-    analyzerPlistPathRegex =
+
+  static NSRegularExpression *analyzerPlistPathRegex =
     [NSRegularExpression regularExpressionWithPattern:@"^.*/StaticAnalyzer/.*\\.plist$"
                                               options:0
                                                 error:0];
-  }
-
+  
   NSString *path = [[self class] intermediatesDirForProject:projectName
                                                      target:targetName
                                               configuration:[options effectiveConfigurationForSchemeAction:@"AnalyzeAction"
@@ -155,7 +154,7 @@
                                                    platform:xcodeSubjectInfo.effectivePlatformName
                                                     objroot:xcodeSubjectInfo.objRoot];
   NSString *buildStatePath = [path stringByAppendingPathComponent:@"build-state.dat"];
-  NSMutableArray *plistPaths = [NSMutableArray array];
+  NSMutableSet *plistPaths = [NSMutableSet new];
   BOOL buildPathExists = [[NSFileManager defaultManager] fileExistsAtPath:buildStatePath];
 
   if (buildPathExists) {
@@ -172,7 +171,10 @@
 
       [plistPaths addObject:path];
     }
-  } else if(path && projectName && targetName) {
+    return plistPaths;
+  }
+  
+  if (path && projectName && targetName) {
     NSString *analyzerFilesPath = [NSString pathWithComponents:@[
                                                                  path,
                                                                  @"StaticAnalyzer",
@@ -185,22 +187,30 @@
     NSArray *pathContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:analyzerFilesPath error:nil];
 
     for (NSString *path in pathContents) {
-      if([[path pathExtension] isEqualToString:@"plist"]) {
+      if ([[path pathExtension] isEqualToString:@"plist"]) {
         NSString *plistPath = [NSString pathWithComponents:@[analyzerFilesPath, path]];
         [plistPaths addObject:plistPath];
       }
     }
-  } else {
-    NSLog(@"No build-state.dat for project/target: %@/%@, skipping...\n"
-          "  it may be overriding CONFIGURATION_TEMP_DIR and emitting intermediate \n"
-          "  files in a non-standard location", projectName, targetName);
-    return;
+    return plistPaths;
   }
+  
+  NSLog(@"No build-state.dat for project/target: %@/%@, skipping...\n"
+        "  it may be overriding CONFIGURATION_TEMP_DIR and emitting intermediate \n"
+        "  files in a non-standard location", projectName, targetName);
+  return plistPaths;
+}
+
++ (void)emitAnalyzerWarningsForProject:(NSString *)projectName
+                                target:(NSString *)targetName
+                            plistPaths:(NSSet *)plistPaths
+                           toReporters:(NSArray *)reporters
+                         foundWarnings:(BOOL *)foundWarnings
+{
 
   BOOL haveFoundWarnings = NO;
 
   for (NSString *path in plistPaths) {
-
     NSDictionary *diags = [NSDictionary dictionaryWithContentsOfFile:path];
     for (NSDictionary *diag in diags[@"diagnostics"]) {
       haveFoundWarnings = YES;
@@ -310,10 +320,13 @@
     }
 
     BOOL foundWarningsInBuildable = NO;
+    NSSet *plistPaths = [self.class findAnalyzerPlistPathsForProject:buildable[@"projectName"]
+                                                              target:buildable[@"targetName"]
+                                                             options:options
+                                                    xcodeSubjectInfo:xcodeSubjectInfo];
     [self.class emitAnalyzerWarningsForProject:buildable[@"projectName"]
                                         target:buildable[@"targetName"]
-                                       options:options
-                              xcodeSubjectInfo:xcodeSubjectInfo
+                                    plistPaths:plistPaths
                                    toReporters:options.reporters
                                  foundWarnings:&foundWarningsInBuildable];
     haveFoundWarnings |= foundWarningsInBuildable;
