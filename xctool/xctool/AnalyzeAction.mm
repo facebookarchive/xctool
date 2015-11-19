@@ -18,6 +18,7 @@
 
 #import "BuildStateParser.h"
 #import "Buildable.h"
+#import "DgphFile.h"
 #import "EventGenerator.h"
 #import "EventSink.h"
 #import "Options.h"
@@ -146,7 +147,10 @@
     [NSRegularExpression regularExpressionWithPattern:@"^.*/StaticAnalyzer/.*\\.plist$"
                                               options:0
                                                 error:0];
-  
+
+  // Used for dgph path.
+  static const std::regex plistPathRegex("^.*/StaticAnalyzer/.*\\.plist");
+
   NSString *path = [[self class] intermediatesDirForProject:projectName
                                                      target:targetName
                                               configuration:[options effectiveConfigurationForSchemeAction:@"AnalyzeAction"
@@ -174,6 +178,22 @@
     return plistPaths;
   }
   
+  NSString *dgphPath = [path stringByAppendingPathComponent:@"dgph"];
+  if ([[NSFileManager defaultManager] fileExistsAtPath:dgphPath]) {
+    DgphFile dgph = DgphFile::loadFromFile(dgphPath.UTF8String);
+    if (dgph.isValid()) {
+      for (auto &invocation : dgph.getInvocations()) {
+        for (auto &arg : invocation) {
+          if (std::regex_match(arg, plistPathRegex)) {
+            [plistPaths addObject:[NSString stringWithUTF8String:arg.c_str()]];
+          }
+        }
+      }
+    } else {
+      NSLog(@"Failed to load dgph file to discover analyzer outputs, analyzer output may be incomplete.");
+    }
+  }
+  
   if (path && projectName && targetName) {
     NSString *analyzerFilesPath = [NSString pathWithComponents:@[
                                                                  path,
@@ -194,7 +214,7 @@
     }
     return plistPaths;
   }
-  
+
   NSLog(@"No build-state.dat for project/target: %@/%@, skipping...\n"
         "  it may be overriding CONFIGURATION_TEMP_DIR and emitting intermediate \n"
         "  files in a non-standard location", projectName, targetName);
@@ -210,12 +230,19 @@
 
   BOOL haveFoundWarnings = NO;
 
+  NSFileManager *fileManager = [NSFileManager defaultManager];
   for (NSString *path in plistPaths) {
     NSDictionary *diags = [NSDictionary dictionaryWithContentsOfFile:path];
+    if (!diags) {
+      continue;
+    }
     for (NSDictionary *diag in diags[@"diagnostics"]) {
       haveFoundWarnings = YES;
       NSString *file = diags[@"files"][[diag[@"location"][@"file"] intValue]];
       file = file.stringByStandardizingPath;
+      if (![fileManager fileExistsAtPath:file]) {
+        continue;
+      }
       NSNumber *line = diag[@"location"][@"line"];
       NSNumber *col = diag[@"location"][@"col"];
       NSString *desc = diag[@"description"];

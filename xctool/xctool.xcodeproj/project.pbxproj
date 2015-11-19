@@ -149,6 +149,8 @@
 		CDD81F2F174ABA2700F42111 /* SchemeGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = CD522EC117471D6300048AF9 /* SchemeGenerator.m */; };
 		CDD81F51174EAFDC00F42111 /* EventBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = CDD81F50174EAFDC00F42111 /* EventBuffer.m */; };
 		CDD81F52174EAFDC00F42111 /* EventBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = CDD81F50174EAFDC00F42111 /* EventBuffer.m */; };
+		CDE875171BFD808D0028F69B /* DgphFile.mm in Sources */ = {isa = PBXBuildFile; fileRef = CDE875151BFD808D0028F69B /* DgphFile.mm */; };
+		CDE875181BFE81660028F69B /* DgphFile.mm in Sources */ = {isa = PBXBuildFile; fileRef = CDE875151BFD808D0028F69B /* DgphFile.mm */; };
 		CDEE9EA1176950DC0026D278 /* BuildStateParserTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CDEE9EA0176950DC0026D278 /* BuildStateParserTests.m */; };
 		EE30659B17DEBE6600733D72 /* FakeFileHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F489F217973B6100068E00 /* FakeFileHandle.m */; };
 		EE37291217E2886200554867 /* Reporter.m in Sources */ = {isa = PBXBuildFile; fileRef = EE37291017E2886200554867 /* Reporter.m */; };
@@ -364,6 +366,8 @@
 		CD56770E1766782C003B727C /* BuildStateParser.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BuildStateParser.mm; sourceTree = "<group>"; };
 		CDD81F4F174EAFDC00F42111 /* EventBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventBuffer.h; sourceTree = "<group>"; };
 		CDD81F50174EAFDC00F42111 /* EventBuffer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventBuffer.m; sourceTree = "<group>"; };
+		CDE875151BFD808D0028F69B /* DgphFile.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DgphFile.mm; sourceTree = "<group>"; };
+		CDE875161BFD808D0028F69B /* DgphFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DgphFile.h; sourceTree = "<group>"; };
 		CDEE9EA0176950DC0026D278 /* BuildStateParserTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuildStateParserTests.m; sourceTree = "<group>"; };
 		EE30658D17DEA92F00733D72 /* TestRunState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestRunState.h; sourceTree = "<group>"; };
 		EE30658E17DEA92F00733D72 /* TestRunState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestRunState.m; sourceTree = "<group>"; };
@@ -489,6 +493,8 @@
 				28BB043C17C7FF43004F6C13 /* Buildable.m */,
 				CD56770D1766782C003B727C /* BuildStateParser.h */,
 				CD56770E1766782C003B727C /* BuildStateParser.mm */,
+				CDE875161BFD808D0028F69B /* DgphFile.h */,
+				CDE875151BFD808D0028F69B /* DgphFile.mm */,
 				CDD81F4F174EAFDC00F42111 /* EventBuffer.h */,
 				CDD81F50174EAFDC00F42111 /* EventBuffer.m */,
 				283CCA4816C2EA3800F2E343 /* main.m */,
@@ -849,6 +855,7 @@
 			files = (
 				2878E7DD184EA4BC00FF4354 /* XcodeRequiredVersion.m in Sources */,
 				EE37291517E289A900554867 /* Reporter.m in Sources */,
+				CDE875171BFD808D0028F69B /* DgphFile.mm in Sources */,
 				EE37291417E2898200554867 /* TestRunState.m in Sources */,
 				EE37291317E288AD00554867 /* main.m in Sources */,
 				EE30659B17DEBE6600733D72 /* FakeFileHandle.m in Sources */,
@@ -908,6 +915,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CDE875181BFE81660028F69B /* DgphFile.mm in Sources */,
 				CC76864D1BBEE93D00287D10 /* SimulatorTaskUtils.m in Sources */,
 				CC07439B1BB9F18D0075E407 /* TaskUtil.m in Sources */,
 				CC07439C1BB9F18D0075E407 /* XCToolUtil.m in Sources */,
