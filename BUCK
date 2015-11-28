@@ -1,5 +1,7 @@
 COMMON_PREPROCESSOR_FLAGS = ['-fobjc-arc', '-mmacosx-version-min=10.7', '-Wno-deprecated-declarations']
 
+COMMON_COMPILER_FLAGS = ['-Wno-undeclared-selector', '-Wno-implicit-retain-self']
+
 COMMON_OTEST_SRCS = [
     'Common/DuplicateTestNameFix.m',
     'Common/NSInvocationInSetFix.m',
@@ -82,6 +84,7 @@ apple_binary(
         'CXX': ['-std=c++11', '-stdlib=libc++'],
         'OBJCXX': ['-std=c++11', '-stdlib=libc++'],
     },
+    compiler_flags = COMMON_COMPILER_FLAGS,
     frameworks = [
         '$SDKROOT/System/Library/Frameworks/AppKit.framework',
         '$SDKROOT/System/Library/Frameworks/CoreFoundation.framework',
@@ -101,6 +104,7 @@ apple_binary(
     linker_flags = [
         '-liconv',
     ],
+    compiler_flags = COMMON_COMPILER_FLAGS,
 )
 
 apple_binary(
@@ -114,6 +118,7 @@ apple_binary(
     linker_flags = [
         '-liconv',
     ],
+    compiler_flags = COMMON_COMPILER_FLAGS,
 )
 
 apple_binary(
@@ -131,6 +136,7 @@ apple_binary(
     linker_flags = [
         '-liconv',
     ],
+    compiler_flags = COMMON_COMPILER_FLAGS,
 )
 
 apple_binary(
@@ -148,6 +154,7 @@ apple_binary(
     linker_flags = [
         '-liconv',
     ],
+    compiler_flags = COMMON_COMPILER_FLAGS,
 )
 
 apple_binary(
@@ -165,6 +172,7 @@ apple_binary(
     linker_flags = [
         '-liconv',
     ],
+    compiler_flags = COMMON_COMPILER_FLAGS,
 )
 
 apple_binary(
@@ -182,6 +190,7 @@ apple_binary(
     linker_flags = [
         '-liconv',
     ],
+    compiler_flags = COMMON_COMPILER_FLAGS,
 )
 
 apple_binary(
@@ -199,6 +208,7 @@ apple_binary(
     linker_flags = [
         '-liconv',
     ],
+    compiler_flags = COMMON_COMPILER_FLAGS,
 )
 
 apple_binary(
@@ -214,6 +224,7 @@ apple_binary(
     linker_flags = [
         '-liconv',
     ],
+    compiler_flags = COMMON_COMPILER_FLAGS,
 )
 
 apple_binary(
@@ -321,6 +332,7 @@ apple_library(
     # this shouldn't be needed as soon as Buck is fixed
     # it comes from `otest-shim-sentestingkit`'s `exported_preprocessor_flags`
     preprocessor_flags = ['-DSENTEST_IGNORE_DEPRECATION_WARNING'],
+    compiler_flags = COMMON_COMPILER_FLAGS,
     frameworks = [
         '$SDKROOT/System/Library/Frameworks/Foundation.framework',
     ],
