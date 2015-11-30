@@ -233,6 +233,7 @@ apple_binary(
     frameworks = [
         '$SDKROOT/System/Library/Frameworks/Foundation.framework',
     ],
+    compiler_flags = COMMON_COMPILER_FLAGS,
 )
 
 genrule(
@@ -257,6 +258,7 @@ apple_binary(
     frameworks = [
         '$SDKROOT/System/Library/Frameworks/Foundation.framework',
     ],
+    compiler_flags = COMMON_COMPILER_FLAGS,
 )
 
 genrule(
@@ -281,6 +283,7 @@ apple_library(
     frameworks = [
         '$SDKROOT/System/Library/Frameworks/Foundation.framework',
     ],
+    compiler_flags = COMMON_COMPILER_FLAGS,
 )
 
 genrule(
