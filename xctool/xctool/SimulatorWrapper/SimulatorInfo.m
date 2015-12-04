@@ -361,7 +361,7 @@ static const NSInteger KProductTypeIpad = 2;
 
 + (NSArray *)availableDevices
 {
-  return [[SimDeviceType supportedDeviceTypesByName] allKeys];
+  return [[SimDeviceType supportedDeviceTypes] valueForKeyPath:@"name"];
 }
 
 + (BOOL)isDeviceAvailableWithAlias:(NSString *)deviceName
