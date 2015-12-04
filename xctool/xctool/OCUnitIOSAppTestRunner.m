@@ -202,10 +202,6 @@ static const NSInteger kMaxRunTestsAttempts = 3;
     [NSThread sleepForTimeInterval:1];
   }
 
-  ReportStatusMessage(_reporters,
-                      REPORTER_MESSAGE_INFO,
-                      @"Launching test host and running tests ...");
-
   NSArray *appLaunchArgs = nil;
   NSMutableDictionary *appLaunchEnvironment = [_simulatorInfo simulatorLaunchEnvironment];
   if (ToolchainIsXcode7OrBetter()) {
@@ -226,6 +222,7 @@ static const NSInteger kMaxRunTestsAttempts = 3;
                                                   arguments:appLaunchArgs
                                                 environment:appLaunchEnvironment
                                           feedOutputToBlock:outputLineBlock
+                                                  reporters:_reporters
                                                       error:&error];
 
     if (infraSucceeded) {

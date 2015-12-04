@@ -53,6 +53,7 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
               arguments:(NSArray *)arguments
             environment:(NSDictionary *)environment
       feedOutputToBlock:(FdOutputLineFeedBlock)feedOutputToBlock
+              reporters:(NSArray *)reporters
                   error:(NSError **)error
 {
   int mkfifoResult;
@@ -86,13 +87,30 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
     kOptionsWaitForDebuggerKey: @"1",
   };
 
+  ReportStatusMessageBegin(reporters,
+                           REPORTER_MESSAGE_INFO,
+                           @"Launching '%@' on '%@' ...",
+                           testHostBundleID,
+                           device.name);
   pid_t appPID = [device launchApplicationWithID:testHostBundleID
                                          options:options
                                            error:&launchError];
   if (appPID == -1) {
     *error = launchError;
+    ReportStatusMessageEnd(reporters,
+                     REPORTER_MESSAGE_INFO,
+                     @"Failed to launch '%@' on '%@': %@",
+                     testHostBundleID,
+                     device.name,
+                     launchError.localizedDescription);
     return NO;
   }
+
+  ReportStatusMessageEnd(reporters,
+                       REPORTER_MESSAGE_INFO,
+                       @"Launched '%@' on '%@'.",
+                       testHostBundleID,
+                       device.name);
 
   dispatch_semaphore_t appSemaphore = dispatch_semaphore_create(0);
   dispatch_source_t source = dispatch_source_create(DISPATCH_SOURCE_TYPE_PROC, appPID, DISPATCH_PROC_EXIT, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0));

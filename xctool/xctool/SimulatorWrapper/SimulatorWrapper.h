@@ -42,6 +42,7 @@
               arguments:(NSArray *)arguments
             environment:(NSDictionary *)environment
       feedOutputToBlock:(FdOutputLineFeedBlock)feedOutputToBlock
+              reporters:(NSArray *)reporters
                   error:(NSError **)error;
 
 + (BOOL)prepareSimulator:(SimDevice *)device
