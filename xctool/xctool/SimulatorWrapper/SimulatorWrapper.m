@@ -23,6 +23,7 @@
 #import "ReportStatus.h"
 #import "SimDevice.h"
 #import "SimulatorInfo.h"
+#import "SimulatorUtils.h"
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
 
@@ -76,7 +77,7 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
   /*
    * Passing the same set of arguments and environment as Xcode 6.4.
    */
-  NSError *launchError = nil;
+  __block NSError *launchError = nil;
   NSDictionary *options = @{
     kOptionsArgumentsKey: arguments,
     kOptionsEnvironmentKey: environmentEdited,
@@ -92,9 +93,18 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
                            @"Launching '%@' on '%@' ...",
                            testHostBundleID,
                            device.name);
-  pid_t appPID = [device launchApplicationWithID:testHostBundleID
-                                         options:options
-                                           error:&launchError];
+  __block pid_t appPID = -1;
+  if (!RunSimulatorBlockWithTimeout(^{
+    appPID = [device launchApplicationWithID:testHostBundleID
+                                     options:options
+                                       error:&launchError];
+  })) {
+    launchError = [NSError errorWithDomain:@"com.facebook.xctool.sim.launch.timeout"
+                                      code:0
+                                  userInfo:@{
+      NSLocalizedDescriptionKey: @"Timed out while launching an application",
+    }];
+  }
   if (appPID == -1) {
     *error = launchError;
     ReportStatusMessageEnd(reporters,

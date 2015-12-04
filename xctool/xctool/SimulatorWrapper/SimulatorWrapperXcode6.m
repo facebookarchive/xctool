@@ -22,6 +22,7 @@
 #import "SimDeviceSet.h"
 #import "SimDeviceType.h"
 #import "SimRuntime.h"
+#import "SimulatorUtils.h"
 #import "XCToolUtil.h"
 
 @implementation SimulatorWrapperXcode6
@@ -83,18 +84,31 @@
                         reporters:(NSArray *)reporters
                             error:(NSString **)error
 {
-  NSError *localError = nil;
-  BOOL uninstalled = ![device applicationIsInstalled:testHostBundleID type:nil error:&localError];
-  if (!uninstalled) {
+  __block BOOL installed = YES;
+  RunSimulatorBlockWithTimeout(^{
+    installed = [device applicationIsInstalled:testHostBundleID type:nil error:nil];
+  });
+  if (!installed) {
+    return YES;
+  }
+
+  __block NSError *localError = nil;
+  __block BOOL uninstalled = NO;
+  if (!RunSimulatorBlockWithTimeout(^{
     uninstalled = [device uninstallApplication:testHostBundleID
                                    withOptions:nil
                                          error:&localError];
+  })) {
+    localError = [NSError errorWithDomain:@"com.facebook.xctool.sim.uninstall.timeout"
+                                     code:0
+                                 userInfo:@{
+      NSLocalizedDescriptionKey: @"Timed out.",
+    }];
   }
 
   if (!uninstalled) {
     *error = [NSString stringWithFormat:
-              @"Failed to uninstall the test host app '%@' "
-              @"before running tests: %@",
+              @"Failed to uninstall the test host app '%@': %@",
               testHostBundleID, localError.localizedDescription ?: @"Failed for unknown reason."];
   }
   return uninstalled;
@@ -106,11 +120,19 @@
                       reporters:(NSArray *)reporters
                           error:(NSString **)error
 {
-  NSError *localError = nil;
-  NSURL *appURL = [NSURL fileURLWithPath:testHostBundlePath];
-  BOOL installed = [device installApplication:appURL
-                                  withOptions:@{@"CFBundleIdentifier": testHostBundleID}
-                                        error:&localError];
+  __block NSError *localError = nil;
+  __block BOOL installed = NO;
+  if (!RunSimulatorBlockWithTimeout(^{
+    installed = [device installApplication:[NSURL fileURLWithPath:testHostBundlePath]
+                               withOptions:@{@"CFBundleIdentifier": testHostBundleID}
+                                     error:&localError];
+  })) {
+    localError = [NSError errorWithDomain:@"com.facebook.xctool.sim.install.timeout"
+                                     code:0
+                                 userInfo:@{
+      NSLocalizedDescriptionKey: @"Timed out.",
+    }];
+  }
 
   if (!installed) {
     *error = [NSString stringWithFormat:
