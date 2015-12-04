@@ -816,7 +816,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastTestingUpgradeCheck = 0700;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = "Facebook, Inc.";
 			};
 			buildConfigurationList = 283CCA3D16C2EA3700F2E343 /* Build configuration list for PBXProject "xctool" */;
@@ -1108,6 +1108,7 @@
 				);
 				GCC_PREFIX_HEADER = "xctool-tests/xctool-tests-Prefix.pch";
 				INFOPLIST_FILE = "xctool-tests/xctool-tests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "xctool-tests";
 				SKIP_INSTALL = YES;
 			};
@@ -1125,6 +1126,7 @@
 				);
 				GCC_PREFIX_HEADER = "xctool-tests/xctool-tests-Prefix.pch";
 				INFOPLIST_FILE = "xctool-tests/xctool-tests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "xctool-tests";
 				SKIP_INSTALL = YES;
 			};
