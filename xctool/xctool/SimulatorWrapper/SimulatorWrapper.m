@@ -135,6 +135,32 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
 
 #pragma mark Installation Methods
 
++ (BOOL)prepareSimulator:(SimDevice *)device
+               reporters:(NSArray *)reporters
+                   error:(NSString **)error
+{
+  ReportStatusMessageBegin(reporters,
+                           REPORTER_MESSAGE_INFO,
+                           @"Preparing '%@' simulator to run tests ...",
+                           device.name);
+
+  BOOL prepared = [[self classBasedOnCurrentVersionOfXcode] prepareSimulator:device
+                                                                   reporters:reporters
+                                                                       error:error];
+  if (prepared) {
+    ReportStatusMessageEnd(reporters,
+                           REPORTER_MESSAGE_INFO,
+                           @"Prepared '%@' simulator to run tests.",
+                           device.name);
+  } else {
+    ReportStatusMessageEnd(reporters,
+                           REPORTER_MESSAGE_WARNING,
+                           @"Failed to prepare '%@' simulator to run tests.",
+                           device.name);
+  }
+  return prepared;
+}
+
 + (BOOL)uninstallTestHostBundleID:(NSString *)testHostBundleID
                            device:(SimDevice *)device
                         reporters:(NSArray *)reporters

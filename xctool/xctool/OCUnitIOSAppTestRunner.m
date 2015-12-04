@@ -58,7 +58,7 @@ static const NSInteger kMaxRunTestsAttempts = 3;
   NSString *testHostBundleID = testHostInfoPlist[@"CFBundleIdentifier"];
   NSAssert(testHostBundleID != nil, @"Missing 'CFBundleIdentifier' in Info.plist");
 
-  void (^prepareSimulator)(BOOL freshSimulator, BOOL resetSimulator) = ^(BOOL freshSimulator, BOOL resetSimulator) {
+  BOOL (^prepareSimulator)(BOOL freshSimulator, BOOL resetSimulator) = ^(BOOL freshSimulator, BOOL resetSimulator) {
     if (freshSimulator || resetSimulator) {
       ReportStatusMessageBegin(_reporters,
                                REPORTER_MESSAGE_INFO,
@@ -124,10 +124,20 @@ static const NSInteger kMaxRunTestsAttempts = 3;
 
       }
     }
+
+   if (![SimulatorWrapper prepareSimulator:[_simulatorInfo simulatedDevice]
+                                 reporters:_reporters
+                                     error:startupError]) {
+      return NO;
+    }
+
+    return YES;
   };
 
   BOOL (^prepTestEnv)() = ^BOOL() {
-    prepareSimulator(_freshSimulator, _resetSimulator);
+    if (!prepareSimulator(_freshSimulator, _resetSimulator)) {
+      return NO;
+    }
 
     if (_freshInstall) {
       if (![SimulatorWrapper uninstallTestHostBundleID:testHostBundleID
@@ -229,7 +239,7 @@ static const NSInteger kMaxRunTestsAttempts = 3;
 
     if (!remainingAttempts) {
       ReportStatusMessage(_reporters,
-                          REPORTER_MESSAGE_WARNING,
+                          REPORTER_MESSAGE_ERROR,
                           @"%@.",
                           *startupError);
       return;

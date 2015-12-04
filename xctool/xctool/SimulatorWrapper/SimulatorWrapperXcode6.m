@@ -29,14 +29,13 @@
 #pragma mark -
 #pragma mark Helpers
 
-+ (BOOL)prepareSimulator:(SimDevice *)device error:(NSError **)error
++ (BOOL)prepareSimulator:(SimDevice *)device
+               reporters:(NSArray *)reporters
+                   error:(NSString **)error
 {
   if (!device.available) {
-    NSString *errorDesc = [NSString stringWithFormat: @"Simulator '%@' is not available", device.name];
     if (error) {
-      *error = [NSError errorWithDomain:@"com.apple.iOSSimulator"
-                                   code:0
-                               userInfo:@{NSLocalizedDescriptionKey: errorDesc}];
+      *error = [NSString stringWithFormat: @"Simulator '%@' is not available", device.name];
     }
     return NO;
   }
@@ -54,11 +53,8 @@
                                                                       configuration:configuration
                                                                               error:&launchError];
   if (!app) {
-    NSString *errorDesc = [NSString stringWithFormat: @"iOS Simulator app wasn't launched at path \"%@\" with configuration: %@. Error: %@", [iOSSimulatorURL path], configuration, launchError];
     if (error) {
-      *error = [NSError errorWithDomain:@"com.apple.iOSSimulator"
-                                   code:0
-                               userInfo:@{NSLocalizedDescriptionKey: errorDesc}];
+      *error = [NSString stringWithFormat: @"iOS Simulator app wasn't launched at path \"%@\" with configuration: %@. Error: %@", [iOSSimulatorURL path], configuration, launchError];
     }
     return NO;
   }
@@ -69,7 +65,14 @@
     --attempts;
   }
 
-  return attempts > 0;
+  if (attempts > 0) {
+    return YES;
+  }
+
+  if (error) {
+    *error = @"Timed out while waiting simulator to boot.";
+  }
+  return NO;
 }
 
 #pragma mark -
@@ -81,14 +84,6 @@
                             error:(NSString **)error
 {
   NSError *localError = nil;
-
-  if (![self prepareSimulator:device error:&localError]) {
-    *error = [NSString stringWithFormat:
-              @"Simulator '%@' was not prepared: %@",
-              device.name, localError.localizedDescription ?: @"Failed for unknown reason."];
-    return NO;
-  }
-
   BOOL uninstalled = ![device applicationIsInstalled:testHostBundleID type:nil error:&localError];
   if (!uninstalled) {
     uninstalled = [device uninstallApplication:testHostBundleID
@@ -113,14 +108,6 @@
 {
   NSError *localError = nil;
   NSURL *appURL = [NSURL fileURLWithPath:testHostBundlePath];
-
-  if (![self prepareSimulator:device error:&localError]) {
-    *error = [NSString stringWithFormat:
-              @"Simulator '%@' was not prepared: %@",
-              device.name, localError.localizedDescription ?: @"Failed for unknown reason."];
-    return NO;
-  }
-
   BOOL installed = [device installApplication:appURL
                                   withOptions:@{@"CFBundleIdentifier": testHostBundleID}
                                         error:&localError];

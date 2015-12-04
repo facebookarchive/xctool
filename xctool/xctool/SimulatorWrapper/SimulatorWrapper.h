@@ -44,6 +44,10 @@
       feedOutputToBlock:(FdOutputLineFeedBlock)feedOutputToBlock
                   error:(NSError **)error;
 
++ (BOOL)prepareSimulator:(SimDevice *)device
+               reporters:(NSArray *)reporters
+                   error:(NSString **)error;
+
 + (BOOL)uninstallTestHostBundleID:(NSString *)testHostBundleID
                            device:(SimDevice *)device
                         reporters:(NSArray *)reporters
