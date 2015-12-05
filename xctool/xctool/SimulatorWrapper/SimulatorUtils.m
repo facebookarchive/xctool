@@ -23,7 +23,7 @@
 #import "SimVerifier.h"
 #import "XCToolUtil.h"
 
-static const dispatch_time_t kDefaultSimulatorBlockTimeout = 15;
+static const dispatch_time_t kDefaultSimulatorBlockTimeout = 30;
 
 static void GetJobsIterator(const launch_data_t launch_data, const char *key, void *context) {
   void (^block)(const launch_data_t, const char *) = (__bridge void (^)(const launch_data_t, const char *))(context);
@@ -224,7 +224,8 @@ BOOL ShutdownSimulator(SimulatorInfo *simulatorInfo, NSString **errorMessage)
 
 BOOL RunSimulatorBlockWithTimeout(dispatch_block_t block)
 {
-  dispatch_time_t timer = dispatch_time(DISPATCH_TIME_NOW, kDefaultSimulatorBlockTimeout * NSEC_PER_SEC);
+  dispatch_time_t timeout = IsRunningUnderTest() ? 5 : kDefaultSimulatorBlockTimeout;
+  dispatch_time_t timer = dispatch_time(DISPATCH_TIME_NOW, timeout * NSEC_PER_SEC);
   dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
     block();

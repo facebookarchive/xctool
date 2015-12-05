@@ -344,9 +344,14 @@ BOOL IsRunningOnCISystem()
 
 BOOL IsRunningUnderTest()
 {
-  NSString *processName = [[NSProcessInfo processInfo] processName];
-  return ([processName isEqualToString:@"xctest"] ||
-          [processName isEqualToString:@"xctest-x86_64"]);
+  static BOOL isRunningUnderTest;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    NSString *processName = [[NSProcessInfo processInfo] processName];
+    isRunningUnderTest = [processName isEqualToString:@"xctest"] ||
+                         [processName isEqualToString:@"xctest-x86_64"];
+  });
+  return isRunningUnderTest;
 }
 
 BOOL LaunchXcodebuildTaskAndFeedEventsToReporters(NSTask *task,

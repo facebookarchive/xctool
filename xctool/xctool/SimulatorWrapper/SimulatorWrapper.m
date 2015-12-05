@@ -211,7 +211,7 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
   } else {
     ReportStatusMessageEnd(reporters,
                            REPORTER_MESSAGE_WARNING,
-                           @"Tried to uninstall the test host app '%@' but failed.",
+                           @"Failed to uninstall the test host app '%@'.",
                            testHostBundleID);
   }
   return uninstalled;
@@ -241,7 +241,7 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
   } else {
     ReportStatusMessageEnd(reporters,
                            REPORTER_MESSAGE_WARNING,
-                           @"Tried to install the test host app '%@' but failed.",
+                           @"Failed to install the test host app '%@'.",
                            testHostBundleID);
   }
   return installed;
