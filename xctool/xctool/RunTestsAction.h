@@ -54,6 +54,7 @@ typedef NS_ENUM(NSInteger, BucketBy) {
 
 @property (nonatomic, assign) BOOL freshSimulator;
 @property (nonatomic, assign) BOOL resetSimulator;
+@property (nonatomic, assign) BOOL newSimulatorInstance;
 @property (nonatomic, assign) BOOL noResetSimulatorOnFailure;
 @property (nonatomic, assign) BOOL freshInstall;
 @property (nonatomic, assign) BOOL parallelize;

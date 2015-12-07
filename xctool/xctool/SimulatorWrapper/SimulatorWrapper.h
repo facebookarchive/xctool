@@ -46,12 +46,14 @@
 
 + (BOOL)uninstallTestHostBundleID:(NSString *)testHostBundleID
                            device:(SimDevice *)device
+             newSimulatorInstance:(BOOL)newSimulatorInstance
                         reporters:(NSArray *)reporters
                             error:(NSString **)error;
 
 + (BOOL)installTestHostBundleID:(NSString *)testHostBundleID
                  fromBundlePath:(NSString *)testHostBundlePath
                          device:(SimDevice *)device
+           newSimulatorInstance:(BOOL)newSimulatorInstance
                       reporters:(NSArray *)reporters
                           error:(NSString **)error;
 

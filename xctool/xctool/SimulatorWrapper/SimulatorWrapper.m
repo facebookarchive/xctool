@@ -137,6 +137,7 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
 
 + (BOOL)uninstallTestHostBundleID:(NSString *)testHostBundleID
                            device:(SimDevice *)device
+                        newSimulatorInstance:(BOOL)newSimulatorInstance
                         reporters:(NSArray *)reporters
                             error:(NSString **)error
 {
@@ -147,6 +148,7 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
 
   BOOL uninstalled = [[self classBasedOnCurrentVersionOfXcode] uninstallTestHostBundleID:testHostBundleID
                                                                                   device:device
+                                                                    newSimulatorInstance:newSimulatorInstance
                                                                                reporters:reporters
                                                                                    error:error];
   if (uninstalled) {
@@ -166,6 +168,7 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
 + (BOOL)installTestHostBundleID:(NSString *)testHostBundleID
                  fromBundlePath:(NSString *)testHostBundlePath
                          device:(SimDevice *)device
+           newSimulatorInstance:(BOOL)newSimulatorInstance
                       reporters:(NSArray *)reporters
                           error:(NSString **)error
 {
@@ -177,6 +180,7 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
   BOOL installed = [[self classBasedOnCurrentVersionOfXcode] installTestHostBundleID:testHostBundleID
                                                                       fromBundlePath:testHostBundlePath
                                                                               device:device
+                                                                newSimulatorInstance:newSimulatorInstance
                                                                            reporters:reporters
                                                                                error:error];
   if (installed) {

@@ -132,6 +132,7 @@ static const NSInteger kMaxRunTestsAttempts = 3;
     if (_freshInstall) {
       if (![SimulatorWrapper uninstallTestHostBundleID:testHostBundleID
                                                 device:[_simulatorInfo simulatedDevice]
+                                  newSimulatorInstance:_newSimulatorInstance
                                              reporters:_reporters
                                                  error:startupError]) {
         return NO;
@@ -151,6 +152,7 @@ static const NSInteger kMaxRunTestsAttempts = 3;
     if (![SimulatorWrapper installTestHostBundleID:testHostBundleID
                                     fromBundlePath:testHostAppPath
                                             device:[_simulatorInfo simulatedDevice]
+                              newSimulatorInstance:_newSimulatorInstance
                                          reporters:_reporters
                                              error:startupError]) {
       return NO;

@@ -36,6 +36,7 @@ static NSString * const kEnvVarPassThroughPrefix = @"XCTOOL_TEST_ENV_";
 @property (nonatomic, assign) BOOL garbageCollection;
 @property (nonatomic, assign) BOOL freshSimulator;
 @property (nonatomic, assign) BOOL resetSimulator;
+@property (nonatomic, assign) BOOL newSimulatorInstance;
 @property (nonatomic, assign) BOOL noResetSimulatorOnFailure;
 @property (nonatomic, assign) BOOL freshInstall;
 @property (nonatomic, copy, readwrite) NSArray *reporters;
@@ -139,6 +140,7 @@ static NSString * const kEnvVarPassThroughPrefix = @"XCTOOL_TEST_ENV_";
                           environment:(NSDictionary *)environment
                        freshSimulator:(BOOL)freshSimulator
                        resetSimulator:(BOOL)resetSimulator
+                 newSimulatorInstance:(BOOL)newSimulatorInstance
             noResetSimulatorOnFailure:(BOOL)noResetSimulatorOnFailure
                          freshInstall:(BOOL)freshInstall
                           testTimeout:(NSInteger)testTimeout
@@ -155,6 +157,7 @@ static NSString * const kEnvVarPassThroughPrefix = @"XCTOOL_TEST_ENV_";
     _environment = [environment copy];
     _freshSimulator = freshSimulator;
     _resetSimulator = resetSimulator;
+    _newSimulatorInstance = newSimulatorInstance;
     _noResetSimulatorOnFailure = noResetSimulatorOnFailure;
     _freshInstall = freshInstall;
     _testTimeout = testTimeout;

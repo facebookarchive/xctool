@@ -141,6 +141,11 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
                      description:
      @"Reset simulator content and settings and restart it before running every app test run."
                          setFlag:@selector(setResetSimulator:)],
+    [Action actionOptionWithName:@"newSimulatorInstance"
+                         aliases:nil
+                     description:
+     @"Start new instance of simulator for each application test target."
+                         setFlag:@selector(setNewSimulatorInstance:)],
     [Action actionOptionWithName:@"noResetSimulatorOnFailure"
                          aliases:nil
                      description:
@@ -677,6 +682,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
                                                                       environment:environment
                                                                    freshSimulator:_freshSimulator
                                                                    resetSimulator:_resetSimulator
+                                                             newSimulatorInstance:_newSimulatorInstance
                                                         noResetSimulatorOnFailure:_noResetSimulatorOnFailure
                                                                      freshInstall:_freshInstall
                                                                       testTimeout:_testTimeout
