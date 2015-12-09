@@ -23,6 +23,7 @@
 #import "ReportStatus.h"
 #import "SimDevice.h"
 #import "SimulatorInfo.h"
+#import "SimulatorUtils.h"
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
 
@@ -53,6 +54,7 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
               arguments:(NSArray *)arguments
             environment:(NSDictionary *)environment
       feedOutputToBlock:(FdOutputLineFeedBlock)feedOutputToBlock
+              reporters:(NSArray *)reporters
                   error:(NSError **)error
 {
   int mkfifoResult;
@@ -75,7 +77,7 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
   /*
    * Passing the same set of arguments and environment as Xcode 6.4.
    */
-  NSError *launchError = nil;
+  __block NSError *launchError = nil;
   NSDictionary *options = @{
     kOptionsArgumentsKey: arguments,
     kOptionsEnvironmentKey: environmentEdited,
@@ -86,13 +88,39 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
     kOptionsWaitForDebuggerKey: @"1",
   };
 
-  pid_t appPID = [device launchApplicationWithID:testHostBundleID
-                                         options:options
-                                           error:&launchError];
+  ReportStatusMessageBegin(reporters,
+                           REPORTER_MESSAGE_INFO,
+                           @"Launching '%@' on '%@' ...",
+                           testHostBundleID,
+                           device.name);
+  __block pid_t appPID = -1;
+  if (!RunSimulatorBlockWithTimeout(^{
+    appPID = [device launchApplicationWithID:testHostBundleID
+                                     options:options
+                                       error:&launchError];
+  })) {
+    launchError = [NSError errorWithDomain:@"com.facebook.xctool.sim.launch.timeout"
+                                      code:0
+                                  userInfo:@{
+      NSLocalizedDescriptionKey: @"Timed out while launching an application",
+    }];
+  }
   if (appPID == -1) {
     *error = launchError;
+    ReportStatusMessageEnd(reporters,
+                     REPORTER_MESSAGE_INFO,
+                     @"Failed to launch '%@' on '%@': %@",
+                     testHostBundleID,
+                     device.name,
+                     launchError.localizedDescription);
     return NO;
   }
+
+  ReportStatusMessageEnd(reporters,
+                       REPORTER_MESSAGE_INFO,
+                       @"Launched '%@' on '%@'.",
+                       testHostBundleID,
+                       device.name);
 
   dispatch_semaphore_t appSemaphore = dispatch_semaphore_create(0);
   dispatch_source_t source = dispatch_source_create(DISPATCH_SOURCE_TYPE_PROC, appPID, DISPATCH_PROC_EXIT, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0));
@@ -135,9 +163,36 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
 
 #pragma mark Installation Methods
 
++ (BOOL)prepareSimulator:(SimDevice *)device
+    newSimulatorInstance:(BOOL)newSimulatorInstance
+               reporters:(NSArray *)reporters
+                   error:(NSString **)error
+{
+  ReportStatusMessageBegin(reporters,
+                           REPORTER_MESSAGE_INFO,
+                           @"Preparing '%@' simulator to run tests ...",
+                           device.name);
+
+  BOOL prepared = [[self classBasedOnCurrentVersionOfXcode] prepareSimulator:device
+                                                        newSimulatorInstance:newSimulatorInstance
+                                                                   reporters:reporters
+                                                                       error:error];
+  if (prepared) {
+    ReportStatusMessageEnd(reporters,
+                           REPORTER_MESSAGE_INFO,
+                           @"Prepared '%@' simulator to run tests.",
+                           device.name);
+  } else {
+    ReportStatusMessageEnd(reporters,
+                           REPORTER_MESSAGE_WARNING,
+                           @"Failed to prepare '%@' simulator to run tests.",
+                           device.name);
+  }
+  return prepared;
+}
+
 + (BOOL)uninstallTestHostBundleID:(NSString *)testHostBundleID
                            device:(SimDevice *)device
-                        newSimulatorInstance:(BOOL)newSimulatorInstance
                         reporters:(NSArray *)reporters
                             error:(NSString **)error
 {
@@ -148,7 +203,6 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
 
   BOOL uninstalled = [[self classBasedOnCurrentVersionOfXcode] uninstallTestHostBundleID:testHostBundleID
                                                                                   device:device
-                                                                    newSimulatorInstance:newSimulatorInstance
                                                                                reporters:reporters
                                                                                    error:error];
   if (uninstalled) {
@@ -159,7 +213,7 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
   } else {
     ReportStatusMessageEnd(reporters,
                            REPORTER_MESSAGE_WARNING,
-                           @"Tried to uninstall the test host app '%@' but failed.",
+                           @"Failed to uninstall the test host app '%@'.",
                            testHostBundleID);
   }
   return uninstalled;
@@ -168,7 +222,6 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
 + (BOOL)installTestHostBundleID:(NSString *)testHostBundleID
                  fromBundlePath:(NSString *)testHostBundlePath
                          device:(SimDevice *)device
-           newSimulatorInstance:(BOOL)newSimulatorInstance
                       reporters:(NSArray *)reporters
                           error:(NSString **)error
 {
@@ -180,7 +233,6 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
   BOOL installed = [[self classBasedOnCurrentVersionOfXcode] installTestHostBundleID:testHostBundleID
                                                                       fromBundlePath:testHostBundlePath
                                                                               device:device
-                                                                newSimulatorInstance:newSimulatorInstance
                                                                            reporters:reporters
                                                                                error:error];
   if (installed) {
@@ -191,7 +243,7 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
   } else {
     ReportStatusMessageEnd(reporters,
                            REPORTER_MESSAGE_WARNING,
-                           @"Tried to install the test host app '%@' but failed.",
+                           @"Failed to install the test host app '%@'.",
                            testHostBundleID);
   }
   return installed;

@@ -58,7 +58,7 @@ static const NSInteger kMaxRunTestsAttempts = 3;
   NSString *testHostBundleID = testHostInfoPlist[@"CFBundleIdentifier"];
   NSAssert(testHostBundleID != nil, @"Missing 'CFBundleIdentifier' in Info.plist");
 
-  void (^prepareSimulator)(BOOL freshSimulator, BOOL resetSimulator) = ^(BOOL freshSimulator, BOOL resetSimulator) {
+  BOOL (^prepareSimulator)(BOOL freshSimulator, BOOL resetSimulator) = ^(BOOL freshSimulator, BOOL resetSimulator) {
     if (freshSimulator || resetSimulator) {
       ReportStatusMessageBegin(_reporters,
                                REPORTER_MESSAGE_INFO,
@@ -124,15 +124,25 @@ static const NSInteger kMaxRunTestsAttempts = 3;
 
       }
     }
+
+   if (![SimulatorWrapper prepareSimulator:[_simulatorInfo simulatedDevice]
+                      newSimulatorInstance:_newSimulatorInstance
+                                 reporters:_reporters
+                                     error:startupError]) {
+      return NO;
+    }
+
+    return YES;
   };
 
   BOOL (^prepTestEnv)() = ^BOOL() {
-    prepareSimulator(_freshSimulator, _resetSimulator);
+    if (!prepareSimulator(_freshSimulator, _resetSimulator)) {
+      return NO;
+    }
 
     if (_freshInstall) {
       if (![SimulatorWrapper uninstallTestHostBundleID:testHostBundleID
                                                 device:[_simulatorInfo simulatedDevice]
-                                  newSimulatorInstance:_newSimulatorInstance
                                              reporters:_reporters
                                                  error:startupError]) {
         return NO;
@@ -152,7 +162,6 @@ static const NSInteger kMaxRunTestsAttempts = 3;
     if (![SimulatorWrapper installTestHostBundleID:testHostBundleID
                                     fromBundlePath:testHostAppPath
                                             device:[_simulatorInfo simulatedDevice]
-                              newSimulatorInstance:_newSimulatorInstance
                                          reporters:_reporters
                                              error:startupError]) {
       return NO;
@@ -194,10 +203,6 @@ static const NSInteger kMaxRunTestsAttempts = 3;
     [NSThread sleepForTimeInterval:1];
   }
 
-  ReportStatusMessage(_reporters,
-                      REPORTER_MESSAGE_INFO,
-                      @"Launching test host and running tests ...");
-
   NSArray *appLaunchArgs = nil;
   NSMutableDictionary *appLaunchEnvironment = [_simulatorInfo simulatorLaunchEnvironment];
   if (ToolchainIsXcode7OrBetter()) {
@@ -218,6 +223,7 @@ static const NSInteger kMaxRunTestsAttempts = 3;
                                                   arguments:appLaunchArgs
                                                 environment:appLaunchEnvironment
                                           feedOutputToBlock:outputLineBlock
+                                                  reporters:_reporters
                                                       error:&error];
 
     if (infraSucceeded) {
@@ -231,7 +237,7 @@ static const NSInteger kMaxRunTestsAttempts = 3;
 
     if (!remainingAttempts) {
       ReportStatusMessage(_reporters,
-                          REPORTER_MESSAGE_WARNING,
+                          REPORTER_MESSAGE_ERROR,
                           @"%@.",
                           *startupError);
       return;

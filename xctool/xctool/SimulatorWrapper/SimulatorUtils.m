@@ -23,6 +23,8 @@
 #import "SimVerifier.h"
 #import "XCToolUtil.h"
 
+static const dispatch_time_t kDefaultSimulatorBlockTimeout = 30;
+
 static void GetJobsIterator(const launch_data_t launch_data, const char *key, void *context) {
   void (^block)(const launch_data_t, const char *) = (__bridge void (^)(const launch_data_t, const char *))(context);
   block(launch_data, key);
@@ -139,16 +141,25 @@ BOOL RemoveSimulatorContentAndSettingsFolder(NSString *simulatorVersion, cpu_typ
 BOOL RemoveSimulatorContentAndSettings(SimulatorInfo *simulatorInfo, NSString **removedPath, NSString **errorMessage)
 {
   SimDevice *simulatedDevice = [simulatorInfo simulatedDevice];
-  NSError *error = nil;
+  __block NSError *error = nil;
+  __block BOOL erased = NO;
   *removedPath = [simulatedDevice dataPath];
-  if ([simulatedDevice eraseContentsAndSettingsWithError:&error]) {
-    return YES;
-  } else {
+  if (!RunSimulatorBlockWithTimeout(^{
+    erased = [simulatedDevice eraseContentsAndSettingsWithError:&error];
+  })) {
+    error = [NSError errorWithDomain:@"com.facebook.xctool.sim.erase.timeout"
+                                code:0
+                            userInfo:@{
+      NSLocalizedDescriptionKey: @"Timed out while erasing contents and settings of a simulator.",
+    }];
+  }
+
+  if (!erased) {
     *errorMessage = [NSString stringWithFormat:@"%@; %@.",
                      error.localizedDescription ?: @"Unknown error.",
                      [error.userInfo[NSUnderlyingErrorKey] localizedDescription] ?: @""];
-    return NO;
   }
+  return erased;
 }
 
 BOOL VerifySimulators(NSString **errorMessage)
@@ -171,7 +182,6 @@ BOOL VerifySimulators(NSString **errorMessage)
 BOOL ShutdownSimulator(SimulatorInfo *simulatorInfo, NSString **errorMessage)
 {
   SimDevice *simulatedDevice = [simulatorInfo simulatedDevice];
-  NSError *error = nil;
 
   /*
    * In Xcode 6 there is a `simBridgeDistantObject` property
@@ -191,7 +201,18 @@ BOOL ShutdownSimulator(SimulatorInfo *simulatorInfo, NSString **errorMessage)
   }
 
   if (simulatedDevice.state != SimDeviceStateShutdown) {
-    if (![simulatedDevice shutdownWithError:&error]) {
+    __block NSError *error = nil;
+    __block BOOL shutdown = NO;
+    if (!RunSimulatorBlockWithTimeout(^{
+      shutdown = [simulatedDevice shutdownWithError:&error];
+    })) {
+      error = [NSError errorWithDomain:@"com.facebook.xctool.sim.shutdown.timeout"
+                                  code:0
+                              userInfo:@{
+        NSLocalizedDescriptionKey: @"Timed out.",
+      }];
+    }
+    if (!shutdown) {
       *errorMessage = [NSString stringWithFormat:@"Tried to shutdown the simulator but failed: %@; %@.",
                        error.localizedDescription ?: @"Unknown error.",
                        [error.userInfo[NSUnderlyingErrorKey] localizedDescription] ?: @""];
@@ -199,4 +220,16 @@ BOOL ShutdownSimulator(SimulatorInfo *simulatorInfo, NSString **errorMessage)
     }
   }
   return YES;
+}
+
+BOOL RunSimulatorBlockWithTimeout(dispatch_block_t block)
+{
+  dispatch_time_t timeout = IsRunningUnderTest() ? 5 : kDefaultSimulatorBlockTimeout;
+  dispatch_time_t timer = dispatch_time(DISPATCH_TIME_NOW, timeout * NSEC_PER_SEC);
+  dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+    block();
+    dispatch_semaphore_signal(semaphore);
+  });
+  return dispatch_semaphore_wait(semaphore, timer) == 0;
 }

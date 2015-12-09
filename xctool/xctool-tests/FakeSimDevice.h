@@ -14,12 +14,21 @@
 // limitations under the License.
 //
 
-#import <Foundation/Foundation.h>
+#import "SimDevice.h"
 
-@class SimulatorInfo;
+@interface FakeSimDevice : SimDevice
 
-void KillSimulatorJobs();
-BOOL RemoveSimulatorContentAndSettings(SimulatorInfo *simulatorInfo, NSString **removedPath, NSString **errorMessage);
-BOOL ShutdownSimulator(SimulatorInfo *simulatorInfo, NSString **errorMessage);
-BOOL VerifySimulators(NSString **errorMessage);
-BOOL RunSimulatorBlockWithTimeout(dispatch_block_t block);
+@property (nonatomic, assign) BOOL fakeAvailable;
+@property (nonatomic, assign) unsigned long long fakeState;
+@property (nonatomic, strong) NSUUID *fakeUDID;
+
+@property (nonatomic, assign) BOOL fakeInstallFailure;
+@property (nonatomic, assign) BOOL fakeUninstallFailure;
+
+@property (nonatomic, assign) int fakeIsInstalledTimeout;
+@property (nonatomic, assign) int fakeInstallTimeout;
+@property (nonatomic, assign) int fakeUninstallTimeout;
+
+- (void)addFakeInstalledApp:(NSString *)testHostBundleID;
+
+@end

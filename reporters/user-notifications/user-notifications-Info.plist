@@ -3,6 +3,6 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleIdentifier</key>
-	<string>com.facebook.xctool</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 </dict>
 </plist>

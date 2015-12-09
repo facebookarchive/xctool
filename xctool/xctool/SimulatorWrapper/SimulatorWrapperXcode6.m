@@ -22,6 +22,7 @@
 #import "SimDeviceSet.h"
 #import "SimDeviceType.h"
 #import "SimRuntime.h"
+#import "SimulatorUtils.h"
 #import "XCToolUtil.h"
 
 @implementation SimulatorWrapperXcode6
@@ -29,14 +30,14 @@
 #pragma mark -
 #pragma mark Helpers
 
-+ (BOOL)prepareSimulator:(SimDevice *)device newSimulatorInstance:(BOOL)newSimulatorInstance error:(NSError **)error
++ (BOOL)prepareSimulator:(SimDevice *)device
+    newSimulatorInstance:(BOOL)newSimulatorInstance
+               reporters:(NSArray *)reporters
+                   error:(NSString **)error
 {
   if (!device.available) {
-    NSString *errorDesc = [NSString stringWithFormat: @"Simulator '%@' is not available", device.name];
     if (error) {
-      *error = [NSError errorWithDomain:@"com.apple.iOSSimulator"
-                                   code:0
-                               userInfo:@{NSLocalizedDescriptionKey: errorDesc}];
+      *error = [NSString stringWithFormat: @"Simulator '%@' is not available", device.name];
     }
     return NO;
   }
@@ -60,11 +61,8 @@
                                                                       configuration:configuration
                                                                               error:&launchError];
   if (!app) {
-    NSString *errorDesc = [NSString stringWithFormat: @"iOS Simulator app wasn't launched at path \"%@\" with configuration: %@. Error: %@", [iOSSimulatorURL path], configuration, launchError];
     if (error) {
-      *error = [NSError errorWithDomain:@"com.apple.iOSSimulator"
-                                   code:0
-                               userInfo:@{NSLocalizedDescriptionKey: errorDesc}];
+      *error = [NSString stringWithFormat: @"iOS Simulator app wasn't launched at path \"%@\" with configuration: %@. Error: %@", [iOSSimulatorURL path], configuration, launchError];
     }
     return NO;
   }
@@ -75,7 +73,14 @@
     --attempts;
   }
 
-  return attempts > 0;
+  if (attempts > 0) {
+    return YES;
+  }
+
+  if (error) {
+    *error = @"Timed out while waiting simulator to boot.";
+  }
+  return NO;
 }
 
 #pragma mark -
@@ -83,30 +88,34 @@
 
 + (BOOL)uninstallTestHostBundleID:(NSString *)testHostBundleID
                            device:(SimDevice *)device
-             newSimulatorInstance:(BOOL)newSimulatorInstance
                         reporters:(NSArray *)reporters
                             error:(NSString **)error
 {
-  NSError *localError = nil;
-
-  if (![self prepareSimulator:device newSimulatorInstance:newSimulatorInstance error:&localError]) {
-    *error = [NSString stringWithFormat:
-              @"Simulator '%@' was not prepared: %@",
-              device.name, localError.localizedDescription ?: @"Failed for unknown reason."];
-    return NO;
+  __block BOOL installed = YES;
+  RunSimulatorBlockWithTimeout(^{
+    installed = [device applicationIsInstalled:testHostBundleID type:nil error:nil];
+  });
+  if (!installed) {
+    return YES;
   }
 
-  BOOL uninstalled = ![device applicationIsInstalled:testHostBundleID type:nil error:&localError];
-  if (!uninstalled) {
+  __block NSError *localError = nil;
+  __block BOOL uninstalled = NO;
+  if (!RunSimulatorBlockWithTimeout(^{
     uninstalled = [device uninstallApplication:testHostBundleID
                                    withOptions:nil
                                          error:&localError];
+  })) {
+    localError = [NSError errorWithDomain:@"com.facebook.xctool.sim.uninstall.timeout"
+                                     code:0
+                                 userInfo:@{
+      NSLocalizedDescriptionKey: @"Timed out.",
+    }];
   }
 
   if (!uninstalled) {
     *error = [NSString stringWithFormat:
-              @"Failed to uninstall the test host app '%@' "
-              @"before running tests: %@",
+              @"Failed to uninstall the test host app '%@': %@",
               testHostBundleID, localError.localizedDescription ?: @"Failed for unknown reason."];
   }
   return uninstalled;
@@ -115,23 +124,22 @@
 + (BOOL)installTestHostBundleID:(NSString *)testHostBundleID
                  fromBundlePath:(NSString *)testHostBundlePath
                          device:(SimDevice *)device
-           newSimulatorInstance:(BOOL)newSimulatorInstance
                       reporters:(NSArray *)reporters
                           error:(NSString **)error
 {
-  NSError *localError = nil;
-  NSURL *appURL = [NSURL fileURLWithPath:testHostBundlePath];
-
-  if (![self prepareSimulator:device newSimulatorInstance:newSimulatorInstance error:&localError]) {
-    *error = [NSString stringWithFormat:
-              @"Simulator '%@' was not prepared: %@",
-              device.name, localError.localizedDescription ?: @"Failed for unknown reason."];
-    return NO;
+  __block NSError *localError = nil;
+  __block BOOL installed = NO;
+  if (!RunSimulatorBlockWithTimeout(^{
+    installed = [device installApplication:[NSURL fileURLWithPath:testHostBundlePath]
+                               withOptions:@{@"CFBundleIdentifier": testHostBundleID}
+                                     error:&localError];
+  })) {
+    localError = [NSError errorWithDomain:@"com.facebook.xctool.sim.install.timeout"
+                                     code:0
+                                 userInfo:@{
+      NSLocalizedDescriptionKey: @"Timed out.",
+    }];
   }
-
-  BOOL installed = [device installApplication:appURL
-                                  withOptions:@{@"CFBundleIdentifier": testHostBundleID}
-                                        error:&localError];
 
   if (!installed) {
     *error = [NSString stringWithFormat:

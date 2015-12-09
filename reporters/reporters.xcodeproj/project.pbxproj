@@ -712,7 +712,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastTestingUpgradeCheck = 0700;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0710;
 			};
 			buildConfigurationList = 2893A94117960CAD00EFBD28 /* Build configuration list for PBXProject "reporters" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -962,6 +962,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "reporters-tests/reporters-tests-Info.plist";
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.xctool.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -996,6 +997,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "reporters-tests/reporters-tests-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.xctool.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -1365,6 +1367,7 @@
 					__info_plist,
 					"$(INFOPLIST_FILE)",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.xctool;
 				PRODUCT_NAME = "user-notifications";
 				SDKROOT = macosx;
 			};
@@ -1396,6 +1399,7 @@
 					__info_plist,
 					"$(INFOPLIST_FILE)",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.xctool;
 				PRODUCT_NAME = "user-notifications";
 				SDKROOT = macosx;
 			};

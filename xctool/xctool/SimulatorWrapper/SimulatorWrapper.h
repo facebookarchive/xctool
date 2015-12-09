@@ -42,18 +42,22 @@
               arguments:(NSArray *)arguments
             environment:(NSDictionary *)environment
       feedOutputToBlock:(FdOutputLineFeedBlock)feedOutputToBlock
+              reporters:(NSArray *)reporters
                   error:(NSError **)error;
+
++ (BOOL)prepareSimulator:(SimDevice *)device
+    newSimulatorInstance:(BOOL)newSimulatorInstance
+               reporters:(NSArray *)reporters
+                   error:(NSString **)error;
 
 + (BOOL)uninstallTestHostBundleID:(NSString *)testHostBundleID
                            device:(SimDevice *)device
-             newSimulatorInstance:(BOOL)newSimulatorInstance
                         reporters:(NSArray *)reporters
                             error:(NSString **)error;
 
 + (BOOL)installTestHostBundleID:(NSString *)testHostBundleID
                  fromBundlePath:(NSString *)testHostBundlePath
                          device:(SimDevice *)device
-           newSimulatorInstance:(BOOL)newSimulatorInstance
                       reporters:(NSArray *)reporters
                           error:(NSString **)error;
 

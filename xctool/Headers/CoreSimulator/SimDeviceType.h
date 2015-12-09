@@ -9,7 +9,6 @@
 + (id)supportedDeviceTypes;
 + (id)supportedDeviceTypesByAlias;
 + (id)supportedDeviceTypesByIdentifier;
-+ (id)supportedDeviceTypesByName;
 + (id)supportedDevices;
 
 - (instancetype)init;
