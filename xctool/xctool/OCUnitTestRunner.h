@@ -31,6 +31,7 @@
   BOOL _garbageCollection;
   BOOL _freshSimulator;
   BOOL _resetSimulator;
+  BOOL _newSimulatorInstance;
   BOOL _noResetSimulatorOnFailure;
   BOOL _freshInstall;
   NSInteger _testTimeout;
@@ -61,6 +62,7 @@
                           environment:(NSDictionary *)environment
                        freshSimulator:(BOOL)freshSimulator
                        resetSimulator:(BOOL)resetSimulator
+                 newSimulatorInstance:(BOOL)newSimulatorInstance
             noResetSimulatorOnFailure:(BOOL)noResetSimulatorOnFailure
                          freshInstall:(BOOL)freshInstall
                           testTimeout:(NSInteger)testTimeout

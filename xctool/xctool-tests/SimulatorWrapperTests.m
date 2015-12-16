@@ -75,6 +75,7 @@
 
   NSString *error = nil;
   BOOL result = [SimulatorWrapper prepareSimulator:_simDevice
+                              newSimulatorInstance:NO
                                          reporters:@[_eventBuffer]
                                              error:&error];
   assertThatBool(result, isTrue());
@@ -95,6 +96,7 @@
 
   NSString *error = nil;
   BOOL result = [SimulatorWrapper prepareSimulator:_simDevice
+                              newSimulatorInstance:NO
                                          reporters:@[_eventBuffer]
                                              error:&error];
   assertThatBool(result, isFalse());
@@ -116,6 +118,7 @@
 
   NSString *error = nil;
   BOOL result = [SimulatorWrapper prepareSimulator:_simDevice
+                              newSimulatorInstance:NO
                                          reporters:@[_eventBuffer]
                                              error:&error];
   assertThatBool(result, isFalse());

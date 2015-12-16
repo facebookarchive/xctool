@@ -55,6 +55,7 @@ static id TestRunnerWithTestListsAndProcessEnv(Class cls, NSDictionary *settings
                                 environment:environment
                              freshSimulator:NO
                              resetSimulator:NO
+                       newSimulatorInstance:NO
                   noResetSimulatorOnFailure:NO
                                freshInstall:NO
                                 testTimeout:30

@@ -126,6 +126,7 @@ static const NSInteger kMaxRunTestsAttempts = 3;
     }
 
    if (![SimulatorWrapper prepareSimulator:[_simulatorInfo simulatedDevice]
+                      newSimulatorInstance:_newSimulatorInstance
                                  reporters:_reporters
                                      error:startupError]) {
       return NO;

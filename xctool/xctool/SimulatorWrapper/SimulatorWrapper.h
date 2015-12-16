@@ -46,6 +46,7 @@
                   error:(NSError **)error;
 
 + (BOOL)prepareSimulator:(SimDevice *)device
+    newSimulatorInstance:(BOOL)newSimulatorInstance
                reporters:(NSArray *)reporters
                    error:(NSString **)error;
 

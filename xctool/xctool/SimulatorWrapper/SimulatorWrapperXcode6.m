@@ -31,6 +31,7 @@
 #pragma mark Helpers
 
 + (BOOL)prepareSimulator:(SimDevice *)device
+    newSimulatorInstance:(BOOL)newSimulatorInstance
                reporters:(NSArray *)reporters
                    error:(NSString **)error
 {
@@ -49,8 +50,14 @@
   }
   NSDictionary *configuration = @{NSWorkspaceLaunchConfigurationArguments: @[@"-CurrentDeviceUDID", [device.UDID UUIDString]]};
   NSError *launchError = nil;
+  
+  NSWorkspaceLaunchOptions launchOptions = NSWorkspaceLaunchAsync | NSWorkspaceLaunchWithoutActivation | NSWorkspaceLaunchAndHide;
+  if (newSimulatorInstance) {
+    launchOptions = launchOptions | NSWorkspaceLaunchNewInstance;
+  }
+
   NSRunningApplication *app = [[NSWorkspace sharedWorkspace] launchApplicationAtURL:iOSSimulatorURL
-                                                                            options:NSWorkspaceLaunchAsync | NSWorkspaceLaunchWithoutActivation | NSWorkspaceLaunchAndHide
+                                                                            options:launchOptions
                                                                       configuration:configuration
                                                                               error:&launchError];
   if (!app) {

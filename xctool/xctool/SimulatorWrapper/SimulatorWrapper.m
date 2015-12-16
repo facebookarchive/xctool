@@ -164,6 +164,7 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
 #pragma mark Installation Methods
 
 + (BOOL)prepareSimulator:(SimDevice *)device
+    newSimulatorInstance:(BOOL)newSimulatorInstance
                reporters:(NSArray *)reporters
                    error:(NSString **)error
 {
@@ -173,6 +174,7 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
                            device.name);
 
   BOOL prepared = [[self classBasedOnCurrentVersionOfXcode] prepareSimulator:device
+                                                        newSimulatorInstance:newSimulatorInstance
                                                                    reporters:reporters
                                                                        error:error];
   if (prepared) {
