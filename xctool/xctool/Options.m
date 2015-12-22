@@ -563,9 +563,13 @@
     // sourcecode.c.objc for architecture i386
     //
     // Explicitly setting PLATFORM_NAME=iphonesimulator seems to fix it.
-    if (!_buildSettings[Xcode_PLATFORM_NAME] &&
-        [_sdk hasPrefix:@"iphonesimulator"]) {
-      _buildSettings[Xcode_PLATFORM_NAME] = @"iphonesimulator";
+    //
+    // This also works around a bug in Xcode 7.2, where it seems to not
+    // set the platform correctly when -sdk is provided. Setting the
+    // platform name manually works to correct the platform it picks.
+    if (!_buildSettings[Xcode_PLATFORM_NAME]) {
+      NSString *platformName = [[[_platformPath lastPathComponent] stringByDeletingPathExtension] lowercaseString];
+      _buildSettings[Xcode_PLATFORM_NAME] = platformName;
     }
   }
   return YES;
