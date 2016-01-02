@@ -169,8 +169,9 @@
     return NO;
   }
   for (NSString *target in _onlyList) {
-    if ([xcodeSubjectInfo testableWithTarget:target] == nil) {
-      *errorMessage = [NSString stringWithFormat:@"build-tests: '%@' is not a testing target in this scheme.", target];
+    if ([xcodeSubjectInfo testablesMatchingTarget:target].count == 0) {
+      *errorMessage = [NSString stringWithFormat:
+                       @"build-tests: '%@' does not match a testing target in this scheme.", target];
       return NO;
     }
   }
@@ -188,13 +189,13 @@
     BOOL add;
     if (onlyList.count > 0 && [[buildable.executable pathExtension] isEqualToString:@"octest"]) {
       // If we're filtering by target, only add targets that match.
-      add = [onlyList containsObject:buildable.target];
+      add = [BuildTestsAction looselyMatchesList:_onlyList target:buildable.target];
     } else if (_skipDependencies) {
       add = NO;
     } else {
       add = !([buildable isKindOfClass:[Testable class]] &&
               ([(Testable *)buildable skipped] ||
-               [omitList containsObject:buildable.target]));
+               [BuildTestsAction looselyMatchesList:_omitList target:buildable.target]));
     }
     if (add) {
       [result addObject:buildable];
@@ -202,6 +203,17 @@
   }
 
   return result;
+}
+
++ (BOOL)looselyMatchesList:(NSArray *)list
+                    target:(NSString *)target
+{
+  for (NSString *item in list) {
+    if ([XcodeSubjectInfo looselyMatchesTarget:target match:item]) {
+      return YES;
+    }
+  }
+  return NO;
 }
 
 - (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo

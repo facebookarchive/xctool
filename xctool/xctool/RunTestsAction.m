@@ -237,28 +237,30 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
   }
 }
 
-+ (Testable *)_matchingTestableForTarget:(NSString *)target
++ (NSArray *)_matchingTestablesForTarget:(NSString *)match
                               logicTests:(NSArray *)logicTests
                                 appTests:(NSDictionary *)appTests
                         xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
+  NSMutableArray *testables = [NSMutableArray array];
   for (NSString *logicTestBundle in logicTests) {
-    if ([target isEqualToString:logicTestBundle]) {
+    if ([XcodeSubjectInfo looselyMatchesTarget:logicTestBundle match:match]) {
       Testable *testable = [[Testable alloc] init];
       testable.target = logicTestBundle;
-      return testable;
+      [testables addObject:testable];
     }
   }
 
   for (NSString *appTestBundle in appTests) {
-    if ([target isEqualToString:appTestBundle]) {
+    if ([XcodeSubjectInfo looselyMatchesTarget:appTestBundle match:match]) {
       Testable *testable = [[Testable alloc] init];
       testable.target = appTestBundle;
-      return testable;
+      [testables addObject:testable];
     }
   }
 
-  return [xcodeSubjectInfo testableWithTarget:target];
+  [testables addObjectsFromArray:[xcodeSubjectInfo testablesMatchingTarget:match]];
+  return testables;
 }
 
 + (void)_populateTestableBuildSettings:(NSDictionary **)defaultTestableBuildSettings
@@ -369,50 +371,66 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
   return (_logicTests.count > 0) || (_rawAppTestArgs.count > 0) || (_appTests.count > 0);
 }
 
-- (NSDictionary *)onlyListAsTargetsAndSenTestList
-{
-  NSMutableDictionary *results = [NSMutableDictionary dictionary];
-  for (NSString *item in _onlyList) {
+- (NSArray *)listAsWildcardTargetAndSenTestList:(NSArray *)list {
+  NSMutableArray *result = [NSMutableArray array];
+  for (NSString *item in list) {
     NSRange colonRange = [item rangeOfString:@":"];
     NSString *target = nil;
     NSString *senTestList = nil;
-    if (colonRange.length > 0) {
+    if (colonRange.location != NSNotFound) {
       target = [item substringToIndex:colonRange.location];
       senTestList = [item substringFromIndex:colonRange.location + 1];
     } else {
       target = item;
     }
-    // Prefer applying the setting to the more specific list rather than the target
-    // if multiple -only are specified and one is a target while the other is a list
-    if (results[target] == nil || [results[target] isEqualTo:[NSNull null]]) {
-      results[target] = senTestList ? [@[senTestList] mutableCopy] : [NSNull null];
-    } else if (senTestList != nil) {
-      [results[target] addObject:senTestList];
+    [result addObject:@{
+      @"target": target,
+      @"senTestList": senTestList ? senTestList : [NSNull null],
+    }];
+  }
+  return result;
+}
+
+- (NSDictionary *)onlyListAsTargetsAndSenTestList:(XcodeSubjectInfo *)xcodeSubjectInfo
+{
+  NSMutableDictionary *results = [NSMutableDictionary dictionary];
+  NSArray *targetAndSenTestLists = [self listAsWildcardTargetAndSenTestList:_onlyList];
+  for (NSDictionary *targetAndSenTestList in targetAndSenTestLists) {
+    NSString *wildcardTarget = targetAndSenTestList[@"target"];
+    NSString *senTestList = targetAndSenTestList[@"senTestList"];
+    NSArray *matches = [xcodeSubjectInfo testablesMatchingTarget:wildcardTarget];
+    for (Testable *testable in matches) {
+      // Prefer applying the setting to the more specific list rather than the target
+      // if multiple -only are specified and one is a target while the other is a list
+      if (results[testable.target] == nil || [results[testable.target] isEqualTo:[NSNull null]]) {
+        results[testable.target] = [senTestList isEqualTo:[NSNull null]] ? [NSNull null] : [@[senTestList] mutableCopy];
+      } else if (![senTestList isEqualTo:[NSNull null]]) {
+        [results[testable.target] addObject:senTestList];
+      }
     }
   }
   return results;
 }
 
-- (NSDictionary *)omitListAsTargetsAndSenTestList
+- (NSDictionary *)omitListAsTargetsAndSenTestList:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   NSMutableDictionary *results = [NSMutableDictionary dictionary];
-  for (NSString *item in _omitList) {
-    NSRange colonRange = [item rangeOfString:@":"];
-    NSString *target = nil;
-    NSString *senTestList = nil;
-    if (colonRange.length > 0) {
-      target = [item substringToIndex:colonRange.location];
-      senTestList = [item substringFromIndex:colonRange.location + 1];
-    } else {
-      target = item;
-    }
-    if (results[target] == nil) {
-      results[target] = senTestList ? [@[senTestList] mutableCopy] : [NSNull null];
-    } else {
-      if (senTestList == nil || [results[target] isEqualTo:[NSNull null]]) {
-        results[target] = [NSNull null];
+  NSArray *targetAndSenTestLists = [self listAsWildcardTargetAndSenTestList:_omitList];
+  for (NSDictionary *targetAndSenTestList in targetAndSenTestLists) {
+    NSString *wildcardTarget = targetAndSenTestList[@"target"];
+    NSString *senTestList = targetAndSenTestList[@"senTestList"];
+    NSArray *matches = [xcodeSubjectInfo testablesMatchingTarget:wildcardTarget];
+    for (Testable *testable in matches) {
+      if (results[testable.target] == nil) {
+        results[testable.target] = [senTestList isEqualTo:[NSNull null]] ?
+                                    [NSNull null] :
+                                    [@[senTestList] mutableCopy];
       } else {
-        [results[target] addObject:senTestList];
+        if ([senTestList isEqualTo:[NSNull null]] || [results[testable.target] isEqualTo:[NSNull null]]) {
+          results[testable.target] = [NSNull null];
+        } else {
+          [results[testable.target] addObject:senTestList];
+        }
       }
     }
   }
@@ -498,23 +516,20 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
     *errorMessage = @"run-tests: -only and -omit cannot both be specified.";
     return NO;
   }
-  for (NSString *target in [self onlyListAsTargetsAndSenTestList]) {
-    if ([[self class] _matchingTestableForTarget:target
-                                      logicTests:_logicTests
-                                        appTests:_appTests
-                                xcodeSubjectInfo:xcodeSubjectInfo] == nil) {
-      *errorMessage = [NSString stringWithFormat:@"run-tests: '%@' is not a testing target in this scheme.", target];
+  for (NSDictionary *targetAndSenTestList in [self listAsWildcardTargetAndSenTestList:_onlyList]) {
+    NSString *target = targetAndSenTestList[@"target"];
+    if ([xcodeSubjectInfo testablesMatchingTarget:target].count == 0) {
+      *errorMessage = [NSString stringWithFormat:
+                       @"run-tests: '%@' does not match a testing target in this scheme.", target];
       return NO;
     }
   }
-
   return YES;
 }
 
 - (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   NSArray *testables = nil;
-
   if (_onlyList.count == 0) {
     // Use whatever we found in the scheme, except for skipped tests in the scheme, and
     // tests omitted via the command line.
@@ -522,7 +537,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
     NSArray *allTestables = [[self class] _allTestablesForLogicTests:_logicTests
                                                             appTests:_appTests
                                                     xcodeSubjectInfo:xcodeSubjectInfo];
-    NSDictionary *omit = [self omitListAsTargetsAndSenTestList];
+    NSDictionary *omit = [self omitListAsTargetsAndSenTestList:xcodeSubjectInfo];
     for (Testable *testable in allTestables) {
       if (omit[testable.target] != nil) {
         // Set tests omitted via command line as skipped.  Tests omitted via the scheme are
@@ -546,16 +561,16 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
   } else {
     // Munge the list of testables from the scheme to only include those given.
     NSMutableArray *newTestables = [NSMutableArray array];
-    NSDictionary *onlyTargets = [self onlyListAsTargetsAndSenTestList];
+    NSDictionary *onlyTargets = [self onlyListAsTargetsAndSenTestList:xcodeSubjectInfo];
     for (NSString *only in onlyTargets) {
-      Testable *matchingTestable =
-        [[self class] _matchingTestableForTarget:only
-                                      logicTests:_logicTests
-                                        appTests:_appTests
-                                xcodeSubjectInfo:xcodeSubjectInfo];
+      NSArray *matchingTestables =
+        [[self class] _matchingTestablesForTarget:only
+                                       logicTests:_logicTests
+                                         appTests:_appTests
+                                 xcodeSubjectInfo:xcodeSubjectInfo];
 
-      if (matchingTestable) {
-        Testable *newTestable = [matchingTestable copy];
+      if (matchingTestables.count > 0) {
+        Testable *newTestable = [matchingTestables[0] copy];
 
         if (onlyTargets[only] != [NSNull null]) {
           newTestable.senTestList = [onlyTargets[only] componentsJoinedByString:@","];
