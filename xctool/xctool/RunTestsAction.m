@@ -216,17 +216,12 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
     for (NSString *logicTestBundle in logicTests) {
       Testable *testable = [[Testable alloc] init];
       testable.target = logicTestBundle;
-
-      // Will be overridden later if -only or -omit is passed
-      testable.senTestList = @"All";
       [result addObject:testable];
     }
 
     for (NSString *appTestBundle in appTests) {
       Testable *testable = [[Testable alloc] init];
       testable.target = appTestBundle;
-
-      testable.senTestList = @"All";
       [result addObject:testable];
     }
     return result;
@@ -375,19 +370,19 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
   for (NSString *item in _onlyList) {
     NSRange colonRange = [item rangeOfString:@":"];
     NSString *target = nil;
-    NSString *senTestList = nil;
+    NSMutableArray *testList = nil;
     if (colonRange.length > 0) {
       target = [item substringToIndex:colonRange.location];
-      senTestList = [item substringFromIndex:colonRange.location + 1];
+      testList = [[[item substringFromIndex:colonRange.location + 1] componentsSeparatedByString:@","] mutableCopy];
     } else {
       target = item;
     }
     // Prefer applying the setting to the more specific list rather than the target
     // if multiple -only are specified and one is a target while the other is a list
     if (results[target] == nil || [results[target] isEqualTo:[NSNull null]]) {
-      results[target] = senTestList ? [@[senTestList] mutableCopy] : [NSNull null];
-    } else if (senTestList != nil) {
-      [results[target] addObject:senTestList];
+      results[target] = testList ?: [NSNull null];
+    } else if (testList != nil) {
+      [results[target] addObjectsFromArray:testList];
     }
   }
   return results;
@@ -399,20 +394,20 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
   for (NSString *item in _omitList) {
     NSRange colonRange = [item rangeOfString:@":"];
     NSString *target = nil;
-    NSString *senTestList = nil;
+    NSMutableArray *testList = nil;
     if (colonRange.length > 0) {
       target = [item substringToIndex:colonRange.location];
-      senTestList = [item substringFromIndex:colonRange.location + 1];
+      testList = [[[item substringFromIndex:colonRange.location + 1] componentsSeparatedByString:@","] mutableCopy];
     } else {
       target = item;
     }
     if (results[target] == nil) {
-      results[target] = senTestList ? [@[senTestList] mutableCopy] : [NSNull null];
+      results[target] = testList ?: [NSNull null];
     } else {
-      if (senTestList == nil || [results[target] isEqualTo:[NSNull null]]) {
+      if (testList == nil || [results[target] isEqualTo:[NSNull null]]) {
         results[target] = [NSNull null];
       } else {
-        [results[target] addObject:senTestList];
+        [results[target] addObjectsFromArray:testList];
       }
     }
   }
@@ -531,12 +526,7 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
         if (testable.skipped || [omitList isKindOfClass:[NSNull class]]) {
           testable.skipped = true;
         } else {
-          if (testable.senTestInvertScope) {
-            // We're already omitting some tests so append
-            [omitList addObject:testable.senTestList];
-          }
-          testable.senTestList = [omitList componentsJoinedByString:@","];
-          testable.senTestInvertScope = YES;
+          testable.skippedTests = [testable.skippedTests arrayByAddingObjectsFromArray:omitList];
         }
       }
       if (!testable.skipped) {
@@ -556,14 +546,11 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
                                 xcodeSubjectInfo:xcodeSubjectInfo];
 
       if (matchingTestable) {
-        Testable *newTestable = [matchingTestable copy];
-
-        if (onlyTargets[only] != [NSNull null]) {
-          newTestable.senTestList = [onlyTargets[only] componentsJoinedByString:@","];
-          newTestable.senTestInvertScope = NO;
+        NSArray *onlyList = onlyTargets[only];
+        if (![onlyList isKindOfClass:[NSNull class]]) {
+          matchingTestable.onlyTests = onlyList;
         }
-
-        [newTestables addObject:newTestable];
+        [newTestables addObject:matchingTestable];
       }
     }
     testables = newTestables;
@@ -808,19 +795,39 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
       continue;
     }
 
+    if (info.testable.skipped) {
+      NSString *message = [NSString stringWithFormat:@"skipping: This test bundle is disabled in %@ scheme.\n", xcodeSubjectInfo.subjectScheme];
+      TestableBlock block = [self blockToAdvertiseMessage:message
+                                 forTestableExecutionInfo:info
+                                                succeeded:YES];
+      NSArray *annotatedBlock = @[block, info.testable.target];
+      [blocksToRunOnDispatchQueue addObject:annotatedBlock];
+      continue;
+    }
+
     // array of [class, (bool) GC Enabled]
     Class testRunnerClass = [self testRunnerClassForBuildSettings:info.buildSettings];
     BOOL isApplicationTest = TestableSettingsIndicatesApplicationTest(info.buildSettings);
 
     NSString *filterError = nil;
     NSArray *testCases = [OCUnitTestRunner filterTestCases:info.testCases
-                                           withSenTestList:info.testable.senTestList
-                                        senTestInvertScope:info.testable.senTestInvertScope
+                                             onlyTestCases:info.testable.onlyTests
+                                          skippedTestCases:info.testable.skippedTests
                                                      error:&filterError];
     if (!testCases) {
       TestableBlock block = [self blockToAdvertiseMessage:filterError
                                  forTestableExecutionInfo:info
                                                 succeeded:NO];
+      NSArray *annotatedBlock = @[block, info.testable.target];
+      [blocksToRunOnDispatchQueue addObject:annotatedBlock];
+      continue;
+    }
+
+    if (testCases.count == 0) {
+      NSString *message = [NSString stringWithFormat:@"skipping: No test cases to run or all test cases were skipped.\n"];
+      TestableBlock block = [self blockToAdvertiseMessage:message
+                                 forTestableExecutionInfo:info
+                                                succeeded:YES];
       NSArray *annotatedBlock = @[block, info.testable.target];
       [blocksToRunOnDispatchQueue addObject:annotatedBlock];
       continue;

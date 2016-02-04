@@ -21,18 +21,18 @@
 @interface Testable : Buildable <NSCopying>
 
 /**
- * If no tests are set to be skipped in the Xcode scheme, then `senTestList`
- * will be 'All', and `senTestInvertScope` will be NO.
- *
- * Otherwise, `senTestList` will be a comma seperated list of classes and tests
- * that should be skipped, and the `senTestInvertScope` will be YES.
+ * Tests that are set to be skipped in the Xcode scheme.
  */
-@property (nonatomic, copy) NSString *senTestList;
-@property (nonatomic, assign) BOOL senTestInvertScope;
+@property (nonatomic, copy) NSArray *skippedTests;
+
+/**
+ * The only tests that should be run (i.e. set by user via `-only` option).
+ */
+@property (nonatomic, copy) NSArray *onlyTests;
 
 /**
  * YES if this testable was deselected in the Xcode scheme
- * (i.e. it gets skipped)
+ * (i.e. it gets skipped).
  */
 @property (nonatomic, assign) BOOL skipped;
 

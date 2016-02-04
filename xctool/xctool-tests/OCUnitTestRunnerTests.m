@@ -576,139 +576,247 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
 - (void)testClassNameDiscoveryFiltering
 {
   NSArray *testCases = @[
-                         @"Cls1/test1",
-                         @"Cls1/test2",
-                         @"Cls1/test3",
-                         @"Cls2/test1",
-                         @"Cls2/test2",
-                         @"Cls3/test1",
-                         @"OtherClass1/test1",
-                         @"OtherClass2/test1",
-                         @"OtherClass2/test2",
-                         @"OtherNonmatching/testOne",
-                         @"OtherNonmatching/testThree",
-                         @"OtherNonmatching/testTwo",
-                         ];
+    @"Cls1/test1",
+    @"Cls1/test2",
+    @"Cls1/test3",
+    @"Cls2/test1",
+    @"Cls2/test2",
+    @"Cls3/test1",
+    @"OtherClass1/test1",
+    @"OtherClass2/test1",
+    @"OtherClass2/test2",
+    @"OtherNonmatching/testOne",
+    @"OtherNonmatching/testThree",
+    @"OtherNonmatching/testTwo",
+  ];
   NSString *error = nil;
-  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"All" senTestInvertScope:NO error:&error],
-             equalTo(testCases));
-  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"None" senTestInvertScope:NO error:&error],
-             equalTo(@[]));
-  XCTAssertNil(error, @"Error shouldn't be set");
-  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Cls1" senTestInvertScope:NO error:&error],
-             equalTo(@[
-                     @"Cls1/test1",
-                     @"Cls1/test2",
-                     @"Cls1/test3",
-                     ]));
-  XCTAssertNil(error, @"Error shouldn't be set");
-  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Cls1" senTestInvertScope:YES error:&error],
-             equalTo(@[
-                     @"Cls2/test1",
-                     @"Cls2/test2",
-                     @"Cls3/test1",
-                     @"OtherClass1/test1",
-                     @"OtherClass2/test1",
-                     @"OtherClass2/test2",
-                     @"OtherNonmatching/testOne",
-                     @"OtherNonmatching/testThree",
-                     @"OtherNonmatching/testTwo",
-                     ]));
-  XCTAssertNil(error, @"Error shouldn't be set");
-  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Cls1,Cls2/test1,Cls3" senTestInvertScope:NO error:&error],
-             equalTo(@[
-                     @"Cls1/test1",
-                     @"Cls1/test2",
-                     @"Cls1/test3",
-                     @"Cls2/test1",
-                     @"Cls3/test1"
-                     ]));
-  XCTAssertNil(error, @"Error shouldn't be set");
-  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Cls1,Cls2/test1,Cls3" senTestInvertScope:YES error:&error],
-             equalTo(@[
-                     @"Cls2/test2",
-                     @"OtherClass1/test1",
-                     @"OtherClass2/test1",
-                     @"OtherClass2/test2",
-                     @"OtherNonmatching/testOne",
-                     @"OtherNonmatching/testThree",
-                     @"OtherNonmatching/testTwo",
-                     ]));
-  XCTAssertNil(error, @"Error shouldn't be set");
+  NSArray *onlyTestCases = nil;
+  NSArray *skipTestCases = nil;
 
-  // Class prefix cases
-  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Other*" senTestInvertScope:NO error:&error],
-             equalTo(@[
-                       @"OtherClass1/test1",
-                       @"OtherClass2/test1",
-                       @"OtherClass2/test2",
-                       @"OtherNonmatching/testOne",
-                       @"OtherNonmatching/testThree",
-                       @"OtherNonmatching/testTwo",
-                       ]));
-  XCTAssertNil(error, @"Error shouldn't be set");
+  // all test cases
+  assertThat([OCUnitTestRunner filterTestCases:testCases onlyTestCases:nil skippedTestCases:nil error:&error], equalTo(testCases));
+  assertThat(error, nilValue());
 
-  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Cls*" senTestInvertScope:NO error:&error],
-             equalTo(@[
-                       @"Cls1/test1",
-                       @"Cls1/test2",
-                       @"Cls1/test3",
-                       @"Cls2/test1",
-                       @"Cls2/test2",
-                       @"Cls3/test1"
-                       ]));
-  XCTAssertNil(error, @"Error shouldn't be set");
+  // no test cases, skip all
+  assertThat([OCUnitTestRunner filterTestCases:testCases onlyTestCases:nil skippedTestCases:testCases error:&error], equalTo(@[]));
+  assertThat(error, nilValue());
 
-  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"OtherC*" senTestInvertScope:NO error:&error],
-             equalTo(@[
-                       @"OtherClass1/test1",
-                       @"OtherClass2/test1",
-                       @"OtherClass2/test2"
-                       ]));
-  XCTAssertNil(error, @"Error shouldn't be set");
+  // skip specified test cases
+  skipTestCases = @[
+    @"Cls2/test1",
+    @"Cls2/test2",
+    @"Cls3/test1",
+    @"OtherClass1/test1",
+    @"OtherClass2/test1",
+    @"OtherClass2/test2",
+    @"OtherNonmatching/testOne",
+    @"OtherNonmatching/testThree",
+    @"OtherNonmatching/testTwo",
+  ];
+  assertThat([OCUnitTestRunner filterTestCases:testCases onlyTestCases:nil skippedTestCases:skipTestCases error:&error], equalTo(@[
+    @"Cls1/test1",
+    @"Cls1/test2",
+    @"Cls1/test3",
+  ]));
+  assertThat(error, nilValue());
 
-  // Test prefix cases
-  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"OtherClass1/test*" senTestInvertScope:NO error:&error],
-             equalTo(@[
-                       @"OtherClass1/test1",
-                       ]));
-  XCTAssertNil(error, @"Error shouldn't be set");
+  // skip specified class and test cases
+  skipTestCases = @[
+    @"Cls1",
+    @"Cls2/test1",
+    @"Cls3",
+  ];
+  assertThat([OCUnitTestRunner filterTestCases:testCases onlyTestCases:nil skippedTestCases:skipTestCases error:&error], equalTo(@[
+    @"Cls2/test2",
+    @"OtherClass1/test1",
+    @"OtherClass2/test1",
+    @"OtherClass2/test2",
+    @"OtherNonmatching/testOne",
+    @"OtherNonmatching/testThree",
+    @"OtherNonmatching/testTwo",
+  ]));
+  assertThat(error, nilValue());
 
-  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"OtherClass2/test*" senTestInvertScope:NO error:&error],
-             equalTo(@[
-                       @"OtherClass2/test1",
-                       @"OtherClass2/test2",
-                       ]));
-  XCTAssertNil(error, @"Error shouldn't be set");
+  // class prefix cases (skip)
+  assertThat([OCUnitTestRunner filterTestCases:testCases onlyTestCases:nil skippedTestCases:@[@"Other*"] error:&error], equalTo(@[
+    @"Cls1/test1",
+    @"Cls1/test2",
+    @"Cls1/test3",
+    @"Cls2/test1",
+    @"Cls2/test2",
+    @"Cls3/test1",
+  ]));
+  assertThat(error, nilValue());
 
-  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"Cls1/t*" senTestInvertScope:NO error:&error],
-             equalTo(@[
-                       @"Cls1/test1",
-                       @"Cls1/test2",
-                       @"Cls1/test3",
-                       ]));
-  XCTAssertNil(error, @"Error shouldn't be set");
+  // test prefix cases (skip)
+  assertThat([OCUnitTestRunner filterTestCases:testCases onlyTestCases:nil skippedTestCases:@[@"OtherNonmatching/testT*"] error:&error], equalTo(@[
+    @"Cls1/test1",
+    @"Cls1/test2",
+    @"Cls1/test3",
+    @"Cls2/test1",
+    @"Cls2/test2",
+    @"Cls3/test1",
+    @"OtherClass1/test1",
+    @"OtherClass2/test1",
+    @"OtherClass2/test2",
+    @"OtherNonmatching/testOne",
+  ]));
+  assertThat(error, nilValue());
 
-  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"OtherNonmatching/*" senTestInvertScope:NO error:&error],
-             equalTo(@[
-                       @"OtherNonmatching/testOne",
-                       @"OtherNonmatching/testThree",
-                       @"OtherNonmatching/testTwo",
-                       ]));
-  XCTAssertNil(error, @"Error shouldn't be set");
+  // only specified class test cases
+  assertThat([OCUnitTestRunner filterTestCases:testCases onlyTestCases:@[@"Cls1"] skippedTestCases:nil error:&error], equalTo(@[
+    @"Cls1/test1",
+    @"Cls1/test2",
+    @"Cls1/test3",
+  ]));
+  assertThat(error, nilValue());
 
-  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"OtherNonmatching/testO*" senTestInvertScope:NO error:&error],
-             equalTo(@[
-                       @"OtherNonmatching/testOne",
-                       ]));
-  XCTAssertNil(error, @"Error shouldn't be set");
+  // only specified classes and test case
+  onlyTestCases = @[
+    @"Cls1",
+    @"Cls2/test1",
+    @"Cls3",
+  ];
+  assertThat([OCUnitTestRunner filterTestCases:testCases onlyTestCases:onlyTestCases skippedTestCases:nil error:&error], equalTo(@[
+    @"Cls1/test1",
+    @"Cls1/test2",
+    @"Cls1/test3",
+    @"Cls2/test1",
+    @"Cls3/test1"
+  ]));
+  assertThat(error, nilValue());
 
-  assertThat([OCUnitTestRunner filterTestCases:testCases withSenTestList:@"OtherNonmatching/testT*" senTestInvertScope:NO error:&error],
-             equalTo(@[
-                       @"OtherNonmatching/testThree",
-                       @"OtherNonmatching/testTwo",
-                       ]));
-  XCTAssertNil(error, @"Error shouldn't be set");
+  // class prefix cases (only)
+  assertThat([OCUnitTestRunner filterTestCases:testCases onlyTestCases:@[@"Other*"] skippedTestCases:nil error:&error], equalTo(@[
+    @"OtherClass1/test1",
+    @"OtherClass2/test1",
+    @"OtherClass2/test2",
+    @"OtherNonmatching/testOne",
+    @"OtherNonmatching/testThree",
+    @"OtherNonmatching/testTwo",
+  ]));
+  assertThat(error, nilValue());
+
+  assertThat([OCUnitTestRunner filterTestCases:testCases onlyTestCases:@[@"Cls*"] skippedTestCases:nil error:&error], equalTo(@[
+    @"Cls1/test1",
+    @"Cls1/test2",
+    @"Cls1/test3",
+    @"Cls2/test1",
+    @"Cls2/test2",
+    @"Cls3/test1",
+  ]));
+  assertThat(error, nilValue());
+
+  assertThat([OCUnitTestRunner filterTestCases:testCases onlyTestCases:@[@"OtherC*"] skippedTestCases:nil error:&error], equalTo(@[
+    @"OtherClass1/test1",
+    @"OtherClass2/test1",
+    @"OtherClass2/test2",
+  ]));
+  assertThat(error, nilValue());
+
+  // test prefix cases (only)
+  assertThat([OCUnitTestRunner filterTestCases:testCases onlyTestCases:@[@"OtherClass1/test*"] skippedTestCases:nil error:&error], equalTo(@[
+    @"OtherClass1/test1",
+  ]));
+  assertThat(error, nilValue());
+
+  assertThat([OCUnitTestRunner filterTestCases:testCases onlyTestCases:@[@"OtherClass2/test*"] skippedTestCases:nil error:&error], equalTo(@[
+    @"OtherClass2/test1",
+    @"OtherClass2/test2",
+  ]));
+  assertThat(error, nilValue());
+
+  assertThat([OCUnitTestRunner filterTestCases:testCases onlyTestCases:@[@"Cls1/t*"] skippedTestCases:nil error:&error], equalTo(@[
+    @"Cls1/test1",
+    @"Cls1/test2",
+    @"Cls1/test3",
+  ]));
+  assertThat(error, nilValue());
+
+  assertThat([OCUnitTestRunner filterTestCases:testCases onlyTestCases:@[@"OtherNonmatching/*"] skippedTestCases:nil error:&error], equalTo(@[
+    @"OtherNonmatching/testOne",
+    @"OtherNonmatching/testThree",
+    @"OtherNonmatching/testTwo",
+  ]));
+  assertThat(error, nilValue());
+
+  assertThat([OCUnitTestRunner filterTestCases:testCases onlyTestCases:@[@"OtherNonmatching/testO*"] skippedTestCases:nil error:&error], equalTo(@[
+    @"OtherNonmatching/testOne",
+  ]));
+  assertThat(error, nilValue());
+
+  assertThat([OCUnitTestRunner filterTestCases:testCases onlyTestCases:@[@"OtherNonmatching/testT*"] skippedTestCases:nil error:&error], equalTo(@[
+    @"OtherNonmatching/testThree",
+    @"OtherNonmatching/testTwo",
+  ]));
+  assertThat(error, nilValue());
+
+  // test only non-existing test case/class
+  assertThat([OCUnitTestRunner filterTestCases:testCases onlyTestCases:@[@"OtherClassR"] skippedTestCases:nil error:&error], nilValue());
+  assertThat(error, equalTo(@"Test cases for the following test specifiers weren't found: OtherClassR."));
+  error = nil;
+
+  assertThat([OCUnitTestRunner filterTestCases:testCases onlyTestCases:@[@"OtherClass1/testR"] skippedTestCases:nil error:&error], nilValue());
+  assertThat(error, equalTo(@"Test cases for the following test specifiers weren't found: OtherClass1/testR."));
+  error = nil;
+
+  assertThat([OCUnitTestRunner filterTestCases:testCases onlyTestCases:@[@"OtherClassR*"] skippedTestCases:nil error:&error], nilValue());
+  assertThat(error, equalTo(@"Test cases for the following test specifiers weren't found: OtherClassR*."));
+  error = nil;
+
+  assertThat([OCUnitTestRunner filterTestCases:testCases onlyTestCases:@[@"OtherClass1/testR*"] skippedTestCases:nil error:&error], nilValue());
+  assertThat(error, equalTo(@"Test cases for the following test specifiers weren't found: OtherClass1/testR*."));
+  error = nil;
+
+  // test only and skip test cases at the same time
+  onlyTestCases = @[
+    @"Cls1",
+    @"Cls2/test1",
+    @"Cls3",
+  ];
+  skipTestCases = @[
+    @"Cls1",
+  ];
+  assertThat([OCUnitTestRunner filterTestCases:testCases onlyTestCases:onlyTestCases skippedTestCases:skipTestCases error:&error], equalTo(@[
+    @"Cls2/test1",
+    @"Cls3/test1",
+  ]));
+  assertThat(error, nilValue());
+
+  onlyTestCases = @[
+    @"Cls1",
+    @"Cls2/test1",
+  ];
+  skipTestCases = @[
+    @"Cls3",
+  ];
+  assertThat([OCUnitTestRunner filterTestCases:testCases onlyTestCases:onlyTestCases skippedTestCases:skipTestCases error:&error], equalTo(@[
+    @"Cls1/test1",
+    @"Cls1/test2",
+    @"Cls1/test3",
+    @"Cls2/test1",
+  ]));
+  assertThat(error, nilValue());
+
+  onlyTestCases = @[
+    @"OtherNonmatching/test*",
+  ];
+  skipTestCases = @[
+    @"OtherNonmatching/testT*",
+  ];
+  assertThat([OCUnitTestRunner filterTestCases:testCases onlyTestCases:onlyTestCases skippedTestCases:skipTestCases error:&error], equalTo(@[
+    @"OtherNonmatching/testOne",
+  ]));
+  assertThat(error, nilValue());
+
+  onlyTestCases = @[
+    @"OtherNonmatching/test*",
+  ];
+  skipTestCases = @[
+    @"OtherNonmatching/test*",
+  ];
+  assertThat([OCUnitTestRunner filterTestCases:testCases onlyTestCases:onlyTestCases skippedTestCases:skipTestCases error:&error], equalTo(@[]));
+  assertThat(error, nilValue());
 }
 
 @end
