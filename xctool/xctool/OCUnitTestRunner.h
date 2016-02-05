@@ -42,16 +42,20 @@
 @property (nonatomic, copy, readonly) NSArray *reporters;
 
 /**
- * Filters a list of test class names to only those that match the
- * senTestList and senTestInvertScope constraints.
+ * Filters a list of test cases by removing test cases with names matching
+ * `skippedTestCases` constraints and, if set, all tests cases not matching
+ * `onlyTestCases` ones.
  *
- * @param testCases An array of test cases ('ClassA/test1', 'ClassB/test2', 'Class*', 'Class', 'ClassA/test*')
- * @param senTestList SenTestList string.  e.g. "All", "None", "ClsA,ClsB"
- * @param senTestInvertScope YES if scope should be inverted.
+ * @param allTestCases An array of test cases ('ClassA/test1', 'ClassB/test2', 'Class')
+ * @param onlyTestCases An array of test case name constraints defining what test
+ *                      cases should only be included ('Class*', 'Class1', 'ClassA/test*', 'ClassB/test2')
+ * @param skippedTestCases An array of test case name constraints defining what test 
+ *                         cases should be removed ('Class*', 'Class1', 'ClassA/test*', 'ClassB/test2')
+ * @param error An output parameter which is set if error occures during filtering.
  */
-+ (NSArray *)filterTestCases:(NSArray *)testCases
-             withSenTestList:(NSString *)senTestList
-          senTestInvertScope:(BOOL)senTestInvertScope
++ (NSArray *)filterTestCases:(NSArray *)allTestCases
+               onlyTestCases:(NSArray *)onlyTestCases
+            skippedTestCases:(NSArray *)skippedTestCases
                        error:(NSString **)error;
 
 - (instancetype)initWithBuildSettings:(NSDictionary *)buildSettings

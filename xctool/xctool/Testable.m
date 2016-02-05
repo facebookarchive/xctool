@@ -23,8 +23,8 @@
   Testable *copy = [super copyWithZone:zone];
 
   if (copy) {
-    copy.senTestList = _senTestList;
-    copy.senTestInvertScope = _senTestInvertScope;
+    copy.skippedTests = _skippedTests;
+    copy.onlyTests = _onlyTests;
     copy.skipped = _skipped;
     copy.arguments = _arguments;
     copy.environment = _environment;
@@ -47,8 +47,8 @@
 
   return ([super isEqual:other] &&
           [other isKindOfClass:[Testable class]] &&
-          bothNilOrEqual(_senTestList, other.senTestList) &&
-          _senTestInvertScope == other.senTestInvertScope &&
+          bothNilOrEqual(_skippedTests, other.skippedTests) &&
+          bothNilOrEqual(_onlyTests, other.onlyTests) &&
           _skipped == other.skipped &&
           bothNilOrEqual(_arguments, other.arguments) &&
           bothNilOrEqual(_environment, other.environment) &&
