@@ -22,6 +22,7 @@ typedef void (^FdOutputLineFeedBlock)(int fd, NSString *);
 typedef void (^BlockToRunWhileReading)(void);
 
 NSString *StripAnsi(NSString *inputString);
+NSString *StringFromDispatchDataWithBrokenUTF8Encoding(const char *dataPtr, size_t dataSz);
 
 /**
  *  Returns array of NSString's with contents read from fildes.
