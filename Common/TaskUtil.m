@@ -68,23 +68,41 @@ NSString *StripAnsi(NSString *inputString)
   return outputString;
 }
 
-static NSString *StringFromDispatchDataWithBrokenUTF8Encoding(const char *dataPtr, size_t dataSz)
+NSString *StringFromDispatchDataWithBrokenUTF8Encoding(const char *dataPtr, size_t dataSz)
 {
   int one = 1;
   iconv_t cd = iconv_open("UTF-8", "UTF-8");
   iconvctl(cd, ICONV_SET_DISCARD_ILSEQ, &one);
-  size_t inbytesleft = dataSz;
-  size_t outbytesleft = dataSz;
   char *inbuf  = (char *)dataPtr;
   char *outbuf = malloc(sizeof(char) * dataSz);
-  char *outptr = outbuf;
-  NSString *string = nil;
-  if (iconv(cd, &inbuf, &inbytesleft, &outptr, &outbytesleft) != (size_t)-1) {
-    string = [[NSString alloc] initWithBytes:outbuf length:dataSz - outbytesleft encoding:NSUTF8StringEncoding];
+  NSMutableString *outputString = [NSMutableString string];
+  long bytesToProcess = dataSz;
+  while (bytesToProcess > 0) {
+    NSString *string = nil;
+    size_t inbytesleft = bytesToProcess;
+    size_t outbytesleft = bytesToProcess;
+    char *outptr = outbuf;
+    size_t iconvResult = iconv(cd, &inbuf, &inbytesleft, &outptr, &outbytesleft);
+    size_t outbytesLength = bytesToProcess - outbytesleft;
+    if (outbytesLength > 0) {
+      string = [[NSString alloc] initWithBytesNoCopy:outbuf length:outbytesLength encoding:NSUTF8StringEncoding freeWhenDone:NO];
+      [outputString appendString:string];
+    }
+    if (iconvResult != (size_t)-1) {
+      inbuf += (bytesToProcess - inbytesleft);
+    } else if (errno == EINVAL) {
+      // skip first byte and then all next 10xxxxxx bytes (see UTF-8 description for more details)
+      do {
+        inbuf++;
+        inbytesleft--;
+      } while (((*inbuf) & 0xC0) == 0x80 && inbytesleft > 0);
+      [outputString appendString:@"\uFFFD"];
+    }
+    bytesToProcess = inbytesleft;
   }
   free(outbuf);
   iconv_close(cd);
-  return string;
+  return outputString;
 }
 
 static NSArray *LinesFromDispatchData(dispatch_data_t data, BOOL omitNewlineCharacters, BOOL forceUntilTheEnd, size_t *convertedSize)

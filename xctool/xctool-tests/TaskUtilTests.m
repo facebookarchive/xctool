@@ -80,4 +80,16 @@
   }
 }
 
+- (void)testConversionToUT8OfBrokenUTF8SequenceOfBytes
+{
+  NSData *data = [NSData dataWithContentsOfFile:TEST_DATA @"BrokenUTF8EncodingInFile.txt"];
+  NSString *string = StringFromDispatchDataWithBrokenUTF8Encoding(data.bytes, data.length);
+  NSString *fixedString = [NSString stringWithContentsOfFile:TEST_DATA @"BrokenUTF8EncodingInFile-FIXED.txt" encoding:NSUTF8StringEncoding error:nil];
+  XCTAssertEqualObjects(string, fixedString);
+
+  NSString *regularString = @"qwertyuiopasdfghjk';123^&*()_<>?";
+  NSData *regularStringData = [regularString dataUsingEncoding:NSUTF8StringEncoding];
+  XCTAssertEqualObjects(StringFromDispatchDataWithBrokenUTF8Encoding(regularStringData.bytes, regularStringData.length), regularString);
+}
+
 @end
