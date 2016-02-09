@@ -60,7 +60,9 @@
      sharedPrecompsDir:(NSString *)sharedPrecompsDir
         xcodeArguments:(NSArray *)xcodeArguments
           xcodeCommand:(NSString *)xcodeCommand
+       derivedDataPath:(NSString *)derivedDataPath
 {
+  NSString *customDerivedDataLocation = derivedDataPath ? derivedDataPath : [TemporaryDirectoryForAction() stringByAppendingPathComponent:@"DerivedData"];
   NSArray *taskArguments =
   [xcodeArguments arrayByAddingObjectsFromArray:@[
    @"-workspace", path,
@@ -82,8 +84,7 @@
    // we're overriding OBJROOT/SYMROOM/SHARED_PRECOMPS_DIR, no build output ends
    // up here so the directory serves no purpose.  It's empty except for one
    // 'info.plist' file.
-   [@"-IDECustomDerivedDataLocation=" stringByAppendingString:
-    [TemporaryDirectoryForAction() stringByAppendingPathComponent:@"DerivedData"]],
+   [@"-IDECustomDerivedDataLocation=" stringByAppendingString:customDerivedDataLocation],
    xcodeCommand,
    ]];
 
@@ -130,7 +131,8 @@
                                             symRoot:xcodeSubjectInfo.symRoot
                                   sharedPrecompsDir:xcodeSubjectInfo.sharedPrecompsDir
                                      xcodeArguments:xcodebuildArguments
-                                       xcodeCommand:command];
+                                       xcodeCommand:command
+                                    derivedDataPath:options.derivedDataPath];
 
   [xcodeSubjectInfo.actionScripts postBuildWithOptions:options];
 
