@@ -85,7 +85,7 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
     // that way xctool preserves an order of printed lines
     kOptionsStdoutKey: simStdoutRelativePath,
     kOptionsStderrKey: simStdoutRelativePath,
-    kOptionsWaitForDebuggerKey: @"1",
+    kOptionsWaitForDebuggerKey: @"0",
   };
 
   ReportStatusMessageBegin(reporters,
