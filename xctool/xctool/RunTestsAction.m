@@ -805,25 +805,49 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
       continue;
     }
 
-    // array of [class, (bool) GC Enabled]
-    Class testRunnerClass = [self testRunnerClassForBuildSettings:info.buildSettings];
-    BOOL isApplicationTest = TestableSettingsIndicatesApplicationTest(info.buildSettings);
+    if (info.testCasesQueryError != nil) {
+      NSString *message = [NSString stringWithFormat:@"Failed to query the list of test cases in the test bundle: %@", info.testCasesQueryError];
+      TestableBlock block = [self blockToAdvertiseMessage:message
+                                 forTestableExecutionInfo:info
+                                                succeeded:NO];
+      NSString *blockAnnotation = info.buildSettings[Xcode_FULL_PRODUCT_NAME];
+      NSArray *annotatedBlock = @[block, blockAnnotation];
+      [blocksToRunOnDispatchQueue addObject:annotatedBlock];
+      continue;
+    }
+
+    if (info.testCases.count == 0) {
+      TestableBlock block;
+      NSString *blockAnnotation;
+      if (_failOnEmptyTestBundles) {
+        block = [self blockToAdvertiseMessage:@"This test bundle contained no tests. Treating as a failure since -failOnEmpyTestBundles is enabled.\n"
+                     forTestableExecutionInfo:info
+                                    succeeded:NO];
+        blockAnnotation = info.buildSettings[Xcode_FULL_PRODUCT_NAME];
+      } else {
+        block = [self blockToAdvertiseMessage:@"skipping: This test bundle contained no tests.\n"
+                     forTestableExecutionInfo:info
+                                    succeeded:YES];
+        blockAnnotation = info.buildSettings[Xcode_FULL_PRODUCT_NAME];
+      }
+      NSArray *annotatedBlock = @[block, blockAnnotation];
+      [blocksToRunOnDispatchQueue addObject:annotatedBlock];
+      continue;
+    }
 
     NSString *filterError = nil;
     NSArray *testCases = [OCUnitTestRunner filterTestCases:info.testCases
                                              onlyTestCases:info.testable.onlyTests
                                           skippedTestCases:info.testable.skippedTests
                                                      error:&filterError];
-    if (!testCases) {
+    if (testCases == nil) {
       TestableBlock block = [self blockToAdvertiseMessage:filterError
                                  forTestableExecutionInfo:info
                                                 succeeded:NO];
       NSArray *annotatedBlock = @[block, info.testable.target];
       [blocksToRunOnDispatchQueue addObject:annotatedBlock];
       continue;
-    }
-
-    if (testCases.count == 0) {
+    } else if (testCases.count == 0) {
       NSString *message = [NSString stringWithFormat:@"skipping: No test cases to run or all test cases were skipped.\n"];
       TestableBlock block = [self blockToAdvertiseMessage:message
                                  forTestableExecutionInfo:info
@@ -833,6 +857,8 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
       continue;
     }
 
+    Class testRunnerClass = [self testRunnerClassForBuildSettings:info.buildSettings];
+    BOOL isApplicationTest = TestableSettingsIndicatesApplicationTest(info.buildSettings);
     int bucketSize = isApplicationTest ? _appTestBucketSize : _logicTestBucketSize;
     NSArray *testChunks;
 
@@ -847,44 +873,17 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
 
     int bucketCount = 1;
 
-    for (NSArray *senTestListChunk in testChunks) {
-
-      TestableBlock block;
-      NSString *blockAnnotation;
-
-      if (info.testCasesQueryError != nil) {
-        block = [self blockToAdvertiseMessage:[NSString stringWithFormat:
-                                             @"Failed to query the list of test cases in the test bundle: %@", info.testCasesQueryError]
-                     forTestableExecutionInfo:info
-                                    succeeded:NO];
-        blockAnnotation = info.buildSettings[Xcode_FULL_PRODUCT_NAME];
-      } else if (info.testCases.count == 0) {
-        if (_failOnEmptyTestBundles) {
-          block = [self blockToAdvertiseMessage:@"This test bundle contained no tests. Treating as a failure since -failOnEmpyTestBundles is enabled.\n"
-                       forTestableExecutionInfo:info
-                                      succeeded:NO];
-          blockAnnotation = info.buildSettings[Xcode_FULL_PRODUCT_NAME];
-        } else {
-          block = [self blockToAdvertiseMessage:@"skipping: This test bundle contained no tests.\n"
-                       forTestableExecutionInfo:info
-                                      succeeded:YES];
-          blockAnnotation = info.buildSettings[Xcode_FULL_PRODUCT_NAME];
-        }
-      } else {
-        block = [self blockForTestable:info.testable
-                      focusedTestCases:senTestListChunk
-                          allTestCases:info.testCases
-                 testableExecutionInfo:info
-                        testableTarget:info.testable.target
-                     isApplicationTest:isApplicationTest
-                             arguments:info.expandedArguments
-                           environment:info.expandedEnvironment
-                       testRunnerClass:testRunnerClass];
-        blockAnnotation = [NSString stringWithFormat:@"%@ (bucket #%d, %ld tests)",
-                           info.buildSettings[Xcode_FULL_PRODUCT_NAME],
-                           bucketCount,
-                           [senTestListChunk count]];
-      }
+    for (NSArray *testListChunk in testChunks) {
+      TestableBlock block = [self blockForTestable:info.testable
+                                  focusedTestCases:testListChunk
+                                      allTestCases:info.testCases
+                             testableExecutionInfo:info
+                                    testableTarget:info.testable.target
+                                 isApplicationTest:isApplicationTest
+                                         arguments:info.expandedArguments
+                                       environment:info.expandedEnvironment
+                                   testRunnerClass:testRunnerClass];
+      NSString *blockAnnotation = [NSString stringWithFormat:@"%@ (bucket #%d, %ld tests)", info.buildSettings[Xcode_FULL_PRODUCT_NAME], bucketCount, testListChunk.count];
       NSArray *annotatedBlock = @[block, blockAnnotation];
 
       if (isApplicationTest) {
