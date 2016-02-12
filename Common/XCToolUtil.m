@@ -732,6 +732,15 @@ NSString *OSXTestFrameworkDirectories()
   return [directories componentsJoinedByString:@":"];
 }
 
+NSString *TVOSTestFrameworkDirectories()
+{
+  NSArray *directories = @[
+    [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"],
+    [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/AppleTVSimulator.platform/Developer/SDKs/AppleTVSimulator.sdk/System/Library/Frameworks"],
+  ];
+  return [directories componentsJoinedByString:@":"];
+}
+
 NSString *AllFrameworkAndLiraryPathsInBuildSettings(NSDictionary *buildSettings)
 {
   NSMutableSet *set = [NSMutableSet set];
@@ -762,6 +771,16 @@ NSMutableDictionary *OSXTestEnvironment(NSDictionary *buildSettings)
     @"DYLD_LIBRARY_PATH" : paths,
     @"DYLD_FALLBACK_FRAMEWORK_PATH" : OSXTestFrameworkDirectories(),
     @"NSUnbufferedIO" : @"YES",
+  } mutableCopy];
+}
+
+NSMutableDictionary *TVOSTestEnvironment(NSDictionary *buildSettings)
+{
+  NSString *paths = AllFrameworkAndLiraryPathsInBuildSettings(buildSettings);
+  return [@{
+    @"DYLD_FRAMEWORK_PATH" : paths,
+    @"DYLD_LIBRARY_PATH" : paths,
+    @"DYLD_FALLBACK_FRAMEWORK_PATH" : TVOSTestFrameworkDirectories(),
   } mutableCopy];
 }
 
