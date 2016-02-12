@@ -268,10 +268,13 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
   NSAssert(sdkName, @"Sdk name should be specified using -sdk option");
   NSAssert(sdkPath, @"Sdk path should be known");
 
+  NSString *platformName = [[[platformPath lastPathComponent] stringByDeletingPathExtension] lowercaseString];
+
   *defaultTestableBuildSettings = @{
     Xcode_SDK_NAME: sdkName,
     Xcode_SDKROOT: sdkPath,
     Xcode_PLATFORM_DIR: platformPath,
+    Xcode_PLATFORM_NAME: platformName,
     Xcode_TARGETED_DEVICE_FAMILY: targetedDeviceFamily ?: @"1", // Default to iPhone simulator
   };
 

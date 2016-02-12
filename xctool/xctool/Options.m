@@ -615,21 +615,12 @@
       }
     }
 
-    if (deviceOS) {
-      NSString *osVersion = [SimulatorInfo sdkVersionForOSVersion:deviceOS];
-      if (!osVersion) {
+    if (deviceOS && deviceName) {
+      if (![SimulatorInfo isSdkVersion:deviceOS supportedByDevice:deviceName]) {
         *errorMessage = [NSString stringWithFormat:
-                         @"'%@' isn't a valid iOS version. The valid iOS versions are: %@.",
-                         deviceOS, [SimulatorInfo availableSdkVersions]];
+                         @"Device with name '%@' doesn't support iOS version '%@'. The supported iOS versions are: %@.",
+                         deviceName, deviceOS, [SimulatorInfo sdksSupportedByDevice:deviceName]];
         return NO;
-      }
-      if (deviceName) {
-        if (![SimulatorInfo isSdkVersion:osVersion supportedByDevice:deviceName]) {
-          *errorMessage = [NSString stringWithFormat:
-                           @"Device with name '%@' doesn't support iOS version '%@'. The supported iOS versions are: %@.",
-                           deviceName, osVersion, [SimulatorInfo sdksSupportedByDevice:deviceName]];
-          return NO;
-        }
       }
     }
   }

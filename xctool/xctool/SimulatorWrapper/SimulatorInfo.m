@@ -29,18 +29,15 @@
 static const NSInteger KProductTypeIphone = 1;
 static const NSInteger KProductTypeIpad = 2;
 
-@interface SimRuntime (Latest)
-+ (SimRuntime *)latest;
+@interface DTiPhoneSimulatorSystemRoot (PlatformName)
+- (NSString *)platformName;
 @end
 
-@implementation SimRuntime (Latest)
-
-+ (SimRuntime *)latest
+@implementation DTiPhoneSimulatorSystemRoot (PlatformName)
+- (NSString *)platformName
 {
-  NSArray *sorted = [[SimRuntime supportedRuntimes] sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"version" ascending:YES]]];
-  return [sorted lastObject];
+  return [[[[[self runtime] platformPath] lastPathComponent] stringByDeletingPathExtension] lowercaseString];
 }
-
 @end
 
 @interface SimulatorInfo ()
@@ -60,6 +57,12 @@ static const NSInteger KProductTypeIpad = 2;
 @end
 
 @implementation SimulatorInfo
+
++ (void)prepare
+{
+  NSAssert([NSThread isMainThread], @"Should be called on main thread");
+  [self _warmUpDTiPhoneSimulatorSystemRootCaches];
+}
 
 - (instancetype)init
 {
@@ -241,15 +244,10 @@ static const NSInteger KProductTypeIpad = 2;
 
 - (NSString *)simulatedSdkVersion
 {
-  if (_OSVersion) {
-    if ([_OSVersion isEqualTo:@"latest"]) {
-      return [[SimRuntime latest] versionString];
-    } else {
-      return _OSVersion;
-    }
-  } else {
-    return [self maxSdkVersionForSimulatedDevice];
+  if (_OSVersion && ![_OSVersion isEqualToString:@"latest"]) {
+    return _OSVersion;
   }
+  return [self maxSdkVersionForSimulatedDevice];
 }
 
 - (NSString *)simulatedSdkRootPath
@@ -269,20 +267,20 @@ static const NSInteger KProductTypeIpad = 2;
   }
 
   DTiPhoneSimulatorSystemRoot *systemRoot = [self systemRootForSimulatedSdk];
-  NSString *platformName = [[[[[systemRoot runtime] platformPath] lastPathComponent] stringByDeletingPathExtension] lowercaseString];
+  NSString *platformName = [systemRoot platformName];
   return [platformName stringByAppendingString:[self simulatedSdkVersion]];
 }
 
 - (DTiPhoneSimulatorSystemRoot *)systemRootForSimulatedSdk
 {
-  NSString *sdkVersion = [self simulatedSdkVersion];
-  DTiPhoneSimulatorSystemRoot *systemRoot = [SimulatorInfo _systemRootWithSDKVersion:sdkVersion];
-  if (systemRoot) {
-    return systemRoot;
+  NSString *platform = _buildSettings[Xcode_PLATFORM_NAME];
+  if (!platform) {
+    platform = [[[_buildSettings[Xcode_PLATFORM_DIR] lastPathComponent] stringByDeletingPathExtension] lowercaseString];
   }
-
-  systemRoot = [SimulatorInfo _systemRootWithSDKVersion:sdkVersion];
-  NSAssert(systemRoot != nil, @"Unable to instantiate DTiPhoneSimulatorSystemRoot for sdk version: %@. Available roots: %@", sdkVersion, [DTiPhoneSimulatorSystemRoot knownRoots]);
+  NSAssert([platform isEqualToString:@"iphonesimulator"] || [platform isEqualToString:@"macosx"], @"Platform '%@' is not yet supported.", platform);
+  NSString *sdkVersion = [self simulatedSdkVersion];
+  DTiPhoneSimulatorSystemRoot *systemRoot = [SimulatorInfo _systemRootForPlatform:platform sdkVersion:sdkVersion];
+  NSAssert(systemRoot != nil, @"Unable to instantiate DTiPhoneSimulatorSystemRoot for platform %@ and sdk version %@. Available roots: %@", platform, sdkVersion, [DTiPhoneSimulatorSystemRoot knownRoots]);
   return systemRoot;
 }
 
@@ -339,9 +337,11 @@ static const NSInteger KProductTypeIpad = 2;
   if ([sdkName hasPrefix:@"macosx"]) {
     environment = OSXTestEnvironment(_buildSettings);
     [librariesToInsert addObject:[XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-osx.dylib"]];
-  } else {
+  } else if ([sdkName hasPrefix:@"iphonesimulator"]) {
     environment = IOSTestEnvironment(_buildSettings);
     [librariesToInsert addObject:[XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"]];
+  } else {
+    NSAssert(false, @"'%@' sdk is not yet supported", sdkName);
   }
 
   [environment addEntriesFromDictionary:@{
@@ -387,19 +387,23 @@ static const NSInteger KProductTypeIpad = 2;
 
 + (BOOL)isSdkVersion:(NSString *)sdkVersion supportedByDevice:(NSString *)deviceName
 {
-  SimDeviceType *deviceType = [SimDeviceType supportedDeviceTypesByAlias][deviceName];
-  SimRuntime *runtime = [self _runtimeForSdkVersion:sdkVersion];
-
-  return [runtime supportsDeviceType:deviceType];
-}
-
-+ (NSString *)sdkVersionForOSVersion:(NSString *)osVersion
-{
-  if ([osVersion isEqualToString:@"latest"]) {
-    return [[SimRuntime latest] versionString];
-  } else {
-    return [[self _runtimeForSdkVersion:osVersion] versionString];
+  NSAssert(sdkVersion != nil, @"Sdk version shouldn't be nil.");
+  NSMutableArray *runtimes = [self _runtimesSupportedByDevice:deviceName];
+  if ([runtimes count] == 0) {
+    return NO;
   }
+
+  if ([sdkVersion isEqualToString:@"latest"]) {
+    return YES;
+  }
+
+  for (SimRuntime *runtime in runtimes) {
+    if ([runtime.versionString hasPrefix:sdkVersion]) {
+      return YES;
+    }
+  }
+
+  return NO;
 }
 
 + (NSArray *)availableSdkVersions
@@ -423,16 +427,6 @@ static const NSInteger KProductTypeIpad = 2;
   }
 }
 
-+ (NSString *)baseVersionForSDKShortVersion:(NSString *)shortVersionString
-{
-  DTiPhoneSimulatorSystemRoot *root = [self _systemRootWithSDKVersion:shortVersionString];
-  NSArray *components = [[root sdkVersion] componentsSeparatedByString:@"."];
-  if ([components count] < 2) {
-    return [root sdkVersion];
-  }
-  return [[components objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 2)]] componentsJoinedByString:@"."];
-}
-
 #pragma mark -
 #pragma mark Helpers
 
@@ -449,18 +443,6 @@ static const NSInteger KProductTypeIpad = 2;
   return supportedRuntimes;
 }
 
-+ (SimRuntime *)_runtimeForSdkVersion:(NSString *)sdkVersion
-{
-  NSAssert(sdkVersion != nil, @"Sdk version shouldn't be nil.");
-  NSArray *runtimes = [SimRuntime supportedRuntimes];
-  for (SimRuntime *runtime in runtimes) {
-    if ([runtime.versionString hasPrefix:sdkVersion]) {
-      return runtime;
-    }
-  }
-  return nil;
-}
-
 + (SimRuntime *)_runtimeForSDKPath:(NSString *)sdkPath
 {
   DTiPhoneSimulatorSystemRoot *root = [SimulatorInfo _systemRootWithSDKPath:sdkPath];
@@ -471,7 +453,7 @@ static const NSInteger KProductTypeIpad = 2;
 {
   NSMutableArray *configs = [NSMutableArray array];
   for (SimDevice *device in [[SimDeviceSet defaultSet] availableDevices]) {
-    [configs addObject:[NSString stringWithFormat:@"%@: %@", device.name, device.runtime.versionString]];
+    [configs addObject:[NSString stringWithFormat:@"%@: %@", device.name, device.runtime.name]];
   }
   return configs;
 }
@@ -479,78 +461,61 @@ static const NSInteger KProductTypeIpad = 2;
 #pragma mark -
 #pragma mark Caching methods
 
+/*
+ * Caches `DTiPhoneSimulatorSystemRoot` instances.
+ *
+ * `sdkRootPath` -> `DTiPhoneSimulatorSystemRoot *`
+ * `platformName` -> `NSDictionary *`: `sdkVersion` -> `DTiPhoneSimulatorSystemRoot *`
+ *
+ */
+static NSDictionary *__systemRootsSdkPlatformVersionMap;
+static NSDictionary *__systemRootsSdkPathMap;
+
++ (void)_warmUpDTiPhoneSimulatorSystemRootCaches
+{
+  // cache system roots
+  NSArray *roots = [DTiPhoneSimulatorSystemRoot knownRoots];
+
+  // create a map
+  NSMutableDictionary *platformVersionMap = [NSMutableDictionary new];
+  NSMutableDictionary *pathMap = [NSMutableDictionary new];
+  for (DTiPhoneSimulatorSystemRoot *root in roots) {
+    pathMap[root.sdkRootPath] = root;
+    if (!platformVersionMap[root.platformName]) {
+      platformVersionMap[root.platformName] = [NSMutableDictionary dictionary];
+    }
+    platformVersionMap[root.platformName][root.sdkVersion] = root;
+  }
+  __systemRootsSdkPlatformVersionMap = [platformVersionMap copy];
+  __systemRootsSdkPathMap = [pathMap copy];
+}
+
 + (DTiPhoneSimulatorSystemRoot *)_systemRootWithSDKPath:(NSString *)path
 {
-  static NSMutableDictionary *map;
-  static dispatch_once_t onceToken;
-  static dispatch_queue_t accessQueue;
-  dispatch_once(&onceToken, ^{
-    map = [@{} mutableCopy];
-    accessQueue = dispatch_queue_create("com.xctool.access_root_with_sdk_path", NULL);
-  });
-
   // In Xcode 6 latest sdk path could be a symlink to iPhoneSimulator.sdk.
   // It should be resolved before comparing with `knownRoots` paths.
   path = [path stringByResolvingSymlinksInPath];
-
-  __block DTiPhoneSimulatorSystemRoot *root = nil;
-  dispatch_sync(accessQueue, ^{
-    root = map[path];
-  });
-
-  if (root) {
-    return root;
-  }
-
-  [[DTiPhoneSimulatorSystemRoot knownRoots] enumerateObjectsUsingBlock:^(DTiPhoneSimulatorSystemRoot *obj, NSUInteger idx, BOOL *stop) {
-    if ([obj.sdkRootPath isEqual:path]) {
-      root = obj;
-      *stop = YES;
-    }
-  }];
-
-  if (root) {
-    dispatch_async(accessQueue, ^{
-      map[path] = root;
-    });
-  }
-
-  return root;
+  return __systemRootsSdkPathMap[path];
 }
 
-+ (DTiPhoneSimulatorSystemRoot *)_systemRootWithSDKVersion:(NSString *)version
++ (DTiPhoneSimulatorSystemRoot *)_systemRootForPlatform:(NSString *)platform sdkVersion:(NSString *)version
 {
-  static NSMutableDictionary *map;
-  static dispatch_once_t onceToken;
-  static dispatch_queue_t accessQueue;
-  dispatch_once(&onceToken, ^{
-    map = [@{} mutableCopy];
-    accessQueue = dispatch_queue_create("com.xctool.access_root_with_sdk_version", NULL);
-  });
-
-  __block DTiPhoneSimulatorSystemRoot *root = nil;
-  dispatch_sync(accessQueue, ^{
-    root = map[version];
-  });
-
-  if (root) {
-    return root;
-  }
-
-  [[DTiPhoneSimulatorSystemRoot knownRoots] enumerateObjectsUsingBlock:^(DTiPhoneSimulatorSystemRoot *obj, NSUInteger idx, BOOL *stop) {
-    if ([obj.sdkVersion hasPrefix:version]) {
-      root = obj;
-      *stop = YES;
+  for (NSString *cachedPlatform in  __systemRootsSdkPlatformVersionMap) {
+    // sometimes platform may include version, for example, iphonesimulator9.2
+    if ([cachedPlatform commonPrefixWithString:platform options:NSCaseInsensitiveSearch].length < 5) {
+      continue;
     }
-  }];
-
-  if (root) {
-    dispatch_async(accessQueue, ^{
-      map[version] = root;
-    });
+    NSDictionary *versions = __systemRootsSdkPlatformVersionMap[cachedPlatform];
+    for (NSString *cachedVersion in versions) {
+      // sdk version of system root usually consists of 2 numbers, like 9.2
+      // but requested sdk version could have 3 numbers, like 9.2.1.
+      if ([cachedVersion hasPrefix:version] || [version hasPrefix:cachedVersion]) {
+        return versions[cachedVersion];
+      }
+    }
+    break;
   }
-
-  return root;
+  return nil;
 }
 
 @end

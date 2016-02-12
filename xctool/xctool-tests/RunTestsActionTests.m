@@ -192,40 +192,6 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
   assertThat(action.testSDK, equalTo(@"iphonesimulator6.1"));
 }
 
-- (void)testRunTestsFailsWhenSDKIsIPHONEOS
-{
-  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
-    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
-     // Make sure -showBuildSettings returns some data
-     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
-                                                     scheme:@"TestProject-Library"
-                                               settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
-     // We're going to call -showBuildSettings on the test target.
-     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
-                                                     target:@"TestProject-LibraryTests"
-                                               settingsPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings-iphoneos.txt"
-                                                       hide:NO],
-     [LaunchHandlers handlerForOtestQueryReturningTestList:@[]],
-     ]];
-
-    XCTool *tool = [[XCTool alloc] init];
-
-    tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                       @"-scheme", @"TestProject-Library",
-                       @"-configuration", @"Debug",
-                       @"run-tests",
-                       @"-reporter", @"plain",
-                       ];
-
-    NSDictionary *output = [TestUtil runWithFakeStreams:tool];
-
-    assertThatInt(tool.exitStatus, equalToInt(1));
-    assertThat(output[@"stdout"],
-               containsString(@"Testing with the 'iphoneos' SDK is not yet supported.  "
-                              @"Instead, test with the simulator SDK by setting '-sdk iphonesimulator'.\n"));
-  }];
-}
-
 - (void)testRunTestsFailsWhenSDKIsIPHONEOS_XCTest
 {
   if (!HasXCTestFramework()) {
@@ -752,7 +718,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
       // We're going to call -showBuildSettings on the test target.
       [LaunchHandlers handlerForShowBuildSettingsWithProject:projectPath
                                                       target:@"TestProject-Library-XCTest-iOSTests"
-                                                settingsPath:TEST_DATA @"TestProject-Library-XCTest-iOS-TestProject-Library-XCTest-iOSTests-showBuildSettings-iphoneos.txt"
+                                                settingsPath:TEST_DATA @"TestProject-Library-XCTest-iOS-TestProject-Library-XCTest-iOSTests-showBuildSettings-iphonesimulator.txt"
                                                         hide:NO],
       [LaunchHandlers handlerForOtestQueryReturningTestList:@[@"FakeTest/TestA", @"FakeTest/TestB"]],
     ]];

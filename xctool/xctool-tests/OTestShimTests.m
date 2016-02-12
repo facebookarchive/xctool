@@ -44,6 +44,7 @@ static NSArray *AllTestCasesInTestBundle(NSString *sdkName,
     Xcode_FULL_PRODUCT_NAME : fullProductName,
     Xcode_SDK_NAME : latestSDK,
     Xcode_TARGETED_DEVICE_FAMILY : @"1",
+    Xcode_PLATFORM_NAME: @"iphonesimulator",
   };
   OCUnitTestQueryRunner *runner = [[testQueryClass alloc] initWithSimulatorInfo:simulatorInfo];
   NSArray *allTests = [runner runQueryWithError:&error];
@@ -444,7 +445,7 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
 {
   NSString *bundlePath = TEST_DATA @"tests-ios-test-bundle/TestProject-Library-XCTest-iOSTests.xctest";
   NSString *targetName = @"TestProject-Library-XCTest-iOSTests";
-  NSString *settingsPath = TEST_DATA @"TestProject-Library-XCTest-iOS-TestProject-Library-XCTest-iOSTests-showBuildSettings-iphoneos.txt";
+  NSString *settingsPath = TEST_DATA @"TestProject-Library-XCTest-iOS-TestProject-Library-XCTest-iOSTests-showBuildSettings-iphonesimulator.txt";
   NSArray *testList = @[ @"SomeTests/testTimeout" ];
 
   NSArray *allTests = AllTestCasesInTestBundleIOS(bundlePath);

@@ -77,9 +77,9 @@ xcodebuild build -showBuildSettings -sdk iphonesimulator -configuration Debug -p
 OUTFILE='TestProject-Library-XCTest-iOS-showBuildSettings.txt'
 xcodebuild build -showBuildSettings -project TestProject-Library-XCTest-iOS/TestProject-Library-XCTest-iOS.xcodeproj > $OUTFILE
 
-# TestProject-Library-XCTest-iOS-TestProject-Library-XCTest-iOSTests-showBuildSettings-iphoneos.txt
-OUTFILE='TestProject-Library-XCTest-iOS-TestProject-Library-XCTest-iOSTests-showBuildSettings-iphoneos.txt'
-xcodebuild build -showBuildSettings -sdk iphoneos -project TestProject-Library-XCTest-iOS/TestProject-Library-XCTest-iOS.xcodeproj -target TestProject-Library-XCTest-iOSTests > $OUTFILE
+# TestProject-Library-XCTest-iOS-TestProject-Library-XCTest-iOSTests-showBuildSettings-iphonesimulator.txt
+OUTFILE='TestProject-Library-XCTest-iOS-TestProject-Library-XCTest-iOSTests-showBuildSettings-iphonesimulator.txt'
+xcodebuild build -showBuildSettings -sdk iphonesimulator -project TestProject-Library-XCTest-iOS/TestProject-Library-XCTest-iOS.xcodeproj -target TestProject-Library-XCTest-iOSTests > $OUTFILE
 
 # TestProject-Library-XCTest-OSX-showBuildSettings.txt
 OUTFILE='TestProject-Library-XCTest-OSX-showBuildSettings.txt'

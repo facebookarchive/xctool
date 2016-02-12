@@ -24,6 +24,7 @@
 #import "Options.h"
 #import "ReporterEvents.h"
 #import "ReporterTask.h"
+#import "SimulatorInfo.h"
 #import "TaskUtil.h"
 #import "Version.h"
 #import "XCToolUtil.h"
@@ -179,6 +180,8 @@
     }
   }
 
+  [SimulatorInfo prepare];
+
   // We want to make sure we always close the reporters, even if validation fails,
   // so we use a try-finally block.
   @try {
@@ -226,6 +229,5 @@
     [options.reporters makeObjectsPerformSelector:@selector(close)];
   }
 }
-
 
 @end
