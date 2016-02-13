@@ -62,7 +62,7 @@
         xcodeArguments:(NSArray *)xcodeArguments
           xcodeCommand:(NSString *)xcodeCommand
 {
-  NSString *customDerivedDataLocation = derivedDataPath ? derivedDataPath : [TemporaryDirectoryForAction() stringByAppendingPathComponent:@"DerivedData"];
+  NSString *customDerivedDataLocation = derivedDataPath ?: [TemporaryDirectoryForAction() stringByAppendingPathComponent:@"DerivedData"];
   NSArray *taskArguments =
   [xcodeArguments arrayByAddingObjectsFromArray:@[
    @"-workspace", path,
