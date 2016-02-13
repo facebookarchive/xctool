@@ -58,9 +58,9 @@
                objRoot:(NSString *)objRoot
                symRoot:(NSString *)symRoot
      sharedPrecompsDir:(NSString *)sharedPrecompsDir
+       derivedDataPath:(NSString *)derivedDataPath
         xcodeArguments:(NSArray *)xcodeArguments
           xcodeCommand:(NSString *)xcodeCommand
-       derivedDataPath:(NSString *)derivedDataPath
 {
   NSString *customDerivedDataLocation = derivedDataPath ? derivedDataPath : [TemporaryDirectoryForAction() stringByAppendingPathComponent:@"DerivedData"];
   NSArray *taskArguments =
@@ -130,9 +130,9 @@
                                             objRoot:xcodeSubjectInfo.objRoot
                                             symRoot:xcodeSubjectInfo.symRoot
                                   sharedPrecompsDir:xcodeSubjectInfo.sharedPrecompsDir
+                                    derivedDataPath:options.derivedDataPath
                                      xcodeArguments:xcodebuildArguments
-                                       xcodeCommand:command
-                                    derivedDataPath:options.derivedDataPath];
+                                       xcodeCommand:command];
 
   [xcodeSubjectInfo.actionScripts postBuildWithOptions:options];
 

@@ -28,9 +28,9 @@
                objRoot:(NSString *)objRoot
                symRoot:(NSString *)symRoot
      sharedPrecompsDir:(NSString *)sharedPrecompsDir
+       derivedDataPath:(NSString *)derivedDataPath
         xcodeArguments:(NSArray *)xcodeArguments
-          xcodeCommand:(NSString *)xcodeCommand
-       derivedDataPath:(NSString *)derivedDataPath;
+          xcodeCommand:(NSString *)xcodeCommand;
 
 + (BOOL)buildTestables:(NSArray *)testables
                command:(NSString *)command
