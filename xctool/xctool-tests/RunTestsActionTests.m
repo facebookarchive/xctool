@@ -250,18 +250,10 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                                                settingsPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings.txt"
                                                        hide:NO],
      [LaunchHandlers handlerForOtestQueryReturningTestList:testList],
-     [^(FakeTask *task){
-      if (IsOtestTask(task)) {
-        // Pretend the tests fail, which should make xctool return an overall
-        // status of 1.
-        [task pretendExitStatusOf:1];
-        [task pretendTaskReturnsStandardOutput:
-         [NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results-notests.txt"
-                                   encoding:NSUTF8StringEncoding
-                                      error:nil]];
-      }
-    } copy],
-     ]];
+     [LaunchHandlers handlerForSimctlXctestRunReturningTestEvents:
+       [NSData dataWithContentsOfFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results-notests.txt"]
+     ],
+    ]];
 
     XCTool *tool = [[XCTool alloc] init];
 
@@ -415,18 +407,10 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                                                settingsPath:TEST_DATA @"TestProject-WithNonExistingTargetInScheme-TestProject-WithNonExistingTargetInSchemeTests-showBuildSettings.txt"
                                                        hide:NO],
      [LaunchHandlers handlerForOtestQueryReturningTestList:testList],
-     [^(FakeTask *task){
-      if (IsOtestTask(task)) {
-        // Pretend the tests fail, which should make xctool return an overall
-        // status of 1.
-        [task pretendExitStatusOf:1];
-        [task pretendTaskReturnsStandardOutput:
-         [NSString stringWithContentsOfFile:TEST_DATA @"TestProject-WithNonExistingTargetInScheme-showBuildSettings-run-tests-output.txt"
-                                   encoding:NSUTF8StringEncoding
-                                      error:nil]];
-      }
-    } copy],
-     ]];
+     [LaunchHandlers handlerForSimctlXctestRunReturningTestEvents:
+       [NSData dataWithContentsOfFile:TEST_DATA @"TestProject-WithNonExistingTargetInScheme-showBuildSettings-run-tests-output.txt"]
+     ],
+    ]];
 
     XCTool *tool = [[XCTool alloc] init];
 
@@ -475,12 +459,15 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
         @"/Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-WithNonExistingTargetInScheme-firogdnnjipxwgadvqtehztcfdio/Build/Products/Release-iphonesimulator/TestProject-WithNonExistingTargetInSchemeTests.xctest",
       ]));
     }
-    assertThatInt(tool.exitStatus, equalToInt(1));
+    assertThatInt(tool.exitStatus, equalToInt(XCToolAllActionsSucceeded));
   }];
 }
 
 - (void)testRunTestsActionWithListTestsOnlyOption
 {
+  NSString *projectPath = TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj";
+  NSString *scheme = @"TestProject-Library";
+  NSString *testTarget = @"TestProject-LibraryTests";
   NSArray *testList = @[@"TestProject_LibraryTests/testOutputMerging",
                         @"TestProject_LibraryTests/testPrintSDK",
                         @"TestProject_LibraryTests/testStream",
@@ -490,12 +477,12 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
       // Make sure -showBuildSettings returns some data
-      [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
-                                                      scheme:@"TestProject-Library"
+      [LaunchHandlers handlerForShowBuildSettingsWithProject:projectPath
+                                                      scheme:scheme
                                                 settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
       // We're going to call -showBuildSettings on the test target.
-      [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
-                                                      target:@"TestProject-LibraryTests"
+      [LaunchHandlers handlerForShowBuildSettingsWithProject:projectPath
+                                                      target:testTarget
                                                 settingsPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings.txt"
                                                         hide:NO],
       [LaunchHandlers handlerForOtestQueryReturningTestList:testList],
@@ -503,15 +490,16 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
 
     XCTool *tool = [[XCTool alloc] init];
 
-    tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                       @"-scheme", @"TestProject-Library",
-                       @"-configuration", @"Debug",
-                       @"-sdk", @"iphonesimulator6.0",
-                       @"-destination", @"arch=i386",
-                       @"run-tests",
-                       @"listTestsOnly",
-                       @"-reporter", @"json-stream"
-                       ];
+    tool.arguments = @[
+      @"-project", projectPath,
+      @"-scheme", scheme,
+      @"-configuration", @"Debug",
+      @"-sdk", @"iphonesimulator6.0",
+      @"-destination", @"arch=i386",
+      @"run-tests",
+      @"listTestsOnly",
+      @"-reporter", @"json-stream"
+    ];
 
     NSDictionary *result = [TestUtil runWithFakeStreams:tool];
     NSString *listTestsOnlyOutput = [NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-run-test-results-listtestonly.txt"
@@ -541,49 +529,46 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
 
 - (void)testCanRunTestsAgainstDifferentTestSDK
 {
-  NSArray *testList = @[@"TestProject_LibraryTests/testBacktraceOutputIsCaptured",
-                        @"TestProject_LibraryTests/testOutputMerging",
-                        @"TestProject_LibraryTests/testPrintSDK",
-                        @"TestProject_LibraryTests/testStream",
-                        @"TestProject_LibraryTests/testWillFail",
-                        @"TestProject_LibraryTests/testWillPass"];
+  NSString *projectPath = TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj";
+  NSString *scheme = @"TestProject-Library";
+  NSString *testTarget = @"TestProject-LibraryTests";
+  NSArray *testList = @[
+    @"TestProject_LibraryTests/testBacktraceOutputIsCaptured",
+    @"TestProject_LibraryTests/testOutputMerging",
+    @"TestProject_LibraryTests/testPrintSDK",
+    @"TestProject_LibraryTests/testStream",
+    @"TestProject_LibraryTests/testWillFail",
+    @"TestProject_LibraryTests/testWillPass",
+  ];
 
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
      // Make sure -showBuildSettings returns some data
-     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
-                                                     scheme:@"TestProject-Library"
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:projectPath
+                                                     scheme:scheme
                                                settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
      // We're going to call -showBuildSettings on the test target.
-     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
-                                                     target:@"TestProject-LibraryTests"
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:projectPath
+                                                     target:testTarget
                                                settingsPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings.txt"
                                                        hide:NO],
      [LaunchHandlers handlerForOtestQueryReturningTestList:testList],
-     [^(FakeTask *task){
-      if (IsOtestTask(task)) {
-        // Pretend the tests fail, which should make xctool return an overall
-        // status of 1.
-        [task pretendExitStatusOf:1];
-        [task pretendTaskReturnsStandardOutput:
-         [NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results.txt"
-                                   encoding:NSUTF8StringEncoding
-                                      error:nil]];
-      }
-
-     } copy],
+     [LaunchHandlers handlerForSimctlXctestRunReturningTestEvents:
+       [NSData dataWithContentsOfFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results.txt"]
+     ],
     ]];
 
     XCTool *tool = [[XCTool alloc] init];
 
-    tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                       @"-scheme", @"TestProject-Library",
-                       @"-configuration", @"Debug",
-                       @"-sdk", @"iphonesimulator6.0",
-                       @"-destination", @"arch=i386",
-                       @"run-tests", @"-test-sdk", @"iphonesimulator5.0",
-                       @"-reporter", @"plain",
-                       ];
+    tool.arguments = @[
+      @"-project", projectPath,
+      @"-scheme", scheme,
+      @"-configuration", @"Debug",
+      @"-sdk", @"iphonesimulator6.0",
+      @"-destination", @"arch=i386",
+      @"run-tests", @"-test-sdk", @"iphonesimulator5.0",
+      @"-reporter", @"plain",
+    ];
 
     [TestUtil runWithFakeStreams:tool];
 
@@ -592,22 +577,21 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
     NSString *action = ToolchainIsXcode7OrBetter() ? @"build" : @"test";
 
     assertThatInteger([launchedTasks count], equalToInteger(2));
-    assertThat([launchedTasks[0] arguments],
-               equalTo(@[
-                       @"-configuration", @"Debug",
-                       @"-sdk", @"iphonesimulator5.0",
-                       @"-destination", @"arch=i386",
-                       @"-destination-timeout", @"10",
-                       @"PLATFORM_NAME=iphonesimulator",
-                       @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                       @"-target", @"TestProject-LibraryTests",
-                       @"OBJROOT=/Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-Library-frruszglismbfoceinskphldzhci/Build/Intermediates",
-                       @"SYMROOT=/Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-Library-frruszglismbfoceinskphldzhci/Build/Products",
-                       @"SHARED_PRECOMPS_DIR=/Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-Library-frruszglismbfoceinskphldzhci/Build/Intermediates/PrecompiledHeaders",
-                       @"TARGETED_DEVICE_FAMILY=1",
-                       action,
-                       @"-showBuildSettings",
-                       ]));
+    assertThat([launchedTasks[0] arguments], equalTo(@[
+      @"-configuration", @"Debug",
+      @"-sdk", @"iphonesimulator5.0",
+      @"-destination", @"arch=i386",
+      @"-destination-timeout", @"10",
+      @"PLATFORM_NAME=iphonesimulator",
+      @"-project", projectPath,
+      @"-target", testTarget,
+      @"OBJROOT=/Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-Library-frruszglismbfoceinskphldzhci/Build/Intermediates",
+      @"SYMROOT=/Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-Library-frruszglismbfoceinskphldzhci/Build/Products",
+      @"SHARED_PRECOMPS_DIR=/Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-Library-frruszglismbfoceinskphldzhci/Build/Intermediates/PrecompiledHeaders",
+      @"TARGETED_DEVICE_FAMILY=1",
+      action,
+      @"-showBuildSettings",
+    ]));
     assertThat([launchedTasks[0] environment][@"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET"], equalTo(@"TestProject-LibraryTests"));
     NSMutableArray *expectedArguments = [@[
       @"-NSTreatUnknownArgumentsAsOpen", @"NO",
@@ -624,51 +608,52 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
     if (ToolchainIsXcode7OrBetter()) {
       assertThat([launchedTasks[1] environment][@"SIMCTL_CHILD_XCTestConfigurationFilePath"], notNilValue());
     }
-    assertThatInt(tool.exitStatus, equalToInt(1));
+    assertThatInt(tool.exitStatus, equalToInt(XCToolActionFailed));
   }];
 }
 
 - (void)testCanSelectSpecificTestClassOrTestMethodsWithOnlyAndOmit
 {
-  NSArray *testList = @[@"OtherTests/testSomething",
-                        @"SomeTests/testBacktraceOutputIsCaptured",
-                        @"SomeTests/testOutputMerging",
-                        @"SomeTests/testPrintSDK",
-                        @"SomeTests/testStream",
-                        @"SomeTests/testWillFail",
-                        @"SomeTests/testWillPass"];
+  NSString *projectPath = TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj";
+  NSString *scheme = @"TestProject-Library";
+  NSString *testTarget = @"TestProject-LibraryTests";
+  NSArray *testList = @[
+    @"OtherTests/testSomething",
+    @"SomeTests/testBacktraceOutputIsCaptured",
+    @"SomeTests/testOutputMerging",
+    @"SomeTests/testPrintSDK",
+    @"SomeTests/testStream",
+    @"SomeTests/testWillFail",
+    @"SomeTests/testWillPass",
+  ];
 
   void (^runWithArguments)(NSString *, NSArray *, BOOL) = ^(NSString *argument, NSArray *values, BOOL skipTarget) {
     [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
       [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
         // Make sure -showBuildSettings returns some data
-        [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
-                                                        scheme:@"TestProject-Library"
+        [LaunchHandlers handlerForShowBuildSettingsWithProject:projectPath
+                                                        scheme:scheme
                                                   settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"],
         // We're going to call -showBuildSettings on the test target.
-        [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
-                                                        target:@"TestProject-LibraryTests"
+        [LaunchHandlers handlerForShowBuildSettingsWithProject:projectPath
+                                                        target:testTarget
                                                   settingsPath:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-showBuildSettings.txt"
                                                           hide:NO],
         [LaunchHandlers handlerForOtestQueryReturningTestList:testList],
-        [^(FakeTask *task){
-        if (IsOtestTask(task)) {
-          [task pretendTaskReturnsStandardOutput:
-           [NSString stringWithContentsOfFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results-notests.txt"
-                                     encoding:NSUTF8StringEncoding
-                                        error:nil]];
-        }
-
-      } copy],
-                                                                ]];
+        [LaunchHandlers handlerForSimctlXctestRunReturningTestEvents:
+          [NSData dataWithContentsOfFile:TEST_DATA @"TestProject-Library-TestProject-LibraryTests-test-results-notests.txt"]
+        ],
+      ]];
 
       XCTool *tool = [[XCTool alloc] init];
-      NSMutableArray *args = [@[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
-                                @"-scheme", @"TestProject-Library",
-                                @"-configuration", @"Debug",
-                                @"-sdk", @"iphonesimulator6.0",
-                                @"-destination", @"arch=i386",
-                                @"run-tests"] mutableCopy];
+      NSMutableArray *args = [@[
+        @"-project", projectPath,
+        @"-scheme", scheme,
+        @"-configuration", @"Debug",
+        @"-sdk", @"iphonesimulator6.0",
+        @"-destination", @"arch=i386",
+        @"run-tests"
+      ] mutableCopy];
       for (NSString *value in values) {
         [args addObject:argument];
         [args addObject:value];

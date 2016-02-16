@@ -1,14 +1,14 @@
 {"suite":"Toplevel Test Suite","event":"begin-test-suite"}
 {"event":"begin-test","test":"-[TestProject_LibraryTests testOutputMerging]"}
-{"event":"test-output","output":"stdout-line1\nstderr-line1\nstdout-line2\nstdout-line3\nstderr-line2\nstderr-line3\n"}
+{"event":"simulator-output","output":"stdout-line1\nstderr-line1\nstdout-line2\nstdout-line3\nstderr-line2\nstderr-line3\n","timestamp":1455587021.776257}
 {"succeeded":true,"test":"-[TestProject_LibraryTests testOutputMerging]","output":"stdout-line1\nstderr-line1\nstdout-line2\nstdout-line3\nstderr-line2\nstderr-line3\n","totalDuration":0.001870989799499512,"event":"end-test"}
 {"event":"begin-test","test":"-[TestProject_LibraryTests testPrintSDK]"}
-{"event":"test-output","output":"2013-02-13 22:37:46.654 otest[21747:707] SDK: 6.0\n"}
+{"event":"simulator-output","output":"2013-02-13 22:37:46.654 otest[21747:707] SDK: 6.0\n","timestamp":1455587022.776257}
 {"succeeded":true,"test":"-[TestProject_LibraryTests testPrintSDK]","output":"2013-02-13 22:37:46.654 otest[21747:707] SDK: 6.0\n","totalDuration":0.0007549524307250977,"event":"end-test"}
 {"event":"begin-test","test":"-[TestProject_LibraryTests testStream]"}
-{"event":"test-output","output":"2013-02-13 22:37:46.757 otest[21747:707] >>>> i = 0\n"}
-{"event":"test-output","output":"2013-02-13 22:37:47.009 otest[21747:707] >>>> i = 1\n"}
-{"event":"test-output","output":"2013-02-13 22:37:47.260 otest[21747:707] >>>> i = 2\n"}
+{"event":"simulator-output","output":"2013-02-13 22:37:46.757 otest[21747:707] >>>> i = 0\n","timestamp":1455587023.776257}
+{"event":"simulator-output","output":"2013-02-13 22:37:47.009 otest[21747:707] >>>> i = 1\n","timestamp":1455587024.776257}
+{"event":"simulator-output","output":"2013-02-13 22:37:47.260 otest[21747:707] >>>> i = 2\n","timestamp":1455587025.776257}
 {"succeeded":true,"test":"-[TestProject_LibraryTests testStream]","output":"2013-02-13 22:37:46.757 otest[21747:707] >>>> i = 0\n2013-02-13 22:37:47.009 otest[21747:707] >>>> i = 1\n2013-02-13 22:37:47.260 otest[21747:707] >>>> i = 2\n","totalDuration":0.7552980184555054,"event":"end-test"}
 {"event":"begin-test","test":"-[TestProject_LibraryTests testWillFail]"}
 {"succeeded":false,"test":"-[TestProject_LibraryTests testWillFail]","exception":{"lineNumber":40,"filePathInProject":"\/Users\/fpotter\/fb\/git\/xctool\/xctool\/xctool-tests\/TestData\/TestProject-Library\/TestProject-LibraryTests\/TestProject_LibraryTests.m","reason":"'a' should be equal to 'b' Strings aren't equal"},"totalDuration":0.002062976360321045,"output":"","event":"end-test"}

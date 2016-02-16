@@ -16,17 +16,6 @@
 
 #import <Foundation/Foundation.h>
 
-/**
- * Returns YES if task appears to specify an otest process, either for OS X
- * or the simulator.
- */
-BOOL IsOtestTask(NSTask *task);
-
-/**
- * Returns YES if task is spawning xctest process via simctl.
- */
-BOOL IsSimctlSpawnXctestTask(NSTask *task);
-
 @interface LaunchHandlers : NSObject
 
 /**
