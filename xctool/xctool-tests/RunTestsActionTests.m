@@ -318,6 +318,82 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
   }];
 }
 
+- (void)testRunTestsAction_AppleTVSimulator
+{
+  if (!ToolchainIsXcode7OrBetter()) {
+    return;
+  }
+
+  NSString *projectPath = TEST_DATA @"TestProject-TVFramework/TestProject-TVFramework.xcodeproj";
+  NSString *scheme = @"TestProject-TVFramework";
+  NSString *testTarget = @"TestProject-TVFrameworkTests";
+  NSArray *testList = @[
+    @"TestProject_TVFrameworkTests/testPrintSDK",
+    @"TestProject_TVFrameworkTests/testStream",
+    @"TestProject_TVFrameworkTests/testWillPass",
+    @"TestProject_TVFrameworkTests/testWillFail",
+  ];
+
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+     // Make sure -showBuildSettings returns some data
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:projectPath
+                                                     scheme:scheme
+                                               settingsPath:TEST_DATA @"TestProject-TVFramework-TestProject-TVFramework-showBuildSettings.txt"],
+     // We're going to call -showBuildSettings on the test target.
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:projectPath
+                                                     target:testTarget
+                                               settingsPath:TEST_DATA @"TestProject-TVFramework-TestProject-TVFrameworkTests-showBuildSettings.txt"
+                                                       hide:NO],
+     [LaunchHandlers handlerForOtestQueryReturningTestList:testList],
+     [LaunchHandlers handlerForSimctlXctestRunReturningTestEvents:
+       [NSData dataWithContentsOfFile:TEST_DATA @"TestProject-TVFramework-TestProject-TVFrameworkTests-test-results.txt"]
+     ],
+    ]];
+
+    XCTool *tool = [[XCTool alloc] init];
+
+    tool.arguments = @[
+      @"-project", projectPath,
+      @"-scheme", scheme,
+      @"-configuration", @"Debug",
+      @"-sdk", @"appletvsimulator",
+      @"run-tests",
+      @"-reporter", @"plain",
+    ];
+
+    [TestUtil runWithFakeStreams:tool];
+
+    NSString *action = ToolchainIsXcode7OrBetter() ? @"build" : @"test";
+
+    NSArray *launchedTasks = [[FakeTaskManager sharedManager] launchedTasks];
+    assertThatInteger([launchedTasks count], equalToInteger(2));
+    assertThat([launchedTasks[0] arguments], equalTo(@[
+      @"-configuration", @"Debug",
+      @"-sdk", @"appletvsimulator9.1",
+      @"PLATFORM_NAME=appletvsimulator",
+      @"-project", projectPath,
+      @"-target", testTarget,
+      @"OBJROOT=/Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-TVFramework-eioarvrojappukbxcyfncxozpvso/Build/Intermediates",
+      @"SYMROOT=/Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-TVFramework-eioarvrojappukbxcyfncxozpvso/Build/Products",
+      @"SHARED_PRECOMPS_DIR=/Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-TVFramework-eioarvrojappukbxcyfncxozpvso/Build/Intermediates/PrecompiledHeaders",
+      @"TARGETED_DEVICE_FAMILY=3",
+      action,
+      @"-showBuildSettings",
+    ]));
+    assertThat([launchedTasks[0] environment][@"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET"], equalTo(@"TestProject-TVFrameworkTests"));
+
+    assertThat([launchedTasks[1] arguments], containsArray(@[
+      @"-NSTreatUnknownArgumentsAsOpen", @"NO",
+      @"-ApplePersistenceIgnoreState", @"YES",
+    ]));
+    assertThat([launchedTasks[1] environment][@"SIMCTL_CHILD_XCTestConfigurationFilePath"], notNilValue());
+    assertThat([launchedTasks[1] environment][@"SIMCTL_CHILD_OTEST_SHIM_STDOUT_FILE"], notNilValue());
+
+    assertThatInt(tool.exitStatus, equalToInt(XCToolActionFailed));
+  }];
+}
+
 - (void)testRunTestsActionAgainstProjectWithNonExistingTargetInScheme
 {
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{

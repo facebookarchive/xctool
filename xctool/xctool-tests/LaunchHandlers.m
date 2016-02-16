@@ -36,6 +36,25 @@ BOOL IsOtestTask(NSTask *task)
   return NO;
 }
 
+BOOL IsSimctlSpawnXctestTask(NSTask *task)
+{
+  if (![[task launchPath] hasSuffix:@"usr/bin/simctl"]) {
+    return NO;
+  }
+
+  if (![[task arguments] containsObject:@"spawn"]) {
+    return NO;
+  }
+
+  for (NSString *arg in [task arguments]) {
+    if ([arg hasSuffix:@"usr/bin/xctest"]) {
+      return YES;
+    }
+  }
+
+  return NO;
+}
+
 @implementation LaunchHandlers
 
 + (id)handlerForShowBuildSettingsWithProject:(NSString *)project
@@ -237,6 +256,24 @@ BOOL IsOtestTask(NSTask *task)
       [[NSJSONSerialization dataWithJSONObject:testList options:0 error:nil] writeToFile:otestQueryOutputFilePath atomically:YES];
       [[FakeTaskManager sharedManager] hideTaskFromLaunchedTasks:task];
     }
+  } copy];
+}
+
++ (id)handlerForSimctlXctestRunReturningTestEvents:(NSData *)testEvents
+{
+  return [^(FakeTask *task){
+
+    if (!IsSimctlSpawnXctestTask(task)) {
+      return;
+    }
+
+    NSString *outputFilePath = task.environment[@"SIMCTL_CHILD_OTEST_SHIM_STDOUT_FILE"];
+    if (!outputFilePath) {
+      return;
+    }
+
+    [task pretendExitStatusOf:0];
+    [testEvents writeToFile:outputFilePath atomically:YES];
   } copy];
 }
 

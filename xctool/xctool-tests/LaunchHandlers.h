@@ -22,6 +22,11 @@
  */
 BOOL IsOtestTask(NSTask *task);
 
+/**
+ * Returns YES if task is spawning xctest process via simctl.
+ */
+BOOL IsSimctlSpawnXctestTask(NSTask *task);
+
 @interface LaunchHandlers : NSObject
 
 /**
@@ -70,5 +75,7 @@ BOOL IsOtestTask(NSTask *task);
 + (id)handlerForOtestQueryReturningTestList:(NSArray *)testList;
 + (id)handlerForOtestQueryWithTestHost:(NSString *)testHost
                      returningTestList:(NSArray *)testList;
+
++ (id)handlerForSimctlXctestRunReturningTestEvents:(NSData *)testEvents;
 
 @end
