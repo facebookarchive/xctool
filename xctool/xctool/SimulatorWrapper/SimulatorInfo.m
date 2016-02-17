@@ -277,7 +277,7 @@ static const NSInteger KProductTypeIpad = 2;
   if (!platform) {
     platform = [[[_buildSettings[Xcode_PLATFORM_DIR] lastPathComponent] stringByDeletingPathExtension] lowercaseString];
   }
-  NSAssert([platform isEqualToString:@"iphonesimulator"] || [platform isEqualToString:@"macosx"], @"Platform '%@' is not yet supported.", platform);
+  NSAssert([platform isEqualToString:@"iphonesimulator"] || [platform isEqualToString:@"macosx"] || [platform isEqualToString:@"appletvsimulator"], @"Platform '%@' is not yet supported.", platform);
   NSString *sdkVersion = [self simulatedSdkVersion];
   DTiPhoneSimulatorSystemRoot *systemRoot = [SimulatorInfo _systemRootForPlatform:platform sdkVersion:sdkVersion];
   NSAssert(systemRoot != nil, @"Unable to instantiate DTiPhoneSimulatorSystemRoot for platform %@ and sdk version %@. Available roots: %@", platform, sdkVersion, [DTiPhoneSimulatorSystemRoot knownRoots]);
@@ -339,6 +339,9 @@ static const NSInteger KProductTypeIpad = 2;
     [librariesToInsert addObject:[XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-osx.dylib"]];
   } else if ([sdkName hasPrefix:@"iphonesimulator"]) {
     environment = IOSTestEnvironment(_buildSettings);
+    [librariesToInsert addObject:[XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"]];
+  } else if ([sdkName hasPrefix:@"appletvsimulator"]) {
+    environment = TVOSTestEnvironment(_buildSettings);
     [librariesToInsert addObject:[XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"]];
   } else {
     NSAssert(false, @"'%@' sdk is not yet supported", sdkName);

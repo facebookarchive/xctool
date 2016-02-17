@@ -1,0 +1,407 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		CC6A6F391C6D51BD00287BFA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6A6F381C6D51BD00287BFA /* main.m */; };
+		CC6A6F3C1C6D51BD00287BFA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6A6F3B1C6D51BD00287BFA /* AppDelegate.m */; };
+		CC6A6F3F1C6D51BD00287BFA /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6A6F3E1C6D51BD00287BFA /* ViewController.m */; };
+		CC6A6F421C6D51BD00287BFA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC6A6F401C6D51BD00287BFA /* Main.storyboard */; };
+		CC6A6F441C6D51BD00287BFA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CC6A6F431C6D51BD00287BFA /* Assets.xcassets */; };
+		CC6A6F4F1C6D51BD00287BFA /* TestProject_TVAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6A6F4E1C6D51BD00287BFA /* TestProject_TVAppTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CC6A6F4B1C6D51BD00287BFA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CC6A6F2C1C6D51BC00287BFA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CC6A6F331C6D51BC00287BFA;
+			remoteInfo = "TestProject-TVApp";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		CC6A6F341C6D51BC00287BFA /* TestProject-TVApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TestProject-TVApp.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC6A6F381C6D51BD00287BFA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		CC6A6F3A1C6D51BD00287BFA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		CC6A6F3B1C6D51BD00287BFA /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		CC6A6F3D1C6D51BD00287BFA /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		CC6A6F3E1C6D51BD00287BFA /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		CC6A6F411C6D51BD00287BFA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		CC6A6F431C6D51BD00287BFA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		CC6A6F451C6D51BD00287BFA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CC6A6F4A1C6D51BD00287BFA /* TestProject-TVAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TestProject-TVAppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC6A6F4E1C6D51BD00287BFA /* TestProject_TVAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestProject_TVAppTests.m; sourceTree = "<group>"; };
+		CC6A6F501C6D51BD00287BFA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CC6A6F311C6D51BC00287BFA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CC6A6F471C6D51BD00287BFA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		CC6A6F2B1C6D51BC00287BFA = {
+			isa = PBXGroup;
+			children = (
+				CC6A6F361C6D51BD00287BFA /* TestProject-TVApp */,
+				CC6A6F4D1C6D51BD00287BFA /* TestProject-TVAppTests */,
+				CC6A6F351C6D51BC00287BFA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		CC6A6F351C6D51BC00287BFA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CC6A6F341C6D51BC00287BFA /* TestProject-TVApp.app */,
+				CC6A6F4A1C6D51BD00287BFA /* TestProject-TVAppTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CC6A6F361C6D51BD00287BFA /* TestProject-TVApp */ = {
+			isa = PBXGroup;
+			children = (
+				CC6A6F3A1C6D51BD00287BFA /* AppDelegate.h */,
+				CC6A6F3B1C6D51BD00287BFA /* AppDelegate.m */,
+				CC6A6F3D1C6D51BD00287BFA /* ViewController.h */,
+				CC6A6F3E1C6D51BD00287BFA /* ViewController.m */,
+				CC6A6F401C6D51BD00287BFA /* Main.storyboard */,
+				CC6A6F431C6D51BD00287BFA /* Assets.xcassets */,
+				CC6A6F451C6D51BD00287BFA /* Info.plist */,
+				CC6A6F371C6D51BD00287BFA /* Supporting Files */,
+			);
+			path = "TestProject-TVApp";
+			sourceTree = "<group>";
+		};
+		CC6A6F371C6D51BD00287BFA /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				CC6A6F381C6D51BD00287BFA /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		CC6A6F4D1C6D51BD00287BFA /* TestProject-TVAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				CC6A6F4E1C6D51BD00287BFA /* TestProject_TVAppTests.m */,
+				CC6A6F501C6D51BD00287BFA /* Info.plist */,
+			);
+			path = "TestProject-TVAppTests";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		CC6A6F331C6D51BC00287BFA /* TestProject-TVApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CC6A6F531C6D51BD00287BFA /* Build configuration list for PBXNativeTarget "TestProject-TVApp" */;
+			buildPhases = (
+				CC6A6F301C6D51BC00287BFA /* Sources */,
+				CC6A6F311C6D51BC00287BFA /* Frameworks */,
+				CC6A6F321C6D51BC00287BFA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "TestProject-TVApp";
+			productName = "TestProject-TVApp";
+			productReference = CC6A6F341C6D51BC00287BFA /* TestProject-TVApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		CC6A6F491C6D51BD00287BFA /* TestProject-TVAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CC6A6F561C6D51BD00287BFA /* Build configuration list for PBXNativeTarget "TestProject-TVAppTests" */;
+			buildPhases = (
+				CC6A6F461C6D51BD00287BFA /* Sources */,
+				CC6A6F471C6D51BD00287BFA /* Frameworks */,
+				CC6A6F481C6D51BD00287BFA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CC6A6F4C1C6D51BD00287BFA /* PBXTargetDependency */,
+			);
+			name = "TestProject-TVAppTests";
+			productName = "TestProject-TVAppTests";
+			productReference = CC6A6F4A1C6D51BD00287BFA /* TestProject-TVAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CC6A6F2C1C6D51BC00287BFA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = Facebook;
+				TargetAttributes = {
+					CC6A6F331C6D51BC00287BFA = {
+						CreatedOnToolsVersion = 7.2.1;
+					};
+					CC6A6F491C6D51BD00287BFA = {
+						CreatedOnToolsVersion = 7.2.1;
+						TestTargetID = CC6A6F331C6D51BC00287BFA;
+					};
+				};
+			};
+			buildConfigurationList = CC6A6F2F1C6D51BC00287BFA /* Build configuration list for PBXProject "TestProject-TVApp" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = CC6A6F2B1C6D51BC00287BFA;
+			productRefGroup = CC6A6F351C6D51BC00287BFA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CC6A6F331C6D51BC00287BFA /* TestProject-TVApp */,
+				CC6A6F491C6D51BD00287BFA /* TestProject-TVAppTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CC6A6F321C6D51BC00287BFA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC6A6F441C6D51BD00287BFA /* Assets.xcassets in Resources */,
+				CC6A6F421C6D51BD00287BFA /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CC6A6F481C6D51BD00287BFA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CC6A6F301C6D51BC00287BFA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC6A6F3F1C6D51BD00287BFA /* ViewController.m in Sources */,
+				CC6A6F3C1C6D51BD00287BFA /* AppDelegate.m in Sources */,
+				CC6A6F391C6D51BD00287BFA /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CC6A6F461C6D51BD00287BFA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC6A6F4F1C6D51BD00287BFA /* TestProject_TVAppTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CC6A6F4C1C6D51BD00287BFA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CC6A6F331C6D51BC00287BFA /* TestProject-TVApp */;
+			targetProxy = CC6A6F4B1C6D51BD00287BFA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		CC6A6F401C6D51BD00287BFA /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CC6A6F411C6D51BD00287BFA /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		CC6A6F511C6D51BD00287BFA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = appletvos;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 9.1;
+			};
+			name = Debug;
+		};
+		CC6A6F521C6D51BD00287BFA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = appletvos;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 9.1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		CC6A6F541C6D51BD00287BFA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				INFOPLIST_FILE = "TestProject-TVApp/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.TestProject-TVApp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		CC6A6F551C6D51BD00287BFA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				INFOPLIST_FILE = "TestProject-TVApp/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.TestProject-TVApp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		CC6A6F571C6D51BD00287BFA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = "TestProject-TVAppTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.TestProject-TVAppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TestProject-TVApp.app/TestProject-TVApp";
+			};
+			name = Debug;
+		};
+		CC6A6F581C6D51BD00287BFA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = "TestProject-TVAppTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.TestProject-TVAppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TestProject-TVApp.app/TestProject-TVApp";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CC6A6F2F1C6D51BC00287BFA /* Build configuration list for PBXProject "TestProject-TVApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CC6A6F511C6D51BD00287BFA /* Debug */,
+				CC6A6F521C6D51BD00287BFA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CC6A6F531C6D51BD00287BFA /* Build configuration list for PBXNativeTarget "TestProject-TVApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CC6A6F541C6D51BD00287BFA /* Debug */,
+				CC6A6F551C6D51BD00287BFA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CC6A6F561C6D51BD00287BFA /* Build configuration list for PBXNativeTarget "TestProject-TVAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CC6A6F571C6D51BD00287BFA /* Debug */,
+				CC6A6F581C6D51BD00287BFA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = CC6A6F2C1C6D51BC00287BFA /* Project object */;
+}

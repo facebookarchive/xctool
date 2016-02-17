@@ -31,7 +31,8 @@ NSTask *CreateTaskForSimulatorExecutable(NSString *sdkName,
   NSMutableArray *taskArgs = [NSMutableArray array];
   NSMutableDictionary *taskEnv = [NSMutableDictionary dictionary];
 
-  if ([sdkName hasPrefix:@"iphonesimulator"]) {
+  if ([sdkName hasPrefix:@"iphonesimulator"] ||
+      [sdkName hasPrefix:@"appletvsimulator"]) {
     [taskArgs addObjectsFromArray:@[
       @"spawn",
       [[[simulatorInfo simulatedDevice] UDID] UUIDString],

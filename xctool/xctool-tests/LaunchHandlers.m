@@ -20,16 +20,22 @@
 #import "FakeTaskManager.h"
 #import "TestUtil.h"
 
-BOOL IsOtestTask(NSTask *task)
+/**
+ * Returns YES if task is spawning xctest process via simctl.
+ */
+BOOL IsSimctlSpawnXctestTask(NSTask *task)
 {
-  if ([[[task launchPath] lastPathComponent] isEqualToString:@"otest"]) {
-    return YES;
-  } else if ([[[task launchPath] lastPathComponent] isEqualToString:@"sim"]) {
-    // For iOS, launched via the 'sim' wrapper.
-    for (NSString *arg in [task arguments]) {
-      if ([[arg lastPathComponent] isEqualToString:@"otest"]) {
-        return YES;
-      }
+  if (![[task launchPath] hasSuffix:@"usr/bin/simctl"]) {
+    return NO;
+  }
+
+  if (![[task arguments] containsObject:@"spawn"]) {
+    return NO;
+  }
+
+  for (NSString *arg in [task arguments]) {
+    if ([arg hasSuffix:@"usr/bin/xctest"]) {
+      return YES;
     }
   }
 
@@ -237,6 +243,24 @@ BOOL IsOtestTask(NSTask *task)
       [[NSJSONSerialization dataWithJSONObject:testList options:0 error:nil] writeToFile:otestQueryOutputFilePath atomically:YES];
       [[FakeTaskManager sharedManager] hideTaskFromLaunchedTasks:task];
     }
+  } copy];
+}
+
++ (id)handlerForSimctlXctestRunReturningTestEvents:(NSData *)testEvents
+{
+  return [^(FakeTask *task){
+
+    if (!IsSimctlSpawnXctestTask(task)) {
+      return;
+    }
+
+    NSString *outputFilePath = task.environment[@"SIMCTL_CHILD_OTEST_SHIM_STDOUT_FILE"];
+    if (!outputFilePath) {
+      return;
+    }
+
+    [task pretendExitStatusOf:0];
+    [testEvents writeToFile:outputFilePath atomically:YES];
   } copy];
 }
 

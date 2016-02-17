@@ -16,12 +16,6 @@
 
 #import <Foundation/Foundation.h>
 
-/**
- * Returns YES if task appears to specify an otest process, either for OS X
- * or the simulator.
- */
-BOOL IsOtestTask(NSTask *task);
-
 @interface LaunchHandlers : NSObject
 
 /**
@@ -70,5 +64,7 @@ BOOL IsOtestTask(NSTask *task);
 + (id)handlerForOtestQueryReturningTestList:(NSArray *)testList;
 + (id)handlerForOtestQueryWithTestHost:(NSString *)testHost
                      returningTestList:(NSArray *)testList;
+
++ (id)handlerForSimctlXctestRunReturningTestEvents:(NSData *)testEvents;
 
 @end

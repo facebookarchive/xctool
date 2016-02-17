@@ -33,7 +33,7 @@ static const NSInteger kMaxRunTestsAttempts = 3;
                     otherErrors:(NSString **)otherErrors
 {
   NSString *sdkName = _buildSettings[Xcode_SDK_NAME];
-  NSAssert([sdkName hasPrefix:@"iphonesimulator"], @"Unexpected SDK: %@", sdkName);
+  NSAssert([sdkName hasPrefix:@"iphonesimulator"] || [sdkName hasPrefix:@"appletvsimulator"], @"Unexpected SDK: %@", sdkName);
 
   // Sometimes the TEST_HOST will be wrapped in double quotes.
   NSString *testHostPath = [_buildSettings[Xcode_TEST_HOST] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];

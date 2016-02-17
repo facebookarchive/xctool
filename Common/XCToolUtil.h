@@ -217,6 +217,11 @@ NSMutableDictionary *IOSTestEnvironment(NSDictionary *buildSettings);
 NSMutableDictionary *OSXTestEnvironment(NSDictionary *buildSettings);
 
 /**
+ * Returns common environment required to query and run TV OS tests.
+ */
+NSMutableDictionary *TVOSTestEnvironment(NSDictionary *buildSettings);
+
+/**
  * Creates a temporary directory under NSTemporaryDirectory() using mkdtemp,
  * and returns the path.
  */

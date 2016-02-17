@@ -188,12 +188,21 @@
       @"macosx" : @"macosx10.8",
       @"macosx10.7" : @"macosx10.7",
       @"macosx10.8" : @"macosx10.8",
+      @"appletvsimulator": @"appletvsimulator9.1",
+      @"appletvsimulator9.1": @"appletvsimulator9.1",
+      @"watchos": @"watchos2.1",
+      @"watchos2.1": @"watchos2.1",
+      @"watchsimulator": @"watchsimulator2.1",
+      @"watchsimulator2.1": @"watchsimulator2.1",
       @"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk": @"macosx10.7",
       @"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk": @"macosx10.8",
       @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk": @"iphoneos6.1",
       @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator5.1.sdk": @"iphonesimulator5.1",
       @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.0.sdk": @"iphonesimulator6.0",
       @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator6.1.sdk": @"iphonesimulator5.0",
+      @"/Applications/Xcode.app/Contents/Developer/Platforms/AppleTVSimulator.platform/Developer/SDKs/AppleTVSimulator9.1.sdk": @"appletvsimulator9.1",
+      @"/Applications/Xcode.app/Contents/Developer/Platforms/WatchOS.platform/Developer/SDKs/WatchOS2.1.sdk": @"watchos2.1",
+      @"/Applications/Xcode.app/Contents/Developer/Platforms/WatchSimulator.platform/Developer/SDKs/WatchSimulator2.1.sdk": @"watchsimulator2.1",
     }));
 
     // Both of the above should be in the allLaunchedTasks list.  Since XcodeDeveloperDirPath()
