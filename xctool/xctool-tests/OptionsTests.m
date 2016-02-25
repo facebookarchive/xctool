@@ -207,28 +207,17 @@
    TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt"];
 }
 
-- (void)testResultBundlePathMustBeADirectory
+- (void)testResultBundlePathMustNotExist
 {
-  NSString *validFilePath = TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt";
+  NSString *existingFilePath = TEST_DATA @"TestWorkspace-Library-TestProject-Library-showBuildSettings.txt";
+  assertThatBool([[NSFileManager defaultManager] fileExistsAtPath:existingFilePath], isTrue());
   [[Options optionsFrom:@[
                           @"-scheme", @"TestProject-Library",
                           @"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
-                          @"-resultBundlePath", validFilePath,
+                          @"-resultBundlePath", existingFilePath,
                           ]]
    assertOptionsFailToValidateWithError:
-   [NSString stringWithFormat:@"Specified result bundle path must be a directory: %@", validFilePath]];
-}
-
-- (void)testResultBundlePathMustExist
-{
-  NSString *invalidResultBundlePath = @"SOME_BAD_PATH";
-  [[Options optionsFrom:@[
-                          @"-scheme", @"TestProject-Library",
-                          @"-workspace", TEST_DATA @"TestWorkspace-Library/TestWorkspace-Library.xcworkspace",
-                          @"-resultBundlePath", invalidResultBundlePath,
-                          ]]
-   assertOptionsFailToValidateWithError:
-   [NSString stringWithFormat:@"Specified result bundle path doesn't exist: %@", invalidResultBundlePath]];
+   [NSString stringWithFormat:@"Specified result bundle path already exists: %@", existingFilePath]];
 }
 
 - (void)testResultBundlePathWorks
