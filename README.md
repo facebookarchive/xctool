@@ -137,6 +137,15 @@ path/to/xctool.sh \
   test -only SomeTestTarget:SomeTestClassPrefix*,SomeTestClass/testSomeMethodPrefix*
 ```
 
+Alternatively, you can omit a specific item by prefix matching for classes or test methods:
+
+```bash
+path/to/xctool.sh \
+  -workspace YourWorkspace.xcworkspace \
+  -scheme YourScheme \
+  test -omit SomeTestTarget:SomeTestClass/testSomeMethodPrefix*
+```
+
 You can also run tests against a different SDK:
 
 ```bash
