@@ -30,7 +30,7 @@ typedef struct io_read_info {
   BOOL done;
   dispatch_io_t io;
   dispatch_data_t data;
-  size_t processedBytes;
+  BOOL trailingNewline;
 } io_read_info;
 
 // This function will strip ANSI escape codes from a string passed to it
@@ -174,7 +174,6 @@ void ReadOutputsAndFeedOuputLinesToBlockOnQueue(
   size_t (^feedUnprocessedLinesToBlock)(int, dispatch_data_t, BOOL) = ^(int fd, dispatch_data_t unprocessedPart, BOOL forceUntilTheEnd) {
     size_t processedSize;
     NSArray *lines = LinesFromDispatchData(unprocessedPart, YES, forceUntilTheEnd, &processedSize);
-    dispatch_release(unprocessedPart);
 
     for (NSString *lineToFeed in lines) {
       callOutputLineFeedBlock(fd, lineToFeed);
@@ -219,11 +218,25 @@ void ReadOutputsAndFeedOuputLinesToBlockOnQueue(
       }
       if (block && info->data != NULL) {
         // feed to block unprocessed lines
-        size_t offset = info->processedBytes;
         size_t size = dispatch_data_get_size(info->data);
-        if (offset < size) {
-          dispatch_data_t unprocessedPart = dispatch_data_create_subrange(info->data, offset, size - offset);
-          info->processedBytes += feedUnprocessedLinesToBlock(info->fd, unprocessedPart, info->done);
+        if (size > 0) {
+          size_t chomped = feedUnprocessedLinesToBlock(info->fd, info->data, info->done);
+
+          // Check for trailing newline before advancing the buffer, this will
+          // be used to determine whether to emit an empty line should the
+          // stream end in a newline, which would otherwise be omitted.
+          if (chomped > 0) {
+            dispatch_data_t data = dispatch_data_create_subrange(info->data, chomped - 1, 1);
+            const char *lastCharPtr;
+            dispatch_data_t ch = dispatch_data_create_map(data, (const void **)&lastCharPtr, NULL);
+            info->trailingNewline = (*lastCharPtr == '\n');
+            dispatch_release(ch);
+            dispatch_release(data);
+          }
+
+          dispatch_data_t remaining = dispatch_data_create_subrange(info->data, chomped, size - chomped);
+          dispatch_release(info->data);
+          info->data = remaining;
         }
       }
       if (info->done) {
@@ -254,22 +267,9 @@ void ReadOutputsAndFeedOuputLinesToBlockOnQueue(
         dispatch_group_leave(ioGroup);
         info->done = YES;
       }
-
-      size_t dataSz = 0;
-      if (info->data != NULL) {
-        dataSz = dispatch_data_get_size(info->data);
+      if (info->trailingNewline) {
+        callOutputLineFeedBlock(info->fd, @"");
       }
-      if (dataSz > 0) {
-        const char *lastCharPtr;
-        dispatch_data_t data = dispatch_data_create_subrange(info->data, dataSz - 1, 1);
-        dispatch_data_t contig = dispatch_data_create_map(data, (const void **)&lastCharPtr, NULL);
-        if (*lastCharPtr == '\n') {
-          callOutputLineFeedBlock(info->fd, @"");
-        }
-        dispatch_release(data);
-        dispatch_release(contig);
-      }
-
       if (info->data != NULL) {
         dispatch_release(info->data);
       }
