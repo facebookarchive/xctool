@@ -442,8 +442,7 @@
 {
   Options *options = [Options optionsFrom:@[@"-scheme", @"TestProject-Library",
                                              ]];
-  options.findProjectPath = [[[NSFileManager defaultManager] currentDirectoryPath]
-                             stringByAppendingPathComponent:@"xctool-tests/TestData/TestProject-Library"];
+  options.findProjectPath = TEST_DATA @"TestProject-Library";
 
   [options assertOptionsValidateWithBuildSettingsFromFile:
                       TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
@@ -459,8 +458,7 @@
 {
   Options *options = [Options optionsFrom:@[@"-scheme", @"TestMultipleProjectsInDirectory1",
                                             ]];
-  options.findProjectPath = [[[NSFileManager defaultManager] currentDirectoryPath]
-                             stringByAppendingPathComponent:@"xctool-tests/TestData/TestMultipleProjectsInDirectory"];
+  options.findProjectPath = TEST_DATA @"TestMultipleProjectsInDirectory";
 
   [options assertOptionsFailToValidateWithError:
    [NSString stringWithFormat:@"The directory %@ contains 2 projects, including multiple projects with the current "
