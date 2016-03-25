@@ -106,6 +106,7 @@ static NSTask *OtestShimTask(NSString *platformName,
   targetSettings[Xcode_SDK_NAME] = GetAvailableSDKsAndAliases()[[platformName lowercaseString]];
 
   targetSettings[Xcode_BUILT_PRODUCTS_DIR] = [bundlePath stringByDeletingLastPathComponent];
+  targetSettings[Xcode_TARGET_BUILD_DIR] = [bundlePath stringByDeletingLastPathComponent];
   targetSettings[Xcode_FULL_PRODUCT_NAME] = [bundlePath lastPathComponent];
 
   // set up an OCUnitIOSLogicTestRunner
