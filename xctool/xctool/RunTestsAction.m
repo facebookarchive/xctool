@@ -25,6 +25,8 @@
 #import "OCUnitOSXLogicTestRunner.h"
 #import "Options.h"
 #import "ReportStatus.h"
+#import "SimDevice.h"
+#import "SimRuntime.h"
 #import "SimulatorInfo.h"
 #import "TestableExecutionInfo.h"
 #import "XCToolUtil.h"
@@ -449,6 +451,9 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
     [_simulatorInfo setOSVersion:destInfo[@"OS"]];
     if (destInfo[@"id"] != nil) {
       NSUUID *udid = [[NSUUID alloc] initWithUUIDString:destInfo[@"id"]];
+      SimDevice *device = [SimulatorInfo deviceWithUDID:udid];
+      [_simulatorInfo setDeviceName:device.name];
+      [_simulatorInfo setOSVersion:device.runtime.versionString];
       [_simulatorInfo setDeviceUDID:udid];
     }
   }
