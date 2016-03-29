@@ -778,9 +778,16 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
     });
   }
 
-  dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
+  dispatch_time_t timeout = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30.0f * NSEC_PER_SEC));
+  long collectBuildSettingsStatus = dispatch_group_wait(group, timeout);
+
   ReportStatusMessageEnd(options.reporters, REPORTER_MESSAGE_INFO,
                          @"Collecting info for testables...");
+
+  if (collectBuildSettingsStatus != 0) {
+    ReportStatusMessage(options.reporters, REPORTER_MESSAGE_ERROR, @"Failed to collect all build settings.");
+    return NO;
+  }
 
   if (_listTestsOnly) {
     return [self listTestsInTestableExecutionInfos:testableExecutionInfos options:options];
