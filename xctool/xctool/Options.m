@@ -446,11 +446,9 @@
   }
 
   if (_resultBundlePath) {
-    BOOL isDirectory = NO;
-    BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:_resultBundlePath isDirectory:&isDirectory];
-    if (!isDirectory) {
-      NSString *errorReason = fileExists ? @"must be a directory" : @"doesn't exist";
-      *errorMessage = [NSString stringWithFormat:@"Specified result bundle path %@: %@", errorReason, _resultBundlePath];
+    BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:_resultBundlePath];
+    if (fileExists) {
+      *errorMessage = [NSString stringWithFormat:@"Specified result bundle path already exists: %@", _resultBundlePath];
       return NO;
     }
   }
