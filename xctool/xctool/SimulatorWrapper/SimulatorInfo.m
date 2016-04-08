@@ -333,7 +333,7 @@ static const NSInteger KProductTypeIpad = 2;
   NSString *sdkName = _buildSettings[Xcode_SDK_NAME];
   NSString *ideBundleInjectionLibPath = [_buildSettings[Xcode_PLATFORM_DIR] stringByAppendingPathComponent:@"Developer/Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection"];
   NSMutableDictionary *environment = nil;
-  NSMutableArray *librariesToInsert = [NSMutableArray arrayWithObject:ideBundleInjectionLibPath];
+  NSMutableArray *librariesToInsert = [NSMutableArray array];
   if ([sdkName hasPrefix:@"macosx"]) {
     environment = OSXTestEnvironment(_buildSettings);
     [librariesToInsert addObject:[XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-osx.dylib"]];
@@ -346,6 +346,7 @@ static const NSInteger KProductTypeIpad = 2;
   } else {
     NSAssert(false, @"'%@' sdk is not yet supported", sdkName);
   }
+  [librariesToInsert addObject:ideBundleInjectionLibPath];
 
   [environment addEntriesFromDictionary:@{
     @"DYLD_INSERT_LIBRARIES" : [librariesToInsert componentsJoinedByString:@":"],

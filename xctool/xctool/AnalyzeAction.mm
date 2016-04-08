@@ -177,7 +177,7 @@
     }
     return plistPaths;
   }
-  
+
   NSString *dgphPath = [path stringByAppendingPathComponent:@"dgph"];
   if ([[NSFileManager defaultManager] fileExistsAtPath:dgphPath]) {
     DgphFile dgph = DgphFile::loadFromFile(dgphPath.UTF8String);
@@ -193,7 +193,7 @@
       NSLog(@"Failed to load dgph file to discover analyzer outputs, analyzer output may be incomplete.");
     }
   }
-  
+
   if (path && projectName && targetName) {
     NSString *analyzerFilesPath = [NSString pathWithComponents:@[
                                                                  path,
