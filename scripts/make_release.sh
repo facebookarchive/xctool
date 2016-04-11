@@ -10,7 +10,7 @@
 # 3.  Fill tag version with current xctool version: `./bin/xctool --version`
 # 4.  Upload the ZIP file produced from make_release.sh.
 # 5.  Write some release notes - use the compare view to find what's changed.
-#     https://github.com/facebook/xctool/compare/v0.2.5...master
+#     https://github.com/facebook/xctool/compare/0.2.5...master
 # 6.  Publish!
 # 7.  Bump the version in xctool/xctool/Version.m; commit your change.
 # 8.  Push the version bump; e.g. `git push origin master`
