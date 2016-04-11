@@ -228,6 +228,11 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
 
 @implementation OTestShimTests
 
++ (void)setUp
+{
+  [SimulatorInfo prepare];
+}
+
 - (void)testSenTestingKitAssertionFailuresInIOSLogicTestsAreNotSilent
 {
   if (ToolchainIsXcode7OrBetter()) {

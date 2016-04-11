@@ -43,6 +43,11 @@
 
 @implementation OTestQueryTests
 
++ (void)setUp
+{
+  [SimulatorInfo prepare];
+}
+
 - (void)testCanQueryClassesFromOSXBundle
 {
   if (ToolchainIsXcode7OrBetter()) {

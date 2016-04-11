@@ -279,7 +279,7 @@ Build settings for action build and target TestProject-TVFrameworkTests:
     REZ_OBJECTS_DIR = /Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-TVFramework-eioarvrojappukbxcyfncxozpvso/Build/Intermediates/TestProject-TVFramework.build/Release-appletvsimulator/TestProject-TVFrameworkTests.build/ResourceManagerResources/Objects
     SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO
     SCRIPTS_FOLDER_PATH = TestProject-TVFrameworkTests.xctest/Scripts
-    SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/AppleTVSimulator.platform/Developer/SDKs/AppleTVSimulator9.1.sdk
+    SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/AppleTVSimulator.platform/Developer/SDKs/AppleTVSimulator.sdk
     SDK_DIR = /Applications/Xcode.app/Contents/Developer/Platforms/AppleTVSimulator.platform/Developer/SDKs/AppleTVSimulator9.1.sdk
     SDK_DIR_appletvsimulator9_1 = /Applications/Xcode.app/Contents/Developer/Platforms/AppleTVSimulator.platform/Developer/SDKs/AppleTVSimulator9.1.sdk
     SDK_NAME = appletvsimulator9.1

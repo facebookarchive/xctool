@@ -65,11 +65,6 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
 
 @implementation RunTestsActionTests
 
-- (void)setUp
-{
-  [super setUp];
-}
-
 - (void)testTestSDKIsCollected
 {
   Options *options = [[Options optionsFrom:@[

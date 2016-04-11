@@ -95,6 +95,11 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
 
 @implementation OCUnitTestRunnerTests
 
++ (void)setUp
+{
+  [SimulatorInfo prepare];
+}
+
 #pragma mark iOS Tests
 
 - (void)runTestsForRunner:(OCUnitTestRunner *)runner andReturnLaunchOptions:(NSDictionary **)outOptions
