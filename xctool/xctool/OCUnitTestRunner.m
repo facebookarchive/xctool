@@ -148,6 +148,7 @@ static NSString * const kEnvVarPassThroughPrefix = @"XCTOOL_TEST_ENV_";
                  newSimulatorInstance:(BOOL)newSimulatorInstance
             noResetSimulatorOnFailure:(BOOL)noResetSimulatorOnFailure
                          freshInstall:(BOOL)freshInstall
+                      waitForDebugger:(BOOL)waitForDebugger
                           testTimeout:(NSInteger)testTimeout
                             reporters:(NSArray *)reporters
                    processEnvironment:(NSDictionary *)processEnvironment
@@ -165,6 +166,7 @@ static NSString * const kEnvVarPassThroughPrefix = @"XCTOOL_TEST_ENV_";
     _newSimulatorInstance = newSimulatorInstance;
     _noResetSimulatorOnFailure = noResetSimulatorOnFailure;
     _freshInstall = freshInstall;
+    _waitForDebugger = waitForDebugger;
     _testTimeout = testTimeout;
     _reporters = [reporters copy];
     _framework = FrameworkInfoForTestBundleAtPath([_simulatorInfo productBundlePath]);
@@ -394,6 +396,10 @@ static NSString * const kEnvVarPassThroughPrefix = @"XCTOOL_TEST_ENV_";
   NSMutableDictionary *internalEnvironment = [NSMutableDictionary dictionary];
   if (_testTimeout > 0) {
     internalEnvironment[@"OTEST_SHIM_TEST_TIMEOUT"] = [@(_testTimeout) stringValue];
+  }
+
+  if (_waitForDebugger) {
+    internalEnvironment[@"XCTOOL_WAIT_FOR_DEBUGGER"] = @"YES";
   }
 
   NSArray *layers = @[

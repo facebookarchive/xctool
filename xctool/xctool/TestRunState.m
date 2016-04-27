@@ -165,6 +165,16 @@
   }
 }
 
+- (void)beginStatus:(NSDictionary *)event
+{
+  [self publishEventToReporters:event];
+}
+
+- (void)endStatus:(NSDictionary *)event
+{
+  [self publishEventToReporters:event];
+}
+
 - (void)handleStartupError:(NSString *)startupError
 {
   [[_testSuiteState unstartedTests] makeObjectsPerformSelector:@selector(appendOutput:)
