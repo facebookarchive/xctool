@@ -111,6 +111,10 @@
                          aliases:nil
                      description:@"Skip actual test running and list them only."
                          setFlag:@selector(setListTestsOnly:)],
+    [Action actionOptionWithName:@"waitForDebugger"
+                         aliases:nil
+                     description:@"Spawn tests but wait for debugger to attach."
+                         setFlag:@selector(setWaitForDebugger:)],
     [Action actionOptionWithName:@"testTimeout"
                          aliases:nil
                      description:
@@ -157,6 +161,11 @@
 - (void)setFreshInstall:(BOOL)freshInstall
 {
   [_runTestsAction setFreshInstall:freshInstall];
+}
+
+- (void)setWaitForDebugger:(BOOL)waitForDebugger
+{
+  [_runTestsAction setWaitForDebugger:waitForDebugger];
 }
 
 - (void)setParallelize:(BOOL)parallelize

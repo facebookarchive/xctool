@@ -97,7 +97,7 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
                 toReporter:state];
   [state didFinishRunWithStartupError:nil otherErrors:nil];
 
-  assertThat(eventBuffer.events, hasCountOf(88));
+  assertThat(eventBuffer.events, hasCountOf(92));
   assertThat(SelectEventFields(eventBuffer.events, kReporter_Events_BeginTest, @"event"), hasCountOf(7));
   assertThat(SelectEventFields(eventBuffer.events, kReporter_Events_EndTest, @"event"), hasCountOf(7));
 }

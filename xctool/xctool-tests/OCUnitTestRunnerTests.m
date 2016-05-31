@@ -58,6 +58,7 @@ static id TestRunnerWithTestListsAndProcessEnv(Class cls, NSDictionary *settings
                        newSimulatorInstance:NO
                   noResetSimulatorOnFailure:NO
                                freshInstall:NO
+                            waitForDebugger:NO
                                 testTimeout:30
                                   reporters:@[eventBuffer]
                          processEnvironment:processEnvironment];

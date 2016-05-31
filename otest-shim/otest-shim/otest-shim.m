@@ -325,15 +325,53 @@ static void XCPerformTestWithSuppressedExpectedAssertionFailures(id self, SEL or
   [handler release];
 }
 
+static void XCWaitForDebuggerIfNeeded()
+{
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    NSDictionary *env = [[NSProcessInfo processInfo] environment];
+    BOOL waitForDebugger = [env[@"XCTOOL_WAIT_FOR_DEBUGGER"] isEqualToString:@"YES"];
+    if (waitForDebugger) {
+      int pid = [[NSProcessInfo processInfo] processIdentifier];
+      NSString *beginMessage = [NSString stringWithFormat:@"Waiting for debugger to be attached to pid '%d' ...", pid];
+      dispatch_sync(EventQueue(), ^{
+        PrintJSON(EventDictionaryWithNameAndContent(
+          kReporter_Events_BeginStatus,
+          @{
+            kReporter_BeginStatus_MessageKey : beginMessage,
+            kReporter_BeginStatus_LevelKey : @"Info"
+          }
+        ));
+      });
+
+      // Halt process execution until a debugger is attached
+      raise(SIGSTOP);
+
+      NSString *endMessage = [NSString stringWithFormat:@"Debugger was successfully attached to pid '%d'.", pid];
+      dispatch_sync(EventQueue(), ^{
+        PrintJSON(EventDictionaryWithNameAndContent(
+          kReporter_Events_EndStatus,
+          @{
+            kReporter_BeginStatus_MessageKey : endMessage,
+            kReporter_BeginStatus_LevelKey : @"Info"
+          }
+        ));
+      });
+    }
+  });
+}
+
 static void SenTestCase_performTest(id self, SEL sel, id arg1)
 {
   SEL originalSelector = @selector(__SenTestCase_performTest:);
+  XCWaitForDebuggerIfNeeded();
   XCPerformTestWithSuppressedExpectedAssertionFailures(self, originalSelector, arg1);
 }
 
 static void XCTestCase_performTest(id self, SEL sel, id arg1)
 {
   SEL originalSelector = @selector(__XCTestCase_performTest:);
+  XCWaitForDebuggerIfNeeded();
   XCPerformTestWithSuppressedExpectedAssertionFailures(self, originalSelector, arg1);
 }
 

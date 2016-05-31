@@ -121,6 +121,7 @@ static NSTask *OtestShimTask(NSString *platformName,
                                                                newSimulatorInstance:NO
                                                           noResetSimulatorOnFailure:NO
                                                                        freshInstall:NO
+                                                                    waitForDebugger:NO
                                                                         testTimeout:1
                                                                           reporters:@[]
                                                                  processEnvironment:@{}];
