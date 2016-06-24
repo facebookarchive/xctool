@@ -18,6 +18,8 @@
 
 #import "Action.h"
 
+static NSString * const XCToolArgsFileExtension = @".xctool-args";
+
 /**
  * Options is a special case of Action.  It's an action that accepts its own params
  * (defined via +[Action options]), but also is the parent of other Actions's.  The
@@ -47,6 +49,7 @@
 @property (nonatomic, copy) NSString *derivedDataPath;
 @property (nonatomic, copy) NSArray *findTargetExcludePaths;
 @property (nonatomic, copy) NSString *launchTimeout;
+@property (nonatomic, copy) NSString *xctoolArgs;
 
 @property (nonatomic, assign) BOOL showBuildSettings;
 @property (nonatomic, assign) BOOL showTasks;
@@ -100,5 +103,8 @@
  */
 - (BOOL)validateAndReturnXcodeSubjectInfo:(XcodeSubjectInfo **)xcodeSubjectInfo
                              errorMessage:(NSString **)errorMessage;
+
+
+- (NSString *)findXCToolArgs:(NSArray *)arguments;
 
 @end

@@ -1,0 +1,4 @@
+[
+  "-scheme", "TestProject-Library",
+  "-showBuildSettings"
+]

@@ -260,6 +260,8 @@
       Action *action = [[verbToClass[argument] alloc] init];
       consumed += [action consumeArguments:argumentList errorMessage:errorMessage];
       [_actions addObject:action];
+    } else if ([argument isEqualToString:_xctoolArgs]) {
+      continue;
     } else {
       *errorMessage = [NSString stringWithFormat:@"Unexpected action: %@", argument];
       break;
@@ -757,6 +759,18 @@
     *errorMessage = [NSString stringWithFormat:@"Unable to find projects (.xcodeproj) in directory %@. Please specify with -workspace, -project, or -find-target.", searchPath];
   }
   return nil;
+}
+
+- (NSString *)findXCToolArgs:(NSArray *)arguments
+{
+  for (NSString *argument in arguments) {
+    if ([argument hasSuffix:XCToolArgsFileExtension]) {
+      _xctoolArgs = [argument copy];
+      break;
+    }
+  }
+  
+  return _xctoolArgs;
 }
 
 - (NSString*)description

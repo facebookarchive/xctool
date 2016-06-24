@@ -105,4 +105,30 @@
   }];
 }
 
+- (void)testCallingWithCustomFileArguments
+{
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
+     // Make sure -showBuildSettings returns some data
+     [LaunchHandlers handlerForShowBuildSettingsWithProject:TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj"
+                                                     scheme:@"TestProject-Library"
+                                               settingsPath:TEST_DATA @"TestProject-Library-showBuildSettings.txt"
+                                                       hide:NO],
+     ]];
+    
+    XCTool *tool = [[XCTool alloc] init];
+    tool.arguments = @[@"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj", TEST_DATA @"custom.xctool-args"];
+    
+    [TestUtil runWithFakeStreams:tool];
+    
+    assertThat([[[FakeTaskManager sharedManager] launchedTasks][0] arguments],
+               equalTo(@[
+                         @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
+                         @"-scheme", @"TestProject-Library",
+                         @"-showBuildSettings",
+                         ]));
+    assertThatInt(tool.exitStatus, equalToInteger(0));
+  }];
+}
+
 @end

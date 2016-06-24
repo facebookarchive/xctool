@@ -100,18 +100,32 @@
   Options *options = [[Options alloc] init];
   NSString *errorMessage = nil;
 
+  NSString *argumentsString = nil;
+  NSString *xctoolargs = [options findXCToolArgs:_arguments];
   NSFileManager *fm = [NSFileManager defaultManager];
-  if ([fm isReadableFileAtPath:@".xctool-args"]) {
+  if ([fm isReadableFileAtPath:xctoolargs]) {
     NSError *readError = nil;
-    NSString *argumentsString = [NSString stringWithContentsOfFile:@".xctool-args"
-                                                          encoding:NSUTF8StringEncoding
-                                                             error:&readError];
+    argumentsString = [NSString stringWithContentsOfFile:xctoolargs
+                                                encoding:NSUTF8StringEncoding
+                                                   error:&readError];
     if (readError) {
-      [_standardError printString:@"ERROR: Cannot read '.xctool-args' file: %@\n", [readError localizedFailureReason]];
+      [_standardError printString:@"ERROR: Cannot read '%@' file: %@\n", xctoolargs, [readError localizedFailureReason]];
       _exitStatus = XCToolArgsFileIsBroken;
       return;
     }
-
+  } else if ([fm isReadableFileAtPath:XCToolArgsFileExtension]) {
+    NSError *readError = nil;
+    argumentsString = [NSString stringWithContentsOfFile:XCToolArgsFileExtension
+                                                encoding:NSUTF8StringEncoding
+                                                   error:&readError];
+    if (readError) {
+      [_standardError printString:@"ERROR: Cannot read '%@' file: %@\n", XCToolArgsFileExtension, [readError localizedFailureReason]];
+      _exitStatus = XCToolArgsFileIsBroken;
+      return;
+    }
+  }
+  
+  if (argumentsString) {
     NSError *JSONError = nil;
     NSArray *argumentsList = [NSJSONSerialization JSONObjectWithData:[argumentsString dataUsingEncoding:NSUTF8StringEncoding]
                                                              options:0
