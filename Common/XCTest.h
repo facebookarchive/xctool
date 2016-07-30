@@ -31,6 +31,8 @@ struct __va_list_tag {
 
 @end
 
+@class XCTestRun;
+
 @interface XCTest : NSObject
 {
 }
@@ -40,6 +42,7 @@ struct __va_list_tag {
 - (void)setUp;
 - (void)performTest:(id)arg1;
 - (id)name;
+- (XCTestRun *)testRun;
 - (Class)testRunClass;
 - (NSUInteger)testCaseCount;
 - (BOOL)isEmpty;
@@ -58,6 +61,7 @@ struct __va_list_tag {
 - (id)description;
 - (BOOL)hasSucceeded;
 - (NSUInteger)testCaseCount;
+- (NSInteger)executionCount;
 - (NSUInteger)unexpectedExceptionCount;
 - (NSUInteger)failureCount;
 - (NSUInteger)totalFailureCount;
