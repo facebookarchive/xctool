@@ -325,9 +325,11 @@ static void XCPerformTestWithSuppressedExpectedAssertionFailures(id self, SEL or
 
   if (timeout > 0) {
     BOOL isSuite = [self isKindOfClass:NSClassFromString(@"XCTestCaseSuite")];
-    // If running in a suite, time out if we run longer than the combined timeouts of all tests.
+    // If running in a suite, time out if we run longer than the combined timeouts of all tests + a fudge factor.
     int64_t testCount = isSuite ? [[self tests] count] : 1;
-    int64_t interval = timeout * NSEC_PER_SEC * testCount;
+    // When in a suite, add a second per test to help account for the time required to switch tests in a suite.
+    int64_t fudgeFactor = isSuite ? MAX(testCount, 1) : 0;
+    int64_t interval = (timeout * testCount + fudgeFactor) * NSEC_PER_SEC ;
     NSString *queueName = [NSString stringWithFormat:@"test.timer.%p", self];
     dispatch_queue_t queue = dispatch_queue_create([queueName cStringUsingEncoding:NSASCIIStringEncoding], DISPATCH_QUEUE_SERIAL);
     dispatch_set_target_queue(queue, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0));
@@ -336,7 +338,6 @@ static void XCPerformTestWithSuppressedExpectedAssertionFailures(id self, SEL or
     dispatch_source_set_event_handler(source, ^{
         if (isSuite) {
             NSString *additionalInformation = @"";
-            
             if ([self respondsToSelector:@selector(testRun)]) {
                 XCTestRun *run = [self testRun];
                 NSUInteger executedTests = [run executionCount];
