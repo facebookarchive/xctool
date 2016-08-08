@@ -14,6 +14,8 @@
 // limitations under the License.
 //
 
+#import <dlfcn.h>
+
 #import <Foundation/Foundation.h>
 
 #import <SenTestingKit/SenTestingKit.h>
@@ -110,6 +112,11 @@ static void XCTestLog_testSuiteDidStart(id self, SEL sel, XCTestSuiteRun *run)
   XCToolLog_testSuiteDidStart(testDescription);
 }
 
+static void XCTestLog_testSuiteWillStart(id self, SEL sel, XCTestSuite *suite)
+{
+  XCTestLog_testSuiteDidStart(self, sel, objc_msgSend(suite, @selector(testRun)));
+}
+
 static void SenTestLog_testSuiteDidStart(id self, SEL sel, NSNotification *notification)
 {
   SenTestRun *run = [notification run];
@@ -142,6 +149,11 @@ static void XCTestLog_testSuiteDidStop(id self, SEL sel, XCTestSuiteRun *run)
       kReporter_EndTestSuite_TestDurationKey: @([run testDuration]),
       kReporter_EndTestSuite_TotalDurationKey : @([run totalDuration]),
   }));
+}
+
+static void XCTestLog_testSuiteDidFinish(id self, SEL sel, XCTestSuite *suite)
+{
+  XCTestLog_testSuiteDidStop(self, sel, objc_msgSend(suite, @selector(testRun)));
 }
 
 static void SenTestLog_testSuiteDidStop(id self, SEL sel, NSNotification *notification)
@@ -177,6 +189,11 @@ static void XCTestLog_testCaseDidStart(id self, SEL sel, XCTestCaseRun *run)
   XCToolLog_testCaseDidStart(fullTestName);
 }
 
+static void XCTestLog_testCaseWillStart(id self, SEL sel, XCTestCase *testCase)
+{
+  XCTestLog_testCaseDidStart(self, sel, objc_msgSend(testCase, @selector(testRun)));
+}
+
 static void SenTestLog_testCaseDidStart(id self, SEL sel, NSNotification *notification)
 {
   SenTestRun *run = [notification run];
@@ -209,6 +226,11 @@ static void XCTestLog_testCaseDidStop(id self, SEL sel, XCTestCaseRun *run)
 {
   NSString *fullTestName = [[run test] name];
   XCToolLog_testCaseDidStop(fullTestName, @([run unexpectedExceptionCount]), @([run failureCount]), @([run totalDuration]));
+}
+
+static void XCTestLog_testCaseDidFinish(id self, SEL sel, XCTestCase *testCase)
+{
+  XCTestLog_testCaseDidStop(self, sel, objc_msgSend(testCase, @selector(testRun)));
 }
 
 static void SenTestLog_testCaseDidStop(id self, SEL sel, NSNotification *notification)
@@ -265,6 +287,11 @@ static void XCTestLog_testCaseDidFail(id self, SEL sel, XCTestCaseRun *run, NSSt
     kReporter_EndTest_Exception_LineNumberKey : @(line),
     kReporter_EndTest_Exception_ReasonKey : description,
   });
+}
+
+static void XCTestLog_testCaseDidFailWithDescription(id self, SEL sel, XCTestCase *testCase, NSString *description, NSString *file, NSUInteger line)
+{
+  XCTestLog_testCaseDidFail(self, sel, objc_msgSend(testCase, @selector(testRun)), description, file, line);
 }
 
 static void SenTestLog_testCaseDidFail(id self, SEL sel, NSNotification *notification)
@@ -432,6 +459,67 @@ static void PrintNewlineAndCloseFDs()
 
 #pragma mark - Entry
 
+static void SwizzleXCTestMethodsIfAvailable()
+{
+  Class testLogClass = NSClassFromString(@"XCTestLog");
+
+  if (testLogClass == nil) {
+    // Looks like the XCTest framework has not been loaded yet.
+    return;
+  }
+
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    if ([testLogClass instancesRespondToSelector:@selector(testSuiteWillStart:)]) {
+      // Swizzle methods for Xcode 8.
+      XTSwizzleSelectorForFunction(testLogClass,
+                                   @selector(testSuiteWillStart:),
+                                   (IMP)XCTestLog_testSuiteWillStart);
+      XTSwizzleSelectorForFunction(testLogClass,
+                                   @selector(testSuiteDidFinish:),
+                                   (IMP)XCTestLog_testSuiteDidFinish);
+      XTSwizzleSelectorForFunction(testLogClass,
+                                   @selector(testCaseWillStart:),
+                                   (IMP)XCTestLog_testCaseWillStart);
+      XTSwizzleSelectorForFunction(testLogClass,
+                                   @selector(testCaseDidFinish:),
+                                   (IMP)XCTestLog_testCaseDidFinish);
+      XTSwizzleSelectorForFunction(testLogClass,
+                                   @selector(testCase:didFailWithDescription:inFile:atLine:),
+                                   (IMP)XCTestLog_testCaseDidFailWithDescription);
+    } else {
+      // Swizzle methods for Xcode 7 and earlier.
+      XTSwizzleSelectorForFunction(testLogClass,
+                                   @selector(testSuiteDidStart:),
+                                   (IMP)XCTestLog_testSuiteDidStart);
+      XTSwizzleSelectorForFunction(testLogClass,
+                                   @selector(testSuiteDidStop:),
+                                   (IMP)XCTestLog_testSuiteDidStop);
+      XTSwizzleSelectorForFunction(testLogClass,
+                                   @selector(testCaseDidStart:),
+                                   (IMP)XCTestLog_testCaseDidStart);
+      XTSwizzleSelectorForFunction(testLogClass,
+                                   @selector(testCaseDidStop:),
+                                   (IMP)XCTestLog_testCaseDidStop);
+      XTSwizzleSelectorForFunction(testLogClass,
+                                   @selector(testCaseDidFail:withDescription:inFile:atLine:),
+                                   (IMP)XCTestLog_testCaseDidFail);
+    }
+    XTSwizzleSelectorForFunction(NSClassFromString(@"XCTestCase"),
+                                 @selector(performTest:),
+                                 (IMP)XCTestCase_performTest);
+    if ([NSClassFromString(@"XCTestCase") respondsToSelector:@selector(_enableSymbolication)]) {
+      // Disable symbolication thing on xctest 7 because it sometimes takes forever.
+      XTSwizzleClassSelectorForFunction(NSClassFromString(@"XCTestCase"),
+                                        @selector(_enableSymbolication),
+                                        (IMP)XCTestCase__enableSymbolication);
+    }
+    NSDictionary *frameworkInfo = FrameworkInfoForExtension(@"xctest");
+    ApplyDuplicateTestNameFix([frameworkInfo objectForKey:kTestingFrameworkTestProbeClassName],
+                              [frameworkInfo objectForKey:kTestingFrameworkTestSuiteClassName]);
+  });
+}
+
 static const char *DyldImageStateChangeHandler(enum dyld_image_states state,
                                                uint32_t infoCount,
                                                const struct dyld_image_info info[])
@@ -475,37 +563,19 @@ static const char *DyldImageStateChangeHandler(enum dyld_image_states state,
       XTApplySenIsSuperclassOfClassPerformanceFix();
     } else if (strstr(info[i].imageFilePath, "XCTest.framework") != NULL) {
       // Since the 'XCTestLog' class now exists, we can swizzle it!
-      XTSwizzleSelectorForFunction(NSClassFromString(@"XCTestLog"),
-                                   @selector(testSuiteDidStart:),
-                                   (IMP)XCTestLog_testSuiteDidStart);
-      XTSwizzleSelectorForFunction(NSClassFromString(@"XCTestLog"),
-                                   @selector(testSuiteDidStop:),
-                                   (IMP)XCTestLog_testSuiteDidStop);
-      XTSwizzleSelectorForFunction(NSClassFromString(@"XCTestLog"),
-                                   @selector(testCaseDidStart:),
-                                   (IMP)XCTestLog_testCaseDidStart);
-      XTSwizzleSelectorForFunction(NSClassFromString(@"XCTestLog"),
-                                   @selector(testCaseDidStop:),
-                                   (IMP)XCTestLog_testCaseDidStop);
-      XTSwizzleSelectorForFunction(NSClassFromString(@"XCTestLog"),
-                                   @selector(testCaseDidFail:withDescription:inFile:atLine:),
-                                   (IMP)XCTestLog_testCaseDidFail);
-      XTSwizzleSelectorForFunction(NSClassFromString(@"XCTestCase"),
-                                   @selector(performTest:),
-                                   (IMP)XCTestCase_performTest);
-      if ([NSClassFromString(@"XCTestCase") respondsToSelector:@selector(_enableSymbolication)]) {
-        // Disable symbolication thing on xctest 7 because it sometimes takes forever.
-        XTSwizzleClassSelectorForFunction(NSClassFromString(@"XCTestCase"),
-                                          @selector(_enableSymbolication),
-                                          (IMP)XCTestCase__enableSymbolication);
-      }
-      NSDictionary *frameworkInfo = FrameworkInfoForExtension(@"xctest");
-      ApplyDuplicateTestNameFix([frameworkInfo objectForKey:kTestingFrameworkTestProbeClassName],
-                                [frameworkInfo objectForKey:kTestingFrameworkTestSuiteClassName]);
+      SwizzleXCTestMethodsIfAvailable();
     }
   }
 
   return NULL;
+}
+
+static id NSBundle_loadAndReturnError(id self, SEL sel, NSError **error)
+{
+  SEL originalSelector = @selector(__NSBundle_loadAndReturnError:);
+  id result = objc_msgSend(self, originalSelector, error);
+  SwizzleXCTestMethodsIfAvailable();
+  return result;
 }
 
 void handle_signal(int signal)
@@ -537,12 +607,24 @@ __attribute__((constructor)) static void EntryPoint()
   sa_abort.sa_handler = &handle_signal;
   sigaction(SIGABRT, &sa_abort, NULL);
 
-  // We need to swizzle SenTestLog (part of SenTestingKit), but the test bundle
-  // which links SenTestingKit hasn't been loaded yet.  Let's register to get
-  // notified when libraries are initialized and we'll watch for SenTestingKit.
-  dyld_register_image_state_change_handler(dyld_image_state_initialized,
-                                           NO,
-                                           DyldImageStateChangeHandler);
+  void (*dyld_register_image_state_change_handler)(enum dyld_image_states, bool, dyld_image_state_change_handler);
+  dyld_register_image_state_change_handler = dlsym(RTLD_DEFAULT, "dyld_register_image_state_change_handler");
+
+  if (dyld_register_image_state_change_handler) {
+    // We need to swizzle SenTestLog (part of SenTestingKit), but the test bundle
+    // which links SenTestingKit hasn't been loaded yet.  Let's register to get
+    // notified when libraries are initialized and we'll watch for SenTestingKit.
+    dyld_register_image_state_change_handler(dyld_image_state_initialized,
+                                             NO,
+                                             DyldImageStateChangeHandler);
+  } else {
+    // The function to register for notifications about loaded libraries is not
+    // available since Xcode 8. Instead swizzle -[NSBundle loadAndReturnError] so
+    // we can try to swizzle the methods as soon as the bundle is loaded. Also try
+    // swizzling immediately in case the bundle has alread been loaded.
+    XTSwizzleSelectorForFunction([NSBundle class], @selector(loadAndReturnError:), (IMP)NSBundle_loadAndReturnError);
+    SwizzleXCTestMethodsIfAvailable();
+  }
 
   // Unset so we don't cascade into any other process that might be spawned.
   unsetenv("DYLD_INSERT_LIBRARIES");
