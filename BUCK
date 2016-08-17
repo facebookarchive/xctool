@@ -243,7 +243,7 @@ genrule(
         ':otest-query-ios-bin#iphonesimulator-x86_64',
     ],
     out = 'otest-query-ios',
-    cmd = 'lipo $SRCS -create -output $OUT',
+    cmd = 'lipo $SRCS -create -output $OUT; codesign --force --sign - --timestamp=none $OUT',
 )
 
 apple_binary(
@@ -268,7 +268,7 @@ genrule(
         ':otest-query-osx-bin#macosx-x86_64',
     ],
     out = 'otest-query-osx',
-    cmd = 'lipo $SRCS -create -output $OUT',
+    cmd = 'lipo $SRCS -create -output $OUT; codesign --force --sign - --timestamp=none $OUT',
 )
 
 apple_library(
@@ -293,7 +293,7 @@ genrule(
         ':otest-query-lib#iphonesimulator-x86_64,shared',
     ],
     out = 'otest-query-lib-ios.dylib',
-    cmd = 'lipo $SRCS -create -output $OUT',
+    cmd = 'lipo $SRCS -create -output $OUT; codesign --force --sign - --timestamp=none $OUT',
 )
 
 genrule(
@@ -303,7 +303,7 @@ genrule(
         ':otest-query-lib#macosx-x86_64,shared',
     ],
     out = 'otest-query-lib-osx.dylib',
-    cmd = 'lipo $SRCS -create -output $OUT',
+    cmd = 'lipo $SRCS -create -output $OUT; codesign --force --sign - --timestamp=none $OUT',
 )
 
 apple_library(
@@ -351,7 +351,7 @@ genrule(
         ':otest-shim#iphonesimulator-x86_64,shared',
     ],
     out = 'otest-shim-ios.dylib',
-    cmd = 'lipo $SRCS -create -output $OUT',
+    cmd = 'lipo $SRCS -create -output $OUT; codesign --force --sign - --timestamp=none $OUT',
 )
 
 genrule(
@@ -361,7 +361,7 @@ genrule(
         ':otest-shim#macosx-x86_64,shared',
     ],
     out = 'otest-shim-osx.dylib',
-    cmd = 'lipo $SRCS -create -output $OUT',
+    cmd = 'lipo $SRCS -create -output $OUT; codesign --force --sign - --timestamp=none $OUT',
 )
 
 genrule(

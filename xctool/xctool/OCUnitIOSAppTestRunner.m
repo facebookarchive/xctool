@@ -62,20 +62,6 @@ static const NSInteger kMaxRunTestsAttempts = 3;
     if (freshSimulator || resetSimulator) {
       ReportStatusMessageBegin(_reporters,
                                REPORTER_MESSAGE_INFO,
-                               @"Verifying iOS Simulators...");
-      NSString *verifyError = nil;
-      if (VerifySimulators(&verifyError)) {
-        ReportStatusMessageEnd(_reporters,
-                               REPORTER_MESSAGE_INFO,
-                               @"Verified iOS Simulators...");
-      } else {
-        ReportStatusMessageEnd(_reporters,
-                               REPORTER_MESSAGE_ERROR,
-                               @"Failed to verify iOS Simulators with error: %@", verifyError);
-      }
-
-      ReportStatusMessageBegin(_reporters,
-                               REPORTER_MESSAGE_INFO,
                                @"Shutting down iOS Simulator...");
       NSString *shutdownError = nil;
       if (ShutdownSimulator(_simulatorInfo, &shutdownError)) {

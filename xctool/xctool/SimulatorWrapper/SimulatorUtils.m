@@ -20,7 +20,6 @@
 
 #import "SimDevice.h"
 #import "SimulatorInfo.h"
-#import "SimVerifier.h"
 #import "XCToolUtil.h"
 
 static const dispatch_time_t kDefaultSimulatorBlockTimeout = 30;
@@ -160,23 +159,6 @@ BOOL RemoveSimulatorContentAndSettings(SimulatorInfo *simulatorInfo, NSString **
                      [error.userInfo[NSUnderlyingErrorKey] localizedDescription] ?: @""];
   }
   return erased;
-}
-
-BOOL VerifySimulators(NSString **errorMessage)
-{
-  if (!NSClassFromString(@"SimVerifier")) {
-    *errorMessage = [NSString stringWithFormat:@"SimVerifier class is not available."];
-    return NO;
-  }
-
-  NSError *error = nil;
-  BOOL result = [[SimVerifier sharedVerifier] verifyAllWithError:&error];
-  if (!result || error) {
-    *errorMessage = [NSString stringWithFormat:@"%@; %@.",
-                     error.localizedDescription ?: @"Unknown error.",
-                     [error.userInfo[NSUnderlyingErrorKey] localizedDescription] ?: @""];
-  }
-  return result;
 }
 
 BOOL ShutdownSimulator(SimulatorInfo *simulatorInfo, NSString **errorMessage)

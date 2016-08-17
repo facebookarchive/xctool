@@ -29,17 +29,6 @@
 static const NSInteger KProductTypeIphone = 1;
 static const NSInteger KProductTypeIpad = 2;
 
-@interface DTiPhoneSimulatorSystemRoot (PlatformName)
-- (NSString *)platformName;
-@end
-
-@implementation DTiPhoneSimulatorSystemRoot (PlatformName)
-- (NSString *)platformName
-{
-  return [[[[[self runtime] platformPath] lastPathComponent] stringByDeletingPathExtension] lowercaseString];
-}
-@end
-
 @interface SimulatorInfo ()
 @property (nonatomic, assign) cpu_type_t cpuType;
 @property (nonatomic, copy) NSString *deviceName;
@@ -61,7 +50,7 @@ static const NSInteger KProductTypeIpad = 2;
 + (void)prepare
 {
   NSAssert([NSThread isMainThread], @"Should be called on main thread");
-  [self _warmUpDTiPhoneSimulatorSystemRootCaches];
+  [self _warmUpSimulatorsInfo];
 }
 
 - (instancetype)init
@@ -196,14 +185,10 @@ static const NSInteger KProductTypeIpad = 2;
       break;
   }
 
-  DTiPhoneSimulatorSystemRoot *systemRoot = [SimulatorInfo _systemRootWithSDKPath:_buildSettings[Xcode_SDKROOT]];
-  if (!systemRoot) {
+  SimRuntime *runtime = [SimulatorInfo _runtimeWithSDKPath:_buildSettings[Xcode_SDKROOT]];
+  if (runtime == nil) {
     return _deviceName;
   }
-
-  // return lowest device that has configuration with simulated sdk where lowest is defined
-  // by the order in the returned array of devices from `-[SimDeviceSet availableDevices]`
-  SimRuntime *runtime = systemRoot.runtime;
   NSMutableArray *supportedDeviceTypes = [NSMutableArray array];
   for (SimDevice *device in [[SimDeviceSet defaultSet] availableDevices]) {
     if (![device.runtime isEqual:runtime]) {
@@ -218,7 +203,7 @@ static const NSInteger KProductTypeIpad = 2;
     }
   }
 
-  NSAssert([supportedDeviceTypes count] > 0, @"There are no available devices that support provided sdk: %@. Supported devices: %@", [systemRoot sdkVersion], [[SimDeviceType supportedDevices] valueForKeyPath:@"name"]);
+  NSAssert([supportedDeviceTypes count] > 0, @"There are no available devices that support provided sdk: %@. Supported devices: %@", [runtime name], [[SimDeviceType supportedDevices] valueForKeyPath:@"name"]);
   _deviceName = [supportedDeviceTypes[0] name];
   return _deviceName;
 }
@@ -252,12 +237,12 @@ static const NSInteger KProductTypeIpad = 2;
 
 - (NSString *)simulatedSdkRootPath
 {
-  return [[self systemRootForSimulatedSdk] sdkRootPath];
+  return [self sdkInfoForSimulatedSdk][@"SDKPath"];
 }
 
 - (NSString *)simulatedSdkShortVersion
 {
-  return [[[self systemRootForSimulatedSdk] runtime] versionString];
+  return [self sdkInfoForSimulatedSdk][@"Version"];
 }
 
 - (NSString *)simulatedSdkName
@@ -265,13 +250,10 @@ static const NSInteger KProductTypeIpad = 2;
   if ([_buildSettings[Xcode_SDK_NAME] hasPrefix:@"macosx"]) {
     return _buildSettings[Xcode_SDK_NAME];
   }
-
-  DTiPhoneSimulatorSystemRoot *systemRoot = [self systemRootForSimulatedSdk];
-  NSString *platformName = [systemRoot platformName];
-  return [platformName stringByAppendingString:[self simulatedSdkVersion]];
+  return [self sdkInfoForSimulatedSdk][@"CanonicalName"];
 }
 
-- (DTiPhoneSimulatorSystemRoot *)systemRootForSimulatedSdk
+- (NSDictionary *)sdkInfoForSimulatedSdk
 {
   NSString *platform = _buildSettings[Xcode_PLATFORM_NAME];
   if (!platform) {
@@ -279,18 +261,15 @@ static const NSInteger KProductTypeIpad = 2;
   }
   NSAssert([platform isEqualToString:@"iphonesimulator"] || [platform isEqualToString:@"macosx"] || [platform isEqualToString:@"appletvsimulator"], @"Platform '%@' is not yet supported.", platform);
   NSString *sdkVersion = [self simulatedSdkVersion];
-  DTiPhoneSimulatorSystemRoot *systemRoot = [SimulatorInfo _systemRootForPlatform:platform sdkVersion:sdkVersion];
-  NSAssert(systemRoot != nil, @"Unable to instantiate DTiPhoneSimulatorSystemRoot for platform %@ and sdk version %@. Available roots: %@", platform, sdkVersion, [DTiPhoneSimulatorSystemRoot knownRoots]);
-  return systemRoot;
+  NSDictionary *sdkInfo = [SimulatorInfo _sdkInfoForPlatform:platform sdkVersion:sdkVersion];
+  NSAssert(sdkInfo != nil, @"Unable to find SDK for platform %@ and sdk version %@. Available roots: %@", platform, sdkVersion, [SimulatorInfo _sdkNames]);
+  return sdkInfo;
 }
 
 - (SimRuntime *)simulatedRuntime
 {
-  if (!_simulatedRuntime) {
-    _simulatedRuntime = [[self systemRootForSimulatedSdk] runtime];
-    NSAssert(_simulatedRuntime != nil, @"Unable to find simulated runtime for simulated sdk of version %@ at path %@. Supported runtimes: %@", [[self systemRootForSimulatedSdk] sdkVersion], [[self systemRootForSimulatedSdk] sdkRootPath], [SimRuntime supportedRuntimes]);
-  }
-  return _simulatedRuntime;
+  NSString *path = [self sdkInfoForSimulatedSdk][@"SDKPath"];
+  return [SimulatorInfo _runtimeWithSDKPath:path];
 }
 
 - (SimDevice *)simulatedDevice
@@ -447,12 +426,6 @@ static const NSInteger KProductTypeIpad = 2;
   return supportedRuntimes;
 }
 
-+ (SimRuntime *)_runtimeForSDKPath:(NSString *)sdkPath
-{
-  DTiPhoneSimulatorSystemRoot *root = [SimulatorInfo _systemRootWithSDKPath:sdkPath];
-  return [root runtime];
-}
-
 + (NSArray *)_availableDeviceConfigurationsInHumanReadableFormat
 {
   NSMutableArray *configs = [NSMutableArray array];
@@ -465,61 +438,175 @@ static const NSInteger KProductTypeIpad = 2;
 #pragma mark -
 #pragma mark Caching methods
 
-/*
- * Caches `DTiPhoneSimulatorSystemRoot` instances.
- *
- * `sdkRootPath` -> `DTiPhoneSimulatorSystemRoot *`
- * `platformName` -> `NSDictionary *`: `sdkVersion` -> `DTiPhoneSimulatorSystemRoot *`
- *
- */
-static NSDictionary *__systemRootsSdkPlatformVersionMap;
-static NSDictionary *__systemRootsSdkPathMap;
+static NSMutableDictionary *__platformInfo = nil;
+static NSMutableDictionary *__platformInfoByBundleID = nil;
+static NSMutableDictionary *__platformInfoByPath = nil;
+static NSMutableDictionary *__deviceTypesInfo = nil;
+static NSMutableDictionary *__deviceTypesInfoByBundleID = nil;
+static NSMutableDictionary *__deviceTypesInfoByPath = nil;
+static NSMutableDictionary *__runtimesInfo = nil;
+static NSMutableDictionary *__runtimesInfoByBundleID = nil;
+static NSMutableDictionary *__runtimesInfoByPath = nil;
+static NSMutableDictionary *__sdkInfo = nil;
+static NSMutableDictionary *__sdkInfoByPath = nil;
 
-+ (void)_warmUpDTiPhoneSimulatorSystemRootCaches
+// This method will go through the folder hierarchy of the simulators to collect information
+// about the platforms, devices, runtimes and SDKs.
++ (void)_warmUpSimulatorsInfo
 {
-  // cache system roots
-  NSArray *roots = [DTiPhoneSimulatorSystemRoot knownRoots];
+  __platformInfo = [[NSMutableDictionary alloc] init];
+  __platformInfoByBundleID = [[NSMutableDictionary alloc] init];
+  __platformInfoByPath = [[NSMutableDictionary alloc] init];
 
-  // create a map
-  NSMutableDictionary *platformVersionMap = [NSMutableDictionary new];
-  NSMutableDictionary *pathMap = [NSMutableDictionary new];
-  for (DTiPhoneSimulatorSystemRoot *root in roots) {
-    pathMap[root.sdkRootPath] = root;
-    if (!platformVersionMap[root.platformName]) {
-      platformVersionMap[root.platformName] = [NSMutableDictionary dictionary];
-    }
-    platformVersionMap[root.platformName][root.sdkVersion] = root;
+  __deviceTypesInfo = [[NSMutableDictionary alloc] init];
+  __deviceTypesInfoByBundleID = [[NSMutableDictionary alloc] init];
+  __deviceTypesInfoByPath = [[NSMutableDictionary alloc] init];
+
+  __runtimesInfo = [[NSMutableDictionary alloc] init];
+  __runtimesInfoByBundleID = [[NSMutableDictionary alloc] init];
+  __runtimesInfoByPath = [[NSMutableDictionary alloc] init];
+
+  __sdkInfo = [[NSMutableDictionary alloc] init];
+  __sdkInfoByPath = [[NSMutableDictionary alloc] init];
+
+  [self _populatePlatformWithPath:IOSSimulatorPlatformPath()];
+  [self _populatePlatformWithPath:AppleTVSimulatorPlatformPath()];
+  [self _populatePlatformWithPath:WatchSimulatorPlatformPath()];
+}
+
++ (void)_populatePlatformWithPath:(NSString *)platformPath
+{
+  NSString *infoPlistPath = [platformPath stringByAppendingPathComponent:@"Info.plist"];
+  NSMutableDictionary * infoPlist = [[NSMutableDictionary alloc] initWithContentsOfFile:infoPlistPath];
+  if (infoPlist == nil) {
+    // skip if the platform doesn't exist.
+    return;
   }
-  __systemRootsSdkPlatformVersionMap = [platformVersionMap copy];
-  __systemRootsSdkPathMap = [pathMap copy];
+
+  infoPlist[@"PlatformPath"] = platformPath;
+
+  NSString *simulatedDeviceTypesPath = [platformPath stringByAppendingPathComponent:@"Developer/Library/CoreSimulator/Profiles/DeviceTypes"];
+  NSArray *simulatedDevices = [self _populateSimulatedDeviceInfo:simulatedDeviceTypesPath platformName:infoPlist[@"Name"]];
+  infoPlist[@"SimulatedDevices"] = simulatedDevices;
+
+  NSString *runtimesPath = [platformPath stringByAppendingPathComponent:@"Developer/Library/CoreSimulator/Profiles/Runtimes"];
+  NSArray *runtimes = [self _populateRuntimesInfo:runtimesPath platformName:infoPlist[@"Name"]];
+  infoPlist[@"Runtimes"] = runtimes;
+
+  NSString *sdkPath = [platformPath stringByAppendingPathComponent:@"Developer/SDKs"];
+  NSArray *sdks = [self _populateSKSsInfo:sdkPath platformName:infoPlist[@"Name"]];
+  infoPlist[@"SDKs"] = sdks;
+
+  __platformInfo[infoPlist[@"Name"]] = infoPlist;
+  __platformInfoByBundleID[infoPlist[@"CFBundleIdentifier"]] = infoPlist;
+  __platformInfoByPath[platformPath] = infoPlist;
 }
 
-+ (DTiPhoneSimulatorSystemRoot *)_systemRootWithSDKPath:(NSString *)path
++ (NSArray *)_populateSimulatedDeviceInfo:(NSString *)deviceTypesPath platformName:(NSString *)platformName
 {
-  // In Xcode 6 latest sdk path could be a symlink to iPhoneSimulator.sdk.
-  // It should be resolved before comparing with `knownRoots` paths.
+  NSMutableArray *result = [NSMutableArray array];
+
+  NSArray * contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:deviceTypesPath error:NULL];
+  for (NSString * path in contents) {
+    NSString * subpath = [deviceTypesPath stringByAppendingPathComponent:path];
+    NSString * infoPlistPath = [subpath stringByAppendingPathComponent:@"Contents/Info.plist"];
+    NSMutableDictionary * infoPlist = [[NSMutableDictionary alloc] initWithContentsOfFile:infoPlistPath];
+    NSString * capabilitiesPath = [subpath stringByAppendingPathComponent:@"Contents/Resources/capabilities.plist"];
+    NSDictionary * capabilities = [[NSDictionary alloc] initWithContentsOfFile:capabilitiesPath];
+    infoPlist[@"Capabilities"] = capabilities;
+    NSString * profilePath = [subpath stringByAppendingPathComponent:@"Contents/Resources/profile.plist"];
+    NSDictionary * profile = [[NSDictionary alloc] initWithContentsOfFile:profilePath];
+    infoPlist[@"Profile"] = profile;
+    infoPlist[@"DeviceTypePath"] = subpath;
+    infoPlist[@"PlatformName"] = platformName;
+
+    __deviceTypesInfo[infoPlist[@"CFBundleName"]] = infoPlist;
+    __deviceTypesInfoByBundleID[infoPlist[@"CFBundleIdentifier"]] = infoPlist;
+    __deviceTypesInfoByPath[subpath] = infoPlist;
+
+    [result addObject:infoPlist];
+  }
+
+  return result;
+}
+
++ (NSArray *)_populateRuntimesInfo:(NSString *)deviceTypesPath platformName:(NSString *)platformName
+{
+  NSMutableArray *result = [NSMutableArray array];
+
+  NSArray * contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:deviceTypesPath error:NULL];
+  for (NSString * path in contents) {
+    NSString * subpath = [deviceTypesPath stringByAppendingPathComponent:path];
+    NSString * infoPlistPath = [subpath stringByAppendingPathComponent:@"Contents/Info.plist"];
+    NSMutableDictionary * infoPlist = [[NSMutableDictionary alloc] initWithContentsOfFile:infoPlistPath];
+    NSString * defaultDevicesPath = [subpath stringByAppendingPathComponent:@"Contents/Resources/default_devices.plist"];
+    NSDictionary * defaultDevices = [[NSDictionary alloc] initWithContentsOfFile:defaultDevicesPath];
+    infoPlist[@"DefaultDevices"] = defaultDevices;
+    NSString * profilePath = [subpath stringByAppendingPathComponent:@"Contents/Resources/profile.plist"];
+    NSDictionary * profile = [[NSDictionary alloc] initWithContentsOfFile:profilePath];
+    infoPlist[@"Profile"] = profile;
+    infoPlist[@"RuntimePath"] = subpath;
+    infoPlist[@"PlatformName"] = platformName;
+
+    __runtimesInfo[infoPlist[@"CFBundleName"]] = infoPlist;
+    __runtimesInfoByBundleID[infoPlist[@"CFBundleIdentifier"]] = infoPlist;
+    __runtimesInfoByPath[subpath] = infoPlist;
+
+    [result addObject:infoPlist];
+  }
+
+  return result;
+}
+
++ (NSArray *)_populateSKSsInfo:(NSString *)sdkPath platformName:(NSString *)platformName
+{
+  NSMutableArray *result = [NSMutableArray array];
+
+  NSArray * contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:sdkPath error:NULL];
+  for (NSString * path in contents) {
+    NSString * subpath = [sdkPath stringByAppendingPathComponent:path];
+    NSString * infoPlistPath = [subpath stringByAppendingPathComponent:@"SDKSettings.plist"];
+    NSMutableDictionary * infoPlist = [[NSMutableDictionary alloc] initWithContentsOfFile:infoPlistPath];
+    infoPlist[@"SDKPath"] = subpath;
+    infoPlist[@"PlatformName"] = platformName;
+
+    __sdkInfo[infoPlist[@"CanonicalName"]] = infoPlist;
+    __sdkInfoByPath[subpath] = infoPlist;
+
+    [result addObject:infoPlist];
+  }
+
+  return result;
+}
+
++ (NSArray *)_sdkNames
+{
+  return [__sdkInfo allKeys];
+}
+
++ (SimRuntime *)_runtimeWithSDKPath:(NSString *)path
+{
   path = [path stringByResolvingSymlinksInPath];
-  return __systemRootsSdkPathMap[path];
-}
+  NSDictionary *sdkInfo = __sdkInfoByPath[path];
+  NSString *platformName = sdkInfo[@"PlatformName"];
+  NSString *platformVersion = sdkInfo[@"Version"];
+  NSDictionary *platformInfo = __platformInfo[platformName];
+  NSString *platformPath = platformInfo[@"PlatformPath"];
 
-+ (DTiPhoneSimulatorSystemRoot *)_systemRootForPlatform:(NSString *)platform sdkVersion:(NSString *)version
-{
-  for (NSString *cachedPlatform in  __systemRootsSdkPlatformVersionMap) {
-    // sometimes platform may include version, for example, iphonesimulator9.2
-    if ([cachedPlatform commonPrefixWithString:platform options:NSCaseInsensitiveSearch].length < 5) {
-      continue;
+  NSArray *runTimeArray = [SimRuntime supportedRuntimes];
+  for (SimRuntime* runTime in runTimeArray) {
+    if ([[runTime platformPath] isEqualToString:platformPath] &&
+        [[runTime versionString] isEqualToString:platformVersion]) {
+      return runTime;
     }
-    NSDictionary *versions = __systemRootsSdkPlatformVersionMap[cachedPlatform];
-    for (NSString *cachedVersion in versions) {
-      // sdk version of system root usually consists of 2 numbers, like 9.2
-      // but requested sdk version could have 3 numbers, like 9.2.1.
-      if ([cachedVersion hasPrefix:version] || [version hasPrefix:cachedVersion]) {
-        return versions[cachedVersion];
-      }
-    }
-    break;
   }
   return nil;
+}
+
++ (NSDictionary *)_sdkInfoForPlatform:(NSString *)platform sdkVersion:(NSString *)sdkVersion
+{
+  NSString *canonicalName = [platform stringByAppendingString:sdkVersion];
+  return __sdkInfo[canonicalName];
 }
 
 @end

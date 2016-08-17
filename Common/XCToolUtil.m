@@ -186,6 +186,21 @@ NSString *XcodeDeveloperDirPathViaForcedConcreteTask(BOOL forceConcreteTask)
   }
 }
 
+NSString *IOSSimulatorPlatformPath(void)
+{
+  return [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform"];
+}
+
+NSString *AppleTVSimulatorPlatformPath(void)
+{
+  return [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/AppleTVSimulator.platform"];
+}
+
+NSString *WatchSimulatorPlatformPath(void)
+{
+  return [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/WatchSimulator.platform"];
+}
+
 NSString *MakeTempFileInDirectoryWithPrefix(NSString *directory, NSString *prefix)
 {
   const char *template = [[directory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.XXXXXXX", prefix]] UTF8String];
