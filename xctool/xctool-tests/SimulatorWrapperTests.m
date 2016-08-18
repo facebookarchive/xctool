@@ -23,6 +23,7 @@
 #import "SimulatorWrapper.h"
 #import "SimulatorWrapperXcode6.h"
 #import "Swizzler.h"
+#import "XCToolUtil.h"
 
 @interface SimulatorWrapperTests : XCTestCase
 {
@@ -192,7 +193,7 @@
   NSString *testHostBundleID = @"com.facebook.xctool-test-app";
   NSString *error = nil;
   [_simDevice addFakeInstalledApp:testHostBundleID];
-  _simDevice.fakeUninstallTimeout = 20;
+  _simDevice.fakeUninstallTimeout = IsRunningOnCISystem() ? 60 : 20;
   BOOL result = [SimulatorWrapper uninstallTestHostBundleID:testHostBundleID
                                                      device:_simDevice
                                                   reporters:@[_eventBuffer]
@@ -211,7 +212,7 @@
   NSString *testHostBundleID = @"com.facebook.xctool-test-app";
   NSString *error = nil;
   [_simDevice addFakeInstalledApp:testHostBundleID];
-  _simDevice.fakeIsInstalledTimeout = 20;
+  _simDevice.fakeIsInstalledTimeout = IsRunningOnCISystem() ? 60 : 20;
   BOOL result = [SimulatorWrapper uninstallTestHostBundleID:testHostBundleID
                                                      device:_simDevice
                                                   reporters:@[_eventBuffer]
@@ -271,7 +272,7 @@
   NSString *testHostBundleID = @"com.facebook.xctool-test-app";
   NSString *error = nil;
   _simDevice.fakeInstallFailure = YES;
-  _simDevice.fakeInstallTimeout = 20;
+  _simDevice.fakeInstallTimeout = IsRunningOnCISystem() ? 60 : 20;
   BOOL result = [SimulatorWrapper installTestHostBundleID:testHostBundleID
                                            fromBundlePath:@"/tmp"
                                                    device:_simDevice
