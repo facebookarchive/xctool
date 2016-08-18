@@ -188,6 +188,7 @@
 				283CCAA516C2EE7200F2E343 /* Sources */,
 				283CCAA616C2EE7200F2E343 /* Frameworks */,
 				283CCAA716C2EE7200F2E343 /* Headers */,
+				BD8F3E2B1D63A6ED00805A14 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -205,6 +206,7 @@
 				287A380A16C876A800319E81 /* Sources */,
 				287A380B16C876A800319E81 /* Frameworks */,
 				287A380C16C876A800319E81 /* Headers */,
+				BD8F3E2C1D63A6FA00805A14 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -241,6 +243,37 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		BD8F3E2B1D63A6ED00805A14 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "codesign --force --sign - --timestamp=none \"${CODESIGNING_FOLDER_PATH}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BD8F3E2C1D63A6FA00805A14 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "codesign --force --sign - --timestamp=none \"${CODESIGNING_FOLDER_PATH}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		283CCAA516C2EE7200F2E343 /* Sources */ = {

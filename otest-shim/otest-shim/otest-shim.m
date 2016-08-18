@@ -520,54 +520,54 @@ static void SwizzleXCTestMethodsIfAvailable()
   });
 }
 
-static const char *DyldImageStateChangeHandler(enum dyld_image_states state,
-                                               uint32_t infoCount,
-                                               const struct dyld_image_info info[])
+static void SwizzleSentTestMethodsIfAvailable()
 {
-  for (uint32_t i = 0; i < infoCount; i++) {
-    // Sometimes the image path will be something like...
-    //   '.../SenTestingKit.framework/SenTestingKit'
-    // Other times it could be...
-    //   '.../SenTestingKit.framework/Versions/A/SenTestingKit'
-    if (strstr(info[i].imageFilePath, "SenTestingKit.framework") != NULL) {
-      // Since the 'SenTestLog' class now exists, we can swizzle it!
-      XTSwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
-                                        @selector(testSuiteDidStart:),
-                                        (IMP)SenTestLog_testSuiteDidStart);
-      XTSwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
-                                        @selector(testSuiteDidStop:),
-                                        (IMP)SenTestLog_testSuiteDidStop);
-      XTSwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
-                                        @selector(testCaseDidStart:),
-                                        (IMP)SenTestLog_testCaseDidStart);
-      XTSwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
-                                        @selector(testCaseDidStop:),
-                                        (IMP)SenTestLog_testCaseDidStop);
-      XTSwizzleClassSelectorForFunction(NSClassFromString(@"SenTestLog"),
-                                        @selector(testCaseDidFail:),
-                                        (IMP)SenTestLog_testCaseDidFail);
-      XTSwizzleSelectorForFunction(NSClassFromString(@"SenTestCase"),
-                                   @selector(performTest:),
-                                   (IMP)SenTestCase_performTest);
-      if (__testScope) {
-        XTSwizzleClassSelectorForFunction(NSClassFromString(@"SenTestProbe"),
-                                          @selector(testScope),
-                                          (IMP)SenTestProbe_testScope);
-      }
+  Class testLogClass = NSClassFromString(@"SenTestLog");
 
-      NSDictionary *frameworkInfo = FrameworkInfoForExtension(@"octest");
-      ApplyDuplicateTestNameFix([frameworkInfo objectForKey:kTestingFrameworkTestProbeClassName],
-                                [frameworkInfo objectForKey:kTestingFrameworkTestSuiteClassName]);
-      XTApplySenTestClassEnumeratorFix();
-      XTApplySenTestCaseInvokeTestFix();
-      XTApplySenIsSuperclassOfClassPerformanceFix();
-    } else if (strstr(info[i].imageFilePath, "XCTest.framework") != NULL) {
-      // Since the 'XCTestLog' class now exists, we can swizzle it!
-      SwizzleXCTestMethodsIfAvailable();
-    }
+  if (testLogClass == nil) {
+    // Looks like the SenTesting framework has not been loaded yet.
+    return;
   }
 
-  return NULL;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    XTSwizzleClassSelectorForFunction(testLogClass,
+                                      @selector(testSuiteDidStart:),
+                                      (IMP)SenTestLog_testSuiteDidStart);
+    XTSwizzleClassSelectorForFunction(testLogClass,
+                                      @selector(testSuiteDidStop:),
+                                      (IMP)SenTestLog_testSuiteDidStop);
+    XTSwizzleClassSelectorForFunction(testLogClass,
+                                      @selector(testCaseDidStart:),
+                                      (IMP)SenTestLog_testCaseDidStart);
+    XTSwizzleClassSelectorForFunction(testLogClass,
+                                      @selector(testCaseDidStop:),
+                                      (IMP)SenTestLog_testCaseDidStop);
+    XTSwizzleClassSelectorForFunction(testLogClass,
+                                      @selector(testCaseDidFail:),
+                                      (IMP)SenTestLog_testCaseDidFail);
+    XTSwizzleSelectorForFunction(testLogClass,
+                                 @selector(performTest:),
+                                 (IMP)SenTestCase_performTest);
+    if (__testScope) {
+      XTSwizzleClassSelectorForFunction(NSClassFromString(@"SenTestProbe"),
+                                        @selector(testScope),
+                                        (IMP)SenTestProbe_testScope);
+    }
+
+    NSDictionary *frameworkInfo = FrameworkInfoForExtension(@"octest");
+    ApplyDuplicateTestNameFix([frameworkInfo objectForKey:kTestingFrameworkTestProbeClassName],
+                              [frameworkInfo objectForKey:kTestingFrameworkTestSuiteClassName]);
+    XTApplySenTestClassEnumeratorFix();
+    XTApplySenTestCaseInvokeTestFix();
+    XTApplySenIsSuperclassOfClassPerformanceFix();
+  });
+}
+
+static void Swizzle()
+{
+  SwizzleXCTestMethodsIfAvailable();
+  SwizzleSentTestMethodsIfAvailable();
 }
 
 static id NSBundle_loadAndReturnError(id self, SEL sel, NSError **error)
@@ -607,24 +607,9 @@ __attribute__((constructor)) static void EntryPoint()
   sa_abort.sa_handler = &handle_signal;
   sigaction(SIGABRT, &sa_abort, NULL);
 
-  void (*dyld_register_image_state_change_handler)(enum dyld_image_states, bool, dyld_image_state_change_handler);
-  dyld_register_image_state_change_handler = dlsym(RTLD_DEFAULT, "dyld_register_image_state_change_handler");
-
-  if (dyld_register_image_state_change_handler) {
-    // We need to swizzle SenTestLog (part of SenTestingKit), but the test bundle
-    // which links SenTestingKit hasn't been loaded yet.  Let's register to get
-    // notified when libraries are initialized and we'll watch for SenTestingKit.
-    dyld_register_image_state_change_handler(dyld_image_state_initialized,
-                                             NO,
-                                             DyldImageStateChangeHandler);
-  } else {
-    // The function to register for notifications about loaded libraries is not
-    // available since Xcode 8. Instead swizzle -[NSBundle loadAndReturnError] so
-    // we can try to swizzle the methods as soon as the bundle is loaded. Also try
-    // swizzling immediately in case the bundle has alread been loaded.
-    XTSwizzleSelectorForFunction([NSBundle class], @selector(loadAndReturnError:), (IMP)NSBundle_loadAndReturnError);
-    SwizzleXCTestMethodsIfAvailable();
-  }
+  // Let's register to get notified when libraries are initialized
+  XTSwizzleSelectorForFunction([NSBundle class], @selector(loadAndReturnError:), (IMP)NSBundle_loadAndReturnError);
+  Swizzle();
 
   // Unset so we don't cascade into any other process that might be spawned.
   unsetenv("DYLD_INSERT_LIBRARIES");

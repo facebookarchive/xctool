@@ -32,6 +32,21 @@ NSString *XCToolReportersPath(void);
 NSString *XcodeDeveloperDirPath(void);
 
 /**
+ Returns the path of iOS Simulator platform.
+ */
+NSString *IOSSimulatorPlatformPath(void);
+
+/**
+ Returns the path of Apple TV Simulator platform.
+ */
+NSString *AppleTVSimulatorPlatformPath(void);
+
+/**
+ Returns the path of Watch Simulator platform.
+ */
+NSString *WatchSimulatorPlatformPath(void);
+
+/**
  Like XcodeDeveloperDirPath(), but can optionally force a concrete task to
  be used.  This is useful if FakeTaskManager is active and swizzling
  all NSTasks.
