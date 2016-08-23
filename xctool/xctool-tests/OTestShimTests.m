@@ -342,12 +342,55 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
   assertThat(@(simOutputEvents.count), greaterThan(@10));
 }
 
+- (void)testXCTestExceptionIsThrownWhenSuiteTimeoutIsHitInSetup
+{
+  NSString *bundlePath = TEST_DATA @"tests-ios-test-bundle/TestProject-Library-XCTest-iOSTests.xctest";
+  NSString *targetName = @"TestProject-Library-XCTest-iOSTests";
+  NSString *settingsPath = TEST_DATA @"TestProject-Library-XCTest-iOS-TestProject-Library-XCTest-iOSTests-showBuildSettings-iphonesimulator.txt";
+  NSArray *testList = @[ @"SetupTimeoutTests/testNothing" ];
+  
+  NSArray *allTests = AllTestCasesInTestBundleIOS(bundlePath);
+  NSString *otestShimOutputPath;
+  NSTask *task = OtestShimTaskIOS(settingsPath, targetName, bundlePath, testList, allTests, &otestShimOutputPath);
+  NSArray *events = RunOtestAndParseResult(task, otestShimOutputPath);
+  
+  NSDictionary *testOutputEvent = ExtractEvent(events, kReporter_Events_SimulatorOuput);
+  assertThat(testOutputEvent, hasKey(@"output"));
+  NSString *testOutput = testOutputEvent[@"output"];
+  assertThat(testOutput, containsString(@"Suite SetupTimeoutTests ran longer than combined test time limit: 1 second(s)"));
+  if (ToolchainIsXcode7OrBetter()) {
+    assertThat(testOutput, containsString(@"(No tests ran, likely stalled in +[SetupTimeoutTests setUp])")); 
+  }
+}
+
+
+- (void)testXCTestExceptionIsThrownWhenSuiteTimeoutIsHitInTeardown
+{
+  NSString *bundlePath = TEST_DATA @"tests-ios-test-bundle/TestProject-Library-XCTest-iOSTests.xctest";
+  NSString *targetName = @"TestProject-Library-XCTest-iOSTests";
+  NSString *settingsPath = TEST_DATA @"TestProject-Library-XCTest-iOS-TestProject-Library-XCTest-iOSTests-showBuildSettings-iphonesimulator.txt";
+  NSArray *testList = @[ @"TeardownTimeoutTests/testNothing" ];
+  
+  NSArray *allTests = AllTestCasesInTestBundleIOS(bundlePath);
+  NSString *otestShimOutputPath;
+  NSTask *task = OtestShimTaskIOS(settingsPath, targetName, bundlePath, testList, allTests, &otestShimOutputPath);
+  NSArray *events = RunOtestAndParseResult(task, otestShimOutputPath);
+  
+  NSDictionary *testOutputEvent = ExtractEvent(events, kReporter_Events_SimulatorOuput);
+  assertThat(testOutputEvent, hasKey(@"output"));
+  NSString *testOutput = testOutputEvent[@"output"];
+  assertThat(testOutput, containsString(@"Suite TeardownTimeoutTests ran longer than combined test time limit: 1 second(s)"));
+  if (ToolchainIsXcode7OrBetter()) {
+    assertThat(testOutput, containsString(@"(All tests ran, likely stalled in +[TeardownTimeoutTests tearDown])"));
+  }
+}
+
 - (void)testXCTestExceptionIsThrownWhenTestTimeoutIsHit
 {
   NSString *bundlePath = TEST_DATA @"tests-ios-test-bundle/TestProject-Library-XCTest-iOSTests.xctest";
   NSString *targetName = @"TestProject-Library-XCTest-iOSTests";
   NSString *settingsPath = TEST_DATA @"TestProject-Library-XCTest-iOS-TestProject-Library-XCTest-iOSTests-showBuildSettings-iphonesimulator.txt";
-  NSArray *testList = @[ @"SomeTests/testTimeout" ];
+  NSArray *testList = @[ @"TimeoutTests/testTimeout" ];
 
   NSArray *allTests = AllTestCasesInTestBundleIOS(bundlePath);
   NSString *otestShimOutputPath;
@@ -357,7 +400,7 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
   NSDictionary *testOutputEvent = ExtractEvent(events, kReporter_Events_SimulatorOuput);
   assertThat(testOutputEvent, hasKey(@"output"));
   NSString *testOutput = testOutputEvent[@"output"];
-  assertThat(testOutput, containsString(@"Test -[SomeTests testTimeout] ran longer than specified test time limit: 1 second(s)"));
+  assertThat(testOutput, containsString(@"Test -[TimeoutTests testTimeout] ran longer than specified test time limit: 1 second(s)"));
 }
 
 @end

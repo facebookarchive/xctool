@@ -324,15 +324,37 @@ static void XCPerformTestWithSuppressedExpectedAssertionFailures(id self, SEL or
   [currentThreadDict setObject:handler forKey:NSAssertionHandlerKey];
 
   if (timeout > 0) {
-    int64_t interval = timeout * NSEC_PER_SEC;
+    BOOL isSuite = [self isKindOfClass:NSClassFromString(@"XCTestCaseSuite")];
+    // If running in a suite, time out if we run longer than the combined timeouts of all tests + a fudge factor.
+    int64_t testCount = isSuite ? [[self tests] count] : 1;
+    // When in a suite, add a second per test to help account for the time required to switch tests in a suite.
+    int64_t fudgeFactor = isSuite ? MAX(testCount, 1) : 0;
+    int64_t interval = (timeout * testCount + fudgeFactor) * NSEC_PER_SEC ;
     NSString *queueName = [NSString stringWithFormat:@"test.timer.%p", self];
     dispatch_queue_t queue = dispatch_queue_create([queueName cStringUsingEncoding:NSASCIIStringEncoding], DISPATCH_QUEUE_SERIAL);
     dispatch_set_target_queue(queue, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0));
     dispatch_source_t source = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
     dispatch_source_set_timer(source, dispatch_time(DISPATCH_TIME_NOW, interval), 0, 0);
     dispatch_source_set_event_handler(source, ^{
-      [NSException raise:NSInternalInconsistencyException
-                  format:@"*** Test %@ ran longer than specified test time limit: %d second(s)", self, timeout];
+        if (isSuite) {
+            NSString *additionalInformation = @"";
+            if ([self respondsToSelector:@selector(testRun)]) {
+                XCTestRun *run = [self testRun];
+                NSUInteger executedTests = [run executionCount];
+                if (executedTests == 0) {
+                    additionalInformation = [NSString stringWithFormat:@"(No tests ran, likely stalled in +[%@ setUp])", [self name]];
+                } else if (executedTests == testCount) {
+                    additionalInformation = [NSString stringWithFormat:@"(All tests ran, likely stalled in +[%@ tearDown])", [self name]];
+                }
+            }
+            
+            [NSException raise:NSInternalInconsistencyException
+                        format:@"*** Suite %@ ran longer than combined test time limit: %lld second(s) %@", [self name], testCount * timeout, additionalInformation];
+            
+        } else {
+            [NSException raise:NSInternalInconsistencyException
+                        format:@"*** Test %@ ran longer than specified test time limit: %d second(s)", self, timeout];
+        }
     });
     dispatch_resume(source);
 
@@ -400,6 +422,13 @@ static void XCTestCase_performTest(id self, SEL sel, id arg1)
   SEL originalSelector = @selector(__XCTestCase_performTest:);
   XCWaitForDebuggerIfNeeded();
   XCPerformTestWithSuppressedExpectedAssertionFailures(self, originalSelector, arg1);
+}
+
+static void XCTestCaseSuite_performTest(id self, SEL sel, id arg1)
+{
+    SEL originalSelector = @selector(__XCTestCaseSuite_performTest:);
+    XCWaitForDebuggerIfNeeded();
+    XCPerformTestWithSuppressedExpectedAssertionFailures(self, originalSelector, arg1);
 }
 
 #pragma mark - _enableSymbolication
@@ -504,6 +533,9 @@ static void SwizzleXCTestMethodsIfAvailable()
       XTSwizzleSelectorForFunction(testLogClass,
                                    @selector(testCaseDidFail:withDescription:inFile:atLine:),
                                    (IMP)XCTestLog_testCaseDidFail);
+      XTSwizzleSelectorForFunction(NSClassFromString(@"XCTestCaseSuite"),
+                                   @selector(performTest:),
+                                   (IMP)XCTestCaseSuite_performTest);
     }
     XTSwizzleSelectorForFunction(NSClassFromString(@"XCTestCase"),
                                  @selector(performTest:),
