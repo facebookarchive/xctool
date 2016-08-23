@@ -385,33 +385,37 @@ BOOL LaunchXcodebuildTaskAndFeedEventsToReporters(NSTask *task,
       return;
     }
 
-    NSError *error = nil;
-    NSDictionary *event = [NSJSONSerialization JSONObjectWithData:[line dataUsingEncoding:NSUTF8StringEncoding]
-                                                          options:0
-                                                            error:&error];
-    NSCAssert(error == nil,
-              @"Got error while trying to deserialize event '%@': %@",
-              line,
-              [error localizedFailureReason]);
-
-    NSString *eventName = event[kReporter_Event_Key];
-
-    if ([eventName isEqualToString:@"__xcodebuild-error__"]) {
-      // xcodebuild-shim will generate this special event if it sees that
-      // xcodebuild failed with an error message.  We don't want this to bubble
-      // up to reporters itself - instead the caller will capture the error
-      // message and include it in the 'end-xcodebuild' event.
-      errorMessage = event[@"message"];
-      errorCode = [event[@"code"] longLongValue];
+    if (ToolchainIsXcode8OrBetter()) {
+      fprintf(stdout, "%s\n", [line UTF8String]);
     } else {
-      PublishEventToReporters(reporters, event);
-    }
+      NSError *error = nil;
+      NSDictionary *event = [NSJSONSerialization JSONObjectWithData:[line dataUsingEncoding:NSUTF8StringEncoding]
+                                                            options:0
+                                                              error:&error];
+      NSCAssert(error == nil,
+                @"Got error while trying to deserialize event '%@': %@",
+                line,
+                [error localizedFailureReason]);
 
-    if ([eventName isEqualToString:kReporter_Events_EndBuildCommand]) {
-      BOOL succeeded = [event[kReporter_EndBuildCommand_SucceededKey] boolValue];
+      NSString *eventName = event[kReporter_Event_Key];
 
-      if (!succeeded) {
-        hadFailingBuildCommand = YES;
+      if ([eventName isEqualToString:@"__xcodebuild-error__"]) {
+        // xcodebuild-shim will generate this special event if it sees that
+        // xcodebuild failed with an error message.  We don't want this to bubble
+        // up to reporters itself - instead the caller will capture the error
+        // message and include it in the 'end-xcodebuild' event.
+        errorMessage = event[@"message"];
+        errorCode = [event[@"code"] longLongValue];
+      } else {
+        PublishEventToReporters(reporters, event);
+      }
+
+      if ([eventName isEqualToString:kReporter_Events_EndBuildCommand]) {
+        BOOL succeeded = [event[kReporter_EndBuildCommand_SucceededKey] boolValue];
+
+        if (!succeeded) {
+          hadFailingBuildCommand = YES;
+        }
       }
     }
   });
@@ -454,11 +458,13 @@ BOOL RunXcodebuildAndFeedEventsToReporters(NSArray *arguments,
   NSMutableDictionary *environment =
     [NSMutableDictionary dictionaryWithDictionary:
      [[NSProcessInfo processInfo] environment]];
-  [environment addEntriesFromDictionary:@{
-   @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath()
-                               stringByAppendingPathComponent:@"xcodebuild-shim.dylib"],
-   }];
-  [task setEnvironment:environment];
+  if (!ToolchainIsXcode8OrBetter()) {
+    [environment addEntriesFromDictionary:@{
+     @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath()
+                                 stringByAppendingPathComponent:@"xcodebuild-shim.dylib"],
+     }];
+    [task setEnvironment:environment];
+  }
 
   NSDictionary *beginEvent = EventDictionaryWithNameAndContent(
     kReporter_Events_BeginXcodebuild, @{
@@ -817,13 +823,28 @@ NSString *XcodebuildVersion()
   return DTXcode;
 }
 
+static BOOL ToolchainIsXcodeVersionSameOrBetter(NSString *versionString)
+{
+  NSComparisonResult cmpResult = [XcodebuildVersion() compare:versionString];
+  return cmpResult != NSOrderedAscending;
+}
+
 BOOL ToolchainIsXcode7OrBetter(void)
 {
   static BOOL result;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    NSComparisonResult cmpResult = [XcodebuildVersion() compare:@"0700"];
-    result = (cmpResult != NSOrderedAscending);
+    result = ToolchainIsXcodeVersionSameOrBetter(@"0700");
+  });
+  return result;
+}
+
+BOOL ToolchainIsXcode8OrBetter(void)
+{
+  static BOOL result;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+   result = ToolchainIsXcodeVersionSameOrBetter(@"0800");
   });
   return result;
 }

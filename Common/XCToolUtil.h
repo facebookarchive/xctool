@@ -122,6 +122,11 @@ NSString *XcodebuildVersion();
 BOOL ToolchainIsXcode7OrBetter(void);
 
 /**
+ Returns YES if we're running with Xcode 8 or better.
+ */
+BOOL ToolchainIsXcode8OrBetter(void);
+
+/**
  Launches a task that will invoke xcodebuild.  It will automatically feed
  build events to the provided reporters.
 
