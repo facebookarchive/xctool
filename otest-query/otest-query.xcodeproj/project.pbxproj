@@ -282,7 +282,7 @@
 				283758D517CED68F006E1544 /* Sources */,
 				283758D617CED68F006E1544 /* Frameworks */,
 				283758D717CED68F006E1544 /* Headers */,
-				28AA034D18564EEC00854B0E /* Run Script (assert_universal) */,
+				28AA034D18564EEC00854B0E /* Verify and Codesign */,
 			);
 			buildRules = (
 			);
@@ -300,7 +300,7 @@
 				28660743183474A7000ACB87 /* Sources */,
 				28660744183474A7000ACB87 /* Frameworks */,
 				28660745183474A7000ACB87 /* Headers */,
-				28AA034E18564EF800854B0E /* Run Script (assert_universal) */,
+				28AA034E18564EF800854B0E /* Verify and Codesign */,
 			);
 			buildRules = (
 			);
@@ -318,7 +318,7 @@
 				CD666128175D1A890057DF4D /* Sources */,
 				CD666129175D1A890057DF4D /* Frameworks */,
 				CD66612A175D1A890057DF4D /* CopyFiles */,
-				28AA034C18564ED000854B0E /* Run Script (assert_universal) */,
+				28AA034C18564ED000854B0E /* Verify */,
 			);
 			buildRules = (
 			);
@@ -336,7 +336,7 @@
 				CD9048FA1756C5B1006CF16D /* Sources */,
 				CD9048FB1756C5B1006CF16D /* Frameworks */,
 				CD9048FC1756C5B1006CF16D /* CopyFiles */,
-				28AA034B18564D2500854B0E /* Run Script (assert_universal) */,
+				28AA034B18564D2500854B0E /* Verify */,
 			);
 			buildRules = (
 			);
@@ -353,7 +353,7 @@
 		CD9048F61756C5B1006CF16D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = Facebook;
 			};
 			buildConfigurationList = CD9048F91756C5B1006CF16D /* Build configuration list for PBXProject "otest-query" */;
@@ -377,14 +377,14 @@
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		28AA034B18564D2500854B0E /* Run Script (assert_universal) */ = {
+		28AA034B18564D2500854B0E /* Verify */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Run Script (assert_universal)";
+			name = Verify;
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -392,14 +392,14 @@
 			shellScript = "\"${PROJECT_DIR}\"/../scripts/RunScripts/assert_universal.sh";
 			showEnvVarsInLog = 0;
 		};
-		28AA034C18564ED000854B0E /* Run Script (assert_universal) */ = {
+		28AA034C18564ED000854B0E /* Verify */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Run Script (assert_universal)";
+			name = Verify;
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -407,34 +407,34 @@
 			shellScript = "\"${PROJECT_DIR}\"/../scripts/RunScripts/assert_universal.sh";
 			showEnvVarsInLog = 0;
 		};
-		28AA034D18564EEC00854B0E /* Run Script (assert_universal) */ = {
+		28AA034D18564EEC00854B0E /* Verify and Codesign */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Run Script (assert_universal)";
+			name = "Verify and Codesign";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PROJECT_DIR}\"/../scripts/RunScripts/assert_universal.sh\ncodesign --force --sign - --timestamp=none \"${CODESIGNING_FOLDER_PATH}\"\n";
+			shellScript = "\"${PROJECT_DIR}\"/../scripts/RunScripts/assert_universal.sh\n\"${PROJECT_DIR}\"/../scripts/RunScripts/codesign.sh\n";
 			showEnvVarsInLog = 0;
 		};
-		28AA034E18564EF800854B0E /* Run Script (assert_universal) */ = {
+		28AA034E18564EF800854B0E /* Verify and Codesign */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Run Script (assert_universal)";
+			name = "Verify and Codesign";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PROJECT_DIR}\"/../scripts/RunScripts/assert_universal.sh\ncodesign --force --sign - --timestamp=none \"${CODESIGNING_FOLDER_PATH}\"\n";
+			shellScript = "\"${PROJECT_DIR}\"/../scripts/RunScripts/assert_universal.sh\n\"${PROJECT_DIR}\"/../scripts/RunScripts/codesign.sh\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

@@ -252,7 +252,7 @@
 				282BFE15171602C60022F9FF /* Sources */,
 				282BFE16171602C60022F9FF /* Frameworks */,
 				282BFE17171602C60022F9FF /* Headers */,
-				28AA035018564F2F00854B0E /* Run Script (assert_universal) */,
+				28AA035018564F2F00854B0E /* Verify and Codesign */,
 			);
 			buildRules = (
 			);
@@ -270,7 +270,7 @@
 				283CCA8816C2EE4C00F2E343 /* Sources */,
 				283CCA8916C2EE4C00F2E343 /* Frameworks */,
 				283CCA8A16C2EE4C00F2E343 /* Headers */,
-				28AA034F18564F1D00854B0E /* Run Script (assert_universal) */,
+				28AA034F18564F1D00854B0E /* Verify and Codesign */,
 			);
 			buildRules = (
 			);
@@ -287,7 +287,7 @@
 		283CCA8416C2EE4C00F2E343 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Facebook, Inc.";
 			};
 			buildConfigurationList = 283CCA8716C2EE4C00F2E343 /* Build configuration list for PBXProject "otest-shim" */;
@@ -309,34 +309,34 @@
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		28AA034F18564F1D00854B0E /* Run Script (assert_universal) */ = {
+		28AA034F18564F1D00854B0E /* Verify and Codesign */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Run Script (assert_universal)";
+			name = "Verify and Codesign";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PROJECT_DIR}\"/../scripts/RunScripts/assert_universal.sh\ncodesign --force --sign - --timestamp=none \"${CODESIGNING_FOLDER_PATH}\"\n";
+			shellScript = "\"${PROJECT_DIR}\"/../scripts/RunScripts/assert_universal.sh\n\"${PROJECT_DIR}\"/../scripts/RunScripts/codesign.sh\n";
 			showEnvVarsInLog = 0;
 		};
-		28AA035018564F2F00854B0E /* Run Script (assert_universal) */ = {
+		28AA035018564F2F00854B0E /* Verify and Codesign */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Run Script (assert_universal)";
+			name = "Verify and Codesign";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PROJECT_DIR}\"/../scripts/RunScripts/assert_universal.sh\ncodesign --force --sign - --timestamp=none \"${CODESIGNING_FOLDER_PATH}\"\n";
+			shellScript = "\"${PROJECT_DIR}\"/../scripts/RunScripts/assert_universal.sh\n\"${PROJECT_DIR}\"/../scripts/RunScripts/codesign.sh\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
