@@ -68,4 +68,9 @@
 
 - (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo;
 
+/**
+ Helper function to print action deprecation notice.
+ */
+- (void)printActionDeprecationNoticeToReporters:(NSMutableArray *)reporters;
+
 @end

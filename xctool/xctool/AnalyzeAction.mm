@@ -288,6 +288,10 @@
 - (BOOL)performActionWithOptions:(Options *)options
                 xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    [self printActionDeprecationNoticeToReporters:options.reporters];
+    return NO;
+  }
 
   [xcodeSubjectInfo.actionScripts preAnalyzeWithOptions:options];
 

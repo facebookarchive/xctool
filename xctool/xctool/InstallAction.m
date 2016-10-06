@@ -29,6 +29,11 @@
 
 - (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    [self printActionDeprecationNoticeToReporters:options.reporters];
+    return NO;
+  }
+
   NSArray *arguments = [[[options xcodeBuildArgumentsForSubject]
                          arrayByAddingObjectsFromArray:[options commonXcodeBuildArgumentsForSchemeAction:@"LaunchAction"
                                                                                         xcodeSubjectInfo:xcodeSubjectInfo]]

@@ -817,13 +817,28 @@ NSString *XcodebuildVersion()
   return DTXcode;
 }
 
+static BOOL ToolchainIsXcodeVersionSameOrBetter(NSString *versionString)
+{
+  NSComparisonResult cmpResult = [XcodebuildVersion() compare:versionString];
+  return cmpResult != NSOrderedAscending;
+}
+
 BOOL ToolchainIsXcode7OrBetter(void)
 {
   static BOOL result;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    NSComparisonResult cmpResult = [XcodebuildVersion() compare:@"0700"];
-    result = (cmpResult != NSOrderedAscending);
+    result = ToolchainIsXcodeVersionSameOrBetter(@"0700");
+  });
+  return result;
+}
+
+BOOL ToolchainIsXcode8OrBetter(void)
+{
+  static BOOL result;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    result = ToolchainIsXcodeVersionSameOrBetter(@"0800");
   });
   return result;
 }

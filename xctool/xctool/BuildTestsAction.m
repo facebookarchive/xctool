@@ -208,6 +208,11 @@
 
 - (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    [self printActionDeprecationNoticeToReporters:options.reporters];
+    return NO;
+  }
+
   NSArray *buildableList = [self buildableList:[xcodeSubjectInfo testablesAndBuildablesForTest]
                                matchingTargets:_onlyList
                               excludingTargets:_omitList];

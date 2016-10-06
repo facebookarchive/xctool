@@ -19,6 +19,8 @@
 #import <objc/message.h>
 #import <objc/runtime.h>
 
+#import "ReportStatus.h"
+
 @class Options;
 
 @implementation Action
@@ -235,6 +237,16 @@
 - (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
   return YES;
+}
+
+- (void)printActionDeprecationNoticeToReporters:(NSMutableArray *)reporters
+{
+  ReportStatusMessage(
+    reporters,
+    REPORTER_MESSAGE_ERROR,
+    @"Action '%@' is deprecated. We suggest moving to xcodebuild (with xcpretty) for simple needs, or xcbuild or Buck for more involved requirements. xctool will continue to support testing: see 'run-tests' action.",
+    [[self class] name]
+  );
 }
 
 @end
