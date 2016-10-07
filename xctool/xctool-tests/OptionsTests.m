@@ -390,6 +390,11 @@
 
 - (void)testActionsAreRecorded
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
+
   NSArray *(^classNamesFromArray)(NSArray *) = ^(NSArray *arr){
     NSMutableArray *result = [NSMutableArray array];
     for (id item in arr) {
@@ -410,6 +415,20 @@
                      @"BuildTestsAction",
                      @"RunTestsAction",
                      ]));
+}
+
+- (void)testActionIsRecorded
+{
+  NSArray *(^classNamesFromArray)(NSArray *) = ^(NSArray *arr){
+    NSMutableArray *result = [NSMutableArray array];
+    for (id item in arr) {
+      [result addObject:@(class_getName([item class]))];
+    }
+    return result;
+  };
+
+  assertThat(classNamesFromArray([Options optionsFrom:@[@"run-tests"]].actions),
+             equalTo(@[@"RunTestsAction"]));
 }
 
 - (void)testDefaultActionIsBuildIfNotSpecified

@@ -45,6 +45,11 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
 
 - (void)testOnlyListAndOmitListCannotBothBeSpecified
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
+
   [[Options optionsFrom:@[
     @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
     @"-scheme", @"TestProject-Library",
@@ -62,6 +67,11 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
 
 - (void)testOnlyListIsCollected
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
+
   Options *options = [[Options optionsFrom:@[
                        @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
@@ -76,6 +86,11 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
 
 - (void)testOmitListIsCollected
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
+
   Options *options = [[Options optionsFrom:@[
                        @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
@@ -90,6 +105,11 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
 
 - (void)testSkipDependenciesIsCollected
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
+
   Options *options = [[Options optionsFrom:@[
                        @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
@@ -105,6 +125,11 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
 
 - (void)testOnlyListRequiresValidTarget
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
+
   [[Options optionsFrom:@[
     @"-project", TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj",
     @"-scheme", @"TestProject-Library",

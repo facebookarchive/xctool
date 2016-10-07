@@ -28,6 +28,7 @@ BUILD_OUTPUT_DIR="$OUTPUT_DIR"/build
 RELEASE_OUTPUT_DIR="$OUTPUT_DIR"/release
 
 xcodebuild \
+  build-for-testing \
   -workspace "$XCTOOL_DIR"/xctool.xcworkspace \
   -scheme xctool \
   -configuration Release \
@@ -42,11 +43,11 @@ if [[ ! -x "$RELEASE_OUTPUT_DIR"/bin/xctool ]]; then
   exit 1
 fi
 
+XT_INSTALL_ROOT="$RELEASE_OUTPUT_DIR" \
 "$RELEASE_OUTPUT_DIR"/bin/xctool \
-  -workspace "$XCTOOL_DIR"/xctool.xcworkspace \
-  -scheme xctool \
-  -configuration Release \
-  test \
+  -sdk macosx \
+  run-tests \
+  -logicTest "$BUILD_OUTPUT_DIR/Products"/Release/xctool-tests.xctest \
   -parallelize \
   -bucketBy class \
   -logicTestBucketSize 1
