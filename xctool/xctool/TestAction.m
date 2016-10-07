@@ -262,11 +262,6 @@
 
 - (BOOL)performActionWithOptions:(Options *)options xcodeSubjectInfo:(XcodeSubjectInfo *)xcodeSubjectInfo
 {
-  if (ToolchainIsXcode8OrBetter()) {
-    [self printActionDeprecationNoticeToReporters:options.reporters];
-    return NO;
-  }
-
   if (![_buildTestsAction performActionWithOptions:options xcodeSubjectInfo:xcodeSubjectInfo]) {
     return NO;
   }

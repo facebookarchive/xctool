@@ -41,6 +41,9 @@
 
 + (NSArray *)actionClasses
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    return @[[RunTestsAction class]];
+  }
   return @[[CleanAction class],
            [BuildAction class],
            [BuildTestsAction class],
