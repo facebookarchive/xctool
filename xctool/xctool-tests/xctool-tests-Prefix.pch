@@ -5,6 +5,9 @@
 #ifdef __OBJC__
   #import <Cocoa/Cocoa.h>
 
+  #import "TestUtil.h"
+  #import "XCToolUtil.h"
+
   #define HC_SHORTHAND
   #import <OCHamcrest/OCHamcrest.h>
 

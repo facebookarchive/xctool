@@ -168,7 +168,7 @@ static const NSInteger KProductTypeIpad = 2;
   switch ([[self simulatedDeviceFamily] integerValue]) {
     case KProductTypeIphone:
       if ([self simulatedCpuType] == CPU_TYPE_I386) {
-        _deviceName = @"iPhone 4s";
+        _deviceName = @"iPhone 5";
       } else {
         // CPU_TYPE_X86_64 or CPU_TYPE_ANY
         _deviceName = @"iPhone 5s";

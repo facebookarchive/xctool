@@ -35,13 +35,13 @@
 
 @implementation CleanActionTests
 
-- (void)setUp
-{
-  [super setUp];
-}
-
 - (void)testCleanActionTriggersCleanForProjectAndSchemeAndTests
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
+
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
      // Make sure -showBuildSettings returns some data
@@ -93,6 +93,11 @@
 
 - (void)testConfigurationIsTakenFromScheme
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
+
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
      // Make sure -showBuildSettings returns some data

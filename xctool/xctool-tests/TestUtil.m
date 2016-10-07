@@ -128,3 +128,8 @@ NSArray *SelectEventFields(NSArray *events, NSString *eventName, NSString *field
 
   return result;
 }
+
+void PrintTestNotRelevantNotice() {
+    printf("[This test isn't relevant for this version of Xcode]\n");
+}
+

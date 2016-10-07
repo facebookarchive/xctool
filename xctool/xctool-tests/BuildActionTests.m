@@ -34,14 +34,13 @@ void _CFAutoreleasePoolPrintPools();
 
 @implementation BuildActionTests
 
-- (void)setUp
-{
-  [super setUp];
-}
-
-
 - (void)testBuildActionPassesSDKParamToXcodebuild
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
+
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
      // Make sure -showBuildSettings returns some data
@@ -75,6 +74,11 @@ void _CFAutoreleasePoolPrintPools();
 
 - (void)testBuildActionTriggersBuildForProjectAndScheme
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
+
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
      // Make sure -showBuildSettings returns some data
@@ -105,6 +109,11 @@ void _CFAutoreleasePoolPrintPools();
 
 - (void)testBuildActionTriggersBuildForWorkspaceAndScheme
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
+
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
      // Make sure -showBuildSettings returns some data
@@ -135,6 +144,11 @@ void _CFAutoreleasePoolPrintPools();
 
 - (void)testBuildActionPassesConfigurationParamToXcodebuild
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
+
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
      // Make sure -showBuildSettings returns some data
@@ -166,6 +180,11 @@ void _CFAutoreleasePoolPrintPools();
 
 - (void)testIfBuildActionFailsThenExitStatusShouldBeOne
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
+
   void (^testWithExitStatus)(int) = ^(int exitStatus) {
     [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
       [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
@@ -205,6 +224,11 @@ void _CFAutoreleasePoolPrintPools();
 
 - (void)testConfigurationIsTakenFromScheme
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
+
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
      // Make sure -showBuildSettings returns some data
@@ -235,6 +259,11 @@ void _CFAutoreleasePoolPrintPools();
 
 - (void)testCanBuildProjectWithTargetsThatUseDifferentSDKs
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
+
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
      // Make sure -showBuildSettings returns some data
@@ -265,6 +294,11 @@ void _CFAutoreleasePoolPrintPools();
 
 - (void)testDryRunOptionSetsFlag
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
+
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
      // Make sure -showBuildSettings returns some data
@@ -297,6 +331,11 @@ void _CFAutoreleasePoolPrintPools();
 
 - (void)testSkipUnavailableActionsOptionSetsFlag
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
+
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
      // Make sure -showBuildSettings returns some data

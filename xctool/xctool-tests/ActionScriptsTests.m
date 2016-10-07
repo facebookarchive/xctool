@@ -65,11 +65,19 @@ static NSArray *GetArgs(NSString *action)
 
 - (void)testActionScriptsWithBuildAction
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
   [self runTestForTestTuple:@[@"build", @[@"build"]]];
 }
 
 - (void)testActionScriptsWithBuildTestsAction
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
   [self runTestForTestTuple:@[@"build-tests", @[@"build"]]];
 }
 
@@ -80,16 +88,28 @@ static NSArray *GetArgs(NSString *action)
 
 - (void)testActionScriptsWithTestAction
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
   [self runTestForTestTuple:@[@"test", @[@"build", @"test"]]];
 }
 
 - (void)testActionScriptsWithArchiveAction
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
   [self runTestForTestTuple:@[@"archive", @[@"archive"]]];
 }
 
 - (void)testActionScriptsWithAnalyzeAction
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
   [self runTestForTestTuple:@[@"analyze", @[@"analyze"]]];
 }
 

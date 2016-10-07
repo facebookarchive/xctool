@@ -39,3 +39,8 @@ BOOL ArrayContainsSubsequence(NSArray *anArray, NSArray *subArray);
  for all events of type `eventName`.
  */
 NSArray *SelectEventFields(NSArray *events, NSString *eventName, NSString *fieldName);
+
+/**
+ Print notice that test is not relevant.
+ */
+void PrintTestNotRelevantNotice();

@@ -43,11 +43,6 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
 
 @implementation BuildTestsActionTests
 
-- (void)setUp
-{
-  [super setUp];
-}
-
 - (void)testOnlyListAndOmitListCannotBothBeSpecified
 {
   [[Options optionsFrom:@[
@@ -125,6 +120,11 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
 
 - (void)testBuildTestsAction
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
+
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     NSString *projectPath = TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj";
 
@@ -186,6 +186,11 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
 
 - (void)testBuildTestsActionWillBuildEverythingMarkedAsBuildForTest
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
+
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
      // Make sure -showBuildSettings returns some data
@@ -250,6 +255,11 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
 
 - (void)testBuildTestsCanBuildASingleTarget
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
+
   // In TestWorkspace-Library, we have a target TestProject-LibraryTest2 that depends on
   // TestProject-OtherLib, but it isn't marked as an explicit dependency.  The only way that
   // dependency gets built is that it's added to the scheme as build-for-test above
@@ -319,6 +329,11 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
 
 - (void)testSkipDependencies
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
+
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
      // Make sure -showBuildSettings returns some data
@@ -380,6 +395,11 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
 
 - (void)testConfigurationIsTakenFromScheme
 {
+  if (ToolchainIsXcode8OrBetter()) {
+    PrintTestNotRelevantNotice();
+    return;
+  }
+
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [[FakeTaskManager sharedManager] addLaunchHandlerBlocks:@[
      // Make sure -showBuildSettings returns some data

@@ -161,7 +161,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                        @"-project", TEST_DATA @"TestProjectWithSchemeThatReferencesNonExistentTestTarget/TestProject-Library.xcodeproj",
                        @"-scheme", @"TestProject-Library",
                        @"-sdk", @"iphonesimulator",
-                       @"test",
+                       @"run-tests",
                        @"-reporter", @"plain",
                        ];
 
