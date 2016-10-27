@@ -1,6 +1,6 @@
 # xctool
 
-__xctool__ is a replacement for Apple's __xcodebuild__ that makes it
+__xctool__ is an extension for Apple's __xcodebuild__ that makes it
 easier to test iOS and Mac products.  It's especially helpful
 for continuous integration.
 
@@ -61,7 +61,7 @@ involved requirements. xctool will continue to support testing (see above).
 
 ## Requirements
 
-* Xcode 6 or higher
+* Xcode 7 or higher
 * You'll need Xcode's Command Line Tools installed.  From Xcode, install
 via _Xcode &rarr; Preferences &rarr; Downloads_.
 
@@ -88,26 +88,26 @@ path/to/xctool.sh -help
 
 ### Testing
 
-_xctool_ has a __test__ action which knows how to build and run the
+_xctool_ has a __run-tests__ action which knows how to run the
 tests in your scheme.  You can optionally limit what tests are run
 or change the SDK they're run against.
 
-To build and run all tests in your scheme, you would use:
+To run all tests in your scheme, you would use:
 
 ```bash
 path/to/xctool.sh \
   -workspace YourWorkspace.xcworkspace \
   -scheme YourScheme \
-  test
+  run-tests
 ```
 
-To build and run just the tests in a specific target, use the `-only` option:
+To run just the tests in a specific target, use the `-only` option:
 
 ```bash
 path/to/xctool.sh \
   -workspace YourWorkspace.xcworkspace \
   -scheme YourScheme \
-  test -only SomeTestTarget
+  run-tests -only SomeTestTarget
 ```
 
 You can go further and just run a specific test class:
@@ -116,7 +116,7 @@ You can go further and just run a specific test class:
 path/to/xctool.sh \
   -workspace YourWorkspace.xcworkspace \
   -scheme YourScheme \
-  test -only SomeTestTarget:SomeTestClass
+  run-tests -only SomeTestTarget:SomeTestClass
 ```
 
 Or, even further and run just a single test method:
@@ -125,7 +125,7 @@ Or, even further and run just a single test method:
 path/to/xctool.sh \
   -workspace YourWorkspace.xcworkspace \
   -scheme YourScheme \
-  test -only SomeTestTarget:SomeTestClass/testSomeMethod
+  run-tests -only SomeTestTarget:SomeTestClass/testSomeMethod
 ```
 
 You can also specify prefix matching for classes or test methods:
@@ -134,7 +134,7 @@ You can also specify prefix matching for classes or test methods:
 path/to/xctool.sh \
   -workspace YourWorkspace.xcworkspace \
   -scheme YourScheme \
-  test -only SomeTestTarget:SomeTestClassPrefix*,SomeTestClass/testSomeMethodPrefix*
+  run-tests -only SomeTestTarget:SomeTestClassPrefix*,SomeTestClass/testSomeMethodPrefix*
 ```
 
 Alternatively, you can omit a specific item by prefix matching for classes or test methods:
@@ -143,7 +143,7 @@ Alternatively, you can omit a specific item by prefix matching for classes or te
 path/to/xctool.sh \
   -workspace YourWorkspace.xcworkspace \
   -scheme YourScheme \
-  test -omit SomeTestTarget:SomeTestClass/testSomeMethodPrefix*
+  run-tests -omit SomeTestTarget:SomeTestClass/testSomeMethodPrefix*
 ```
 
 You can also run tests against a different SDK:
@@ -152,13 +152,35 @@ You can also run tests against a different SDK:
 path/to/xctool.sh \
   -workspace YourWorkspace.xcworkspace \
   -scheme YourScheme \
-  test -test-sdk iphonesimulator5.1
+  run-tests -test-sdk iphonesimulator5.1
 ```
+
+Optionally you can specify `-testTimeout` when running tests. When an individual
+test hits this timeout, it is considered a failure rather than waiting indefinitely. 
+This can prevent your test run from deadlocking forever due to misbehaving tests.
+
+By default application tests will wait at most 30 seconds for the simulator
+to launch. If you need to change this timeout, use the `-launch-timeout` option.
 
 #### Building Tests
 
-While __test__ will build and run your tests, sometimes you want to
-build them without running them.  For that, use __build-tests__.
+Before running tests you need to build them. You can use __xcodebuild__,  __xcbuild__ or __Buck__ to do that. 
+
+For example:
+
+```bash
+xcodebuild \
+  -workspace YourWorkspace.xcworkspace \
+  -scheme YourScheme \
+  build-for-testing
+```
+
+
+
+##### Xcode 7
+
+If you are using Xcode 7 for building you can continue using xctool to build tests using
+__build-tests__ or just use __test__ actions to run tests.
 
 For example:
 
@@ -178,29 +200,6 @@ path/to/xctool.sh \
   build-tests -only SomeTestTarget
 ```
 
-#### Running Tests
-
-If you've already built tests with __build-tests__, you can use
-__run-tests__ to run them.  This is helpful if you want to build tests
-once but run them against multiple SDKs.
-
-To run all tests, you would use:
-
-```bash
-path/to/xctool.sh \
-  -workspace YourWorkspace.xcworkspace \
-  -scheme YourScheme \
-  run-tests
-```
-
-Just as with the __test__ action, you can limit which tests are run with
-the `-only`.  And, you can change which SDK they're run against
-with the `-test-sdk`.
-
-Optionally you can specify `-testTimeout` when running tests. When an individual test hits this timeout, it is considered a failure rather than waiting indefinitely. This can prevent your test run from deadlocking forever due to misbehaving tests.
-
-By default application tests will wait at most 30 seconds for the simulator
-to launch. If you need to change this timeout, use the `-launch-timeout` option.
 
 #### Parallelizing Test Runs
 
@@ -238,13 +237,13 @@ cases each, and those bundles will be run concurrently.  If some of your
 test bundles are much larger than others, this will help even things out
 and speed up the overall test run.
 
-### Building
+### Building (Xcode 7 only)
 
-**Note:** Support for building projects with xctool is deprecated and will
-not be updated to support future versions of Xcode. We suggest moving to
-`xcodebuild` (with [xcpretty](https://github.com/supermarin/xcpretty)) for
+**Note:** Support for building projects with xctool is deprecated and isn't
+supported in Xcode 8 and later. We suggest moving to `xcodebuild` (with 
+[xcpretty](https://github.com/supermarin/xcpretty)) for
 simple needs, or [xcbuild](https://github.com/facebook/xcbuild) for more
-involved requirements. xctool will continue to support testing (see above).
+involved requirements. Alternatively you can use [Buck](https://buckbuild.com/).
 
 Building products with _xctool_ is the same as building them with
 _xcodebuild_.
