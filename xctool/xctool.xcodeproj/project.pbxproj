@@ -358,6 +358,7 @@
 		CCCF099B1C1286B4006F08C4 /* FakeSimDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeSimDevice.h; sourceTree = "<group>"; };
 		CCCF099C1C1286B4006F08C4 /* FakeSimDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeSimDevice.m; sourceTree = "<group>"; };
 		CCE14EA01ACB5B8100B76996 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		CCED47DB1DD2711E006CBBD3 /* SimServiceContext.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimServiceContext.h; sourceTree = "<group>"; };
 		CCF50B5519DC9E8C00A1044E /* SimVerifier.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimVerifier.h; sourceTree = "<group>"; };
 		CCF6EE48195BA918005BA335 /* SimulatorInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimulatorInfo.m; path = xctool/SimulatorWrapper/SimulatorInfo.m; sourceTree = "<group>"; };
 		CCF980311B38D1C900E4E0B0 /* XCTestConfigurationUnarchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCTestConfigurationUnarchiver.h; sourceTree = "<group>"; };
@@ -719,6 +720,7 @@
 				CCC55AC3195BB1E80051A50B /* SimDeviceSet.h */,
 				CCC55AC4195BB1E80051A50B /* SimDeviceType.h */,
 				CCC55AC5195BB1E80051A50B /* SimRuntime.h */,
+				CCED47DB1DD2711E006CBBD3 /* SimServiceContext.h */,
 				CCF50B5519DC9E8C00A1044E /* SimVerifier.h */,
 			);
 			path = CoreSimulator;
@@ -824,7 +826,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastTestingUpgradeCheck = 0700;
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = "Facebook, Inc.";
 			};
 			buildConfigurationList = 283CCA3D16C2EA3700F2E343 /* Build configuration list for PBXProject "xctool" */;

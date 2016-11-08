@@ -13,6 +13,7 @@ typedef void (^CDUnknownFunctionPointerType)(void);
 
 @interface SimRuntime : NSObject<SimRuntimeDVTAdditions>
 
+// Deprecated in Xcode 8.1
 + (id)supportedRuntimes;
 + (id)supportedRuntimesByAlias;
 + (id)supportedRuntimesByIdentifier;

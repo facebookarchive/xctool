@@ -580,6 +580,7 @@
 
 - (BOOL)_validateDestinationWithErrorMessage:(NSString **)errorMessage {
   if (_destination) {
+    SimulatorInfo *simInfo = [SimulatorInfo new];
     NSDictionary *destInfo = ParseDestinationString(_destination, errorMessage);
 
     NSString *deviceID = destInfo[@"id"];
@@ -588,7 +589,7 @@
 
     if (deviceID) {
       NSUUID *udid = [[NSUUID alloc] initWithUUIDString:deviceID];
-      if ([SimulatorInfo deviceWithUDID:udid]) {
+      if ([simInfo deviceWithUDID:udid]) {
         if (deviceName || deviceOS) {
           *errorMessage = @"If device id is specified, name or OS must not be specified.";
           return NO;
@@ -602,7 +603,7 @@
     }
 
     if (deviceName) {
-      NSString *deviceSystemName = [SimulatorInfo deviceNameForAlias:deviceName];
+      NSString *deviceSystemName = [simInfo deviceNameForAlias:deviceName];
       if (![deviceName isEqual:deviceSystemName] &&
           deviceSystemName) {
         ReportStatusMessage(_reporters, REPORTER_MESSAGE_WARNING,
@@ -610,19 +611,19 @@
         _destination = [_destination stringByReplacingOccurrencesOfString:deviceName withString:deviceSystemName];
         deviceName = deviceSystemName;
       }
-      if (![SimulatorInfo isDeviceAvailableWithAlias:deviceName]) {
+      if (![simInfo isDeviceAvailableWithAlias:deviceName]) {
         *errorMessage = [NSString stringWithFormat:
                          @"'%@' isn't a valid device name. The valid device names are: %@.",
-                         deviceName, [SimulatorInfo availableDevices]];
+                         deviceName, [simInfo availableDevices]];
         return NO;
       }
     }
 
     if (deviceOS && deviceName) {
-      if (![SimulatorInfo isSdkVersion:deviceOS supportedByDevice:deviceName]) {
+      if (![simInfo isSdkVersion:deviceOS supportedByDevice:deviceName]) {
         *errorMessage = [NSString stringWithFormat:
                          @"Device with name '%@' doesn't support iOS version '%@'. The supported iOS versions are: %@.",
-                         deviceName, deviceOS, [SimulatorInfo sdksSupportedByDevice:deviceName]];
+                         deviceName, deviceOS, [simInfo sdksSupportedByDevice:deviceName]];
         return NO;
       }
     }

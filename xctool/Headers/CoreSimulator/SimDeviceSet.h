@@ -8,6 +8,7 @@
 
 @interface SimDeviceSet : NSObject
 
+// Deprecated in Xcode 8.1
 + (id)defaultSet;
 + (id)defaultSetPath;
 + (id)setForSetPath:(id)arg1;

@@ -843,6 +843,16 @@ BOOL ToolchainIsXcode8OrBetter(void)
   return result;
 }
 
+BOOL ToolchainIsXcode81OrBetter(void)
+{
+  static BOOL result;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    result = ToolchainIsXcodeVersionSameOrBetter(@"0810");
+  });
+  return result;
+}
+
 NSString *MakeTemporaryDirectory(NSString *nameTemplate)
 {
   NSMutableData *template = [[[NSTemporaryDirectory() stringByAppendingPathComponent:nameTemplate]

@@ -55,13 +55,11 @@
 - (NSString *)testHostPath;
 - (NSString *)productBundlePath;
 
-+ (NSArray *)availableDevices;
-+ (NSString *)deviceNameForAlias:(NSString *)deviceAlias;
-+ (BOOL)isDeviceAvailableWithAlias:(NSString *)deviceName;
-+ (BOOL)isSdkVersion:(NSString *)sdkVersion supportedByDevice:(NSString *)deviceName;
-+ (NSArray *)availableSdkVersions;
-+ (NSArray *)sdksSupportedByDevice:(NSString *)deviceName;
-+ (cpu_type_t)cpuTypeForDevice:(NSString *)deviceName;
-+ (SimDevice *)deviceWithUDID:(NSUUID *)deviceUDID;
+- (NSArray *)availableDevices;
+- (NSString *)deviceNameForAlias:(NSString *)deviceAlias;
+- (BOOL)isDeviceAvailableWithAlias:(NSString *)deviceName;
+- (BOOL)isSdkVersion:(NSString *)sdkVersion supportedByDevice:(NSString *)deviceName;
+- (NSArray *)sdksSupportedByDevice:(NSString *)deviceName;
+- (SimDevice *)deviceWithUDID:(NSUUID *)deviceUDID;
 
 @end

@@ -127,6 +127,11 @@ BOOL ToolchainIsXcode7OrBetter(void);
 BOOL ToolchainIsXcode8OrBetter(void);
 
 /**
+ Returns YES if we're running with Xcode 8.1 or better.
+ */
+BOOL ToolchainIsXcode81OrBetter(void);
+
+/**
  Launches a task that will invoke xcodebuild.  It will automatically feed
  build events to the provided reporters.
 

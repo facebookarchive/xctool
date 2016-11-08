@@ -6,6 +6,7 @@
 
 @interface SimDeviceType : NSObject
 
+// Deprecated in Xcode 8.1
 + (id)supportedDeviceTypes;
 + (id)supportedDeviceTypesByAlias;
 + (id)supportedDeviceTypesByIdentifier;
