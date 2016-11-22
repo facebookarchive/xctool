@@ -100,7 +100,9 @@ NSDictionary *BuildSettingsFromOutput(NSString *output)
       [scanner scanUpToString:@"\n" intoString:&value];
       [scanner scanString:@"\n" intoString:NULL];
 
-      targetSettings[key] = (value == nil) ? @"" : value;
+      if (key) {
+        targetSettings[key] = (value == nil) ? @"" : value;
+      }
     }
 
     settings[target] = targetSettings;
