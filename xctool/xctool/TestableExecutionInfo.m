@@ -109,8 +109,8 @@
     @"SHOW_ONLY_BUILD_SETTINGS_FOR_TARGET" : target,
   }];
 
-  NSDictionary *output = LaunchTaskAndCaptureOutput(settingsTask,
-                                                    [NSString stringWithFormat:@"running xcodebuild -showBuildSettings for '%@' target", target]);
+  NSString *settingsTaskDescription = [NSString stringWithFormat:@"running xcodebuild -showBuildSettings for '%@' target", target];
+  NSDictionary *output = LaunchTaskAndCaptureOutputWithTimeoutAndRetry(settingsTask, settingsTaskDescription, 10.0f, 5);
   settingsTask = nil;
 
   NSDictionary *allSettings = BuildSettingsFromOutput(output[@"stdout"]);

@@ -63,6 +63,13 @@ void ReadOutputsAndFeedOuputLinesToBlockOnQueue(
 NSDictionary *LaunchTaskAndCaptureOutput(NSTask *task, NSString *description);
 
 /**
+ * Launchs a task, waits for exit or timeout, retries n times, and returns a dictionary like
+ * { @"stdout": "...", @"stderr": "..." }
+ * If given timeout is 0.0f, it waits forever (and will not retry of course).
+ */
+NSDictionary *LaunchTaskAndCaptureOutputWithTimeoutAndRetry(NSTask *task, NSString *description, NSTimeInterval timeout, NSUInteger retry);
+
+/**
  * Launches a task, waits for exit, and returns a string of the combined
  * STDOUT and STDERR output.
  */
