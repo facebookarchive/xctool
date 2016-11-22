@@ -91,6 +91,25 @@
     NSArray *list = [NSJSONSerialization JSONObjectWithData:[jsonOutput dataUsingEncoding:NSUTF8StringEncoding]
                                                     options:0
                                                       error:&parseError];
+    if (parseError) {
+
+      // If the test bundle (or any frameworks loaded by the test bundle) write to stdout, the expected JSON will
+      // be prepended with that output, causing an error. As a workaround, if we failed above, scan the output
+      // for something that looks like a JSON array, and try again.
+
+      // Note that we are assuming the test query binary returns a JSON array, not a JSON object.
+
+      NSRange leftBracket = [jsonOutput rangeOfString:@"[\""];
+      
+      if (leftBracket.location != NSNotFound) {
+        jsonOutput = [jsonOutput substringFromIndex:leftBracket.location];
+
+        parseError = nil;
+        list = [NSJSONSerialization JSONObjectWithData:[jsonOutput dataUsingEncoding:NSUTF8StringEncoding]
+                                               options:0
+                                                 error:&parseError];
+      }
+    }
     if (list) {
       return list;
     } else {
