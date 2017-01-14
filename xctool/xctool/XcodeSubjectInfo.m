@@ -64,20 +64,6 @@ static NSString *ProjectPathFromSchemePath(NSString *schemePath)
   return schemePath;
 }
 
-static NSString *FullPathForBasePathAndRelativePath(NSString *basePath, NSString *relativePath)
-{
-  NSString *fullPath = [basePath stringByAppendingPathComponent:relativePath];
-  NSArray *relativePathComponenets = [relativePath pathComponents];
-  for (NSUInteger l=[relativePathComponenets count]; l>0; l--) {
-    NSString *substring = [NSString pathWithComponents:[relativePathComponenets subarrayWithRange:NSMakeRange(0, l)]];
-    if ([basePath hasSuffix:substring]) {
-      fullPath = [basePath stringByAppendingPathComponent:[relativePath substringFromIndex:[substring length]]];
-      break;
-    }
-  }
-  return fullPath;
-}
-
 static NSString *StandardizedContainerPath(NSString *container, NSString *basePath)
 {
   static NSString * const kContainerReference = @"container:";
@@ -140,13 +126,13 @@ static NSDictionary *BuildConfigurationsByActionForSchemePath(NSString *schemePa
     workspaceBasePath = @".";
   }
 
-  NSString *path = [workspacePath stringByAppendingPathComponent:@"contents.xcworkspacedata"];
-  if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+  NSString *xcworkspaceDataPath = [workspacePath stringByAppendingPathComponent:@"contents.xcworkspacedata"];
+  if (![[NSFileManager defaultManager] fileExistsAtPath:xcworkspaceDataPath]) {
     // Git might leave empty directories around with no workspace data.
     return @[];
   }
 
-  NSURL *URL = [NSURL fileURLWithPath:path];
+  NSURL *URL = [NSURL fileURLWithPath:xcworkspaceDataPath];
   NSError *error = nil;
   NSXMLDocument *doc = [[NSXMLDocument alloc] initWithContentsOfURL:URL
                                                             options:0
@@ -695,8 +681,8 @@ containsFilesModifiedSince:(NSDate *)sinceDate
 
     NSArray *skippedTestsNodes = [node nodesForXPath:@"SkippedTests/Test" error:nil];
     NSMutableArray *testsToSkip = [NSMutableArray array];
-    for (NSXMLElement *node in skippedTestsNodes) {
-      NSString *test = [[node attributeForName:@"Identifier"] stringValue];
+    for (NSXMLElement *skippedNode in skippedTestsNodes) {
+      NSString *test = [[skippedNode attributeForName:@"Identifier"] stringValue];
       [testsToSkip addObject:test];
     }
 

@@ -128,7 +128,7 @@
   for (NSDictionary *piece in path) {
     if ([piece[@"kind"] isEqual:kReporter_Event_Key]) {
       NSDictionary *location = piece[@"location"];
-      [result addObject:@{@"file" : files[[location[@"file"] intValue]],
+      [result addObject:@{@"file" : files[(NSUInteger)[location[@"file"] integerValue]],
                           @"line" : location[@"line"],
                           @"col" : location[@"col"],
                           @"message" : piece[@"message"]}];
@@ -163,17 +163,17 @@
 
   if (buildPathExists) {
     BuildStateParser *buildState = [[BuildStateParser alloc] initWithPath:buildStatePath];
-    for (NSString *path in buildState.nodes) {
+    for (NSString *lpath in buildState.nodes) {
       NSTextCheckingResult *result = [analyzerPlistPathRegex
-                                      firstMatchInString:path
+                                      firstMatchInString:lpath
                                       options:0
-                                      range:NSMakeRange(0, path.length)];
+                                      range:NSMakeRange(0, lpath.length)];
 
       if (result == nil || result.range.location == NSNotFound) {
         continue;
       }
 
-      [plistPaths addObject:path];
+      [plistPaths addObject:lpath];
     }
     return plistPaths;
   }
@@ -206,9 +206,9 @@
 
     NSArray *pathContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:analyzerFilesPath error:nil];
 
-    for (NSString *path in pathContents) {
-      if ([[path pathExtension] isEqualToString:@"plist"]) {
-        NSString *plistPath = [NSString pathWithComponents:@[analyzerFilesPath, path]];
+    for (NSString *lpath in pathContents) {
+      if ([[lpath pathExtension] isEqualToString:@"plist"]) {
+        NSString *plistPath = [NSString pathWithComponents:@[analyzerFilesPath, lpath]];
         [plistPaths addObject:plistPath];
       }
     }
@@ -238,7 +238,7 @@
     }
     for (NSDictionary *diag in diags[@"diagnostics"]) {
       haveFoundWarnings = YES;
-      NSString *file = diags[@"files"][[diag[@"location"][@"file"] intValue]];
+      NSString *file = diags[@"files"][(NSUInteger)[diag[@"location"][@"file"] integerValue]];
       file = file.stringByStandardizingPath;
       if (![fileManager fileExistsAtPath:file]) {
         continue;

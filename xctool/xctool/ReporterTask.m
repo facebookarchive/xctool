@@ -177,7 +177,7 @@
   const uint8_t *bufferPtr = [buffer bytes];
 
   while (bytesWritten < bufferLength) {
-    size_t result = write(fd, bufferPtr + bytesWritten, (bufferLength - bytesWritten));
+    ssize_t result = write(fd, bufferPtr + bytesWritten, (bufferLength - bytesWritten));
 
     if (result == -1) {
       if (errno == ESRCH || errno == EPIPE) {
@@ -193,7 +193,7 @@
                  strerror(errno), errno);
       }
     } else {
-      bytesWritten += result;
+      bytesWritten += (NSUInteger)result;
     }
   }
 

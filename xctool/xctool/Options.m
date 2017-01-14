@@ -323,7 +323,7 @@
 - (BOOL)validateAndReturnXcodeSubjectInfo:(XcodeSubjectInfo **)xcodeSubjectInfoOut
                              errorMessage:(NSString **)errorMessage
 {
-  BOOL (^isDirectory)(NSString *) = ^(NSString *path){
+  BOOL (^isDirectoryAtPath)(NSString *) = ^(NSString *path){
     BOOL isDirectory = NO;
     BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDirectory];
     return (BOOL)(exists && isDirectory);
@@ -430,7 +430,7 @@
     return NO;
   }
 
-  if (_workspace && !isDirectory(_workspace)) {
+  if (_workspace && !isDirectoryAtPath(_workspace)) {
     *errorMessage = [NSString stringWithFormat:@"Specified workspace doesn't exist: %@", _workspace];
     return NO;
   }
@@ -440,7 +440,7 @@
     return NO;
   }
 
-  if (_project && !isDirectory(_project)) {
+  if (_project && !isDirectoryAtPath(_project)) {
     *errorMessage = [NSString stringWithFormat:@"Specified project doesn't exist: %@", _project];
     return NO;
   }

@@ -55,10 +55,7 @@ static NSArray *FilterBuildables(NSArray *buildables)
 
 static id IDEBuildSchemeAction__uniquedBuildablesForBuildables_includingDependencies(id self, SEL sel, id buildables, BOOL includingDependencies)
 {
-  id result = objc_msgSend(self,
-                      @selector(__IDEBuildSchemeAction__uniquedBuildablesForBuildables:includingDependencies:),
-                      buildables,
-                      includingDependencies);
+  id result = ((id (*)(id, SEL, id, BOOL))objc_msgSend)(self, @selector(__IDEBuildSchemeAction__uniquedBuildablesForBuildables:includingDependencies:),buildables, includingDependencies);
   return FilterBuildables(result);
 }
 

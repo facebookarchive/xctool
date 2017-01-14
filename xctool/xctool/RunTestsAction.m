@@ -60,14 +60,14 @@ static BOOL IsDirectory(NSString *path) {
   return exists && isDirectory;
 };
 
-NSArray *BucketizeTestCasesByTestCase(NSArray *testCases, int bucketSize)
+NSArray *BucketizeTestCasesByTestCase(NSArray *testCases, NSUInteger bucketSize)
 {
   return chunkifyArray(testCases, bucketSize);
 }
 
-NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
+NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, NSUInteger bucketSize)
 {
-  NSMutableArray *testClassNames = [NSMutableArray array];
+  NSMutableArray *allTestClassNames = [NSMutableArray array];
   NSMutableDictionary *testCasesByClass = [NSMutableDictionary dictionary];
 
   for (NSString *classAndMethod in testCases) {
@@ -75,13 +75,13 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
 
     if (testCasesByClass[className] == nil) {
       testCasesByClass[className] = [NSMutableArray array];
-      [testClassNames addObject:className];
+      [allTestClassNames addObject:className];
     }
 
     [testCasesByClass[className] addObject:classAndMethod];
   }
 
-  NSArray *testClassNamesChunked = chunkifyArray(testClassNames, bucketSize);
+  NSArray *testClassNamesChunked = chunkifyArray(allTestClassNames, bucketSize);
 
   NSMutableArray *result = [NSMutableArray array];
 
@@ -98,8 +98,8 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
 
 @interface RunTestsAction ()
 @property (nonatomic, strong) SimulatorInfo *simulatorInfo;
-@property (nonatomic, assign) int logicTestBucketSize;
-@property (nonatomic, assign) int appTestBucketSize;
+@property (nonatomic, assign) NSUInteger logicTestBucketSize;
+@property (nonatomic, assign) NSUInteger appTestBucketSize;
 @property (nonatomic, assign) BucketBy bucketBy;
 @property (nonatomic, assign) int testTimeout;
 @property (nonatomic, strong) NSMutableArray *rawAppTestArgs;
@@ -336,12 +336,14 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize)
 
 - (void)setLogicTestBucketSizeValue:(NSString *)str
 {
-  _logicTestBucketSize = [str intValue];
+  NSInteger value = [str integerValue];
+  _logicTestBucketSize = (value > 0 ? (NSUInteger)value : 0);
 }
 
 - (void)setAppTestBucketSizeValue:(NSString *)str
 {
-  _appTestBucketSize = [str intValue];
+  NSInteger value = [str integerValue];
+  _appTestBucketSize = (value > 0 ? (NSUInteger)value : 0);
 }
 
 - (void)setBucketByValue:(NSString *)str
@@ -725,7 +727,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
   // Note that the operation must not acquire this resources in one block and
   // release in another block submitted to the same queue, as it may lead to
   // starvation since the queue may not run the release block.
-  dispatch_semaphore_t queueLimiter = dispatch_semaphore_create([[NSProcessInfo processInfo] processorCount]);
+  dispatch_semaphore_t queueLimiter = dispatch_semaphore_create((long)[[NSProcessInfo processInfo] processorCount]);
 
   NSMutableArray *blocksToRunOnMainThread = [NSMutableArray array];
   NSMutableArray *blocksToRunOnDispatchQueue = [NSMutableArray array];
@@ -873,13 +875,13 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
 
     Class testRunnerClass = [self testRunnerClassForBuildSettings:info.buildSettings];
     BOOL isApplicationTest = TestableSettingsIndicatesApplicationTest(info.buildSettings);
-    int bucketSize = isApplicationTest ? _appTestBucketSize : _logicTestBucketSize;
+    NSUInteger bucketSize = isApplicationTest ? _appTestBucketSize : _logicTestBucketSize;
     NSArray *testChunks;
 
     if (_bucketBy == BucketByClass) {
-      testChunks = BucketizeTestCasesByTestClass(testCases, bucketSize > 0 ? bucketSize : INT_MAX);
+      testChunks = BucketizeTestCasesByTestClass(testCases, bucketSize != 0 ? bucketSize : INT_MAX);
     } else if (_bucketBy == BucketByTestCase) {
-      testChunks = BucketizeTestCasesByTestCase(testCases, bucketSize > 0 ? bucketSize : INT_MAX);
+      testChunks = BucketizeTestCasesByTestCase(testCases, bucketSize != 0 ? bucketSize : INT_MAX);
     } else {
       NSAssert(NO, @"Unexpected value for _bucketBy: %ld", _bucketBy);
       abort();
@@ -911,7 +913,7 @@ typedef BOOL (^TestableBlock)(NSArray *reporters);
   }
 
   __block BOOL succeeded = YES;
-  __weak NSMutableArray *bundlesInProgress = [NSMutableArray array];
+  NSMutableArray *bundlesInProgress = [NSMutableArray array];
 
   void (^runTestableBlockAndSaveSuccess)(TestableBlock, NSString *) = ^(TestableBlock block, NSString *blockAnnotation) {
     NSArray *reporters;

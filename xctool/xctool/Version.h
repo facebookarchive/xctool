@@ -16,4 +16,4 @@
 
 #import <Foundation/Foundation.h>
 
-NSString * const XCToolVersionString;
+extern NSString * const XCToolVersionString;

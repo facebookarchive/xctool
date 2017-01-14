@@ -123,7 +123,7 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
                        device.name);
 
   dispatch_semaphore_t appSemaphore = dispatch_semaphore_create(0);
-  dispatch_source_t source = dispatch_source_create(DISPATCH_SOURCE_TYPE_PROC, appPID, DISPATCH_PROC_EXIT, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0));
+  dispatch_source_t source = dispatch_source_create(DISPATCH_SOURCE_TYPE_PROC, (unsigned long)appPID, DISPATCH_PROC_EXIT, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0));
   dispatch_source_set_event_handler(source, ^{
     dispatch_source_cancel(source);
   });

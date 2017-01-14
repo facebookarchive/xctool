@@ -40,7 +40,7 @@ NSTask *CreateTaskForSimulatorExecutable(NSString *sdkName,
     [taskArgs addObject:launchPath];
     [taskArgs addObjectsFromArray:arguments];
 
-    [environment enumerateKeysAndObjectsUsingBlock:^(id key, id val, BOOL *stop){
+    [environment enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *val, BOOL *stop){
       // simctl has a bug where it hangs if an empty child environment variable is set.
       if ([val length] == 0) {
         return;

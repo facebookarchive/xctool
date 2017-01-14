@@ -90,5 +90,4 @@ int main(int argc, const char * argv[])
 
     return tool.exitStatus;
   }
-  return 0;
 }

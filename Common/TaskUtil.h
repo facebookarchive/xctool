@@ -49,7 +49,7 @@ NSString *StringFromDispatchDataWithBrokenUTF8Encoding(const char *dataPtr, size
  */
 void ReadOutputsAndFeedOuputLinesToBlockOnQueue(
   int * const fildes,
-  const int sz,
+  const NSUInteger sz,
   FdOutputLineFeedBlock block,
   dispatch_queue_t blockDispatchQueue,
   BlockToRunWhileReading blockToRunWhileReading,

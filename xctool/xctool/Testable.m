@@ -37,7 +37,7 @@
 
 - (BOOL)isEqual:(Testable *)other
 {
-  BOOL (^bothNilOrEqual)(id, id) = ^(id a, id b) {
+  BOOL (^bothNilOrEqual)(NSObject *, NSObject *) = ^(NSObject *a, NSObject *b) {
     if (a == nil && b == nil) {
       return YES;
     } else {
@@ -62,9 +62,9 @@
           [self.target hash] ^
           [self.targetID hash] ^
           [self.executable hash] ^
-          self.buildForRunning ^
-          self.buildForTesting ^
-          self.buildForAnalyzing);
+          (unsigned)self.buildForRunning ^
+          (unsigned)self.buildForTesting ^
+          (unsigned)self.buildForAnalyzing);
 }
 
 

@@ -65,7 +65,7 @@
 - (BOOL)allTestsPassed
 {
   unsigned int numPassed = 0;
-  for (int i = 0; i < [_testSuiteState.tests count]; i++) {
+  for (NSUInteger i = 0; i < [_testSuiteState.tests count]; i++) {
     OCTestEventState *testState = _testSuiteState.tests[i];
     if (testState.isSuccessful) {
       numPassed++;
@@ -122,7 +122,7 @@
   NSString *testName = event[kReporter_EndTest_TestKey];
   OCTestEventState *state = [_testSuiteState getTestWithTestName:testName];
   NSAssert(state, @"Can't find test state for '%@', check senTestList", testName);
-  [state stateEndTest:[event[kReporter_EndTest_SucceededKey] intValue]
+  [state stateEndTest:[event[kReporter_EndTest_SucceededKey] boolValue]
                result:event[kReporter_EndTest_ResultKey]
              duration:[event[kReporter_EndTest_TotalDurationKey] doubleValue]];
 

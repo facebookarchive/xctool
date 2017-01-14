@@ -269,7 +269,7 @@ static void IDECommandLineBuildLogRecorder__emitSection_inSupersection(id self,
                                                                        id supersection)
 {
   // Call through to the original implementation.
-  objc_msgSend(self, sel_getUid("__IDECommandLineBuildLogRecorder__emitSection:inSupersection:"), section, supersection);
+  ((void (*)(id, SEL, IDEActivityLogSection *, id))objc_msgSend)(self, sel_getUid("__IDECommandLineBuildLogRecorder__emitSection:inSupersection:"), section, supersection);
 
   HandleBeginSection(section, supersection);
 }
@@ -280,7 +280,7 @@ static void IDECommandLineBuildLogRecorder__cleanupClosedSection_inSupersection(
                                                                                 id supersection)
 {
   // Call through to the original implementation.
-  objc_msgSend(self, sel_getUid("__IDECommandLineBuildLogRecorder__cleanupClosedSection:inSupersection:"), section, supersection);
+  ((void (*)(id, SEL, IDEActivityLogSection *, id))objc_msgSend)(self, sel_getUid("__IDECommandLineBuildLogRecorder__cleanupClosedSection:inSupersection:"), section, supersection);
 
   HandleEndSection(section, supersection);
 }
@@ -298,10 +298,7 @@ static void Xcode3CommandLineBuildTool__printErrorString_andFailWithCode(id self
             @"message" : str,
             @"code" : @(code),
             });
- objc_msgSend(self,
-               @selector(__Xcode3CommandLineBuildTool__printErrorString:andFailWithCode:),
-               str,
-               code);
+ ((void (*)(id, SEL, NSString *, long long))objc_msgSend)(self, @selector(__Xcode3CommandLineBuildTool__printErrorString:andFailWithCode:), str, code);
 }
 
 __attribute__((constructor)) static void EntryPoint()

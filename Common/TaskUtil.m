@@ -76,7 +76,7 @@ NSString *StringFromDispatchDataWithBrokenUTF8Encoding(const char *dataPtr, size
   char *inbuf  = (char *)dataPtr;
   char *outbuf = malloc(sizeof(char) * dataSz);
   NSMutableString *outputString = [NSMutableString string];
-  long bytesToProcess = dataSz;
+  size_t bytesToProcess = dataSz;
   while (bytesToProcess > 0) {
     NSString *string = nil;
     size_t inbytesleft = bytesToProcess;
@@ -129,7 +129,7 @@ static NSArray *LinesFromDispatchData(dispatch_data_t data, BOOL omitNewlineChar
       lineLength = dataSz - processedSize;
       processedSize += lineLength;
     } else {
-      lineLength = newlineLocation - dataPtr + (omitNewlineCharacters ? 0 : sizeof(char));
+      lineLength = (size_t)(newlineLocation - dataPtr) + (omitNewlineCharacters ? 0 : sizeof(char));
       processedSize += lineLength + (omitNewlineCharacters ? sizeof(char) : 0);
     }
 
@@ -155,7 +155,7 @@ static NSArray *LinesFromDispatchData(dispatch_data_t data, BOOL omitNewlineChar
 
 void ReadOutputsAndFeedOuputLinesToBlockOnQueue(
   int * const fildes,
-  const int sz,
+  const NSUInteger sz,
   FdOutputLineFeedBlock block,
   dispatch_queue_t queue,
   BlockToRunWhileReading blockToRunWhileReading,
@@ -186,7 +186,7 @@ void ReadOutputsAndFeedOuputLinesToBlockOnQueue(
   dispatch_queue_t ioQueue = dispatch_queue_create([ioQueueName UTF8String], DISPATCH_QUEUE_SERIAL);
   io_read_info *infos = calloc(sz, sizeof(io_read_info));
   dispatch_group_t ioGroup = dispatch_group_create();
-  for (int i = 0; i < sz; i++) {
+  for (NSUInteger i = 0; i < sz; i++) {
     dispatch_group_enter(ioGroup);
     io_read_info *info = infos+i;
     info->fd = fildes[i];
@@ -226,12 +226,12 @@ void ReadOutputsAndFeedOuputLinesToBlockOnQueue(
           // be used to determine whether to emit an empty line should the
           // stream end in a newline, which would otherwise be omitted.
           if (chomped > 0) {
-            dispatch_data_t data = dispatch_data_create_subrange(info->data, chomped - 1, 1);
+            dispatch_data_t subdata = dispatch_data_create_subrange(info->data, chomped - 1, 1);
             const char *lastCharPtr;
-            dispatch_data_t ch = dispatch_data_create_map(data, (const void **)&lastCharPtr, NULL);
+            dispatch_data_t ch = dispatch_data_create_map(subdata, (const void **)&lastCharPtr, NULL);
             info->trailingNewline = (*lastCharPtr == '\n');
             dispatch_release(ch);
-            dispatch_release(data);
+            dispatch_release(subdata);
           }
 
           dispatch_data_t remaining = dispatch_data_create_subrange(info->data, chomped, size - chomped);
@@ -260,7 +260,7 @@ void ReadOutputsAndFeedOuputLinesToBlockOnQueue(
     dispatch_sync(queue, ^{});
   }
 
-  for (int i = 0; i < sz; i++) {
+  for (NSUInteger i = 0; i < sz; i++) {
     io_read_info *info = infos+i;
     dispatch_sync(ioQueue, ^{
       if (!info->done) {
@@ -450,9 +450,7 @@ NSTask *CreateConcreteTaskInSameProcessGroup()
   NSConcreteTask *task = nil;
 
   if (IsRunningUnderTest()) {
-    task = [objc_msgSend([NSTask class],
-                         @selector(__NSTask_allocWithZone:),
-                         NSDefaultMallocZone()) init];
+    task = [((NSConcreteTask *(*)(id, SEL, NSZone *))objc_msgSend)([NSTask class], @selector(__NSTask_allocWithZone:), NSDefaultMallocZone()) init];
     [task setStartsNewProcessGroup:NO];
     return task;
   } else {

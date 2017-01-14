@@ -24,7 +24,7 @@
  * e.g. ['Cls1/test1', 'Cls1/test2', 'Cls2/test1'] with bucketSize=2 woudl be
  * broken into [['Cls1/test1', 'Cls1/test2'], ['Cls2/test1']].
  */
-NSArray *BucketizeTestCasesByTestCase(NSArray *testCases, int bucketSize);
+NSArray *BucketizeTestCasesByTestCase(NSArray *testCases, NSUInteger bucketSize);
 
 /**
  * Break test cases into groups of `bucketSize` test classes.
@@ -33,7 +33,7 @@ NSArray *BucketizeTestCasesByTestCase(NSArray *testCases, int bucketSize);
  * with bucketSize=2 would be broken into [['Cls1/test1', 'Cls1/test2',
  * 'Cls1/test3', 'Cls2/test2'], ['Cls3/test1']].
  */
-NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, int bucketSize);
+NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, NSUInteger bucketSize);
 
 typedef NS_ENUM(NSInteger, BucketBy) {
   // Bucket by individual test case (the most granular option).  Test cases

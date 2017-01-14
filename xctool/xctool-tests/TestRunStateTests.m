@@ -308,7 +308,7 @@ static TestRunState *TestRunStateForFakeRun(id<EventSink> sink)
   [state didFinishRunWithStartupError:nil otherErrors:nil];
 
   // Not much we can do here, make sure no events are shipped out
-  assertThatInteger(eventBuffer.events.count, equalToInteger(7));
+  assertThatUnsignedInteger(eventBuffer.events.count, equalToUnsignedInteger(7));
   assertThat(SelectEventFields(eventBuffer.events, kReporter_Events_BeginTest, @"event"), hasCountOf(2));
   assertThat(SelectEventFields(eventBuffer.events, kReporter_Events_EndTest, @"event"), hasCountOf(2));
 }

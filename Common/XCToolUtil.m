@@ -109,7 +109,7 @@ NSDictionary *BuildSettingsFromOutput(NSString *output)
   return settings;
 }
 
-NSString *AbsoluteExecutablePath() {
+NSString *AbsoluteExecutablePath(void) {
   char execRelativePath[PATH_MAX] = {0};
   uint32_t execRelativePathSize = sizeof(execRelativePath);
   _NSGetExecutablePath(execRelativePath, &execRelativePathSize);
@@ -350,7 +350,7 @@ NSDictionary *GetAvailableSDKsAndAliases()
 
 BOOL IsRunningOnCISystem()
 {
-  NSDictionary *environment = [[NSProcessInfo processInfo] environment];
+  NSDictionary<NSString *, NSString *> *environment = [[NSProcessInfo processInfo] environment];
   return ([environment[@"TRAVIS"] isEqualToString:@"true"] ||
           [environment[@"CIRCLECI"] isEqualToString:@"true"] ||
           [environment[@"JENKINS_URL"] length] > 0 ||
@@ -510,7 +510,7 @@ NSArray *ArgumentListByOverriding(NSArray *arguments,
 
   BOOL foundAndReplaced = NO;
 
-  for (int i = 0; i < [arguments count]; i++) {
+  for (NSUInteger i = 0; i < [arguments count]; i++) {
     if ([arguments[i] isEqualToString:option]) {
       [result addObjectsFromArray:@[option, optionValue]];
       i++;

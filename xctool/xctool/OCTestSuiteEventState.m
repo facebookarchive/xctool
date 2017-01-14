@@ -152,7 +152,7 @@
 
 - (OCTestEventState *)runningTest
 {
-  NSUInteger idx = [_tests indexOfObjectPassingTest:^(OCTestEventState *test, NSUInteger idx, BOOL *stop) {
+  NSUInteger idx = [_tests indexOfObjectPassingTest:^(OCTestEventState *test, NSUInteger index, BOOL *stop) {
     return [test isRunning];
   }];
 
@@ -186,7 +186,7 @@
 
 - (OCTestEventState *)getTestWithTestName:(NSString *)name
 {
-  NSUInteger idx = [_tests indexOfObjectPassingTest:^(OCTestEventState *test, NSUInteger idx, BOOL *stop) {
+  NSUInteger idx = [_tests indexOfObjectPassingTest:^(OCTestEventState *test, NSUInteger index, BOOL *stop) {
     return [[test testName] isEqualToString:name];
   }];
 

@@ -180,7 +180,7 @@
     return (NSDictionary *)nil;
   };
 
-  int count = 0;
+  NSUInteger count = 0;
   while (arguments.count > 0) {
     NSString *argument = arguments[0];
     NSDictionary *matchingNamedOption = namedOptionMatchingArgument(argument);
@@ -189,14 +189,14 @@
     if (matchingNamedOption) {
       if (matchingNamedOption[kActionOptionSetFlagSelector]) {
         SEL sel = sel_registerName([matchingNamedOption[kActionOptionSetFlagSelector] UTF8String]);
-        objc_msgSend(self, sel, YES);
+        ((void (*)(id, SEL, BOOL))objc_msgSend)(self, sel, YES);
         count++;
         [arguments removeObjectAtIndex:0];
         continue;
       } else if (matchingNamedOption[kActionOptionMapToSelector]) {
         SEL sel = sel_registerName([matchingNamedOption[kActionOptionMapToSelector] UTF8String]);
         NSString *nextArgument = arguments.count > 1 ? arguments[1] : nil;
-        if(nextArgument) {
+        if (nextArgument) {
           count += 2;
           [arguments removeObjectsInRange:NSMakeRange(0, 2)];
         } else {
@@ -204,7 +204,7 @@
           [arguments removeAllObjects];
           return 0;
         }
-        objc_msgSend(self, sel, nextArgument);
+        ((void (*)(id, SEL, NSString *))objc_msgSend)(self, sel, nextArgument);
         continue;
       }
     }
@@ -213,7 +213,7 @@
     NSDictionary *matchingMatcherOption = matcherOptionMatchingArgument(argument);
     if (matchingMatcherOption) {
       SEL sel = sel_registerName([matchingMatcherOption[kActionOptionMapToSelector] UTF8String]);
-      objc_msgSend(self, sel, argument);
+      ((void (*)(id, SEL, NSString *))objc_msgSend)(self, sel, argument);
       count++;
       [arguments removeObjectsInRange:NSMakeRange(0, 1)];
       continue;

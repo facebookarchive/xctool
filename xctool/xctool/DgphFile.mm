@@ -20,6 +20,10 @@
 #include <fstream>
 #include <vector>
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wsign-conversion"
+#pragma clang diagnostic ignored "-Wshadow"
+
 namespace {
 
 std::string pTake(std::ifstream &stream, int count) {
@@ -207,3 +211,5 @@ DgphFile DgphFile::loadFromFile(const char *path) {
   NSLog(@"DGPH failed to load: %s", path);
   return DgphFile();
 }
+
+#pragma clang diagnostic pop
