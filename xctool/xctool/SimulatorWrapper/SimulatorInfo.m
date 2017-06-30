@@ -623,7 +623,7 @@ static NSMutableDictionary *__sdkInfoByPath = nil;
   }
   for (SimRuntime* runTime in runTimeArray) {
     if ([[runTime platformPath] isEqualToString:platformPath] &&
-        [[runTime versionString] isEqualToString:platformVersion]) {
+        [[runTime versionString] hasPrefix:platformVersion]) {
       return runTime;
     }
   }
@@ -632,7 +632,10 @@ static NSMutableDictionary *__sdkInfoByPath = nil;
 
 + (NSDictionary *)_sdkInfoForPlatform:(NSString *)platform sdkVersion:(NSString *)sdkVersion
 {
-  NSString *canonicalName = [platform stringByAppendingString:sdkVersion];
+  NSString *sdkMajorMinorVersion = [[[sdkVersion componentsSeparatedByString:@"."]
+                                     subarrayWithRange:(NSRange){0,2}]
+                                    componentsJoinedByString:@"."];
+  NSString *canonicalName = [platform stringByAppendingString:sdkMajorMinorVersion];
   return __sdkInfo[canonicalName];
 }
 
