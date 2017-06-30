@@ -35,9 +35,3 @@ XT_INSTALL_ROOT="$RELEASE_OUTPUT_DIR" \
   -parallelize \
   -bucketBy class \
   -logicTestBucketSize 1
-
-# Fetch latest upstream Buck version
-git clone https://github.com/facebook/buck.git Vendor/buck
-
-# Build xctool with Buck
-TERM=dumb PATH=Vendor/buck/bin:$PATH buck build //:xctool-zip
