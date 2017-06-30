@@ -114,7 +114,7 @@ static void XCTestLog_testSuiteDidStart(id self, SEL sel, XCTestSuiteRun *run)
 
 static void XCTestLog_testSuiteWillStart(id self, SEL sel, XCTestSuite *suite)
 {
-  XCTestLog_testSuiteDidStart(self, sel, objc_msgSend(suite, @selector(testRun)));
+  XCTestLog_testSuiteDidStart(self, sel, ((XCTestSuiteRun *(*)(id, SEL))objc_msgSend)(suite, @selector(testRun)));
 }
 
 static void SenTestLog_testSuiteDidStart(id self, SEL sel, NSNotification *notification)
@@ -153,7 +153,7 @@ static void XCTestLog_testSuiteDidStop(id self, SEL sel, XCTestSuiteRun *run)
 
 static void XCTestLog_testSuiteDidFinish(id self, SEL sel, XCTestSuite *suite)
 {
-  XCTestLog_testSuiteDidStop(self, sel, objc_msgSend(suite, @selector(testRun)));
+  XCTestLog_testSuiteDidStop(self, sel, ((XCTestSuiteRun *(*)(id, SEL))objc_msgSend)(suite, @selector(testRun)));
 }
 
 static void SenTestLog_testSuiteDidStop(id self, SEL sel, NSNotification *notification)
@@ -191,7 +191,7 @@ static void XCTestLog_testCaseDidStart(id self, SEL sel, XCTestCaseRun *run)
 
 static void XCTestLog_testCaseWillStart(id self, SEL sel, XCTestCase *testCase)
 {
-  XCTestLog_testCaseDidStart(self, sel, objc_msgSend(testCase, @selector(testRun)));
+  XCTestLog_testCaseDidStart(self, sel, ((XCTestCaseRun *(*)(id, SEL))objc_msgSend)(testCase, @selector(testRun)));
 }
 
 static void SenTestLog_testCaseDidStart(id self, SEL sel, NSNotification *notification)
@@ -230,7 +230,7 @@ static void XCTestLog_testCaseDidStop(id self, SEL sel, XCTestCaseRun *run)
 
 static void XCTestLog_testCaseDidFinish(id self, SEL sel, XCTestCase *testCase)
 {
-  XCTestLog_testCaseDidStop(self, sel, objc_msgSend(testCase, @selector(testRun)));
+  XCTestLog_testCaseDidStop(self, sel, ((XCTestCaseRun *(*)(id, SEL))objc_msgSend)(testCase, @selector(testRun)));
 }
 
 static void SenTestLog_testCaseDidStop(id self, SEL sel, NSNotification *notification)
@@ -291,7 +291,12 @@ static void XCTestLog_testCaseDidFail(id self, SEL sel, XCTestCaseRun *run, NSSt
 
 static void XCTestLog_testCaseDidFailWithDescription(id self, SEL sel, XCTestCase *testCase, NSString *description, NSString *file, NSUInteger line)
 {
-  XCTestLog_testCaseDidFail(self, sel, objc_msgSend(testCase, @selector(testRun)), description, file, line);
+  XCTestLog_testCaseDidFail(self,
+                            sel,
+                            ((XCTestCaseRun *(*)(id, SEL))objc_msgSend)(testCase, @selector(testRun)),
+                            description,
+                            file,
+                            line);
 }
 
 static void SenTestLog_testCaseDidFail(id self, SEL sel, NSNotification *notification)
@@ -359,14 +364,14 @@ static void XCPerformTestWithSuppressedExpectedAssertionFailures(id self, SEL or
     dispatch_resume(source);
 
     // Call through original implementation
-    objc_msgSend(self, origSel, arg1);
+    ((void (*)(id, SEL, id))objc_msgSend)(self, origSel, arg1);
 
     dispatch_source_cancel(source);
     dispatch_release(source);
     dispatch_release(queue);
   } else {
     // Call through original implementation
-    objc_msgSend(self, origSel, arg1);
+    ((void (*)(id, SEL, id))objc_msgSend)(self, origSel, arg1);
   }
 
   // The assertion handler hasn't been touched for our test, so we can safely remove it.
@@ -605,7 +610,7 @@ static void Swizzle()
 static id NSBundle_loadAndReturnError(id self, SEL sel, NSError **error)
 {
   SEL originalSelector = @selector(__NSBundle_loadAndReturnError:);
-  id result = objc_msgSend(self, originalSelector, error);
+  id result = ((id (*)(id, SEL, NSError **))objc_msgSend)(self, originalSelector, error);
   SwizzleXCTestMethodsIfAvailable();
   return result;
 }

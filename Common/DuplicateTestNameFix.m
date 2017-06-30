@@ -106,7 +106,7 @@ static void ProcessTestSuite(id testSuite)
 
 static id TestProbe_specifiedTestSuite(Class cls, SEL cmd)
 {
-  id testSuite = objc_msgSend(cls,
+  id testSuite = ((id (*)(id, SEL))objc_msgSend)(cls,
                               sel_registerName([[NSString stringWithFormat:@"__%s_specifiedTestSuite",
                                                  class_getName(cls)] UTF8String]));
   ProcessTestSuite(testSuite);
@@ -115,7 +115,7 @@ static id TestProbe_specifiedTestSuite(Class cls, SEL cmd)
 
 static id TestSuite_allTests(Class cls, SEL cmd)
 {
-  id testSuite = objc_msgSend(cls,
+  id testSuite = ((id (*)(id, SEL))objc_msgSend)(cls,
                               sel_registerName([[NSString stringWithFormat:@"__%s_allTests",
                                                  class_getName(cls)] UTF8String]));
   ProcessTestSuite(testSuite);

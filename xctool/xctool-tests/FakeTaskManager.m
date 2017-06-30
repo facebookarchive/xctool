@@ -30,7 +30,7 @@ static id NSTask_allocWithZone(id cls, SEL sel, NSZone *zone)
       cls != objc_getClass("FakeTask")) {
     return [FakeTask allocWithZone:zone];
   } else {
-    return objc_msgSend(cls, @selector(__NSTask_allocWithZone:), zone);
+    return ((id (*)(id, SEL, NSZone *))objc_msgSend)(cls, @selector(__NSTask_allocWithZone:), zone);
   }
 }
 
