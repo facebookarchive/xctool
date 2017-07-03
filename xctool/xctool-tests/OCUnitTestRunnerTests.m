@@ -103,7 +103,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
 
 #pragma mark iOS Tests
 
-- (void)runTestsForRunner:(OCUnitTestRunner *)runner andReturnLaunchOptions:(NSDictionary **)outOptions
+- (void)runTestsForRunner:(OCUnitTestRunner *)runner andReturnLaunchOptions:(NSDictionary * __strong *)outOptions
 {
   [Swizzler whileSwizzlingSelector:@selector(launchApplicationWithID:options:error:)
                forInstancesOfClass:[SimDevice class]
