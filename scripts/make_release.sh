@@ -15,7 +15,7 @@
 # 7.  Bump the version in xctool/xctool/Version.m; commit your change.
 # 8.  Push the version bump; e.g. `git push origin master`
 # 9.  Make a new release on homebrew:
-#     - Edit url and sha256 (`shasum -a 256`) in `Library/Formula/xctool.rb`.
+#     - Edit url and sha256 (`shasum -a 256`) in `Formula/xctool.rb`.
 #       Predownload tar.gz archive from Github.
 #     - Submit new PR to bump xctool version.
 
