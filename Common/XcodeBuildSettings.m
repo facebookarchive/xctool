@@ -30,6 +30,7 @@ NSString * const Xcode_PRODUCT_TYPE_FRAMEWORK_SEARCH_PATHS = @"PRODUCT_TYPE_FRAM
 NSString * const Xcode_PROJECT_DIR = @"PROJECT_DIR";
 NSString * const Xcode_SDK_NAME = @"SDK_NAME";
 NSString * const Xcode_SDKROOT = @"SDKROOT";
+NSString * const Xcode_SDK_VERSION = @"SDK_VERSION";
 NSString * const Xcode_SHARED_PRECOMPS_DIR = @"SHARED_PRECOMPS_DIR";
 NSString * const Xcode_SYMROOT = @"SYMROOT";
 NSString * const Xcode_TARGET_BUILD_DIR = @"TARGET_BUILD_DIR";

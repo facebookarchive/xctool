@@ -30,6 +30,7 @@ extern NSString * const Xcode_PRODUCT_TYPE_FRAMEWORK_SEARCH_PATHS;
 extern NSString * const Xcode_PROJECT_DIR;
 extern NSString * const Xcode_SDK_NAME;
 extern NSString * const Xcode_SDKROOT;
+extern NSString * const Xcode_SDK_VERSION;
 extern NSString * const Xcode_SHARED_PRECOMPS_DIR;
 extern NSString * const Xcode_SYMROOT;
 extern NSString * const Xcode_TARGET_BUILD_DIR;
