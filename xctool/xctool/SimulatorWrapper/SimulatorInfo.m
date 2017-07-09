@@ -222,7 +222,15 @@ static const NSInteger KProductTypeAppleTV = 3;
     }
   }
 
-  NSAssert([supportedDeviceTypes count] > 0, @"There are no available devices that support provided sdk: %@. Supported devices: %@", [runtime name], [[SimDeviceType supportedDevices] valueForKeyPath:@"name"]);
+  if (supportedDeviceTypes.count == 0) {
+    NSArray *supportedDevices = nil;
+    if (ToolchainIsXcode81OrBetter()) {
+      supportedDevices = [[_simulatedServiceContext supportedDeviceTypes] valueForKeyPath:@"name"];
+    } else {
+      supportedDevices = [[SimDeviceType supportedDevices] valueForKeyPath:@"name"];
+    }
+    NSAssert(supportedDeviceTypes.count > 0, @"There are no available devices that support provided sdk: %@. Supported devices: %@", [runtime name], supportedDevices);
+  }
   _deviceName = [supportedDeviceTypes[0] name];
   return _deviceName;
 }
