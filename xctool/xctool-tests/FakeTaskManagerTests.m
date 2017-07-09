@@ -172,7 +172,8 @@
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     // This function calls out to xcode-select
     NSString *path = XcodeDeveloperDirPath();
-    assertThat(path, equalTo(@"/Applications/Xcode.app/Contents/Developer"));
+    assertThat(path, startsWith(@"/Applications/"));
+    assertThat(path, endsWith(@".app/Contents/Developer"));
 
     // This function calls out to xcodebuild -showsdks
     NSDictionary *sdksAndAliases = GetAvailableSDKsAndAliases();

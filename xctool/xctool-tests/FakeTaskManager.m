@@ -50,6 +50,15 @@ __attribute__((constructor)) static void initialize()
 
 @implementation FakeTaskManager
 
++ (NSString *)xcodeDeveloperDirPathViaForcedConcreteTask {
+  static NSString *path;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    path = XcodeDeveloperDirPathViaForcedConcreteTask(YES);
+  });
+  return path;
+}
+
 + (FakeTaskManager *)sharedManager
 {
   if (__sharedManager == nil) {
@@ -133,7 +142,7 @@ __attribute__((constructor)) static void initialize()
              if ([[task launchPath] isEqualToString:@"/usr/bin/xcode-select"] &&
                  [[task arguments] isEqualToArray:@[@"--print-path"]]) {
                [task pretendTaskReturnsStandardOutput:
-                @"/Applications/Xcode.app/Contents/Developer"];
+                [FakeTaskManager xcodeDeveloperDirPathViaForcedConcreteTask]];
                [[FakeTaskManager sharedManager] hideTaskFromLaunchedTasks:task];
              }
            },
