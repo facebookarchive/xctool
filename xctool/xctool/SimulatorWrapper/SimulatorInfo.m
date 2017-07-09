@@ -491,8 +491,11 @@ static NSMutableDictionary *__sdkInfoByPath = nil;
   __sdkInfo = [[NSMutableDictionary alloc] init];
   __sdkInfoByPath = [[NSMutableDictionary alloc] init];
 
-  [self _populatePlatformWithPath:IOSSimulatorPlatformPath()];
+  [self _populatePlatformWithPath:AppleTVOSPlatformPath()];
   [self _populatePlatformWithPath:AppleTVSimulatorPlatformPath()];
+  [self _populatePlatformWithPath:iPhoneOSPlatformPath()];
+  [self _populatePlatformWithPath:iPhoneSimulatorPlatformPath()];
+  [self _populatePlatformWithPath:WatchOSPlatformPath()];
   [self _populatePlatformWithPath:WatchSimulatorPlatformPath()];
 }
 

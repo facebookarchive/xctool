@@ -186,19 +186,42 @@ NSString *XcodeDeveloperDirPathViaForcedConcreteTask(BOOL forceConcreteTask)
   }
 }
 
-NSString *IOSSimulatorPlatformPath(void)
+NSString *PlatformPathForName(NSString *platformName)
 {
-  return [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform"];
+  return [[[XcodeDeveloperDirPath()
+            stringByAppendingPathComponent:@"Platforms"]
+           stringByAppendingPathComponent:platformName]
+          stringByAppendingPathExtension:@"platform"];
+}
+
+NSString *AppleTVOSPlatformPath(void)
+{
+  return PlatformPathForName(@"AppleTVOS");
 }
 
 NSString *AppleTVSimulatorPlatformPath(void)
 {
-  return [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/AppleTVSimulator.platform"];
+  return PlatformPathForName(@"AppleTVSimulator");
+}
+
+NSString *iPhoneOSPlatformPath(void)
+{
+  return PlatformPathForName(@"iPhoneOS");
+}
+
+NSString *iPhoneSimulatorPlatformPath(void)
+{
+  return PlatformPathForName(@"iPhoneSimulator");
+}
+
+NSString *WatchOSPlatformPath(void)
+{
+  return PlatformPathForName(@"WatchOS");
 }
 
 NSString *WatchSimulatorPlatformPath(void)
 {
-  return [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/WatchSimulator.platform"];
+  return PlatformPathForName(@"WatchSimulator");
 }
 
 NSString *MakeTempFileInDirectoryWithPrefix(NSString *directory, NSString *prefix)

@@ -32,18 +32,13 @@ NSString *XCToolReportersPath(void);
 NSString *XcodeDeveloperDirPath(void);
 
 /**
- Returns the path of iOS Simulator platform.
+ Returns the path of corresponding platforms.
  */
-NSString *IOSSimulatorPlatformPath(void);
-
-/**
- Returns the path of Apple TV Simulator platform.
- */
+NSString *AppleTVOSPlatformPath(void);
 NSString *AppleTVSimulatorPlatformPath(void);
-
-/**
- Returns the path of Watch Simulator platform.
- */
+NSString *iPhoneOSPlatformPath(void);
+NSString *iPhoneSimulatorPlatformPath(void);
+NSString *WatchOSPlatformPath(void);
 NSString *WatchSimulatorPlatformPath(void);
 
 /**
