@@ -44,10 +44,7 @@
 - (SimDevice *)simulatedDevice;
 - (SimRuntime *)simulatedRuntime;
 
-- (NSString *)simulatedSdkVersion;
-- (NSString *)simulatedSdkShortVersion;
-- (NSString *)simulatedSdkRootPath;
-- (NSString *)simulatedSdkName;
+- (NSString *)simulatedPlatform;
 - (NSNumber *)launchTimeout;
 
 - (NSMutableDictionary *)simulatorLaunchEnvironment;

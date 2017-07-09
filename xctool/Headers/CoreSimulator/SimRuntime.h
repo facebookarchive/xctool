@@ -33,6 +33,7 @@ typedef void (^CDUnknownFunctionPointerType)(void);
 @property unsigned int maxHostVersion;
 @property unsigned int minHostVersion;
 @property(copy) NSString *name;
+@property(copy) NSString *platformIdentifier;
 @property(copy) NSString *platformPath;
 @property(copy) NSDictionary *requiredHostServices;
 @property(copy) NSString *root;

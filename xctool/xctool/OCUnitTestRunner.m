@@ -373,7 +373,7 @@ static NSString * const kEnvVarPassThroughPrefix = @"XCTOOL_TEST_ENV_";
 - (NSDictionary *)_filteredProcessEnvironment
 {
   NSMutableDictionary *filteredProcessEnv = [NSMutableDictionary dictionary];
-  BOOL isMacOSX = [[_simulatorInfo simulatedSdkName] hasPrefix:@"macosx"];
+  BOOL isMacOSX = [[_simulatorInfo simulatedPlatform] isEqualToString:@"macosx"];
   for (NSString *envVarName in _processEnvironment) {
     NSString *value = [_processEnvironment objectForKey:envVarName];
     if ([envVarName hasPrefix:kEnvVarPassThroughPrefix]) {

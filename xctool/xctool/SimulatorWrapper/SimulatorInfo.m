@@ -29,6 +29,7 @@
 
 static const NSInteger KProductTypeIphone = 1;
 static const NSInteger KProductTypeIpad = 2;
+static const NSInteger KProductTypeAppleTV = 3;
 
 @interface SimulatorInfo ()
 @property (nonatomic, assign) cpu_type_t cpuType;
@@ -195,9 +196,15 @@ static const NSInteger KProductTypeIpad = 2;
         _deviceName = @"iPad Air";
       }
       break;
+
+    case KProductTypeAppleTV:
+      _deviceName = @"Apple TV 1080p";
+      break;
   }
 
-  SimRuntime *runtime = [self _runtimeWithSDKPath:_buildSettings[Xcode_SDKROOT]];
+  NSString *platform = [self simulatedPlatform];
+  NSString *sdkVersion = _buildSettings[Xcode_SDK_VERSION];
+  SimRuntime *runtime = [self _runtimeForPlatform:platform version:sdkVersion];
   if (runtime == nil) {
     return _deviceName;
   }
@@ -247,46 +254,26 @@ static const NSInteger KProductTypeIpad = 2;
   return [self maxSdkVersionForSimulatedDevice];
 }
 
-- (NSString *)simulatedSdkRootPath
-{
-  return [self sdkInfoForSimulatedSdk][@"SDKPath"];
-}
-
-- (NSString *)simulatedSdkShortVersion
-{
-  return [self sdkInfoForSimulatedSdk][@"Version"];
-}
-
-- (NSString *)simulatedSdkName
-{
-  if ([_buildSettings[Xcode_SDK_NAME] hasPrefix:@"macosx"]) {
-    return _buildSettings[Xcode_SDK_NAME];
-  }
-  return [self sdkInfoForSimulatedSdk][@"CanonicalName"];
-}
-
-- (NSDictionary *)sdkInfoForSimulatedSdk
+- (NSString *)simulatedPlatform
 {
   NSString *platform = _buildSettings[Xcode_PLATFORM_NAME];
   if (!platform) {
     platform = [[[_buildSettings[Xcode_PLATFORM_DIR] lastPathComponent] stringByDeletingPathExtension] lowercaseString];
   }
   NSAssert([platform isEqualToString:@"iphonesimulator"] || [platform isEqualToString:@"macosx"] || [platform isEqualToString:@"appletvsimulator"], @"Platform '%@' is not yet supported.", platform);
-  NSString *sdkVersion = [self simulatedSdkVersion];
-  NSDictionary *sdkInfo = [SimulatorInfo _sdkInfoForPlatform:platform sdkVersion:sdkVersion];
-  NSAssert(sdkInfo != nil, @"Unable to find SDK for platform %@ and sdk version %@. Available roots: %@", platform, sdkVersion, [SimulatorInfo _sdkNames]);
-  return sdkInfo;
+  return platform;
 }
 
 - (SimRuntime *)simulatedRuntime
 {
-  NSString *path = [self sdkInfoForSimulatedSdk][@"SDKPath"];
-  return [self _runtimeWithSDKPath:path];
+  NSString *platform = [self simulatedPlatform];
+  NSString *sdkVersion = [self simulatedSdkVersion];
+  return [self _runtimeForPlatform:platform version:sdkVersion];
 }
 
 - (SimDevice *)simulatedDevice
 {
-  if (!_simulatedDevice) {
+  if (_simulatedDevice == nil) {
     SimRuntime *runtime = [self simulatedRuntime];
     if (_deviceUDID) {
       return [self deviceWithUDID:_deviceUDID];
@@ -469,8 +456,8 @@ static NSMutableDictionary *__deviceTypesInfoByPath = nil;
 static NSMutableDictionary *__runtimesInfo = nil;
 static NSMutableDictionary *__runtimesInfoByBundleID = nil;
 static NSMutableDictionary *__runtimesInfoByPath = nil;
-static NSMutableDictionary *__sdkInfo = nil;
-static NSMutableDictionary *__sdkInfoByPath = nil;
+static NSMutableDictionary *__sdkInfo = nil;       /* currently unused */
+static NSMutableDictionary *__sdkInfoByPath = nil; /* currently unused */
 
 // This method will go through the folder hierarchy of the simulators to collect information
 // about the platforms, devices, runtimes and SDKs.
@@ -532,15 +519,15 @@ static NSMutableDictionary *__sdkInfoByPath = nil;
   NSMutableArray *result = [NSMutableArray array];
 
   NSArray * contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:deviceTypesPath error:NULL];
-  for (NSString * path in contents) {
-    NSString * subpath = [deviceTypesPath stringByAppendingPathComponent:path];
-    NSString * infoPlistPath = [subpath stringByAppendingPathComponent:@"Contents/Info.plist"];
-    NSMutableDictionary * infoPlist = [[NSMutableDictionary alloc] initWithContentsOfFile:infoPlistPath];
-    NSString * capabilitiesPath = [subpath stringByAppendingPathComponent:@"Contents/Resources/capabilities.plist"];
-    NSDictionary * capabilities = [[NSDictionary alloc] initWithContentsOfFile:capabilitiesPath];
+  for (NSString *path in contents) {
+    NSString *subpath = [deviceTypesPath stringByAppendingPathComponent:path];
+    NSString *infoPlistPath = [subpath stringByAppendingPathComponent:@"Contents/Info.plist"];
+    NSMutableDictionary *infoPlist = [[NSMutableDictionary alloc] initWithContentsOfFile:infoPlistPath];
+    NSString *capabilitiesPath = [subpath stringByAppendingPathComponent:@"Contents/Resources/capabilities.plist"];
+    NSDictionary *capabilities = [[NSDictionary alloc] initWithContentsOfFile:capabilitiesPath];
     infoPlist[@"Capabilities"] = capabilities;
-    NSString * profilePath = [subpath stringByAppendingPathComponent:@"Contents/Resources/profile.plist"];
-    NSDictionary * profile = [[NSDictionary alloc] initWithContentsOfFile:profilePath];
+    NSString *profilePath = [subpath stringByAppendingPathComponent:@"Contents/Resources/profile.plist"];
+    NSDictionary *profile = [[NSDictionary alloc] initWithContentsOfFile:profilePath];
     infoPlist[@"Profile"] = profile;
     infoPlist[@"DeviceTypePath"] = subpath;
     infoPlist[@"PlatformName"] = platformName;
@@ -559,16 +546,16 @@ static NSMutableDictionary *__sdkInfoByPath = nil;
 {
   NSMutableArray *result = [NSMutableArray array];
 
-  NSArray * contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:deviceTypesPath error:NULL];
-  for (NSString * path in contents) {
-    NSString * subpath = [deviceTypesPath stringByAppendingPathComponent:path];
-    NSString * infoPlistPath = [subpath stringByAppendingPathComponent:@"Contents/Info.plist"];
-    NSMutableDictionary * infoPlist = [[NSMutableDictionary alloc] initWithContentsOfFile:infoPlistPath];
-    NSString * defaultDevicesPath = [subpath stringByAppendingPathComponent:@"Contents/Resources/default_devices.plist"];
-    NSDictionary * defaultDevices = [[NSDictionary alloc] initWithContentsOfFile:defaultDevicesPath];
+  NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:deviceTypesPath error:NULL];
+  for (NSString *path in contents) {
+    NSString *subpath = [deviceTypesPath stringByAppendingPathComponent:path];
+    NSString *infoPlistPath = [subpath stringByAppendingPathComponent:@"Contents/Info.plist"];
+    NSMutableDictionary *infoPlist = [[NSMutableDictionary alloc] initWithContentsOfFile:infoPlistPath];
+    NSString *defaultDevicesPath = [subpath stringByAppendingPathComponent:@"Contents/Resources/default_devices.plist"];
+    NSDictionary *defaultDevices = [[NSDictionary alloc] initWithContentsOfFile:defaultDevicesPath];
     infoPlist[@"DefaultDevices"] = defaultDevices;
-    NSString * profilePath = [subpath stringByAppendingPathComponent:@"Contents/Resources/profile.plist"];
-    NSDictionary * profile = [[NSDictionary alloc] initWithContentsOfFile:profilePath];
+    NSString *profilePath = [subpath stringByAppendingPathComponent:@"Contents/Resources/profile.plist"];
+    NSDictionary *profile = [[NSDictionary alloc] initWithContentsOfFile:profilePath];
     infoPlist[@"Profile"] = profile;
     infoPlist[@"RuntimePath"] = subpath;
     infoPlist[@"PlatformName"] = platformName;
@@ -587,11 +574,11 @@ static NSMutableDictionary *__sdkInfoByPath = nil;
 {
   NSMutableArray *result = [NSMutableArray array];
 
-  NSArray * contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:sdkPath error:NULL];
-  for (NSString * path in contents) {
-    NSString * subpath = [sdkPath stringByAppendingPathComponent:path];
-    NSString * infoPlistPath = [subpath stringByAppendingPathComponent:@"SDKSettings.plist"];
-    NSMutableDictionary * infoPlist = [[NSMutableDictionary alloc] initWithContentsOfFile:infoPlistPath];
+  NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:sdkPath error:NULL];
+  for (NSString *path in contents) {
+    NSString *subpath = [sdkPath stringByAppendingPathComponent:path];
+    NSString *infoPlistPath = [subpath stringByAppendingPathComponent:@"SDKSettings.plist"];
+    NSMutableDictionary *infoPlist = [[NSMutableDictionary alloc] initWithContentsOfFile:infoPlistPath];
     infoPlist[@"SDKPath"] = subpath;
     infoPlist[@"PlatformName"] = platformName;
 
@@ -604,42 +591,23 @@ static NSMutableDictionary *__sdkInfoByPath = nil;
   return result;
 }
 
-+ (NSArray *)_sdkNames
+- (SimRuntime *)_runtimeForPlatform:(NSString *)platform version:(NSString *)version
 {
-  return [__sdkInfo allKeys];
-}
-
-- (SimRuntime *)_runtimeWithSDKPath:(NSString *)path
-{
-  path = [path stringByResolvingSymlinksInPath];
-  NSDictionary *sdkInfo = __sdkInfoByPath[path];
-  NSString *platformName = sdkInfo[@"PlatformName"];
-  NSString *platformVersion = sdkInfo[@"Version"];
-  NSDictionary *platformInfo = __platformInfo[platformName];
-  NSString *platformPath = platformInfo[@"PlatformPath"];
-
+  if (version == nil) {
+    return nil;
+  }
   NSArray *runTimeArray;
   if (ToolchainIsXcode81OrBetter()) {
     runTimeArray = [_simulatedServiceContext supportedRuntimes];
   } else {
     runTimeArray = [SimRuntime supportedRuntimes];
   }
-  for (SimRuntime* runTime in runTimeArray) {
-    if ([[runTime platformPath] isEqualToString:platformPath] &&
-        [[runTime versionString] hasPrefix:platformVersion]) {
+  for (SimRuntime *runTime in runTimeArray) {
+    if ([runTime.platformIdentifier hasSuffix:platform] &&
+        [runTime.versionString hasPrefix:version]) {
       return runTime;
     }
   }
   return nil;
 }
-
-+ (NSDictionary *)_sdkInfoForPlatform:(NSString *)platform sdkVersion:(NSString *)sdkVersion
-{
-  NSString *sdkMajorMinorVersion = [[[sdkVersion componentsSeparatedByString:@"."]
-                                     subarrayWithRange:(NSRange){0,2}]
-                                    componentsJoinedByString:@"."];
-  NSString *canonicalName = [platform stringByAppendingString:sdkMajorMinorVersion];
-  return __sdkInfo[canonicalName];
-}
-
 @end

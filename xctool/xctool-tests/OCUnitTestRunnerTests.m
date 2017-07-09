@@ -393,6 +393,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
 - (void)testOSXLogicTestWorksWithNoProjectPath
 {
   NSDictionary *testSettings = @{
+    Xcode_PLATFORM_NAME: @"macosx",
     Xcode_SDK_NAME: @"macosx10.8",
     Xcode_SDKROOT: @"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk",
     Xcode_BUILT_PRODUCTS_DIR: TEST_DATA @"tests-osx-test-bundle",

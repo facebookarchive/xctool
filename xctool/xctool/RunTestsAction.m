@@ -602,9 +602,8 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, NSUInteger bucketSize
 
   if (testableExecutionInfo.buildSettings) {
     BOOL isApplicationTest = TestableSettingsIndicatesApplicationTest(testableExecutionInfo.buildSettings);
-
     result[kReporter_BeginOCUnit_TestTypeKey] = isApplicationTest ? @"application-test" : @"logic-test";
-    result[kReporter_BeginOCUnit_SDKNameKey] = [testableExecutionInfo.simulatorInfo simulatedSdkName] ?: testableExecutionInfo.buildSettings[Xcode_SDK_NAME];
+    result[kReporter_BeginOCUnit_SDKNameKey] = testableExecutionInfo.buildSettings[Xcode_SDK_NAME] ?: [testableExecutionInfo.simulatorInfo simulatedPlatform];
     result[kReporter_BeginOCUnit_BundleNameKey] = testableExecutionInfo.buildSettings[Xcode_FULL_PRODUCT_NAME];
     if ([testableExecutionInfo.simulatorInfo simulatedDeviceInfoName]) {
       result[kReporter_BeginOCUnit_DeviceNameKey] = [testableExecutionInfo.simulatorInfo simulatedDeviceInfoName];

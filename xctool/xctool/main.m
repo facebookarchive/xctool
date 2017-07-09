@@ -23,7 +23,7 @@ int main(int argc, const char * argv[])
 {
   @autoreleasepool {
     // xctool depends on CoreSimulator.framework which is private framework for
-    // interacting with the simulator that come bundled with Xcode 6 and better.
+    // interacting with the simulator that come bundled with Xcode 6-8.
     //
     // Since xctool can work with multiple verstions of Xcode and since each of
     // Xcode versions might live at different paths, we don't want to strongly
@@ -60,8 +60,10 @@ int main(int argc, const char * argv[])
       }
 
       [fallbackFrameworkPaths addObjectsFromArray:@[
-        // Path to CoreSimulator.framework for Xcode 6 and better.
+        // Path to CoreSimulator.framework for Xcode 6-8.
         [developerDirPath stringByAppendingPathComponent:@"Library/PrivateFrameworks"],
+        // Path to CoreSimulator.framework for Xcode 9.
+        [developerDirPath stringByAppendingPathComponent:@"/Library/Developer/PrivateFrameworks"],
         // Path to XCTest.framework for Xcode 7 and better.
         [developerDirPath stringByAppendingPathComponent:@"Platforms/MacOSX.platform/Developer/Library/Frameworks"],
         // Paths to other dependencies
