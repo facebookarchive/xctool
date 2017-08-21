@@ -33,11 +33,20 @@ static NSString * const XCTOOL_TMPDIR = @"TMPDIR";
 
 - (NSTask *)otestTaskWithTestBundle:(NSString *)testBundlePath otestShimOutputPath:(NSString **)otestShimOutputPath
 {
-  NSString *launchPath = [NSString pathWithComponents:@[
-    _buildSettings[Xcode_SDKROOT],
-    @"Developer",
-    _framework[kTestingFrameworkIOSTestrunnerName],
-  ]];
+  NSString *launchPath = nil;
+  if (ToolchainIsXcode9OrBetter()) {
+    launchPath = [NSString pathWithComponents:@[
+      _buildSettings[Xcode_PLATFORM_DIR],
+      @"Developer",
+      @"Library/Xcode/Agents/xctest",
+    ]];
+  } else {
+    launchPath = [NSString pathWithComponents:@[
+      _buildSettings[Xcode_SDKROOT],
+      @"Developer",
+      @"usr/bin/xctest",
+    ]];
+  }
 
   NSArray *args = nil;
   NSMutableDictionary *env = [NSMutableDictionary dictionary];
