@@ -44,7 +44,7 @@ static NSString * const XCTOOL_TMPDIR = @"TMPDIR";
     launchPath = [NSString pathWithComponents:@[
       _buildSettings[Xcode_SDKROOT],
       @"Developer",
-      _framework[kTestingFrameworkIOSTestrunnerName],
+      @"usr/bin/xctest",
     ]];
   }
 

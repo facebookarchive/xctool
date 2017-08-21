@@ -127,7 +127,7 @@ BOOL ToolchainIsXcode8OrBetter(void);
 BOOL ToolchainIsXcode81OrBetter(void);
 
 /**
- Returns YES if we're running with Xcode 8.1 or better.
+ Returns YES if we're running with Xcode 9.0 or better.
  */
 BOOL ToolchainIsXcode9OrBetter(void);
 

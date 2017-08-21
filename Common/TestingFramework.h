@@ -30,7 +30,6 @@ typedef NS_ENUM(NSInteger, OTestExitCode) {
 // Internally, it just becomes 'extern'.
 FOUNDATION_EXPORT NSString *const kTestingFrameworkTestProbeClassName;
 FOUNDATION_EXPORT NSString *const kTestingFrameworkTestSuiteClassName;
-FOUNDATION_EXPORT NSString *const kTestingFrameworkIOSTestrunnerName;
 FOUNDATION_EXPORT NSString *const kTestingFrameworkOSXTestrunnerName;
 FOUNDATION_EXPORT NSString *const kTestingFrameworkInvertScopeKey;
 FOUNDATION_EXPORT NSString *const kTestingFrameworkFilterTestArgsKey;
