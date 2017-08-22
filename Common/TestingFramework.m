@@ -18,6 +18,7 @@
 
 NSString *const kTestingFrameworkTestProbeClassName = @"kTestingFrameworkTestProbeClassName";
 NSString *const kTestingFrameworkTestSuiteClassName = @"kTestingFrameworkTestSuiteClassName";
+NSString *const kTestingFrameworkIOSTestrunnerName = @"ios_executable";
 NSString *const kTestingFrameworkOSXTestrunnerName = @"osx_executable";
 NSString *const kTestingFrameworkInvertScopeKey = @"invertScope";
 NSString *const kTestingFrameworkFilterTestArgsKey = @"filterTestcasesArg";
@@ -31,6 +32,7 @@ NSDictionary *FrameworkInfoForExtension(NSString *extension)
       @"octest": @{
         kTestingFrameworkTestProbeClassName: @"SenTestProbe",
         kTestingFrameworkTestSuiteClassName: @"SenTestSuite",
+        kTestingFrameworkIOSTestrunnerName: @"usr/bin/otest",
         kTestingFrameworkOSXTestrunnerName: @"Tools/otest",
         kTestingFrameworkFilterTestArgsKey: @"SenTest",
         kTestingFrameworkInvertScopeKey: @"SenTestInvertScope"
@@ -38,6 +40,7 @@ NSDictionary *FrameworkInfoForExtension(NSString *extension)
       @"xctest": @{
         kTestingFrameworkTestProbeClassName: @"XCTestProbe",
         kTestingFrameworkTestSuiteClassName: @"XCTestSuite",
+        kTestingFrameworkIOSTestrunnerName: @"usr/bin/xctest",
         kTestingFrameworkOSXTestrunnerName: @"usr/bin/xctest",
         kTestingFrameworkFilterTestArgsKey: @"XCTest",
         kTestingFrameworkInvertScopeKey: @"XCTestInvertScope"
