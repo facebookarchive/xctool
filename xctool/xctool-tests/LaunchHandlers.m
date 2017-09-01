@@ -34,7 +34,7 @@ BOOL IsSimctlSpawnXctestTask(NSTask *task)
   }
 
   for (NSString *arg in [task arguments]) {
-    if ([arg hasSuffix:@"usr/bin/xctest"]) {
+    if ([arg hasSuffix:@"xctest"]) {
       return YES;
     }
   }

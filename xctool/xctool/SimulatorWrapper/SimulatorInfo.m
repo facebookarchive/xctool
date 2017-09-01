@@ -198,7 +198,11 @@ static const NSInteger KProductTypeAppleTV = 3;
       break;
 
     case KProductTypeAppleTV:
-      _deviceName = @"Apple TV 1080p";
+      if (ToolchainIsXcode9OrBetter()) {
+        _deviceName = @"Apple TV";
+      } else {
+        _deviceName = @"Apple TV 1080p";
+      }
       break;
   }
 
