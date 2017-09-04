@@ -80,9 +80,17 @@ static NSString * const XCTOOL_TMPDIR = @"TMPDIR";
   }
 
   // adding custom xctool environment variables
-  [env addEntriesFromDictionary:IOSTestEnvironment(_buildSettings)];
+  NSString *sdkName = _buildSettings[Xcode_SDK_NAME];
+  if ([sdkName hasPrefix:@"iphonesimulator"]) {
+    [env addEntriesFromDictionary:IOSTestEnvironment(_buildSettings)];
+    env[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"];
+  } else if ([sdkName hasPrefix:@"appletvsimulator"]) {
+    [env addEntriesFromDictionary:IOSTestEnvironment(_buildSettings)];
+    env[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-appletv.dylib"];
+  } else {
+    NSAssert(false, @"'%@' sdk is not yet supported", sdkName);
+  }
   [env addEntriesFromDictionary:@{
-    @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"],
     @"NSUnbufferedIO" : @"YES",
   }];
 

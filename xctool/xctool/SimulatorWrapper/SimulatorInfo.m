@@ -338,7 +338,7 @@ static const NSInteger KProductTypeAppleTV = 3;
     [librariesToInsert addObject:[XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"]];
   } else if ([sdkName hasPrefix:@"appletvsimulator"]) {
     environment = TVOSTestEnvironment(_buildSettings);
-    [librariesToInsert addObject:[XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"]];
+    [librariesToInsert addObject:[XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-appletv.dylib"]];
   } else {
     NSAssert(false, @"'%@' sdk is not yet supported", sdkName);
   }
@@ -605,21 +605,23 @@ static NSMutableDictionary *__sdkInfoByPath = nil; /* currently unused */
 
 - (SimRuntime *)_runtimeForPlatform:(NSString *)platform version:(NSString *)version
 {
-  if (version == nil) {
-    return nil;
-  }
   NSArray *runTimeArray;
   if (ToolchainIsXcode81OrBetter()) {
     runTimeArray = [_simulatedServiceContext supportedRuntimes];
   } else {
     runTimeArray = [SimRuntime supportedRuntimes];
   }
+  SimRuntime *latestRunTime = nil;
   for (SimRuntime *runTime in runTimeArray) {
-    if ([runTime.platformIdentifier hasSuffix:platform] &&
-        [runTime.versionString hasPrefix:version]) {
-      return runTime;
+    if ([runTime.platformIdentifier hasSuffix:platform]) {
+      if (version != nil && [runTime.versionString hasPrefix:version]) {
+        return runTime;
+      }
+      if (version == nil && latestRunTime.version < runTime.version) {
+        latestRunTime = runTime;
+      }
     }
   }
-  return nil;
+  return version == nil ? latestRunTime : nil;
 }
 @end

@@ -39,6 +39,9 @@
       location = "group:xcodebuild-lib/../Configurations"
       name = "Configurations">
       <FileRef
+         location = "group:AppleTV.xcconfig">
+      </FileRef>
+      <FileRef
          location = "group:Install.xcconfig">
       </FileRef>
       <FileRef

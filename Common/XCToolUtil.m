@@ -774,7 +774,7 @@ NSString *TVOSTestFrameworkDirectories()
 {
   NSArray *directories = @[
     [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks"],
-    [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/AppleTVSimulator.platform/Developer/SDKs/AppleTVSimulator.sdk/System/Library/Frameworks"],
+    [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Platforms/AppleTVSimulator.platform/Developer/Library/Frameworks"],
   ];
   return [directories componentsJoinedByString:@":"];
 }

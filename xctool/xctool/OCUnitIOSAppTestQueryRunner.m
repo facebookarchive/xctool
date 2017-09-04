@@ -25,10 +25,19 @@
 
 - (NSTask *)createTaskForQuery
 {
-  NSMutableDictionary *environment = IOSTestEnvironment(_simulatorInfo.buildSettings);
+  NSMutableDictionary *environment = nil;
+  NSString *sdkName = _simulatorInfo.buildSettings[Xcode_SDK_NAME];
+  if ([sdkName hasPrefix:@"iphonesimulator"]) {
+    environment = IOSTestEnvironment(_simulatorInfo.buildSettings);
+    environment[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-query-lib-ios.dylib"];
+  } else if ([sdkName hasPrefix:@"appletvsimulator"]) {
+    environment = TVOSTestEnvironment(_simulatorInfo.buildSettings);
+    environment[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-query-lib-appletv.dylib"];
+  } else {
+    NSAssert(false, @"'%@' sdk is not yet supported", sdkName);
+  }
   [environment addEntriesFromDictionary:@{
-    @"DYLD_INSERT_LIBRARIES" : [XCToolLibPath() stringByAppendingPathComponent:@"otest-query-lib-ios.dylib"],
-    // The test bundle that we want to query from, as loaded by otest-query-lib-ios.dylib.
+    // The test bundle that we want to query from, as loaded by otest-query-lib-*.dylib.
     @"OtestQueryBundlePath" : [_simulatorInfo productBundlePath],
     @"__CFPREFERENCES_AVOID_DAEMON" : @"YES",
   }];
