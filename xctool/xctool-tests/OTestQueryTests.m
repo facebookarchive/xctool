@@ -96,10 +96,6 @@
 
 - (void)testCanQueryXCTestClassesFromOSXBundle
 {
-  if (!HasXCTestFramework()) {
-    return;
-  }
-
   NSString *error = nil;
   NSDictionary *buildSettings = @{
     Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"tests-osx-test-bundle"),
@@ -117,10 +113,6 @@
 
 - (void)testCanQueryCustomXCTestClasses
 {
-  if (!HasXCTestFramework()) {
-    return;
-  }
-
   NSString *error = nil;
   NSDictionary *buildSettings = @{
     Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"tests-osx-test-bundle"),
@@ -171,10 +163,6 @@
 
 - (void)testCanQueryXCTestClassesFromIOSBundle
 {
-  if (!HasXCTestFramework()) {
-    return;
-  }
-
   NSString *error = nil;
   NSString *latestSDK = GetAvailableSDKsAndAliases()[@"iphonesimulator"];
   NSDictionary *buildSettings = @{
@@ -188,14 +176,21 @@
 
   assertThat(error, is(nilValue()));
   assertThat(classes,
-             equalTo(@[
-                       @"OtherTests/testSomething",
+             equalTo(@[@"OtherTests/testSomething",
+                       @"SetupTimeoutTests/testNothing",
+                       @"SomeTests/testAborts",
                        @"SomeTests/testBacktraceOutputIsCaptured",
+                       @"SomeTests/testCrash",
+                       @"SomeTests/testExits",
+                       @"SomeTests/testHandlingOfUnicodeStrings",
                        @"SomeTests/testOutputMerging",
                        @"SomeTests/testPrintSDK",
                        @"SomeTests/testStream",
+                       @"SomeTests/testTimeout",
                        @"SomeTests/testWillFail",
                        @"SomeTests/testWillPass",
+                       @"TeardownTimeoutTests/testNothing",
+                       @"TimeoutTests/testTimeout",
                        ]));
 }
 
@@ -216,6 +211,7 @@
   };
   OCUnitTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithSimulatorInfo:[SimulatorInfo simulatorInfoWithBuildSettings:buildSettings]];
   NSArray *cases = [runner runQueryWithError:&error];
+  assertThat(error, is(nilValue()));
   assertThat(cases, equalTo(@[
                               @"KiwiTests_OCUnit/SomeDescription_ADuplicateName",
                               @"KiwiTests_OCUnit/SomeDescription_ADuplicateName_2",
@@ -224,12 +220,8 @@
                               ]));
 }
 
-- (void)testCanQueryTestCasesForIOSKiwiBundle_XCTest
+- (void)DISABLED_testCanQueryTestCasesForIOSKiwiBundle_XCTest
 {
-  if (!HasXCTestFramework()) {
-    return;
-  }
-
   NSString *error = nil;
   NSDictionary *buildSettings = @{
     Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"KiwiTests/Build/Products/Debug-iphonesimulator"),
@@ -240,6 +232,7 @@
   };
   OCUnitTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithSimulatorInfo:[SimulatorInfo simulatorInfoWithBuildSettings:buildSettings]];
   NSArray *cases = [runner runQueryWithError:&error];
+  assertThat(error, is(nilValue()));
   assertThat(cases, equalTo(@[
                               @"KiwiTests_XCTest/SomeDescription_ADuplicateName",
                               @"KiwiTests_XCTest/SomeDescription_ADuplicateName_2",
@@ -248,12 +241,8 @@
                               ]));
 }
 
-- (void)testCanQueryTestCasesForIOSKiwiBundle_XCTest_AppTests
+- (void)DISABLED_testCanQueryTestCasesForIOSKiwiBundle_XCTest_AppTests
 {
-  if (!HasXCTestFramework()) {
-    return;
-  }
-
   NSString *error = nil;
   NSDictionary *buildSettings = @{
     Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"KiwiTests/Build/Products/Debug-iphonesimulator"),
@@ -265,6 +254,7 @@
   };
   OCUnitTestQueryRunner *runner = [[OCUnitIOSAppTestQueryRunner alloc] initWithSimulatorInfo:[SimulatorInfo simulatorInfoWithBuildSettings:buildSettings]];
   NSArray *cases = [runner runQueryWithError:&error];
+  assertThat(error, is(nilValue()));
   assertThat(cases, equalTo(@[
                               @"KiwiTests_XCTest_AppTests/SomeDescription_ADuplicateName",
                               @"KiwiTests_XCTest_AppTests/SomeDescription_ADuplicateName_2",
@@ -291,12 +281,73 @@
   };
   OCUnitTestQueryRunner *runner = [[OCUnitIOSAppTestQueryRunner alloc] initWithSimulatorInfo:[SimulatorInfo simulatorInfoWithBuildSettings:buildSettings]];
   NSArray *cases = [runner runQueryWithError:&error];
+  assertThat(error, is(nilValue()));
   assertThat(cases, equalTo(@[
                               @"KiwiTests_OCUnit_AppTests/SomeDescription_ADuplicateName",
                               @"KiwiTests_OCUnit_AppTests/SomeDescription_ADuplicateName_2",
                               @"KiwiTests_OCUnit_AppTests/SomeDescription_ItAnotherthing",
                               @"KiwiTests_OCUnit_AppTests/SomeDescription_ItSomething",
                               ]));
+}
+
+- (void)testCanQueryXCTestClassesFromAppleTVBundle
+{
+  NSString *error = nil;
+  NSString *latestSDK = GetAvailableSDKsAndAliases()[@"appletvsimulator"];
+  NSDictionary *buildSettings = @{
+    Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"tests-appletv-test-bundle"),
+    Xcode_FULL_PRODUCT_NAME : @"TestProject-TVFrameworkTests.xctest",
+    Xcode_SDK_NAME : latestSDK,
+    Xcode_PLATFORM_NAME : @"appletvsimulator",
+  };
+  OCUnitTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithSimulatorInfo:[SimulatorInfo simulatorInfoWithBuildSettings:buildSettings]];
+  NSArray *classes = [runner runQueryWithError:&error];
+  assertThat(error, is(nilValue()));
+  assertThat(classes,
+             equalTo(@[@"TestProject_TVFrameworkTests/testAborts",
+                       @"TestProject_TVFrameworkTests/testBacktraceOutputIsCaptured",
+                       @"TestProject_TVFrameworkTests/testCrash",
+                       @"TestProject_TVFrameworkTests/testExits",
+                       @"TestProject_TVFrameworkTests/testHandlingOfUnicodeStrings",
+                       @"TestProject_TVFrameworkTests/testOutputMerging",
+                       @"TestProject_TVFrameworkTests/testPerformanceExample",
+                       @"TestProject_TVFrameworkTests/testPrintSDK",
+                       @"TestProject_TVFrameworkTests/testStream",
+                       @"TestProject_TVFrameworkTests/testTimeout",
+                       @"TestProject_TVFrameworkTests/testWillFail",
+                       @"TestProject_TVFrameworkTests/testWillPass",
+                       ]));
+}
+
+- (void)testCanQueryXCTestClassesFromAppleTVBundle_AppTests
+{
+  NSString *error = nil;
+  NSString *latestSDK = GetAvailableSDKsAndAliases()[@"appletvsimulator"];
+  NSDictionary *buildSettings = @{
+    Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"tests-appletv-test-bundle/TestProject-TVApp.app/PlugIns"),
+    Xcode_FULL_PRODUCT_NAME : @"TestProject-TVAppTests.xctest",
+    Xcode_SDK_NAME : latestSDK,
+    Xcode_TEST_HOST : AbsolutePathFromRelative(TEST_DATA @"tests-appletv-test-bundle/TestProject-TVApp.app/TestProject-TVApp"),
+    Xcode_TARGETED_DEVICE_FAMILY : @"3",
+    Xcode_PLATFORM_NAME : @"appletvsimulator",
+  };
+  OCUnitTestQueryRunner *runner = [[OCUnitIOSAppTestQueryRunner alloc] initWithSimulatorInfo:[SimulatorInfo simulatorInfoWithBuildSettings:buildSettings]];
+  NSArray *classes = [runner runQueryWithError:&error];
+  assertThat(error, is(nilValue()));
+  assertThat(classes,
+             equalTo(@[@"TestProject_TVAppTests/testAborts",
+                       @"TestProject_TVAppTests/testBacktraceOutputIsCaptured",
+                       @"TestProject_TVAppTests/testCrash",
+                       @"TestProject_TVAppTests/testExits",
+                       @"TestProject_TVAppTests/testHandlingOfUnicodeStrings",
+                       @"TestProject_TVAppTests/testOutputMerging",
+                       @"TestProject_TVAppTests/testPerformanceExample",
+                       @"TestProject_TVAppTests/testPrintSDK",
+                       @"TestProject_TVAppTests/testStream",
+                       @"TestProject_TVAppTests/testTimeout",
+                       @"TestProject_TVAppTests/testWillFail",
+                       @"TestProject_TVAppTests/testWillPass",
+  ]));
 }
 
 - (void)testCanQueryClassesFromIOS64BitOnlyBundle
@@ -313,7 +364,6 @@
 
   OCUnitTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithSimulatorInfo:[SimulatorInfo simulatorInfoWithBuildSettings:buildSettings]];
   NSArray *classes = [runner runQueryWithError:&error];
-
   assertThat(error, is(nilValue()));
   assertThat(classes,
              equalTo(@[
@@ -336,7 +386,6 @@
 
   OCUnitTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithSimulatorInfo:[SimulatorInfo simulatorInfoWithBuildSettings:buildSettings]];
   NSArray *classes = [runner runQueryWithError:&error];
-
   assertThat(error, is(nilValue()));
   assertThat(classes,
              equalTo(@[

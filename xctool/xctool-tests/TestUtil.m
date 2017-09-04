@@ -85,12 +85,6 @@
 
 @end
 
-BOOL HasXCTestFramework()
-{
-  NSString *frameworkDirPath = [XcodeDeveloperDirPath() stringByAppendingPathComponent:@"Library/Frameworks/XCTest.framework"];
-  return [[NSFileManager defaultManager] fileExistsAtPath:frameworkDirPath];
-}
-
 BOOL ArrayContainsSubsequence(NSArray *anArray, NSArray *subArray)
 {
   for (NSUInteger i = 0; (i + [subArray count]) <= [anArray count]; i++) {

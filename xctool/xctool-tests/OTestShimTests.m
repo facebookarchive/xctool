@@ -236,10 +236,6 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
 
 - (void)testXCTestAssertionFailuresInIOSLogicTestsAreNotSilent
 {
-  if (!HasXCTestFramework()) {
-    return;
-  }
-
   NSString *bundlePath = TEST_DATA @"tests-ios-test-bundle/XCTest_Assertion.xctest";
   NSString *targetName = @"XCTest_Assertion";
   NSString *settingsPath = TEST_DATA @"TestProject-Assertion-XCTest_Assertion-showBuildSettings.txt";
@@ -264,10 +260,6 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
 
 - (void)testXCTestExpectedAssertionFailuresInIOSLogicTestsAreSilent
 {
-  if (!HasXCTestFramework()) {
-    return;
-  }
-
   NSString *bundlePath = TEST_DATA @"tests-ios-test-bundle/XCTest_Assertion.xctest";
   NSString *targetName = @"XCTest_Assertion";
   NSString *settingsPath = TEST_DATA @"TestProject-Assertion-XCTest_Assertion-showBuildSettings.txt";
@@ -282,7 +274,7 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
   NSDictionary *testBeginEvent = ExtractEvent(events, kReporter_Events_BeginTest);
   assertThat(testBeginEvent, hasKey(@"test"));
   assertThat(testBeginEvent[@"test"], is(methodName));
-  NSDictionary *testOutputEvent = ExtractEvent(events, kReporter_Events_TestOuput);
+  NSDictionary *testOutputEvent = ExtractEvent(events, kReporter_Events_SimulatorOuput);
   assertThat(testOutputEvent, hasKey(@"output"));
   assertThat(testOutputEvent[@"output"], isNot(containsAssertionFailureFromMethod(methodName)));
   assertThat(testOutputEvent[@"output"], containsString(@"[GOOD1]"));
@@ -290,10 +282,6 @@ static NSDictionary *ExtractEvent(NSArray *events, NSString *eventType)
 
 - (void)testXCTestMissingExpectedAssertionsAreNotSilent
 {
-  if (!HasXCTestFramework()) {
-    return;
-  }
-
   NSString *bundlePath = TEST_DATA @"tests-ios-test-bundle/XCTest_Assertion.xctest";
   NSString *targetName = @"XCTest_Assertion";
   NSString *settingsPath = TEST_DATA @"TestProject-Assertion-XCTest_Assertion-showBuildSettings.txt";

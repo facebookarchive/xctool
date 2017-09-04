@@ -25,11 +25,6 @@
 @end
 
 /**
- Returns YES if XCTest.framework is available.
- */
-BOOL HasXCTestFramework();
-
-/**
  Returns YES if an array contains a contiguous sub-array.
  */
 BOOL ArrayContainsSubsequence(NSArray *anArray, NSArray *subArray);

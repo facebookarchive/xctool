@@ -200,7 +200,7 @@ BOOL IsSimctlSpawnXctestTask(NSTask *task)
     if ([[task launchPath] hasSuffix:@"usr/bin/simctl"]) {
       // iOS tests get queried through the 'simctl' launcher.
       for (NSString *arg in [task arguments]) {
-        if ([arg hasSuffix:@"otest-query-ios"]) {
+        if ([arg hasSuffix:@"otest-query-ios"] || [arg hasSuffix:@"otest-query-appletv"]) {
           otestQueryOutputFilePath = task.environment[@"SIMCTL_CHILD_OTEST_QUERY_OUTPUT_FILE"];
           break;
         }
