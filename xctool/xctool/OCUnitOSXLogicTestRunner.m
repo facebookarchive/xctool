@@ -53,20 +53,43 @@
     [args addObject:testBundlePath];
   }
 
-  [task setLaunchPath:[XcodeDeveloperDirPath() stringByAppendingPathComponent:_framework[kTestingFrameworkOSXTestrunnerName]]];
-
-  // When invoking otest directly, the last arg needs to be the the test bundle.
-  [task setArguments:args];
-
   env[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-osx.dylib"];
 
   // specify a path where to write otest-shim events
   NSString *outputPath = MakeTempFileWithPrefix(@"output");
   [[NSFileManager defaultManager] removeItemAtPath:outputPath error:nil];
   env[@"OTEST_SHIM_STDOUT_FILE"] = outputPath;
+  env = [self otestEnvironmentWithOverrides:env];
   *otestShimOutputPath = outputPath;
 
-  [task setEnvironment:[self otestEnvironmentWithOverrides:env]];
+  NSString *launchPath = nil;
+  NSString *xctestPath = [XcodeDeveloperDirPath() stringByAppendingPathComponent:_framework[kTestingFrameworkOSXTestrunnerName]];
+
+  // force to run xctest executable in i386 mode if
+  // it is the only supported architecture by the project
+  NSString *archs = _simulatorInfo.buildSettings[@"ARCHS"];
+  if ([archs isEqualToString:@"i386"]) {
+    // when running `arch`, pass all environment variables
+    // via "-e" option
+    launchPath = @"/usr/bin/arch";
+    NSUInteger nextIndexPath = 0;
+    [args insertObject:@"-i386" atIndex:nextIndexPath++];
+    for (NSString *key in env) {
+      [args insertObject:@"-e" atIndex:nextIndexPath++];
+      [args insertObject:[NSString stringWithFormat:@"%@=%@", key, env[key]]
+                 atIndex:nextIndexPath++];
+    }
+    // reset environment
+    env = [NSMutableDictionary dictionary];
+    // and finally pass executable to launch
+    [args insertObject:xctestPath atIndex:nextIndexPath++];
+  } else {
+    launchPath = xctestPath;
+  }
+
+  [task setLaunchPath:launchPath];
+  [task setArguments:args];
+  [task setEnvironment:env];
   return task;
 }
 

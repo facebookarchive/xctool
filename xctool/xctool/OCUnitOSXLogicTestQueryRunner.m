@@ -47,9 +47,35 @@
     @"__CFPREFERENCES_AVOID_DAEMON" : @"YES",
   }];
 
+  NSString *taskLaunchPath = nil;
+  NSMutableArray *taskArguments = [NSMutableArray array];
+  NSString *otestQueryExecutablePath = [XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-osx"];
+
+  // force to run otest-query executable in i386 mode if
+  // it is the only supported architecture by the project
+  NSString *archs = _simulatorInfo.buildSettings[@"ARCHS"];
+  if ([archs isEqualToString:@"i386"]) {
+    // when running `arch`, pass all environment variables
+    // via "-e" option
+    taskLaunchPath = @"/usr/bin/arch";
+    [taskArguments addObject:@"-i386"];
+    for (NSString *key in environment) {
+      [taskArguments addObject:@"-e"];
+      [taskArguments addObject:[NSString stringWithFormat:@"%@=%@", key, environment[key]]];
+    }
+    // reset environment
+    environment = [NSMutableDictionary dictionary];
+    // and finally pass executable to launch
+    [taskArguments addObject:otestQueryExecutablePath];
+  } else {
+    taskLaunchPath = otestQueryExecutablePath;
+  }
+  // specify test bundle to query
+  [taskArguments addObject:[_simulatorInfo productBundlePath]];
+
   NSTask *task = CreateTaskInSameProcessGroup();
-  [task setLaunchPath:[XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-osx"]];
-  [task setArguments:@[ [_simulatorInfo productBundlePath] ]];
+  [task setLaunchPath:taskLaunchPath];
+  [task setArguments:taskArguments];
   [task setEnvironment:environment];
 
   return task;
