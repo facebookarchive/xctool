@@ -35,6 +35,14 @@
   return self;
 }
 
+- (NSNumber *)phabricatorDuration:(NSNumber *)duration
+{
+    // Phabricator/Arcanist expects value in seconds.
+    // https://github.com/phacility/arcanist/blob/master/src/unit/ArcanistUnitTestResult.php#L86
+    // Luckily, we already record in seconds so we don't need to translate anything here.
+    return duration;
+};
+
 
 - (void)beginAction:(NSDictionary *)event
 {
@@ -62,6 +70,7 @@
    @"result" : (_currentTargetFailures.count == 0) ? @"pass" : @"broken",
    @"userdata" : [_currentTargetFailures componentsJoinedByString:@"=================================\n"],
    @"coverage" : [NSNull null],
+   @"duration": [self phabricatorDuration: event[kReporter_EndBuildCommand_DurationKey]],
    @"extra" : [NSNull null],
    }];
 
@@ -143,6 +152,7 @@
    @"result" : result,
    @"userdata" : userdata,
    @"coverage" : [NSNull null],
+   @"duration": [self phabricatorDuration: event[kReporter_EndTest_TotalDurationKey]],
    @"extra" : [NSNull null],
    }];
 }
