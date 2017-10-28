@@ -307,7 +307,7 @@ static const NSInteger KProductTypeAppleTV = 3;
       }
     }
 
-    NSAssert(_simulatedDevice != nil, @"Simulator with name \"%@\" doesn't have configuration with sdk version \"%@\". Available configurations: %@.", [self simulatedDeviceInfoName], runtime.versionString, [self _availableDeviceConfigurationsInHumanReadableFormat]);
+    NSAssert(_simulatedDevice != nil, @"Simulator with name \"%@\" doesn't have configuration with runtime \"%@\". Available configurations: %@.", [self simulatedDeviceInfoName], runtime, [self _availableDeviceConfigurationsInHumanReadableFormat]);
   }
   return _simulatedDevice;
 }
