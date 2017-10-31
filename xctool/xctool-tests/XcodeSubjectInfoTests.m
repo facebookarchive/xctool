@@ -242,12 +242,13 @@
   info.subjectWorkspace = projectPath;
   info.subjectScheme = schemeName;
   NSArray *schemes = [XcodeSubjectInfo schemePathsInContainer:projectPath];
-  assertThat(schemes, containsArray(@[
+  assertThat(schemes, containsInAnyOrder(
     sharedSchemePath,
     TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj/xcshareddata/xcschemes/Target Name With Spaces.xcscheme",
     TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj/xcshareddata/xcschemes/TestProject-Library.xcscheme",
-    userSchemePath
-  ]));
+    userSchemePath,
+    nil
+  ));
 
   assertThat([info matchingSchemePathForWorkspace], equalTo(userSchemePath));
 

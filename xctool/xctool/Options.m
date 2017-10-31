@@ -505,7 +505,7 @@
     *errorMessage = [NSString stringWithFormat:
                      @"Can't find scheme '%@'.\n\nPossible schemes include:\n  %@",
                      _scheme,
-                     [schemeNames componentsJoinedByString:@"\n  "]];
+                     [[schemeNames sortedArrayUsingSelector:@selector(compare:)] componentsJoinedByString:@"\n  "]];
 
     if (!automaticSchemeCreationDisabled) {
       *errorMessage = [*errorMessage stringByAppendingString:schemeCreationTip];
