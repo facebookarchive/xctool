@@ -65,9 +65,17 @@ static const NSInteger KProductTypeAppleTV = 3;
     _testHostPathCpuType = 0;
     _productBundlePathCpuType = 0;
     if (ToolchainIsXcode81OrBetter()) {
+      NSError *sharedError = nil;
+      _simulatedServiceContext = [SimServiceContext sharedServiceContextForDeveloperDir:XcodeDeveloperDirPath()
+                                                                                  error:&sharedError];
+      if (_simulatedServiceContext == nil) {
+        NSError *error = nil;
+        _simulatedServiceContext = [SimServiceContext serviceContextForDeveloperDir:XcodeDeveloperDirPath()
+                                                                     connectionType:0
+                                                                              error:&error];
+        NSAssert(_simulatedServiceContext != nil, @"Failed to initialize simulated service context: errors: %@, %@", sharedError, error);
+      }
       NSError *error = nil;
-      _simulatedServiceContext = [SimServiceContext sharedServiceContextForDeveloperDir:XcodeDeveloperDirPath() error:&error];
-      NSAssert(_simulatedServiceContext != nil, @"Failed to inialize simulated service context with error: %@", error);
       _simulatedDeviceSet = [_simulatedServiceContext defaultDeviceSetWithError:&error];
       NSAssert(_simulatedDeviceSet != nil, @"Failed to create default device set for %@ with error: %@", _simulatedServiceContext, error);
     } else {
