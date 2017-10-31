@@ -222,7 +222,7 @@ static const NSInteger KProductTypeAppleTV = 3;
   }
   NSMutableArray *supportedDeviceTypes = [NSMutableArray array];
   for (SimDevice *device in [_simulatedDeviceSet availableDevices]) {
-    if (![device.runtime isEqual:runtime]) {
+    if (![device.runtime.identifier isEqual:runtime.identifier]) {
       continue;
     }
 
@@ -307,8 +307,8 @@ static const NSInteger KProductTypeAppleTV = 3;
       SimDeviceType *deviceType = supportedDeviceTypesByAlias[[self simulatedDeviceInfoName]];
       NSAssert(deviceType != nil, @"Unable to find SimDeviceType for the device with name \"%@\". Available device names: %@", [self simulatedDeviceInfoName], [supportedDeviceTypesByAlias allKeys]);
       for (SimDevice *device in [_simulatedDeviceSet availableDevices]) {
-        if ([device.deviceType isEqual:deviceType] &&
-            [device.runtime isEqual:runtime]) {
+        if ([device.deviceType.identifier isEqual:deviceType.identifier] &&
+            [device.runtime.identifier isEqual:runtime.identifier]) {
           _simulatedDevice = device;
           break;
         }
