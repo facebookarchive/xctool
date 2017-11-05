@@ -46,6 +46,7 @@
     @"OBJC_DISABLE_GC" : @"YES",
     @"__CFPREFERENCES_AVOID_DAEMON" : @"YES",
   }];
+  OSXInsertSanitizerLibrariesIfNeeded(environment, [_simulatorInfo productBundlePath]);
 
   NSString *taskLaunchPath = nil;
   NSMutableArray *taskArguments = [NSMutableArray array];

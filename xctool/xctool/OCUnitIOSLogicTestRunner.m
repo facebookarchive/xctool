@@ -25,6 +25,7 @@
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
 
+static NSString * const DYLD_INSERT_LIBRARIES = @"DYLD_INSERT_LIBRARIES";
 static NSString * const XCTOOL_CFFIXED_USER_HOME = @"CFFIXED_USER_HOME";
 static NSString * const XCTOOL_HOME = @"HOME";
 static NSString * const XCTOOL_TMPDIR = @"TMPDIR";
@@ -83,10 +84,12 @@ static NSString * const XCTOOL_TMPDIR = @"TMPDIR";
   NSString *sdkName = _buildSettings[Xcode_SDK_NAME];
   if ([sdkName hasPrefix:@"iphonesimulator"]) {
     [env addEntriesFromDictionary:IOSTestEnvironment(_buildSettings)];
-    env[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"];
+    env[DYLD_INSERT_LIBRARIES] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-ios.dylib"];
+    IOSInsertSanitizerLibrariesIfNeeded(env, [_simulatorInfo productBundlePath]);
   } else if ([sdkName hasPrefix:@"appletvsimulator"]) {
-    [env addEntriesFromDictionary:IOSTestEnvironment(_buildSettings)];
-    env[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-appletv.dylib"];
+    [env addEntriesFromDictionary:TVOSTestEnvironment(_buildSettings)];
+    env[DYLD_INSERT_LIBRARIES] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-appletv.dylib"];
+    TVOSInsertSanitizerLibrariesIfNeeded(env, [_simulatorInfo productBundlePath]);
   } else {
     NSAssert(false, @"'%@' sdk is not yet supported", sdkName);
   }

@@ -24,12 +24,11 @@
 #import "EventGenerator.h"
 #import "EventSink.h"
 #import "NSFileHandle+Print.h"
-//#import "Options.h"
 #import "ReporterEvents.h"
-//#import "ReporterTask.h"
 #import "TaskUtil.h"
 #import "XcodeBuildSettings.h"
-//#import "XcodeSubjectInfo.h"
+
+static NSString * const DYLD_INSERT_LIBRARIES = @"DYLD_INSERT_LIBRARIES";
 
 static NSString *__tempDirectoryForAction = nil;
 
@@ -784,7 +783,7 @@ NSString *AllFrameworkAndLiraryPathsInBuildSettings(NSDictionary *buildSettings)
   NSMutableSet *set = [NSMutableSet set];
   for (NSString *pathKey in @[Xcode_BUILT_PRODUCTS_DIR, Xcode_PRODUCT_TYPE_FRAMEWORK_SEARCH_PATHS, Xcode_TEST_FRAMEWORK_SEARCH_PATHS]) {
     NSString *pathExists = buildSettings[pathKey];
-    if (pathExists) {
+    if (pathExists != nil) {
       [set addObject:[pathExists stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
     }
   }
@@ -820,6 +819,38 @@ NSMutableDictionary *TVOSTestEnvironment(NSDictionary *buildSettings)
     @"DYLD_LIBRARY_PATH" : paths,
     @"DYLD_FALLBACK_FRAMEWORK_PATH" : TVOSTestFrameworkDirectories(),
   } mutableCopy];
+}
+
+void EnvironmentInsertSanitizerLibrariesIfNeeded(NSMutableDictionary *environment,
+                                                 NSString *platform,
+                                                 NSString *frameworkDirectory,
+                                                 NSString *xctestBundlePath)
+{
+  NSMutableArray *dyldInsertLibraries = [[environment[DYLD_INSERT_LIBRARIES] componentsSeparatedByString:@":"]?:@[] mutableCopy];
+  NSString *frameworkPath = [xctestBundlePath stringByAppendingPathComponent:frameworkDirectory];
+  for (NSString *sanDylibKeyname in @[@"asan", @"tsan", @"ubsan"]) {
+    NSString *libName = [NSString stringWithFormat:@"libclang_rt.%@_%@_dynamic.dylib", sanDylibKeyname, platform];
+    NSString *pathToCheck = [frameworkPath stringByAppendingPathComponent:libName];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:pathToCheck]) {
+      [dyldInsertLibraries addObject:pathToCheck];
+    }
+  }
+  environment[DYLD_INSERT_LIBRARIES] = [dyldInsertLibraries componentsJoinedByString:@":"];
+}
+
+void IOSInsertSanitizerLibrariesIfNeeded(NSMutableDictionary *environment, NSString *xctestBundlePath)
+{
+  return EnvironmentInsertSanitizerLibrariesIfNeeded(environment, @"iossim", @"Frameworks", xctestBundlePath);
+}
+
+void OSXInsertSanitizerLibrariesIfNeeded(NSMutableDictionary *environment, NSString *xctestBundlePath)
+{
+  return EnvironmentInsertSanitizerLibrariesIfNeeded(environment, @"osx", @"Contents/Frameworks", xctestBundlePath);
+}
+
+void TVOSInsertSanitizerLibrariesIfNeeded(NSMutableDictionary *environment, NSString *xctestBundlePath)
+{
+  return EnvironmentInsertSanitizerLibrariesIfNeeded(environment, @"tvossim", @"Frameworks", xctestBundlePath);
 }
 
 NSString *XcodebuildVersion()

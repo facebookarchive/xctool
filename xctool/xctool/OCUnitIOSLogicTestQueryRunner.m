@@ -21,6 +21,8 @@
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
 
+static NSString * const DYLD_INSERT_LIBRARIES = @"DYLD_INSERT_LIBRARIES";
+
 @implementation OCUnitIOSLogicTestQueryRunner
 
 - (NSTask *)createTaskForQuery
@@ -30,11 +32,13 @@
   NSString *sdkName = _simulatorInfo.buildSettings[Xcode_SDK_NAME];
   if ([sdkName hasPrefix:@"iphonesimulator"]) {
     environment = IOSTestEnvironment(_simulatorInfo.buildSettings);
-    environment[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-query-lib-ios.dylib"];
+    environment[DYLD_INSERT_LIBRARIES] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-query-lib-ios.dylib"];
+    IOSInsertSanitizerLibrariesIfNeeded(environment, [_simulatorInfo productBundlePath]);
     launchPath = [XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-ios"];
   } else if ([sdkName hasPrefix:@"appletvsimulator"]) {
     environment = TVOSTestEnvironment(_simulatorInfo.buildSettings);
-    environment[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-query-lib-appletv.dylib"];
+    environment[DYLD_INSERT_LIBRARIES] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-query-lib-appletv.dylib"];
+    TVOSInsertSanitizerLibrariesIfNeeded(environment, [_simulatorInfo productBundlePath]);
     launchPath = [XCToolLibExecPath() stringByAppendingPathComponent:@"otest-query-appletv"];
   } else {
     NSAssert(false, @"'%@' sdk is not yet supported", sdkName);

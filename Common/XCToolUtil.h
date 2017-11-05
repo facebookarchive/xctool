@@ -232,19 +232,19 @@ NSString *IOSTestFrameworkDirectories();
 NSString *OSXTestFrameworkDirectories();
 
 /**
- * Returns common environment required to query and run iOS tests.
+ * Returns common environment required to query and run iOS, OS X or TV OS tests.
  */
 NSMutableDictionary *IOSTestEnvironment(NSDictionary *buildSettings);
-
-/**
- * Returns common environment required to query and run OS X tests.
- */
 NSMutableDictionary *OSXTestEnvironment(NSDictionary *buildSettings);
+NSMutableDictionary *TVOSTestEnvironment(NSDictionary *buildSettings);
 
 /**
- * Returns common environment required to query and run TV OS tests.
+ * Updates DYLD_INSERT_LIBRARIES environment value to include sanitizer library paths
+ * included into the specified xctest bundle.
  */
-NSMutableDictionary *TVOSTestEnvironment(NSDictionary *buildSettings);
+void IOSInsertSanitizerLibrariesIfNeeded(NSMutableDictionary *environment, NSString *xctestBundlePath);
+void OSXInsertSanitizerLibrariesIfNeeded(NSMutableDictionary *environment, NSString *xctestBundlePath);
+void TVOSInsertSanitizerLibrariesIfNeeded(NSMutableDictionary *environment, NSString *xctestBundlePath);
 
 /**
  * Creates a temporary directory under NSTemporaryDirectory() using mkdtemp,

@@ -22,6 +22,8 @@
 #import "XCToolUtil.h"
 #import "XcodeBuildSettings.h"
 
+static NSString * const DYLD_INSERT_LIBRARIES = @"DYLD_INSERT_LIBRARIES";
+
 @implementation OCUnitOSXLogicTestRunner
 
 - (NSMutableDictionary *)environmentOverrides
@@ -53,7 +55,8 @@
     [args addObject:testBundlePath];
   }
 
-  env[@"DYLD_INSERT_LIBRARIES"] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-osx.dylib"];
+  env[DYLD_INSERT_LIBRARIES] = [XCToolLibPath() stringByAppendingPathComponent:@"otest-shim-osx.dylib"];
+  OSXInsertSanitizerLibrariesIfNeeded(env, [_simulatorInfo productBundlePath]);
 
   // specify a path where to write otest-shim events
   NSString *outputPath = MakeTempFileWithPrefix(@"output");
