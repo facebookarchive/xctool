@@ -193,12 +193,39 @@ static NSDictionary *BuildConfigurationsByActionForSchemePath(NSString *schemePa
 
 + (NSSet *)projectPathsInProject:(NSString *)projectPath
 {
+  return [self projectPathsInProject:projectPath skipping:[NSSet set]];
+}
+
++ (NSSet *)projectPathsInProject:(NSString *)projectPath skipping:(NSSet *)projectPathsToSkip
+{
+  NSMutableSet *pathsToSkip = [NSMutableSet setWithSet:projectPathsToSkip ?: [NSSet set]];
+  NSString * absolutePathForPath = [self absolutePathForPath:projectPath];
+  [pathsToSkip addObject:absolutePathForPath];
+  
   NSMutableSet *projects = [ProjectFilesReferencedInProjectAtPath(projectPath) mutableCopy];
   for (NSString *innerProjectPath in [projects allObjects]) {
-    [projects unionSet:[self projectPathsInProject:innerProjectPath]];
+    NSString * innerProjectAbsolutePath = [self absolutePathForPath:innerProjectPath];
+    if ([projectPathsToSkip containsObject:innerProjectAbsolutePath]) {
+      continue;
+    }
+    [projects unionSet:[self projectPathsInProject:innerProjectPath skipping:pathsToSkip]];
   }
   return projects;
 }
+
++ (NSString *)absolutePathForPath:(NSString *)path {
+  if ([path hasPrefix:@"/"]) {
+    return path;
+  }
+  if ([path hasPrefix:@"~"]) {
+    return [path stringByExpandingTildeInPath];
+  }
+  NSString * currentDirectory = [[NSFileManager defaultManager] currentDirectoryPath];
+  NSString * fullPath = [currentDirectory stringByAppendingPathComponent:path];
+  NSString * standartizedPath = [fullPath stringByStandardizingPath];
+  return standartizedPath;
+}
+
 
 + (NSArray *)schemePathsInWorkspace:(NSString *)workspace
 {
