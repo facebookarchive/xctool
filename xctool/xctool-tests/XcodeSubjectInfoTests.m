@@ -111,6 +111,18 @@
   ]]));
 }
 
+- (void)testCanGetProjectPathsInProjectWithNestedProjectsWithCrossDependencies
+{
+  NSArray *paths = [XcodeSubjectInfo projectPathsInWorkspace:TEST_DATA "TestProject-RecursiveDefinitions/Untitled.xcworkspace"];
+  // we can't be sure about order because PbxprojReader returns sets.
+  assertThatInteger(paths.count, equalToInteger(3));
+  assertThat([NSSet setWithArray:paths], equalTo([NSSet setWithArray:@[
+    TEST_DATA "TestProject-RecursiveDefinitions/Core/Core.xcodeproj",
+    TEST_DATA "TestProject-RecursiveDefinitions/TestingCore/TestingCore.xcodeproj",
+    TEST_DATA "TestProject-RecursiveDefinitions/MainProject/MainProject.xcodeproj",
+  ]]));
+}
+
 - (void)testCanGetAllSchemesInAProjectIncludingCurrentlyLoggedInUserOne
 {
   NSString *projectPath = TEST_DATA @"TestProject-Library/TestProject-Library.xcodeproj";
