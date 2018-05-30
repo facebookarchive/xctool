@@ -172,7 +172,15 @@
   }
   for (NSString *target in _onlyList) {
     if ([xcodeSubjectInfo testableWithTarget:target] == nil) {
-      *errorMessage = [NSString stringWithFormat:@"build-tests: '%@' is not a testing target in this scheme.", target];
+      if (xcodeSubjectInfo.testables.count > 0) {
+        *errorMessage = [NSString stringWithFormat:
+                         @"build-tests: invalid '-only' option: '%@' is not a testing target. Possible testing targets: %@.",
+                         target, [xcodeSubjectInfo.testables valueForKeyPath:@"target"] ?: @"unavailable"];
+      } else {
+        *errorMessage = [NSString stringWithFormat:
+                         @"build-tests: invalid '-only' option: '%@' is not a testing target.",
+                         target];
+      }
       return NO;
     }
   }

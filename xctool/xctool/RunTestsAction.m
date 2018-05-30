@@ -513,7 +513,19 @@ NSArray *BucketizeTestCasesByTestClass(NSArray *testCases, NSUInteger bucketSize
                                       logicTests:_logicTests
                                         appTests:_appTests
                                 xcodeSubjectInfo:xcodeSubjectInfo] == nil) {
-      *errorMessage = [NSString stringWithFormat:@"run-tests: '%@' is not a testing target in this scheme.", target];
+      NSMutableSet *targets = [NSMutableSet new];
+      [targets addObjectsFromArray:_logicTests ?: @[]];
+      [targets addObjectsFromArray:_appTests.allKeys ?: @[]];
+      [targets addObjectsFromArray:[xcodeSubjectInfo.testables valueForKeyPath:@"target"] ?: @[]];
+      if (targets.count > 0) {
+        *errorMessage = [NSString stringWithFormat:
+                         @"run-tests: invalid '-only' option: '%@' is not a testing target. Possible testing targets: %@.",
+                         target, targets];
+      } else {
+        *errorMessage = [NSString stringWithFormat:
+                         @"run-tests: invalid '-only' option: '%@' is not a testing target.",
+                         target];
+      }
       return NO;
     }
   }
