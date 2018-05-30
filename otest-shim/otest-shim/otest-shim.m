@@ -322,14 +322,17 @@ static void XCToolLog_testCaseDidFail(NSDictionary *exceptionInfo)
 static void XCPerformTestWithSuppressedExpectedAssertionFailures(id self, SEL origSel, id arg1)
 {
   int timeout = [@(getenv("OTEST_SHIM_TEST_TIMEOUT") ?: "0") intValue];
+  bool skipTimeoutGuard = [[self valueForKey:@"_classNameForReporting"] hasSuffix:@".xctest"] ||
+                          [[self valueForKey:@"_classNameForReporting"] isEqualToString:@"Selected tests"];
 
   NSAssertionHandler *handler = [[XCToolAssertionHandler alloc] init];
   NSThread *currentThread = [NSThread currentThread];
   NSMutableDictionary *currentThreadDict = [currentThread threadDictionary];
   [currentThreadDict setObject:handler forKey:NSAssertionHandlerKey];
 
-  if (timeout > 0) {
-    BOOL isSuite = [self isKindOfClass:NSClassFromString(@"XCTestCaseSuite")];
+  if (timeout > 0 && !skipTimeoutGuard) {
+    BOOL isSuite = [self isKindOfClass:NSClassFromString(@"XCTestCaseSuite")] ||
+                   [self isKindOfClass:NSClassFromString(@"XCTestSuite")];
     // If running in a suite, time out if we run longer than the combined timeouts of all tests + a fudge factor.
     int64_t testCount = isSuite ? [[self tests] count] : 1;
     // When in a suite, add a second per test to help account for the time required to switch tests in a suite.
@@ -341,25 +344,35 @@ static void XCPerformTestWithSuppressedExpectedAssertionFailures(id self, SEL or
     dispatch_source_t source = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue);
     dispatch_source_set_timer(source, dispatch_time(DISPATCH_TIME_NOW, interval), 0, 0);
     dispatch_source_set_event_handler(source, ^{
-        if (isSuite) {
-            NSString *additionalInformation = @"";
-            if ([self respondsToSelector:@selector(testRun)]) {
-                XCTestRun *run = [self testRun];
-                NSUInteger executedTests = [run executionCount];
-                if (executedTests == 0) {
-                    additionalInformation = [NSString stringWithFormat:@"(No tests ran, likely stalled in +[%@ setUp])", [self name]];
-                } else if (executedTests == testCount) {
-                    additionalInformation = [NSString stringWithFormat:@"(All tests ran, likely stalled in +[%@ tearDown])", [self name]];
-                }
-            }
-            
-            [NSException raise:NSInternalInconsistencyException
-                        format:@"*** Suite %@ ran longer than combined test time limit: %lld second(s) %@", [self name], testCount * timeout, additionalInformation];
-            
-        } else {
-            [NSException raise:NSInternalInconsistencyException
-                        format:@"*** Test %@ ran longer than specified test time limit: %d second(s)", self, timeout];
+      if (isSuite) {
+        NSString *additionalInformation = @"";
+        if ([self respondsToSelector:@selector(testRun)]) {
+          XCTestRun *run = [self testRun];
+          NSUInteger executedTests = [run executionCount];
+          if (executedTests == 0) {
+            additionalInformation = [NSString stringWithFormat:@"(No tests ran, likely stalled in +[%@ setUp])", [self name]];
+          } else if (executedTests == testCount) {
+            additionalInformation = [NSString stringWithFormat:@"(All tests ran, likely stalled in +[%@ tearDown])", [self name]];
+          }
         }
+        /**
+         * Starting from Xcode 8 or 9 simply raising an exception wasn't always enough to kill the test and the appp.
+         * Dispatching this block to a background thread handles all currently known use cases.
+         */
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+          [NSException raise:NSInternalInconsistencyException
+                      format:@"*** Suite %@ ran longer than combined test time limit: %lld second(s) %@", [self name], testCount * timeout, additionalInformation];
+        });
+      } else {
+        /**
+         * Starting from Xcode 8 or 9 simply raising an exception wasn't always enough to kill the test and the appp.
+         * Dispatching this block to a background thread handles all currently known use cases.
+         */
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+          [NSException raise:NSInternalInconsistencyException
+                      format:@"*** Test %@ ran longer than specified test time limit: %d second(s)", self, timeout];
+        });
+      }
     });
     dispatch_resume(source);
 
@@ -434,6 +447,13 @@ static void XCTestCaseSuite_performTest(id self, SEL sel, id arg1)
     SEL originalSelector = @selector(__XCTestCaseSuite_performTest:);
     XCWaitForDebuggerIfNeeded();
     XCPerformTestWithSuppressedExpectedAssertionFailures(self, originalSelector, arg1);
+}
+
+static void XCTestSuite_performTest(id self, SEL sel, id arg1)
+{
+  SEL originalSelector = @selector(__XCTestSuite_performTest:);
+  XCWaitForDebuggerIfNeeded();
+  XCPerformTestWithSuppressedExpectedAssertionFailures(self, originalSelector, arg1);
 }
 
 #pragma mark - _enableSymbolication
@@ -545,6 +565,9 @@ static void SwizzleXCTestMethodsIfAvailable()
     XTSwizzleSelectorForFunction(NSClassFromString(@"XCTestCase"),
                                  @selector(performTest:),
                                  (IMP)XCTestCase_performTest);
+    XTSwizzleSelectorForFunction(NSClassFromString(@"XCTestSuite"),
+                                 @selector(performTest:),
+                                 (IMP)XCTestSuite_performTest);
     if ([NSClassFromString(@"XCTestCase") respondsToSelector:@selector(_enableSymbolication)]) {
       // Disable symbolication thing on xctest 7 because it sometimes takes forever.
       XTSwizzleClassSelectorForFunction(NSClassFromString(@"XCTestCase"),

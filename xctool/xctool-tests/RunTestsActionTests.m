@@ -133,7 +133,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
     @"run-tests", @"-only", @"BOGUS_TARGET",
     ]]
    assertOptionsFailToValidateWithError:
-   @"run-tests: 'BOGUS_TARGET' is not a testing target in this scheme."
+   @"run-tests: invalid '-only' option: 'BOGUS_TARGET' is not a testing target. Possible testing targets: {(\n    \"TestProject-LibraryTests\"\n)}."
    withBuildSettingsFromFile:
    TEST_DATA @"TestProject-Library-TestProject-Library-showBuildSettings.txt"
    ];
