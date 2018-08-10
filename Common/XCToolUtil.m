@@ -917,7 +917,7 @@ BOOL ToolchainIsXcode9OrBetter(void)
     return result;
 }
 
-BOOL ToolchainIsXcode100OrBetter(void)
+BOOL ToolchainIsXcode10OrBetter(void)
 {
   static BOOL result;
   static dispatch_once_t onceToken;
