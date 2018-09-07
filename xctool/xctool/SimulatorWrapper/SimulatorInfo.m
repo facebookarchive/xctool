@@ -335,7 +335,9 @@ static const NSInteger KProductTypeAppleTV = 3;
 - (NSMutableDictionary *)simulatorLaunchEnvironment
 {
   NSString *sdkName = _buildSettings[Xcode_SDK_NAME];
-  NSString *ideBundleInjectionLibPath = [_buildSettings[Xcode_PLATFORM_DIR] stringByAppendingPathComponent:@"Developer/Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection"];
+  BOOL isXcode10OrBetter = ToolchainIsXcode10OrBetter();
+  NSString *ideBundleInjectionLibSubPath = isXcode10OrBetter ? @"Developer/usr/lib/libXCTestBundleInject.dylib" : @"Developer/Library/PrivateFrameworks/IDEBundleInjection.framework/IDEBundleInjection";
+  NSString *ideBundleInjectionLibPath = [_buildSettings[Xcode_PLATFORM_DIR] stringByAppendingPathComponent:ideBundleInjectionLibSubPath];
   NSMutableDictionary *environment = nil;
   NSMutableArray *librariesToInsert = [NSMutableArray array];
   if ([sdkName hasPrefix:@"macosx"]) {

@@ -130,6 +130,11 @@ BOOL ToolchainIsXcode81OrBetter(void);
  Returns YES if we're running with Xcode 9.0 or better.
  */
 BOOL ToolchainIsXcode9OrBetter(void);
+  
+/**
+ Returns YES if we're running with Xcode 10.0 or better.
+ */
+BOOL ToolchainIsXcode10OrBetter(void);
 
 /**
  Launches a task that will invoke xcodebuild.  It will automatically feed
