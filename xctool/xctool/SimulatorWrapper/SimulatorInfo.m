@@ -241,7 +241,11 @@ static const NSInteger KProductTypeAppleTV = 3;
     } else {
       supportedDevices = [[SimDeviceType supportedDevices] valueForKeyPath:@"name"];
     }
-    NSAssert(supportedDeviceTypes.count > 0, @"There are no available devices that support provided sdk: %@. Supported devices: %@", [runtime name], supportedDevices);
+    NSAssert(supportedDeviceTypes.count > 0,
+             @"There are no available devices that support requested configuration: sdk %@, cpu type: %d (%@), device name: %@. "
+             "Supported devices: %@",
+             runtime.name, (int)self.simulatedCpuType, self.simulatedArchitecture, _deviceName,
+             supportedDevices);
   }
   _deviceName = [supportedDeviceTypes[0] name];
   return _deviceName;
