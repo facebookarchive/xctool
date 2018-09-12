@@ -358,7 +358,7 @@
 		283CCA8416C2EE4C00F2E343 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 1000;
 				ORGANIZATIONNAME = "Facebook, Inc.";
 			};
 			buildConfigurationList = 283CCA8716C2EE4C00F2E343 /* Build configuration list for PBXProject "otest-shim" */;
@@ -490,12 +490,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 282BFE29171602F80022F9FF /* otest-shim-osx.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				COMBINE_HIDPI_IMAGES = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				GCC_PREFIX_HEADER = "otest-shim/otest-shim-Prefix.pch";
 				PRODUCT_NAME = "otest-shim-osx";
 				SDKROOT = macosx;
+				VALID_ARCHS = x86_64;
 			};
 			name = Debug;
 		};
@@ -503,12 +505,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 282BFE29171602F80022F9FF /* otest-shim-osx.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				COMBINE_HIDPI_IMAGES = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				GCC_PREFIX_HEADER = "otest-shim/otest-shim-Prefix.pch";
 				PRODUCT_NAME = "otest-shim-osx";
 				SDKROOT = macosx;
+				VALID_ARCHS = x86_64;
 			};
 			name = Release;
 		};
@@ -583,7 +587,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				GCC_PREFIX_HEADER = "otest-shim/otest-shim-Prefix.pch";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "otest-shim-ios";
 			};
 			name = Debug;
@@ -596,7 +599,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				GCC_PREFIX_HEADER = "otest-shim/otest-shim-Prefix.pch";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "otest-shim-ios";
 			};
 			name = Release;

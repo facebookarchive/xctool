@@ -450,7 +450,7 @@
 		CD9048F61756C5B1006CF16D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 1000;
 				ORGANIZATIONNAME = Facebook;
 			};
 			buildConfigurationList = CD9048F91756C5B1006CF16D /* Build configuration list for PBXProject "otest-query" */;
@@ -663,6 +663,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 28660768183474D6000ACB87 /* otest-query-lib-osx.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
@@ -678,6 +679,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = x86_64;
 			};
 			name = Debug;
 		};
@@ -685,6 +687,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 28660768183474D6000ACB87 /* otest-query-lib-osx.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
@@ -697,6 +700,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = x86_64;
 			};
 			name = Release;
 		};
@@ -752,8 +756,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CD666138175D1B090057DF4D /* otest-query-osx.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				GCC_PREFIX_HEADER = "otest-query-osx/otest-query-osx-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = x86_64;
 			};
 			name = Debug;
 		};
@@ -761,8 +767,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CD666138175D1B090057DF4D /* otest-query-osx.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				GCC_PREFIX_HEADER = "otest-query-osx/otest-query-osx-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = x86_64;
 			};
 			name = Release;
 		};
