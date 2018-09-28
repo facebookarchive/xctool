@@ -23,11 +23,12 @@
 #import "ReporterEvents.h"
 #import "XCToolUtil.h"
 
-@interface TestRunState ()
+@interface TestRunState () {
+  NSMutableString *_outputBeforeTestsStart;
+}
 @property (nonatomic, strong) OCTestSuiteEventState *testSuiteState;
 @property (nonatomic, strong) OCTestEventState *previousTestState;
 @property (nonatomic, copy) NSSet *crashReportsAtStart;
-@property (nonatomic, copy) NSMutableString *outputBeforeTestsStart;
 @end
 
 @implementation TestRunState

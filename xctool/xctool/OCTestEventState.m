@@ -21,12 +21,11 @@
 #import "EventGenerator.h"
 #import "ReporterEvents.h"
 
-@interface OCTestEventState ()
-
-@property (nonatomic, assign) CFTimeInterval beginTime;
-@property (nonatomic, copy) NSMutableString *outputToPublish;
-@property (nonatomic, copy) NSMutableString *outputAlreadyPublished;
-
+@interface OCTestEventState () {
+  CFTimeInterval _beginTime;
+  NSMutableString *_outputToPublish;
+  NSMutableString *_outputAlreadyPublished;
+}
 @end
 
 @implementation OCTestEventState

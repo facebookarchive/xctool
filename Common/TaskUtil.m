@@ -172,7 +172,7 @@ void ReadOutputsAndFeedOuputLinesToBlockOnQueue(
   };
 
   size_t (^feedUnprocessedLinesToBlock)(int, dispatch_data_t, BOOL) = ^(int fd, dispatch_data_t unprocessedPart, BOOL forceUntilTheEnd) {
-    size_t processedSize;
+    size_t processedSize = 0;
     NSArray *lines = LinesFromDispatchData(unprocessedPart, YES, forceUntilTheEnd, &processedSize);
 
     for (NSString *lineToFeed in lines) {

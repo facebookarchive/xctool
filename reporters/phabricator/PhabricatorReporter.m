@@ -18,11 +18,12 @@
 
 #import "ReporterEvents.h"
 
-@interface PhabricatorReporter ()
-@property (nonatomic, copy) NSDictionary *currentBuildCommand;
-@property (nonatomic, copy) NSMutableArray *currentTargetFailures;
-@property (nonatomic, copy) NSMutableArray *results;
-@property (nonatomic, copy) NSString *scheme;
+@interface PhabricatorReporter () {
+  NSDictionary *_currentBuildCommand;
+  NSMutableArray *_currentTargetFailures;
+  NSMutableArray *_results;
+  NSString *_scheme;
+}
 @end
 
 @implementation PhabricatorReporter

@@ -51,10 +51,11 @@
 
 @end
 
-@interface JSONCompilationDatabaseReporter ()
-@property (nonatomic, copy) NSMutableArray *compiles;
-@property (nonatomic, copy) NSDictionary *currentBuildCommand;
-@property (nonatomic, copy) NSMutableArray *precompiles;
+@interface JSONCompilationDatabaseReporter () {
+  NSMutableArray *_compiles;
+  NSDictionary *_currentBuildCommand;
+  NSMutableArray *_precompiles;
+}
 @end
 
 @implementation JSONCompilationDatabaseReporter

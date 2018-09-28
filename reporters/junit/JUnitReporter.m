@@ -23,16 +23,15 @@
 #define kJUnitReporter_Suite_Results @"results"
 
 #pragma mark Private Interface
-@interface JUnitReporter ()
-
-@property (nonatomic, copy) NSMutableArray *testSuites;
-@property (nonatomic, copy) NSMutableArray *testResults;
-@property (nonatomic, strong) NSDateFormatter *formatter;
-@property (nonatomic, assign) int totalTests;
-@property (nonatomic, assign) int totalFailures;
-@property (nonatomic, assign) int totalErrors;
-@property (nonatomic, assign) double totalTime;
-
+@interface JUnitReporter () {
+  NSMutableArray *_testSuites;
+  NSMutableArray *_testResults;
+  NSDateFormatter *_formatter;
+  int _totalTests;
+  int _totalFailures;
+  int _totalErrors;
+  double _totalTime;
+}
 @end
 
 #pragma mark Implementation

@@ -18,10 +18,10 @@
 
 #import "XCToolUtil.h"
 
-@interface SchemeGenerator ()
-@property (nonatomic, copy) NSMutableArray *buildables;
-@property (nonatomic, copy) NSMutableSet *projectPaths;
-
+@interface SchemeGenerator () {
+  NSMutableArray *_buildables;
+  NSMutableSet *_projectPaths;
+}
 @end
 
 @implementation SchemeGenerator {

@@ -167,20 +167,22 @@ static NSString *abbreviatePath(NSString *string) {
 
 @end
 
-@interface TextReporter ()
-@property (nonatomic, assign) BOOL isPretty;
-@property (nonatomic, assign) BOOL canOverwrite;
-@property (nonatomic, strong) TestResultCounter *resultCounter;
-@property (nonatomic, copy) NSDictionary *currentStatusEvent;
-@property (nonatomic, copy) NSDictionary *currentBuildCommandEvent;
-@property (nonatomic, assign) BOOL testHadOutput;
-@property (nonatomic, assign) BOOL testOutputEndsInNewline;
-@property (nonatomic, strong) ReportWriter *reportWriter;
-@property (nonatomic, copy) NSMutableArray *failedTests;
-@property (nonatomic, copy) NSString *currentBundle;
-@property (nonatomic, copy) NSMutableArray *analyzerWarnings;
-@property (nonatomic, copy) NSMutableArray *failedBuildEvents;
-@property (nonatomic, copy) NSMutableArray *failedOcunitEvents;
+@interface TextReporter () {
+  TestResultCounter *_resultCounter;
+  NSDictionary *_currentStatusEvent;
+  NSDictionary *_currentBuildCommandEvent;
+  BOOL _testHadOutput;
+  BOOL _testOutputEndsInNewline;
+  ReportWriter *_reportWriter;
+  NSMutableArray *_failedTests;
+  NSString *_currentBundle;
+  NSMutableArray *_analyzerWarnings;
+  NSMutableArray *_failedBuildEvents;
+  NSMutableArray *_failedOcunitEvents;
+@protected
+  BOOL _isPretty;
+  BOOL _canOverwrite;
+}
 @end
 
 @implementation TextReporter
@@ -919,8 +921,8 @@ static NSString *abbreviatePath(NSString *string) {
 - (instancetype)init
 {
   if (self = [super init]) {
-    self.isPretty = YES;
-    self.canOverwrite = YES;
+    _isPretty = YES;
+    _canOverwrite = YES;
   }
   return self;
 }
@@ -932,7 +934,7 @@ static NSString *abbreviatePath(NSString *string) {
 - (instancetype)init
 {
   if (self = [super init]) {
-    self.isPretty = YES;
+    _isPretty = YES;
   }
   return self;
 }
@@ -944,7 +946,7 @@ static NSString *abbreviatePath(NSString *string) {
 - (instancetype)init
 {
   if (self = [super init]) {
-    self.isPretty = NO;
+    _isPretty = NO;
   }
   return self;
 }

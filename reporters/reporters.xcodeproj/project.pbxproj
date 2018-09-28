@@ -379,7 +379,9 @@
 				2893A94E17960CD400EFBD28 /* Frameworks */,
 				2893A94D17960CD400EFBD28 /* Products */,
 			);
+			indentWidth = 2;
 			sourceTree = "<group>";
+			tabWidth = 2;
 		};
 		2893A94D17960CD400EFBD28 /* Products */ = {
 			isa = PBXGroup;

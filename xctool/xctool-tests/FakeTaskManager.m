@@ -41,11 +41,12 @@ __attribute__((constructor)) static void initialize()
                                     (IMP)NSTask_allocWithZone);
 }
 
-@interface FakeTaskManager ()
-@property (nonatomic, copy) NSMutableArray *launchedTasks;
-@property (nonatomic, copy) NSMutableArray *launchedTasksToBeHidden;
-@property (nonatomic, copy) NSMutableArray *launchHandlerBlocks;
-@property (nonatomic, assign) BOOL fakeTasksAreEnabled;
+@interface FakeTaskManager () {
+  NSMutableArray *_launchedTasks;
+  NSMutableArray *_launchedTasksToBeHidden;
+  NSMutableArray *_launchHandlerBlocks;
+  BOOL _fakeTasksAreEnabled;
+}
 @end
 
 @implementation FakeTaskManager

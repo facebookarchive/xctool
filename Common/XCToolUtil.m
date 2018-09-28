@@ -228,7 +228,7 @@ NSString *MakeTempFileInDirectoryWithPrefix(NSString *directory, NSString *prefi
   const char *template = [[directory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.XXXXXXX", prefix]] UTF8String];
 
   char tempPath[PATH_MAX] = {0};
-  strcpy(tempPath, template);
+  strlcpy(tempPath, template, PATH_MAX);
 
   int handle = mkstemp(tempPath);
   NSCAssert(handle != -1, @"Failed to make temporary file name for template %s, error: %d", template, handle);

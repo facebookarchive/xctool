@@ -271,7 +271,9 @@
 				28660740183471FF000ACB87 /* otest-query-lib */,
 				CD9048FF1756C5B1006CF16D /* Products */,
 			);
+			indentWidth = 2;
 			sourceTree = "<group>";
+			tabWidth = 2;
 		};
 		CD9048FF1756C5B1006CF16D /* Products */ = {
 			isa = PBXGroup;

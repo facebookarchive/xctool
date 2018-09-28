@@ -18,9 +18,10 @@
 
 #import "XCToolUtil.h"
 
-@interface EventBuffer ()
-@property (nonatomic, strong) id<EventSink> underlyingSink;
-@property (nonatomic, copy) NSMutableArray *bufferedEventData;
+@interface EventBuffer () {
+  id<EventSink> _underlyingSink;
+  NSMutableArray *_bufferedEventData;
+}
 @end
 
 @implementation EventBuffer
@@ -37,7 +38,7 @@
 + (instancetype)eventBufferForSink:(id<EventSink>)reporter
 {
   EventBuffer *obj = [[EventBuffer alloc] init];
-  obj.underlyingSink = reporter;
+  obj->_underlyingSink = reporter;
   return obj;
 }
 

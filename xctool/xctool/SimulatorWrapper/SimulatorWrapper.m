@@ -106,7 +106,9 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
     }];
   }
   if (appPID == -1) {
-    *error = launchError;
+    if (error != nil) {
+      *error = launchError;
+    }
     ReportStatusMessageEnd(reporters,
                      REPORTER_MESSAGE_INFO,
                      @"Failed to launch '%@' on '%@': %@",

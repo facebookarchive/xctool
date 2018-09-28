@@ -76,7 +76,9 @@
 				287A381016C876A800319E81 /* xcodebuild-fastsettings-shim */,
 				283CCAB216C2EE7200F2E343 /* xcodebuild-shim */,
 			);
+			indentWidth = 2;
 			sourceTree = "<group>";
+			tabWidth = 2;
 		};
 		283CCAAA16C2EE7200F2E343 /* Products */ = {
 			isa = PBXGroup;

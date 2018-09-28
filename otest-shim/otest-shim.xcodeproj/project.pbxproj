@@ -168,7 +168,9 @@
 				283CCA8E16C2EE4C00F2E343 /* Frameworks */,
 				283CCA8D16C2EE4C00F2E343 /* Products */,
 			);
+			indentWidth = 2;
 			sourceTree = "<group>";
+			tabWidth = 2;
 		};
 		283CCA8D16C2EE4C00F2E343 /* Products */ = {
 			isa = PBXGroup;
