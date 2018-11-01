@@ -273,7 +273,6 @@ void ReadOutputsAndFeedOuputLinesToBlockOnQueue(
       if (info->data != NULL) {
         dispatch_release(info->data);
       }
-      close(info->fd);
       dispatch_io_close(info->io, DISPATCH_IO_STOP);
       dispatch_release(info->io);
     });
