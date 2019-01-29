@@ -189,12 +189,15 @@ void ReadOutputsAndFeedOuputLinesToBlockOnQueue(
   for (NSUInteger i = 0; i < sz; i++) {
     dispatch_group_enter(ioGroup);
     io_read_info *info = infos+i;
-    info->fd = fildes[i];
-    info->io = dispatch_io_create(DISPATCH_IO_STREAM, info->fd, dispatch_get_main_queue(), ^(int error) {
-      if(error) {
-        NSLog(@"[%d] Got an error while creating io for fd", info->fd);
+    int fd = fildes[i];
+    info->fd = fd;
+    info->io = dispatch_io_create(DISPATCH_IO_STREAM, fd, ioQueue, ^(int error) {
+      if (error != 0) {
+        NSLog(@"xctool[%d]: Errored [%d] while creating IO channel", fd, error);
       }
+      close(fd);
     });
+    NSCAssert(info->io != NULL, @"Failed to create IO channel for fb [%d]", fd);
     dispatch_io_set_low_water(info->io, 1);
     dispatch_io_read(info->io, 0, SIZE_MAX, ioQueue, ^(bool done, dispatch_data_t data, int error) {
       if (error == ECANCELED) {
@@ -273,7 +276,6 @@ void ReadOutputsAndFeedOuputLinesToBlockOnQueue(
       if (info->data != NULL) {
         dispatch_release(info->data);
       }
-      close(info->fd);
       dispatch_io_close(info->io, DISPATCH_IO_STOP);
       dispatch_release(info->io);
     });
