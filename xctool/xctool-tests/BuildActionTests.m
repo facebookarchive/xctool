@@ -27,7 +27,7 @@
 #import "XCToolUtil.h"
 #import "xcodeSubjectInfo.h"
 
-void _CFAutoreleasePoolPrintPools();
+void _CFAutoreleasePoolPrintPools(void);
 
 @interface BuildActionTests : XCTestCase
 @end

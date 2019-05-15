@@ -73,7 +73,7 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
 
   NSMutableDictionary *environmentEdited = [environment mutableCopy];
   environmentEdited[kOtestShimStdoutFilePath] = otestShimOutputPath;
-
+  
   /*
    * Passing the same set of arguments and environment as Xcode 6.4.
    */

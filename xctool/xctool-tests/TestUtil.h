@@ -38,4 +38,4 @@ NSArray *SelectEventFields(NSArray *events, NSString *eventName, NSString *field
 /**
  Print notice that test is not relevant.
  */
-void PrintTestNotRelevantNotice();
+void PrintTestNotRelevantNotice(void);

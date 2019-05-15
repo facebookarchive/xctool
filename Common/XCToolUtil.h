@@ -74,7 +74,7 @@ NSString *MakeTempFileWithPrefix(NSString *prefix);
  "ProductBuildVersion"); also adds a mapping of "SDK" to the sdk version
  (e.g. "macosx10.9") for lookup purposes.
  */
-NSDictionary *GetAvailableSDKsInfo();
+NSDictionary *GetAvailableSDKsInfo(void);
 
 /**
  Returns a NSDictionary with a NSString to NSString mapping of what SDKs are
@@ -91,15 +91,15 @@ NSDictionary *GetAvailableSDKsInfo();
  (i.e. GetAvailableSDKsInfo()[whichSDK][@"SDK"] ==
        GetAvailableSDKsAndAliases()[whichSDK])
  */
-NSDictionary *GetAvailableSDKsAndAliases();
+NSDictionary *GetAvailableSDKsAndAliases(void);
 NSDictionary *GetAvailableSDKsAndAliasesWithSDKInfo(NSDictionary *sdkInfo);
 
 /**
  Returns YES if runing on Travis or TeamCity
  */
-BOOL IsRunningOnCISystem();
+BOOL IsRunningOnCISystem(void);
 
-BOOL IsRunningUnderTest();
+BOOL IsRunningUnderTest(void);
 
 /**
  Returns the Xcode version, as read from DTXCode in:
@@ -109,7 +109,7 @@ BOOL IsRunningUnderTest();
 
  @return NSString Xcode version
  */
-NSString *XcodebuildVersion();
+NSString *XcodebuildVersion(void);
 
 /**
  Returns YES if we're running with Xcode 7 or better.
@@ -189,13 +189,13 @@ NSDictionary *ParseDestinationString(NSString *destinationString, NSString **err
  (i.e. build, or test).  As soon as the action completes, the temporary
  dir is cleaned up.
  */
-NSString *TemporaryDirectoryForAction();
+NSString *TemporaryDirectoryForAction(void);
 
 /**
  Cleans up any temporary directory that was created earlier with
  `TemporaryDirectoryForRun()`.
  */
-void CleanupTemporaryDirectoryForAction();
+void CleanupTemporaryDirectoryForAction(void);
 
 /**
  Publish event to a list of reporters.
@@ -209,7 +209,7 @@ void PublishEventToReporters(NSArray *reporters, NSDictionary *event);
  @return array A list of available reporter executables in the reporters
   directory.
  */
-NSArray *AvailableReporters();
+NSArray *AvailableReporters(void);
 
 /**
  Uses realpath() to resolve an relative path.
@@ -219,22 +219,22 @@ NSString *AbsolutePathFromRelative(NSString *path);
 /**
  Returns the absolute path to the current executable, with sym links resolved.
  */
-NSString *AbsoluteExecutablePath();
+NSString *AbsoluteExecutablePath(void);
 
 /**
  * Returns the contents of `/etc/paths` in the form of `path1:path2:path3`.
  */
-NSString *SystemPaths();
+NSString *SystemPaths(void);
 
 /**
  * Returns absolute paths to directories with iOS test frameworks in the form of `path1:path2:path3`.
  */
-NSString *IOSTestFrameworkDirectories();
+NSString *IOSTestFrameworkDirectories(void);
 
 /**
  * Returns absolute paths to directories with OS X test frameworks in the form of `path1:path2:path3`.
  */
-NSString *OSXTestFrameworkDirectories();
+NSString *OSXTestFrameworkDirectories(void);
 
 /**
  * Returns common environment required to query and run iOS, OS X or TV OS tests.
@@ -266,7 +266,7 @@ BOOL TestableSettingsIndicatesApplicationTest(NSDictionary *settings);
 /**
  * Returns path to the latest xcodebuild crash report or nil.
  */
-NSString *LatestXcodebuildCrashReportPath();
+NSString *LatestXcodebuildCrashReportPath(void);
 
 /**
  * Returns SHA1 for provided string.

@@ -58,7 +58,8 @@ static const NSInteger kMaxRunTestsAttempts = 3;
   NSString *testHostBundleID = testHostInfoPlist[@"CFBundleIdentifier"];
   NSAssert(testHostBundleID != nil, @"Missing 'CFBundleIdentifier' in Info.plist");
 
-  BOOL (^prepareSimulator)(BOOL freshSimulator, BOOL resetSimulator) = ^(BOOL freshSimulator, BOOL resetSimulator) {
+  BOOL (^prepareSimulator)(BOOL freshSimulator, BOOL resetSimulator, NSString **error) =
+  ^(BOOL freshSimulator, BOOL resetSimulator, NSString **error) {
     if (freshSimulator || resetSimulator) {
       ReportStatusMessageBegin(_reporters,
                                REPORTER_MESSAGE_INFO,
@@ -114,23 +115,23 @@ static const NSInteger kMaxRunTestsAttempts = 3;
    if (![SimulatorWrapper prepareSimulator:[_simulatorInfo simulatedDevice]
                       newSimulatorInstance:_newSimulatorInstance
                                  reporters:_reporters
-                                     error:startupError]) {
+                                     error:error]) {
       return NO;
     }
 
     return YES;
   };
 
-  BOOL (^prepTestEnv)() = ^BOOL() {
-    if (!prepareSimulator(_freshSimulator, _resetSimulator)) {
+  BOOL (^prepTestEnv)(NSString **error) = ^BOOL(NSString **error) {
+    if (!prepareSimulator(_freshSimulator, _resetSimulator, error)) {
       return NO;
     }
 
     if (_freshInstall) {
       if (![SimulatorWrapper uninstallTestHostBundleID:testHostBundleID
-                                                device:[_simulatorInfo simulatedDevice]
+                                                device:_simulatorInfo.simulatedDevice
                                              reporters:_reporters
-                                                 error:startupError]) {
+                                                 error:error]) {
         return NO;
       }
     }
@@ -147,9 +148,9 @@ static const NSInteger kMaxRunTestsAttempts = 3;
     // is always set correctly.
     if (![SimulatorWrapper installTestHostBundleID:testHostBundleID
                                     fromBundlePath:testHostAppPath
-                                            device:[_simulatorInfo simulatedDevice]
+                                            device:_simulatorInfo.simulatedDevice
                                          reporters:_reporters
-                                             error:startupError]) {
+                                             error:error]) {
       return NO;
     }
     return YES;
@@ -180,7 +181,7 @@ static const NSInteger kMaxRunTestsAttempts = 3;
 
     // we will reset iOS simulator contents and settings now if it is not done in `prepTestEnv`
     if (!_resetSimulator) {
-      prepareSimulator(YES, !_noResetSimulatorOnFailure);
+      prepareSimulator(YES, !_noResetSimulatorOnFailure, startupError);
     }
 
     // Sometimes, the test host app installation retries are starting and
@@ -240,7 +241,7 @@ static const NSInteger kMaxRunTestsAttempts = 3;
     [NSThread sleepForTimeInterval:1];
 
     // Restarting simulator
-    prepareSimulator(YES, NO);
+    prepareSimulator(YES, NO, startupError);
   }
 }
 

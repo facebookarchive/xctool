@@ -288,7 +288,7 @@ static NSString *abbreviatePath(NSString *string) {
 
     [_analyzerWarnings enumerateObjectsUsingBlock:
      ^(NSDictionary *event, NSUInteger idx, BOOL *stop) {
-       [_reportWriter printLine:@"%lu) %@:%@:%@: %@:",
+       [self->_reportWriter printLine:@"%lu) %@:%@:%@: %@:",
         (unsigned long)idx,
         abbreviatePath(event[kReporter_AnalyzerResult_FileKey]),
         event[kReporter_AnalyzerResult_LineKey],
@@ -296,20 +296,20 @@ static NSString *abbreviatePath(NSString *string) {
         event[kReporter_AnalyzerResult_DescriptionKey]];
 
        [self printDivider];
-       [_reportWriter disableIndent];
-       [_reportWriter printLine:@"<faint>%@<rest>",
+       [self->_reportWriter disableIndent];
+       [self->_reportWriter printLine:@"<faint>%@<rest>",
         [TextReporter getContext:event[kReporter_AnalyzerResult_FileKey]
                        errorLine:[event[kReporter_AnalyzerResult_LineKey] intValue]
                        colNumber:[event[kReporter_AnalyzerResult_ColumnKey] intValue]]];
-       [_reportWriter printNewline];
+       [self->_reportWriter printNewline];
        for (NSDictionary *piece in event[kReporter_AnalyzerResult_ContextKey]) {
-         [_reportWriter printLine:@"<faint>%@:%@:%@: %@<reset>",
+         [self->_reportWriter printLine:@"<faint>%@:%@:%@: %@<reset>",
           abbreviatePath(piece[@"file"]), piece[@"line"], piece[@"col"], piece[@"message"]];
        }
-       [_reportWriter enableIndent];
+       [self->_reportWriter enableIndent];
        [self printDivider];
 
-       [_reportWriter printNewline];
+       [self->_reportWriter printNewline];
      }];
 
     [_reportWriter decreaseIndent];

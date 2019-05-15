@@ -36,7 +36,7 @@ FOUNDATION_EXPORT void HC_assertThatWithLocation(id testCase, id actual, id <HCM
 #endif
 
 
-typedef id (^HCAssertThatAfterActualBlock)();
+typedef id (^HCAssertThatAfterActualBlock)(void);
 
 OBJC_EXPORT void HC_assertThatAfterWithLocation(id testCase, NSTimeInterval maxTime,
                                                 HCAssertThatAfterActualBlock actualBlock,

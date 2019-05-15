@@ -452,15 +452,16 @@
 		CD9048F61756C5B1006CF16D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1000;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = Facebook;
 			};
 			buildConfigurationList = CD9048F91756C5B1006CF16D /* Build configuration list for PBXProject "otest-query" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = CD9048F51756C5B1006CF16D;
 			productRefGroup = CD9048FF1756C5B1006CF16D /* Products */;

@@ -86,9 +86,9 @@ void LaunchTaskAndFeedSimulatorOutputAndOtestShimEventsToBlock(NSTask *task, NSS
  *
  * @return Task with a retain count of 1.
  */
-NSTask *CreateTaskInSameProcessGroup();
+NSTask *CreateTaskInSameProcessGroup(void);
 
-NSTask *CreateConcreteTaskInSameProcessGroup();
+NSTask *CreateConcreteTaskInSameProcessGroup(void);
 
 /**
  * Call CreateTaskInSameProcessGroup() and set the task's preferred architecture.

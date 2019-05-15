@@ -39,7 +39,7 @@ NSDictionary *BuildSettingsFromOutput(NSString *output)
 
   NSMutableDictionary *settings = [NSMutableDictionary dictionary];
 
-  void (^scanUntilEmptyLine)() = ^{
+  void (^scanUntilEmptyLine)(void) = ^{
     // Advance until we hit an empty line.
     while (![scanner scanString:@"\n" intoString:NULL]) {
       [scanner scanUpToString:@"\n" intoString:NULL];
@@ -156,7 +156,7 @@ NSString *XcodeDeveloperDirPath(void)
 
 NSString *XcodeDeveloperDirPathViaForcedConcreteTask(BOOL forceConcreteTask)
 {
-  NSString *(^getPath)() = ^{
+  NSString *(^getPath)(void) = ^{
     NSTask *task = (forceConcreteTask ?
                     CreateConcreteTaskInSameProcessGroup() :
                     CreateTaskInSameProcessGroup());

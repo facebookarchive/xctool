@@ -243,7 +243,7 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
 #pragma mark OSX Tests
 
 - (void)runTestsForRunner:(OCUnitTestRunner *)runner
-           andReturnTasks:(NSArray **)launchedTasks
+           andReturnTasks:(NSArray * __strong *)launchedTasks
 {
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
     [runner runTests];
