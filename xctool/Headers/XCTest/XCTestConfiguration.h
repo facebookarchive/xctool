@@ -6,20 +6,43 @@
 
 #import <Foundation/Foundation.h>
 
+@class XCTAggregateSuiteRunStatistics;
+
 @interface XCTestConfiguration : NSObject <NSSecureCoding>
 
+@property(copy) NSString *absolutePath;
+@property(copy) XCTAggregateSuiteRunStatistics *aggregateStatisticsBeforeCrash;
+@property(copy) NSString *automationFrameworkPath;
+@property(copy) NSString *baselineFileRelativePath;
 @property(copy) NSURL *baselineFileURL;
-@property BOOL disablePerformanceMetrics;
+@property(copy) NSString *bridgedProcessAutomationFrameworkPath;
+@property(assign) BOOL disablePerformanceMetrics;
+@property(assign) BOOL emitOSLogs;
+@property(assign) BOOL gatherLocalizableStringsData;
+@property(assign) BOOL initializeForUITesting;
 @property(copy) NSString *pathToXcodeReportingSocket;
 @property(copy) NSString *productModuleName;
-@property BOOL reportResultsToIDE;
+@property(retain) NSNumber *randomExecutionOrderingSeed;
+@property(assign) BOOL reportActivities;
+@property(assign) BOOL reportResultsToIDE;
 @property(copy) NSUUID *sessionIdentifier;
+@property(assign) long long systemAttachmentLifetime;
+@property(copy) NSArray *targetApplicationArguments;
 @property(copy) NSString *targetApplicationBundleID;
+@property(copy) NSDictionary *targetApplicationEnvironment;
 @property(copy) NSString *targetApplicationPath;
+@property(copy) NSDictionary *testApplicationDependencies;
+@property(copy) NSDictionary *testApplicationUserOverrides;
+@property(copy) NSString *testBundleRelativePath;
 @property(copy) NSURL *testBundleURL;
+@property(assign) long long testExecutionOrdering;
+@property(assign) BOOL testsDrivenByIDE;
+@property(assign) BOOL testsMustRunOnMainThread;
 @property(copy) NSSet *testsToRun;
 @property(copy) NSSet *testsToSkip;
-@property BOOL treatMissingBaselinesAsFailures;
+@property(assign) BOOL treatMissingBaselinesAsFailures;
+@property(assign) long long userAttachmentLifetime;
+@property(readonly) long long testMode;
 
 + (id)activeTestConfiguration;
 + (id)configurationWithContentsOfFile:(id)arg1;
