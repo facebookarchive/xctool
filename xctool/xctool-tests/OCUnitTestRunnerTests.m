@@ -171,8 +171,9 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
              equalTo(@[@"-[TEST_BUNDLE FAILED_TO_START]"]));
 
   // And, it should indicate what broke.
+  NSString *error = [NSString stringWithFormat:@"There was a problem starting the test bundle: App path %@ not executable.", testSettings[@"TEST_HOST"]];
   assertThat(SelectEventFields(events, kReporter_Events_TestOuput, kReporter_TestOutput_OutputKey),
-             equalTo(@[@"There was a problem starting the test bundle: TEST_HOST not executable."]));
+             equalTo(@[error]));
 
 }
 

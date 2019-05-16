@@ -1056,8 +1056,7 @@ cpu_type_t CpuTypeForTestBundleAtPath(NSString *testBundlePath)
 
 NSString *TestHostPathForBuildSettings(NSDictionary *buildSettings)
 {
-  // TEST_HOST will sometimes be wrapped in "quotes".
-  return [buildSettings[Xcode_TEST_HOST] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
+  return FixedAppPathFromAppPath(buildSettings[Xcode_TEST_HOST]);
 }
 
 NSString *ProductBundlePathForBuildSettings(NSDictionary *buildSettings)
@@ -1066,3 +1065,23 @@ NSString *ProductBundlePathForBuildSettings(NSDictionary *buildSettings)
   NSString *fullProductName = buildSettings[Xcode_FULL_PRODUCT_NAME];
   return [builtProductsDir stringByAppendingPathComponent:fullProductName];
 }
+
+NSString *FixedAppPathFromAppPath(NSString *appPath)
+{
+  // Sometimes the path is wrapped in double quotes.
+  return [appPath stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
+}
+
+NSString *AppBundleIDForAppAtPath(NSString *appPath)
+{
+  NSString *appBundle = nil;
+  if ([appPath.pathExtension isEqualToString:@"app"]) {
+    appBundle = appPath;
+  } else {
+    appBundle = appPath.stringByDeletingLastPathComponent;
+  }
+  NSString *plistPath = [appBundle stringByAppendingPathComponent:@"Info.plist"];
+  NSDictionary *plist = [NSDictionary dictionaryWithContentsOfFile:plistPath];
+  return plist[@"CFBundleIdentifier"];
+}
+

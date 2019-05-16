@@ -292,6 +292,15 @@ NSString *TestHostPathForBuildSettings(NSDictionary *buildSettings);
  */
 NSString *ProductBundlePathForBuildSettings(NSDictionary *buildSettings);
 
+/**
+ * Returns correct app path for a given app path.
+ */
+NSString *FixedAppPathFromAppPath(NSString *appPath);
+
+/**
+ * Returns app bundle id for a given app path.
+ */
+NSString *AppBundleIDForAppAtPath(NSString *appPath);
 
 #ifdef __cplusplus
 }

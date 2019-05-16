@@ -35,28 +35,14 @@ static const NSInteger kMaxRunTestsAttempts = 3;
   NSString *sdkName = _buildSettings[Xcode_SDK_NAME];
   NSAssert([sdkName hasPrefix:@"iphonesimulator"] || [sdkName hasPrefix:@"appletvsimulator"], @"Unexpected SDK: %@", sdkName);
 
-  // Sometimes the TEST_HOST will be wrapped in double quotes.
-  NSString *testHostPath = [_buildSettings[Xcode_TEST_HOST] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"\""]];
-  NSString *testHostAppPath = [testHostPath stringByDeletingLastPathComponent];
-  NSString *testHostPlistPath = [[testHostPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"Info.plist"];
-
-  if (![[NSFileManager defaultManager] isExecutableFileAtPath:testHostPath]) {
-    ReportStatusMessage(_reporters, REPORTER_MESSAGE_ERROR,
-                        @"Your TEST_HOST '%@' does not appear to be an executable.", testHostPath);
-    *startupError = @"TEST_HOST not executable.";
+  NSString *testHostBundlePath;
+  NSString *testHostBundleID =
+  [self bundleIDForAppAtPath:_buildSettings[Xcode_TEST_HOST]
+                  bundlePath:&testHostBundlePath
+                       error:startupError];
+  if (testHostBundleID == nil) {
     return;
   }
-
-  NSDictionary *testHostInfoPlist = [NSDictionary dictionaryWithContentsOfFile:testHostPlistPath];
-  if (!testHostInfoPlist) {
-    ReportStatusMessage(_reporters, REPORTER_MESSAGE_ERROR,
-                        @"Info.plist for TEST_HOST missing or malformatted.");
-    *startupError = @"Bad Info.plist for TEST_HOST";
-    return;
-  }
-
-  NSString *testHostBundleID = testHostInfoPlist[@"CFBundleIdentifier"];
-  NSAssert(testHostBundleID != nil, @"Missing 'CFBundleIdentifier' in Info.plist");
 
   BOOL (^prepareSimulator)(BOOL freshSimulator, BOOL resetSimulator, NSString **error) =
   ^(BOOL freshSimulator, BOOL resetSimulator, NSString **error) {
@@ -147,7 +133,7 @@ static const NSInteger kMaxRunTestsAttempts = 3;
     // By making sure the app is already installed, we guarantee the environment
     // is always set correctly.
     if (![SimulatorWrapper installTestHostBundleID:testHostBundleID
-                                    fromBundlePath:testHostAppPath
+                                    fromBundlePath:testHostBundlePath
                                             device:_simulatorInfo.simulatedDevice
                                          reporters:_reporters
                                              error:error]) {
@@ -243,6 +229,20 @@ static const NSInteger kMaxRunTestsAttempts = 3;
     // Restarting simulator
     prepareSimulator(YES, NO, startupError);
   }
+}
+
+- (NSString *)bundleIDForAppAtPath:(NSString *)path
+                        bundlePath:(NSString **)bundlePath
+                             error:(NSString **)error {
+  NSString *fixedPath = FixedAppPathFromAppPath(path);
+  if (![[NSFileManager defaultManager] isExecutableFileAtPath:fixedPath]) {
+    ReportStatusMessage(_reporters, REPORTER_MESSAGE_ERROR,
+                        @"Spefied app path '%@' does not appear to be an executable.", path);
+    *error = [NSString stringWithFormat:@"App path %@ not executable.", fixedPath];
+    return nil;
+  }
+  *bundlePath = [fixedPath stringByDeletingLastPathComponent];
+  return AppBundleIDForAppAtPath(*bundlePath);
 }
 
 @end
