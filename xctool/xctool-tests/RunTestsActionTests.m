@@ -1153,6 +1153,28 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
   }];
 }
 
+- (void)testActionOptionUITest
+{
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    Options *options = [[Options optionsFrom:
+  @[
+    @"-sdk", @"macosx10.7",
+    @"run-tests",
+    @"-uiTest",
+    TEST_DATA @"TestProject-UITests/Build/Products/Debug-iphonesimulator/TestProject-UITestsUITests-Runner.app/PlugIns/TestProject-UITestsUITests.xctest:"
+    TEST_DATA @"TestProject-UITests/Build/Products/Debug-iphonesimulator/TestProject-UITestsUITests-Runner.app/TestProject-UITestsUITests-Runner:"
+    TEST_DATA @"TestProject-UITests/Build/Products/Debug-iphonesimulator/TestProject-UITests.app/TestProject-UITests"
+    ]] assertOptionsValidate];
+    RunTestsAction *action = options.actions[0];
+    RunTestsActionUITest *config =
+    [[RunTestsActionUITest alloc] initWithHostApp:TEST_DATA @"TestProject-UITests/Build/Products/Debug-iphonesimulator/TestProject-UITests.app/TestProject-UITests"
+                                        runnerApp:TEST_DATA @"TestProject-UITests/Build/Products/Debug-iphonesimulator/TestProject-UITestsUITests-Runner.app/TestProject-UITestsUITests-Runner"];
+    assertThat(action.uiTests, equalTo(
+    @{TEST_DATA @"TestProject-UITests/Build/Products/Debug-iphonesimulator/TestProject-UITestsUITests-Runner.app/PlugIns/TestProject-UITestsUITests.xctest": config,
+      }));
+  }];
+}
+
 - (void)testActionOptionMixedLogicAndAppTests
 {
   [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
@@ -1210,7 +1232,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                               @"-appTest", TEST_DATA @"path/to/this-does-not-exist.xctest:path/to/HostApp.app/HostApp",
                               ]]
        assertOptionsFailToValidateWithError:
-           @"run-tests: Application test at path '" TEST_DATA @"path/to/this-does-not-exist.xctest' does not exist or is not a directory"];
+           @"run-tests: option -appTest has invalid argument: path '" TEST_DATA @"path/to/this-does-not-exist.xctest' doesn't exist"];
 
   }];
 }
@@ -1225,8 +1247,51 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                                            TEST_DATA @"path/to/NonExistentHostApp.app/HostApp",
                               ]]
        assertOptionsFailToValidateWithError:
-           @"run-tests: Application test host binary at path '" TEST_DATA "path/to/NonExistentHostApp.app/HostApp' does not exist or is not a file"];
+           @"run-tests: option -appTest has invalid argument: path '" TEST_DATA "path/to/NonExistentHostApp.app/HostApp' doesn't exist"];
 
+  }];
+}
+
+- (void)testWillComplainWhenPassingUITestBundleThatDoesntExist
+{
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[Options optionsFrom:
+      @[@"-sdk", @"iphonesimulator",
+        @"run-tests",
+        @"-uiTest",
+        TEST_DATA @"TestProject-UITests/Build/Products/Debug-iphonesimulator/TestProject-UITestsUITests-Runner.app/PlugIns/TestProject-UITestsUITestsFAKE.xctest:"
+        TEST_DATA @"TestProject-UITests/Build/Products/Debug-iphonesimulator/TestProject-UITestsUITests-Runner.app/TestProject-UITestsUITests-Runner:"
+        TEST_DATA @"TestProject-UITests/Build/Products/Debug-iphonesimulator/TestProject-UITests.app/TestProject-UITests"]]
+     assertOptionsFailToValidateWithError:
+     @"run-tests: option -uiTest has invalid argument: path '"TEST_DATA @"TestProject-UITests/Build/Products/Debug-iphonesimulator/TestProject-UITestsUITests-Runner.app/PlugIns/TestProject-UITestsUITestsFAKE.xctest' doesn't exist"];
+  }];
+}
+
+- (void)testWillComplainWhenPassingUITestRunnerAppThatDoesntExist {
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[Options optionsFrom:
+      @[@"-sdk", @"iphonesimulator",
+        @"run-tests",
+        @"-uiTest",
+        TEST_DATA @"TestProject-UITests/Build/Products/Debug-iphonesimulator/TestProject-UITestsUITests-Runner.app/PlugIns/TestProject-UITestsUITests.xctest:"
+        TEST_DATA @"TestProject-UITests/Build/Products/Debug-iphonesimulator/TestProject-UITestsUITests-Runner.app/TestProject-UITestsUITests-RunnerFAKE:"
+        TEST_DATA @"TestProject-UITests/Build/Products/Debug-iphonesimulator/TestProject-UITests.app/TestProject-UITests"]]
+     assertOptionsFailToValidateWithError:
+     @"run-tests: option -uiTest has invalid argument: path '"TEST_DATA @"TestProject-UITests/Build/Products/Debug-iphonesimulator/TestProject-UITestsUITests-Runner.app/TestProject-UITestsUITests-RunnerFAKE' doesn't exist"];
+  }];
+}
+
+- (void)testWillComplainWhenPassingUITestHostAppThatDoesntExist {
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[Options optionsFrom:
+      @[@"-sdk", @"iphonesimulator",
+        @"run-tests",
+        @"-uiTest",
+        TEST_DATA @"TestProject-UITests/Build/Products/Debug-iphonesimulator/TestProject-UITestsUITests-Runner.app/PlugIns/TestProject-UITestsUITests.xctest:"
+        TEST_DATA @"TestProject-UITests/Build/Products/Debug-iphonesimulator/TestProject-UITestsUITests-Runner.app/TestProject-UITestsUITests-Runner:"
+        TEST_DATA @"TestProject-UITests/Build/Products/Debug-iphonesimulator/TestProject-UITests.app/TestProject-UITestsFAKE"]]
+     assertOptionsFailToValidateWithError:
+     @"run-tests: option -uiTest has invalid argument: path '"TEST_DATA @"TestProject-UITests/Build/Products/Debug-iphonesimulator/TestProject-UITests.app/TestProject-UITestsFAKE' doesn't exist"];
   }];
 }
 
@@ -1244,6 +1309,26 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
        assertOptionsFailToValidateWithError:
            @"run-tests: The same test bundle '"TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/TestProject-App-OSXTests.xctest' cannot test "
            @"more than one test host app (got '"TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/TestProject-App-OSX.app/Contents/MacOS/TestProject-App-OSX' and '" TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/TestProject-App-OSX.app/Contents/MacOS/TestProject-App-OSX')"];
+  }];
+}
+
+- (void)testWillComplainWhenPassingSameLogicTestForMultipleUITests
+{
+  [[FakeTaskManager sharedManager] runBlockWithFakeTasks:^{
+    [[Options optionsFrom:
+      @[@"-sdk", @"iphonesimulator",
+        @"run-tests",
+        @"-uiTest",
+        TEST_DATA @"TestProject-UITests/Build/Products/Debug-iphonesimulator/TestProject-UITestsUITests-Runner.app/PlugIns/TestProject-UITestsUITests.xctest:"
+        TEST_DATA @"TestProject-UITests/Build/Products/Debug-iphonesimulator/TestProject-UITestsUITests-Runner.app/TestProject-UITestsUITests-Runner:"
+        TEST_DATA @"TestProject-UITests/Build/Products/Debug-iphonesimulator/TestProject-UITests.app/TestProject-UITests",
+        @"-uiTest",
+        TEST_DATA @"TestProject-UITests/Build/Products/Debug-iphonesimulator/TestProject-UITestsUITests-Runner.app/PlugIns/TestProject-UITestsUITests.xctest:"
+        TEST_DATA @"TestProject-UITests/Build/Products/Debug-iphonesimulator/TestProject-UITestsUITests-Runner.app/TestProject-UITestsUITests-Runner:"
+        TEST_DATA @"TestProject-UITests/Build/Products/Debug-iphonesimulator/TestProject-UITests.app/TestProject-UITests",
+        ]]
+     assertOptionsFailToValidateWithError:
+     @"run-tests: The same test bundle '"TEST_DATA @"TestProject-UITests/Build/Products/Debug-iphonesimulator/TestProject-UITestsUITests-Runner.app/PlugIns/TestProject-UITestsUITests.xctest' cannot have more than one test configuration of host app and runner"];
   }];
 }
 

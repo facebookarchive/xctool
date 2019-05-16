@@ -68,6 +68,7 @@
 
 + (NSDictionary *)testableBuildSettingsForProject:(NSString *)projectPath
                                            target:(NSString *)target
+                             macroExpansionTarget:(NSString *)macroExpansionTarget
                                           objRoot:(NSString *)objRoot
                                           symRoot:(NSString *)symRoot
                                 sharedPrecompsDir:(NSString *)sharedPrecompsDir
@@ -75,6 +76,56 @@
                                    xcodeArguments:(NSArray *)xcodeArguments
                                           testSDK:(NSString *)testSDK
                                             error:(NSString **)error
+{
+  NSDictionary *testTargetSettings = [self _buildSettingsForProject:projectPath
+                                                             target:target
+                                                            objRoot:objRoot
+                                                            symRoot:symRoot
+                                                  sharedPrecompsDir:sharedPrecompsDir
+                                               targetedDeviceFamily:targetedDeviceFamily
+                                                     xcodeArguments:xcodeArguments
+                                                            testSDK:testSDK
+                                                              error:error];
+  if (*error != nil) {
+    return nil;
+  }
+  if ([testTargetSettings[Xcode_USES_XCTRUNNER] boolValue]) {
+    // fetch settings for test host app target
+    if (macroExpansionTarget == nil) {
+      *error = [NSString stringWithFormat:@"Failed to find test host app for test target %@.", target];
+      return nil;
+    }
+    NSDictionary *buildSettings = [self _buildSettingsForProject:projectPath
+                                                          target:macroExpansionTarget
+                                                         objRoot:objRoot
+                                                         symRoot:symRoot
+                                               sharedPrecompsDir:sharedPrecompsDir
+                                            targetedDeviceFamily:targetedDeviceFamily
+                                                  xcodeArguments:xcodeArguments
+                                                         testSDK:testSDK
+                                                           error:error];
+    if (*error != nil) {
+      return nil;
+    }
+    NSMutableDictionary *updatedSettings = [testTargetSettings mutableCopy];
+    NSString *pathToExecutable = [NSString stringWithFormat:@"%@/%@",
+                                  buildSettings[Xcode_TARGET_BUILD_DIR],
+                                  buildSettings[Xcode_EXECUTABLE_PATH]];
+    updatedSettings[Xcode_TEST_HOST] = FixedAppPathFromAppPath(pathToExecutable);
+    testTargetSettings = updatedSettings;
+  }
+  return testTargetSettings;
+}
+
++ (NSDictionary *)_buildSettingsForProject:(NSString *)projectPath
+                                    target:(NSString *)target
+                                   objRoot:(NSString *)objRoot
+                                   symRoot:(NSString *)symRoot
+                         sharedPrecompsDir:(NSString *)sharedPrecompsDir
+                      targetedDeviceFamily:(NSString *)targetedDeviceFamily
+                            xcodeArguments:(NSArray *)xcodeArguments
+                                   testSDK:(NSString *)testSDK
+                                     error:(NSString **)error
 {
   // Collect build settings for this test target.
   NSTask *settingsTask = CreateTaskInSameProcessGroup();
@@ -136,12 +187,13 @@
     return nil;
   }
 
-  if (!allSettings[target]) {
+  NSDictionary *targetSettings = allSettings[target];
+  if (targetSettings == nil) {
     *error = [NSString stringWithFormat:@"Should have found build settings for target '%@'", target];
     return nil;
   }
 
-  return allSettings[target];
+  return targetSettings;
 }
 
 /**

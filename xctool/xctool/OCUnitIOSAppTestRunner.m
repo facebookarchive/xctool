@@ -44,6 +44,22 @@ static const NSInteger kMaxRunTestsAttempts = 3;
     return;
   }
 
+  NSString *testRunnerBundlePath;
+  NSString *testRunnerBundleID;
+  if ([_buildSettings[Xcode_USES_XCTRUNNER] boolValue]) {
+    // manually specified
+    if (_buildSettings[Xcode_UI_RUNNER_APP] != nil) {
+      testRunnerBundleID =
+      [self bundleIDForAppAtPath:_buildSettings[Xcode_UI_RUNNER_APP]
+                      bundlePath:&testRunnerBundlePath
+                           error:startupError];
+    } else {
+      // extract from build settings
+      testRunnerBundlePath = [_buildSettings[Xcode_TARGET_BUILD_DIR] stringByDeletingLastPathComponent];
+      testRunnerBundleID = AppBundleIDForAppAtPath(testRunnerBundlePath);
+    }
+  }
+
   BOOL (^prepareSimulator)(BOOL freshSimulator, BOOL resetSimulator, NSString **error) =
   ^(BOOL freshSimulator, BOOL resetSimulator, NSString **error) {
     if (freshSimulator || resetSimulator) {
@@ -120,6 +136,14 @@ static const NSInteger kMaxRunTestsAttempts = 3;
                                                  error:error]) {
         return NO;
       }
+
+      if (testRunnerBundleID != nil &&
+          ![SimulatorWrapper uninstallTestHostBundleID:testRunnerBundleID
+                                                device:[_simulatorInfo simulatedDevice]
+                                             reporters:_reporters
+                                                 error:error]) {
+            return NO;
+          }
     }
 
     // Always install the app before running it.  We've observed that
@@ -135,6 +159,14 @@ static const NSInteger kMaxRunTestsAttempts = 3;
     if (![SimulatorWrapper installTestHostBundleID:testHostBundleID
                                     fromBundlePath:testHostBundlePath
                                             device:_simulatorInfo.simulatedDevice
+                                         reporters:_reporters
+                                             error:error]) {
+      return NO;
+    }
+    if (testRunnerBundleID != nil && testRunnerBundlePath != nil &&
+        ![SimulatorWrapper installTestHostBundleID:testRunnerBundleID
+                                    fromBundlePath:testRunnerBundlePath
+                                            device:[_simulatorInfo simulatedDevice]
                                          reporters:_reporters
                                              error:error]) {
       return NO;
@@ -191,7 +223,7 @@ static const NSInteger kMaxRunTestsAttempts = 3;
   // Let's try several times to run before reporting about failure to callers.
   for (NSInteger remainingAttempts = kMaxRunTestsAttempts - 1; remainingAttempts >= 0; --remainingAttempts) {
     NSError *error = nil;
-    BOOL infraSucceeded = [SimulatorWrapper runHostAppTests:testHostBundleID
+    BOOL infraSucceeded = [SimulatorWrapper runHostAppTests:testRunnerBundleID ?: testHostBundleID
                                                      device:[_simulatorInfo simulatedDevice]
                                                   arguments:appLaunchArgs
                                                 environment:appLaunchEnvironment

@@ -456,6 +456,13 @@ static void XCTestSuite_performTest(id self, SEL sel, id arg1)
   XCPerformTestWithSuppressedExpectedAssertionFailures(self, originalSelector, arg1);
 }
 
+#pragma mark - UI Tests
+static BOOL XCUIApplication_prefersPlatformLauncher(id self, SEL sel)
+{
+  // Override to force XCUIApplication to not rely on Xcode when running UI tests
+  return YES;
+}
+
 #pragma mark - _enableSymbolication
 static BOOL XCTestCase__enableSymbolication(id self, SEL sel)
 {
@@ -568,6 +575,9 @@ static void SwizzleXCTestMethodsIfAvailable()
     XTSwizzleSelectorForFunction(NSClassFromString(@"XCTestSuite"),
                                  @selector(performTest:),
                                  (IMP)XCTestSuite_performTest);
+    XTSwizzleSelectorForFunction(NSClassFromString(@"XCUIApplication"),
+                                 @selector(prefersPlatformLauncher),
+                                 (IMP)XCUIApplication_prefersPlatformLauncher);
     if ([NSClassFromString(@"XCTestCase") respondsToSelector:@selector(_enableSymbolication)]) {
       // Disable symbolication thing on xctest 7 because it sometimes takes forever.
       XTSwizzleClassSelectorForFunction(NSClassFromString(@"XCTestCase"),

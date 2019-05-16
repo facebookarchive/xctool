@@ -74,6 +74,7 @@
  */
 + (NSDictionary *)testableBuildSettingsForProject:(NSString *)projectPath
                                            target:(NSString *)target
+                             macroExpansionTarget:(NSString *)macroExpansionTarget
                                           objRoot:(NSString *)objRoot
                                           symRoot:(NSString *)symRoot
                                 sharedPrecompsDir:(NSString *)sharedPrecompsDir

@@ -345,18 +345,47 @@ static NSString * const kEnvVarPassThroughPrefix = @"XCTOOL_TEST_ENV_";
 
 - (NSDictionary *)testEnvironmentWithSpecifiedTestConfiguration
 {
-  NSArray *testCasesToSkip = [self testCasesToSkip];
-
   Class XCTestConfigurationClass = NSClassFromString(@"XCTestConfiguration");
   NSAssert(XCTestConfigurationClass, @"XCTestConfiguration isn't available");
 
-  XCTestConfiguration *configuration = [[XCTestConfigurationClass alloc] init];
-  [configuration setProductModuleName:_buildSettings[Xcode_PRODUCT_MODULE_NAME]];
-  [configuration setTestBundleURL:[NSURL fileURLWithPath:[_simulatorInfo productBundlePath]]];
-  [configuration setTestsToSkip:[NSSet setWithArray:testCasesToSkip]];
-  [configuration setReportResultsToIDE:NO];
+  NSArray *testCasesToSkip = [self testCasesToSkip];
+  NSString *testHostAppPath = FixedAppPathFromAppPath(_simulatorInfo.testHostPath);
+  NSString *testHostBundleID = AppBundleIDForAppAtPath(testHostAppPath);
 
-  NSString *XCTestConfigurationFilename = [NSString stringWithFormat:@"%@-%@", _buildSettings[Xcode_PRODUCT_NAME], [configuration.sessionIdentifier UUIDString]];
+  XCTestConfiguration *configuration = [XCTestConfigurationClass new];
+  configuration.testBundleURL = [NSURL fileURLWithPath:_simulatorInfo.productBundlePath];
+  configuration.productModuleName = _buildSettings[Xcode_PRODUCT_MODULE_NAME];
+  configuration.testsToSkip = [NSSet setWithArray:testCasesToSkip];
+  configuration.targetApplicationPath = testHostAppPath;
+  configuration.targetApplicationBundleID = testHostBundleID;
+  configuration.reportActivities = YES;
+
+  // UI tests require special treatment
+  if ([_buildSettings[Xcode_USES_XCTRUNNER] boolValue]) {
+    configuration.testsMustRunOnMainThread = YES;
+    configuration.initializeForUITesting = YES;
+  }
+
+  // Xcode also sets these properties for UI (and may be other) tests:
+  // - testBundleRelativePath:
+  //   uses __TESTHOST__ placeholder in the path to xctest bundle
+  // - sessionIdentifier:
+  //   needs to be reset, so xctest doesn't expect any session to be running
+  // - testApplicationDependencies:
+  //   @{@"runner bundle id" -> "runner app bundle path",
+  //     @"target app bundle id" -> "target app bundle path"}
+  // - aggregateStatisticsBeforeCrash:
+  //   @{@"XCSuiteRecordsKey": @{}}
+  // - automationFrameworkPath:
+  //   set to XCTAutomationSupport.framework path inside Xcode app bundle
+  // - automationFrameworkPath:
+  //   set to 1
+  // - systemAttachmentLifetime:
+  //   set to 1
+
+  NSString *XCTestConfigurationFilename = [NSString stringWithFormat:@"%@-%@",
+                                           _buildSettings[Xcode_PRODUCT_MODULE_NAME],
+                                           configuration.sessionIdentifier.UUIDString];
   NSString *XCTestConfigurationFilePath = [MakeTempFileWithPrefix(XCTestConfigurationFilename) stringByAppendingPathExtension:@"xctestconfiguration"];
   if ([[NSFileManager defaultManager] fileExistsAtPath:XCTestConfigurationFilePath]) {
     [[NSFileManager defaultManager] removeItemAtPath:XCTestConfigurationFilePath error:nil];

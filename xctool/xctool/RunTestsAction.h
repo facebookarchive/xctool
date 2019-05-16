@@ -48,7 +48,9 @@ typedef NS_ENUM(NSInteger, BucketBy) {
   // be in the same bucket.
   BucketByClass,
 
-} ;
+};
+
+@class RunTestsActionUITest;
 
 @interface RunTestsAction : Action<TestRunning>
 
@@ -65,7 +67,8 @@ typedef NS_ENUM(NSInteger, BucketBy) {
 @property (nonatomic, strong) NSMutableArray *onlyList;
 @property (nonatomic, strong) NSMutableArray *omitList;
 @property (nonatomic, strong) NSMutableArray *logicTests;
-@property (nonatomic, strong) NSMutableDictionary *appTests;
+@property (nonatomic, strong) NSMutableDictionary<NSString *, NSString *> *appTests; // testBundle -> hostApp
+@property (nonatomic, strong) NSMutableDictionary<NSString *, RunTestsActionUITest *> *uiTests; // testBundle -> (host app, runner app)
 @property (nonatomic, copy) NSString *targetedDeviceFamily;
 
 - (void)setLogicTestBucketSizeValue:(NSString *)str;
@@ -73,4 +76,10 @@ typedef NS_ENUM(NSInteger, BucketBy) {
 - (void)setBucketByValue:(NSString *)str;
 - (void)setTestTimeoutValue:(NSString *)str;
 
+@end
+
+@interface RunTestsActionUITest: NSObject
+@property (nonatomic, copy, readonly) NSString *hostApp;
+@property (nonatomic, copy, readonly) NSString *runnerApp;
+- (instancetype)initWithHostApp:(NSString *)hostApp runnerApp:(NSString *)runnerApp;
 @end
