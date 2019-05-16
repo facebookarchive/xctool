@@ -32,6 +32,5 @@ XT_INSTALL_ROOT="$RELEASE_OUTPUT_DIR" \
   -sdk macosx \
   run-tests \
   -logicTest "$BUILD_OUTPUT_DIR/Products"/Debug/xctool-tests.xctest \
-  -parallelize \
   -bucketBy class \
   -logicTestBucketSize 1
