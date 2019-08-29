@@ -33,10 +33,13 @@ NSTask *CreateTaskForSimulatorExecutable(NSString *sdkName,
 
   if ([sdkName hasPrefix:@"iphonesimulator"] ||
       [sdkName hasPrefix:@"appletvsimulator"]) {
-    [taskArgs addObjectsFromArray:@[
-      @"spawn",
-      [[[simulatorInfo simulatedDevice] UDID] UUIDString],
-    ]];
+    SimDevice *simulatedDevice = [simulatorInfo simulatedDevice];
+    [taskArgs addObject: @"spawn"];
+    if (ToolchainIsXcode10OrBetter() && [simulatedDevice state] != SimDeviceStateBooted) {
+      // If simulator is not booted, pass --standalone option, which is required by Xcode 11.
+      [taskArgs addObject: @"--standalone"];
+    }
+    [taskArgs addObject: [[simulatedDevice UDID] UUIDString]];
     [taskArgs addObject:launchPath];
     [taskArgs addObjectsFromArray:arguments];
 
