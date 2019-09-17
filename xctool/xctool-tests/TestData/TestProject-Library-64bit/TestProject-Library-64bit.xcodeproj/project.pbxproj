@@ -19,7 +19,6 @@
 		CC02126E1AFC486F00A4639A /* TestProjectLibrary64bitTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestProjectLibrary64bitTests.h; sourceTree = "<group>"; };
 		CC02126F1AFC486F00A4639A /* TestProjectLibrary64bitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestProjectLibrary64bitTests.m; sourceTree = "<group>"; };
 		CC02127A1AFD568A00A4639A /* TestProject-Library-32And64bitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TestProject-Library-32And64bitTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		CC02127B1AFD568A00A4639A /* TestProject-Library-32And64bitTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "TestProject-Library-32And64bitTests-Info.plist"; path = "/Users/nekto/Projects/xctool/xctool/xctool-tests/TestData/TestProject-Library-64bit/TestProject-Library-32And64bitTests-Info.plist"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,7 +79,6 @@
 		CC0212641AFC456D00A4639A /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				CC02127B1AFD568A00A4639A /* TestProject-Library-32And64bitTests-Info.plist */,
 				CC0212651AFC456D00A4639A /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -320,7 +318,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "TestProject-Library-32And64bitTests-Info.plist";
+				INFOPLIST_FILE = "TestProject-Library-64bitTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "TestProject-Library-32And64bitTests";
@@ -336,7 +334,7 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "TestProject-Library-32And64bitTests-Info.plist";
+				INFOPLIST_FILE = "TestProject-Library-64bitTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "TestProject-Library-32And64bitTests";
 			};
