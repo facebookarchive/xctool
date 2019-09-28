@@ -107,6 +107,6 @@ int main(int argc, const char * argv[])
 
     [tool run];
 
-    return tool.exitStatus;
+    return (int)tool.exitStatus;
   }
 }
