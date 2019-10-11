@@ -1,6 +1,6 @@
 # xctool
 
-__xctool__ is an extension for Apple's __xcodebuild__ that makes it
+__xctool__ is an extension for Apple's __xcodebuild__ which makes it
 easier to test iOS and Mac products.  It's especially helpful
 for continuous integration.
 
@@ -44,7 +44,7 @@ problems are.
 
   Example:
 
-	![pretty output](https://fpotter_public.s3.amazonaws.com/xctool-uicatalog.gif)
+    ![pretty output](https://fpotter_public.s3.amazonaws.com/xctool-uicatalog.gif)
 
 * **Written in Objective-C.**
 
@@ -243,7 +243,7 @@ and speed up the overall test run.
 supported in Xcode 8 and later. We suggest moving to `xcodebuild` (with 
 [xcpretty](https://github.com/supermarin/xcpretty)) for
 simple needs, or [xcbuild](https://github.com/facebook/xcbuild) for more
-involved requirements. Alternatively you can use [Buck](https://buckbuild.com/).
+involved requirements. Alternatively, you can use [Buck](https://buckbuild.com/).
 
 Building products with _xctool_ is the same as building them with
 _xcodebuild_.
@@ -350,7 +350,7 @@ if xctool detects that the build is being run by Travis CI, CircleCI, TeamCity,
 or Jenkins (i.e. `TRAVIS=true`, `CIRCLECI=true`, `TEAMCITY_VERSION`, or
 `JENKINS_URL` in the environment).
 
-You can choose your own reporters with the `-reporter` option:
+You can choose your reporters with the `-reporter` option:
 
 ```bash
 path/to/xctool.sh \
@@ -396,7 +396,7 @@ You can also implement your own reporters using whatever language you
 like.  Reporters in xctool are separate executables that read JSON
 objects from STDIN and write formatted results to STDOUT.
 
-You can invoke reporters by passing their full path via the `-reporter`
+You can invoke reporters bypassing their full path via the `-reporter`
 option:
 
 ```bash
