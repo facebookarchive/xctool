@@ -1,6 +1,6 @@
 # xctool
 
-__xctool__ is an extension for Apple's __xcodebuild__ that makes it
+__xctool__ is an extension for Apple's __xcodebuild__ which makes it
 easier to test iOS and Mac products.  It's especially helpful
 for continuous integration.
 
@@ -44,7 +44,7 @@ problems are.
 
   Example:
 
-	![pretty output](https://fpotter_public.s3.amazonaws.com/xctool-uicatalog.gif)
+    ![pretty output](https://fpotter_public.s3.amazonaws.com/xctool-uicatalog.gif)
 
 * **Written in Objective-C.**
 
@@ -243,7 +243,7 @@ and speed up the overall test run.
 supported in Xcode 8 and later. We suggest moving to `xcodebuild` (with 
 [xcpretty](https://github.com/supermarin/xcpretty)) for
 simple needs, or [xcbuild](https://github.com/facebook/xcbuild) for more
-involved requirements. Alternatively you can use [Buck](https://buckbuild.com/).
+involved requirements. Alternatively, you can use [Buck](https://buckbuild.com/).
 
 Building products with _xctool_ is the same as building them with
 _xcodebuild_.
@@ -276,7 +276,7 @@ NOTE: _xctool_ doesn't support directly building targets using
 
 xctool is an excellent choice for running your tests under a continuous
 integration server such as [Travis CI](https://travis-ci.org/) or [Jenkins](http://jenkins-ci.org/).
-In order to your run your tests within a continuous integration environment,
+To your run your tests within a continuous integration environment,
 you must create **Shared Schemes** for your application target and ensure that all dependencies (such as CocoaPods) are added explicitly to the Scheme. To do so:
 
 1. Open up the **Manage Schemes** sheet by selecting the **Product** menu > **Schemes** > **Manage Schemes...**
@@ -350,7 +350,7 @@ if xctool detects that the build is being run by Travis CI, CircleCI, TeamCity,
 or Jenkins (i.e. `TRAVIS=true`, `CIRCLECI=true`, `TEAMCITY_VERSION`, or
 `JENKINS_URL` in the environment).
 
-You can choose your own reporters with the `-reporter` option:
+You can choose your reporters with the `-reporter` option:
 
 ```bash
 path/to/xctool.sh \
@@ -390,13 +390,13 @@ output)](https://gist.github.com/fpotter/82ffcc3d9a49d10ee41b).
 * __user-notifications__: sends notification to Notification Center when action is completed [(example notifications)](https://cloud.githubusercontent.com/assets/1044236/2771974/a2715306-ca74-11e3-9889-fa50607cc412.png).
 * __teamcity__: sends service messages to [TeamCity](http://www.jetbrains.com/teamcity/) Continuous Integration Server
 
-### Implementing Your Own Reporters
+### Implementing Your Reporters
 
 You can also implement your own reporters using whatever language you
 like.  Reporters in xctool are separate executables that read JSON
 objects from STDIN and write formatted results to STDOUT.
 
-You can invoke reporters by passing their full path via the `-reporter`
+You can invoke reporters bypassing their full path via the `-reporter`
 option:
 
 ```bash
@@ -517,7 +517,7 @@ It's a nice way to keep things together.
   Preparing test environment failed.
   -[TEST_BUNDLE FAILED_TO_START] 
   There was a problem starting the test bundle: Simulator 'iPhone 6' was not prepared: Failed for unknown reason.
-  Test did not run: Simulator 'iPhone 6' was not prepared: Failed for unknown reason.
+  The test did not run: Simulator 'iPhone 6' was not prepared: Failed for unknown reason.
   2015-01-21 12:02:19.296 xcodebuild[35135:875297]  iPhoneSimulator: Timed out waiting 120 seconds for simulator to boot, current state is 1.
   Testing failed:
   Test target MyProjectTests encountered an error (Timed out waiting 120 seconds for simulator to boot, current state is 1.  
