@@ -319,6 +319,23 @@ static void XCToolLog_testCaseDidFail(NSDictionary *exceptionInfo)
 
 #pragma mark - performTest
 
+static int64_t totalTestCount(id testCollection)
+{
+  if ([testCollection isKindOfClass:NSClassFromString(@"XCTestCaseSuite")])
+  {
+    return  [[testCollection tests] count];
+  }
+  
+  int64_t testCount = 0;
+  
+  for (id test in [testCollection tests])
+  {
+    testCount += totalTestCount(test);
+  }
+  
+  return testCount;
+}
+
 static void XCPerformTestWithSuppressedExpectedAssertionFailures(id self, SEL origSel, id arg1)
 {
   int timeout = [@(getenv("OTEST_SHIM_TEST_TIMEOUT") ?: "0") intValue];
@@ -334,7 +351,7 @@ static void XCPerformTestWithSuppressedExpectedAssertionFailures(id self, SEL or
     BOOL isSuite = [self isKindOfClass:NSClassFromString(@"XCTestCaseSuite")] ||
                    [self isKindOfClass:NSClassFromString(@"XCTestSuite")];
     // If running in a suite, time out if we run longer than the combined timeouts of all tests + a fudge factor.
-    int64_t testCount = isSuite ? [[self tests] count] : 1;
+    int64_t testCount = isSuite ? totalTestCount(self) : 1;
     // When in a suite, add a second per test to help account for the time required to switch tests in a suite.
     int64_t fudgeFactor = isSuite ? MAX(testCount, 1) : 0;
     int64_t interval = (timeout * testCount + fudgeFactor) * NSEC_PER_SEC ;
