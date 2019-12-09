@@ -337,6 +337,7 @@
 		CC2BE2101B7ADE8D008FBC50 /* PbxprojReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PbxprojReader.m; sourceTree = "<group>"; };
 		CC2BE3391B7B1BE7008FBC50 /* PbxprojReaderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PbxprojReaderTests.m; sourceTree = "<group>"; };
 		CC4AB1FA1B82C57F00543A42 /* TestableExecutionInfoTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestableExecutionInfoTests.m; sourceTree = "<group>"; };
+		CC61509A239FB8C10001F382 /* TestConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestConstants.h; sourceTree = "<group>"; };
 		CC6A783B1BB9E5D500327F38 /* SimulatorTaskUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimulatorTaskUtils.h; path = xctool/SimulatorWrapper/SimulatorTaskUtils.h; sourceTree = "<group>"; };
 		CC6A783C1BB9E5D500327F38 /* SimulatorTaskUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimulatorTaskUtils.m; path = xctool/SimulatorWrapper/SimulatorTaskUtils.m; sourceTree = "<group>"; };
 		CC75C2A61BB9D94E004315B2 /* TaskUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskUtil.h; sourceTree = "<group>"; };
@@ -603,6 +604,7 @@
 				CD0CFBD71992E32C0028F69B /* TaskUtilTests.m */,
 				CC4AB1FA1B82C57F00543A42 /* TestableExecutionInfoTests.m */,
 				32707EE11725FE7F00AF2F53 /* TestActionTests.m */,
+				CC61509A239FB8C10001F382 /* TestConstants.h */,
 				AAF3344D1806A48A00928A00 /* TestRunStateTests.m */,
 				283479B716E3EBE5003C3B77 /* TestUtil.h */,
 				283479B816E3EBE5003C3B77 /* TestUtil.m */,

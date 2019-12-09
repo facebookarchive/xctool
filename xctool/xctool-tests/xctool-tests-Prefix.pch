@@ -5,6 +5,7 @@
 #ifdef __OBJC__
   #import <Cocoa/Cocoa.h>
 
+  #import "TestConstants.h"
   #import "TestUtil.h"
   #import "XCToolUtil.h"
 

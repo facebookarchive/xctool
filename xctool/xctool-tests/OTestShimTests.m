@@ -39,6 +39,7 @@ static NSArray *AllTestCasesInTestBundle(NSString *sdkName,
   NSString *builtProductsDir = [bundlePath stringByDeletingLastPathComponent];
   NSString *fullProductName = [bundlePath lastPathComponent];
   SimulatorInfo *simulatorInfo = [[SimulatorInfo alloc] init];
+  [simulatorInfo setDeviceName:kDefaultDeviceName];
   simulatorInfo.buildSettings = @{
     Xcode_BUILT_PRODUCTS_DIR : builtProductsDir,
     Xcode_FULL_PRODUCT_NAME : fullProductName,
@@ -111,7 +112,7 @@ static NSTask *OtestShimTask(NSString *platformName,
 
   // set up an OCUnitIOSLogicTestRunner
   SimulatorInfo *simulatorInfo = [SimulatorInfo new];
-  [simulatorInfo setDeviceName:@"iPhone 6s"];
+  [simulatorInfo setDeviceName:kDefaultDeviceName];
   OCUnitIOSLogicTestRunner *runner = [[testRunnerClass alloc] initWithBuildSettings:targetSettings
                                                                       simulatorInfo:simulatorInfo
                                                                    focusedTestCases:focusedTests

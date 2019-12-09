@@ -39,3 +39,8 @@ NSArray *SelectEventFields(NSArray *events, NSString *eventName, NSString *field
  Print notice that test is not relevant.
  */
 void PrintTestNotRelevantNotice(void);
+
+/**
+ Returns default device destination to be used in tests.
+ */
+NSString *DefaultDeviceDestination(void);

@@ -105,6 +105,10 @@ static const NSString * kOptionsWaitForDebuggerKey = @"wait_for_debugger";
       NSLocalizedDescriptionKey: @"Timed out while launching an application",
     }];
   }
+  // This is possible only in xctool tests. Simulating success.
+  if (appPID == -100) {
+    return YES;
+  }
   if (appPID == -1) {
     if (error != nil) {
       *error = launchError;

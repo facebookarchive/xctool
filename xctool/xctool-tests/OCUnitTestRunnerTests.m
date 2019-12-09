@@ -47,8 +47,10 @@ static id TestRunnerWithTestListsAndProcessEnv(Class cls, NSDictionary *settings
 
   EventBuffer *eventBuffer = [[EventBuffer alloc] init];
 
+  SimulatorInfo *simulatorInfo = [SimulatorInfo new];
+  [simulatorInfo setDeviceName:kDefaultDeviceName];
   return [[cls alloc] initWithBuildSettings:settings
-                              simulatorInfo:[[SimulatorInfo alloc] init]
+                              simulatorInfo:simulatorInfo
                            focusedTestCases:focusedTestCases
                                allTestCases:allTestCases
                                   arguments:arguments
@@ -105,18 +107,24 @@ static int NumberOfEntries(NSArray *array, NSObject *target)
 
 - (void)runTestsForRunner:(OCUnitTestRunner *)runner andReturnLaunchOptions:(NSDictionary * __strong *)outOptions
 {
-  [Swizzler whileSwizzlingSelector:@selector(launchApplicationWithID:options:error:)
+  [Swizzler whileSwizzlingSelector:@selector(installApplication:withOptions:error:)
                forInstancesOfClass:[SimDevice class]
                          withBlock:
-   ^(SimDevice *m_self, NSString *bundleId, NSDictionary *options, NSError **err) {
-     // Pretend it failed, but save the options so we can check it.
-     *outOptions = [options copy];
-     return -1;
-   }
-                          runBlock:
-   ^{
-     [runner runTests];
-   }];
+   ^(SimDevice *m_self, NSURL *appURL, NSDictionary *options, NSError **error) {
+    return YES;
+  } runBlock:^{
+    [Swizzler whileSwizzlingSelector:@selector(launchApplicationWithID:options:error:)
+                 forInstancesOfClass:[SimDevice class]
+                           withBlock:
+     ^(SimDevice *m_self, NSString *bundleId, NSDictionary *options, NSError **err) {
+      // Simulate successfull launch and execution to avoid simulator restarts
+      // Save the options so we can check it.
+      *outOptions = [options copy];
+      return -100;
+    } runBlock:^{
+      [runner runTests];
+    }];
+  }];
 }
 
 - (void)testArgsAndEnvArePassedToIOSApplicationTest

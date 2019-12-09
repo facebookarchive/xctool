@@ -127,3 +127,6 @@ void PrintTestNotRelevantNotice() {
     printf("[This test isn't relevant for this version of Xcode]\n");
 }
 
+NSString *DefaultDeviceDestination() {
+  return [NSString stringWithFormat:@"name=%@", kDefaultDeviceName];
+}

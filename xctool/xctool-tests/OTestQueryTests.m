@@ -26,13 +26,14 @@
 #import "XcodeBuildSettings.h"
 
 @interface SimulatorInfo (Helper)
-+ (SimulatorInfo *)simulatorInfoWithBuildSettings:(NSDictionary *)buildSettings;
++ (SimulatorInfo *)simulatorInfoWithBuildSettings:(NSDictionary *)buildSettings deviceName:(NSString *)deviceName;
 @end
 
 @implementation SimulatorInfo (Helper)
-+ (SimulatorInfo *)simulatorInfoWithBuildSettings:(NSDictionary *)buildSettings
++ (SimulatorInfo *)simulatorInfoWithBuildSettings:(NSDictionary *)buildSettings deviceName:(NSString *)deviceName
 {
   SimulatorInfo *info = [[SimulatorInfo alloc] init];
+  [info setDeviceName:deviceName];
   info.buildSettings = buildSettings;
   return info;
 }
@@ -61,7 +62,9 @@
     Xcode_FULL_PRODUCT_NAME : @"TestProject-Library-OSXTests.octest",
     Xcode_TARGETED_DEVICE_FAMILY : @"1",
   };
-  OCUnitTestQueryRunner *runner = [[OCUnitOSXLogicTestQueryRunner alloc] initWithSimulatorInfo:[SimulatorInfo simulatorInfoWithBuildSettings:buildSettings]];
+  OCUnitTestQueryRunner *runner =
+  [[OCUnitOSXLogicTestQueryRunner alloc] initWithSimulatorInfo:
+   [SimulatorInfo simulatorInfoWithBuildSettings:buildSettings deviceName:nil]];
   NSArray *classes = [runner runQueryWithError:&error];
   assertThat(error, is(nilValue()));
   assertThat(classes,
@@ -82,7 +85,9 @@
                                   Xcode_TEST_HOST : AbsolutePathFromRelative(TEST_DATA @"TestProject-App-OSX/Build/Products/Debug/TestProject-App-OSX.app/Contents/MacOS/TestProject-App-OSX"),
                                   Xcode_TARGETED_DEVICE_FAMILY : @"1",
                                   };
-  OCUnitTestQueryRunner *runner = [[OCUnitOSXAppTestQueryRunner alloc] initWithSimulatorInfo:[SimulatorInfo simulatorInfoWithBuildSettings:buildSettings]];
+  OCUnitTestQueryRunner *runner =
+  [[OCUnitOSXAppTestQueryRunner alloc] initWithSimulatorInfo:
+   [SimulatorInfo simulatorInfoWithBuildSettings:buildSettings deviceName:nil]];
   NSArray *classes = [runner runQueryWithError:&error];
   assertThat(error, is(nilValue()));
   assertThat(classes,
@@ -102,7 +107,9 @@
     Xcode_FULL_PRODUCT_NAME : @"TestProject-Library-XCTest-OSXTests.xctest",
     Xcode_TARGETED_DEVICE_FAMILY : @"1",
   };
-  OCUnitTestQueryRunner *runner = [[OCUnitOSXLogicTestQueryRunner alloc] initWithSimulatorInfo:[SimulatorInfo simulatorInfoWithBuildSettings:buildSettings]];
+  OCUnitTestQueryRunner *runner =
+  [[OCUnitOSXLogicTestQueryRunner alloc] initWithSimulatorInfo:
+   [SimulatorInfo simulatorInfoWithBuildSettings:buildSettings deviceName:nil]];
   NSArray *classes = [runner runQueryWithError:&error];
   assertThat(error, is(nilValue()));
   assertThat(classes,
@@ -119,7 +126,9 @@
     Xcode_FULL_PRODUCT_NAME : @"TestProject-Library-XCTest-CustomTests.xctest",
     Xcode_TARGETED_DEVICE_FAMILY : @"1",
   };
-  OCUnitTestQueryRunner *runner = [[OCUnitOSXLogicTestQueryRunner alloc] initWithSimulatorInfo:[SimulatorInfo simulatorInfoWithBuildSettings:buildSettings]];
+  OCUnitTestQueryRunner *runner =
+  [[OCUnitOSXLogicTestQueryRunner alloc] initWithSimulatorInfo:
+   [SimulatorInfo simulatorInfoWithBuildSettings:buildSettings deviceName:nil]];
   NSArray *classes = [runner runQueryWithError:&error];
   assertThat(error, is(nilValue()));
   assertThat(classes,
@@ -144,7 +153,9 @@
     Xcode_PLATFORM_NAME : @"iphonesimulator",
   };
 
-  OCUnitTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithSimulatorInfo:[SimulatorInfo simulatorInfoWithBuildSettings:buildSettings]];
+  OCUnitTestQueryRunner *runner =
+  [[OCUnitIOSLogicTestQueryRunner alloc] initWithSimulatorInfo:
+   [SimulatorInfo simulatorInfoWithBuildSettings:buildSettings deviceName:kDefaultDeviceName]];
   NSArray *classes = [runner runQueryWithError:&error];
 
   assertThat(error, is(nilValue()));
@@ -171,7 +182,9 @@
     Xcode_SDK_NAME : latestSDK,
     Xcode_PLATFORM_NAME : @"iphonesimulator",
   };
-  OCUnitTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithSimulatorInfo:[SimulatorInfo simulatorInfoWithBuildSettings:buildSettings]];
+  OCUnitTestQueryRunner *runner =
+  [[OCUnitIOSLogicTestQueryRunner alloc] initWithSimulatorInfo:
+   [SimulatorInfo simulatorInfoWithBuildSettings:buildSettings deviceName:kDefaultDeviceName]];
   NSArray *classes = [runner runQueryWithError:&error];
 
   assertThat(error, is(nilValue()));
@@ -209,7 +222,9 @@
     Xcode_TARGETED_DEVICE_FAMILY : @"1",
     Xcode_PLATFORM_NAME : @"iphonesimulator",
   };
-  OCUnitTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithSimulatorInfo:[SimulatorInfo simulatorInfoWithBuildSettings:buildSettings]];
+  OCUnitTestQueryRunner *runner =
+  [[OCUnitIOSLogicTestQueryRunner alloc] initWithSimulatorInfo:
+   [SimulatorInfo simulatorInfoWithBuildSettings:buildSettings deviceName:kDefaultDeviceName]];
   NSArray *cases = [runner runQueryWithError:&error];
   assertThat(error, is(nilValue()));
   assertThat(cases, equalTo(@[
@@ -230,7 +245,9 @@
     Xcode_TARGETED_DEVICE_FAMILY : @"1",
     Xcode_PLATFORM_NAME : @"iphonesimulator",
   };
-  OCUnitTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithSimulatorInfo:[SimulatorInfo simulatorInfoWithBuildSettings:buildSettings]];
+  OCUnitTestQueryRunner *runner =
+  [[OCUnitIOSLogicTestQueryRunner alloc] initWithSimulatorInfo:
+   [SimulatorInfo simulatorInfoWithBuildSettings:buildSettings deviceName:kDefaultDeviceName]];
   NSArray *cases = [runner runQueryWithError:&error];
   assertThat(error, is(nilValue()));
   assertThat(cases, equalTo(@[
@@ -252,7 +269,9 @@
     Xcode_TARGETED_DEVICE_FAMILY : @"1",
     Xcode_PLATFORM_NAME : @"iphonesimulator",
   };
-  OCUnitTestQueryRunner *runner = [[OCUnitIOSAppTestQueryRunner alloc] initWithSimulatorInfo:[SimulatorInfo simulatorInfoWithBuildSettings:buildSettings]];
+  OCUnitTestQueryRunner *runner =
+  [[OCUnitIOSAppTestQueryRunner alloc] initWithSimulatorInfo:
+   [SimulatorInfo simulatorInfoWithBuildSettings:buildSettings deviceName:kDefaultDeviceName]];
   NSArray *cases = [runner runQueryWithError:&error];
   assertThat(error, is(nilValue()));
   assertThat(cases, equalTo(@[
@@ -279,7 +298,9 @@
     Xcode_TARGETED_DEVICE_FAMILY : @"1",
     Xcode_PLATFORM_NAME : @"iphonesimulator",
   };
-  OCUnitTestQueryRunner *runner = [[OCUnitIOSAppTestQueryRunner alloc] initWithSimulatorInfo:[SimulatorInfo simulatorInfoWithBuildSettings:buildSettings]];
+  OCUnitTestQueryRunner *runner =
+  [[OCUnitIOSAppTestQueryRunner alloc] initWithSimulatorInfo:
+   [SimulatorInfo simulatorInfoWithBuildSettings:buildSettings deviceName:kDefaultDeviceName]];
   NSArray *cases = [runner runQueryWithError:&error];
   assertThat(error, is(nilValue()));
   assertThat(cases, equalTo(@[
@@ -300,7 +321,9 @@
     Xcode_SDK_NAME : latestSDK,
     Xcode_PLATFORM_NAME : @"appletvsimulator",
   };
-  OCUnitTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithSimulatorInfo:[SimulatorInfo simulatorInfoWithBuildSettings:buildSettings]];
+  OCUnitTestQueryRunner *runner =
+  [[OCUnitIOSLogicTestQueryRunner alloc] initWithSimulatorInfo:
+   [SimulatorInfo simulatorInfoWithBuildSettings:buildSettings deviceName:nil]];
   NSArray *classes = [runner runQueryWithError:&error];
   assertThat(error, is(nilValue()));
   assertThat(classes,
@@ -331,7 +354,9 @@
     Xcode_TARGETED_DEVICE_FAMILY : @"3",
     Xcode_PLATFORM_NAME : @"appletvsimulator",
   };
-  OCUnitTestQueryRunner *runner = [[OCUnitIOSAppTestQueryRunner alloc] initWithSimulatorInfo:[SimulatorInfo simulatorInfoWithBuildSettings:buildSettings]];
+  OCUnitTestQueryRunner *runner =
+  [[OCUnitIOSAppTestQueryRunner alloc] initWithSimulatorInfo:
+   [SimulatorInfo simulatorInfoWithBuildSettings:buildSettings deviceName:nil]];
   NSArray *classes = [runner runQueryWithError:&error];
   assertThat(error, is(nilValue()));
   assertThat(classes,
@@ -362,7 +387,9 @@
     Xcode_PLATFORM_NAME : @"iphonesimulator",
   };
 
-  OCUnitTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithSimulatorInfo:[SimulatorInfo simulatorInfoWithBuildSettings:buildSettings]];
+  OCUnitTestQueryRunner *runner =
+  [[OCUnitIOSLogicTestQueryRunner alloc] initWithSimulatorInfo:
+   [SimulatorInfo simulatorInfoWithBuildSettings:buildSettings deviceName:kDefaultDeviceName]];
   NSArray *classes = [runner runQueryWithError:&error];
   assertThat(error, is(nilValue()));
   assertThat(classes,
@@ -384,7 +411,9 @@
     Xcode_PLATFORM_NAME : @"iphonesimulator",
   };
 
-  OCUnitTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithSimulatorInfo:[SimulatorInfo simulatorInfoWithBuildSettings:buildSettings]];
+  OCUnitTestQueryRunner *runner =
+  [[OCUnitIOSLogicTestQueryRunner alloc] initWithSimulatorInfo:
+   [SimulatorInfo simulatorInfoWithBuildSettings:buildSettings deviceName:kDefaultDeviceName]];
   NSArray *classes = [runner runQueryWithError:&error];
   assertThat(error, is(nilValue()));
   assertThat(classes,
@@ -403,7 +432,9 @@
     Xcode_BUILT_PRODUCTS_DIR : AbsolutePathFromRelative(TEST_DATA @"tests-ios-test-bundle"),
     Xcode_FULL_PRODUCT_NAME : @"TestProject-LibraryTests.octest",
   };
-  OCUnitTestQueryRunner *runner = [[OCUnitOSXLogicTestQueryRunner alloc] initWithSimulatorInfo:[SimulatorInfo simulatorInfoWithBuildSettings:buildSettings]];
+  OCUnitTestQueryRunner *runner =
+  [[OCUnitOSXLogicTestQueryRunner alloc] initWithSimulatorInfo:
+   [SimulatorInfo simulatorInfoWithBuildSettings:buildSettings deviceName:nil]];
   NSArray *classes = [runner runQueryWithError:&error];
   assertThat(classes, equalTo(nil));
   assertThat(error, containsString(@"no suitable image found."));
@@ -422,7 +453,9 @@
     Xcode_TARGETED_DEVICE_FAMILY : @"1",
     Xcode_PLATFORM_NAME : @"iphonesimulator",
   };
-  OCUnitTestQueryRunner *runner = [[OCUnitIOSLogicTestQueryRunner alloc] initWithSimulatorInfo:[SimulatorInfo simulatorInfoWithBuildSettings:buildSettings]];
+  OCUnitTestQueryRunner *runner =
+  [[OCUnitIOSLogicTestQueryRunner alloc] initWithSimulatorInfo:
+   [SimulatorInfo simulatorInfoWithBuildSettings:buildSettings deviceName:kDefaultDeviceName]];
   NSArray *classes = [runner runQueryWithError:&error];
 
   assertThat(classes, equalTo(nil));
@@ -442,7 +475,9 @@
     Xcode_TARGETED_DEVICE_FAMILY : @"1",
     Xcode_PLATFORM_NAME : @"iphonesimulator",
   };
-  OCUnitTestQueryRunner *runner = [[OCUnitIOSAppTestQueryRunner alloc] initWithSimulatorInfo:[SimulatorInfo simulatorInfoWithBuildSettings:buildSettings]];
+  OCUnitTestQueryRunner *runner =
+  [[OCUnitIOSAppTestQueryRunner alloc] initWithSimulatorInfo:
+   [SimulatorInfo simulatorInfoWithBuildSettings:buildSettings deviceName:kDefaultDeviceName]];
   NSArray *classes = [runner runQueryWithError:&error];
   assertThat(classes, equalTo(nil));
   assertThat(error, containsString(@"The test host executable is missing: '/path/to/executable/that/does/not/exist'"));
