@@ -110,8 +110,10 @@ static NSTask *OtestShimTask(NSString *platformName,
   targetSettings[Xcode_FULL_PRODUCT_NAME] = [bundlePath lastPathComponent];
 
   // set up an OCUnitIOSLogicTestRunner
+  SimulatorInfo *simulatorInfo = [SimulatorInfo new];
+  [simulatorInfo setDeviceName:@"iPhone 6s"];
   OCUnitIOSLogicTestRunner *runner = [[testRunnerClass alloc] initWithBuildSettings:targetSettings
-                                                                      simulatorInfo:[[SimulatorInfo alloc] init]
+                                                                      simulatorInfo:simulatorInfo
                                                                    focusedTestCases:focusedTests
                                                                        allTestCases:allTests
                                                                           arguments:@[]
