@@ -211,7 +211,7 @@ void _CFAutoreleasePoolPrintPools(void);
 
       [TestUtil runWithFakeStreams:tool];
 
-      assertThatInt(tool.exitStatus, equalToInt(exitStatus));
+      assertThatInteger(tool.exitStatus, equalToInt(exitStatus));
     }];
   };
 

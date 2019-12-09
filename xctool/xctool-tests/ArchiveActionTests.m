@@ -99,7 +99,7 @@
 
     NSDictionary *output = [TestUtil runWithFakeStreams:tool];
 
-    assertThatInt([tool exitStatus], equalToInt(1));
+    assertThatInteger([tool exitStatus], equalToInt(1));
     assertThat(output[@"stdout"], containsString(@"** ARCHIVE FAILED **"));
   }];
 }
@@ -140,7 +140,7 @@
 
     NSDictionary *output = [TestUtil runWithFakeStreams:tool];
 
-    assertThatInt([tool exitStatus], equalToInt(0));
+    assertThatInteger([tool exitStatus], equalToInt(0));
     assertThat(output[@"stdout"], containsString(@"** ARCHIVE SUCCEEDED **"));
   }];
 }

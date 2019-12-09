@@ -452,7 +452,7 @@
 		CD9048F61756C5B1006CF16D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1120;
 				ORGANIZATIONNAME = Facebook;
 			};
 			buildConfigurationList = CD9048F91756C5B1006CF16D /* Build configuration list for PBXProject "otest-query" */;

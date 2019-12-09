@@ -225,7 +225,7 @@
 		283CCAA116C2EE7200F2E343 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1120;
 				ORGANIZATIONNAME = "Facebook, Inc.";
 			};
 			buildConfigurationList = 283CCAA416C2EE7200F2E343 /* Build configuration list for PBXProject "xcodebuild-shim" */;

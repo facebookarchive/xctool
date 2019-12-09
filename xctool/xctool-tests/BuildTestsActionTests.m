@@ -196,7 +196,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                        [NSString stringWithFormat:@"-IDECustomDerivedDataLocation=%@xctool_temp_UNDERTEST_%d/DerivedData", NSTemporaryDirectory(), [[NSProcessInfo processInfo] processIdentifier]],
                        @"build",
                        ]));
-    assertThatInt(tool.exitStatus, equalToInt(0));
+    assertThatInteger(tool.exitStatus, equalToInt(0));
 
     [verify(mockSchemeGenerator) setParallelizeBuildables:YES];
     [verify(mockSchemeGenerator) setBuildImplicitDependencies:YES];
@@ -260,7 +260,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                        [NSString stringWithFormat:@"-IDECustomDerivedDataLocation=%@xctool_temp_UNDERTEST_%d/DerivedData", NSTemporaryDirectory(), [[NSProcessInfo processInfo] processIdentifier]],
                        @"build",
                        ]));
-    assertThatInt(tool.exitStatus, equalToInt(0));
+    assertThatInteger(tool.exitStatus, equalToInt(0));
 
     NSString *projectPath = TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj";
     [verify(mockSchemeGenerator) setParallelizeBuildables:NO];
@@ -334,7 +334,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                        [NSString stringWithFormat:@"-IDECustomDerivedDataLocation=%@xctool_temp_UNDERTEST_%d/DerivedData", NSTemporaryDirectory(), [[NSProcessInfo processInfo] processIdentifier]],
                        @"build",
                        ]));
-    assertThatInt(tool.exitStatus, equalToInt(0));
+    assertThatInteger(tool.exitStatus, equalToInt(0));
 
     NSString *projectPath = TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj";
     [verify(mockSchemeGenerator) setParallelizeBuildables:NO];
@@ -405,7 +405,7 @@ static NSString *kTestWorkspaceTestProjectOtherLibTargetID      = @"28ADB45F16E4
                        [NSString stringWithFormat:@"-IDECustomDerivedDataLocation=%@xctool_temp_UNDERTEST_%d/DerivedData", NSTemporaryDirectory(), [[NSProcessInfo processInfo] processIdentifier]],
                        @"build",
                        ]));
-    assertThatInt(tool.exitStatus, equalToInt(0));
+    assertThatInteger(tool.exitStatus, equalToInt(0));
 
     NSString *projectPath = TEST_DATA @"TestWorkspace-Library/TestProject-Library/TestProject-Library.xcodeproj";
     [verify(mockSchemeGenerator) setParallelizeBuildables:NO];

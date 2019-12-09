@@ -714,7 +714,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastTestingUpgradeCheck = 0700;
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1120;
 			};
 			buildConfigurationList = 2893A94117960CAD00EFBD28 /* Build configuration list for PBXProject "reporters" */;
 			compatibilityVersion = "Xcode 3.2";

@@ -167,7 +167,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
 
     NSDictionary *output = [TestUtil runWithFakeStreams:tool];
 
-    assertThatInt(tool.exitStatus, equalToInt(1));
+    assertThatInteger(tool.exitStatus, equalToInt(1));
     assertThat(output[@"stdout"],
                containsString(@"Unable to read build settings for target 'TestProject-LibraryTests'."));
   }];
@@ -263,7 +263,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
       assertThat([launchedTasks[1] environment][@"SIMCTL_CHILD_XCTestConfigurationFilePath"], notNilValue());
     }
 
-    assertThatInt(tool.exitStatus, equalToInt(1));
+    assertThatInteger(tool.exitStatus, equalToInt(1));
   }];
 }
 
@@ -339,7 +339,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
     assertThat([launchedTasks[1] environment][@"SIMCTL_CHILD_XCTestConfigurationFilePath"], notNilValue());
     assertThat([launchedTasks[1] environment][@"SIMCTL_CHILD_OTEST_SHIM_STDOUT_FILE"], notNilValue());
 
-    assertThatInt(tool.exitStatus, equalToInt(XCToolActionFailed));
+    assertThatInteger(tool.exitStatus, equalToInt(XCToolActionFailed));
   }];
 }
 
@@ -416,7 +416,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
         @"/Users/nekto/Library/Developer/Xcode/DerivedData/TestProject-WithNonExistingTargetInScheme-firogdnnjipxwgadvqtehztcfdio/Build/Products/Release-iphonesimulator/TestProject-WithNonExistingTargetInSchemeTests.xctest",
       ]));
     }
-    assertThatInt(tool.exitStatus, equalToInt(XCToolAllActionsSucceeded));
+    assertThatInteger(tool.exitStatus, equalToInt(XCToolAllActionsSucceeded));
   }];
 }
 
@@ -478,7 +478,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
                      ];
 
   NSDictionary *output = [TestUtil runWithFakeStreams:tool];
-  assertThatInt(tool.exitStatus, equalToInt(0));
+  assertThatInteger(tool.exitStatus, equalToInt(0));
   assertThat(output[@"stdout"], containsString(@"-[TestProject_Library_XCTest_CustomTests customTest]"));
   assertThat(output[@"stdout"], containsString(@"-[TestProject_Library_XCTest_CustomTests customTestWithInteger:]"));
   assertThat(output[@"stdout"], containsString(@"SUCCEEDED"));
@@ -565,7 +565,7 @@ static BOOL areEqualJsonOutputsIgnoringKeys(NSString *output1, NSString *output2
     if (ToolchainIsXcode7OrBetter()) {
       assertThat([launchedTasks[1] environment][@"SIMCTL_CHILD_XCTestConfigurationFilePath"], notNilValue());
     }
-    assertThatInt(tool.exitStatus, equalToInt(XCToolActionFailed));
+    assertThatInteger(tool.exitStatus, equalToInt(XCToolActionFailed));
   }];
 }
 
