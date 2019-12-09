@@ -1,6 +1,6 @@
 # xctool
 
-__xctool__ is an extension for Apple's __xcodebuild__ that makes it
+__xctool__ is an extension for Apple's __xcodebuild__ which makes it
 easier to test iOS and Mac products.  It's especially helpful
 for continuous integration.
 
@@ -243,7 +243,7 @@ and speed up the overall test run.
 supported in Xcode 8 and later. We suggest moving to `xcodebuild` (with 
 [xcpretty](https://github.com/supermarin/xcpretty)) for
 simple needs, or [xcbuild](https://github.com/facebook/xcbuild) for more
-involved requirements. Alternatively you can use [Buck](https://buckbuild.com/).
+involved requirements. Alternatively, you can use [Buck](https://buckbuild.com/).
 
 Building products with _xctool_ is the same as building them with
 _xcodebuild_.
@@ -276,7 +276,7 @@ NOTE: _xctool_ doesn't support directly building targets using
 
 xctool is an excellent choice for running your tests under a continuous
 integration server such as [Travis CI](https://travis-ci.org/) or [Jenkins](http://jenkins-ci.org/).
-In order to your run your tests within a continuous integration environment,
+To run tests within a continuous integration environment,
 you must create **Shared Schemes** for your application target and ensure that all dependencies (such as CocoaPods) are added explicitly to the Scheme. To do so:
 
 1. Open up the **Manage Schemes** sheet by selecting the **Product** menu > **Schemes** > **Manage Schemes...**
